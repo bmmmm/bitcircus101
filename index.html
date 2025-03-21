@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>BitCircus101</title>
+        <style>
+            /* Base styles */
+            body {
+                font-family: "Courier New", monospace;
+                line-height: 1.6;
+                color: #333;
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f5;
+            }
+
+            .container {
+                width: 90%;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            /* Navigation */
+            header {
+                background-color: #333;
+                padding: 10px 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                justify-content: center;
+                padding: 0;
+                margin: 0;
+            }
+
+            nav li {
+                margin: 0 15px;
+            }
+
+            nav a {
+                color: #fff;
+                text-decoration: none;
+                font-size: 1.2rem;
+                transition: color 0.3s;
+            }
+
+            nav a:hover {
+                color: #aaa;
+            }
+
+            .menu-toggle {
+                display: none;
+                color: white;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 10px;
+            }
+
+            /* Sections */
+            section {
+                margin: 40px 0;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            h1,
+            h2 {
+                text-align: center;
+            }
+
+            /* ASCII Art container */
+            .ascii-art {
+                font-family: monospace;
+                white-space: pre;
+                display: block;
+                line-height: 1;
+                font-size: 14px;
+                margin: 30px auto;
+                text-align: center;
+            }
+
+            /* Calendar */
+            .calendar-container {
+                display: flex;
+                justify-content: center;
+                margin: 30px 0;
+            }
+
+            iframe {
+                max-width: 100%;
+            }
+
+            /* Contact Section */
+            .contact-info {
+                text-align: center;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .menu-toggle {
+                    display: block;
+                    margin: 0 auto;
+                }
+
+                nav ul {
+                    flex-direction: column;
+                    align-items: center;
+                    display: none;
+                }
+
+                nav.active ul {
+                    display: flex;
+                }
+
+                nav li {
+                    margin: 10px 0;
+                }
+
+                .ascii-art {
+                    font-size: 10px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav id="main-nav">
+                <button class="menu-toggle" id="menu-toggle">☰ Menu</button>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#events">Events</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="container">
+            <section id="home">
+                <h1>Welcome to BitCircus101</h1>
+                <pre class="ascii-art">
+  +------------------------------------------+
+  |                                          |
+  |                BitCircus101              |
+  |                                          |
+  |       +---------+        +-------+       |
+  |       |  [PC]   |        |  Art  |       |
+  |       +---------+        +-------+       |
+  |                                          |
+  |                                          |
+  |  +------+                    +------+    |
+  |  |      |                    |      |    |
+  |  | Sofa |       +-----+      | Desk |    |
+  |  |      |       |     |      |      |    |
+  |  +------+       |Table|      +------+    |
+  |                 |     |                  |
+  |  +------+       +-----+      +------+    |
+  |  |      |                    |      |    |
+  |  | Bean |                    |Shelf |    |
+  |  | Bag  |                    |      |    |
+  |  +------+                    +------+    |
+  |                                          |
+  |              +---------+                 |
+  |              | Plants  |                 |
+  |              +---------+                 |
+  |                                          |
+  +------------------------------------------+
+            </pre
+                >
+                <p>
+                    A digital oasis for tech enthusiasts, creatives, and curious
+                    minds.
+                </p>
+            </section>
+
+            <section id="about">
+                <h2>About BitCircus101</h2>
+                <p>
+                    BitCircus101 is a unique space designed to be a sanctuary
+                    where technology meets creativity. It's a place to relax and
+                    connect with like-minded individuals in a peaceful
+                    atmosphere.
+                </p>
+                <p>Our space welcomes:</p>
+                <ul>
+                    <li>
+                        Tech enthusiasts looking for a quiet place to work or
+                        collaborate
+                    </li>
+                    <li>Art lovers seeking inspiration and connection</li>
+                    <li>People of all genders and backgrounds</li>
+                    <li>
+                        Anyone seeking a calm environment with good internet
+                        connectivity
+                    </li>
+                </ul>
+                <p>
+                    Whether you're working on your latest project, engaging in
+                    thoughtful conversations, or simply enjoying the peaceful
+                    atmosphere, BitCircus101 provides the perfect setting for
+                    your digital and creative endeavors.
+                </p>
+            </section>
+
+            <section id="events">
+                <h2>Upcoming Events</h2>
+                <p>
+                    Join us for our regular events and special gatherings. Check
+                    our calendar below for the latest schedule.
+                </p>
+                <div class="calendar-container">
+                    <iframe
+                        src="https://calendar.google.com/calendar/embed?src=e62c542fe796499243d6315da449d278d350b205a595d7933cf4a70d0f1dc4fb%40group.calendar.google.com&ctz=Europe%2FBerlin"
+                        style="border: 0"
+                        width="800"
+                        height="600"
+                        frameborder="0"
+                        scrolling="no"
+                    ></iframe>
+                </div>
+            </section>
+
+            <section id="contact">
+                <h2>Contact Us</h2>
+                <div class="contact-info">
+                    <p>
+                        Email:
+                        <a href="mailto:info@bitcircus101.com"
+                            >info@bitcircus101.com</a
+                        >
+                    </p>
+                    <p>
+                        Instagram:
+                        <a
+                            href="https://instagram.com/bitcircus101"
+                            target="_blank"
+                            >@bitcircus101</a
+                        >
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            // Toggle mobile menu
+            document
+                .getElementById("menu-toggle")
+                .addEventListener("click", function () {
+                    document
+                        .getElementById("main-nav")
+                        .classList.toggle("active");
+                });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll("nav a").forEach((anchor) => {
+                anchor.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute("href");
+                    const targetElement = document.querySelector(targetId);
+
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: "smooth",
+                    });
+
+                    // Close mobile menu after clicking a link
+                    if (window.innerWidth <= 768) {
+                        document
+                            .getElementById("main-nav")
+                            .classList.remove("active");
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
