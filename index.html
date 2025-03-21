@@ -94,10 +94,44 @@
                 display: flex;
                 justify-content: center;
                 margin: 30px 0;
+                flex-direction: column;
+                align-items: center;
             }
 
             iframe {
                 max-width: 100%;
+            }
+
+            /* Calendar legend */
+            .calendar-legend {
+                margin-top: 15px;
+                padding: 15px;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                border: 1px solid #eee;
+                width: 100%;
+                max-width: 800px;
+            }
+
+            .calendar-type {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            .calendar-color {
+                width: 20px;
+                height: 20px;
+                border-radius: 3px;
+                margin-right: 10px;
+            }
+
+            .blue-calendar {
+                background-color: #4285f4;
+            }
+
+            .green-calendar {
+                background-color: #33b679;
             }
 
             /* Contact Section */
@@ -227,6 +261,31 @@
                         frameborder="0"
                         scrolling="no"
                     ></iframe>
+
+                    <div class="calendar-legend">
+                        <h3>Calendar Legend</h3>
+                        <div class="calendar-type">
+                            <div class="calendar-color blue-calendar"></div>
+                            <div>
+                                <strong>Events Calendar (Blue)</strong>: Shows
+                                all community events, workshops, and gatherings
+                                happening at BitCircus101.
+                            </div>
+                        </div>
+                        <div class="calendar-type">
+                            <div class="calendar-color green-calendar"></div>
+                            <div>
+                                <strong>Table Bookings Calendar (Green)</strong
+                                >: Shows reserved time slots for tables and
+                                workspaces. Currently, there are 5 slots
+                                available each day for booking.
+                            </div>
+                        </div>
+                        <p>
+                            To make a booking or inquire about event
+                            participation, please contact us via email.
+                        </p>
+                    </div>
                 </div>
             </section>
 
