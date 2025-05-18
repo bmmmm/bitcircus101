@@ -447,8 +447,70 @@
                     <div class="calendar-legend">
                         <h3>Calendar Legend</h3>
                         <div id="calendar-legend-content">
-                            <p><em>Select a calendar to see its description here.</em></p>
+                            <p>
+                                <em
+                                    >Select a calendar to see its description
+                                    here.</em
+                                >
+                            </p>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="donations">
+                <h2>Support bitcircus101</h2>
+                <p>
+                    Your donations help sustain our creative space. Choose your
+                    preferred method below:
+                </p>
+                <div
+                    class="donation-buttons"
+                    style="display: flex; flex-direction: column; gap: 20px"
+                >
+                    <div class="donation-item">
+                        <h3>Donate via PayPal</h3>
+                        <form
+                            action="https://www.paypal.com/donate"
+                            method="post"
+                            target="_top"
+                        >
+                            <input
+                                type="hidden"
+                                name="hosted_button_id"
+                                value="ZF34GXRRDRF8E"
+                            />
+                            <input
+                                type="image"
+                                src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
+                                border="0"
+                                name="submit"
+                                title="PayPal - The safer, easier way to pay online!"
+                                alt="Donate with PayPal button"
+                            />
+                            <img
+                                alt=""
+                                border="0"
+                                src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
+                                width="1"
+                                height="1"
+                            />
+                        </form>
+                    </div>
+                    <div class="donation-item">
+                        <h3>Donate via Ko‑fi</h3>
+                        <iframe
+                            id="kofiframe"
+                            src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
+                            style="
+                                border: none;
+                                width: 100%;
+                                padding: 4px;
+                                background: #f9f9f9;
+                            "
+                            height="712"
+                            title="bmabma"
+                        ></iframe>
                     </div>
                 </div>
             </section>
@@ -519,9 +581,9 @@
             document
                 .getElementById("table-calendar")
                 .addEventListener("change", updateCalendar);
-                
+
             // Initialize calendar view on page load
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 // Make sure events calendar is checked by default
                 document.getElementById("events-calendar").checked = true;
                 document.getElementById("table-calendar").checked = false;
@@ -534,9 +596,14 @@
                 const tableCalendar =
                     document.getElementById("table-calendar").checked;
 
-                const calendarIframe = document.getElementById("calendar-iframe");
-                const noSelectionContainer = document.getElementById("no-selection-container");
-                const calendarLegend = document.getElementById("calendar-legend-content");
+                const calendarIframe =
+                    document.getElementById("calendar-iframe");
+                const noSelectionContainer = document.getElementById(
+                    "no-selection-container",
+                );
+                const calendarLegend = document.getElementById(
+                    "calendar-legend-content",
+                );
                 let legendContent = "";
 
                 // Check if any calendar is selected
@@ -544,8 +611,10 @@
                     // No calendar selected, show the meme
                     calendarIframe.style.opacity = "0";
                     noSelectionContainer.style.display = "flex";
-                    calendarLegend.innerHTML = "<p><em>Select a calendar to see its description here.</em></p>";
-                    calendarLegend.innerHTML = "<p><em>Select a calendar to see its description here.</em></p>";
+                    calendarLegend.innerHTML =
+                        "<p><em>Select a calendar to see its description here.</em></p>";
+                    calendarLegend.innerHTML =
+                        "<p><em>Select a calendar to see its description here.</em></p>";
                     return;
                 }
 
@@ -593,7 +662,9 @@
                 calendarIframe.src = calendarSrc;
 
                 // Update the legend content
-                calendarLegend.innerHTML = legendContent || "<p><em>Select a calendar to see its description here.</em></p>";
+                calendarLegend.innerHTML =
+                    legendContent ||
+                    "<p><em>Select a calendar to see its description here.</em></p>";
             }
         </script>
     </body>
