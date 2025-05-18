@@ -273,6 +273,24 @@
                 .menu-toggle {
                     display: block;
                     margin: 0 auto;
+                    legendContent += `
+                        <div class="calendar-type">
+                            <div class="calendar-color blue-calendar"></div>
+                            <div>
+                                <strong>Events Calendar (Blue)</strong>: Shows
+                                all community events, workshops, and gatherings
+                                happening at bitcircus101.
+                            </div>
+                        </div>`;
+                    legendContent += `
+                        <div class="calendar-type">
+                            <div class="calendar-color green-calendar"></div>
+                            <div>
+                                <strong>Table Bookings Calendar (Green)</strong>: Shows
+                                reserved time slots for tables and workspaces.
+                                <em>You can view the table booking calendar, but the actual booking system is not yet in place. Coming soon!</em>
+                            </div>
+                        </div>`;
                 }
 
                 nav ul {
@@ -519,12 +537,14 @@
                 const calendarIframe = document.getElementById("calendar-iframe");
                 const noSelectionContainer = document.getElementById("no-selection-container");
                 const calendarLegend = document.getElementById("calendar-legend-content");
+                let legendContent = "";
 
                 // Check if any calendar is selected
                 if (!eventsCalendar && !tableCalendar) {
                     // No calendar selected, show the meme
                     calendarIframe.style.opacity = "0";
                     noSelectionContainer.style.display = "flex";
+                    calendarLegend.innerHTML = "<p><em>Select a calendar to see its description here.</em></p>";
                     calendarLegend.innerHTML = "<p><em>Select a calendar to see its description here.</em></p>";
                     return;
                 }
@@ -573,7 +593,7 @@
                 calendarIframe.src = calendarSrc;
 
                 // Update the legend content
-                calendarLegend.innerHTML = legendContent;
+                calendarLegend.innerHTML = legendContent || "<p><em>Select a calendar to see its description here.</em></p>";
             }
         </script>
     </body>
