@@ -428,31 +428,9 @@
 
                     <div class="calendar-legend">
                         <h3>Calendar Legend</h3>
-                        <div class="calendar-type">
-                            <div class="calendar-color blue-calendar"></div>
-                            <div>
-                                <strong>Events Calendar (Blue)</strong>: Shows
-                                all community events, workshops, and gatherings
-                                happening at bitcircus101.
-                            </div>
+                        <div id="calendar-legend-content">
+                            <p><em>Select a calendar to see its description here.</em></p>
                         </div>
-                        <div class="calendar-type">
-                            <div class="calendar-color green-calendar"></div>
-                            <div>
-                                <strong>Table Bookings Calendar (Green)</strong
-                                >: Shows reserved time slots for tables and
-                                workspaces.
-                                <em
-                                    >You can view the table booking calendar,
-                                    but the actual booking system is not yet in
-                                    place. Coming soon!</em
-                                >
-                            </div>
-                        </div>
-                        <p>
-                            To inquire about event participation, please contact
-                            us via email.
-                        </p>
                     </div>
                 </div>
             </section>
@@ -538,17 +516,16 @@
                 const tableCalendar =
                     document.getElementById("table-calendar").checked;
 
-                const calendarIframe =
-                    document.getElementById("calendar-iframe");
-                const noSelectionContainer = document.getElementById(
-                    "no-selection-container",
-                );
+                const calendarIframe = document.getElementById("calendar-iframe");
+                const noSelectionContainer = document.getElementById("no-selection-container");
+                const calendarLegend = document.getElementById("calendar-legend-content");
 
                 // Check if any calendar is selected
                 if (!eventsCalendar && !tableCalendar) {
                     // No calendar selected, show the meme
                     calendarIframe.style.opacity = "0";
                     noSelectionContainer.style.display = "flex";
+                    calendarLegend.innerHTML = "<p><em>Select a calendar to see its description here.</em></p>";
                     return;
                 }
 
@@ -562,13 +539,31 @@
                 if (eventsCalendar) {
                     calendarSrc +=
                         "src=e62c542fe796499243d6315da449d278d350b205a595d7933cf4a70d0f1dc4fb%40group.calendar.google.com&color=%234285F4";
+                    legendContent += `
+                        <div class="calendar-type">
+                            <div class="calendar-color blue-calendar"></div>
+                            <div>
+                                <strong>Events Calendar (Blue)</strong>: Shows
+                                all community events, workshops, and gatherings
+                                happening at bitcircus101.
+                            </div>
+                        </div>`;
                 }
 
-                // Add table calendar if checked (for future use)
+                // Add table calendar if checked
                 if (tableCalendar) {
                     if (eventsCalendar) calendarSrc += "&";
                     calendarSrc +=
                         "src=d3eef7243f29a490ebf055af39a45f0869aac7c46d6946f65abe60c04ec4059b%40group.calendar.google.com&color=%2333B679";
+                    legendContent += `
+                        <div class="calendar-type">
+                            <div class="calendar-color green-calendar"></div>
+                            <div>
+                                <strong>Table Bookings Calendar (Green)</strong>: Shows
+                                reserved time slots for tables and workspaces.
+                                <em>You can view the table booking calendar, but the actual booking system is not yet in place. Coming soon!</em>
+                            </div>
+                        </div>`;
                 }
 
                 // Add common params
@@ -576,6 +571,9 @@
 
                 // Update iframe src
                 calendarIframe.src = calendarSrc;
+
+                // Update the legend content
+                calendarLegend.innerHTML = legendContent;
             }
         </script>
     </body>
