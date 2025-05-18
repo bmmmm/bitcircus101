@@ -3,22 +3,22 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>BitCircus101 | Tech & Creative Space in Bonn, Germany</title>
+        <title>bitcircus101 | Tech & Creative Space in Bonn, Germany</title>
 
         <!-- Primary Meta Tags -->
         <meta
             name="title"
-            content="BitCircus101 | Tech & Creative Space in Bonn, Germany"
+            content="bitcircus101 | Tech & Creative Space in Bonn, Germany"
         />
         <meta
             name="description"
-            content="BitCircus101 is a calm, creative space at Dorotheenstraße 101 in Bonn for tech enthusiasts, artists, and anyone seeking a peaceful work environment with excellent internet connectivity."
+            content="bitcircus101 is a calm, creative space at Dorotheenstraße 101 in Bonn for tech enthusiasts, artists, and anyone seeking a peaceful work environment with excellent internet connectivity."
         />
         <meta
             name="keywords"
-            content="BitCircus101, coworking Bonn, tech space, creative space, digital community, hackerspace, maker space, Bonn workspace, community events, Dorotheenstraße"
+            content="bitcircus101, coworking Bonn, tech space, creative space, digital community, hackerspace, maker space, Bonn workspace, community events, Dorotheenstraße"
         />
-        <meta name="author" content="BitCircus101" />
+        <meta name="author" content="bitcircus101" />
         <meta name="robots" content="index, follow" />
         <meta name="language" content="English" />
         <meta name="revisit-after" content="7 days" />
@@ -28,7 +28,7 @@
         <meta property="og:url" content="https://bitcircus101.de/" />
         <meta
             property="og:title"
-            content="BitCircus101 | Tech & Creative Space in Bonn"
+            content="bitcircus101 | Tech & Creative Space in Bonn"
         />
         <meta
             property="og:description"
@@ -45,7 +45,7 @@
         <meta property="twitter:url" content="https://bitcircus101.de/" />
         <meta
             property="twitter:title"
-            content="BitCircus101 | Tech & Creative Space in Bonn"
+            content="bitcircus101 | Tech & Creative Space in Bonn"
         />
         <meta
             property="twitter:description"
@@ -151,16 +151,76 @@
             }
 
             /* Calendar */
+            /* Calendar container */
             .calendar-container {
                 display: flex;
                 justify-content: center;
                 margin: 30px 0;
                 flex-direction: column;
                 align-items: center;
+                position: relative;
             }
 
             iframe {
                 max-width: 100%;
+                transition: opacity 0.3s ease;
+            }
+
+            /* No selection meme container */
+            .no-selection-container {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 600px;
+                display: none;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: #f5f5f5;
+                border-radius: 5px;
+                text-align: center;
+                padding: 20px;
+                z-index: 1;
+            }
+
+            .no-selection-container img {
+                max-width: 70%;
+                max-height: 300px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .select-calendar-arrows {
+                display: flex;
+                justify-content: space-around;
+                width: 100%;
+                margin-top: 20px;
+                font-size: 2rem;
+                color: #4285f4;
+            }
+
+            /* Calendar controls */
+            .calendar-controls {
+                position: relative;
+                z-index: 2;
+                margin-top: 15px;
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .calendar-toggle {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+            }
+
+            .calendar-toggle input {
+                margin: 0;
             }
 
             /* Calendar legend */
@@ -250,27 +310,27 @@
 
         <div class="container">
             <section id="home">
-                <h1>Welcome to BitCircus101</h1>
+                <h1>Welcome to bitcircus101</h1>
                 <pre class="ascii-art">
   +------------------------------------------+
   |                                          |
-  |                BitCircus101              |
+  |                bitcircus101              |
   |                                          |
   |       +---------+        +-------+       |
-  |       |  [PC]   |        |  Art  |       |
+  |       |  Desk   |        |  Art  |       |
   |       +---------+        +-------+       |
   |                                          |
   |                                          |
   |  +------+                     +------+   |
   |  |      |                     |      |   |
-  |  | Sofa |       +-----+       | Desk |   |
+  |  |Chair |       +-----+       | Desk |   |
   |  |      |       |     |       |      |   |
   |  +------+       |Table|       +------+   |
   |                 |     |                  |
   |  +------+       +-----+       +------+   |
   |  |      |                     |      |   |
-  |  | Bean |                     |Shelf |   |
-  |  | Bag  |                     |      |   |
+  |  |Chair |                     |Shelf |   |
+  |  |      |                     |      |   |
   |  +------+                     +------+   |
   |                                          |
   |              +---------+                 |
@@ -287,9 +347,9 @@
             </section>
 
             <section id="about">
-                <h2>About BitCircus101</h2>
+                <h2>About bitcircus101</h2>
                 <p>
-                    BitCircus101 is a unique space located at Dorotheenstraße
+                    bitcircus101 is a unique space located at Dorotheenstraße
                     101 in Bonn, Germany. We're designed to be a sanctuary where
                     technology meets creativity. It's a place to relax and
                     connect with like-minded individuals in a peaceful
@@ -311,7 +371,7 @@
                 <p>
                     Whether you're working on your latest project, engaging in
                     thoughtful conversations, or simply enjoying the peaceful
-                    atmosphere, BitCircus101 provides the perfect setting for
+                    atmosphere, bitcircus101 provides the perfect setting for
                     your digital and creative endeavors in Bonn.
                 </p>
             </section>
@@ -325,13 +385,46 @@
                 </p>
                 <div class="calendar-container">
                     <iframe
-                        src="https://calendar.google.com/calendar/embed?src=e62c542fe796499243d6315da449d278d350b205a595d7933cf4a70d0f1dc4fb%40group.calendar.google.com&color=%234285F4&src=d3eef7243f29a490ebf055af39a45f0869aac7c46d6946f65abe60c04ec4059b%40group.calendar.google.com&color=%2333B679&ctz=Europe%2FBerlin&mode=WEEK"
+                        id="calendar-iframe"
+                        src="https://calendar.google.com/calendar/embed?src=e62c542fe796499243d6315da449d278d350b205a595d7933cf4a70d0f1dc4fb%40group.calendar.google.com&color=%234285F4&ctz=Europe%2FBerlin&mode=WEEK"
                         style="border: 0"
                         width="800"
                         height="600"
                         frameborder="0"
                         scrolling="no"
                     ></iframe>
+
+                    <div
+                        id="no-selection-container"
+                        class="no-selection-container"
+                    >
+                        <img
+                            src="https://images.unsplash.com/photo-1435527173128-983b87201f4d?q=80&w=2934&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="Confused looking at empty calendar"
+                        />
+                        <h3>Please select at least one calendar below</h3>
+                        <div class="select-calendar-arrows">
+                            <div>↓</div>
+                            <div>↓</div>
+                        </div>
+                    </div>
+
+                    <div class="calendar-controls">
+                        <label class="calendar-toggle">
+                            <input
+                                type="checkbox"
+                                id="events-calendar"
+                                checked
+                            />
+                            <div class="calendar-color blue-calendar"></div>
+                            <span>Events Calendar</span>
+                        </label>
+                        <label class="calendar-toggle">
+                            <input type="checkbox" id="table-calendar" />
+                            <div class="calendar-color green-calendar"></div>
+                            <span>Table Bookings Calendar (Preview)</span>
+                        </label>
+                    </div>
 
                     <div class="calendar-legend">
                         <h3>Calendar Legend</h3>
@@ -340,7 +433,7 @@
                             <div>
                                 <strong>Events Calendar (Blue)</strong>: Shows
                                 all community events, workshops, and gatherings
-                                happening at BitCircus101.
+                                happening at bitcircus101.
                             </div>
                         </div>
                         <div class="calendar-type">
@@ -348,13 +441,17 @@
                             <div>
                                 <strong>Table Bookings Calendar (Green)</strong
                                 >: Shows reserved time slots for tables and
-                                workspaces. Currently, there are 5 slots
-                                available each day for booking.
+                                workspaces.
+                                <em
+                                    >You can view the table booking calendar,
+                                    but the actual booking system is not yet in
+                                    place. Coming soon!</em
+                                >
                             </div>
                         </div>
                         <p>
-                            To make a booking or inquire about event
-                            participation, please contact us via email.
+                            To inquire about event participation, please contact
+                            us via email.
                         </p>
                     </div>
                 </div>
@@ -379,7 +476,7 @@
                     </p>
                     <div class="address">
                         <strong>Visit Us:</strong><br />
-                        BitCircus101<br />
+                        bitcircus101<br />
                         Dorotheenstraße 101<br />
                         53113 Bonn, Germany
                     </div>
@@ -418,6 +515,68 @@
                     }
                 });
             });
+
+            // Calendar toggle functionality
+            document
+                .getElementById("events-calendar")
+                .addEventListener("change", updateCalendar);
+            document
+                .getElementById("table-calendar")
+                .addEventListener("change", updateCalendar);
+                
+            // Initialize calendar view on page load
+            document.addEventListener("DOMContentLoaded", function() {
+                // Make sure events calendar is checked by default
+                document.getElementById("events-calendar").checked = true;
+                document.getElementById("table-calendar").checked = false;
+                updateCalendar();
+            });
+
+            function updateCalendar() {
+                const eventsCalendar =
+                    document.getElementById("events-calendar").checked;
+                const tableCalendar =
+                    document.getElementById("table-calendar").checked;
+
+                const calendarIframe =
+                    document.getElementById("calendar-iframe");
+                const noSelectionContainer = document.getElementById(
+                    "no-selection-container",
+                );
+
+                // Check if any calendar is selected
+                if (!eventsCalendar && !tableCalendar) {
+                    // No calendar selected, show the meme
+                    calendarIframe.style.opacity = "0";
+                    noSelectionContainer.style.display = "flex";
+                    return;
+                }
+
+                // At least one calendar is selected, hide the meme
+                calendarIframe.style.opacity = "1";
+                noSelectionContainer.style.display = "none";
+
+                let calendarSrc = "https://calendar.google.com/calendar/embed?";
+
+                // Add events calendar if checked
+                if (eventsCalendar) {
+                    calendarSrc +=
+                        "src=e62c542fe796499243d6315da449d278d350b205a595d7933cf4a70d0f1dc4fb%40group.calendar.google.com&color=%234285F4";
+                }
+
+                // Add table calendar if checked (for future use)
+                if (tableCalendar) {
+                    if (eventsCalendar) calendarSrc += "&";
+                    calendarSrc +=
+                        "src=d3eef7243f29a490ebf055af39a45f0869aac7c46d6946f65abe60c04ec4059b%40group.calendar.google.com&color=%2333B679";
+                }
+
+                // Add common params
+                calendarSrc += "&ctz=Europe%2FBerlin&mode=WEEK";
+
+                // Update iframe src
+                calendarIframe.src = calendarSrc;
+            }
         </script>
     </body>
 </html>
