@@ -257,10 +257,13 @@
                     Choose your preferred donation method below:
                 </p>
 
-                <div class="donation-buttons" id="donation-content" style="display: none;">
+                <div
+                    class="donation-buttons"
+                    id="donation-content"
+                    style="display: none; flex-direction: column; gap: 20px"
+                >
                     <div class="donation-item">
                         <h3>Donate via PayPal</h3>
-                        <p>Secure one-time or recurring donations through PayPal.</p>
                         <form
                             action="https://www.paypal.com/donate"
                             method="post"
@@ -288,10 +291,8 @@
                             />
                         </form>
                     </div>
-                    
                     <div class="donation-item">
                         <h3>Donate via Ko‑fi</h3>
-                        <p>Support us with a coffee or custom amount through Ko-fi.</p>
                         <iframe
                             id="kofiframe"
                             src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
@@ -305,8 +306,24 @@
                             title="bmabma"
                         ></iframe>
                     </div>
+                    <div class="donation-item">
+                        <h3>Donate via Stripe</h3>
+                        <form action="https://donate.stripe.com/8wM8zQ4QF7vV1cYbII" method="get" target="_blank">
+                            <button type="submit" style="background-color:#635bff;color:#fff;padding:12px 24px;border:none;border-radius:4px;font-size:1.1rem;cursor:pointer;">
+                                Donate with Stripe
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
+                <div id="decline-message" style="display: none; text-align: center; margin-top: 20px;">
+                    <p style="font-size: 3rem;">😢</p>
+                    <p>
+                        You declined cookie consent.<br>
+                        Please <a href="javascript:acceptCookies()">accept cookies</a> to view online donation options,<br>
+                        or <strong>decline </strong>and donate onsite at bitcircus101!</strong>
+                    </p>
+                </div>
                 <div class="back-link">
                     <a href="index.html">← Back to Home Page</a>
                 </div>
@@ -343,7 +360,8 @@
             }
 
             function declineCookies() {
-                window.location.href = 'index.html';
+                document.getElementById('decline-message').style.display = 'block';
+                document.getElementById('donation-content').style.display = 'none';
             }
 
             // Toggle mobile menu
