@@ -105,8 +105,8 @@
                 text-align: center;
             }
 
-            /* Cookie Banner */
-            .cookie-banner {
+            /* Site Notice (was Cookie Banner) */
+            .site-notice {
                 position: fixed;
                 top: 50%;
                 left: 50%;
@@ -123,12 +123,12 @@
                 max-width: 90vw;
             }
 
-            .cookie-banner p {
+            .site-notice p {
                 margin: 0 0 15px 0;
                 font-size: 14px;
             }
 
-            .cookie-banner button {
+            .site-notice button {
                 background-color: #4285f4;
                 color: white;
                 border: none;
@@ -141,20 +141,20 @@
                 box-shadow: 0 2px 8px rgba(66,133,244,0.10);
             }
 
-            .cookie-banner button:hover,
-            .cookie-banner button:focus {
+            .site-notice button:hover,
+            .site-notice button:focus {
                 background-color: #357ae8;
                 transform: translateY(-2px) scale(1.04);
                 box-shadow: 0 4px 16px rgba(66,133,244,0.18);
             }
 
-            .cookie-banner .decline {
+            .site-notice .decline {
                 background-color: #666;
                 transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
             }
 
-            .cookie-banner .decline:hover,
-            .cookie-banner .decline:focus {
+            .site-notice .decline:hover,
+            .site-notice .decline:focus {
                 background-color: #555;
                 transform: translateY(-2px) scale(1.04);
                 box-shadow: 0 4px 16px rgba(66,133,244,0.10);
@@ -230,14 +230,19 @@
         </style>
     </head>
     <body>
-        <!-- Cookie Banner -->
-        <div id="cookie-banner" class="cookie-banner">
+        <!-- Site Notice (was Cookie Banner) -->
+        <div id="site-notice" class="site-notice">
             <p>
-                <strong>Cookie Notice:</strong> This page uses third-party payment services (PayPal, Ko-fi) that may set cookies to process donations securely. 
-                These services are essential for donation processing and are governed by their respective privacy policies.
+                <strong>Notice:</strong> This page uses third-party services (PayPal, Ko-fi, OpenStreetMap) that may set cookies to process donations securely or display maps. 
+                Additionally, our hosting provider uses Cloudflare, which may set a <code>cf_clearance</code> cookie for security and DDoS protection.
             </p>
+            <ul style="text-align:left; margin: 0 auto 10px auto; max-width: 500px; font-size: 0.97em;">
+                <li><strong>PayPal, Ko-fi:</strong> Cookies for secure payment processing (see their privacy policies).</li>
+                <li><strong>OpenStreetMap:</strong> Cookies may be set when viewing the map for technical and analytics purposes.</li>
+                <li><strong>Cloudflare:</strong> <code>cf_clearance</code> cookie for security and access reliability.</li>
+            </ul>
             <p>
-                By clicking "Accept & Continue", you consent to the use of cookies by these payment services. 
+                By clicking "Accept & Continue", you consent to the use of cookies by these services. 
                 <a href="privacy.html" style="color: #4285f4;">Learn more about our privacy policy</a>.
             </p>
             <button onclick="acceptCookies()">Accept & Continue</button>
@@ -343,31 +348,33 @@
                 if (consent === 'accepted') {
                     showDonationContent();
                 } else {
-                    showCookieBanner();
+                    showSiteNotice();
                 }
             }
 
-            function showCookieBanner() {
-                document.getElementById('cookie-banner').style.display = 'block';
+            function showSiteNotice() {
+                document.getElementById('site-notice').style.display = 'block';
             }
 
-            function hideCookieBanner() {
-                document.getElementById('cookie-banner').style.display = 'none';
+            function hideSiteNotice() {
+                document.getElementById('site-notice').style.display = 'none';
             }
 
             function showDonationContent() {
                 document.getElementById('donation-content').style.display = 'flex';
-                hideCookieBanner();
+                hideSiteNotice();
             }
 
             function acceptCookies() {
                 localStorage.setItem('bitcircus-cookie-consent', 'accepted');
                 showDonationContent();
+                hideSiteNotice();
             }
 
             function declineCookies() {
                 document.getElementById('decline-message').style.display = 'block';
                 document.getElementById('donation-content').style.display = 'none';
+                hideSiteNotice();
             }
 
             // Toggle mobile menu
