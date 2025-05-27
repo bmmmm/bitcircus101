@@ -339,6 +339,26 @@
                         Dorotheenstraße 101<br />
                         53113 Bonn, Germany
                     </div>
+                    <div style="margin-top: 20px;">
+                        <button id="show-map-btn" style="padding: 10px 20px; background: #4285f4; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+                            Show Map
+                        </button>
+                    </div>
+                    <div id="osm-map-container" style="display:none; margin-top: 20px;">
+                        <iframe
+                            id="osm-map"
+                            width="100%"
+                            height="350"
+                            frameborder="0"
+                            scrolling="no"
+                            style="border-radius: 8px; border: 1px solid #ccc;"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=7.086424%2C50.738492%2C7.092424%2C50.742492&amp;layer=mapnik&amp;marker=50.740492,7.089424"
+                            allowfullscreen
+                        ></iframe>
+                        <div style="font-size: 0.9em; margin-top: 4px;">
+                            <a href="https://www.openstreetmap.org/?mlat=50.740492&amp;mlon=7.089424#map=18/50.740492/7.089424" target="_blank" rel="noopener" style="color:#4285f4;">View Larger Map</a>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
@@ -353,25 +373,43 @@
                         .classList.toggle("active");
                 });
 
+            // Show OSM map on button click
+            document.addEventListener("DOMContentLoaded", function () {
+                var showMapBtn = document.getElementById("show-map-btn");
+                var mapContainer = document.getElementById("osm-map-container");
+                var osmMap = document.getElementById("osm-map");
+                if (showMapBtn && mapContainer && osmMap) {
+                    showMapBtn.addEventListener("click", function () {
+                        // Set src to center the pin on click (forces reload/center)
+                        osmMap.src = "https://www.openstreetmap.org/export/embed.html?bbox=7.086424%2C50.738492%2C7.092424%2C50.742492&layer=mapnik&marker=50.740492,7.089424";
+                        mapContainer.style.display = "block";
+                        showMapBtn.style.display = "none";
+                    });
+                }
+            });
+
             // Smooth scrolling for navigation links
             document.querySelectorAll("nav a").forEach((anchor) => {
                 anchor.addEventListener("click", function (e) {
-                    e.preventDefault();
-
-                    const targetId = this.getAttribute("href");
-                    const targetElement = document.querySelector(targetId);
-
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 70,
-                        behavior: "smooth",
-                    });
-
-                    // Close mobile menu after clicking a link
-                    if (window.innerWidth <= 768) {
-                        document
-                            .getElementById("main-nav")
-                            .classList.remove("active");
+                    const href = this.getAttribute("href");
+                    // Only handle smooth scroll for anchor links on this page
+                    if (href.startsWith("#")) {
+                        e.preventDefault();
+                        const targetElement = document.querySelector(href);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 70,
+                                behavior: "smooth",
+                            });
+                        }
+                        // Close mobile menu after clicking a link
+                        if (window.innerWidth <= 768) {
+                            document
+                                .getElementById("main-nav")
+                                .classList.remove("active");
+                        }
                     }
+                    // For external links (donations.html, privacy.html, imprint.html), let default behavior occur
                 });
             });
 
