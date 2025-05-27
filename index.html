@@ -40,20 +40,15 @@
         />
         <meta property="og:locale" content="en_US" />
 
-        <!-- Twitter -->
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:url" content="https://bitcircus101.de/" />
+        <!-- Instagram -->
+        <meta property="instagram:url" content="https://www.instagram.com/bitcircus101/" />
         <meta
-            property="twitter:title"
+            property="instagram:title"
             content="bitcircus101 | Tech & Creative Space in Bonn"
         />
         <meta
-            property="twitter:description"
+            property="instagram:description"
             content="A peaceful tech and creative community space at Dorotheenstraße 101 in Bonn with events, workshops, and bookable workspaces."
-        />
-        <meta
-            property="twitter:image"
-            content="https://bitcircus101.de/images/bitcircus-twitter-image.jpg"
         />
 
         <!-- Geo Tags -->
@@ -151,108 +146,16 @@
             }
 
             /* Calendar */
-            /* Calendar container */
             .calendar-container {
                 display: flex;
                 justify-content: center;
                 margin: 30px 0;
                 flex-direction: column;
                 align-items: center;
-                position: relative;
             }
 
             iframe {
                 max-width: 100%;
-                transition: opacity 0.3s ease;
-            }
-
-            /* No selection meme container */
-            .no-selection-container {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 600px;
-                display: none;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                background-color: #f5f5f5;
-                border-radius: 5px;
-                text-align: center;
-                padding: 20px;
-                z-index: 1;
-            }
-
-            .no-selection-container img {
-                max-width: 70%;
-                max-height: 300px;
-                margin-bottom: 20px;
-                border-radius: 5px;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            }
-
-            .select-calendar-arrows {
-                display: flex;
-                justify-content: space-around;
-                width: 100%;
-                margin-top: 20px;
-                font-size: 2rem;
-                color: #4285f4;
-            }
-
-            /* Calendar controls */
-            .calendar-controls {
-                position: relative;
-                z-index: 2;
-                margin-top: 15px;
-                display: flex;
-                justify-content: center;
-                gap: 15px;
-                flex-wrap: wrap;
-            }
-
-            .calendar-toggle {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                cursor: pointer;
-            }
-
-            .calendar-toggle input {
-                margin: 0;
-            }
-
-            /* Calendar legend */
-            .calendar-legend {
-                margin-top: 15px;
-                padding: 15px;
-                border-radius: 5px;
-                background-color: #f9f9f9;
-                border: 1px solid #eee;
-                width: 100%;
-                max-width: 800px;
-            }
-
-            .calendar-type {
-                display: flex;
-                align-items: center;
-                margin-bottom: 10px;
-            }
-
-            .calendar-color {
-                width: 20px;
-                height: 20px;
-                border-radius: 3px;
-                margin-right: 10px;
-            }
-
-            .blue-calendar {
-                background-color: #4285f4;
-            }
-
-            .green-calendar {
-                background-color: #33b679;
             }
 
             /* Contact Section */
@@ -273,24 +176,6 @@
                 .menu-toggle {
                     display: block;
                     margin: 0 auto;
-                    legendContent += `
-                        <div class="calendar-type">
-                            <div class="calendar-color blue-calendar"></div>
-                            <div>
-                                <strong>Events Calendar (Blue)</strong>: Shows
-                                all community events, workshops, and gatherings
-                                happening at bitcircus101.
-                            </div>
-                        </div>`;
-                    legendContent += `
-                        <div class="calendar-type">
-                            <div class="calendar-color green-calendar"></div>
-                            <div>
-                                <strong>Table Bookings Calendar (Green)</strong>: Shows
-                                reserved time slots for tables and workspaces.
-                                <em>You can view the table booking calendar, but the actual booking system is not yet in place. Coming soon!</em>
-                            </div>
-                        </div>`;
                 }
 
                 nav ul {
@@ -321,7 +206,10 @@
                     <li><a href="#home">Home</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#events">Events</a></li>
+                    <li><a href="donations.html">Donations</a></li>
                     <li><a href="#contact">Contact</a></li>
+                    <li><a href="privacy.html">Privacy</a></li>
+                    <li><a href="imprint.html">Imprint</a></li>
                 </ul>
             </nav>
         </header>
@@ -402,117 +290,30 @@
                     latest schedule.
                 </p>
                 <div class="calendar-container">
-                    <iframe
-                        id="calendar-iframe"
-                        src="https://calendar.google.com/calendar/embed?src=e62c542fe796499243d6315da449d278d350b205a595d7933cf4a70d0f1dc4fb%40group.calendar.google.com&color=%234285F4&ctz=Europe%2FBerlin&mode=WEEK"
-                        style="border: 0"
-                        width="800"
-                        height="600"
+                    <iframe 
+                        width="800" 
+                        height="600" 
+                        src="https://nc.6bm.de/apps/calendar/embed/DCaFSYECrcTJRJjC?view=list"
+                        style="border: 0; max-width: 100%;"
                         frameborder="0"
                         scrolling="no"
                     ></iframe>
-
-                    <div
-                        id="no-selection-container"
-                        class="no-selection-container"
-                    >
-                        <img
-                            src="https://images.unsplash.com/photo-1435527173128-983b87201f4d?q=80&w=2934&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            alt="Confused looking at empty calendar"
-                        />
-                        <h3>Please select at least one calendar below</h3>
-                        <div class="select-calendar-arrows">
-                            <div>↓</div>
-                            <div>↓</div>
-                        </div>
-                    </div>
-
-                    <div class="calendar-controls">
-                        <label class="calendar-toggle">
-                            <input
-                                type="checkbox"
-                                id="events-calendar"
-                                checked
-                            />
-                            <div class="calendar-color blue-calendar"></div>
-                            <span>Events Calendar</span>
-                        </label>
-                        <label class="calendar-toggle">
-                            <input type="checkbox" id="table-calendar" />
-                            <div class="calendar-color green-calendar"></div>
-                            <span>Table Bookings Calendar (Preview)</span>
-                        </label>
-                    </div>
-
-                    <div class="calendar-legend">
-                        <h3>Calendar Legend</h3>
-                        <div id="calendar-legend-content">
-                            <p>
-                                <em
-                                    >Select a calendar to see its description
-                                    here.</em
-                                >
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </section>
 
             <section id="donations">
                 <h2>Support bitcircus101</h2>
                 <p>
-                    Your donations help sustain our creative space. Choose your
-                    preferred method below:
+                    Your donations help sustain our creative space and keep our community thriving.
                 </p>
-                <div
-                    class="donation-buttons"
-                    style="display: flex; flex-direction: column; gap: 20px"
-                >
-                    <div class="donation-item">
-                        <h3>Donate via PayPal</h3>
-                        <form
-                            action="https://www.paypal.com/donate"
-                            method="post"
-                            target="_top"
-                        >
-                            <input
-                                type="hidden"
-                                name="hosted_button_id"
-                                value="ZF34GXRRDRF8E"
-                            />
-                            <input
-                                type="image"
-                                src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
-                                border="0"
-                                name="submit"
-                                title="PayPal - The safer, easier way to pay online!"
-                                alt="Donate with PayPal button"
-                            />
-                            <img
-                                alt=""
-                                border="0"
-                                src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
-                                width="1"
-                                height="1"
-                            />
-                        </form>
-                    </div>
-                    <div class="donation-item">
-                        <h3>Donate via Ko‑fi</h3>
-                        <iframe
-                            id="kofiframe"
-                            src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
-                            style="
-                                border: none;
-                                width: 100%;
-                                padding: 4px;
-                                background: #f9f9f9;
-                            "
-                            height="712"
-                            title="bmabma"
-                        ></iframe>
-                    </div>
-                </div>
+                <p style="text-align: center; margin-top: 20px;">
+                    <a href="donations.html" style="display: inline-block; padding: 15px 30px; background-color: #4285f4; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                        Donate Now
+                    </a>
+                </p>
+                <p style="font-size: 0.9em; color: #666; text-align: center; margin-top: 15px;">
+                    <em>Note: Our donation page uses third-party payment services that may set cookies. By proceeding, you agree to their terms of service.</em>
+                </p>
             </section>
 
             <section id="contact">
@@ -574,98 +375,7 @@
                 });
             });
 
-            // Calendar toggle functionality
-            document
-                .getElementById("events-calendar")
-                .addEventListener("change", updateCalendar);
-            document
-                .getElementById("table-calendar")
-                .addEventListener("change", updateCalendar);
-
-            // Initialize calendar view on page load
-            document.addEventListener("DOMContentLoaded", function () {
-                // Make sure events calendar is checked by default
-                document.getElementById("events-calendar").checked = true;
-                document.getElementById("table-calendar").checked = false;
-                updateCalendar();
-            });
-
-            function updateCalendar() {
-                const eventsCalendar =
-                    document.getElementById("events-calendar").checked;
-                const tableCalendar =
-                    document.getElementById("table-calendar").checked;
-
-                const calendarIframe =
-                    document.getElementById("calendar-iframe");
-                const noSelectionContainer = document.getElementById(
-                    "no-selection-container",
-                );
-                const calendarLegend = document.getElementById(
-                    "calendar-legend-content",
-                );
-                let legendContent = "";
-
-                // Check if any calendar is selected
-                if (!eventsCalendar && !tableCalendar) {
-                    // No calendar selected, show the meme
-                    calendarIframe.style.opacity = "0";
-                    noSelectionContainer.style.display = "flex";
-                    calendarLegend.innerHTML =
-                        "<p><em>Select a calendar to see its description here.</em></p>";
-                    calendarLegend.innerHTML =
-                        "<p><em>Select a calendar to see its description here.</em></p>";
-                    return;
-                }
-
-                // At least one calendar is selected, hide the meme
-                calendarIframe.style.opacity = "1";
-                noSelectionContainer.style.display = "none";
-
-                let calendarSrc = "https://calendar.google.com/calendar/embed?";
-
-                // Add events calendar if checked
-                if (eventsCalendar) {
-                    calendarSrc +=
-                        "src=e62c542fe796499243d6315da449d278d350b205a595d7933cf4a70d0f1dc4fb%40group.calendar.google.com&color=%234285F4";
-                    legendContent += `
-                        <div class="calendar-type">
-                            <div class="calendar-color blue-calendar"></div>
-                            <div>
-                                <strong>Events Calendar (Blue)</strong>: Shows
-                                all community events, workshops, and gatherings
-                                happening at bitcircus101.
-                            </div>
-                        </div>`;
-                }
-
-                // Add table calendar if checked
-                if (tableCalendar) {
-                    if (eventsCalendar) calendarSrc += "&";
-                    calendarSrc +=
-                        "src=d3eef7243f29a490ebf055af39a45f0869aac7c46d6946f65abe60c04ec4059b%40group.calendar.google.com&color=%2333B679";
-                    legendContent += `
-                        <div class="calendar-type">
-                            <div class="calendar-color green-calendar"></div>
-                            <div>
-                                <strong>Table Bookings Calendar (Green)</strong>: Shows
-                                reserved time slots for tables and workspaces.
-                                <em>You can view the table booking calendar, but the actual booking system is not yet in place. Coming soon!</em>
-                            </div>
-                        </div>`;
-                }
-
-                // Add common params
-                calendarSrc += "&ctz=Europe%2FBerlin&mode=WEEK";
-
-                // Update iframe src
-                calendarIframe.src = calendarSrc;
-
-                // Update the legend content
-                calendarLegend.innerHTML =
-                    legendContent ||
-                    "<p><em>Select a calendar to see its description here.</em></p>";
-            }
+            // Calendar is now static, no toggle functionality needed
         </script>
     </body>
 </html>

@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Support bitcircus101 | Donations</title>
+
+        <!-- Primary Meta Tags -->
+        <meta
+            name="title"
+            content="Support bitcircus101 | Donations"
+        />
+        <meta
+            name="description"
+            content="Support bitcircus101 with your donation. Help us maintain our creative and tech space in Bonn, Germany."
+        />
+        <meta name="robots" content="index, follow" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bitcircus101.de/donations.html" />
+        <meta
+            property="og:title"
+            content="Support bitcircus101 | Donations"
+        />
+        <meta
+            property="og:description"
+            content="Support bitcircus101 with your donation. Help us maintain our creative and tech space in Bonn, Germany."
+        />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://bitcircus101.de/donations.html" />
+
+        <style>
+            /* Base styles */
+            body {
+                font-family: "Courier New", monospace;
+                line-height: 1.6;
+                color: #333;
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f5;
+            }
+
+            .container {
+                width: 90%;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            /* Navigation */
+            header {
+                background-color: #333;
+                padding: 10px 0;
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            nav ul {
+                list-style: none;
+                display: flex;
+                justify-content: center;
+                padding: 0;
+                margin: 0;
+            }
+
+            nav li {
+                margin: 0 15px;
+            }
+
+            nav a {
+                color: #fff;
+                text-decoration: none;
+                font-size: 1.2rem;
+                transition: color 0.3s;
+            }
+
+            nav a:hover {
+                color: #aaa;
+            }
+
+            .menu-toggle {
+                display: none;
+                color: white;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 10px;
+            }
+
+            /* Sections */
+            section {
+                margin: 40px 0;
+                padding: 20px;
+                background-color: #fff;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            h1,
+            h2 {
+                text-align: center;
+            }
+
+            /* Cookie Banner */
+            .cookie-banner {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background-color: #333;
+                color: white;
+                padding: 20px;
+                text-align: center;
+                z-index: 1000;
+                display: none;
+            }
+
+            .cookie-banner p {
+                margin: 0 0 15px 0;
+                font-size: 14px;
+            }
+
+            .cookie-banner button {
+                background-color: #4285f4;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                margin: 0 10px;
+                border-radius: 3px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+            .cookie-banner button:hover {
+                background-color: #357ae8;
+            }
+
+            .cookie-banner .decline {
+                background-color: #666;
+            }
+
+            .cookie-banner .decline:hover {
+                background-color: #555;
+            }
+
+            /* Donation sections */
+            .donation-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                margin-top: 30px;
+            }
+
+            .donation-item {
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+                text-align: center;
+            }
+
+            .donation-item h3 {
+                margin-top: 0;
+                color: #333;
+            }
+
+            .back-link {
+                text-align: center;
+                margin: 30px 0;
+            }
+
+            .back-link a {
+                color: #4285f4;
+                text-decoration: none;
+                font-size: 1.1rem;
+            }
+
+            .back-link a:hover {
+                text-decoration: underline;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .menu-toggle {
+                    display: block;
+                    margin: 0 auto;
+                }
+
+                nav ul {
+                    flex-direction: column;
+                    align-items: center;
+                    display: none;
+                }
+
+                nav.active ul {
+                    display: flex;
+                }
+
+                nav li {
+                    margin: 10px 0;
+                }
+
+                .cookie-banner {
+                    font-size: 12px;
+                }
+
+                .cookie-banner button {
+                    display: block;
+                    width: 100%;
+                    margin: 5px 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Cookie Banner -->
+        <div id="cookie-banner" class="cookie-banner">
+            <p>
+                <strong>Cookie Notice:</strong> This page uses third-party payment services (PayPal, Ko-fi) that may set cookies to process donations securely. 
+                These services are essential for donation processing and are governed by their respective privacy policies.
+            </p>
+            <p>
+                By clicking "Accept & Continue", you consent to the use of cookies by these payment services. 
+                <a href="privacy.html" style="color: #4285f4;">Learn more about our privacy policy</a>.
+            </p>
+            <button onclick="acceptCookies()">Accept & Continue</button>
+            <button class="decline" onclick="declineCookies()">Decline & Go Back</button>
+        </div>
+
+        <header>
+            <nav id="main-nav">
+                <button class="menu-toggle" id="menu-toggle">☰ Menu</button>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#events">Events</a></li>
+                    <li><a href="donations.html">Donations</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                    <li><a href="privacy.html">Privacy</a></li>
+                    <li><a href="imprint.html">Imprint</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="container">
+            <section>
+                <h1>Support bitcircus101</h1>
+                <p style="text-align: center; font-size: 1.1rem;">
+                    Your generous donations help us maintain our creative and tech space in Bonn. 
+                    Every contribution, no matter the size, makes a difference in keeping our community thriving.
+                </p>
+                <p style="text-align: center; color: #666;">
+                    Choose your preferred donation method below:
+                </p>
+
+                <div class="donation-buttons" id="donation-content" style="display: none;">
+                    <div class="donation-item">
+                        <h3>Donate via PayPal</h3>
+                        <p>Secure one-time or recurring donations through PayPal.</p>
+                        <form
+                            action="https://www.paypal.com/donate"
+                            method="post"
+                            target="_top"
+                        >
+                            <input
+                                type="hidden"
+                                name="hosted_button_id"
+                                value="ZF34GXRRDRF8E"
+                            />
+                            <input
+                                type="image"
+                                src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
+                                border="0"
+                                name="submit"
+                                title="PayPal - The safer, easier way to pay online!"
+                                alt="Donate with PayPal button"
+                            />
+                            <img
+                                alt=""
+                                border="0"
+                                src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
+                                width="1"
+                                height="1"
+                            />
+                        </form>
+                    </div>
+                    
+                    <div class="donation-item">
+                        <h3>Donate via Ko‑fi</h3>
+                        <p>Support us with a coffee or custom amount through Ko-fi.</p>
+                        <iframe
+                            id="kofiframe"
+                            src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
+                            style="
+                                border: none;
+                                width: 100%;
+                                padding: 4px;
+                                background: #f9f9f9;
+                            "
+                            height="712"
+                            title="bmabma"
+                        ></iframe>
+                    </div>
+                </div>
+
+                <div class="back-link">
+                    <a href="index.html">← Back to Home Page</a>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            // Check if cookies were already accepted
+            function checkCookieConsent() {
+                const consent = localStorage.getItem('bitcircus-cookie-consent');
+                if (consent === 'accepted') {
+                    showDonationContent();
+                } else {
+                    showCookieBanner();
+                }
+            }
+
+            function showCookieBanner() {
+                document.getElementById('cookie-banner').style.display = 'block';
+            }
+
+            function hideCookieBanner() {
+                document.getElementById('cookie-banner').style.display = 'none';
+            }
+
+            function showDonationContent() {
+                document.getElementById('donation-content').style.display = 'flex';
+                hideCookieBanner();
+            }
+
+            function acceptCookies() {
+                localStorage.setItem('bitcircus-cookie-consent', 'accepted');
+                showDonationContent();
+            }
+
+            function declineCookies() {
+                window.location.href = 'index.html';
+            }
+
+            // Toggle mobile menu
+            document
+                .getElementById("menu-toggle")
+                .addEventListener("click", function () {
+                    document
+                        .getElementById("main-nav")
+                        .classList.toggle("active");
+                });
+
+            // Initialize on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                checkCookieConsent();
+            });
+        </script>
+    </body>
+</html>
