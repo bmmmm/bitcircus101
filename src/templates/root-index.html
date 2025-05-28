@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>bitcircus101 | Choose your</title> language</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        background: #181c1f;
+        color: #fff;
+        font-family: "Fira Mono", "Courier New", monospace;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .ascii-art {
+        font-size: 1.1em;
+        color: #00ffea;
+        text-shadow: 0 0 8px #00ffea88;
+        margin-bottom: 2em;
+        white-space: pre;
+        text-align: center;
+        user-select: none;
+      }
+      .lang-selector {
+        display: flex;
+        gap: 2em;
+        margin-top: 1em;
+      }
+      .lang-btn {
+        background: #23272b;
+        color: #fff;
+        border: 2px solid #00ffea;
+        border-radius: 8px;
+        padding: 1.5em 2.5em;
+        font-size: 1.5em;
+        font-family: inherit;
+        cursor: pointer;
+        transition: 
+          box-shadow 0.2s,
+          background 0.2s,
+          color 0.2s,
+          border-color 0.2s;
+        box-shadow: 0 0 0 #00ffea;
+        position: relative;
+        overflow: hidden;
+      }
+      .lang-btn.left:hover {
+        background: #1e2b3a;
+        color: #00ffea;
+        box-shadow: -2px 0 32px #00ffea88, 0 0 8px #00ffea;
+        border-color: #fff;
+        z-index: 2;
+      }
+      .lang-btn.right:hover {
+        background: #2b1e3a;
+        color: #ff00ea;
+        box-shadow: 2px 0 32px #ff00ea88, 0 0 8px #ff00ea;
+        border-color: #fff;
+        z-index: 2;
+      }
+      .lang-btn:active {
+        transform: scale(0.97);
+      }
+      .lang-btn span {
+        pointer-events: none;
+      }
+      @media (max-width: 600px) {
+        .lang-selector {
+          flex-direction: column;
+          gap: 1.5em;
+        }
+        .lang-btn {
+          width: 100%;
+        }
+      }
+      .footer {
+        margin-top: 3em;
+        color: #888;
+        font-size: 0.95em;
+        text-align: center;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ascii-art">
+{ bitcircus101 }
+    </div>
+    <div style="text-align: center; margin-bottom: 1.5em;">
+      <span style="font-size: 1.2em;">Choose your language / Wähle deine Sprache</span>
+    </div>
+    <div class="lang-selector">
+      <button class="lang-btn left" onclick="window.location.href='/en/'">
+        <span>English</span>
+      </button</span>>
+      <button class="lang-btn right" onclick="window.location.href='/de/'">
+        <span>Deutsch</span>
+      </</span>button>
+    </div>
+    <div class="footer">
+      <span>
+        <span style="color:#00ffea;">&lt;/&gt;</span> with <span style="color:#ff00ea;">&#10084;</span> by bitcircus101
+      </span>
+    </div>
+  </body>
+</html>

@@ -1,6 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+  // Copy root-index.html to project root as index.html (language selector landing page)
+  const rootIndexPath = path.join(templatesDir, 'root-index.html');
+  if (fs.existsSync(rootIndexPath)) {
+    fs.copyFileSync(rootIndexPath, path.join(__dirname, 'index.html'));
+  }
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
