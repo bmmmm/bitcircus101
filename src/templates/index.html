@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="{{lang}}">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{site_title}}</title>
+    <!-- SEO: alternate language links -->
+    <link rel="alternate" hreflang="en" href="/en/index.html" />
+    <link rel="alternate" hreflang="de" href="/de/index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- ...other meta tags as needed... -->
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="index.html">{{nav_home}}</a></li>
+        <li><a href="about.html">{{nav_about}}</a></li>
+        <li><a href="events.html">{{nav_events}}</a></li>
+        <li><a href="donations.html">{{nav_donations}}</a></li>
+        <li><a href="contact.html">{{nav_contact}}</a></li>
+        <li><a href="privacy.html">{{nav_privacy}}</a></li>
+        <li><a href="imprint.html">{{nav_imprint}}</a></li>
+      </ul>
+      <!-- Language toggle -->
+      <select id="lang-toggle">
+        <option value="en" {{en_selected}}>English</option>
+        <option value="de" {{de_selected}}>Deutsch</option>
+      </select>
+    </nav>
+    <main>
+      <h1>{{welcome_heading}}</h1>
+      <p>{{welcome_text}}</p>
+      <a href="donations.html">{{donate_now}}</a>
+    </main>
+    <script src="/assets/lang-toggle.js"></script>
+  </body>
+</html>
