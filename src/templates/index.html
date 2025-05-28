@@ -10,28 +10,27 @@
     <!-- ...other meta tags as needed... -->
   </head>
   <body>
-    <nav style="display: flex; align-items: center; justify-content: space-between;">
-      <ul style="margin: 0; padding: 0; display: flex; list-style: none;">
+    <nav style="display: flex; align-items: center; justify-content: center; font-size: 1.1em;">
+      <ul style="margin: 0; padding: 0; display: flex; list-style: none; gap: 1.5em;">
         <li><a href="index.html">{{nav_home}}</a></li>
         <li><a href="about.html">{{nav_about}}</a></li>
         <li><a href="events.html">{{nav_events}}</a></li>
         <li><a href="donations.html">{{nav_donations}}</a></li>
         <li><a href="contact.html">{{nav_contact}}</a></li>
         <li><a href="privacy.html">{{nav_privacy}}</a></li>
-        <li><a href="imprint.html">{{nav_imprint}}</a></li>
+        <li style="display: flex; align-items: center; gap: 0.5em;">
+          <a href="imprint.html">{{nav_imprint}}</a>
+          <select id="lang-toggle" style="padding: 4px 8px; font-size: 1em;">
+            <option value="en" {{en_selected}}>English</option>
+            <option value="de" {{de_selected}}>Deutsch</option>
+          </select>
+        </li>
       </ul>
-      <!-- Language toggle -->
-      <div style="margin-left: auto;">
-        <select id="lang-toggle" style="padding: 4px 8px; font-size: 1em;">
-          <option value="en" {{en_selected}}>English</option>
-          <option value="de" {{de_selected}}>Deutsch</option>
-        </select>
-      </div>
     </nav>
-    <main>
-      <h1>{{welcome_heading}}</h1>
-      <p>{{welcome_text}}</p>
-      <a href="donations.html">{{donate_now}}</a>
+    <main style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center;">
+      <h1 style="font-size: 2.2em; margin-bottom: 0.5em;">{{welcome_heading}}</h1>
+      <p style="max-width: 600px; font-size: 1.2em; margin-bottom: 1.5em;">{{welcome_text}}</p>
+      <a href="donations.html" style="padding: 12px 28px; background: #4285f4; color: #fff; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 1.1em;">{{donate_now}}</a>
     </main>
     <script src="/assets/lang-toggle.js"></script>
   </body>
