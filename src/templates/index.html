@@ -10,8 +10,8 @@
     <!-- ...other meta tags as needed... -->
   </head>
   <body>
-    <nav>
-      <ul>
+    <nav style="display: flex; align-items: center; justify-content: space-between;">
+      <ul style="margin: 0; padding: 0; display: flex; list-style: none;">
         <li><a href="index.html">{{nav_home}}</a></li>
         <li><a href="about.html">{{nav_about}}</a></li>
         <li><a href="events.html">{{nav_events}}</a></li>
@@ -21,10 +21,12 @@
         <li><a href="imprint.html">{{nav_imprint}}</a></li>
       </ul>
       <!-- Language toggle -->
-      <select id="lang-toggle">
-        <option value="en" {{en_selected}}>English</option>
-        <option value="de" {{de_selected}}>Deutsch</option>
-      </select>
+      <div style="margin-left: auto;">
+        <select id="lang-toggle" style="padding: 4px 8px; font-size: 1em;">
+          <option value="en" {{en_selected}}>English</option>
+          <option value="de" {{de_selected}}>Deutsch</option>
+        </select>
+      </div>
     </nav>
     <main>
       <h1>{{welcome_heading}}</h1>
