@@ -41,10 +41,10 @@ function build() {
     }
   }
 
-  // Build each template for each language
+  // Build each template for each language (skip root-index.html, which is only for the root selector)
   const templates = fs
     .readdirSync(templatesDir)
-    .filter((f) => f.endsWith(".html") && !f.startsWith("root-index"));
+    .filter((f) => f.endsWith(".html") && f !== "root-index.html");
   for (const lang of languages) {
     const translations = JSON.parse(
       fs.readFileSync(path.join(translationsDir, `${lang}.json`), "utf8"),
