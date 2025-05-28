@@ -1,8 +1,12 @@
 // Optional: Auto-translate missing keys using LibreTranslate (for local use)
 // Usage: node src/translate-missing.js
-const fetch = require('node-fetch');
-const fs = require('fs');
-const path = require('path');
+import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const enPath = path.join(__dirname, 'translations', 'en.json');
 const dePath = path.join(__dirname, 'translations', 'de.json');
