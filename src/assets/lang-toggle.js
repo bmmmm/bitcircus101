@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!langToggle) return;
   langToggle.addEventListener('change', function () {
     const lang = langToggle.value;
-    // Get current page filename (e.g., "about.html")
-    const page = window.location.pathname.split('/').pop() || 'index.html';
-    // Redirect to the same page in the other language
-    window.location.href = `/${lang}/${page}`;
+    // Always go to the root of the selected language
+    window.location.href = `/${lang}/`;
   });
 });
