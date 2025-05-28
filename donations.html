@@ -108,7 +108,7 @@
             /* Site Notice (was Cookie Banner) */
             .site-notice {
                 position: fixed;
-                top: 50%;
+                top: 58%;
                 left: 50%;
                 transform: translate(-50%, -50%);
                 background-color: #333;
@@ -233,20 +233,18 @@
         <!-- Site Notice (was Cookie Banner) -->
         <div id="site-notice" class="site-notice">
             <p>
-                <strong>Notice:</strong> This page uses third-party services (PayPal, Ko-fi, OpenStreetMap) that may set cookies to process donations securely or display maps. 
-                Additionally, our hosting provider uses Cloudflare, which may set a <code>cf_clearance</code> cookie for security and DDoS protection.
+               <strong>Notice:</strong> This page uses third-party payment services (PayPal, Ko-fi, Stripe) and Google services (reCAPTCHA, SOCS) that may set cookies to process donations securely and prevent fraud.
             </p>
             <ul style="text-align:left; margin: 0 auto 10px auto; max-width: 500px; font-size: 0.97em;">
-                <li><strong>PayPal, Ko-fi:</strong> Cookies for secure payment processing (see their privacy policies).</li>
-                <li><strong>OpenStreetMap:</strong> Cookies may be set when viewing the map for technical and analytics purposes.</li>
-                <li><strong>Cloudflare:</strong> <code>cf_clearance</code> cookie for security and access reliability.</li>
+                <li><strong>PayPal, Ko-fi, Stripe:</strong> Cookies for secure payment processing (see their privacy policies).</li>
+                <li><strong>Google (reCAPTCHA, SOCS):</strong> Cookies for fraud prevention, bot protection, and payment security.</li>
             </ul>
             <p>
                 By clicking "Accept & Continue", you consent to the use of cookies by these services. 
                 <a href="privacy.html" style="color: #4285f4;">Learn more about our privacy policy</a>.
             </p>
             <button onclick="acceptCookies()">Accept & Continue</button>
-            <button class="decline" onclick="declineCookies()">Decline & Go Back</button>
+            <button class="decline" onclick="declineCookies()">Decline</button>
         </div>
 
         <header>
@@ -280,101 +278,138 @@
                     id="donation-content"
                     style="display: none; flex-direction: column; gap: 20px"
                 >
-                    <div class="donation-item">
-                        <h3>Donate via PayPal</h3>
-                        <form
-                            action="https://www.paypal.com/donate"
-                            method="post"
-                            target="_top"
-                        >
-                            <input
-                                type="hidden"
-                                name="hosted_button_id"
-                                value="ZF34GXRRDRF8E"
-                            />
-                            <input
-                                type="image"
-                                src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
-                                border="0"
-                                name="submit"
-                                title="PayPal - The safer, easier way to pay online!"
-                                alt="Donate with PayPal button"
-                            />
-                            <img
-                                alt=""
-                                border="0"
-                                src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
-                                width="1"
-                                height="1"
-                            />
-                        </form>
-                    </div>
-                    <div class="donation-item">
-                        <h3>Donate via Ko‑fi</h3>
-                        <iframe
-                            id="kofiframe"
-                            src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
-                            style="
-                                border: none;
-                                width: 100%;
-                                padding: 4px;
-                                background: #f9f9f9;
-                            "
-                            height="712"
-                            title="bmabma"
-                        ></iframe>
-                    </div>
-
+                    <!-- Content will be injected after consent -->
                 </div>
 
                 <div id="decline-message" style="display: none; text-align: center; margin-top: 20px;">
                     <p style="font-size: 3rem;">😢</p>
                     <p>
-                        You declined cookie consent.<br>
-                        Please <a href="javascript:acceptCookies()">accept cookies</a> to view online donation options,<br>
-                        or <strong>decline </strong>and donate onsite at bitcircus101!</strong>
+                        You declined cookies.<br>
+                        You can still support us by donating onsite at bitcircus101!
                     </p>
                 </div>
                 <div class="back-link">
                     <a href="index.html">← Back to Home Page</a>
                 </div>
+                <div id="osm-map-decline-section" style="margin-top: 30px;">
+                    <button id="show-map-btn-decline" style="padding: 10px 20px; background: #4285f4; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+                        Show Map
+                    </button>
+                    <div id="osm-map-container-decline" style="display:none; margin-top: 20px;">
+                        <iframe
+                            id="osm-map-decline"
+                            width="100%"
+                            height="350"
+                            frameborder="0"
+                            scrolling="no"
+                            style="border-radius: 8px; border: 1px solid #ccc;"
+                            src=""
+                            allowfullscreen
+                        ></iframe>
+                        <div style="font-size: 0.9em; margin-top: 4px;">
+                            <a href="https://www.openstreetmap.org/?mlat=50.740492&amp;mlon=7.089424#map=18/50.740492/7.089424" target="_blank" rel="noopener" style="color:#4285f4;">View Larger Map</a>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
+        <script>
+            // Always show site notice immediately on page load, block all content until action
+            document.addEventListener('DOMContentLoaded', function() {
+                var siteNotice = document.getElementById('site-notice');
+                var donationContent = document.getElementById('donation-content');
+                var declineMessage = document.getElementById('decline-message');
+                // Hide donation content and decline message initially
+                if (donationContent) donationContent.style.display = 'none';
+                if (declineMessage) declineMessage.style.display = 'none';
+                if (siteNotice) siteNotice.style.display = 'block';
+
+                // OSM map for decline
+                var showMapBtnDecline = document.getElementById("show-map-btn-decline");
+                var mapContainerDecline = document.getElementById("osm-map-container-decline");
+                var osmMapDecline = document.getElementById("osm-map-decline");
+                if (showMapBtnDecline && mapContainerDecline && osmMapDecline) {
+                    showMapBtnDecline.addEventListener("click", function () {
+                        osmMapDecline.src = "https://www.openstreetmap.org/export/embed.html?bbox=7.086424%2C50.738492%2C7.092424%2C50.742492&layer=mapnik&marker=50.740492,7.089424";
+                        mapContainerDecline.style.display = "block";
+                        showMapBtnDecline.style.display = "none";
+                    });
+                }
+            });
+        </script>
 
         <script>
-            // Check if cookies were already accepted
-            function checkCookieConsent() {
-                const consent = localStorage.getItem('bitcircus-cookie-consent');
-                if (consent === 'accepted') {
-                    showDonationContent();
-                } else {
-                    showSiteNotice();
-                }
-            }
-
-            function showSiteNotice() {
-                document.getElementById('site-notice').style.display = 'block';
-            }
-
-            function hideSiteNotice() {
-                document.getElementById('site-notice').style.display = 'none';
-            }
-
+            // Show donation content only after explicit consent, always show banner first
             function showDonationContent() {
-                document.getElementById('donation-content').style.display = 'flex';
-                hideSiteNotice();
+                var container = document.getElementById('donation-content');
+                if (container) {
+                    // Inject PayPal and Ko-fi only after consent
+                    container.innerHTML = `
+                        <div class="donation-item">
+                            <h3>Donate via PayPal</h3>
+                            <form
+                                action="https://www.paypal.com/donate"
+                                method="post"
+                                target="_top"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="hosted_button_id"
+                                    value="ZF34GXRRDRF8E"
+                                />
+                                <input
+                                    type="image"
+                                    src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
+                                    border="0"
+                                    name="submit"
+                                    title="PayPal - The safer, easier way to pay online!"
+                                    alt="Donate with PayPal button"
+                                />
+                                <img
+                                    alt=""
+                                    border="0"
+                                    src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
+                                    width="1"
+                                    height="1"
+                                />
+                            </form>
+                        </div>
+                        <div class="donation-item">
+                            <h3>Donate via Ko‑fi</h3>
+                            <iframe
+                                id="kofiframe"
+                                src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
+                                style="
+                                    border: none;
+                                    width: 100%;
+                                    padding: 4px;
+                                    background: #f9f9f9;
+                                "
+                                height="712"
+                                title="bmabma"
+                            ></iframe>
+                        </div>
+                    `;
+                    container.style.display = 'flex';
+                }
+                var siteNotice = document.getElementById('site-notice');
+                if (siteNotice) siteNotice.style.display = 'none';
             }
 
             function acceptCookies() {
                 localStorage.setItem('bitcircus-cookie-consent', 'accepted');
                 showDonationContent();
-                hideSiteNotice();
+                var siteNotice = document.getElementById('site-notice');
+                if (siteNotice) siteNotice.style.display = 'none';
             }
 
             function declineCookies() {
-                document.getElementById('decline-message').style.display = 'block';
-                document.getElementById('donation-content').style.display = 'none';
-                hideSiteNotice();
+                var declineMessage = document.getElementById('decline-message');
+                var donationContent = document.getElementById('donation-content');
+                if (declineMessage) declineMessage.style.display = 'block';
+                if (donationContent) donationContent.style.display = 'none';
+                var siteNotice = document.getElementById('site-notice');
+                if (siteNotice) siteNotice.style.display = 'none';
             }
 
             // Toggle mobile menu
