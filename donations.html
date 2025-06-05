@@ -291,8 +291,8 @@
                 <div class="back-link">
                     <a href="index.html">← Back to Home Page</a>
                 </div>
-                <div id="osm-map-decline-section" style="margin-top: 30px;">
-                    <button id="show-map-btn-decline" style="padding: 10px 20px; background: #4285f4; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem;">
+                <div id="osm-map-decline-section" style="margin-top: 30px; text-align: center;">
+                    <button id="show-map-btn-decline" style="padding: 10px 20px; background: #4285f4; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; display: block; margin: 0 auto;">
                         Show Map
                     </button>
                     <div id="osm-map-container-decline" style="display:none; margin-top: 20px;">
@@ -306,7 +306,7 @@
                             src=""
                             allowfullscreen
                         ></iframe>
-                        <div style="font-size: 0.9em; margin-top: 4px;">
+                        <div style="font-size: 0.9em; margin-top: 4px; text-align: center;"></div>
                             <a href="https://www.openstreetmap.org/?mlat=50.740492&amp;mlon=7.089424#map=18/50.740492/7.089424" target="_blank" rel="noopener" style="color:#4285f4;">View Larger Map</a>
                         </div>
                     </div>
@@ -347,32 +347,23 @@
                     container.innerHTML = `
                         <div class="donation-item">
                             <h3>Donate via PayPal</h3>
-                            <form
-                                action="https://www.paypal.com/donate"
-                                method="post"
-                                target="_top"
+                            <a
+                                href="https://www.paypal.com/paypalme/b6m"
+                                target="_blank"
+                                style="
+                                    display: inline-block;
+                                    padding: 10px 20px;
+                                    background-color: #0070ba;
+                                    color: white;
+                                    text-decoration: none;
+                                    border-radius: 5px;
+                                    font-size: 1rem;
+                                    text-align: center;
+                                    transition: background-color 0.3s;
+                                "
                             >
-                                <input
-                                    type="hidden"
-                                    name="hosted_button_id"
-                                    value="ZF34GXRRDRF8E"
-                                />
-                                <input
-                                    type="image"
-                                    src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"
-                                    border="0"
-                                    name="submit"
-                                    title="PayPal - The safer, easier way to pay online!"
-                                    alt="Donate with PayPal button"
-                                />
-                                <img
-                                    alt=""
-                                    border="0"
-                                    src="https://www.paypal.com/en_DE/i/scr/pixel.gif"
-                                    width="1"
-                                    height="1"
-                                />
-                            </form>
+                                Donate with PayPal
+                            </a>
                         </div>
                         <div class="donation-item">
                             <h3>Donate via Ko‑fi</h3>
