@@ -63,6 +63,10 @@
         <!-- Canonical URL -->
         <meta rel="canonical" href="https://bitcircus101.de/" />
 
+        <!-- Privacy & Security -->
+        <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://nc.6bm.de https://www.openstreetmap.org;">
+        <meta name="referrer" content="no-referrer-when-downgrade">
+
         <style>
             /* CSS Reset and Base Styles */
             :root {
@@ -343,6 +347,20 @@
                     Dorotheenstraße location. Check our calendar below for the
                     latest schedule.
                 </p>
+                <p class="privacy-notice" style="font-size: 0.9em; color: #666; margin-bottom: 10px;">
+                    ℹ️ Our calendar is hosted on our secure Nextcloud instance (nc.6bm.de). 
+                    No tracking or third-party cookies are used.
+                    <a href="privacy.html" style="color: var(--primary-color);">Privacy Policy</a>
+                </p>
+                <p class="calendar-fallback" style="font-size: 0.9em; color: #666;">
+                    🛡️ Calendar not visible? Check your Privacy Badger or AdBlock settings, or 
+                    <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" 
+                       target="_blank" 
+                       rel="noopener"
+                       style="color: var(--primary-color);">
+                        view calendar directly
+                    </a>
+                </p>
                 <div class="calendar-container">
                     <!-- Calendar iframe for production -->
                     <iframe
@@ -352,6 +370,9 @@
                         style="border: 0; max-width: 100%"
                         frameborder="0"
                         scrolling="no"
+                        sandbox="allow-scripts allow-same-origin"
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
                     ></iframe>
                     <!-- Development placeholder -->
                     <div class="calendar-placeholder" style="width: 800px; max-width: 100%; height: 600px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius); border: 2px dashed #ccc;">
@@ -372,9 +393,12 @@
             <section id="donations">
                 <h2>Support bitcircus101</h2>
                 <p>
-                    Your donations help sustain our creative space and keep our
-                    community thriving.
+                    As a community space for the <em>Bonner Altstadt</em>, our goal is to unite neighbors through shared experiences and collaborative projects—making bitcircus101 a welcoming home in the heart of the old town.
                 </p>
+                <p>
+                    Your donations help sustain our mission and vibrant atmosphere. By contributing, you enable us to host events, maintain our space, and support tech enthusiasts, artists, and creatives as they collaborate and innovate together.
+                </p>
+
                 <p style="text-align: center; margin-top: 20px">
                     <a
                         href="donations.html"
