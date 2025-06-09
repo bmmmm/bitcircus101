@@ -1,23 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>bitcircus101 | Technik‑ & Kreativraum in Bonn</title>
 
         <!-- Primary Meta Tags -->
-        <meta
-            name="title"
-            content="bitcircus101 | Technik‑ & Kreativraum in Bonn"
-        />
-        <meta
-            name="description"
-            content="bitcircus101 ist ein ruhiger Technik‑ und Kreativraum in der Dorotheenstraße 101 in Bonn. Ideal für Workshops, Schulungen und kleine Veranstaltungen mit schnellem Internet."
-        />
-        <meta
-            name="keywords"
-            content="bitcircus101, Workshop Bonn, Kreativraum Bonn, Technikraum, Veranstaltungsraum, Dorotheenstraße"
-        />
+        <meta name="title" content="bitcircus101 | Technik‑ & Kreativraum in Bonn" />
+        <meta name="description" content="bitcircus101 ist ein ruhiger Technik‑ & Kreativraum in der Dorotheenstraße 101 in Bonn. Ideal für Workshops, Schulungen und kleine Veranstaltungen mit schnellem Internet." />
+        <meta name="keywords" content="bitcircus101, Workshop Bonn, Kreativraum Bonn, Technikraum, Veranstaltungsraum, Dorotheenstraße" />
         <meta name="author" content="bitcircus101" />
         <meta name="robots" content="index, follow" />
         <meta name="language" content="Deutsch" />
@@ -26,33 +17,15 @@
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://bitcircus101.de/" />
-        <meta
-            property="og:title"
-            content="bitcircus101 | Technik‑ & Kreativraum in Bonn"
-        />
-        <meta
-            property="og:description"
-            content="Ein ruhiger Technik‑ und Kreativraum in der Dorotheenstraße 101 in Bonn. Räume für Workshops, Veranstaltungen und kreative Treffen."
-        />
-        <meta
-            property="og:image"
-            content="https://bitcircus101.de/images/bitcircus-og-image.jpg"
-        />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:title" content="bitcircus101 | Technik‑ & Kreativraum in Bonn" />
+        <meta property="og:description" content="Ein ruhiger Technik‑ & Kreativraum in der Dorotheenstraße 101 in Bonn. Räume für Workshops, Veranstaltungen und kreative Treffen." />
+        <meta property="og:image" content="https://bitcircus101.de/images/bitcircus-og-image.jpg" />
+        <meta property="og:locale" content="de_DE" />
 
         <!-- Instagram -->
-        <meta
-            property="instagram:url"
-            content="https://www.instagram.com/bitcircus101/"
-        />
-        <meta
-            property="instagram:title"
-            content="bitcircus101 | Technik‑ & Kreativraum in Bonn"
-        />
-        <meta
-            property="instagram:description"
-            content="Ein ruhiger Technik‑ und Kreativraum in der Dorotheenstraße 101 in Bonn. Räume für Workshops, Veranstaltungen und kreative Treffen."
-        />
+        <meta property="instagram:url" content="https://www.instagram.com/bitcircus101/" />
+        <meta property="instagram:title" content="bitcircus101 | Technik‑ & Kreativraum in Bonn" />
+        <meta property="instagram:description" content="Ein ruhiger Technik‑ & Kreativraum in der Dorotheenstraße 101 in Bonn. Räume für Workshops, Veranstaltungen und kreative Treffen." />
 
         <!-- Geo Tags -->
         <meta name="geo.region" content="DE-NW" />
@@ -61,322 +34,33 @@
         <meta name="ICBM" content="50.7374, 7.0982" />
 
         <!-- Canonical URL -->
-        <meta rel="canonical" href="https://bitcircus101.de/" />
+        <link rel="canonical" href="https://bitcircus101.de/" />
 
         <!-- Privacy & Security -->
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="frame-src 'self' https://nc.6bm.de https://www.openstreetmap.org;"
-        />
+        <meta http-equiv="Content-Security-Policy" content="frame-src 'self' https://nc.6bm.de https://www.openstreetmap.org;" />
         <meta name="referrer" content="no-referrer-when-downgrade" />
-
-        <style>
-            .carousel-container {
-                position: relative;
-                width: 100%;
-                max-width: 800px;
-                margin: 40px auto;
-                overflow: hidden;
-                border-radius: var(--border-radius);
-                box-shadow: var(--shadow);
-                aspect-ratio: 16/9;
-                background: #eee;
-            }
-
-            .carousel {
-                display: flex;
-                transition: transform 0.5s ease-in-out;
-                height: 100%;
-            }
-
-            .carousel-item {
-                min-width: 100%;
-                transition: opacity 0.5s ease-in-out;
-                display: none;
-                height: 100%;
-            }
-
-            .carousel-item.active {
-                display: block;
-            }
-
-            .carousel-item img {
-                display: block;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                border-radius: var(--border-radius);
-            }
-
-            .carousel-button {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-                background-color: rgba(0, 0, 0, 0.5);
-                color: white;
-                border: none;
-                padding: 10px;
-                cursor: pointer;
-                font-size: 1.5rem;
-                z-index: 1;
-            }
-
-            .carousel-button.prev {
-                left: 10px;
-            }
-
-            .carousel-button.next {
-                right: 10px;
-            }
-
-            .carousel-indicators {
-                text-align: center;
-                position: absolute;
-                bottom: 10px;
-                width: 100%;
-            }
-
-            .dot {
-                height: 12px;
-                width: 12px;
-                margin: 0 5px;
-                background-color: #bbb;
-                border-radius: 50%;
-                display: inline-block;
-                transition: background-color 0.3s ease;
-                cursor: pointer;
-            }
-
-            .dot.active {
-                background-color: #717171;
-            }
-
-            /* Responsive Design */
-
-            @media (max-width: 900px) {
-                .carousel-container {
-                    max-width: 100vw;
-                    aspect-ratio: 16/9;
-                }
-            }
-            @media (max-width: 600px) {
-                .carousel-container {
-                    max-width: 100vw;
-                    aspect-ratio: 4/3;
-                }
-                .carousel-item img {
-                    border-radius: 0;
-                }
-            }
-            /* CSS Reset and Base Styles */
-            :root {
-                --primary-color: #4285f4;
-                --secondary-color: #333;
-                --background-color: #f5f5f5;
-                --text-color: #333;
-                --border-radius: 5px;
-                --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            }
-
-            body {
-                font-family: "Courier New", monospace;
-                line-height: 1.6;
-                color: var(--text-color);
-                margin: 0;
-                padding: 0;
-                background-color: var(--background-color);
-            }
-
-            /* Layout */
-            .container {
-                width: 90%;
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-
-            /* Navigation */
-            header {
-                background-color: var(--secondary-color);
-                padding: 10px 0;
-                position: sticky;
-                top: 0;
-                z-index: 100;
-            }
-
-            nav ul {
-                list-style: none;
-                display: flex;
-                justify-content: center;
-                padding: 0;
-                margin: 0;
-            }
-
-            nav li {
-                margin: 0 15px;
-            }
-
-            nav a {
-                color: #fff;
-                text-decoration: none;
-                font-size: 1.2rem;
-                transition: color 0.3s;
-            }
-
-            nav a:hover {
-                color: #aaa;
-            }
-
-            .menu-toggle {
-                display: none;
-                color: white;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                cursor: pointer;
-                padding: 10px;
-            }
-
-            /* Sections */
-            section {
-                margin: 40px 0;
-                padding: 20px;
-                background-color: #fff;
-                border-radius: var(--border-radius);
-                box-shadow: var(--shadow);
-            }
-
-            h1,
-            h2 {
-                text-align: center;
-            }
-
-            /* ASCII Art */
-            .ascii-art {
-                font-family: monospace;
-                white-space: pre;
-                display: block;
-                line-height: 1;
-                font-size: 14px;
-                margin: 30px auto;
-                text-align: center;
-            }
-
-            /* Calendar */
-            .calendar-container {
-                display: flex;
-                justify-content: center;
-                margin: 30px 0;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            iframe {
-                max-width: 100%;
-            }
-
-            /* Contact Section */
-            .contact-info {
-                text-align: center;
-            }
-
-            .address {
-                margin-top: 15px;
-                padding: 10px;
-                background: #f0f0f0;
-                border-radius: var(--border-radius);
-                display: inline-block;
-            }
-
-            /* Signal Group */
-            .signal-group {
-                margin: 20px 0;
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .signal-text {
-                font-size: 1.1rem;
-                font-weight: bold;
-                color: var(--secondary-color);
-                margin: 0;
-            }
-
-            .signal-qr {
-                width: 200px;
-                height: 200px;
-                border-radius: var(--border-radius);
-                transition: transform 0.3s ease;
-                border: 2px solid #eee;
-            }
-
-            .signal-qr:hover {
-                transform: scale(1.05);
-                border-color: var(--primary-color);
-            }
-
-            .signal-hint {
-                font-size: 0.9rem;
-                color: var(--secondary-color);
-                opacity: 0.8;
-                margin: 0;
-            }
-
-            /* Responsive Design */
-            @media (max-width: 768px) {
-                .menu-toggle {
-                    display: block;
-                    margin: 0 auto;
-                }
-
-                nav ul {
-                    flex-direction: column;
-                    align-items: center;
-                    display: none;
-                }
-
-                nav.active ul {
-                    display: flex;
-                }
-
-                nav li {
-                    margin: 10px 0;
-                }
-
-                .ascii-art {
-                    font-size: 10px;
-                }
-
-                .signal-qr {
-                    width: 150px;
-                    height: 150px;
-                }
-            }
-        </style>
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
         <header>
-            <nav id="main-nav">
-                <button class="menu-toggle" id="menu-toggle">☰ Menu</button>
+            <nav id="main-nav" aria-label="Hauptnavigation">
+                <button class="menu-toggle" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">☰ Menü</button>
                 <ul>
-                    <li><a href="#home">Start</a></li>
-                    <li><a href="#about">Über uns</a></li>
+                    <li><a href="index.html">Start</a></li>
+                    <li><a href="index.html#about">Über uns</a></li>
                     <li><a href="events.html">Veranstaltungen</a></li>
                     <li><a href="donations.html">Spenden</a></li>
-                    <li><a href="#contact">Kontakt</a></li>
+                    <li><a href="index.html#contact">Kontakt</a></li>
                     <li><a href="privacy.html">Datenschutz</a></li>
                     <li><a href="imprint.html">Impressum</a></li>
                 </ul>
             </nav>
         </header>
-
-        <div class="container">
-            <section id="home">
-                <h1>Willkommen im bitcircus101</h1>
-                <pre class="ascii-art">
+        <main>
+            <div class="container">
+                <section id="home">
+                    <h1>Willkommen im bitcircus101</h1>
+                    <pre class="ascii-art">
   +------------------------------------------+
   |                                          |
   |                bitcircus101              |
@@ -405,222 +89,224 @@
   +------------------------------------------+
             </pre
                 >
-                <p>
-                    Erlebe einen flexiblen Technik‑ und Kreativraum für
-                    Workshops, Schulungen und entspannte Treffen – am Rande der
-                    Bonner Altstadt.
-                </p>
-            </section>
-
-            <section id="about">
-                <h2>bitcircus101 – Ort &amp; Idee</h2>
-                <p>
-                    bitcircus101 befindet sich in der Dorotheenstraße 101 in
-                    Bonn. Zwei Räume – einer vorne, einer hinten – plus
-                    reichlich Stauraum bieten den idealen Rahmen für Workshops,
-                    Lernformate und kreative Sessions in ruhiger Atmosphäre.
-                </p>
-                <p>Bei uns sind willkommen:</p>
-                <ul>
-                    <li>
-                        Menschen, die Workshops, Schulungen oder Meet‑ups
-                        durchführen
-                    </li>
-                    <li>
-                        Kreative und Technikbegeisterte auf der Suche nach
-                        Inspiration
-                    </li>
-                    <li>Nachbar*innen, die sich vernetzen möchten</li>
-                    <li>
-                        Alle, die schnelles Internet in entspannter Umgebung
-                        schätzen
-                    </li>
-                </ul>
-                <p>
-                    Egal ob du einen Workshop leitest, dich mit anderen
-                    austauschen möchtest oder einfach einen ruhigen Ort zum
-                    Arbeiten brauchst – bitcircus101 gibt deiner Idee Raum.
-                </p>
-                <p>
-                    <strong
-                        >bitcircus101 ist ein nicht‑kommerzieller Raum</strong
-                    >, der sich vor allem durch Ehrenamt und Spenden trägt – und
-                    durch die eine oder andere Vermietung unserer Räume.
-                    <a href="#contact"><strong>Melde dich gern</strong></a
-                    >, wenn du Fragen hast oder mitmachen möchtest!
-                </p>
-                <div class="carousel-container">
-                    <div class="carousel">
-                        <div class="carousel-item active">
-                            <img
-                                src="images/img1.jpeg"
-                                alt="Bild 1"
-                                loading="lazy"
-                            />
-                        </div>
-                        <div class="carousel-item">
-                            <img
-                                src="images/img2.jpeg"
-                                alt="Bild 2"
-                                loading="lazy"
-                            />
-                        </div>
-                        <div class="carousel-item">
-                            <img
-                                src="images/img3.jpeg"
-                                alt="Bild 3"
-                                loading="lazy"
-                            />
-                        </div>
-                    </div>
-                    <div class="carousel-indicators">
-                        <span class="dot active" onclick="setSlide(0)"></span>
-                        <span class="dot" onclick="setSlide(1)"></span>
-                        <span class="dot" onclick="setSlide(2)"></span>
-                    </div>
-                    <button
-                        class="carousel-button prev"
-                        onclick="moveCarousel(-1)"
-                        aria-label="Vorheriges Bild"
-                    >
-                        ❮
-                    </button>
-                    <button
-                        class="carousel-button next"
-                        onclick="moveCarousel(1)"
-                        aria-label="Nächstes Bild"
-                    >
-                        ❯
-                    </button>
-                </div>
-            </section>
-
-            <section id="donations">
-                <h2>Unterstütze bitcircus101</h2>
-                <p>
-                    Wir sind das Wohnzimmer der Bonner Altstadt – Nachbar*innen
-                    lernen, arbeiten und entspannen gemeinsam.
-                </p>
-                <p>
-                    Mit deiner Unterstützung bleiben die Türen offen, das WLAN
-                    stabil und die Stimmung herzlich – für alle, die einen
-                    <strong>entspannten Ort zum Ausprobieren</strong> suchen.
-                </p>
-                <p>
-                    Unsere Basis bilden Spenden, ehrenamtliches Engagement – und
-                    nicht zuletzt die Vermietung unserer Räume.
-                    <a href="#contact"><strong>Sprich uns an</strong></a
-                    >, wenn du wissen willst, wie du helfen kannst.
-                </p>
-                <p>
-                    <small
-                        >Psst … jede Buchung hält den Kaffeenachschub
-                        frisch ☕️🃏</small
-                    >
-                </p>
-                <p style="text-align: center; margin-top: 20px">
-                    <a
-                        href="donations.html"
-                        style="
-                            display: inline-block;
-                            padding: 15px 30px;
-                            background-color: #4285f4;
-                            color: white;
-                            text-decoration: none;
-                            border-radius: 5px;
-                            font-weight: bold;
-                        "
-                    >
-                        Jetzt spenden
-                    </a>
-                </p>
-            </section>
-
-            <section id="contact">
-                <h2>Kontakt</h2>
-                <div class="contact-info">
                     <p>
-                        E‑Mail:
-                        <a href="mailto:info@bitcircus101.de"
-                            >info@bitcircus101.de</a
-                        >
+                        Erlebe einen flexiblen Technik‑ und Kreativraum für
+                        Workshops, Schulungen und entspannte Treffen – am Rande der
+                        Bonner Altstadt.
+                    </p>
+                </section>
+
+                <section id="about">
+                    <h2>bitcircus101 – Ort &amp; Idee</h2>
+                    <p>
+                        bitcircus101 befindet sich in der Dorotheenstraße 101 in
+                        Bonn. Zwei Räume – einer vorne, einer hinten – plus
+                        reichlich Stauraum bieten den idealen Rahmen für Workshops,
+                        Lernformate und kreative Sessions in ruhiger Atmosphäre.
+                    </p>
+                    <p>Bei uns sind willkommen:</p>
+                    <ul>
+                        <li>
+                            Menschen, die Workshops, Schulungen oder Meet‑ups
+                            durchführen
+                        </li>
+                        <li>
+                            Kreative und Technikbegeisterte auf der Suche nach
+                            Inspiration
+                        </li>
+                        <li>Nachbar*innen, die sich vernetzen möchten</li>
+                        <li>
+                            Alle, die schnelles Internet in entspannter Umgebung
+                            schätzen
+                        </li>
+                    </ul>
+                    <p>
+                        Egal ob du einen Workshop leitest, dich mit anderen
+                        austauschen möchtest oder einfach einen ruhigen Ort zum
+                        Arbeiten brauchst – bitcircus101 gibt deiner Idee Raum.
                     </p>
                     <p>
-                        Instagram:
-                        <a
-                            href="https://instagram.com/bitcircus101"
-                            target="_blank"
-                            >@bitcircus101</a
-                        >
+                        <strong
+                            >bitcircus101 ist ein nicht‑kommerzieller Raum</strong
+                        >, der sich vor allem durch Ehrenamt und Spenden trägt – und
+                        durch die eine oder andere Vermietung unserer Räume.
+                        <a href="#contact"><strong>Melde dich gern</strong></a
+                        >, wenn du Fragen hast oder mitmachen möchtest!
                     </p>
-                    <div class="signal-group">
-                        <p class="signal-text">Tritt unserem Signal‑Chat bei</p>
-                        <a
-                            href="https://signal.group/#CjQKIE1y0qxqFK3-s2iaAfKoRpPr0d0SJ5xfo1CYx1i0OL3HEhBCwWp72gxe7qpDnikgHwmc"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            <img
-                                src="src/assets/signal-group.png"
-                                alt="Signal‑Chat QR‑Code"
-                                class="signal-qr"
-                            />
-                        </a>
-                        <p class="signal-hint">
-                            QR‑Code scannen oder klicken, um beizutreten!
-                        </p>
-                    </div>
-                    <div class="address">
-                        <strong>Besuche uns:</strong><br />
-                        bitcircus101<br />
-                        Dorotheenstraße 101<br />
-                        53113 Bonn, Germany
-                    </div>
-                    <div style="margin-top: 20px">
+                    <div class="carousel-container">
+                        <div class="carousel">
+                            <div class="carousel-item active">
+                                <img
+                                    src="images/img1.jpeg"
+                                    alt="Bild 1"
+                                    loading="lazy"
+                                />
+                            </div>
+                            <div class="carousel-item">
+                                <img
+                                    src="images/img2.jpeg"
+                                    alt="Bild 2"
+                                    loading="lazy"
+                                />
+                            </div>
+                            <div class="carousel-item">
+                                <img
+                                    src="images/img3.jpeg"
+                                    alt="Bild 3"
+                                    loading="lazy"
+                                />
+                            </div>
+                        </div>
+                        <div class="carousel-indicators">
+                            <span class="dot active" onclick="setSlide(0)"></span>
+                            <span class="dot" onclick="setSlide(1)"></span>
+                            <span class="dot" onclick="setSlide(2)"></span>
+                        </div>
                         <button
-                            id="show-map-btn"
-                            style="
-                                padding: 10px 20px;
-                                background: #4285f4;
-                                color: #fff;
-                                border: none;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                font-size: 1rem;
-                            "
+                            class="carousel-button prev"
+                            onclick="moveCarousel(-1)"
+                            aria-label="Vorheriges Bild"
                         >
-                            Karte anzeigen
+                            ❮
+                        </button>
+                        <button
+                            class="carousel-button next"
+                            onclick="moveCarousel(1)"
+                            aria-label="Nächstes Bild"
+                        >
+                            ❯
                         </button>
                     </div>
-                    <div
-                        id="osm-map-container"
-                        style="display: none; margin-top: 20px"
-                    >
-                        <iframe
-                            id="osm-map"
-                            width="100%"
-                            height="350"
-                            frameborder="0"
-                            scrolling="no"
-                            style="border-radius: 8px; border: 1px solid #ccc"
-                            src="https://www.openstreetmap.org/export/embed.html?bbox=7.086424%2C50.738492%2C7.092424%2C50.742492&amp;layer=mapnik&amp;marker=50.740492,7.089424"
-                            allowfullscreen
-                        ></iframe>
-                        <div style="font-size: 0.9em; margin-top: 4px">
+                </section>
+
+                <section id="donations">
+                    <h2>Unterstütze bitcircus101</h2>
+                    <p>
+                        Wir sind das Wohnzimmer der Bonner Altstadt – Nachbar*innen
+                        lernen, arbeiten und entspannen gemeinsam.
+                    </p>
+                    <p>
+                        Mit deiner Unterstützung bleiben die Türen offen, das WLAN
+                        stabil und die Stimmung herzlich – für alle, die einen
+                        <strong>entspannten Ort zum Ausprobieren</strong> suchen.
+                    </p>
+                    <p>
+                        Unsere Basis bilden Spenden, ehrenamtliches Engagement – und
+                        nicht zuletzt die Vermietung unserer Räume.
+                        <a href="#contact"><strong>Sprich uns an</strong></a
+                        >, wenn du wissen willst, wie du helfen kannst.
+                    </p>
+                    <p>
+                        <small
+                            >Psst … jede Buchung hält den Kaffeenachschub
+                            frisch ☕️🃏</small
+                        >
+                    </p>
+                    <p style="text-align: center; margin-top: 20px">
+                        <a
+                            href="donations.html"
+                            style="
+                                display: inline-block;
+                                padding: 15px 30px;
+                                background-color: #4285f4;
+                                color: white;
+                                text-decoration: none;
+                                border-radius: 5px;
+                                font-weight: bold;
+                            "
+                        >
+                            Jetzt spenden
+                        </a>
+                    </p>
+                </section>
+
+                <section id="contact">
+                    <h2>Kontakt</h2>
+                    <div class="contact-info">
+                        <p>
+                            E‑Mail:
+                            <a href="mailto:info@bitcircus101.de"
+                                >info@bitcircus101.de</a
+                            >
+                        </p>
+                        <p>
+                            Instagram:
                             <a
-                                href="https://www.openstreetmap.org/?mlat=50.740492&amp;mlon=7.089424#map=18/50.740492/7.089424"
+                                href="https://instagram.com/bitcircus101"
+                                target="_blank"
+                                >@bitcircus101</a
+                            >
+                        </p>
+                        <div class="signal-group">
+                            <p class="signal-text">Tritt unserem Signal‑Chat bei</p>
+                            <a
+                                href="https://signal.group/#CjQKIE1y0qxqFK3-s2iaAfKoRpPr0d0SJ5xfo1CYx1i0OL3HEhBCwWp72gxe7qpDnikgHwmc"
                                 target="_blank"
                                 rel="noopener"
-                                style="color: #4285f4"
-                                >View Larger Map</a
                             >
+                                <img
+                                    src="src/assets/signal-group.png"
+                                    alt="Signal‑Chat QR‑Code"
+                                    class="signal-qr"
+                                />
+                            </a>
+                            <p class="signal-hint">
+                                QR‑Code scannen oder klicken, um beizutreten!
+                            </p>
+                        </div>
+                        <div class="address">
+                            <strong>Besuche uns:</strong><br />
+                            bitcircus101<br />
+                            Dorotheenstraße 101<br />
+                            53113 Bonn, Germany
+                        </div>
+                        <div style="margin-top: 20px">
+                            <button
+                                id="show-map-btn"
+                                style="
+                                    padding: 10px 20px;
+                                    background: #4285f4;
+                                    color: #fff;
+                                    border: none;
+                                    border-radius: 5px;
+                                    cursor: pointer;
+                                    font-size: 1rem;
+                                "
+                            >
+                                Karte anzeigen
+                            </button>
+                        </div>
+                        <div
+                            id="osm-map-container"
+                            style="display: none; margin-top: 20px"
+                        >
+                            <iframe
+                                id="osm-map"
+                                width="100%"
+                                height="350"
+                                frameborder="0"
+                                scrolling="no"
+                                style="border-radius: 8px; border: 1px solid #ccc"
+                                src="https://www.openstreetmap.org/export/embed.html?bbox=7.086424%2C50.738492%2C7.092424%2C50.742492&amp;layer=mapnik&amp;marker=50.740492,7.089424"
+                                allowfullscreen
+                            ></iframe>
+                            <div style="font-size: 0.9em; margin-top: 4px">
+                                <a
+                                    href="https://www.openstreetmap.org/?mlat=50.740492&amp;mlon=7.089424#map=18/50.740492/7.089424"
+                                    target="_blank"
+                                    rel="noopener"
+                                    style="color: #4285f4"
+                                    >View Larger Map</a
+                                >
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>
-        <!-- end .container -->
+                </section>
+            </div>
+            <!-- end .container -->
+        </main>
         <footer
+            role="contentinfo"
             style="
                 width: 100%;
                 background: #222;
@@ -657,117 +343,11 @@
                     onmouseover="this.style.transform='scale(1.06)';this.style.background='linear-gradient(90deg,#ff7e5f 0%,#ffb347 100%)';"
                     onmouseout="this.style.transform='scale(1)';this.style.background='linear-gradient(90deg,#ffb347 0%,#ff7e5f 100%)';"
                 >
-                    🚀 Beiträge oder Issue‑Meldungen auf GitHub:
+                    🚀 Mitmachen oder Feedback auf GitHub:
                     <span style="text-decoration: underline">bitcircus101</span>
                 </a>
             </div>
         </footer>
-
-        <script>
-            // Toggle mobile menu
-            document
-                .getElementById("menu-toggle")
-                .addEventListener("click", function () {
-                    document
-                        .getElementById("main-nav")
-                        .classList.toggle("active");
-                });
-
-            // Show OSM map on button click
-            document.addEventListener("DOMContentLoaded", function () {
-                var showMapBtn = document.getElementById("show-map-btn");
-                var mapContainer = document.getElementById("osm-map-container");
-                var osmMap = document.getElementById("osm-map");
-                if (showMapBtn && mapContainer && osmMap) {
-                    showMapBtn.addEventListener("click", function () {
-                        // Set src to center the pin on click (forces reload/center)
-                        osmMap.src =
-                            "https://www.openstreetmap.org/export/embed.html?bbox=7.086424%2C50.738492%2C7.092424%2C50.742492&layer=mapnik&marker=50.740492,7.089424";
-                        mapContainer.style.display = "block";
-                        showMapBtn.style.display = "none";
-                    });
-                }
-            });
-
-            // Smooth scrolling for navigation links
-            document.querySelectorAll("nav a").forEach((anchor) => {
-                anchor.addEventListener("click", function (e) {
-                    const href = this.getAttribute("href");
-                    // Only handle smooth scroll for anchor links on this page
-                    if (href.startsWith("#")) {
-                        e.preventDefault();
-                        const targetElement = document.querySelector(href);
-                        if (targetElement) {
-                            window.scrollTo({
-                                top: targetElement.offsetTop - 70,
-                                behavior: "smooth",
-                            });
-                        }
-                        // Close mobile menu after clicking a link
-                        if (window.innerWidth <= 768) {
-                            document
-                                .getElementById("main-nav")
-                                .classList.remove("active");
-                        }
-                    }
-                    // For external links (donations.html, privacy.html, imprint.html), let default behavior occur
-                });
-            });
-
-            // Calendar is now static, no toggle functionality needed
-            // Carousel functionality
-            let currentSlide = 0;
-            const items = document.querySelectorAll(".carousel-item");
-            const dots = document.querySelectorAll(".dot");
-            let slideInterval = setInterval(() => moveCarousel(1), 5000);
-
-            function showSlide(index) {
-                items.forEach((item, i) => {
-                    item.classList.toggle("active", i === index);
-                    dots[i].classList.toggle("active", i === index);
-                });
-                currentSlide = index;
-            }
-
-            function moveCarousel(direction) {
-                let newIndex =
-                    (currentSlide + direction + items.length) % items.length;
-                showSlide(newIndex);
-            }
-
-            function setSlide(index) {
-                showSlide(index);
-                resetSlideInterval();
-            }
-
-            function resetSlideInterval() {
-                clearInterval(slideInterval);
-                slideInterval = setInterval(() => moveCarousel(1), 5000);
-            }
-
-            const carouselContainer = document.querySelector(
-                ".carousel-container",
-            );
-            carouselContainer.addEventListener("mouseenter", () =>
-                clearInterval(slideInterval),
-            );
-            carouselContainer.addEventListener("mouseleave", () =>
-                resetSlideInterval(),
-            );
-
-            // Swipe-Unterstützung
-            let touchStartX = null;
-            carouselContainer.addEventListener("touchstart", (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            });
-            carouselContainer.addEventListener("touchend", (e) => {
-                if (touchStartX === null) return;
-                let diff = e.changedTouches[0].screenX - touchStartX;
-                if (Math.abs(diff) > 50) {
-                    moveCarousel(diff > 0 ? -1 : 1);
-                }
-                touchStartX = null;
-            });
-        </script>
+        <script defer src="main.js"></script>
     </body>
 </html>
