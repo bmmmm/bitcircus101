@@ -1,0 +1,47 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+PRODID:-//bitcircus101//Casual Linkup//EN
+X-WR-CALNAME:Casual Linkup@bitcircus101
+X-WR-TIMEZONE:Europe/Berlin
+BEGIN:VEVENT
+UID:casual-linkup-1fr@bitcircus101.de
+SUMMARY:Casual Linkup@bitcircus101 (1FR)
+DTSTART;TZID=Europe/Berlin:20250613T200000
+DTEND;TZID=Europe/Berlin:20250613T230000
+RRULE:FREQ=MONTHLY;BYDAY=1FR
+LOCATION:bitcircus101 Dorotheenstraße 101, 53111 Bonn, Germany
+DESCRIPTION:A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de
+URL:https://bitcircus101.de
+END:VEVENT
+BEGIN:VEVENT
+UID:casual-linkup-2fr@bitcircus101.de
+SUMMARY:Casual Linkup@bitcircus101 (2FR)
+DTSTART;TZID=Europe/Berlin:20250613T200000
+DTEND;TZID=Europe/Berlin:20250613T230000
+RRULE:FREQ=MONTHLY;BYDAY=2FR
+LOCATION:bitcircus101 Dorotheenstraße 101, 53111 Bonn, Germany
+DESCRIPTION:A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de
+URL:https://bitcircus101.de
+END:VEVENT
+BEGIN:VEVENT
+UID:casual-linkup-4fr@bitcircus101.de
+SUMMARY:Casual Linkup@bitcircus101 (4FR)
+DTSTART;TZID=Europe/Berlin:20250613T200000
+DTEND;TZID=Europe/Berlin:20250613T230000
+RRULE:FREQ=MONTHLY;BYDAY=4FR
+LOCATION:bitcircus101 Dorotheenstraße 101, 53111 Bonn, Germany
+DESCRIPTION:A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de
+URL:https://bitcircus101.de
+END:VEVENT
+BEGIN:VEVENT
+UID:casual-linkup-5fr@bitcircus101.de
+SUMMARY:Casual Linkup@bitcircus101 (5FR)
+DTSTART;TZID=Europe/Berlin:20250829T200000
+DTEND;TZID=Europe/Berlin:20250829T230000
+RRULE:FREQ=MONTHLY;BYDAY=5FR
+LOCATION:bitcircus101 Dorotheenstraße 101, 53111 Bonn, Germany
+DESCRIPTION:A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de
+URL:https://bitcircus101.de
+END:VEVENT
+END:VCALENDAR
