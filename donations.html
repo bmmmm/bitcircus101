@@ -121,6 +121,8 @@
                 box-shadow: 0 8px 32px rgba(0,0,0,0.25);
                 min-width: 320px;
                 max-width: 90vw;
+                overflow-y: auto;
+                max-height: 80vh;
             }
 
             .site-notice p {
@@ -226,6 +228,23 @@
                     width: 100%;
                     margin: 5px 0;
                 }
+
+                /* Ensure the site notice is scrollable on mobile */
+                .site-notice {
+                    overflow-y: auto;
+                    max-height: 80vh;
+                }
+
+                /* Adjustments for mobile devices */
+                .site-notice {
+                    top: 10%;
+                    transform: translate(-50%, 0);
+                }
+
+                .site-notice button {
+                    width: 100%;
+                    margin: 10px 0;
+                }
             }
         </style>
     </head>
@@ -319,7 +338,7 @@
                 var siteNotice = document.getElementById('site-notice');
                 var donationContent = document.getElementById('donation-content');
                 var declineMessage = document.getElementById('decline-message');
-                // Hide donation content and decline message initially
+
                 if (donationContent) donationContent.style.display = 'none';
                 if (declineMessage) declineMessage.style.display = 'none';
                 if (siteNotice) siteNotice.style.display = 'block';
@@ -415,6 +434,15 @@
             // Initialize on page load
             document.addEventListener('DOMContentLoaded', function() {
                 checkCookieConsent();
+            });
+
+            // Ensure the site notice is scrollable and buttons are clickable on mobile
+            document.addEventListener('DOMContentLoaded', function() {
+                var siteNotice = document.getElementById('site-notice');
+                if (siteNotice) {
+                    siteNotice.style.overflowY = 'auto';
+                    siteNotice.style.maxHeight = '80vh';
+                }
             });
         </script>
     </body>
