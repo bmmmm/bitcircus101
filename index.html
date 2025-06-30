@@ -126,6 +126,30 @@
                 right: 10px;
             }
 
+            .carousel-indicators {
+            text-align: center;
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            }
+
+            .dot {
+            height: 12px;
+            width: 12px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            }
+
+            .dot.active {
+            background-color: #717171;
+            }
+
+            /* Responsive Design */
+
             @media (max-width: 900px) {
                 .carousel-container {
                     max-width: 100vw;
@@ -401,13 +425,18 @@
                     <strong>bitcircus101 ist ein nicht‑kommerzieller Raum</strong>, der sich vor allem durch Ehrenamt und Spenden trägt – und durch die eine oder andere Vermietung unserer Räume. <a href="#contact"><strong>Melde dich gern</strong></a>, wenn du Fragen hast oder mitmachen möchtest!
                 </p>
                 <div class="carousel-container">
-                    <div class="carousel">
-                        <div class="carousel-item active"><img src="images/img1.jpeg" alt="Bild 1" /></div>
-                        <div class="carousel-item"><img src="images/img2.jpeg" alt="Bild 2" /></div>
-                        <div class="carousel-item"><img src="images/img3.jpeg" alt="Bild 3" /></div>
-                    </div>
-                    <button class="carousel-button prev" onclick="moveCarousel(-1)">❮</button>
-                    <button class="carousel-button next" onclick="moveCarousel(1)">❯</button>
+                <div class="carousel">
+                    <div class="carousel-item active"><img src="images/img1.jpeg" alt="Bild 1" loading="lazy" /></div>
+                    <div class="carousel-item"><img src="images/img2.jpeg" alt="Bild 2" loading="lazy" /></div>
+                    <div class="carousel-item"><img src="images/img3.jpeg" alt="Bild 3" loading="lazy" /></div>
+                </div>
+                <div class="carousel-indicators">
+                    <span class="dot active" onclick="setSlide(0)"></span>
+                    <span class="dot" onclick="setSlide(1)"></span>
+                    <span class="dot" onclick="setSlide(2)"></span>
+                </div>
+                <button class="carousel-button prev" onclick="moveCarousel(-1)" aria-label="Vorheriges Bild">❮</button>
+                <button class="carousel-button next" onclick="moveCarousel(1)" aria-label="Nächstes Bild">❯</button>
                 </div>
             </section>
 
@@ -637,12 +666,48 @@
     </body>
 </html>
 
-            // Carousel functionality
-            let currentSlide = 0;
-            const items = document.querySelectorAll(".carousel-item");
+let currentSlide = 0;
+const items = document.querySelectorAll(".carousel-item");
+const dots = document.querySelectorAll(".dot");
+let slideInterval = setInterval(() => moveCarousel(1), 5000);
 
-            function moveCarousel(direction) {
-                items[currentSlide].classList.remove("active");
-                currentSlide = (currentSlide + direction + items.length) % items.length;
-                items[currentSlide].classList.add("active");
-            }
+function showSlide(index) {
+  items.forEach((item, i) => {
+    item.classList.toggle("active", i === index);
+    dots[i].classList.toggle("active", i === index);
+  });
+  currentSlide = index;
+}
+
+function moveCarousel(direction) {
+  let newIndex = (currentSlide + direction + items.length) % items.length;
+  showSlide(newIndex);
+}
+
+function setSlide(index) {
+  showSlide(index);
+  resetSlideInterval();
+}
+
+function resetSlideInterval() {
+  clearInterval(slideInterval);
+  slideInterval = setInterval(() => moveCarousel(1), 5000);
+}
+
+const carouselContainer = document.querySelector(".carousel-container");
+carouselContainer.addEventListener("mouseenter", () => clearInterval(slideInterval));
+carouselContainer.addEventListener("mouseleave", () => resetSlideInterval());
+
+// Swipe-Unterstützung
+let touchStartX = null;
+carouselContainer.addEventListener("touchstart", (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+});
+carouselContainer.addEventListener("touchend", (e) => {
+  if (touchStartX === null) return;
+  let diff = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(diff) > 50) {
+    moveCarousel(diff > 0 ? -1 : 1);
+  }
+  touchStartX = null;
+});
