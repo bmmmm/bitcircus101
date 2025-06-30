@@ -68,6 +68,58 @@
         <meta name="referrer" content="no-referrer-when-downgrade">
 
         <style>
+            .carousel-container {
+                position: relative;
+                width: 100%;
+                max-width: 800px;
+                margin: 40px auto;
+                overflow: hidden;
+                border-radius: var(--border-radius);
+                box-shadow: var(--shadow);
+            }
+
+            .carousel {
+                display: flex;
+                transition: transform 0.5s ease-in-out;
+            }
+
+            .carousel-item {
+                min-width: 100%;
+                transition: opacity 0.5s ease-in-out;
+                display: none;
+            }
+
+            .carousel-item.active {
+                display: block;
+            }
+
+            .carousel-item img {
+                display: block;
+                width: 100%;
+                height: auto;
+                border-radius: var(--border-radius);
+            }
+
+            .carousel-button {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: rgba(0, 0, 0, 0.5);
+                color: white;
+                border: none;
+                padding: 10px;
+                cursor: pointer;
+                font-size: 1.5rem;
+                z-index: 1;
+            }
+
+            .carousel-button.prev {
+                left: 10px;
+            }
+
+            .carousel-button.next {
+                right: 10px;
+            }
             /* CSS Reset and Base Styles */
             :root {
                 --primary-color: #4285f4;
@@ -327,6 +379,15 @@
                 <p>
                     <strong>bitcircus101 ist ein nicht‑kommerzieller Raum</strong>, der sich vor allem durch Ehrenamt und Spenden trägt – und durch die eine oder andere Vermietung unserer Räume. <a href="#contact"><strong>Melde dich gern</strong></a>, wenn du Fragen hast oder mitmachen möchtest!
                 </p>
+                <div class="carousel-container">
+                    <div class="carousel">
+                        <div class="carousel-item active"><img src="images/placeholder1.jpg" alt="Bild 1" /></div>
+                        <div class="carousel-item"><img src="images/placeholder2.jpg" alt="Bild 2" /></div>
+                        <div class="carousel-item"><img src="images/placeholder3.jpg" alt="Bild 3" /></div>
+                    </div>
+                    <button class="carousel-button prev" onclick="moveCarousel(-1)">❮</button>
+                    <button class="carousel-button next" onclick="moveCarousel(1)">❯</button>
+                </div>
             </section>
 
             <section id="home">
@@ -554,3 +615,13 @@
         </script>
     </body>
 </html>
+
+            // Carousel functionality
+            let currentSlide = 0;
+            const items = document.querySelectorAll(".carousel-item");
+
+            function moveCarousel(direction) {
+                items[currentSlide].classList.remove("active");
+                currentSlide = (currentSlide + direction + items.length) % items.length;
+                items[currentSlide].classList.add("active");
+            }
