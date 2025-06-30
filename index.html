@@ -357,43 +357,53 @@ const items = document.querySelectorAll(".carousel-item");
 const dots = document.querySelectorAll(".dot");
 let slideInterval = setInterval(() => moveCarousel(1), 5000);
 
-function showSlide(index) {
-  items.forEach((item, i) => {
-    item.classList.toggle("active", i === index);
-    dots[i].classList.toggle("active", i === index);
-  });
-  currentSlide = index;
-}
+            function showSlide(index) {
+                items.forEach((item, i) => {
+                    item.classList.toggle("active", i === index);
+                    dots[i].classList.toggle("active", i === index);
+                });
+                currentSlide = index;
+            }
 
-function moveCarousel(direction) {
-  let newIndex = (currentSlide + direction + items.length) % items.length;
-  showSlide(newIndex);
-}
+            function moveCarousel(direction) {
+                let newIndex =
+                    (currentSlide + direction + items.length) % items.length;
+                showSlide(newIndex);
+            }
 
-function setSlide(index) {
-  showSlide(index);
-  resetSlideInterval();
-}
+            function setSlide(index) {
+                showSlide(index);
+                resetSlideInterval();
+            }
 
-function resetSlideInterval() {
-  clearInterval(slideInterval);
-  slideInterval = setInterval(() => moveCarousel(1), 5000);
-}
+            function resetSlideInterval() {
+                clearInterval(slideInterval);
+                slideInterval = setInterval(() => moveCarousel(1), 5000);
+            }
 
-const carouselContainer = document.querySelector(".carousel-container");
-carouselContainer.addEventListener("mouseenter", () => clearInterval(slideInterval));
-carouselContainer.addEventListener("mouseleave", () => resetSlideInterval());
+            const carouselContainer = document.querySelector(
+                ".carousel-container",
+            );
+            carouselContainer.addEventListener("mouseenter", () =>
+                clearInterval(slideInterval),
+            );
+            carouselContainer.addEventListener("mouseleave", () =>
+                resetSlideInterval(),
+            );
 
-// Swipe-Unterstützung
-let touchStartX = null;
-carouselContainer.addEventListener("touchstart", (e) => {
-  touchStartX = e.changedTouches[0].screenX;
-});
-carouselContainer.addEventListener("touchend", (e) => {
-  if (touchStartX === null) return;
-  let diff = e.changedTouches[0].screenX - touchStartX;
-  if (Math.abs(diff) > 50) {
-    moveCarousel(diff > 0 ? -1 : 1);
-  }
-  touchStartX = null;
-});
+            // Swipe-Unterstützung
+            let touchStartX = null;
+            carouselContainer.addEventListener("touchstart", (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+            carouselContainer.addEventListener("touchend", (e) => {
+                if (touchStartX === null) return;
+                let diff = e.changedTouches[0].screenX - touchStartX;
+                if (Math.abs(diff) > 50) {
+                    moveCarousel(diff > 0 ? -1 : 1);
+                }
+                touchStartX = null;
+            });
+        </script>
+    </body>
+</html>
