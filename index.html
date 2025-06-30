@@ -76,17 +76,21 @@
                 overflow: hidden;
                 border-radius: var(--border-radius);
                 box-shadow: var(--shadow);
+                aspect-ratio: 16/9;
+                background: #eee;
             }
 
             .carousel {
                 display: flex;
                 transition: transform 0.5s ease-in-out;
+                height: 100%;
             }
 
             .carousel-item {
                 min-width: 100%;
                 transition: opacity 0.5s ease-in-out;
                 display: none;
+                height: 100%;
             }
 
             .carousel-item.active {
@@ -96,7 +100,8 @@
             .carousel-item img {
                 display: block;
                 width: 100%;
-                height: auto;
+                height: 100%;
+                object-fit: cover;
                 border-radius: var(--border-radius);
             }
 
@@ -119,6 +124,22 @@
 
             .carousel-button.next {
                 right: 10px;
+            }
+
+            @media (max-width: 900px) {
+                .carousel-container {
+                    max-width: 100vw;
+                    aspect-ratio: 16/9;
+                }
+            }
+            @media (max-width: 600px) {
+                .carousel-container {
+                    max-width: 100vw;
+                    aspect-ratio: 4/3;
+                }
+                .carousel-item img {
+                    border-radius: 0;
+                }
             }
             /* CSS Reset and Base Styles */
             :root {
