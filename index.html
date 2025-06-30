@@ -263,7 +263,7 @@
                 <ul>
                     <li><a href="#home">Start</a></li>
                     <li><a href="#about">Über uns</a></li>
-                    <li><a href="#events">Veranstaltungen</a></li>
+                    <li><a href="events.html">Veranstaltungen</a></li>
                     <li><a href="donations.html">Spenden</a></li>
                     <li><a href="#contact">Kontakt</a></li>
                     <li><a href="privacy.html">Datenschutz</a></li>
@@ -329,55 +329,40 @@
                 </p>
             </section>
 
-            <section id="events">
-                <h2>Kommende Veranstaltungen</h2>
+            <section id="home">
+                <h1>Willkommen im bitcircus101</h1>
+                <pre class="ascii-art">
+  +------------------------------------------+
+  |                                          |
+  |                bitcircus101              |
+  |                                          |
+  |       +---------+        +-------+       |
+  |       |  Desk   |        |  Art  |       |
+  |       +---------+        +-------+       |
+  |                                          |
+  |                                          |
+  |  +------+                     +------+   |
+  |  |      |                     |      |   |
+  |  |Chair |       +-----+       | Desk |   |
+  |  |      |       |     |       |      |   |
+  |  +------+       |Table|       +------+   |
+  |                 |     |                  |
+  |  +------+       +-----+       +------+   |
+  |  |      |                     |      |   |
+  |  |Chair |                     |Shelf |   |
+  |  |      |                     |      |   |
+  |  +------+                     +------+   |
+  |                                          |
+  |              +---------+                 |
+  |              | Plants  |                 |
+  |              +---------+                 |
+  |                                          |
+  +------------------------------------------+
+            </pre
+                >
                 <p>
-                    Neben gebuchten Workshops bieten wir regelmäßige offene Veranstaltungen an. Im Kalender findest du alle aktuellen Termine.
+                    Erlebe einen flexiblen Technik‑ und Kreativraum für Workshops, Schulungen und entspannte Treffen – am Rande der Bonner Altstadt.
                 </p>
-                <p class="privacy-notice" style="font-size: 0.9em; color: #666; margin-bottom: 10px;">
-                    ℹ️ Unser Kalender liegt auf unserer sicheren Nextcloud‑Instanz (nc.6bm.de). Es werden keine Tracker oder Cookies von Drittanbietern verwendet.
-                </p>
-                <p class="calendar-fallback" style="font-size: 0.9em; color: #666;">
-                    🛡️ Kalender nicht sichtbar? Prüfe deine Privacy‑ oder Ad‑Block‑Einstellungen oder <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" target="_blank" rel="noopener" style="color: var(--primary-color);">öffne den Kalender direkt</a>
-                </p>
-                <div class="calendar-container">
-                    <!-- Calendar iframe for production -->
-                    <iframe
-                        width="800"
-                        height="600"
-                        src="https://nc.6bm.de/apps/calendar/embed/DCaFSYECrcTJRJjC/listMonth/now"
-                        style="border: 0; max-width: 100%"
-                        frameborder="0"
-                        scrolling="no"
-                        sandbox="allow-scripts allow-same-origin"
-                        loading="lazy"
-                        referrerpolicy="no-referrer"
-                    ></iframe>
-                    <!-- Development placeholder -->
-                    <div class="calendar-placeholder" style="width: 800px; max-width: 100%; height: 600px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius); border: 2px dashed #ccc;">
-                        <p style="color: #666;">Der Kalender wird auf der Live‑Site angezeigt</p>
-                    </div>
-                </div>
-                <!-- Linkup Event Description -->
-                <div class="linkup-description" style="margin: 20px 0; padding: 20px; background-color: #eef; border-radius: var(--border-radius); box-shadow: var(--shadow);">
-                    <h3>linkup@bitcircus101</h3>
-                    <p>
-                        Unser monatliches Highlight: linkup@bitcircus101 findet jeden dritten Freitag im Monat ab 20 Uhr statt. Freu dich auf Lightning Talks (3 Folien, 3 Minuten) und anschließend lockere Gespräche.
-                    </p>
-                    <p>
-                        An den übrigen Freitagen laden wir ab 20 Uhr zum Casual linkup – bring deine Ideen mit, genieß Getränke &amp; Snacks und vernetze dich mit der Tech‑Community!
-                    </p>
-                    <p>Fragen? <a href="#contact">Kontaktiere uns</a> – wir freuen uns!</p>
-                </div>
-                
-                <script>
-                    // Show placeholder in development, real calendar in production
-                    if (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') {
-                        document.querySelector('.calendar-container iframe').style.display = 'none';
-                    } else {
-                        document.querySelector('.calendar-placeholder').style.display = 'none';
-                    }
-                </script>
             </section>
 
             <section id="donations">
