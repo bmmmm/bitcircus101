@@ -351,3 +351,13 @@
         <script defer src="main.js"></script>
     </body>
 </html>
+
+            // Carousel functionality
+            let currentSlide = 0;
+            const items = document.querySelectorAll(".carousel-item");
+
+            function moveCarousel(direction) {
+                items[currentSlide].classList.remove("active");
+                currentSlide = (currentSlide + direction + items.length) % items.length;
+                items[currentSlide].classList.add("active");
+            }
