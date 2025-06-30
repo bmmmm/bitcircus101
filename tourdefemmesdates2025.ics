@@ -1,0 +1,79 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//TDF Femmes 2025//Etappen+Adressen//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250726T172500
+DTEND;TZID=Europe/Paris:20250726T192700
+SUMMARY:TDF Femmes 2025 – Stage 1  Vannes ➜ Plumelec
+LOCATION:56000 Vannes, France
+DESCRIPTION:Type Hilly\nLength 78.8 km\nNeutralised start 17:25\nExpected arrival 19:27\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250727T121000
+DTEND;TZID=Europe/Paris:20250727T150400
+SUMMARY:TDF Femmes 2025 – Stage 2  Brest ➜ Quimper
+LOCATION:29200 Brest, France
+DESCRIPTION:Type Flat\nLength 110.4 km\nNeutralised start 12:10\nExpected arrival 15:04\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250728T135000
+DTEND;TZID=Europe/Paris:20250728T173300
+SUMMARY:TDF Femmes 2025 – Stage 3  La Gacilly ➜ Angers
+LOCATION:56200 La Gacilly, France
+DESCRIPTION:Type Flat\nLength 163.5 km\nNeutralised start 13:50\nExpected arrival 17:33\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250729T143500
+DTEND;TZID=Europe/Paris:20250729T173500
+SUMMARY:TDF Femmes 2025 – Stage 4  Saumur ➜ Poitiers
+LOCATION:49400 Saumur, France
+DESCRIPTION:Type Flat\nLength 130.7 km\nNeutralised start 14:35\nExpected arrival 17:35\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250730T132000
+DTEND;TZID=Europe/Paris:20250730T173200
+SUMMARY:TDF Femmes 2025 – Stage 5  Chasseneuil-du-Poitou (Futuroscope) ➜ Guéret
+LOCATION:86360 Chasseneuil-du-Poitou, France
+DESCRIPTION:Type Medium Mountains\nLength 165.8 km\nNeutralised start 13:20\nExpected arrival 17:32\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250731T140000
+DTEND;TZID=Europe/Paris:20250731T173300
+SUMMARY:TDF Femmes 2025 – Stage 6  Clermont-Ferrand ➜ Ambert
+LOCATION:63000 Clermont-Ferrand, France
+DESCRIPTION:Type Mountain\nLength 123.7 km\nNeutralised start 14:00\nExpected arrival 17:33\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250801T133000
+DTEND;TZID=Europe/Paris:20250801T173000
+SUMMARY:TDF Femmes 2025 – Stage 7  Bourg-en-Bresse ➜ Chambéry
+LOCATION:01000 Bourg-en-Bresse, France
+DESCRIPTION:Type Hilly\nLength 159.7 km\nNeutralised start 13:30\nExpected arrival 17:30\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250802T134500
+DTEND;TZID=Europe/Paris:20250802T171500
+SUMMARY:TDF Femmes 2025 – Stage 8  Chambéry ➜ St-François-Longchamp (Col de la Madeleine)
+LOCATION:73000 Chambéry, France
+DESCRIPTION:Type Mountain\nLength 111.9 km\nNeutralised start 13:45\nExpected arrival 17:15\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTART;TZID=Europe/Paris:20250803T152000
+DTEND;TZID=Europe/Paris:20250803T184500
+SUMMARY:TDF Femmes 2025 – Stage 9  Praz-sur-Arly ➜ Châtel
+LOCATION:74120 Praz-sur-Arly, France
+DESCRIPTION:Type Mountain\nLength 124.1 km\nNeutralised start 15:20\nExpected arrival 18:45\nStage image https://www.letourfemmes.fr/img/stage/default-route.png
+END:VEVENT
+
+END:VCALENDAR
