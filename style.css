@@ -829,8 +829,9 @@ body.cookie-banner-shown {
     }
 
     .linkup-description {
-        background-color: #2a2a2a !important;
+        background-color: #0f0f0f !important;
         border-left-color: var(--primary-color);
+        color: var(--text-color) !important;
     }
 
     .donation-item {
