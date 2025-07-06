@@ -275,6 +275,34 @@ body.cookie-banner-shown {
     padding-top: 200px;
 }
 
+/* Blur effect for donations page until cookie decision */
+body.cookie-banner-shown main {
+    filter: blur(8px);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+body.cookie-banner-shown .back-link {
+    filter: none;
+    opacity: 1;
+    pointer-events: auto;
+    position: relative;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 300px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.cookie-banner-shown footer {
+    filter: blur(8px);
+    opacity: 0.3;
+    pointer-events: none;
+}
+
 /* Contact Info Styles */
 .contact-info {
     text-align: center;
@@ -628,6 +656,12 @@ body.cookie-banner-shown {
         padding-top: 180px;
     }
 
+    body.cookie-banner-shown .back-link {
+        padding: 12px;
+        margin: 15px auto;
+        max-width: 280px;
+    }
+
     .site-notice button {
         padding: 10px 15px;
         font-size: 0.9rem;
@@ -693,6 +727,13 @@ body.cookie-banner-shown {
         padding-top: 160px;
     }
 
+    body.cookie-banner-shown .back-link {
+        padding: 10px;
+        margin: 12px auto;
+        max-width: 250px;
+        font-size: 0.9rem;
+    }
+
     .site-notice button {
         padding: 8px 12px;
         font-size: 0.85rem;
@@ -751,6 +792,13 @@ body.cookie-banner-shown {
 
     body.cookie-banner-shown {
         padding-top: 140px;
+    }
+
+    body.cookie-banner-shown .back-link {
+        padding: 8px;
+        margin: 10px auto;
+        max-width: 220px;
+        font-size: 0.85rem;
     }
 
     .donation-item {
