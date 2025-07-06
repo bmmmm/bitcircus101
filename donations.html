@@ -174,7 +174,7 @@
                                 "
                             >
                                 <a
-                                    href="https://www.openstreetmap.org/?mlat=50.7374&amp;mlon=7.0982#map=16/50.7374/7.0982"
+                                    href="https://www.openstreetmap.org/?mlat=50.74042&amp;mlon=7.08942#map=15/50.74042/7.08942"
                                     target="_blank"
                                     rel="noopener"
                                     style="color: #4285f4"
@@ -244,6 +244,12 @@
                     document.body.classList.add("cookie-banner-shown");
                 }
 
+                // Hide payment method text until decision is made
+                var paymentMethodText = document.getElementById(
+                    "payment-method-text",
+                );
+                if (paymentMethodText) paymentMethodText.style.display = "none";
+
                 // OSM map for decline
                 var showMapBtnDecline = document.getElementById(
                     "show-map-btn-decline",
@@ -255,7 +261,7 @@
                 if (showMapBtnDecline && mapContainerDecline && osmMapDecline) {
                     showMapBtnDecline.addEventListener("click", function () {
                         osmMapDecline.src =
-                            "https://www.openstreetmap.org/export/embed.html?bbox=7.085%2C50.735%2C7.105%2C50.740&layer=mapnik&marker=50.7374,7.0982";
+                            "https://www.openstreetmap.org/export/embed.html?bbox=7.076%2C50.738%2C7.102%2C50.743&layer=mapnik&marker=50.74042,7.08942";
                         mapContainerDecline.style.display = "block";
                         showMapBtnDecline.style.display = "none";
                     });
@@ -310,6 +316,13 @@
                 if (siteNotice) siteNotice.style.display = "none";
                 document.body.style.overflow = "auto";
                 document.body.classList.remove("cookie-banner-shown");
+
+                // Show payment method text after decision
+                var paymentMethodText = document.getElementById(
+                    "payment-method-text",
+                );
+                if (paymentMethodText)
+                    paymentMethodText.style.display = "block";
             }
 
             function acceptCookies() {
@@ -335,6 +348,13 @@
                 if (siteNotice) siteNotice.style.display = "none";
                 document.body.style.overflow = "auto";
                 document.body.classList.remove("cookie-banner-shown");
+
+                // Show payment method text after decision
+                var paymentMethodText = document.getElementById(
+                    "payment-method-text",
+                );
+                if (paymentMethodText)
+                    paymentMethodText.style.display = "block";
             }
         </script>
         <script defer src="main.js"></script>
