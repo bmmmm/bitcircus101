@@ -55,7 +55,7 @@
             <p>
                 Mit Klick auf „Akzeptieren &amp; fortfahren" stimmst du der
                 Nutzung von Cookies durch diese Dienste zu.
-                <a href="privacy.html" style="color: #4285f4"
+                <a href="impressum-datenschutz.html" style="color: #4285f4"
                     >Mehr zum Datenschutz</a
                 >.
             </p>
@@ -80,8 +80,11 @@
                     <li><a href="events.html">Veranstaltungen</a></li>
                     <li><a href="donations.html">Spenden</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="privacy.html">Datenschutz</a></li>
-                    <li><a href="imprint.html">Impressum</a></li>
+                    <li>
+                        <a href="impressum-datenschutz.html"
+                            >Impressum & Datenschutz</a
+                        >
+                    </li>
                 </ul>
             </nav>
         </header>
@@ -95,7 +98,10 @@
                         egal wie groß oder klein – macht einen Unterschied und
                         hält unsere Community lebendig.
                     </p>
-                    <p style="text-align: center; color: #666">
+                    <p
+                        id="payment-method-text"
+                        style="text-align: center; color: #666"
+                    >
                         Wähle deine bevorzugte Spendenmethode:
                     </p>
                     <div
@@ -246,7 +252,7 @@
                 if (showMapBtnDecline && mapContainerDecline && osmMapDecline) {
                     showMapBtnDecline.addEventListener("click", function () {
                         osmMapDecline.src =
-                            "https://www.openstreetmap.org/export/embed.html?bbox=7.08%2C50.72%2C7.12%2C50.755&layer=mapnik&marker=50.7374,7.0982";
+                            "https://www.openstreetmap.org/export/embed.html?bbox=7.085%2C50.735%2C7.105%2C50.740&layer=mapnik&marker=50.7374,7.0982";
                         mapContainerDecline.style.display = "block";
                         showMapBtnDecline.style.display = "none";
                     });
@@ -311,11 +317,15 @@
                 var declineMessage = document.getElementById("decline-message");
                 var donationContent =
                     document.getElementById("donation-content");
+                var paymentMethodText = document.getElementById(
+                    "payment-method-text",
+                );
                 var showMapBtn = document.getElementById(
                     "show-map-btn-decline",
                 );
                 if (declineMessage) declineMessage.style.display = "block";
                 if (donationContent) donationContent.style.display = "none";
+                if (paymentMethodText) paymentMethodText.style.display = "none";
                 if (showMapBtn) showMapBtn.style.display = "block";
                 var siteNotice = document.getElementById("site-notice");
                 if (siteNotice) siteNotice.style.display = "none";
