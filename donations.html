@@ -239,7 +239,10 @@
 
                 if (donationContent) donationContent.style.display = "none";
                 if (declineMessage) declineMessage.style.display = "none";
-                if (siteNotice) siteNotice.style.display = "block";
+                if (siteNotice) {
+                    siteNotice.style.display = "block";
+                    document.body.classList.add("cookie-banner-shown");
+                }
 
                 // OSM map for decline
                 var showMapBtnDecline = document.getElementById(
@@ -306,6 +309,7 @@
                 var siteNotice = document.getElementById("site-notice");
                 if (siteNotice) siteNotice.style.display = "none";
                 document.body.style.overflow = "auto";
+                document.body.classList.remove("cookie-banner-shown");
             }
 
             function acceptCookies() {
@@ -330,6 +334,7 @@
                 var siteNotice = document.getElementById("site-notice");
                 if (siteNotice) siteNotice.style.display = "none";
                 document.body.style.overflow = "auto";
+                document.body.classList.remove("cookie-banner-shown");
             }
         </script>
         <script defer src="main.js"></script>
