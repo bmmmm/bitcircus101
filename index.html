@@ -100,15 +100,7 @@
             <div class="container">
                 <section id="home">
                     <h1>Willkommen im bitcircus101</h1>
-                    <pre
-                        class="ascii-art"
-                        style="
-                            margin: 0 auto;
-                            max-width: 100%;
-                            font-size: 13px;
-                            text-align: center;
-                        "
-                    >
+                    <pre class="ascii-art">
   +------------------------------------------+
   |                                          |
   |                bitcircus101              |
@@ -210,21 +202,33 @@
                         <div class="carousel-indicators">
                             <span
                                 class="dot active"
-                                onclick="setSlide(0)"
+                                tabindex="0"
+                                role="button"
+                                aria-label="Zu Bild 1"
                             ></span>
-                            <span class="dot" onclick="setSlide(1)"></span>
-                            <span class="dot" onclick="setSlide(2)"></span>
+                            <span
+                                class="dot"
+                                tabindex="0"
+                                role="button"
+                                aria-label="Zu Bild 2"
+                            ></span>
+                            <span
+                                class="dot"
+                                tabindex="0"
+                                role="button"
+                                aria-label="Zu Bild 3"
+                            ></span>
                         </div>
                         <button
                             class="carousel-button prev"
-                            onclick="moveCarousel(-1)"
+                            type="button"
                             aria-label="Vorheriges Bild"
                         >
                             ❮
                         </button>
                         <button
                             class="carousel-button next"
-                            onclick="moveCarousel(1)"
+                            type="button"
                             aria-label="Nächstes Bild"
                         >
                             ❯
