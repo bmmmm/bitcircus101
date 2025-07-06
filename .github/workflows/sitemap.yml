@@ -1,29 +1,33 @@
 name: Generate sitemap
 
+#  ► Token braucht Schreibrechte
+permissions:
+  contents: write
+
 on:
   push:
-    branches:
-      - live          # feuert nur, wenn du in den Branch »live« pushst
-  # optional, falls du den Workflow auch manuell starten willst:
-  workflow_dispatch:
+    branches: [live] # bleibt bei dir so
+  workflow_dispatch: # manuelles Auslösen im Actions-Tab
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # damit <lastmod> auf echte Commit-Daten setzt
+          persist-credentials: true
 
       - name: Generate sitemap.xml
-        uses: cicirello/generate-sitemap@v1
+        uses: cicirello/generate-sitemap@v1.10.1 # feste Version ist klarer
         with:
-          base-url: https://bitcircus101.de
+          base-url: https://bitcircus101.de # ← richtige Domain
           output-file: sitemap.xml
 
-      # sitemap ins gleiche Branch committen
       - name: Commit sitemap
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add sitemap.xml
-          git commit -m "Update sitemap"
+          git diff --cached --quiet && echo "No changes" || git commit -m "Update sitemap"
           git push origin HEAD:${GITHUB_REF#refs/heads/}
