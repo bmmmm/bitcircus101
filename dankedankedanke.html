@@ -4,10 +4,12 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Danke für deine Spende – bitcircus101</title>
+        <link rel="stylesheet" href="style.css" />
         <style>
             /* Base styles */
             body {
-                font-family: "Courier New", monospace;
+                /* Einheitliche Schriftart wie in style.css */
+                font-family: 'Inter', Arial, sans-serif;
                 line-height: 1.6;
                 color: #333;
                 margin: 0;
@@ -106,8 +108,8 @@
     </head>
     <body>
         <header>
-            <nav id="main-nav">
-                <button class="menu-toggle" id="menu-toggle">☰ Menü</button>
+            <nav id="main-nav" aria-label="Hauptnavigation">
+                <button class="menu-toggle" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">☰ Menü</button>
                 <ul>
                     <li><a href="index.html">Start</a></li>
                     <li><a href="index.html#about">Über uns</a></li>
@@ -170,5 +172,6 @@
                         .classList.toggle("active");
                 });
         </script>
+        <script defer src="main.js"></script>
     </body>
 </html>
