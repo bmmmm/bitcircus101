@@ -4,291 +4,31 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Unterstütze bitcircus101 | Spenden</title>
-
-        <!-- Primary Meta Tags -->
-        <meta
-            name="title"
-            content="Unterstütze bitcircus101 | Spenden"
-        />
-        <meta
-            name="description"
-            content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!"
-        />
+        <meta name="title" content="Unterstütze bitcircus101 | Spenden" />
+        <meta name="description" content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!" />
         <meta name="robots" content="index, follow" />
-
-        <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://bitcircus101.de/donations.html" />
-        <meta
-            property="og:title"
-            content="Unterstütze bitcircus101 | Spenden"
-        />
-        <meta
-            property="og:description"
-            content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!"
-        />
-
-        <!-- Canonical URL -->
+        <meta property="og:title" content="Unterstütze bitcircus101 | Spenden" />
+        <meta property="og:description" content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!" />
+        <meta property="og:locale" content="de_DE" />
         <link rel="canonical" href="https://bitcircus101.de/donations.html" />
-
-        <style>
-            /* Base styles */
-            body {
-                font-family: "Courier New", monospace;
-                line-height: 1.6;
-                color: #333;
-                margin: 0;
-                padding: 0;
-                background-color: #f5f5f5;
-            }
-
-            .container {
-                width: 90%;
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 20px;
-            }
-
-            /* Navigation */
-            header {
-                background-color: #333;
-                padding: 10px 0;
-                position: sticky;
-                top: 0;
-                z-index: 100;
-            }
-
-            nav ul {
-                list-style: none;
-                display: flex;
-                justify-content: center;
-                padding: 0;
-                margin: 0;
-            }
-
-            nav li {
-                margin: 0 15px;
-            }
-
-            nav a {
-                color: #fff;
-                text-decoration: none;
-                font-size: 1.2rem;
-                transition: color 0.3s;
-            }
-
-            nav a:hover {
-                color: #aaa;
-            }
-
-            .menu-toggle {
-                display: none;
-                color: white;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                cursor: pointer;
-                padding: 10px;
-            }
-
-            /* Sections */
-            section {
-                margin: 40px 0;
-                padding: 20px;
-                background-color: #fff;
-                border-radius: 5px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            }
-
-            h1,
-            h2 {
-                text-align: center;
-            }
-
-            /* Site Notice (was Cookie Banner) */
-            .site-notice {
-                position: fixed;
-                top: 58%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: linear-gradient(135deg, #ffb347 0%, #ff7e5f 100%); /* warm ascent color */
-                color: white;
-                padding: 32px 28px 28px 28px;
-                text-align: center;
-                z-index: 1000;
-                display: none;
-                border-radius: 12px;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-                min-width: 320px;
-                max-width: 90vw;
-                overflow-y: auto;
-                max-height: 80vh;
-            }
-
-            .site-notice p {
-                margin: 0 0 15px 0;
-                font-size: 14px;
-            }
-
-            .site-notice button {
-                background-color: #4285f4;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                margin: 0 10px;
-                border-radius: 3px;
-                cursor: pointer;
-                font-size: 14px;
-                transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-                box-shadow: 0 2px 8px rgba(66,133,244,0.10);
-            }
-
-            .site-notice button:hover,
-            .site-notice button:focus {
-                background-color: #357ae8;
-                transform: translateY(-2px) scale(1.04);
-                box-shadow: 0 4px 16px rgba(66,133,244,0.18);
-            }
-
-            .site-notice .decline {
-                background-color: #666;
-                transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-            }
-
-            .site-notice .decline:hover,
-            .site-notice .decline:focus {
-                background-color: #555;
-                transform: translateY(-2px) scale(1.04);
-                box-shadow: 0 4px 16px rgba(66,133,244,0.10);
-            }
-
-            /* Donation sections */
-            .donation-buttons {
-                display: flex;
-                flex-direction: column;
-                gap: 30px;
-                margin-top: 30px;
-            }
-
-            .donation-item {
-                padding: 20px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                background-color: #f9f9f9;
-                text-align: center;
-            }
-
-            .donation-item h3 {
-                margin-top: 0;
-                color: #333;
-            }
-
-            .back-link {
-                text-align: center;
-                margin: 30px 0;
-            }
-
-            .back-link a {
-                color: #4285f4;
-                text-decoration: none;
-                font-size: 1.1rem;
-            }
-
-            .back-link a:hover {
-                text-decoration: underline;
-            }
-
-            /* Footer */
-            footer {
-                width: 100%;
-                background: #222;
-                color: #fff;
-                padding: 28px 0 18px 0;
-                text-align: center;
-                margin-top: 40px;
-            }
-
-            footer a {
-                color: #fff;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-            footer a:hover {
-                text-decoration: underline;
-            }
-
-            /* Responsive */
-            @media (max-width: 768px) {
-                .menu-toggle {
-                    display: block;
-                    margin: 0 auto;
-                }
-
-                nav ul {
-                    flex-direction: column;
-                    align-items: center;
-                    display: none;
-                }
-
-                nav.active ul {
-                    display: flex;
-                }
-
-                nav li {
-                    margin: 10px 0;
-                }
-
-                .cookie-banner {
-                    font-size: 12px;
-                }
-
-                .cookie-banner button {
-                    display: block;
-                    width: 100%;
-                    margin: 5px 0;
-                }
-
-                /* Ensure the site notice is scrollable on mobile */
-                .site-notice {
-                    overflow-y: auto;
-                    max-height: 80vh;
-                }
-
-                /* Adjustments for mobile devices */
-                .site-notice {
-                    top: 10%;
-                    transform: translate(-50%, 0);
-                }
-
-                .site-notice button {
-                    width: 100%;
-                    margin: 10px 0;
-                }
-            }
-        </style>
+        <link rel="stylesheet" href="style.css" />
     </head>
     <body>
-        <!-- Site Notice (was Cookie Banner) -->
         <div id="site-notice" class="site-notice">
-            <p>
-               <strong>Hinweis:</strong> Diese Seite nutzt Zahlungsdienste von Drittanbietern (PayPal, Ko-fi, Stripe) sowie Google-Dienste (reCAPTCHA, SOCS), die Cookies setzen können, um Spenden sicher abzuwickeln und Missbrauch zu verhindern.
-            </p>
+            <p><strong>Hinweis:</strong> Diese Seite nutzt Zahlungsdienste von Drittanbietern (PayPal, Ko-fi, Stripe) sowie Google-Dienste (reCAPTCHA, SOCS), die Cookies setzen können, um Spenden sicher abzuwickeln und Missbrauch zu verhindern.</p>
             <ul style="text-align:left; margin: 0 auto 10px auto; max-width: 500px; font-size: 0.97em;">
                 <li><strong>PayPal, Ko-fi, Stripe:</strong> Cookies für sichere Zahlungsabwicklung (siehe jeweilige Datenschutzerklärungen).</li>
                 <li><strong>Google (reCAPTCHA, SOCS):</strong> Cookies für Betrugsprävention, Bot-Schutz und Zahlungssicherheit.</li>
             </ul>
-            <p>
-                Mit Klick auf „Akzeptieren &amp; fortfahren“ stimmst du der Nutzung von Cookies durch diese Dienste zu. 
-                <a href="privacy.html" style="color: #4285f4;">Mehr zum Datenschutz</a>.
-            </p>
+            <p>Mit Klick auf „Akzeptieren &amp; fortfahren“ stimmst du der Nutzung von Cookies durch diese Dienste zu. <a href="privacy.html" style="color: #4285f4;">Mehr zum Datenschutz</a>.</p>
             <button onclick="acceptCookies()">Akzeptieren &amp; fortfahren</button>
             <button class="decline" onclick="declineCookies()">Ablehnen</button>
         </div>
-
         <header>
-            <nav id="main-nav">
-                <button class="menu-toggle" id="menu-toggle">☰ Menü</button>
+            <nav id="main-nav" aria-label="Hauptnavigation">
+                <button class="menu-toggle" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">☰ Menü</button>
                 <ul>
                     <li><a href="index.html">Start</a></li>
                     <li><a href="index.html#about">Über uns</a></li>
@@ -300,160 +40,41 @@
                 </ul>
             </nav>
         </header>
-
-        <div class="container">
-            <section>
-                <h1>Unterstütze bitcircus101</h1>
-                <p style="text-align: center; font-size: 1.1rem;">
-                    Deine Spende hilft, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag – egal wie groß oder klein – macht einen Unterschied und hält unsere Community lebendig.
-                </p>
-                <p style="text-align: center; color: #666;">
-                    Wähle deine bevorzugte Spendenmethode:
-                </p>
-
-                <div
-                    class="donation-buttons"
-                    id="donation-content"
-                    style="display: none; flex-direction: column; gap: 20px"
-                >
-                    <!-- Inhalt wird nach Zustimmung angezeigt -->
-                </div>
-
-                <div id="decline-message" style="display: none; text-align: center; margin-top: 20px;">
-                    <p style="font-size: 3rem;">😢</p>
-                    <p>
-                        Du hast Cookies abgelehnt.<br>
-                        Du kannst uns trotzdem vor Ort bei bitcircus101 unterstützen!
-                    </p>
-                </div>
-                <div class="back-link">
-                    <a href="index.html">← Zurück zur Startseite</a>
-                </div>
-                <div id="osm-map-decline-section" style="margin-top: 30px; text-align: center;">
-                    <button id="show-map-btn-decline" style="padding: 10px 20px; background: #4285f4; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; display: block; margin: 0 auto;">
-                        Karte anzeigen
-                    </button>
-                    <div id="osm-map-container-decline" style="display:none; margin-top: 20px;">
-                        <iframe
-                            id="osm-map-decline"
-                            width="100%"
-                            height="350"
-                            frameborder="0"
-                            scrolling="no"
-                            style="border-radius: 8px; border: 1px solid #ccc;"
-                            src=""
-                            allowfullscreen
-                        ></iframe>
-                        <div style="font-size: 0.9em; margin-top: 4px; text-align: center;"></div>
-                            <a href="https://www.openstreetmap.org/?mlat=50.740492&amp;mlon=7.089424#map=18/50.740492/7.089424" target="_blank" rel="noopener" style="color:#4285f4;">Größere Karte öffnen</a>
-                        </div>
+        <main>
+            <div class="container">
+                <section>
+                    <h1>Unterstütze bitcircus101</h1>
+                    <p style="text-align: center; font-size: 1.1rem;">Deine Spende hilft, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag – egal wie groß oder klein – macht einen Unterschied und hält unsere Community lebendig.</p>
+                    <p style="text-align: center; color: #666;">Wähle deine bevorzugte Spendenmethode:</p>
+                    <div class="donation-buttons" id="donation-content" style="display: none; flex-direction: column; gap: 20px"></div>
+                    <div id="decline-message" style="display: none; text-align: center; margin-top: 20px;">
+                        <p style="font-size: 3rem;">😢</p>
+                        <p></p>
                     </div>
-                </div>
-            </section>
-        </div> <!-- end .container -->
-        <footer style="width:100%; background: #222; color: #fff; padding: 28px 0 18px 0; text-align: center; margin-top: 40px;">
+                    <div class="back-link">
+                        <a href="index.html">← Zurück zur Startseite</a>
+                    </div>
+                    <div id="osm-map-decline-section" style="margin-top: 30px; text-align: center;"></div>
+                </section>
+            </div>
+        </main>
+        <footer role="contentinfo" style="width:100%; background: #222; color: #fff; padding: 28px 0 18px 0; text-align: center; margin-top: 40px;">
             <div style="max-width: 700px; margin: 0 auto;">
-                <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener" style="
-                    display: inline-block;
-                    color: #fff;
-                    background: linear-gradient(90deg, #ffb347 0%, #ff7e5f 100%);
-                    padding: 12px 32px;
-                    border-radius: 8px;
-                    font-size: 1.15rem;
-                    font-weight: bold;
-                    text-decoration: none;
-                    box-shadow: 0 2px 12px rgba(255,126,95,0.10);
-                    margin: 0 auto;
-                    transition: background 0.2s, transform 0.2s;
-                "
-                onmouseover="this.style.transform='scale(1.06)';this.style.background='linear-gradient(90deg,#ff7e5f 0%,#ffb347 100%)';"
-                onmouseout="this.style.transform='scale(1)';this.style.background='linear-gradient(90deg,#ffb347 0%,#ff7e5f 100%)';"
-                >
-                    🚀 Mitmachen oder Feedback auf GitHub: <span style="text-decoration:underline;">bitcircus101</span>
-                </a>
+                <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener" style="display: inline-block; color: #fff; background: linear-gradient(90deg, #ffb347 0%, #ff7e5f 100%); padding: 12px 32px; border-radius: 8px; font-size: 1.15rem; font-weight: bold; text-decoration: none; box-shadow: 0 2px 12px rgba(255,126,95,0.10); margin: 0 auto; transition: background 0.2s, transform 0.2s;" onmouseover="this.style.transform='scale(1.06)';this.style.background='linear-gradient(90deg,#ff7e5f 0%,#ffb347 100%)';" onmouseout="this.style.transform='scale(1)';this.style.background='linear-gradient(90deg,#ffb347 0%,#ff7e5f 100%)';"></a>
             </div>
         </footer>
+        <script defer src="main.js"></script>
         <script>
-            // Always show site notice immediately on page load, block all content until action
-            document.addEventListener('DOMContentLoaded', function() {
-                var siteNotice = document.getElementById('site-notice');
-                var donationContent = document.getElementById('donation-content');
-                var declineMessage = document.getElementById('decline-message');
-
-                if (donationContent) donationContent.style.display = 'none';
-                if (declineMessage) declineMessage.style.display = 'none';
-                if (siteNotice) siteNotice.style.display = 'block';
-
-                // OSM map for decline
-                var showMapBtnDecline = document.getElementById("show-map-btn-decline");
-                var mapContainerDecline = document.getElementById("osm-map-container-decline");
-                var osmMapDecline = document.getElementById("osm-map-decline");
-                if (showMapBtnDecline && mapContainerDecline && osmMapDecline) {
-                    showMapBtnDecline.addEventListener("click", function () {
-                        osmMapDecline.src = "https://www.openstreetmap.org/export/embed.html?bbox=7.086424%2C50.738492%2C7.092424%2C50.742492&layer=mapnik&marker=50.740492,7.089424";
-                        mapContainerDecline.style.display = "block";
-                        showMapBtnDecline.style.display = "none";
-                    });
-                }
-            });
-        </script>
-
-        <script>
-            // Show donation content only after explicit consent, always show banner first
             function showDonationContent() {
                 var container = document.getElementById('donation-content');
-                if (container) {
-                    // PayPal und Ko-fi erst nach Zustimmung anzeigen
-                    container.innerHTML = `
-                        <div class="donation-item">
-                            <h3>Spende via PayPal</h3>
-                            <a
-                                href="https://www.paypal.com/paypalme/b6m"
-                                target="_blank"
-                                style="
-                                    display: inline-block;
-                                    padding: 10px 20px;
-                                    background-color: #0070ba;
-                                    color: white;
-                                    text-decoration: none;
-                                    border-radius: 5px;
-                                    font-size: 1rem;
-                                    text-align: center;
-                                    transition: background-color 0.3s;
-                                "
-                            >
-                                Mit PayPal spenden
-                            </a>
-                        </div>
-                        <div class="donation-item">
-                            <h3>Spende via Ko‑fi</h3>
-                            <iframe
-                                id="kofiframe"
-                                src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
-                                style="
-                                    border: none;
-                                    width: 100%;
-                                    padding: 4px;
-                                    background: #f9f9f9;
-                                "
-                                height="712"
-                                title="bmabma"
-                            ></iframe>
-                        </div>
-                    `;
-                    container.style.display = 'flex';
-                }
+                if (container) container.style.display = 'flex';
                 var siteNotice = document.getElementById('site-notice');
                 if (siteNotice) siteNotice.style.display = 'none';
             }
-
             function acceptCookies() {
                 localStorage.setItem('bitcircus-cookie-consent', 'accepted');
                 showDonationContent();
-                var siteNotice = document.getElementById('site-notice');
-                if (siteNotice) siteNotice.style.display = 'none';
             }
-
             function declineCookies() {
                 var declineMessage = document.getElementById('decline-message');
                 var donationContent = document.getElementById('donation-content');
@@ -462,27 +83,12 @@
                 var siteNotice = document.getElementById('site-notice');
                 if (siteNotice) siteNotice.style.display = 'none';
             }
-
-            // Toggle mobile menu
-            document
-                .getElementById("menu-toggle")
-                .addEventListener("click", function () {
-                    document
-                        .getElementById("main-nav")
-                        .classList.toggle("active");
-                });
-
-            // Initialize on page load
-            document.addEventListener('DOMContentLoaded', function() {
-                checkCookieConsent();
+            document.getElementById('menu-toggle').addEventListener('click', function () {
+                document.getElementById('main-nav').classList.toggle('active');
             });
-
-            // Ensure the site notice is scrollable and buttons are clickable on mobile
             document.addEventListener('DOMContentLoaded', function() {
-                var siteNotice = document.getElementById('site-notice');
-                if (siteNotice) {
-                    siteNotice.style.overflowY = 'auto';
-                    siteNotice.style.maxHeight = '80vh';
+                if (localStorage.getItem('bitcircus-cookie-consent') === 'accepted') {
+                    showDonationContent();
                 }
             });
         </script>
