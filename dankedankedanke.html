@@ -16,9 +16,16 @@
                 padding: 0;
                 background-color: #f5f5f5;
                 display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+
+            .main-content {
+                flex: 1;
+                display: flex;
                 align-items: center;
                 justify-content: center;
-                min-height: 100vh;
+                padding: 80px 20px 20px;
             }
 
             /* Navigation */
@@ -71,7 +78,9 @@
                 border-radius: 5px;
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
                 text-align: center;
-                margin-top: 80px;
+                max-width: 600px;
+                width: 100%;
+                margin: 0 auto;
             }
 
             a {
@@ -132,14 +141,16 @@
             </nav>
         </header>
 
-        <div class="container">
-            <h1>VIELEN DANK!</h1>
-            <p>
-                Deine Spende hilft, dass bitcircus101 ein kreativer und
-                inspirierender Ort für die Community bleibt. Wir freuen uns über
-                jede Unterstützung – und sagen von Herzen: Danke!
-            </p>
-            <p><a href="index.html">Zurück zur Startseite</a></p>
+        <div class="main-content">
+            <div class="container">
+                <h1>VIELEN DANK!</h1>
+                <p>
+                    Deine Spende hilft, dass bitcircus101 ein kreativer und
+                    inspirierender Ort für die Community bleibt. Wir freuen uns
+                    über jede Unterstützung – und sagen von Herzen: Danke!
+                </p>
+                <p><a href="index.html">Zurück zur Startseite</a></p>
+            </div>
         </div>
         <!-- end .container -->
         <footer
@@ -149,7 +160,7 @@
                 color: #fff;
                 padding: 28px 0 18px 0;
                 text-align: center;
-                margin-top: 40px;
+                margin-top: 0;
             "
         >
             <div style="max-width: 700px; margin: 0 auto">
