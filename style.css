@@ -194,22 +194,28 @@ section {
 /* Cookie Banner Styles */
 .site-notice {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background-color: #fff;
-    border-bottom: 3px solid var(--primary-color);
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    top: 58%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #ffb347 0%, #ff7e5f 100%);
+    color: white;
+    padding: 32px 28px 28px 28px;
     text-align: center;
-    font-size: 0.95em;
+    z-index: 1000;
+    display: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    min-width: 320px;
+    max-width: 90vw;
+    overflow-y: auto;
+    max-height: 80vh;
+    font-size: 14px;
     line-height: 1.5;
 }
 
 .site-notice p {
     margin: 0 0 15px 0;
-    color: var(--text-color);
+    color: white;
 }
 
 .site-notice ul {
@@ -221,18 +227,51 @@ section {
 
 .site-notice li {
     margin: 8px 0;
-    color: var(--text-color);
+    color: white;
 }
 
 .site-notice button {
-    margin: 5px 10px;
-    font-size: 0.95rem;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+    transition:
+        background 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.1);
     min-width: 120px;
+}
+
+.site-notice button:hover,
+.site-notice button:focus {
+    background-color: #357ae8;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px rgba(66, 133, 244, 0.18);
+}
+
+.site-notice .btn-secondary {
+    background-color: #666;
+    transition:
+        background 0.2s,
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+
+.site-notice .btn-secondary:hover,
+.site-notice .btn-secondary:focus {
+    background-color: #555;
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 4px 16px rgba(66, 133, 244, 0.1);
 }
 
 /* Adjust body margin when cookie banner is shown */
 body.cookie-banner-shown {
-    padding-top: 180px;
+    overflow: hidden;
 }
 
 /* Contact Info Styles */
@@ -325,6 +364,30 @@ body.cookie-banner-shown {
 
 .donation-buttons a:hover {
     transform: translateY(-3px);
+}
+
+/* Donation Items */
+.donation-item {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    background-color: #f9f9f9;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.donation-item h3 {
+    margin-top: 0;
+    color: var(--text-color);
+    font-family: "Courier New", monospace;
+}
+
+.donation-item iframe {
+    border: none;
+    width: 100%;
+    padding: 4px;
+    background: #f9f9f9;
+    border-radius: var(--border-radius);
 }
 
 /* Privacy Notice */
@@ -554,16 +617,17 @@ body.cookie-banner-shown {
     .site-notice {
         padding: 15px;
         font-size: 0.9em;
+        top: 10%;
+        transform: translate(-50%, 0);
+        overflow-y: auto;
+        max-height: 80vh;
     }
 
     .site-notice button {
         padding: 10px 15px;
         font-size: 0.9rem;
-        margin: 3px 5px;
-    }
-
-    body.cookie-banner-shown {
-        padding-top: 220px;
+        margin: 10px 0;
+        width: 100%;
     }
 
     .ascii-art {
@@ -578,6 +642,15 @@ body.cookie-banner-shown {
     .donation-buttons a {
         min-width: 150px;
         padding: 12px 20px;
+    }
+
+    .donation-item {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .donation-item h3 {
+        font-size: 1.2rem;
     }
 }
 
@@ -618,10 +691,6 @@ body.cookie-banner-shown {
         margin: 5px auto;
     }
 
-    body.cookie-banner-shown {
-        padding-top: 260px;
-    }
-
     .ascii-art {
         font-size: 0.6rem;
         padding: 8px;
@@ -642,6 +711,20 @@ body.cookie-banner-shown {
         padding: 10px 15px;
         font-size: 0.9rem;
     }
+
+    .donation-item {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .donation-item h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    .donation-item iframe {
+        height: 600px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -653,8 +736,17 @@ body.cookie-banner-shown {
         font-size: 0.8em;
     }
 
-    body.cookie-banner-shown {
-        padding-top: 300px;
+    .donation-item {
+        padding: 8px;
+        margin-bottom: 8px;
+    }
+
+    .donation-item h3 {
+        font-size: 1rem;
+    }
+
+    .donation-item iframe {
+        height: 500px;
     }
 }
 /* Utility classes */
@@ -734,5 +826,23 @@ body.cookie-banner-shown {
     .site-notice {
         background-color: #1e1e1e;
         color: var(--text-color);
+    }
+
+    .linkup-description {
+        background-color: #2a2a2a !important;
+        border-left-color: var(--primary-color);
+    }
+
+    .donation-item {
+        background-color: #2a2a2a;
+        border-color: #444;
+    }
+
+    .donation-item h3 {
+        color: var(--text-color);
+    }
+
+    .donation-item iframe {
+        background: #2a2a2a;
     }
 }

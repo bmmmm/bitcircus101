@@ -53,18 +53,16 @@
                 </li>
             </ul>
             <p>
-                Mit Klick auf „Akzeptieren &amp; fortfahren“ stimmst du der
+                Mit Klick auf „Akzeptieren &amp; fortfahren" stimmst du der
                 Nutzung von Cookies durch diese Dienste zu.
                 <a href="privacy.html" style="color: #4285f4"
                     >Mehr zum Datenschutz</a
                 >.
             </p>
-            <button class="btn btn-primary" onclick="acceptCookies()">
+            <button onclick="acceptCookies()">
                 Akzeptieren &amp; fortfahren
             </button>
-            <button class="btn btn-secondary" onclick="declineCookies()">
-                Ablehnen
-            </button>
+            <button class="decline" onclick="declineCookies()">Ablehnen</button>
         </div>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
@@ -103,40 +101,9 @@
                     <div
                         class="donation-buttons"
                         id="donation-content"
-                        style="
-                            display: none;
-                            flex-direction: column;
-                            gap: 20px;
-                            align-items: center;
-                        "
+                        style="display: none; flex-direction: column; gap: 20px"
                     >
-                        <a
-                            href="https://www.paypal.com/donate/?business=info%40bitcircus101.de&no_recurring=0&item_name=Unterstütze+bitcircus101&currency_code=EUR"
-                            target="_blank"
-                            rel="noopener"
-                            class="btn btn-primary"
-                            style="background-color: #0070ba"
-                        >
-                            💳 Spende via PayPal
-                        </a>
-                        <a
-                            href="https://ko-fi.com/bitcircus101"
-                            target="_blank"
-                            rel="noopener"
-                            class="btn btn-primary"
-                            style="background-color: #ff5f5f"
-                        >
-                            ☕ Spende via Ko-fi
-                        </a>
-                        <a
-                            href="https://buy.stripe.com/test_00000000000000000000"
-                            target="_blank"
-                            rel="noopener"
-                            class="btn btn-primary"
-                            style="background-color: #635bff"
-                        >
-                            💳 Spende via Stripe
-                        </a>
+                        <!-- Inhalt wird nach Zustimmung angezeigt -->
                     </div>
                     <div
                         id="decline-message"
@@ -148,18 +115,67 @@
                     >
                         <p style="font-size: 3rem">😢</p>
                         <p>
-                            Schade, dass du keine Cookies akzeptieren möchtest.
-                            Du kannst uns trotzdem gerne direkt per E-Mail
-                            kontaktieren:
-                            <a
-                                href="mailto:info@bitcircus101.de"
-                                style="color: #4285f4"
-                                >info@bitcircus101.de</a
-                            >
+                            Du hast Cookies abgelehnt.<br />
+                            Du kannst uns trotzdem vor Ort bei bitcircus101
+                            unterstützen!
                         </p>
                     </div>
                     <div class="back-link">
                         <a href="index.html">← Zurück zur Startseite</a>
+                    </div>
+                    <div
+                        id="osm-map-decline-section"
+                        style="margin-top: 30px; text-align: center"
+                    >
+                        <button
+                            id="show-map-btn-decline"
+                            style="
+                                padding: 10px 20px;
+                                background: #4285f4;
+                                color: #fff;
+                                border: none;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                font-size: 1rem;
+                                display: none;
+                                margin: 0 auto;
+                            "
+                        >
+                            Karte anzeigen
+                        </button>
+                        <div
+                            id="osm-map-container-decline"
+                            style="display: none; margin-top: 20px"
+                        >
+                            <iframe
+                                id="osm-map-decline"
+                                width="100%"
+                                height="350"
+                                frameborder="0"
+                                scrolling="no"
+                                style="
+                                    border-radius: 8px;
+                                    border: 1px solid #ccc;
+                                "
+                                src=""
+                                allowfullscreen
+                            ></iframe>
+                            <div
+                                style="
+                                    font-size: 0.9em;
+                                    margin-top: 4px;
+                                    text-align: center;
+                                "
+                            >
+                                <a
+                                    href="https://www.openstreetmap.org/?mlat=50.7374&amp;mlon=7.0982#map=16/50.7374/7.0982"
+                                    target="_blank"
+                                    rel="noopener"
+                                    style="color: #4285f4"
+                                    >Größere Karte öffnen</a
+                                >
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
@@ -207,7 +223,105 @@
                 </a>
             </div>
         </footer>
+        <script>
+            // Always show site notice immediately on page load, block all content until action
+            document.addEventListener("DOMContentLoaded", function () {
+                var siteNotice = document.getElementById("site-notice");
+                var donationContent =
+                    document.getElementById("donation-content");
+                var declineMessage = document.getElementById("decline-message");
+
+                if (donationContent) donationContent.style.display = "none";
+                if (declineMessage) declineMessage.style.display = "none";
+                if (siteNotice) siteNotice.style.display = "block";
+
+                // OSM map for decline
+                var showMapBtnDecline = document.getElementById(
+                    "show-map-btn-decline",
+                );
+                var mapContainerDecline = document.getElementById(
+                    "osm-map-container-decline",
+                );
+                var osmMapDecline = document.getElementById("osm-map-decline");
+                if (showMapBtnDecline && mapContainerDecline && osmMapDecline) {
+                    showMapBtnDecline.addEventListener("click", function () {
+                        osmMapDecline.src =
+                            "https://www.openstreetmap.org/export/embed.html?bbox=7.08%2C50.72%2C7.12%2C50.755&layer=mapnik&marker=50.7374,7.0982";
+                        mapContainerDecline.style.display = "block";
+                        showMapBtnDecline.style.display = "none";
+                    });
+                }
+            });
+
+            // Show donation content only after explicit consent, always show banner first
+            function showDonationContent() {
+                var container = document.getElementById("donation-content");
+                if (container) {
+                    // PayPal und Ko-fi erst nach Zustimmung anzeigen
+                    container.innerHTML = `
+                        <div class="donation-item" style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
+                            <h3 style="margin-top: 0; color: #333;">Spende via PayPal</h3>
+                            <a
+                                href="https://www.paypal.com/paypalme/b6m"
+                                target="_blank"
+                                style="
+                                    display: inline-block;
+                                    padding: 10px 20px;
+                                    background-color: #0070ba;
+                                    color: white;
+                                    text-decoration: none;
+                                    border-radius: 5px;
+                                    font-size: 1rem;
+                                    text-align: center;
+                                    transition: background-color 0.3s;
+                                "
+                            >
+                                Mit PayPal spenden
+                            </a>
+                        </div>
+                        <div class="donation-item" style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
+                            <h3 style="margin-top: 0; color: #333;">Spende via Ko‑fi</h3>
+                            <iframe
+                                id="kofiframe"
+                                src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
+                                style="
+                                    border: none;
+                                    width: 100%;
+                                    padding: 4px;
+                                    background: #f9f9f9;
+                                "
+                                height="712"
+                                title="bmabma"
+                            ></iframe>
+                        </div>
+                    `;
+                    container.style.display = "flex";
+                }
+                var siteNotice = document.getElementById("site-notice");
+                if (siteNotice) siteNotice.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+
+            function acceptCookies() {
+                localStorage.setItem("bitcircus-cookie-consent", "accepted");
+                showDonationContent();
+            }
+
+            function declineCookies() {
+                var declineMessage = document.getElementById("decline-message");
+                var donationContent =
+                    document.getElementById("donation-content");
+                var showMapBtn = document.getElementById(
+                    "show-map-btn-decline",
+                );
+                if (declineMessage) declineMessage.style.display = "block";
+                if (donationContent) donationContent.style.display = "none";
+                if (showMapBtn) showMapBtn.style.display = "block";
+                var siteNotice = document.getElementById("site-notice");
+                if (siteNotice) siteNotice.style.display = "none";
+                document.body.style.overflow = "auto";
+            }
+        </script>
         <script defer src="main.js"></script>
-        <script defer src="cookie-banner.js"></script>
     </body>
 </html>

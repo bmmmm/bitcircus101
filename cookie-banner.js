@@ -1,53 +1,30 @@
-// cookie-banner.js – Cookie banner logic for donations page
+// cookie-banner.js – General cookie consent utility
 (function () {
   "use strict";
 
-  function showDonationContent() {
-    var container = document.getElementById("donation-content");
-    if (container) {
-      container.style.display = "flex";
-      container.style.flexDirection = "column";
-      container.style.alignItems = "center";
-    }
-    hideBanner();
+  // Check if we're on the donations page - if so, don't run this script
+  // as donations.html handles its own cookie banner
+  if (window.location.pathname.includes("donations.html")) {
+    return;
   }
 
-  function hideBanner() {
-    var siteNotice = document.getElementById("site-notice");
-    if (siteNotice) siteNotice.style.display = "none";
-    document.body.classList.remove("cookie-banner-shown");
-  }
-
-  function showDeclineMessage() {
-    var declineMessage = document.getElementById("decline-message");
-    var donationContent = document.getElementById("donation-content");
-    if (declineMessage) declineMessage.style.display = "block";
-    if (donationContent) donationContent.style.display = "none";
-    hideBanner();
-  }
-
-  // Global functions for button clicks
-  window.acceptCookies = function () {
-    localStorage.setItem("bitcircus-cookie-consent", "accepted");
-    showDonationContent();
+  // Utility function to check cookie consent status
+  window.checkCookieConsent = function () {
+    return localStorage.getItem("bitcircus-cookie-consent") === "accepted";
   };
 
-  window.declineCookies = function () {
-    showDeclineMessage();
-  };
-
-  // Initialize on page load
-  document.addEventListener("DOMContentLoaded", function () {
-    var siteNotice = document.getElementById("site-notice");
-
-    // Only run cookie banner logic if site notice exists (donations page)
-    if (!siteNotice) return;
-
-    if (localStorage.getItem("bitcircus-cookie-consent") === "accepted") {
-      showDonationContent();
+  // Utility function to set cookie consent
+  window.setCookieConsent = function (accepted) {
+    if (accepted) {
+      localStorage.setItem("bitcircus-cookie-consent", "accepted");
     } else {
-      // Show banner and add body padding
-      document.body.classList.add("cookie-banner-shown");
+      localStorage.removeItem("bitcircus-cookie-consent");
     }
+  };
+
+  // Initialize consent check on page load for non-donations pages
+  document.addEventListener("DOMContentLoaded", function () {
+    // This script is now just a utility - specific pages can implement
+    // their own cookie banner logic if needed
   });
 })();
