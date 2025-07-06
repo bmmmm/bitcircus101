@@ -78,6 +78,21 @@
                         >öffne den Kalender direkt</a
                     >
                 </p>
+                <p
+                    class="calendar-download"
+                    style="font-size: 0.9em; color: #666; margin-top: 10px"
+                >
+                    📅 Du kannst den Kalender auch als
+                    <a
+                        href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
+                        target="_blank"
+                        rel="noopener"
+                        style="color: #4285f4"
+                        download="bitcircus101-events.ics"
+                        >ICS-Datei herunterladen</a
+                    >
+                    und in deinen eigenen Kalender importieren.
+                </p>
                 <div class="calendar-container">
                     <iframe
                         width="800"
@@ -86,9 +101,10 @@
                         style="border: 0; max-width: 100%"
                         frameborder="0"
                         scrolling="no"
-                        sandbox="allow-scripts allow-same-origin"
+                        sandbox="allow-scripts allow-same-origin allow-popups"
                         loading="lazy"
                         referrerpolicy="no-referrer"
+                        title="bitcircus101 Veranstaltungskalender"
                     ></iframe>
                     <div
                         class="calendar-placeholder"
@@ -187,18 +203,97 @@
             </div>
         </footer>
         <script>
-            // Show placeholder in development, real calendar in production
-            if (
-                window.location.hostname === "127.0.0.1" ||
-                window.location.hostname === "localhost"
-            ) {
-                document.querySelector(
+            document.addEventListener("DOMContentLoaded", function () {
+                const iframe = document.querySelector(
                     ".calendar-container iframe",
-                ).style.display = "none";
-            } else {
-                document.querySelector(".calendar-placeholder").style.display =
-                    "none";
-            }
+                );
+                const placeholder = document.querySelector(
+                    ".calendar-placeholder",
+                );
+
+                // Show placeholder in development
+                if (
+                    window.location.hostname === "127.0.0.1" ||
+                    window.location.hostname === "localhost"
+                ) {
+                    iframe.style.display = "none";
+                    return;
+                }
+
+                // Hide placeholder initially in production
+                placeholder.style.display = "none";
+
+                // Set up iframe load detection
+                let iframeLoaded = false;
+                let loadTimeout;
+
+                function showFallback() {
+                    iframe.style.display = "none";
+                    placeholder.style.display = "flex";
+                    placeholder.innerHTML = `
+                        <div style="text-align: center; padding: 20px;">
+                            <p style="color: #666; margin-bottom: 15px;">
+                                🛡️ Der Kalender wird von deinem Browser oder einer Erweiterung blockiert.
+                            </p>
+                            <p style="margin-bottom: 15px;">
+                                <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
+                                   target="_blank" rel="noopener"
+                                   style="color: #4285f4; text-decoration: none; font-weight: bold;">
+                                    📅 Kalender direkt öffnen
+                                </a>
+                            </p>
+                            <p>
+                                <a href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
+                                   target="_blank" rel="noopener"
+                                   style="color: #4285f4; text-decoration: none;"
+                                   download="bitcircus101-events.ics">
+                                    💾 Als ICS-Datei herunterladen
+                                </a>
+                            </p>
+                        </div>
+                    `;
+                }
+
+                // Set timeout to detect if iframe fails to load
+                loadTimeout = setTimeout(function () {
+                    if (!iframeLoaded) {
+                        showFallback();
+                    }
+                }, 5000); // 5 seconds timeout
+
+                // Handle iframe load success
+                iframe.addEventListener("load", function () {
+                    iframeLoaded = true;
+                    clearTimeout(loadTimeout);
+                });
+
+                // Handle iframe load error
+                iframe.addEventListener("error", function () {
+                    clearTimeout(loadTimeout);
+                    showFallback();
+                });
+
+                // Additional check for Privacy Badger or similar blockers
+                setTimeout(function () {
+                    try {
+                        // Try to access iframe content (will fail if blocked)
+                        const iframeDoc =
+                            iframe.contentDocument ||
+                            iframe.contentWindow.document;
+                        if (
+                            !iframeDoc ||
+                            iframeDoc.body.innerHTML.trim() === ""
+                        ) {
+                            showFallback();
+                        }
+                    } catch (e) {
+                        // Cross-origin error is expected, but complete blocking will cause other errors
+                        if (e.name !== "SecurityError") {
+                            showFallback();
+                        }
+                    }
+                }, 3000);
+            });
         </script>
         <script defer src="main.js"></script>
     </body>
