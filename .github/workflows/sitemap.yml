@@ -1,13 +1,12 @@
 name: Generate sitemap
 
-#  ► Token braucht Schreibrechte
 permissions:
-  contents: write
+  contents: write # Push-Recht für github-actions[bot]
 
 on:
   push:
-    branches: [live] # bleibt bei dir so
-  workflow_dispatch: # manuelles Auslösen im Actions-Tab
+    branches: [live] # oder [ main ] – je nach Setup
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,14 +14,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # damit <lastmod> auf echte Commit-Daten setzt
+          fetch-depth: 0 # korrekte <lastmod>-Daten
           persist-credentials: true
 
       - name: Generate sitemap.xml
-        uses: cicirello/generate-sitemap@v1.10.1 # feste Version ist klarer
+        uses: cicirello/generate-sitemap@v1.10.1 # feste Version empfohlen
+        id: sitemap
         with:
-          base-url: https://bitcircus101.de # ← richtige Domain
-          output-file: sitemap.xml
+          base-url-path: https://bitcircus101.de # ← deine Domain
+          path-to-root: . # (Standard, kann entfallen)
+          include-html: true
+          include-pdf: true # Standardwerte, nur zur Klarheit
+          sitemap-format: xml # "
 
       - name: Commit sitemap
         run: |

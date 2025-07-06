@@ -37,12 +37,14 @@
     });
   }
 
-  // Simple Carousel
+  // Carousel with Auto-Rotate
   const carousel = document.querySelector(".carousel");
   if (carousel) {
     const items = carousel.querySelectorAll(".carousel-item");
     const dots = document.querySelectorAll(".dot");
     let current = 0;
+    let autoRotateInterval;
+    let isUserInteracting = false;
 
     function showSlide(idx) {
       if (idx < 0 || idx >= items.length) return;
@@ -60,39 +62,107 @@
       showSlide(current);
     }
 
-    // Button clicks
-    carousel.addEventListener("click", (e) => {
-      if (e.target.matches(".carousel-button.next")) {
-        nextSlide();
-      } else if (e.target.matches(".carousel-button.prev")) {
-        prevSlide();
-      } else if (e.target.matches(".dot")) {
-        current = [...dots].indexOf(e.target);
-        showSlide(current);
+    function startAutoRotate() {
+      clearInterval(autoRotateInterval);
+      if (!isUserInteracting) {
+        autoRotateInterval = setInterval(nextSlide, 5000);
       }
+    }
+
+    function stopAutoRotate() {
+      clearInterval(autoRotateInterval);
+    }
+
+    function handleUserInteraction() {
+      isUserInteracting = true;
+      stopAutoRotate();
+      setTimeout(() => {
+        isUserInteracting = false;
+        startAutoRotate();
+      }, 10000);
+    }
+
+    // Direct button event handlers
+    const prevButton = carousel.querySelector(".carousel-button.prev");
+    const nextButton = carousel.querySelector(".carousel-button.next");
+
+    if (prevButton) {
+      prevButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        handleUserInteraction();
+        prevSlide();
+      });
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        handleUserInteraction();
+        nextSlide();
+      });
+    }
+
+    // Dot clicks
+    dots.forEach((dot, index) => {
+      dot.addEventListener("click", (e) => {
+        e.preventDefault();
+        handleUserInteraction();
+        current = index;
+        showSlide(current);
+      });
     });
 
-    // Simple touch support
+    // Touch support
     let startX = 0;
-    carousel.addEventListener("touchstart", (e) => {
-      startX = e.touches[0].clientX;
+    carousel.addEventListener(
+      "touchstart",
+      (e) => {
+        startX = e.touches[0].clientX;
+      },
+      { passive: true },
+    );
+
+    carousel.addEventListener(
+      "touchend",
+      (e) => {
+        const endX = e.changedTouches[0].clientX;
+        const deltaX = startX - endX;
+
+        if (Math.abs(deltaX) > 50) {
+          handleUserInteraction();
+          if (deltaX > 0) {
+            nextSlide();
+          } else {
+            prevSlide();
+          }
+        }
+      },
+      { passive: true },
+    );
+
+    // Pause on hover
+    carousel.addEventListener("mouseenter", () => {
+      isUserInteracting = true;
+      stopAutoRotate();
     });
 
-    carousel.addEventListener("touchend", (e) => {
-      const endX = e.changedTouches[0].clientX;
-      const deltaX = startX - endX;
+    carousel.addEventListener("mouseleave", () => {
+      isUserInteracting = false;
+      startAutoRotate();
+    });
 
-      if (Math.abs(deltaX) > 50) {
-        if (deltaX > 0) {
-          nextSlide();
-        } else {
-          prevSlide();
-        }
+    // Pause when tab is not visible
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stopAutoRotate();
+      } else if (!isUserInteracting) {
+        startAutoRotate();
       }
     });
 
     // Initialize
     showSlide(current);
+    startAutoRotate();
   }
 
   // Smooth scrolling for anchor links
