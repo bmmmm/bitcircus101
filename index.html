@@ -348,62 +348,21 @@
                 </a>
             </div>
         </footer>
+        <div id="site-notice" class="site-notice" style="display:none;">
+            <p><strong>Hinweis:</strong> Diese Seite nutzt Zahlungsdienste von Drittanbietern (PayPal, Ko-fi, Stripe) sowie Google-Dienste (reCAPTCHA, SOCS), die Cookies setzen können, um Spenden sicher abzuwickeln und Missbrauch zu verhindern.</p>
+            <ul style="text-align:left; margin: 0 auto 10px auto; max-width: 500px; font-size: 0.97em;">
+                <li><strong>PayPal, Ko-fi, Stripe:</strong> Cookies für sichere Zahlungsabwicklung (siehe jeweilige Datenschutzerklärungen).</li>
+                <li><strong>Google (reCAPTCHA, SOCS):</strong> Cookies für Betrugsprävention, Bot-Schutz und Zahlungssicherheit.</li>
+            </ul>
+            <p>Mit Klick auf „Akzeptieren &amp; fortfahren“ stimmst du der Nutzung von Cookies durch diese Dienste zu. <a href="privacy.html" style="color: #4285f4;">Mehr zum Datenschutz</a>.</p>
+            <button onclick="acceptCookies()">Akzeptieren &amp; fortfahren</button>
+            <button class="decline" onclick="declineCookies()">Ablehnen</button>
+        </div>
         <script defer src="main.js"></script>
-    </body>
-</html>
-
-let currentSlide = 0;
-const items = document.querySelectorAll(".carousel-item");
-const dots = document.querySelectorAll(".dot");
-let slideInterval = setInterval(() => moveCarousel(1), 5000);
-
-            function showSlide(index) {
-                items.forEach((item, i) => {
-                    item.classList.toggle("active", i === index);
-                    dots[i].classList.toggle("active", i === index);
-                });
-                currentSlide = index;
-            }
-
-            function moveCarousel(direction) {
-                let newIndex =
-                    (currentSlide + direction + items.length) % items.length;
-                showSlide(newIndex);
-            }
-
-            function setSlide(index) {
-                showSlide(index);
-                resetSlideInterval();
-            }
-
-            function resetSlideInterval() {
-                clearInterval(slideInterval);
-                slideInterval = setInterval(() => moveCarousel(1), 5000);
-            }
-
-            const carouselContainer = document.querySelector(
-                ".carousel-container",
-            );
-            carouselContainer.addEventListener("mouseenter", () =>
-                clearInterval(slideInterval),
-            );
-            carouselContainer.addEventListener("mouseleave", () =>
-                resetSlideInterval(),
-            );
-
-            // Swipe-Unterstützung
-            let touchStartX = null;
-            carouselContainer.addEventListener("touchstart", (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            });
-            carouselContainer.addEventListener("touchend", (e) => {
-                if (touchStartX === null) return;
-                let diff = e.changedTouches[0].screenX - touchStartX;
-                if (Math.abs(diff) > 50) {
-                    moveCarousel(diff > 0 ? -1 : 1);
-                }
-                touchStartX = null;
-            });
-        </script>
-    </body>
-</html>
+        <script>
+            // Cookie-Banner Logik
+            function showDonationContent() {
+                var container = document.getElementById('donation-content');
+                if (container) container.style.display = 'flex';
+                var siteNotice = document.getElementById('site-notice');
+                if
