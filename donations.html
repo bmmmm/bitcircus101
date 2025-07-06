@@ -5,30 +5,77 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Unterstütze bitcircus101 | Spenden</title>
         <meta name="title" content="Unterstütze bitcircus101 | Spenden" />
-        <meta name="description" content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!" />
+        <meta
+            name="description"
+            content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!"
+        />
         <meta name="robots" content="index, follow" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://bitcircus101.de/donations.html" />
-        <meta property="og:title" content="Unterstütze bitcircus101 | Spenden" />
-        <meta property="og:description" content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!" />
+        <meta
+            property="og:url"
+            content="https://bitcircus101.de/donations.html"
+        />
+        <meta
+            property="og:title"
+            content="Unterstütze bitcircus101 | Spenden"
+        />
+        <meta
+            property="og:description"
+            content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!"
+        />
         <meta property="og:locale" content="de_DE" />
         <link rel="canonical" href="https://bitcircus101.de/donations.html" />
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
         <div id="site-notice" class="site-notice">
-            <p><strong>Hinweis:</strong> Diese Seite nutzt Zahlungsdienste von Drittanbietern (PayPal, Ko-fi, Stripe) sowie Google-Dienste (reCAPTCHA, SOCS), die Cookies setzen können, um Spenden sicher abzuwickeln und Missbrauch zu verhindern.</p>
-            <ul style="text-align:left; margin: 0 auto 10px auto; max-width: 500px; font-size: 0.97em;">
-                <li><strong>PayPal, Ko-fi, Stripe:</strong> Cookies für sichere Zahlungsabwicklung (siehe jeweilige Datenschutzerklärungen).</li>
-                <li><strong>Google (reCAPTCHA, SOCS):</strong> Cookies für Betrugsprävention, Bot-Schutz und Zahlungssicherheit.</li>
+            <p>
+                <strong>Hinweis:</strong> Diese Seite nutzt Zahlungsdienste von
+                Drittanbietern (PayPal, Ko-fi, Stripe) sowie Google-Dienste
+                (reCAPTCHA, SOCS), die Cookies setzen können, um Spenden sicher
+                abzuwickeln und Missbrauch zu verhindern.
+            </p>
+            <ul
+                style="
+                    text-align: left;
+                    margin: 0 auto 10px auto;
+                    max-width: 500px;
+                    font-size: 0.97em;
+                "
+            >
+                <li>
+                    <strong>PayPal, Ko-fi, Stripe:</strong> Cookies für sichere
+                    Zahlungsabwicklung (siehe jeweilige Datenschutzerklärungen).
+                </li>
+                <li>
+                    <strong>Google (reCAPTCHA, SOCS):</strong> Cookies für
+                    Betrugsprävention, Bot-Schutz und Zahlungssicherheit.
+                </li>
             </ul>
-            <p>Mit Klick auf „Akzeptieren &amp; fortfahren“ stimmst du der Nutzung von Cookies durch diese Dienste zu. <a href="privacy.html" style="color: #4285f4;">Mehr zum Datenschutz</a>.</p>
-            <button onclick="acceptCookies()">Akzeptieren &amp; fortfahren</button>
-            <button class="decline" onclick="declineCookies()">Ablehnen</button>
+            <p>
+                Mit Klick auf „Akzeptieren &amp; fortfahren“ stimmst du der
+                Nutzung von Cookies durch diese Dienste zu.
+                <a href="privacy.html" style="color: #4285f4"
+                    >Mehr zum Datenschutz</a
+                >.
+            </p>
+            <button class="btn btn-primary" onclick="acceptCookies()">
+                Akzeptieren &amp; fortfahren
+            </button>
+            <button class="btn btn-secondary" onclick="declineCookies()">
+                Ablehnen
+            </button>
         </div>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
-                <button class="menu-toggle" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">☰ Menü</button>
+                <button
+                    class="menu-toggle"
+                    id="menu-toggle"
+                    aria-controls="main-nav"
+                    aria-expanded="false"
+                >
+                    ☰ Menü
+                </button>
                 <ul>
                     <li><a href="index.html">Start</a></li>
                     <li><a href="index.html#about">Über uns</a></li>
@@ -44,54 +91,123 @@
             <div class="container">
                 <section>
                     <h1>Unterstütze bitcircus101</h1>
-                    <p style="text-align: center; font-size: 1.1rem;">Deine Spende hilft, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag – egal wie groß oder klein – macht einen Unterschied und hält unsere Community lebendig.</p>
-                    <p style="text-align: center; color: #666;">Wähle deine bevorzugte Spendenmethode:</p>
-                    <div class="donation-buttons" id="donation-content" style="display: none; flex-direction: column; gap: 20px"></div>
-                    <div id="decline-message" style="display: none; text-align: center; margin-top: 20px;">
-                        <p style="font-size: 3rem;">😢</p>
-                        <p></p>
+                    <p style="text-align: center; font-size: 1.1rem">
+                        Deine Spende hilft, dass bitcircus101 ein kreativer und
+                        technischer Freiraum in Bonn bleibt. Jeder Beitrag –
+                        egal wie groß oder klein – macht einen Unterschied und
+                        hält unsere Community lebendig.
+                    </p>
+                    <p style="text-align: center; color: #666">
+                        Wähle deine bevorzugte Spendenmethode:
+                    </p>
+                    <div
+                        class="donation-buttons"
+                        id="donation-content"
+                        style="
+                            display: none;
+                            flex-direction: column;
+                            gap: 20px;
+                            align-items: center;
+                        "
+                    >
+                        <a
+                            href="https://www.paypal.com/donate/?business=info%40bitcircus101.de&no_recurring=0&item_name=Unterstütze+bitcircus101&currency_code=EUR"
+                            target="_blank"
+                            rel="noopener"
+                            class="btn btn-primary"
+                            style="background-color: #0070ba"
+                        >
+                            💳 Spende via PayPal
+                        </a>
+                        <a
+                            href="https://ko-fi.com/bitcircus101"
+                            target="_blank"
+                            rel="noopener"
+                            class="btn btn-primary"
+                            style="background-color: #ff5f5f"
+                        >
+                            ☕ Spende via Ko-fi
+                        </a>
+                        <a
+                            href="https://buy.stripe.com/test_00000000000000000000"
+                            target="_blank"
+                            rel="noopener"
+                            class="btn btn-primary"
+                            style="background-color: #635bff"
+                        >
+                            💳 Spende via Stripe
+                        </a>
+                    </div>
+                    <div
+                        id="decline-message"
+                        style="
+                            display: none;
+                            text-align: center;
+                            margin-top: 20px;
+                        "
+                    >
+                        <p style="font-size: 3rem">😢</p>
+                        <p>
+                            Schade, dass du keine Cookies akzeptieren möchtest.
+                            Du kannst uns trotzdem gerne direkt per E-Mail
+                            kontaktieren:
+                            <a
+                                href="mailto:info@bitcircus101.de"
+                                style="color: #4285f4"
+                                >info@bitcircus101.de</a
+                            >
+                        </p>
                     </div>
                     <div class="back-link">
                         <a href="index.html">← Zurück zur Startseite</a>
                     </div>
-                    <div id="osm-map-decline-section" style="margin-top: 30px; text-align: center;"></div>
                 </section>
             </div>
         </main>
-        <footer role="contentinfo" style="width:100%; background: #222; color: #fff; padding: 28px 0 18px 0; text-align: center; margin-top: 40px;">
-            <div style="max-width: 700px; margin: 0 auto;">
-                <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener" style="display: inline-block; color: #fff; background: linear-gradient(90deg, #ffb347 0%, #ff7e5f 100%); padding: 12px 32px; border-radius: 8px; font-size: 1.15rem; font-weight: bold; text-decoration: none; box-shadow: 0 2px 12px rgba(255,126,95,0.10); margin: 0 auto; transition: background 0.2s, transform 0.2s;" onmouseover="this.style.transform='scale(1.06)';this.style.background='linear-gradient(90deg,#ff7e5f 0%,#ffb347 100%)';" onmouseout="this.style.transform='scale(1)';this.style.background='linear-gradient(90deg,#ffb347 0%,#ff7e5f 100%)';"></a>
+        <footer
+            role="contentinfo"
+            style="
+                width: 100%;
+                background: #222;
+                color: #fff;
+                padding: 28px 0 18px 0;
+                text-align: center;
+                margin-top: 40px;
+            "
+        >
+            <div style="max-width: 700px; margin: 0 auto">
+                <a
+                    href="https://github.com/bmmmm/bitcircus101"
+                    target="_blank"
+                    rel="noopener"
+                    style="
+                        display: inline-block;
+                        color: #fff;
+                        background: linear-gradient(
+                            90deg,
+                            #ffb347 0%,
+                            #ff7e5f 100%
+                        );
+                        padding: 12px 32px;
+                        border-radius: 8px;
+                        font-size: 1.15rem;
+                        font-weight: bold;
+                        text-decoration: none;
+                        box-shadow: 0 2px 12px rgba(255, 126, 95, 0.1);
+                        margin: 0 auto;
+                        transition:
+                            background 0.2s,
+                            transform 0.2s;
+                    "
+                    onmouseover="this.style.transform='scale(1.06)';this.style.background='linear-gradient(90deg,#ff7e5f 0%,#ffb347 100%)';"
+                    onmouseout="this.style.transform='scale(1)';this.style.background='linear-gradient(90deg,#ffb347 0%,#ff7e5f 100%)';"
+                >
+                    🚀 Mitmachen oder Feedback auf GitHub:
+                    <span style="text-decoration: underline">bitcircus101</span>
+                </a>
             </div>
         </footer>
         <script defer src="main.js"></script>
         <script defer src="cookie-banner.js"></script>
-        <script>
-            function showDonationContent() {
-                var container = document.getElementById('donation-content');
-                if (container) container.style.display = 'flex';
-                var siteNotice = document.getElementById('site-notice');
-                if (siteNotice) siteNotice.style.display = 'none';
-            }
-            function acceptCookies() {
-                localStorage.setItem('bitcircus-cookie-consent', 'accepted');
-                showDonationContent();
-            }
-            function declineCookies() {
-                var declineMessage = document.getElementById('decline-message');
-                var donationContent = document.getElementById('donation-content');
-                if (declineMessage) declineMessage.style.display = 'block';
-                if (donationContent) donationContent.style.display = 'none';
-                var siteNotice = document.getElementById('site-notice');
-                if (siteNotice) siteNotice.style.display = 'none';
-            }
-            document.getElementById('menu-toggle').addEventListener('click', function () {
-                document.getElementById('main-nav').classList.toggle('active');
-            });
-            document.addEventListener('DOMContentLoaded', function() {
-                if (localStorage.getItem('bitcircus-cookie-consent') === 'accepted') {
-                    showDonationContent();
-                }
-            });
-        </script>
     </body>
 </html>
