@@ -100,7 +100,7 @@
                     </p>
                     <p
                         id="payment-method-text"
-                        style="text-align: center; color: #666"
+                        style="text-align: center; color: #666; display: none"
                     >
                         Wähle deine bevorzugte Spendenmethode:
                     </p>
@@ -328,6 +328,13 @@
             function acceptCookies() {
                 localStorage.setItem("bitcircus-cookie-consent", "accepted");
                 showDonationContent();
+
+                // Show payment method text after acceptance
+                var paymentMethodText = document.getElementById(
+                    "payment-method-text",
+                );
+                if (paymentMethodText)
+                    paymentMethodText.style.display = "block";
             }
 
             function declineCookies() {
