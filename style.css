@@ -194,19 +194,19 @@ section {
 /* Cookie Banner Styles */
 .site-notice {
     position: fixed;
-    top: 58%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
     background: linear-gradient(135deg, #ffb347 0%, #ff7e5f 100%);
     color: white;
-    padding: 32px 28px 28px 28px;
+    padding: 20px;
     text-align: center;
     z-index: 1000;
     display: none;
-    border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    min-width: 320px;
-    max-width: 90vw;
+    border-radius: 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     overflow-y: auto;
     max-height: 80vh;
     font-size: 14px;
@@ -272,6 +272,7 @@ section {
 /* Adjust body margin when cookie banner is shown */
 body.cookie-banner-shown {
     overflow: hidden;
+    padding-top: 200px;
 }
 
 /* Contact Info Styles */
@@ -617,10 +618,14 @@ body.cookie-banner-shown {
     .site-notice {
         padding: 15px;
         font-size: 0.9em;
-        top: 10%;
-        transform: translate(-50%, 0);
+        top: 0;
+        transform: none;
         overflow-y: auto;
         max-height: 80vh;
+    }
+
+    body.cookie-banner-shown {
+        padding-top: 180px;
     }
 
     .site-notice button {
@@ -680,6 +685,12 @@ body.cookie-banner-shown {
     .site-notice {
         padding: 10px;
         font-size: 0.85em;
+        top: 0;
+        transform: none;
+    }
+
+    body.cookie-banner-shown {
+        padding-top: 160px;
     }
 
     .site-notice button {
@@ -734,6 +745,12 @@ body.cookie-banner-shown {
 
     .site-notice {
         font-size: 0.8em;
+        top: 0;
+        transform: none;
+    }
+
+    body.cookie-banner-shown {
+        padding-top: 140px;
     }
 
     .donation-item {
