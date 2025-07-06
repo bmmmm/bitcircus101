@@ -453,7 +453,7 @@ body.cookie-banner-shown footer {
 /* ASCII Art */
 .ascii-art {
     font-family: "Courier New", monospace;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     overflow-x: hidden;
     white-space: pre;
     background-color: #f8f9fa;
@@ -462,7 +462,7 @@ body.cookie-banner-shown footer {
     margin: 20px 0;
     border: 1px solid #e9ecef;
     text-align: center;
-    max-width: 100%;
+    width: 100%;
     box-sizing: border-box;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -696,14 +696,12 @@ body.cookie-banner-shown footer {
     }
 
     .ascii-art {
-        font-size: 0.6rem;
+        font-size: 0.75rem;
         padding: 8px;
         overflow-x: hidden;
         line-height: 1.1;
-        transform: scale(0.8);
-        transform-origin: center;
         margin: 10px 0;
-        max-width: 100%;
+        width: 100%;
     }
 
     .donation-buttons {
@@ -804,14 +802,12 @@ body.cookie-banner-shown footer {
     }
 
     .ascii-art {
-        font-size: 0.5rem;
+        font-size: 0.65rem;
         padding: 5px;
         margin: 8px 0;
         overflow-x: hidden;
         line-height: 1;
-        transform: scale(0.7);
-        transform-origin: center;
-        max-width: 100%;
+        width: 100%;
     }
 
     .contact-info p {
@@ -846,14 +842,12 @@ body.cookie-banner-shown footer {
 
 @media (max-width: 400px) {
     .ascii-art {
-        font-size: 0.4rem;
+        font-size: 0.55rem;
         overflow-x: hidden;
         line-height: 0.9;
-        transform: scale(0.6);
-        transform-origin: center;
         padding: 3px;
         margin: 5px 0;
-        max-width: 100%;
+        width: 100%;
     }
 
     .carousel-container {

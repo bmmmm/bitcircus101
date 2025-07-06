@@ -44,7 +44,6 @@
     const dots = document.querySelectorAll(".dot");
     let current = 0;
     let autoRotateInterval;
-    let isUserInteracting = false;
 
     function showSlide(idx) {
       if (idx < 0 || idx >= items.length) return;
@@ -64,22 +63,16 @@
 
     function startAutoRotate() {
       clearInterval(autoRotateInterval);
-      if (!isUserInteracting) {
-        autoRotateInterval = setInterval(nextSlide, 5000);
-      }
+      autoRotateInterval = setInterval(nextSlide, 5000);
     }
 
     function stopAutoRotate() {
       clearInterval(autoRotateInterval);
     }
 
-    function handleUserInteraction() {
-      isUserInteracting = true;
+    function resetAutoRotate() {
       stopAutoRotate();
-      setTimeout(() => {
-        isUserInteracting = false;
-        startAutoRotate();
-      }, 10000);
+      setTimeout(startAutoRotate, 8000);
     }
 
     // Direct button event handlers
@@ -89,16 +82,18 @@
     if (prevButton) {
       prevButton.addEventListener("click", (e) => {
         e.preventDefault();
-        handleUserInteraction();
+        e.stopPropagation();
         prevSlide();
+        resetAutoRotate();
       });
     }
 
     if (nextButton) {
       nextButton.addEventListener("click", (e) => {
         e.preventDefault();
-        handleUserInteraction();
+        e.stopPropagation();
         nextSlide();
+        resetAutoRotate();
       });
     }
 
@@ -106,56 +101,42 @@
     dots.forEach((dot, index) => {
       dot.addEventListener("click", (e) => {
         e.preventDefault();
-        handleUserInteraction();
+        e.stopPropagation();
         current = index;
         showSlide(current);
+        resetAutoRotate();
       });
     });
 
     // Touch support
     let startX = 0;
-    carousel.addEventListener(
-      "touchstart",
-      (e) => {
-        startX = e.touches[0].clientX;
-      },
-      { passive: true },
-    );
+    carousel.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+    });
 
-    carousel.addEventListener(
-      "touchend",
-      (e) => {
-        const endX = e.changedTouches[0].clientX;
-        const deltaX = startX - endX;
+    carousel.addEventListener("touchend", (e) => {
+      const endX = e.changedTouches[0].clientX;
+      const deltaX = startX - endX;
 
-        if (Math.abs(deltaX) > 50) {
-          handleUserInteraction();
-          if (deltaX > 0) {
-            nextSlide();
-          } else {
-            prevSlide();
-          }
+      if (Math.abs(deltaX) > 50) {
+        if (deltaX > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
         }
-      },
-      { passive: true },
-    );
+        resetAutoRotate();
+      }
+    });
 
     // Pause on hover
-    carousel.addEventListener("mouseenter", () => {
-      isUserInteracting = true;
-      stopAutoRotate();
-    });
-
-    carousel.addEventListener("mouseleave", () => {
-      isUserInteracting = false;
-      startAutoRotate();
-    });
+    carousel.addEventListener("mouseenter", stopAutoRotate);
+    carousel.addEventListener("mouseleave", startAutoRotate);
 
     // Pause when tab is not visible
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         stopAutoRotate();
-      } else if (!isUserInteracting) {
+      } else {
         startAutoRotate();
       }
     });
