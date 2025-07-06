@@ -165,6 +165,9 @@
                                 "
                                 src=""
                                 allowfullscreen
+                                sandbox="allow-scripts allow-same-origin"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                loading="lazy"
                             ></iframe>
                             <div
                                 style="
@@ -261,7 +264,7 @@
                 if (showMapBtnDecline && mapContainerDecline && osmMapDecline) {
                     showMapBtnDecline.addEventListener("click", function () {
                         osmMapDecline.src =
-                            "https://www.openstreetmap.org/export/embed.html?bbox=7.076%2C50.738%2C7.102%2C50.743&layer=mapnik&marker=50.74042,7.08942";
+                            "https://www.openstreetmap.org/export/embed.html?bbox=7.086%2C50.739%2C7.093%2C50.742&layer=mapnik&marker=50.74042,7.08942";
                         mapContainerDecline.style.display = "block";
                         showMapBtnDecline.style.display = "none";
                     });
