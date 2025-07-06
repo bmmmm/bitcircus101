@@ -1,0 +1,29 @@
+name: Generate sitemap
+
+on:
+  push:
+    branches:
+      - live          # feuert nur, wenn du in den Branch »live« pushst
+  # optional, falls du den Workflow auch manuell starten willst:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate sitemap.xml
+        uses: cicirello/generate-sitemap@v1
+        with:
+          base-url: https://bitcircus101.de
+          output-file: sitemap.xml
+
+      # sitemap ins gleiche Branch committen
+      - name: Commit sitemap
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sitemap.xml
+          git commit -m "Update sitemap"
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
