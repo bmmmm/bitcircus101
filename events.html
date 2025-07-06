@@ -60,69 +60,192 @@
                     class="privacy-notice"
                     style="font-size: 0.9em; color: #666; margin-bottom: 10px"
                 >
-                    ℹ️ Unser Kalender liegt auf unserer sicheren
+                    ℹ️ Unsere Kalender liegen auf unserer sicheren
                     Nextcloud‑Instanz (nc.6bm.de). Es werden keine Tracker oder
                     Cookies von Drittanbietern verwendet.
                 </p>
+
+                <div
+                    class="calendar-controls"
+                    style="margin: 20px 0; text-align: center"
+                >
+                    <h3>Kalender-Ansicht</h3>
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: center;
+                            gap: 20px;
+                            flex-wrap: wrap;
+                            margin-bottom: 15px;
+                        "
+                    >
+                        <label
+                            style="display: flex; align-items: center; gap: 5px"
+                        >
+                            <input
+                                type="checkbox"
+                                id="calendar1-toggle"
+                                checked
+                            />
+                            <span>🎯 Hauptkalender (Events & Workshops)</span>
+                        </label>
+                        <label
+                            style="display: flex; align-items: center; gap: 5px"
+                        >
+                            <input
+                                type="checkbox"
+                                id="calendar2-toggle"
+                                checked
+                            />
+                            <span>📚 Zusatzkalender (Termine & Infos)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div
+                    class="calendar-downloads"
+                    style="margin: 20px 0; text-align: center"
+                >
+                    <h4>📅 Kalender-Downloads</h4>
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: center;
+                            gap: 15px;
+                            flex-wrap: wrap;
+                            margin-bottom: 10px;
+                        "
+                    >
+                        <a
+                            href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
+                            target="_blank"
+                            rel="noopener"
+                            style="color: #4285f4; text-decoration: none"
+                            download="bitcircus101-hauptkalender.ics"
+                        >
+                            💾 Hauptkalender (ICS)
+                        </a>
+                        <a
+                            href="https://nc.6bm.de/remote.php/dav/public-calendars/eXAebopPy9xZQCZT?export"
+                            target="_blank"
+                            rel="noopener"
+                            style="color: #4285f4; text-decoration: none"
+                            download="bitcircus101-zusatzkalender.ics"
+                        >
+                            💾 Zusatzkalender (ICS)
+                        </a>
+                    </div>
+                    <p style="font-size: 0.9em; color: #666; margin-top: 10px">
+                        Lade die ICS-Dateien herunter und importiere sie in
+                        deinen eigenen Kalender.
+                    </p>
+                </div>
+
                 <p
                     class="calendar-fallback"
-                    style="font-size: 0.9em; color: #666"
+                    style="font-size: 0.9em; color: #666; margin-bottom: 20px"
                 >
                     🛡️ Kalender nicht sichtbar? Prüfe deine Privacy‑ oder
-                    Ad‑Block‑Einstellungen oder
+                    Ad‑Block‑Einstellungen oder öffne sie direkt:
                     <a
                         href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
                         target="_blank"
                         rel="noopener"
                         style="color: #4285f4"
-                        >öffne den Kalender direkt</a
+                        >Hauptkalender</a
                     >
-                </p>
-                <p
-                    class="calendar-download"
-                    style="font-size: 0.9em; color: #666; margin-top: 10px"
-                >
-                    📅 Du kannst den Kalender auch als
+                    |
                     <a
-                        href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
+                        href="https://nc.6bm.de/apps/calendar/p/eXAebopPy9xZQCZT"
                         target="_blank"
                         rel="noopener"
                         style="color: #4285f4"
-                        download="bitcircus101-events.ics"
-                        >ICS-Datei herunterladen</a
+                        >Zusatzkalender</a
                     >
-                    und in deinen eigenen Kalender importieren.
                 </p>
-                <div class="calendar-container">
-                    <iframe
-                        width="800"
-                        height="600"
-                        src="https://nc.6bm.de/apps/calendar/embed/DCaFSYECrcTJRJjC/listMonth/now"
-                        style="border: 0; max-width: 100%"
-                        frameborder="0"
-                        scrolling="no"
-                        sandbox="allow-scripts allow-same-origin allow-popups"
-                        loading="lazy"
-                        referrerpolicy="no-referrer"
-                        title="bitcircus101 Veranstaltungskalender"
-                    ></iframe>
+                <div class="calendars-container">
+                    <!-- Hauptkalender -->
+                    <div class="calendar-container" id="calendar1-container">
+                        <h4 style="text-align: center; margin-bottom: 10px">
+                            🎯 Hauptkalender (Events & Workshops)
+                        </h4>
+                        <iframe
+                            id="calendar1-iframe"
+                            width="800"
+                            height="600"
+                            src="https://nc.6bm.de/apps/calendar/embed/DCaFSYECrcTJRJjC/listMonth/now"
+                            style="border: 0; max-width: 100%"
+                            frameborder="0"
+                            scrolling="no"
+                            sandbox="allow-scripts allow-same-origin allow-popups"
+                            loading="lazy"
+                            referrerpolicy="no-referrer"
+                            title="bitcircus101 Hauptkalender"
+                        ></iframe>
+                        <div
+                            class="calendar-placeholder"
+                            id="calendar1-placeholder"
+                            style="
+                                width: 800px;
+                                max-width: 100%;
+                                height: 600px;
+                                background: #f5f5f5;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 5px;
+                                border: 2px dashed #ccc;
+                            "
+                        >
+                            <p style="color: #666">
+                                Der Hauptkalender wird auf der Live‑Site
+                                angezeigt
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Zusatzkalender -->
                     <div
-                        class="calendar-placeholder"
-                        style="
-                            width: 800px;
-                            max-width: 100%;
-                            height: 600px;
-                            background: #f5f5f5;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            border-radius: 5px;
-                            border: 2px dashed #ccc;
-                        "
+                        class="calendar-container"
+                        id="calendar2-container"
+                        style="margin-top: 30px"
                     >
-                        <p style="color: #666">
-                            Der Kalender wird auf der Live‑Site angezeigt
-                        </p>
+                        <h4 style="text-align: center; margin-bottom: 10px">
+                            📚 Zusatzkalender (Termine & Infos)
+                        </h4>
+                        <iframe
+                            id="calendar2-iframe"
+                            width="800"
+                            height="600"
+                            src="https://nc.6bm.de/apps/calendar/embed/eXAebopPy9xZQCZT/listMonth/now"
+                            style="border: 0; max-width: 100%"
+                            frameborder="0"
+                            scrolling="no"
+                            sandbox="allow-scripts allow-same-origin allow-popups"
+                            loading="lazy"
+                            referrerpolicy="no-referrer"
+                            title="bitcircus101 Zusatzkalender"
+                        ></iframe>
+                        <div
+                            class="calendar-placeholder"
+                            id="calendar2-placeholder"
+                            style="
+                                width: 800px;
+                                max-width: 100%;
+                                height: 600px;
+                                background: #f5f5f5;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 5px;
+                                border: 2px dashed #ccc;
+                            "
+                        >
+                            <p style="color: #666">
+                                Der Zusatzkalender wird auf der Live‑Site
+                                angezeigt
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <div
@@ -204,95 +327,133 @@
         </footer>
         <script>
             document.addEventListener("DOMContentLoaded", function () {
-                const iframe = document.querySelector(
-                    ".calendar-container iframe",
-                );
-                const placeholder = document.querySelector(
-                    ".calendar-placeholder",
-                );
-
-                // Show placeholder in development
-                if (
+                const isDevelopment =
                     window.location.hostname === "127.0.0.1" ||
-                    window.location.hostname === "localhost"
-                ) {
-                    iframe.style.display = "none";
-                    return;
-                }
+                    window.location.hostname === "localhost";
 
-                // Hide placeholder initially in production
-                placeholder.style.display = "none";
+                // Calendar configurations
+                const calendars = [
+                    {
+                        id: "calendar1",
+                        name: "Hauptkalender",
+                        directUrl:
+                            "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+                        downloadUrl:
+                            "https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export",
+                        downloadName: "bitcircus101-hauptkalender.ics",
+                    },
+                    {
+                        id: "calendar2",
+                        name: "Zusatzkalender",
+                        directUrl:
+                            "https://nc.6bm.de/apps/calendar/p/eXAebopPy9xZQCZT",
+                        downloadUrl:
+                            "https://nc.6bm.de/remote.php/dav/public-calendars/eXAebopPy9xZQCZT?export",
+                        downloadName: "bitcircus101-zusatzkalender.ics",
+                    },
+                ];
 
-                // Set up iframe load detection
-                let iframeLoaded = false;
-                let loadTimeout;
+                // Initialize each calendar
+                calendars.forEach(function (cal) {
+                    const iframe = document.getElementById(cal.id + "-iframe");
+                    const placeholder = document.getElementById(
+                        cal.id + "-placeholder",
+                    );
+                    const container = document.getElementById(
+                        cal.id + "-container",
+                    );
+                    const toggle = document.getElementById(cal.id + "-toggle");
 
-                function showFallback() {
-                    iframe.style.display = "none";
-                    placeholder.style.display = "flex";
-                    placeholder.innerHTML = `
-                        <div style="text-align: center; padding: 20px;">
-                            <p style="color: #666; margin-bottom: 15px;">
-                                🛡️ Der Kalender wird von deinem Browser oder einer Erweiterung blockiert.
-                            </p>
-                            <p style="margin-bottom: 15px;">
-                                <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
-                                   target="_blank" rel="noopener"
-                                   style="color: #4285f4; text-decoration: none; font-weight: bold;">
-                                    📅 Kalender direkt öffnen
-                                </a>
-                            </p>
-                            <p>
-                                <a href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
-                                   target="_blank" rel="noopener"
-                                   style="color: #4285f4; text-decoration: none;"
-                                   download="bitcircus101-events.ics">
-                                    💾 Als ICS-Datei herunterladen
-                                </a>
-                            </p>
-                        </div>
-                    `;
-                }
+                    if (!iframe || !placeholder || !container || !toggle)
+                        return;
 
-                // Set timeout to detect if iframe fails to load
-                loadTimeout = setTimeout(function () {
-                    if (!iframeLoaded) {
+                    // Handle toggle functionality
+                    toggle.addEventListener("change", function () {
+                        container.style.display = this.checked
+                            ? "block"
+                            : "none";
+                    });
+
+                    // Show placeholder in development
+                    if (isDevelopment) {
+                        iframe.style.display = "none";
+                        return;
+                    }
+
+                    // Hide placeholder initially in production
+                    placeholder.style.display = "none";
+
+                    // Set up iframe load detection
+                    let iframeLoaded = false;
+                    let loadTimeout;
+
+                    function showFallback() {
+                        iframe.style.display = "none";
+                        placeholder.style.display = "flex";
+                        placeholder.innerHTML = `
+                            <div style="text-align: center; padding: 20px;">
+                                <p style="color: #666; margin-bottom: 15px;">
+                                    🛡️ Der ${cal.name} wird von deinem Browser oder einer Erweiterung blockiert.
+                                </p>
+                                <p style="margin-bottom: 15px;">
+                                    <a href="${cal.directUrl}"
+                                       target="_blank" rel="noopener"
+                                       style="color: #4285f4; text-decoration: none; font-weight: bold;">
+                                        📅 ${cal.name} direkt öffnen
+                                    </a>
+                                </p>
+                                <p>
+                                    <a href="${cal.downloadUrl}"
+                                       target="_blank" rel="noopener"
+                                       style="color: #4285f4; text-decoration: none;"
+                                       download="${cal.downloadName}">
+                                        💾 Als ICS-Datei herunterladen
+                                    </a>
+                                </p>
+                            </div>
+                        `;
+                    }
+
+                    // Set timeout to detect if iframe fails to load
+                    loadTimeout = setTimeout(function () {
+                        if (!iframeLoaded) {
+                            showFallback();
+                        }
+                    }, 5000); // 5 seconds timeout
+
+                    // Handle iframe load success
+                    iframe.addEventListener("load", function () {
+                        iframeLoaded = true;
+                        clearTimeout(loadTimeout);
+                    });
+
+                    // Handle iframe load error
+                    iframe.addEventListener("error", function () {
+                        clearTimeout(loadTimeout);
                         showFallback();
-                    }
-                }, 5000); // 5 seconds timeout
+                    });
 
-                // Handle iframe load success
-                iframe.addEventListener("load", function () {
-                    iframeLoaded = true;
-                    clearTimeout(loadTimeout);
-                });
-
-                // Handle iframe load error
-                iframe.addEventListener("error", function () {
-                    clearTimeout(loadTimeout);
-                    showFallback();
-                });
-
-                // Additional check for Privacy Badger or similar blockers
-                setTimeout(function () {
-                    try {
-                        // Try to access iframe content (will fail if blocked)
-                        const iframeDoc =
-                            iframe.contentDocument ||
-                            iframe.contentWindow.document;
-                        if (
-                            !iframeDoc ||
-                            iframeDoc.body.innerHTML.trim() === ""
-                        ) {
-                            showFallback();
+                    // Additional check for Privacy Badger or similar blockers
+                    setTimeout(function () {
+                        try {
+                            // Try to access iframe content (will fail if blocked)
+                            const iframeDoc =
+                                iframe.contentDocument ||
+                                iframe.contentWindow.document;
+                            if (
+                                !iframeDoc ||
+                                iframeDoc.body.innerHTML.trim() === ""
+                            ) {
+                                showFallback();
+                            }
+                        } catch (e) {
+                            // Cross-origin error is expected, but complete blocking will cause other errors
+                            if (e.name !== "SecurityError") {
+                                showFallback();
+                            }
                         }
-                    } catch (e) {
-                        // Cross-origin error is expected, but complete blocking will cause other errors
-                        if (e.name !== "SecurityError") {
-                            showFallback();
-                        }
-                    }
-                }, 3000);
+                    }, 3000);
+                });
             });
         </script>
         <script defer src="main.js"></script>
