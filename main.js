@@ -35,6 +35,81 @@
         );
       }
     });
+
+    // Fallback for iframe loading issues
+    const mapIframe = mapContainer.querySelector("iframe");
+    if (mapIframe) {
+      // Add error handling for iframe loading
+      mapIframe.addEventListener("error", function () {
+        handleMapFallback(mapContainer);
+      });
+
+      // Check if iframe loads successfully
+      mapIframe.addEventListener("load", function () {
+        // If iframe is blocked or partitioned, show fallback
+        try {
+          if (
+            mapIframe.contentWindow &&
+            mapIframe.contentWindow.location.href === "about:blank"
+          ) {
+            handleMapFallback(mapContainer);
+          }
+        } catch (e) {
+          // Cross-origin restrictions prevent access, but iframe loaded
+          console.log("Map iframe loaded with cross-origin restrictions");
+        }
+      });
+    }
+  }
+
+  // Handle map fallback when iframe fails
+  function handleMapFallback(container) {
+    const iframe = container.querySelector("iframe");
+    if (iframe) {
+      iframe.style.display = "none";
+
+      // Create static map fallback
+      const fallbackDiv = document.createElement("div");
+      fallbackDiv.className = "map-fallback";
+      fallbackDiv.innerHTML = `
+        <div style="
+          background: #f0f0f0;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          padding: 20px;
+          text-align: center;
+          min-height: 350px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        ">
+          <div style="font-size: 48px; margin-bottom: 15px;">🗺️</div>
+          <h3 style="margin: 0 0 10px 0; color: #333;">Karte nicht verfügbar</h3>
+          <p style="color: #666; margin: 0 0 15px 0;">
+            Die interaktive Karte kann aufgrund von Browser-Sicherheitseinstellungen nicht geladen werden.
+          </p>
+          <a href="https://www.openstreetmap.org/?mlat=50.74053&mlon=7.08942#map=15/50.74053/7.08942"
+             target="_blank"
+             rel="noopener"
+             style="
+               background: #4285f4;
+               color: white;
+               padding: 10px 20px;
+               text-decoration: none;
+               border-radius: 5px;
+               font-weight: bold;
+             ">
+            🌐 Karte in neuem Tab öffnen
+          </a>
+          <div style="margin-top: 15px; font-size: 0.9em; color: #666;">
+            <strong>Adresse:</strong> Dorotheenstraße 101, 53111 Bonn
+          </div>
+        </div>
+      `;
+
+      container.appendChild(fallbackDiv);
+    }
   }
 
   // Carousel with Auto-Rotate
