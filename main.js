@@ -75,9 +75,10 @@
       setTimeout(startAutoRotate, 8000);
     }
 
-    // Direct button event handlers
-    const prevButton = carousel.querySelector(".carousel-button.prev");
-    const nextButton = carousel.querySelector(".carousel-button.next");
+    // Direct button event handlers - look in parent container
+    const carouselContainer = carousel.parentElement;
+    const prevButton = carouselContainer.querySelector(".carousel-button.prev");
+    const nextButton = carouselContainer.querySelector(".carousel-button.next");
 
     if (prevButton) {
       prevButton.addEventListener("click", (e) => {
