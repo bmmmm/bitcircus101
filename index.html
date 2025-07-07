@@ -336,10 +336,30 @@
                             53113 Bonn, Germany
                         </div>
                         <div style="margin-top: 20px">
+                            <button
+                                id="show-map-btn"
+                                style="
+                                    padding: 10px 20px;
+                                    background: #4285f4;
+                                    color: #fff;
+                                    border: none;
+                                    border-radius: 5px;
+                                    cursor: pointer;
+                                    font-size: 1rem;
+                                "
+                            >
+                                Auf Karte anzeigen
+                            </button>
+                        </div>
+                        <div
+                            id="osm-map-container"
+                            style="display: none; margin-top: 20px"
+                        >
                             <iframe
+                                id="osm-map"
                                 width="425"
                                 height="350"
-                                src="https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&amp;layer=mapnik&amp;marker=50.74052905321277%2C7.08942174911499"
+                                src=""
                                 style="border: 1px solid black"
                             ></iframe
                             ><br /><small
@@ -398,6 +418,39 @@
             </div>
         </footer>
 
+        <script>
+            // OSM Map functionality
+            const showMapBtn = document.getElementById("show-map-btn");
+            const mapContainer = document.getElementById("osm-map-container");
+            const osmMap = document.getElementById("osm-map");
+
+            if (showMapBtn && mapContainer && osmMap) {
+                showMapBtn.addEventListener("click", function () {
+                    // Load map only on first click
+                    if (!osmMap.src) {
+                        osmMap.src =
+                            "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&layer=mapnik&marker=50.74052905321277%2C7.08942174911499";
+                    }
+
+                    // Show/hide map
+                    const isVisible = mapContainer.style.display !== "none";
+                    mapContainer.style.display = isVisible ? "none" : "block";
+                    showMapBtn.textContent = isVisible
+                        ? "Auf Karte anzeigen"
+                        : "Karte verstecken";
+
+                    // Scroll to map when showing
+                    if (!isVisible) {
+                        setTimeout(() => {
+                            mapContainer.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center",
+                            });
+                        }, 100);
+                    }
+                });
+            }
+        </script>
         <script defer src="main.js"></script>
     </body>
 </html>
