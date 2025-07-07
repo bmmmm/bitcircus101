@@ -433,7 +433,7 @@
                     }
 
                     // Show/hide map
-                    const isVisible = mapContainer.style.display !== "none";
+                    const isVisible = mapContainer.style.display === "block";
                     mapContainer.style.display = isVisible ? "none" : "block";
                     showMapBtn.textContent = isVisible
                         ? "Auf Karte anzeigen"
