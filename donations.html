@@ -133,18 +133,38 @@
                             display: none;
                         "
                     >
-                        <iframe
-                            width="425"
-                            height="350"
-                            src="https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&amp;layer=mapnik&amp;marker=50.74052905321277%2C7.08942174911499"
-                            style="border: 1px solid black"
-                        ></iframe
-                        ><br /><small
-                            ><a
-                                href="https://www.openstreetmap.org/?mlat=50.74053&amp;mlon=7.08942#map=15/50.74053/7.08942"
-                                >Größere Karte öffnen</a
-                            ></small
+                        <button
+                            id="show-map-btn"
+                            style="
+                                padding: 10px 20px;
+                                background: #4285f4;
+                                color: #fff;
+                                border: none;
+                                border-radius: 5px;
+                                cursor: pointer;
+                                font-size: 1rem;
+                            "
                         >
+                            Auf Karte anzeigen
+                        </button>
+                        <div
+                            id="osm-map-container"
+                            style="display: none; margin-top: 20px"
+                        >
+                            <iframe
+                                id="osm-map"
+                                width="425"
+                                height="350"
+                                src=""
+                                style="border: 1px solid black"
+                            ></iframe
+                            ><br /><small
+                                ><a
+                                    href="https://www.openstreetmap.org/?mlat=50.74053&amp;mlon=7.08942#map=15/50.74053/7.08942"
+                                    >Größere Karte öffnen</a
+                                ></small
+                            >
+                        </div>
                     </div>
                     <div class="back-link">
                         <a href="index.html">← Zurück zur Startseite</a>
@@ -215,6 +235,40 @@
                     "payment-method-text",
                 );
                 if (paymentMethodText) paymentMethodText.style.display = "none";
+
+                // OSM Map functionality
+                var showMapBtn = document.getElementById("show-map-btn");
+                var mapContainer = document.getElementById("osm-map-container");
+                var osmMap = document.getElementById("osm-map");
+
+                if (showMapBtn && mapContainer && osmMap) {
+                    showMapBtn.addEventListener("click", function () {
+                        // Load map only on first click
+                        if (!osmMap.src) {
+                            osmMap.src =
+                                "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&layer=mapnik&marker=50.74052905321277%2C7.08942174911499";
+                        }
+
+                        // Show/hide map
+                        var isVisible = mapContainer.style.display !== "none";
+                        mapContainer.style.display = isVisible
+                            ? "none"
+                            : "block";
+                        showMapBtn.textContent = isVisible
+                            ? "Auf Karte anzeigen"
+                            : "Karte verstecken";
+
+                        // Scroll to map when showing
+                        if (!isVisible) {
+                            setTimeout(function () {
+                                mapContainer.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "center",
+                                });
+                            }, 100);
+                        }
+                    });
+                }
             });
 
             // Show donation content only after explicit consent, always show banner first
