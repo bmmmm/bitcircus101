@@ -36,12 +36,7 @@
                 abzuwickeln und Missbrauch zu verhindern.
             </p>
             <ul
-                style="
-                    text-align: left;
-                    margin: 0 auto 10px auto;
-                    max-width: 500px;
-                    font-size: 0.97em;
-                "
+                class="site-notice__list"
             >
                 <li>
                     <strong>PayPal, Ko-fi, Stripe:</strong> Cookies für sichere
@@ -55,9 +50,7 @@
             <p>
                 Mit Klick auf „Akzeptieren &amp; fortfahren" stimmst du der
                 Nutzung von Cookies durch diese Dienste zu.
-                <a href="impressum-datenschutz.html" style="color: #4285f4"
-                    >Mehr zum Datenschutz</a
-                >.
+                <a href="impressum-datenschutz.html">Mehr zum Datenschutz</a>.
             </p>
             <button onclick="acceptCookies()">
                 Akzeptieren &amp; fortfahren
@@ -100,24 +93,22 @@
                     </p>
                     <p
                         id="payment-method-text"
-                        style="text-align: center; color: #666; display: none"
+                        class="payment-method-text"
+                        style="display: none"
                     >
                         Wähle deine bevorzugte Spendenmethode:
                     </p>
                     <div
                         class="donation-buttons"
                         id="donation-content"
-                        style="display: none; flex-direction: column; gap: 20px"
+                        style="display: none"
                     >
                         <!-- Inhalt wird nach Zustimmung angezeigt -->
                     </div>
                     <div
                         id="decline-message"
-                        style="
-                            display: none;
-                            text-align: center;
-                            margin-top: 20px;
-                        "
+                        class="decline-message"
+                        style="display: none"
                     >
                         <p style="font-size: 3rem">😢</p>
                         <p>
@@ -127,36 +118,26 @@
                     </div>
                     <div
                         id="osm-map-decline-section"
-                        style="
-                            margin-top: 30px;
-                            text-align: center;
-                            display: none;
-                        "
-                    >
+                        class="osm-map-decline-section"
+                        style="display: none"
+                    ></div>
                         <button
                             id="show-map-btn"
-                            style="
-                                padding: 10px 20px;
-                                background: #4285f4;
-                                color: #fff;
-                                border: none;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                font-size: 1rem;
-                            "
+                            class="map-button"
                         >
                             Auf Karte anzeigen
                         </button>
                         <div
                             id="osm-map-container"
-                            style="display: none; margin-top: 20px"
+                            class="map-container"
+                            style="display: none"
                         >
                             <iframe
                                 id="osm-map"
                                 width="425"
                                 height="350"
                                 src=""
-                                style="border: 1px solid black"
+                                class="map-container iframe"
                             ></iframe
                             ><br /><small
                                 ><a
@@ -172,46 +153,16 @@
                 </section>
             </div>
         </main>
-        <footer
-            role="contentinfo"
-            style="
-                width: 100%;
-                background: #222;
-                color: #fff;
-                padding: 28px 0 18px 0;
-                text-align: center;
-                margin-top: 40px;
-            "
-        >
-            <div style="max-width: 700px; margin: 0 auto">
+        <footer role="contentinfo" class="footer">
+            <div class="footer__container">
                 <a
                     href="https://github.com/bmmmm/bitcircus101"
                     target="_blank"
                     rel="noopener"
-                    style="
-                        display: inline-block;
-                        color: #fff;
-                        background: linear-gradient(
-                            90deg,
-                            #ffb347 0%,
-                            #ff7e5f 100%
-                        );
-                        padding: 12px 32px;
-                        border-radius: 8px;
-                        font-size: 1.15rem;
-                        font-weight: bold;
-                        text-decoration: none;
-                        box-shadow: 0 2px 12px rgba(255, 126, 95, 0.1);
-                        margin: 0 auto;
-                        transition:
-                            background 0.2s,
-                            transform 0.2s;
-                    "
-                    onmouseover="this.style.transform='scale(1.06)';this.style.background='linear-gradient(90deg,#ff7e5f 0%,#ffb347 100%)';"
-                    onmouseout="this.style.transform='scale(1)';this.style.background='linear-gradient(90deg,#ffb347 0%,#ff7e5f 100%)';"
+                    class="footer__github-link"
                 >
                     🚀 Mitmachen oder Feedback auf GitHub:
-                    <span style="text-decoration: underline">bitcircus101</span>
+                    <span class="footer__github-link-text">bitcircus101</span>
                 </a>
             </div>
         </footer>
@@ -277,37 +228,23 @@
                 if (container) {
                     // PayPal und Ko-fi erst nach Zustimmung anzeigen
                     container.innerHTML = `
-                        <div class="donation-item" style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
-                            <h3 style="margin-top: 0; color: #333;">Spende via PayPal</h3>
+                    <div class="donation-item">
+                        <h3>Spende via PayPal</h3>
                             <a
                                 href="https://www.paypal.com/paypalme/b6m"
                                 target="_blank"
-                                style="
-                                    display: inline-block;
-                                    padding: 10px 20px;
-                                    background-color: #0070ba;
-                                    color: white;
-                                    text-decoration: none;
-                                    border-radius: 5px;
-                                    font-size: 1rem;
-                                    text-align: center;
-                                    transition: background-color 0.3s;
-                                "
+                                class="btn btn-primary"
+                                style="background-color: #0070ba"
                             >
                                 Mit PayPal spenden
                             </a>
                         </div>
-                        <div class="donation-item" style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; text-align: center;">
-                            <h3 style="margin-top: 0; color: #333;">Spende via Ko‑fi</h3>
+                        <div class="donation-item">
+                            <h3>Spende via Ko‑fi</h3>
                             <iframe
                                 id="kofiframe"
                                 src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
-                                style="
-                                    border: none;
-                                    width: 100%;
-                                    padding: 4px;
-                                    background: #f9f9f9;
-                                "
+
                                 height="712"
                                 title="bmabma"
                             ></iframe>
