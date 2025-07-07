@@ -272,15 +272,7 @@
                     <p style="text-align: center; margin-top: 20px">
                         <a
                             href="donations.html"
-                            style="
-                                display: inline-block;
-                                padding: 15px 30px;
-                                background-color: #4285f4;
-                                color: white;
-                                text-decoration: none;
-                                border-radius: 5px;
-                                font-weight: bold;
-                            "
+                            class="btn btn-primary btn-large"
                         >
                             Jetzt spenden
                         </a>
@@ -317,12 +309,6 @@
                                     class="signal-qr"
                                     src="images/signal-group.png"
                                     alt="Signal Gruppen-QR-Code für bitcircus101"
-                                    style="
-                                        width: 120px;
-                                        height: 120px;
-                                        max-width: 30vw;
-                                        max-height: 30vw;
-                                    "
                                 />
                             </a>
                             <p class="signal-hint">
@@ -335,85 +321,47 @@
                             Dorotheenstraße 101<br />
                             53113 Bonn, Germany
                         </div>
-                        <div style="margin-top: 20px">
-                            <button
-                                id="show-map-btn"
-                                style="
-                                    padding: 10px 20px;
-                                    background: #4285f4;
-                                    color: #fff;
-                                    border: none;
-                                    border-radius: 5px;
-                                    cursor: pointer;
-                                    font-size: 1rem;
-                                "
-                            >
+                        <div class="map-container">
+                            <button id="show-map-btn" class="map-button">
                                 Auf Karte anzeigen
                             </button>
                         </div>
                         <div
                             id="osm-map-container"
-                            style="display: none; margin-top: 20px"
+                            class="map-container"
+                            style="display: none"
                         >
                             <iframe
                                 id="osm-map"
                                 width="425"
                                 height="350"
                                 src=""
-                                style="border: 1px solid black"
-                            ></iframe
-                            ><br /><small
-                                ><a
+                                class="map-container iframe"
+                            ></iframe>
+                            <br />
+                            <small>
+                                <a
                                     href="https://www.openstreetmap.org/?mlat=50.74053&amp;mlon=7.08942#map=15/50.74053/7.08942"
-                                    >Größere Karte öffnen</a
-                                ></small
-                            >
+                                >
+                                    Größere Karte öffnen
+                                </a>
+                            </small>
                         </div>
                     </div>
                 </section>
             </div>
             <!-- end .container -->
         </main>
-        <footer
-            role="contentinfo"
-            style="
-                width: 100%;
-                background: #222;
-                color: #fff;
-                padding: 28px 0 18px 0;
-                text-align: center;
-                margin-top: 40px;
-            "
-        >
-            <div style="max-width: 700px; margin: 0 auto">
+        <footer role="contentinfo" class="footer">
+            <div class="footer__container">
                 <a
                     href="https://github.com/bmmmm/bitcircus101"
                     target="_blank"
                     rel="noopener"
-                    style="
-                        display: inline-block;
-                        color: #fff;
-                        background: linear-gradient(
-                            90deg,
-                            #ffb347 0%,
-                            #ff7e5f 100%
-                        );
-                        padding: 12px 32px;
-                        border-radius: 8px;
-                        font-size: 1.15rem;
-                        font-weight: bold;
-                        text-decoration: none;
-                        box-shadow: 0 2px 12px rgba(255, 126, 95, 0.1);
-                        margin: 0 auto;
-                        transition:
-                            background 0.2s,
-                            transform 0.2s;
-                    "
-                    onmouseover="this.style.transform='scale(1.06)';this.style.background='linear-gradient(90deg,#ff7e5f 0%,#ffb347 100%)';"
-                    onmouseout="this.style.transform='scale(1)';this.style.background='linear-gradient(90deg,#ffb347 0%,#ff7e5f 100%)';"
+                    class="footer__github-link"
                 >
                     🚀 Mitmachen oder Feedback auf GitHub:
-                    <span style="text-decoration: underline">bitcircus101</span>
+                    <span class="footer__github-link-text">bitcircus101</span>
                 </a>
             </div>
         </footer>
