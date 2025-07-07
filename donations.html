@@ -189,39 +189,6 @@
                 );
                 if (paymentMethodText) paymentMethodText.style.display = "none";
 
-                // OSM Map functionality
-                var showMapBtn = document.getElementById("show-map-btn");
-                var mapContainer = document.getElementById("osm-map-container");
-                var osmMap = document.getElementById("osm-map");
-
-                if (showMapBtn && mapContainer && osmMap) {
-                    showMapBtn.addEventListener("click", function () {
-                        // Load map only on first click
-                        if (!osmMap.src) {
-                            osmMap.src =
-                                "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&layer=mapnik&marker=50.74052905321277%2C7.08942174911499";
-                        }
-
-                        // Show/hide map
-                        var isVisible = mapContainer.style.display === "block";
-                        mapContainer.style.display = isVisible
-                            ? "none"
-                            : "block";
-                        showMapBtn.textContent = isVisible
-                            ? "Auf Karte anzeigen"
-                            : "Karte verstecken";
-
-                        // Scroll to map when showing
-                        if (!isVisible) {
-                            setTimeout(function () {
-                                mapContainer.scrollIntoView({
-                                    behavior: "smooth",
-                                    block: "center",
-                                });
-                            }, 100);
-                        }
-                    });
-                }
             });
 
             // Show donation content only after explicit consent, always show banner first
