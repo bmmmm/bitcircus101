@@ -122,8 +122,7 @@
                         <p style="font-size: 3rem">😢</p>
                         <p>
                             Du hast Cookies abgelehnt.<br />
-                            Du kannst uns trotzdem vor Ort bei bitcircus101
-                            unterstützen!
+                            Du kannst uns trotzdem vor Ort unterstützen!
                         </p>
                     </div>
                     <div
@@ -162,9 +161,10 @@
                                 "
                                 src=""
                                 allowfullscreen
-                                sandbox="allow-scripts allow-same-origin"
-                                referrerpolicy="no-referrer-when-downgrade"
+                                sandbox="allow-scripts allow-same-origin allow-popups"
+                                referrerpolicy="no-referrer"
                                 loading="lazy"
+                                credentialless
                             ></iframe>
                             <div
                                 style="
@@ -264,10 +264,65 @@
                 if (showMapBtnDecline && mapContainerDecline && osmMapDecline) {
                     showMapBtnDecline.addEventListener("click", function () {
                         osmMapDecline.src =
-                            "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&layer=mapnik&marker=50.74052905321277%2C7.08942174911499";
+                            "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212,50.72276418262858,7.12090015411377,50.75828718705439&layer=mapnik&marker=50.74052905321277,7.08942174911499";
                         mapContainerDecline.style.display = "block";
                         showMapBtnDecline.style.display = "none";
+
+                        // Add error handling and fallback
+                        setTimeout(function () {
+                            handleMapFallback(
+                                osmMapDecline,
+                                mapContainerDecline,
+                            );
+                        }, 3000);
+
+                        osmMapDecline.addEventListener("error", function () {
+                            handleMapFallback(
+                                osmMapDecline,
+                                mapContainerDecline,
+                            );
+                        });
                     });
+                }
+
+                // Handle map fallback when iframe fails
+                function handleMapFallback(iframe, container) {
+                    if (iframe && container) {
+                        // Check if iframe loaded successfully
+                        try {
+                            if (
+                                iframe.contentWindow &&
+                                iframe.contentWindow.location.href ===
+                                    "about:blank"
+                            ) {
+                                showMapFallback(iframe, container);
+                            }
+                        } catch (e) {
+                            // Cross-origin restrictions - iframe might still work
+                            console.log(
+                                "Map iframe loaded with cross-origin restrictions",
+                            );
+                        }
+                    }
+                }
+
+                function showMapFallback(iframe, container) {
+                    if (iframe && !container.querySelector(".map-fallback")) {
+                        iframe.style.display = "none";
+
+                        var fallbackDiv = document.createElement("div");
+                        fallbackDiv.className = "map-fallback";
+                        fallbackDiv.innerHTML =
+                            '<div style="background: #f0f0f0; border: 1px solid #ccc; border-radius: 8px; padding: 20px; text-align: center; min-height: 350px; display: flex; flex-direction: column; justify-content: center; align-items: center;">' +
+                            '<div style="font-size: 48px; margin-bottom: 15px;">🗺️</div>' +
+                            '<h3 style="margin: 0 0 10px 0; color: #333;">Karte nicht verfügbar</h3>' +
+                            '<p style="color: #666; margin: 0 0 15px 0;">Die interaktive Karte kann aufgrund von Browser-Sicherheitseinstellungen nicht geladen werden.</p>' +
+                            '<a href="https://www.openstreetmap.org/?mlat=50.74053&mlon=7.08942#map=15/50.74053/7.08942" target="_blank" rel="noopener" style="background: #4285f4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">🌐 Karte in neuem Tab öffnen</a>' +
+                            '<div style="margin-top: 15px; font-size: 0.9em; color: #666;"><strong>Adresse:</strong> Dorotheenstraße 101, 53111 Bonn</div>' +
+                            "</div>";
+
+                        container.appendChild(fallbackDiv);
+                    }
                 }
             });
 

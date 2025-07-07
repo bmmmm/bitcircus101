@@ -1043,6 +1043,25 @@ body.cookie-banner-shown footer {
         top: 3px;
         right: 3px;
     }
+
+    .map-fallback div {
+        padding: 20px 15px;
+        min-height: 300px;
+    }
+
+    .map-fallback h3 {
+        font-size: 1.1rem;
+    }
+
+    .map-fallback p {
+        font-size: 0.9rem;
+        margin: 0 0 15px 0;
+    }
+
+    .map-fallback a {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 400px) {
@@ -1111,6 +1130,26 @@ body.cookie-banner-shown footer {
 
     .donation-item iframe {
         height: 500px;
+    }
+
+    .map-fallback {
+        width: 100%;
+        margin: 0;
+    }
+
+    .map-fallback div {
+        background: #f8f9fa !important;
+        border: 2px solid #dee2e6 !important;
+    }
+
+    .map-fallback a {
+        transition: all 0.3s ease;
+    }
+
+    .map-fallback a:hover {
+        background: #3367d6 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(67, 133, 244, 0.3);
     }
 }
 /* Utility classes */
