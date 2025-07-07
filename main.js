@@ -345,8 +345,6 @@
       Carousel.init();
       MapHandler.init();
       Accessibility.init();
-
-      console.log("bitcircus101 app initialized");
     },
   };
 
