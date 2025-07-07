@@ -127,61 +127,24 @@
                     </div>
                     <div
                         id="osm-map-decline-section"
-                        style="margin-top: 30px; text-align: center"
+                        style="
+                            margin-top: 30px;
+                            text-align: center;
+                            display: none;
+                        "
                     >
-                        <button
-                            id="show-map-btn-decline"
-                            style="
-                                padding: 10px 20px;
-                                background: #4285f4;
-                                color: #fff;
-                                border: none;
-                                border-radius: 5px;
-                                cursor: pointer;
-                                font-size: 1rem;
-                                display: none;
-                                margin: 0 auto;
-                            "
+                        <iframe
+                            width="425"
+                            height="350"
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&amp;layer=mapnik&amp;marker=50.74052905321277%2C7.08942174911499"
+                            style="border: 1px solid black"
+                        ></iframe
+                        ><br /><small
+                            ><a
+                                href="https://www.openstreetmap.org/?mlat=50.74053&amp;mlon=7.08942#map=15/50.74053/7.08942"
+                                >View Larger Map</a
+                            ></small
                         >
-                            Karte anzeigen
-                        </button>
-                        <div
-                            id="osm-map-container-decline"
-                            style="display: none; margin-top: 20px"
-                        >
-                            <iframe
-                                id="osm-map-decline"
-                                width="100%"
-                                height="350"
-                                frameborder="0"
-                                scrolling="no"
-                                style="
-                                    border-radius: 8px;
-                                    border: 1px solid #ccc;
-                                "
-                                src=""
-                                allowfullscreen
-                                sandbox="allow-scripts allow-same-origin allow-popups"
-                                referrerpolicy="no-referrer"
-                                loading="lazy"
-                                credentialless
-                            ></iframe>
-                            <div
-                                style="
-                                    font-size: 0.9em;
-                                    margin-top: 4px;
-                                    text-align: center;
-                                "
-                            >
-                                <a
-                                    href="https://www.openstreetmap.org/?mlat=50.74053&mlon=7.08942#map=15/50.74053/7.08942"
-                                    target="_blank"
-                                    rel="noopener"
-                                    style="color: #4285f4"
-                                    >Größere Karte öffnen</a
-                                >
-                            </div>
-                        </div>
                     </div>
                     <div class="back-link">
                         <a href="index.html">← Zurück zur Startseite</a>
@@ -252,78 +215,6 @@
                     "payment-method-text",
                 );
                 if (paymentMethodText) paymentMethodText.style.display = "none";
-
-                // OSM map for decline
-                var showMapBtnDecline = document.getElementById(
-                    "show-map-btn-decline",
-                );
-                var mapContainerDecline = document.getElementById(
-                    "osm-map-container-decline",
-                );
-                var osmMapDecline = document.getElementById("osm-map-decline");
-                if (showMapBtnDecline && mapContainerDecline && osmMapDecline) {
-                    showMapBtnDecline.addEventListener("click", function () {
-                        osmMapDecline.src =
-                            "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212,50.72276418262858,7.12090015411377,50.75828718705439&layer=mapnik&marker=50.74052905321277,7.08942174911499";
-                        mapContainerDecline.style.display = "block";
-                        showMapBtnDecline.style.display = "none";
-
-                        // Add error handling and fallback
-                        setTimeout(function () {
-                            handleMapFallback(
-                                osmMapDecline,
-                                mapContainerDecline,
-                            );
-                        }, 3000);
-
-                        osmMapDecline.addEventListener("error", function () {
-                            handleMapFallback(
-                                osmMapDecline,
-                                mapContainerDecline,
-                            );
-                        });
-                    });
-                }
-
-                // Handle map fallback when iframe fails
-                function handleMapFallback(iframe, container) {
-                    if (iframe && container) {
-                        // Check if iframe loaded successfully
-                        try {
-                            if (
-                                iframe.contentWindow &&
-                                iframe.contentWindow.location.href ===
-                                    "about:blank"
-                            ) {
-                                showMapFallback(iframe, container);
-                            }
-                        } catch (e) {
-                            // Cross-origin restrictions - iframe might still work
-                            console.log(
-                                "Map iframe loaded with cross-origin restrictions",
-                            );
-                        }
-                    }
-                }
-
-                function showMapFallback(iframe, container) {
-                    if (iframe && !container.querySelector(".map-fallback")) {
-                        iframe.style.display = "none";
-
-                        var fallbackDiv = document.createElement("div");
-                        fallbackDiv.className = "map-fallback";
-                        fallbackDiv.innerHTML =
-                            '<div style="background: #f0f0f0; border: 1px solid #ccc; border-radius: 8px; padding: 20px; text-align: center; min-height: 350px; display: flex; flex-direction: column; justify-content: center; align-items: center;">' +
-                            '<div style="font-size: 48px; margin-bottom: 15px;">🗺️</div>' +
-                            '<h3 style="margin: 0 0 10px 0; color: #333;">Karte nicht verfügbar</h3>' +
-                            '<p style="color: #666; margin: 0 0 15px 0;">Die interaktive Karte kann aufgrund von Browser-Sicherheitseinstellungen nicht geladen werden.</p>' +
-                            '<a href="https://www.openstreetmap.org/?mlat=50.74053&mlon=7.08942#map=15/50.74053/7.08942" target="_blank" rel="noopener" style="background: #4285f4; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">🌐 Karte in neuem Tab öffnen</a>' +
-                            '<div style="margin-top: 15px; font-size: 0.9em; color: #666;"><strong>Adresse:</strong> Dorotheenstraße 101, 53111 Bonn</div>' +
-                            "</div>";
-
-                        container.appendChild(fallbackDiv);
-                    }
-                }
             });
 
             // Show donation content only after explicit consent, always show banner first
@@ -402,13 +293,13 @@
                 var paymentMethodText = document.getElementById(
                     "payment-method-text",
                 );
-                var showMapBtn = document.getElementById(
-                    "show-map-btn-decline",
+                var osmMapSection = document.getElementById(
+                    "osm-map-decline-section",
                 );
                 if (declineMessage) declineMessage.style.display = "block";
                 if (donationContent) donationContent.style.display = "none";
                 if (paymentMethodText) paymentMethodText.style.display = "none";
-                if (showMapBtn) showMapBtn.style.display = "block";
+                if (osmMapSection) osmMapSection.style.display = "block";
                 var siteNotice = document.getElementById("site-notice");
                 if (siteNotice) siteNotice.style.display = "none";
                 document.body.style.overflow = "auto";
