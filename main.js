@@ -259,45 +259,20 @@
   // =============================================================================
   const MapHandler = {
     init() {
-      console.log("MapHandler: Starting initialization");
       const showMapBtn = utils.getElementById("show-map-btn");
       const mapContainer = utils.getElementById("osm-map-container");
       const osmMap = utils.getElementById("osm-map");
 
-      console.log("MapHandler: Elements found:", {
-        showMapBtn: !!showMapBtn,
-        mapContainer: !!mapContainer,
-        osmMap: !!osmMap,
-        showMapBtnId: showMapBtn?.id,
-        mapContainerId: mapContainer?.id,
-        osmMapId: osmMap?.id,
-      });
+      if (!showMapBtn || !mapContainer || !osmMap) return;
 
-      if (!showMapBtn || !mapContainer || !osmMap) {
-        console.warn("MapHandler: Missing required elements, aborting");
-        return;
-      }
-
-      console.log("MapHandler: Adding click event listener");
-      const success = utils.addEventListenerSafe(showMapBtn, "click", () => {
-        console.log("MapHandler: Button clicked!");
+      utils.addEventListenerSafe(showMapBtn, "click", () => {
         this.toggleMap(showMapBtn, mapContainer, osmMap);
       });
-
-      console.log("MapHandler: Event listener added successfully:", success);
     },
 
     toggleMap(button, container, iframe) {
-      console.log("MapHandler: toggleMap called");
-      console.log("MapHandler: Current iframe src:", iframe.src);
-      console.log(
-        "MapHandler: Current container display:",
-        container.style.display,
-      );
-
-      // Load map only on first click
-      if (!iframe.src) {
-        console.log("MapHandler: Loading iframe src");
+      // Load map only on first click (check if it's the OpenStreetMap URL)
+      if (!iframe.src.includes("openstreetmap.org")) {
         iframe.src =
           "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&layer=mapnik&marker=50.74052905321277%2C7.08942174911499";
       }
@@ -309,20 +284,11 @@
         ? "Auf Karte anzeigen"
         : "Karte verstecken";
 
-      console.log(
-        "MapHandler: Changing display from",
-        container.style.display,
-        "to",
-        newDisplay,
-      );
-      console.log("MapHandler: Changing button text to", newButtonText);
-
       container.style.display = newDisplay;
       button.textContent = newButtonText;
 
       // Scroll to map when showing
       if (!isVisible) {
-        console.log("MapHandler: Scrolling to map");
         setTimeout(() => {
           container.scrollIntoView({
             behavior: "smooth",
@@ -377,13 +343,11 @@
   // =============================================================================
   const App = {
     init() {
-      console.log("App: Starting initialization");
       // Initialize all modules
       Navigation.init();
       Carousel.init();
       MapHandler.init();
       Accessibility.init();
-      console.log("App: Initialization complete");
     },
   };
 
@@ -408,44 +372,4 @@
 
   // Strategy 3: Immediate retry (fallback for dynamic content)
   setTimeout(safeInit, 100);
-
-  // =============================================================================
-  // Debug/Test Functions (can be called from browser console)
-  // =============================================================================
-  window.testMapFunction = function () {
-    console.log("=== MAP TEST FUNCTION ===");
-    const showMapBtn = document.getElementById("show-map-btn");
-    const mapContainer = document.getElementById("osm-map-container");
-    const osmMap = document.getElementById("osm-map");
-
-    console.log("Elements found:", {
-      showMapBtn: !!showMapBtn,
-      mapContainer: !!mapContainer,
-      osmMap: !!osmMap,
-    });
-
-    if (showMapBtn) {
-      console.log("Button element:", showMapBtn);
-      console.log("Button text:", showMapBtn.textContent);
-      console.log("Button classes:", showMapBtn.className);
-
-      // Try to trigger the map manually
-      if (mapContainer && osmMap) {
-        console.log("Manually triggering map...");
-        if (!osmMap.src) {
-          osmMap.src =
-            "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&layer=mapnik&marker=50.74052905321277%2C7.08942174911499";
-          console.log("Map src set:", osmMap.src);
-        }
-
-        mapContainer.style.display = "block";
-        showMapBtn.textContent = "Karte verstecken";
-        console.log("Map should now be visible!");
-      }
-    } else {
-      console.error("Button with id 'show-map-btn' not found!");
-    }
-
-    return "Test completed - check console output above";
-  };
 })();
