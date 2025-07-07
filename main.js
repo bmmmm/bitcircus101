@@ -44,6 +44,7 @@
     const dots = document.querySelectorAll(".dot");
     let current = 0;
     let autoRotateInterval;
+    let isAutoRotateEnabled = true;
 
     function showSlide(idx) {
       if (idx < 0 || idx >= items.length) return;
@@ -79,13 +80,16 @@
     const carouselContainer = carousel.parentElement;
     const prevButton = carouselContainer.querySelector(".carousel-button.prev");
     const nextButton = carouselContainer.querySelector(".carousel-button.next");
+    const toggleButton = carouselContainer.querySelector(".carousel-toggle");
 
     if (prevButton) {
       prevButton.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         prevSlide();
-        resetAutoRotate();
+        if (isAutoRotateEnabled) {
+          resetAutoRotate();
+        }
       });
     }
 
@@ -94,7 +98,32 @@
         e.preventDefault();
         e.stopPropagation();
         nextSlide();
-        resetAutoRotate();
+        if (isAutoRotateEnabled) {
+          resetAutoRotate();
+        }
+      });
+    }
+
+    // Toggle button functionality
+    if (toggleButton) {
+      toggleButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        isAutoRotateEnabled = !isAutoRotateEnabled;
+
+        if (isAutoRotateEnabled) {
+          toggleButton.innerHTML = "⏸️";
+          toggleButton.setAttribute("aria-label", "Auto-Rotate pausieren");
+          toggleButton.setAttribute("title", "Auto-Rotate pausieren");
+          carouselContainer.classList.remove("manual-mode");
+          startAutoRotate();
+        } else {
+          toggleButton.innerHTML = "▶️";
+          toggleButton.setAttribute("aria-label", "Auto-Rotate starten");
+          toggleButton.setAttribute("title", "Auto-Rotate starten");
+          carouselContainer.classList.add("manual-mode");
+          stopAutoRotate();
+        }
       });
     }
 
@@ -105,7 +134,9 @@
         e.stopPropagation();
         current = index;
         showSlide(current);
-        resetAutoRotate();
+        if (isAutoRotateEnabled) {
+          resetAutoRotate();
+        }
       });
     });
 
@@ -125,20 +156,32 @@
         } else {
           prevSlide();
         }
-        resetAutoRotate();
+        if (isAutoRotateEnabled) {
+          resetAutoRotate();
+        }
       }
     });
 
-    // Pause on hover
-    carousel.addEventListener("mouseenter", stopAutoRotate);
-    carousel.addEventListener("mouseleave", startAutoRotate);
-
-    // Pause when tab is not visible
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
+    // Pause on hover (only if auto-rotate is enabled)
+    carousel.addEventListener("mouseenter", () => {
+      if (isAutoRotateEnabled) {
         stopAutoRotate();
-      } else {
+      }
+    });
+    carousel.addEventListener("mouseleave", () => {
+      if (isAutoRotateEnabled) {
         startAutoRotate();
+      }
+    });
+
+    // Pause when tab is not visible (only if auto-rotate is enabled)
+    document.addEventListener("visibilitychange", () => {
+      if (isAutoRotateEnabled) {
+        if (document.hidden) {
+          stopAutoRotate();
+        } else {
+          startAutoRotate();
+        }
       }
     });
 
