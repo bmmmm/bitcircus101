@@ -509,6 +509,14 @@ select:focus {
     letter-spacing: 0.08em;
 }
 
+.signal-channel-primary {
+    font-size: 0.72rem;
+    color: var(--accent);
+    opacity: 0.6;
+    letter-spacing: 0.04em;
+    margin-top: -0.3em;
+}
+
 .signal-qr {
     display: block;
     width: 130px;
@@ -519,6 +527,7 @@ select:focus {
     transition: border-color var(--transition);
 }
 
+.signal-channel:first-child .signal-qr { border-color: var(--accent); }
 .signal-channel:hover .signal-qr { border-color: var(--accent); }
 
 .signal-channel-desc {
