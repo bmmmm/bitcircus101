@@ -343,11 +343,63 @@ nav li a:focus-visible {
 .footer__sep { color: var(--border); }
 
 .footer__status {
+    position: relative;
     margin-left: auto;
     color: var(--accent);
     opacity: 0.45;
     letter-spacing: 0.04em;
+    cursor: pointer;
 }
+
+/* Funding levels */
+.footer__status--green { color: var(--accent); opacity: 0.65; }
+.footer__status--amber { color: #f0a030; opacity: 0.75; }
+.footer__status--red { color: #e04040; opacity: 0.8; }
+
+.footer__funding-bar { letter-spacing: 0.08em; }
+
+/* Hover info panel */
+.footer__funding-info {
+    position: absolute;
+    bottom: calc(100% + 0.75em);
+    right: 0;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    padding: 0.9em 1.2em;
+    font-size: 0.72rem;
+    line-height: 1.9;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: var(--z-nav);
+}
+
+.footer__status:hover .footer__funding-info,
+.footer__status:focus .footer__funding-info {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.footer__funding-info-head {
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.3em;
+    font-size: 0.68rem;
+}
+
+.footer__funding-info p { margin: 0; color: var(--text-dim); }
+.footer__funding-info a {
+    color: var(--accent);
+    display: block;
+    margin-top: 0.5em;
+    text-decoration: none;
+}
+.footer__funding-info a:hover { text-decoration: underline; }
+
+.fs--green { color: var(--accent); }
+.fs--amber { color: #f0a030; }
+.fs--red { color: #e04040; }
 
 @media (max-width: 600px) {
     .footer__grid { grid-template-columns: 1fr 1fr; }
