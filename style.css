@@ -957,14 +957,33 @@ select:focus {
 /* Content column */
 .event-card__content { min-width: 0; }
 
+.event-card__header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+}
+
 .event-card__title {
     font-size: 1rem;
     color: var(--text-bright);
     margin: 0 0 0.2rem;
     font-weight: bold;
+    flex: 1;
 }
 
 .event-card__title::before { content: none; }
+
+.event-card__link {
+    color: var(--border);
+    font-size: 0.75rem;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity var(--transition), color var(--transition);
+    flex-shrink: 0;
+}
+
+.event-card:hover .event-card__link { opacity: 1; }
+.event-card__link:hover { color: var(--accent); }
 
 .event-card__subtitle {
     font-size: 0.82rem;
