@@ -70,6 +70,10 @@
     <body>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
+                <a class="nav__brand" href="index.html">
+                    <span class="nav__prompt">&gt;_</span>
+                    <span class="nav__name">bitcircus101</span>
+                </a>
                 <button
                     class="menu-toggle"
                     id="menu-toggle"
@@ -176,36 +180,29 @@
 
                 <section>
                     <h2>Adresse & Anfahrt</h2>
-                    <div class="contact-info">
-                        <div class="address">
-                            bitcircus101<br />
-                            Dorotheenstraße 101<br />
-                            53113 Bonn
-                        </div>
-                        <div class="map-container">
-                            <button id="show-map-btn" class="map-button">
-                                Auf Karte anzeigen
-                            </button>
-                        </div>
-                        <div
-                            id="osm-map-container"
-                            class="map-container"
-                            style="display: none"
-                        >
+                    <div class="location-card">
+                        <div class="location-card__header">[ LOCATE ]</div>
+                        <dl class="location-card__data">
+                            <dt>name</dt><dd>bitcircus101</dd>
+                            <dt>str</dt><dd>Dorotheenstraße 101</dd>
+                            <dt>plz</dt><dd>53113 Bonn</dd>
+                            <dt>lat</dt><dd>50.74042° N</dd>
+                            <dt>lon</dt><dd>7.08942° E</dd>
+                        </dl>
+                        <button id="show-map-btn" class="location-card__map-btn">
+                            <span aria-hidden="true">$</span> map --load
+                        </button>
+                        <div id="osm-map-container" style="display: none">
                             <iframe
                                 id="osm-map"
-                                width="425"
-                                height="350"
-                                class="map-container iframe"
+                                class="location-card__map-frame"
                             ></iframe>
-                            <br />
-                            <small>
-                                <a
-                                    href="https://www.openstreetmap.org/?mlat=50.74053&amp;mlon=7.08942#map=15/50.74053/7.08942"
-                                >
-                                    Größere Karte öffnen
-                                </a>
-                            </small>
+                            <a
+                                class="location-card__osm-link"
+                                href="https://www.openstreetmap.org/?mlat=50.74053&amp;mlon=7.08942#map=15/50.74053/7.08942"
+                                target="_blank"
+                                rel="noopener"
+                            >Größere Karte öffnen ↗</a>
                         </div>
                     </div>
                 </section>
@@ -231,7 +228,7 @@
                 </div>
             </div>
             <div class="footer__bar">
-                <span>© 2025 bitcircus101</span>
+                <span>© <span class="footer__year"></span> bitcircus101</span>
                 <span class="footer__sep">·</span>
                 <a href="impressum-datenschutz.html">Impressum & Datenschutz</a>
                 <span class="footer__sep">·</span>
