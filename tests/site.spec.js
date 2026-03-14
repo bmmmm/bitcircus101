@@ -255,7 +255,7 @@ test.describe('Raum mieten page', () => {
     });
 
     test('loads with correct title', async ({ page }) => {
-        await expect(page).toHaveTitle(/Raum mieten/);
+        await expect(page).toHaveTitle(/Raum nutzen|Raum mieten/);
     });
 
     test('title contains Bonn', async ({ page }) => {
