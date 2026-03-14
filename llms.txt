@@ -1,0 +1,30 @@
+# bitcircus101
+
+> Hackspace und offener Treffpunkt in Bonn, Dorotheenstraße 101.
+
+bitcircus101 ist ein privat und nicht-kommerziell betriebener Hackspace in Bonn. Freitags ab 20 Uhr offen für alle – kein Anmelden, keine Mitgliedschaft. Schwerpunkte: IT-Security, Open-Source, Datensouveränität, KI/LLMs, Hardware-Projekte.
+
+## Seiten
+
+- [Startseite](https://bitcircus101.de/): Überblick, Signal-Channels, Kontakt
+- [Veranstaltungen](https://bitcircus101.de/events.html): Termine, linkup@bitcircus101 Lightning Talks, offene Freitagabende
+- [Raum mieten](https://bitcircus101.de/raum-mieten.html): bitcircus101 für Workshops, Meetups, Drehs buchen
+- [Spenden](https://bitcircus101.de/donations.html): bitcircus101 finanziell unterstützen
+- [Impressum & Datenschutz](https://bitcircus101.de/impressum-datenschutz.html): Rechtliches
+
+## Kontakt
+
+- E-Mail: info@bitcircus101.de
+- Adresse: Dorotheenstraße 101, 53113 Bonn
+- Signal: INFO-Channel und TALK-Channel (Links auf der Startseite)
+- GitHub: https://github.com/bmmmm/bitcircus101
+
+## Feeds
+
+- RSS: https://bitcircus101.de/feed.xml
+- ICS Kalender: https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export
+
+## Regelmäßige Termine
+
+- Jeden Freitag ab 20:00 Uhr: offener Abend
+- Jeden dritten Freitag im Monat: linkup@bitcircus101 – Lightning Talks (3 Folien, 3 Minuten)
