@@ -1,11 +1,11 @@
 name: Generate sitemap
 
 permissions:
-  contents: write # Push-Recht für github-actions[bot]
+  contents: write
 
 on:
   push:
-    branches: [live] # oder [ main ] – je nach Setup
+    branches: [live]
   workflow_dispatch:
 
 jobs:
@@ -14,18 +14,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # korrekte <lastmod>-Daten
+          fetch-depth: 0
           persist-credentials: true
 
       - name: Generate sitemap.xml
-        uses: cicirello/generate-sitemap@v1.10.1 # feste Version empfohlen
+        uses: cicirello/generate-sitemap@v1.10.1
         id: sitemap
         with:
-          base-url-path: https://bitcircus101.de # ← deine Domain
-          path-to-root: . # (Standard, kann entfallen)
+          base-url-path: https://bitcircus101.de
+          path-to-root: .
           include-html: true
-          include-pdf: true # Standardwerte, nur zur Klarheit
-          sitemap-format: xml # "
+          sitemap-format: xml
+
+      - name: Remove verification files from sitemap
+        run: |
+          sed -i '/<loc>.*google[^<]*<\/loc>/,/<\/url>/d' sitemap.xml
 
       - name: Commit sitemap
         run: |

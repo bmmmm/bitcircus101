@@ -58,3 +58,9 @@ __pycache__/
 # Misc
 *.orig
 OPTIMIZATION-SUMMARY.md
+
+# Playwright MCP
+.playwright-mcp/
+
+# Screenshots (dev only)
+location-card-*.png
