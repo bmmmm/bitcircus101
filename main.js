@@ -380,6 +380,56 @@
   };
 
   // =============================================================================
+  // Funding Status
+  // =============================================================================
+  const FundingStatus = {
+    init() {
+      utils.querySelectorAll(".footer__status").forEach((el) => {
+        var pct = parseInt(el.getAttribute("data-funding"), 10);
+        if (isNaN(pct)) return;
+        this.render(el, pct);
+      });
+    },
+
+    render(el, pct) {
+      var p = Math.max(0, Math.min(100, pct));
+      var filled = Math.round(p / 10);
+      var bar = "\u2588".repeat(filled) + "\u2591".repeat(10 - filled);
+
+      var level = "red";
+      if (p >= 75) level = "green";
+      else if (p >= 50) level = "amber";
+
+      el.classList.add("footer__status--" + level);
+      el.setAttribute("tabindex", "0");
+      el.setAttribute("role", "status");
+      el.setAttribute(
+        "aria-label",
+        "Funding: " + p + "% der monatlichen Kosten gedeckt",
+      );
+
+      el.innerHTML =
+        '<span class="footer__funding-bar">' +
+        bar +
+        " " +
+        p +
+        "%</span>" +
+        '<div class="footer__funding-info">' +
+        '<div class="footer__funding-info-head">[ SYSTEM STATUS ]</div>' +
+        "<p>" +
+        bar +
+        " " +
+        p +
+        "% gedeckt</p>" +
+        '<p><span class="fs--green">\u2588</span> gr\u00fcn \u2014 kosten gedeckt</p>' +
+        '<p><span class="fs--amber">\u2588</span> amber \u2014 ~50% gedeckt</p>' +
+        '<p><span class="fs--red">\u2588</span> rot \u2014 &lt;25% gedeckt</p>' +
+        '<a href="donations.html">$ contribute \u2192</a>' +
+        "</div>";
+    },
+  };
+
+  // =============================================================================
   // Footer Year
   // =============================================================================
   const FooterYear = {
@@ -401,6 +451,7 @@
       MapHandler.init();
       Accessibility.init();
       EventsPreview.init();
+      FundingStatus.init();
       FooterYear.init();
     },
   };
