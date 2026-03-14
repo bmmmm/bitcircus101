@@ -40,13 +40,13 @@ test.describe('Home page', () => {
 
     test('shows support section with donation and rental CTAs', async ({ page }) => {
         await expect(page.locator('#support')).toBeVisible();
-        await expect(page.locator('a[href="donations.html"]').first()).toBeVisible();
-        await expect(page.locator('a[href="raum-mieten.html"]').first()).toBeVisible();
+        await expect(page.locator('#support a[href="donations.html"]')).toBeVisible();
+        await expect(page.locator('#support a[href="raum-mieten.html"]')).toBeVisible();
     });
 
     test('shows contact section', async ({ page }) => {
         await expect(page.locator('#contact')).toBeVisible();
-        await expect(page.locator('a[href^="mailto:"]')).toBeVisible();
+        await expect(page.locator('#contact a[href^="mailto:"]')).toBeVisible();
     });
 
     test('has map button', async ({ page }) => {
@@ -181,6 +181,7 @@ test.describe('Navigation', () => {
     });
 
     test('nav links navigate correctly', async ({ page }) => {
+        await page.setViewportSize({ width: 1280, height: 800 });
         await page.goto('/');
         await page.locator('nav a[href="events.html"]').click();
         await expect(page).toHaveURL(/events\.html/);
@@ -265,7 +266,7 @@ test.describe('Raum mieten page', () => {
     });
 
     test('has contact CTA', async ({ page }) => {
-        await expect(page.locator('a[href^="mailto:"]')).toBeVisible();
+        await expect(page.locator('a[href^="mailto:"][class*="btn"]')).toBeVisible();
     });
 
     test('has map button', async ({ page }) => {
