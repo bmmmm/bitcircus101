@@ -358,44 +358,52 @@ nav li a:focus-visible {
 
 .footer__funding-bar { letter-spacing: 0.08em; }
 
-/* Hover info panel */
+/* Funding info panel – click to toggle */
 .footer__funding-info {
     position: absolute;
     bottom: calc(100% + 0.75em);
     right: 0;
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    padding: 0.9em 1.2em;
-    font-size: 0.72rem;
+    background: var(--bg);
+    border: 1px solid var(--accent-dim);
+    padding: 1em 1.3em;
+    font-size: 0.75rem;
     line-height: 1.9;
     white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    z-index: var(--z-nav);
+    display: none;
+    z-index: var(--z-modal);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
 }
 
-.footer__status:hover .footer__funding-info,
-.footer__status:focus .footer__funding-info {
-    opacity: 1;
-    pointer-events: auto;
+.footer__funding-info.active {
+    display: block;
 }
 
 .footer__funding-info-head {
     color: var(--accent);
     letter-spacing: 0.1em;
-    margin-bottom: 0.3em;
-    font-size: 0.68rem;
+    margin-bottom: 0.5em;
+    font-size: 0.7rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4em;
 }
 
-.footer__funding-info p { margin: 0; color: var(--text-dim); }
+.footer__funding-info p { margin: 0; color: var(--text); }
 .footer__funding-info a {
     color: var(--accent);
     display: block;
-    margin-top: 0.5em;
+    margin-top: 0.7em;
+    padding-top: 0.5em;
+    border-top: 1px solid var(--border);
     text-decoration: none;
 }
 .footer__funding-info a:hover { text-decoration: underline; }
+
+@media (max-width: 600px) {
+    .footer__funding-info {
+        right: auto;
+        left: 0;
+    }
+}
 
 .fs--green { color: var(--accent); }
 .fs--amber { color: #f0a030; }
