@@ -136,7 +136,7 @@ nav {
     padding: 0 var(--gap-lg);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: var(--gap-lg);
 }
 
 .nav__brand {
@@ -171,6 +171,8 @@ nav ul {
     margin: 0;
     padding: 0;
     gap: 0;
+    flex: 1;
+    justify-content: center;
 }
 
 nav li a {
@@ -1073,19 +1075,27 @@ select:focus {
 @media (max-width: 700px) {
     .menu-toggle { display: flex; align-items: center; }
 
-    nav { flex-wrap: wrap; padding: 0 var(--gap-md); gap: 0; }
-    .nav__brand { flex: 1; }
+    nav { flex-wrap: wrap; padding: 0 var(--gap-md); gap: 0; justify-content: space-between; }
+    .nav__brand { flex: 0 0 auto; }
     nav ul {
-        width: 100%;
+        flex: none;
+        width: calc(100% + 2 * var(--gap-md));
+        margin: 0 calc(-1 * var(--gap-md));
         flex-direction: column;
+        justify-content: flex-start;
         display: none;
         border-top: 1px solid var(--border);
-        margin: 0 calc(-1 * var(--gap-md));
         padding: 0;
     }
     nav.active ul { display: flex; }
     nav li { margin: 0; width: 100%; }
-    nav li a { padding: var(--gap-sm) var(--gap-md); width: 100%; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+    nav li a {
+        padding: var(--gap-sm) var(--gap-md);
+        width: 100%;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.85rem;
+        min-height: 44px; /* touch target */
+    }
 
     h1 { font-size: 1.3rem; }
     h2 { font-size: 1.1rem; }
