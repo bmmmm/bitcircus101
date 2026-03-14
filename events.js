@@ -9,16 +9,24 @@
   var JSON_URL = "events-data.json";
   var ICS_URL =
     "https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export";
+  var CALENDAR_URL =
+    "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC";
   var MONTHS = [
-    "JAN", "FEB", "MÄR", "APR", "MAI", "JUN",
+    "JAN", "FEB", "M\u00c4R", "APR", "MAI", "JUN",
     "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ",
   ];
   var MONTHS_FULL = [
-    "JANUAR", "FEBRUAR", "MÄRZ", "APRIL", "MAI", "JUNI",
+    "JANUAR", "FEBRUAR", "M\u00c4RZ", "APRIL", "MAI", "JUNI",
     "JULI", "AUGUST", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DEZEMBER",
   ];
   var DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
   var HORIZON = 120;
+
+  // State
+  var activeFilters = [];
+  var allUpcoming = [];
+  var eventsContainer = null;
+  var filterBar = null;
 
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
 
@@ -32,30 +40,102 @@
   // ── Card Renderer ─────────────────────────────────────────────────────────
 
   function renderCards(events, el) {
+    eventsContainer = el;
     var now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    var upcoming = events
+    allUpcoming = events
       .filter(function (e) {
         return new Date(e.date + "T23:59:59") >= now;
       })
       .sort(function (a, b) {
         return new Date(a.date) - new Date(b.date);
       })
-      .slice(0, 20);
+      .slice(0, 30);
 
-    if (!upcoming.length) {
+    if (!allUpcoming.length) {
       el.innerHTML =
         '<p class="events-empty">Keine kommenden Termine gefunden.</p>' +
-        '<p><a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" ' +
-        'target="_blank" rel="noopener">Kalender öffnen ↗</a></p>';
+        '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
+        "Kalender \u00f6ffnen \u2197</a></p>";
+      return;
+    }
+
+    // Collect all tags
+    var tagSet = {};
+    allUpcoming.forEach(function (e) {
+      (e.tags || []).forEach(function (t) { tagSet[t] = true; });
+    });
+    var allTags = Object.keys(tagSet).sort();
+
+    buildFilterBar(allTags, el);
+    renderFilteredCards();
+  }
+
+  function buildFilterBar(tags, el) {
+    if (!tags.length) return;
+
+    filterBar = document.createElement("div");
+    filterBar.className = "events-filter";
+
+    var html = '<span class="events-filter__label">$ filter</span>';
+    tags.forEach(function (t) {
+      html += '<button class="events-filter__tag" data-tag="' +
+        esc(t) + '">' + esc(t) + "</button>";
+    });
+    html += '<button class="events-filter__clear" style="display:none">' +
+      "\u00d7 reset</button>";
+    filterBar.innerHTML = html;
+
+    el.parentNode.insertBefore(filterBar, el);
+
+    var clearBtn = filterBar.querySelector(".events-filter__clear");
+    filterBar.querySelectorAll(".events-filter__tag").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var tag = btn.getAttribute("data-tag");
+        var idx = activeFilters.indexOf(tag);
+        if (idx > -1) {
+          activeFilters.splice(idx, 1);
+          btn.classList.remove("active");
+        } else {
+          activeFilters.push(tag);
+          btn.classList.add("active");
+        }
+        clearBtn.style.display = activeFilters.length ? "" : "none";
+        renderFilteredCards();
+      });
+    });
+
+    clearBtn.addEventListener("click", function () {
+      activeFilters = [];
+      filterBar.querySelectorAll(".events-filter__tag").forEach(function (b) {
+        b.classList.remove("active");
+      });
+      clearBtn.style.display = "none";
+      renderFilteredCards();
+    });
+  }
+
+  function renderFilteredCards() {
+    var el = eventsContainer;
+    var filtered = activeFilters.length
+      ? allUpcoming.filter(function (e) {
+          return activeFilters.some(function (f) {
+            return (e.tags || []).indexOf(f) > -1;
+          });
+        })
+      : allUpcoming;
+
+    if (!filtered.length) {
+      el.innerHTML =
+        '<p class="events-empty">Keine Treffer f\u00fcr diesen Filter.</p>';
       return;
     }
 
     // Group by year-month
     var groups = [];
     var groupMap = {};
-    upcoming.forEach(function (e) {
+    filtered.forEach(function (e) {
       var d = new Date(e.date + "T00:00:00");
       var k = d.getFullYear() + "-" + pad(d.getMonth() + 1);
       if (!groupMap[k]) { groupMap[k] = []; groups.push(k); }
@@ -75,10 +155,12 @@
         var d = new Date(e.date + "T00:00:00");
         var typeClass = e.type ? " event-card--" + e.type : "";
         var slug = e.date + "-" + e.title.toLowerCase()
-          .replace(/[^a-z0-9äöü]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+          .replace(/[^a-z0-9\u00e4\u00f6\u00fc]+/g, "-")
+          .replace(/^-|-$/g, "").slice(0, 40);
         var anchor = "ev-" + slug;
 
-        html += '<article class="event-card' + typeClass + '" id="' + anchor + '">';
+        html += '<article class="event-card' + typeClass +
+          '" id="' + anchor + '">';
 
         // Date column
         html += '<div class="event-card__date">';
@@ -91,9 +173,12 @@
         html += '<div class="event-card__content">';
         html += '<div class="event-card__header">';
         html += '<h3 class="event-card__title">' + esc(e.title) + "</h3>";
-        html += '<a class="event-card__link" href="#' + anchor +
-          '" title="Link zu diesem Event" aria-label="Permalink">#</a>';
-        html += "</div>";
+        html += '<div class="event-card__actions">';
+        html += '<a class="event-card__action" href="#' + anchor +
+          '" title="Permalink">\u00a7</a>';
+        html += '<a class="event-card__action" href="' + CALENDAR_URL +
+          '" target="_blank" rel="noopener" title="Kalender">\u2197</a>';
+        html += "</div></div>";
         if (e.subtitle) {
           html += '<p class="event-card__subtitle">' + esc(e.subtitle) + "</p>";
         }
@@ -120,6 +205,12 @@
     });
 
     el.innerHTML = html;
+
+    // Scroll to anchor if URL has hash
+    if (window.location.hash) {
+      var target = document.getElementById(window.location.hash.slice(1));
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
   }
 
   // ── ICS Parser (fallback) ─────────────────────────────────────────────────
@@ -248,13 +339,12 @@
     return events;
   }
 
-  /** Convert ICS event objects to card-format objects */
   function icsToCards(icsEvents) {
     var now = new Date();
     return icsEvents
       .filter(function (e) { return e.dtstart > now; })
       .sort(function (a, b) { return a.dtstart - b.dtstart; })
-      .slice(0, 20)
+      .slice(0, 30)
       .map(function (e) {
         return {
           title: e.summary,
@@ -270,7 +360,7 @@
       });
   }
 
-  // ── Error / Loading States ────────────────────────────────────────────────
+  // ── Error / Loading ─────────────────────────────────────────────────────
 
   function renderError(el) {
     el.innerHTML =
@@ -279,9 +369,8 @@
       "$ events --load " +
       '<span class="events-fallback__err">ERR</span></p>' +
       "<p>Termine direkt ansehen: " +
-      '<a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" ' +
-      'target="_blank" rel="noopener">Kalender öffnen ↗</a></p>' +
-      "</div>";
+      '<a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
+      "Kalender \u00f6ffnen \u2197</a></p></div>";
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
@@ -293,9 +382,8 @@
     el.innerHTML =
       '<p class="events-loading">' +
       '<span class="events-loading__cmd">$ events --load</span>' +
-      '<span class="events-cursor">▋</span></p>';
+      '<span class="events-cursor">\u258b</span></p>';
 
-    // 1. Try local JSON (generated by CI)
     fetch(JSON_URL)
       .then(function (res) {
         if (!res.ok) throw new Error("no json");
@@ -306,7 +394,6 @@
         renderCards(events, el);
       })
       .catch(function () {
-        // 2. Fallback: fetch ICS from Nextcloud
         fetch(ICS_URL, { mode: "cors" })
           .then(function (res) {
             if (!res.ok) throw new Error("HTTP " + res.status);

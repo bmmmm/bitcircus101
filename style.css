@@ -883,6 +883,61 @@ select:focus {
     min-height: 60px;
 }
 
+/* Tag filter bar */
+.events-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-bottom: var(--gap-lg);
+    font-size: 0.75rem;
+}
+
+.events-filter__label {
+    color: var(--accent);
+    margin-right: 0.3rem;
+    opacity: 0.6;
+}
+
+.events-filter__tag {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.2em 0.6em;
+    font-family: var(--font);
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.events-filter__tag:hover {
+    border-color: var(--accent-dim);
+    color: var(--text);
+}
+
+.events-filter__tag.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0, 217, 126, 0.08);
+}
+
+.events-filter__clear {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.2em 0.6em;
+    font-family: var(--font);
+    font-size: 0.72rem;
+    cursor: pointer;
+    margin-left: 0.3rem;
+    transition: all var(--transition);
+}
+
+.events-filter__clear:hover {
+    border-color: #e04040;
+    color: #e04040;
+}
+
 .events-month { margin-bottom: var(--gap-xl); }
 
 .events-month__label {
@@ -973,17 +1028,23 @@ select:focus {
 
 .event-card__title::before { content: none; }
 
-.event-card__link {
-    color: var(--border);
-    font-size: 0.75rem;
-    text-decoration: none;
-    opacity: 0;
-    transition: opacity var(--transition), color var(--transition);
+.event-card__actions {
+    display: flex;
+    gap: 0.4em;
     flex-shrink: 0;
 }
 
-.event-card:hover .event-card__link { opacity: 1; }
-.event-card__link:hover { color: var(--accent); }
+.event-card__action {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    text-decoration: none;
+    opacity: 0.4;
+    transition: opacity var(--transition), color var(--transition);
+    padding: 0.1em 0.2em;
+}
+
+.event-card:hover .event-card__action { opacity: 1; }
+.event-card__action:hover { color: var(--accent); text-decoration: none; }
 
 .event-card__subtitle {
     font-size: 0.82rem;
