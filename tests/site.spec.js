@@ -12,6 +12,10 @@ test.describe('Home page', () => {
         await expect(page).toHaveTitle(/bitcircus101/);
     });
 
+    test('title contains Hackspace', async ({ page }) => {
+        await expect(page).toHaveTitle(/Hackspace/);
+    });
+
     test('has correct h1', async ({ page }) => {
         await expect(page.locator('h1')).toContainText('bitcircus101');
     });
@@ -34,9 +38,10 @@ test.describe('Home page', () => {
         expect(activeDotAfter).not.toBe(activeDotBefore);
     });
 
-    test('shows donation section with CTA', async ({ page }) => {
-        await expect(page.locator('#donations')).toBeVisible();
+    test('shows support section with donation and rental CTAs', async ({ page }) => {
+        await expect(page.locator('#support')).toBeVisible();
         await expect(page.locator('a[href="donations.html"]').first()).toBeVisible();
+        await expect(page.locator('a[href="raum-mieten.html"]').first()).toBeVisible();
     });
 
     test('shows contact section', async ({ page }) => {
@@ -93,6 +98,24 @@ test.describe('SEO meta tags', () => {
         expect(themeColor).toBeTruthy();
     });
 
+    test('home page keywords include Hackspace Bonn', async ({ page }) => {
+        await page.goto('/');
+        const keywords = await page.locator('meta[name="keywords"]').getAttribute('content');
+        expect(keywords.toLowerCase()).toContain('hackspace bonn');
+    });
+
+    test('home page body text mentions Hackspace', async ({ page }) => {
+        await page.goto('/');
+        const bodyText = await page.locator('main').innerText();
+        expect(bodyText.toLowerCase()).toContain('hackspace');
+    });
+
+    test('raum-mieten page has rental keywords', async ({ page }) => {
+        await page.goto('/raum-mieten.html');
+        const keywords = await page.locator('meta[name="keywords"]').getAttribute('content');
+        expect(keywords.toLowerCase()).toContain('raum mieten bonn');
+    });
+
     test('events page has meta description', async ({ page }) => {
         await page.goto('/events.html');
         const desc = await page.locator('meta[name="description"]').getAttribute('content');
@@ -141,6 +164,7 @@ test.describe('Navigation', () => {
         await page.goto('/');
         await expect(page.locator('nav a[href="events.html"]')).toBeVisible();
         await expect(page.locator('nav a[href="donations.html"]')).toBeVisible();
+        await expect(page.locator('nav a[href="raum-mieten.html"]')).toBeVisible();
     });
 
     test('mobile menu toggle shows/hides nav', async ({ page }) => {
@@ -225,6 +249,40 @@ test.describe('Donations page', () => {
     });
 });
 
+// ─── Raum Mieten Page ────────────────────────────────────────────────────────
+
+test.describe('Raum mieten page', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/raum-mieten.html');
+    });
+
+    test('loads with correct title', async ({ page }) => {
+        await expect(page).toHaveTitle(/Raum mieten/);
+    });
+
+    test('title contains Bonn', async ({ page }) => {
+        await expect(page).toHaveTitle(/Bonn/);
+    });
+
+    test('has contact CTA', async ({ page }) => {
+        await expect(page.locator('a[href^="mailto:"]')).toBeVisible();
+    });
+
+    test('has map button', async ({ page }) => {
+        await expect(page.locator('#show-map-btn')).toBeVisible();
+    });
+
+    test('has JSON-LD structured data', async ({ page }) => {
+        const jsonLd = await page.locator('script[type="application/ld+json"]').textContent();
+        const data = JSON.parse(jsonLd);
+        expect(data['@type']).toBe('EventVenue');
+    });
+
+    test('has back link', async ({ page }) => {
+        await expect(page.locator('.back-link a')).toBeVisible();
+    });
+});
+
 // ─── Impressum Page ───────────────────────────────────────────────────────────
 
 test.describe('Impressum & Datenschutz page', () => {
@@ -268,8 +326,8 @@ test.describe('Terminal theme', () => {
 
     test('no inline styles remain on key elements', async ({ page }) => {
         await page.goto('/');
-        // Check donate CTA paragraph
-        const donateP = page.locator('#donations .text-center');
+        // Check support CTA paragraph
+        const donateP = page.locator('#support .text-center');
         await expect(donateP).toBeVisible();
         const inlineStyle = await donateP.getAttribute('style');
         expect(inlineStyle).toBeFalsy();
