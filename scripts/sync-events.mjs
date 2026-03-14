@@ -168,7 +168,7 @@ function keywordTags(text) {
   if (text.includes("ctf") || text.includes("capture the flag")) tags.push("#ctf");
   if (/\bsecurity\b/.test(text) || /\bpentest\b/.test(text)) tags.push("#security");
   if (/\bllm\b/.test(text) || /\b(ai|künstliche intelligenz)\b/.test(text)) tags.push("#ai");
-  if (text.includes("retro") || text.includes("gaming") || text.includes("spiele")) tags.push("#gaming");
+  if (text.includes("retro") || /\bgaming\b/.test(text) || text.includes("spieleabend")) tags.push("#gaming");
   if (text.includes("fsfe") || text.includes("open source") || text.includes("free software")) tags.push("#foss");
   if (/\bchaos\b/.test(text) || /\bccc\b/.test(text) || text.includes("easterhegg") || text.includes("congress") || text.includes("camp")) tags.push("#chaos");
   if (/\bfroscon\b/.test(text) || text.includes("froscon") || text.includes("free and open source")) tags.push("#froscon");

@@ -74,8 +74,11 @@
       groupMap[k].forEach(function (e) {
         var d = new Date(e.date + "T00:00:00");
         var typeClass = e.type ? " event-card--" + e.type : "";
+        var slug = e.date + "-" + e.title.toLowerCase()
+          .replace(/[^a-z0-9äöü]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+        var anchor = "ev-" + slug;
 
-        html += '<article class="event-card' + typeClass + '">';
+        html += '<article class="event-card' + typeClass + '" id="' + anchor + '">';
 
         // Date column
         html += '<div class="event-card__date">';
@@ -86,7 +89,11 @@
 
         // Content column
         html += '<div class="event-card__content">';
+        html += '<div class="event-card__header">';
         html += '<h3 class="event-card__title">' + esc(e.title) + "</h3>";
+        html += '<a class="event-card__link" href="#' + anchor +
+          '" title="Link zu diesem Event" aria-label="Permalink">#</a>';
+        html += "</div>";
         if (e.subtitle) {
           html += '<p class="event-card__subtitle">' + esc(e.subtitle) + "</p>";
         }
