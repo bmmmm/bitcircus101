@@ -810,68 +810,124 @@ select:focus {
 }
 
 /* =============================================================================
-   Calendar Components
+   Events Feed
    ============================================================================= */
-.calendar-container {
+.events-intro {
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    letter-spacing: 0.04em;
+}
+
+.events-list {
     margin: var(--gap-lg) 0;
-    text-align: center;
+    min-height: 60px;
 }
 
-.calendar-container iframe {
-    max-width: 100%;
-    border: 1px solid var(--border);
+.events-month { margin-bottom: var(--gap-xl); }
+
+.events-month__label {
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    margin: 0 0 var(--gap-sm);
+    font-weight: normal;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4em;
 }
 
-.calendar-placeholder {
-    width: 800px;
-    max-width: 100%;
-    height: 600px;
-    background: var(--bg-panel);
+.events-month__label::before { content: none; }
+
+.event-entry {
+    display: grid;
+    grid-template-columns: 6.5em 1fr;
+    gap: 0 1.5em;
+    padding: 0.6em 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    align-items: baseline;
+}
+
+.event-entry:last-child { border-bottom: none; }
+
+.event-entry__when {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed var(--border);
+    gap: 0.6em;
+    align-items: baseline;
 }
 
-.calendar-placeholder p { color: var(--text-dim); margin: 0; }
-
-.calendar-controls {
-    margin: var(--gap-lg) 0;
-    text-align: center;
+.event-entry__dow {
+    color: var(--accent);
+    font-size: 0.72rem;
+    opacity: 0.6;
+    min-width: 1.6em;
 }
 
-.calendar-controls > div {
+.event-entry__date { color: var(--text); font-size: 0.85rem; }
+
+.event-entry__body {
     display: flex;
-    justify-content: center;
-    gap: var(--gap-lg);
-    flex-wrap: wrap;
-    margin-bottom: var(--gap-md);
+    flex-direction: column;
+    gap: 0.15em;
 }
 
-.calendar-controls label {
+.event-entry__title { color: var(--text-bright); font-size: 0.9rem; }
+.event-entry__meta { color: var(--text-dim); font-size: 0.78rem; }
+
+.events-loading {
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    padding: var(--gap-md) 0;
+}
+
+.events-loading__cmd { color: var(--accent); }
+
+.events-cursor {
+    display: inline-block;
+    animation: blink 1.1s step-start infinite;
+    margin-left: 0.15em;
+    color: var(--accent);
+}
+
+.events-fallback {
+    padding: var(--gap-md) 0;
+    font-size: 0.85rem;
+}
+
+.events-fallback__cmd { color: var(--text-dim); margin-bottom: var(--gap-sm); }
+.events-fallback__err { color: #ff6b6b; }
+.events-empty { color: var(--text-dim); font-size: 0.88rem; }
+
+.events-actions {
     display: flex;
-    align-items: center;
-    gap: var(--gap-xs);
-    cursor: pointer;
-}
-
-.calendar-downloads {
-    margin: var(--gap-lg) 0;
-    text-align: center;
-}
-
-.calendar-downloads > div {
-    display: flex;
-    justify-content: center;
     gap: var(--gap-md);
     flex-wrap: wrap;
-    margin-bottom: var(--gap-sm);
+    margin: var(--gap-lg) 0;
+    font-size: 0.82rem;
 }
 
-.calendar-fallback {
-    font-size: 0.88em;
+.events-actions a {
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 0.4em 0.9em;
+    transition: background var(--transition), border-color var(--transition);
+}
+
+.events-actions a:hover {
+    background: var(--bg-panel);
+    border-color: var(--accent-dim);
+    text-decoration: none;
+}
+
+.events-privacy {
     color: var(--text-dim);
-    margin-bottom: var(--gap-lg);
+    font-size: 0.82rem;
+    opacity: 0.7;
+}
+
+@media (max-width: 600px) {
+    .event-entry { grid-template-columns: 1fr; gap: 0.2em 0; }
+    .events-actions { flex-direction: column; }
+    .events-actions a { text-align: center; }
 }
 
 .linkup-description {
@@ -882,15 +938,6 @@ select:focus {
 }
 
 .linkup-description h3 { margin-top: 0; }
-
-.privacy-notice {
-    background: var(--bg-panel);
-    padding: var(--gap-md);
-    border-left: 2px solid var(--accent);
-    margin: var(--gap-lg) 0;
-    color: var(--text-dim);
-    font-size: 0.9rem;
-}
 
 /* =============================================================================
    ASCII Art
