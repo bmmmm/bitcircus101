@@ -644,14 +644,34 @@ select:focus {
    Location Card
    ============================================================================= */
 .location-card {
+    position: relative;
     display: inline-block;
     border: 1px solid var(--border);
     font-size: 0.85rem;
     margin: var(--gap-lg) 0;
     min-width: 260px;
+    overflow: hidden;
 }
 
+/* Coordinate grid fades in on hover — hints at hidden map */
+.location-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(0, 217, 126, 0.06) 20px),
+        repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(0, 217, 126, 0.06) 20px);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.location-card:hover::before { opacity: 1; }
+
 .location-card__header {
+    position: relative;
+    z-index: 1;
     border-bottom: 1px solid var(--border);
     padding: 0.4em 1em;
     color: var(--accent);
@@ -660,27 +680,46 @@ select:focus {
     background: var(--bg-elevated);
 }
 
-.location-card__data {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.25em 1.5em;
+.location-card__body {
+    position: relative;
+    z-index: 1;
     padding: 0.9em 1em;
-    margin: 0;
 }
 
-.location-card__data dt {
-    color: var(--accent);
-    opacity: 0.55;
-    user-select: none;
-    font-style: normal;
+.location-card__body p { margin: 0; }
+
+.location-card__name {
+    color: var(--text-bright);
+    margin-bottom: 0.35em;
 }
 
-.location-card__data dd {
+.location-card__address {
     color: var(--text);
-    margin: 0;
+    line-height: 1.65;
+    margin-bottom: 0.65em;
+}
+
+.location-card__coords {
+    color: var(--accent);
+    opacity: 0.5;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.location-card__cursor {
+    display: inline-block;
+    margin-left: 0.15em;
+    animation: blink 1.1s step-start infinite;
 }
 
 .location-card__map-btn {
+    position: relative;
+    z-index: 1;
     display: block;
     width: 100%;
     background: none;
@@ -706,6 +745,8 @@ select:focus {
 .location-card__map-btn:hover span { opacity: 1; }
 
 .location-card__map-frame {
+    position: relative;
+    z-index: 1;
     width: 100%;
     height: 300px;
     border: none;
@@ -714,6 +755,8 @@ select:focus {
 }
 
 .location-card__osm-link {
+    position: relative;
+    z-index: 1;
     display: block;
     padding: 0.4em 1em;
     border-top: 1px solid var(--border);
