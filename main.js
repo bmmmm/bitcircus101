@@ -411,8 +411,8 @@
       var bar = "\u2588".repeat(filled) + "\u2591".repeat(10 - filled);
 
       var level = "red";
-      if (p >= 75) level = "green";
-      else if (p >= 50) level = "amber";
+      if (p >= 80) level = "green";
+      else if (p >= 33) level = "amber";
 
       el.classList.add("footer__status--" + level);
       el.setAttribute("tabindex", "0");
@@ -435,9 +435,9 @@
         " " +
         p +
         "% gedeckt</p>" +
-        '<p><span class="fs--green">\u2588</span> gr\u00fcn \u2014 kosten gedeckt</p>' +
-        '<p><span class="fs--amber">\u2588</span> amber \u2014 ~50% gedeckt</p>' +
-        '<p><span class="fs--red">\u2588</span> rot \u2014 &lt;25% gedeckt</p>' +
+        '<p><span class="fs--green">\u2588</span> gr\u00fcn \u2014 \u226580% gedeckt</p>' +
+        '<p><span class="fs--amber">\u2588</span> amber \u2014 33\u201380% gedeckt</p>' +
+        '<p><span class="fs--red">\u2588</span> rot \u2014 &lt;33% gedeckt</p>' +
         '<a href="donations.html">$ contribute \u2192</a>' +
         "</div>";
 
