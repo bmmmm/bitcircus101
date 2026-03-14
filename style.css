@@ -1297,6 +1297,59 @@ select:focus {
 }
 
 /* =============================================================================
+   Scroll to Top + Matrix Trail
+   ============================================================================= */
+.scroll-top {
+    position: fixed;
+    bottom: var(--gap-lg);
+    right: var(--gap-lg);
+    width: 40px;
+    height: 40px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-nav);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, border-color var(--transition), background var(--transition);
+}
+
+.scroll-top.visible {
+    opacity: 0.6;
+    pointer-events: auto;
+}
+
+.scroll-top:hover {
+    opacity: 1;
+    border-color: var(--accent);
+    background: var(--bg-elevated);
+}
+
+.scroll-top:active { transform: scale(0.92); }
+
+.matrix-trail {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+@media (max-width: 600px) {
+    .scroll-top {
+        bottom: var(--gap-md);
+        right: var(--gap-md);
+        width: 36px;
+        height: 36px;
+    }
+}
+
+/* =============================================================================
    Accessibility & Focus Management
    ============================================================================= */
 *:focus-visible {
