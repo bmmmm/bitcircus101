@@ -457,6 +457,123 @@
   };
 
   // =============================================================================
+  // Scroll to Top + Matrix Trail
+  // =============================================================================
+  const ScrollTop = {
+    chars: "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
+    columns: [],
+    canvas: null,
+    ctx: null,
+    animId: null,
+    btn: null,
+
+    init() {
+      // Create button
+      var btn = document.createElement("button");
+      btn.className = "scroll-top";
+      btn.setAttribute("aria-label", "Nach oben scrollen");
+      btn.innerHTML = "▲";
+      btn.type = "button";
+      document.body.appendChild(btn);
+      this.btn = btn;
+
+      // Show/hide on scroll
+      var self = this;
+      var ticking = false;
+      window.addEventListener("scroll", function () {
+        if (!ticking) {
+          requestAnimationFrame(function () {
+            btn.classList.toggle("visible", window.scrollY > 400);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      // Click: matrix trail + scroll
+      btn.addEventListener("click", function () {
+        self.fireMatrixTrail();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    },
+
+    fireMatrixTrail() {
+      if (this.canvas) return; // already running
+
+      var canvas = document.createElement("canvas");
+      canvas.className = "matrix-trail";
+      document.body.appendChild(canvas);
+      this.canvas = canvas;
+
+      var ctx = canvas.getContext("2d");
+      this.ctx = ctx;
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      var fontSize = 14;
+      var colCount = Math.floor(canvas.width / fontSize);
+      var columns = [];
+      for (var i = 0; i < colCount; i++) {
+        columns[i] = Math.random() * canvas.height / fontSize;
+      }
+      this.columns = columns;
+
+      var self = this;
+      var chars = this.chars;
+      var frames = 0;
+      var maxFrames = 45;
+
+      function draw() {
+        // Fade background
+        ctx.fillStyle = "rgba(13, 13, 13, 0.12)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.font = fontSize + "px monospace";
+
+        for (var i = 0; i < columns.length; i++) {
+          var ch = chars[Math.floor(Math.random() * chars.length)];
+          var x = i * fontSize;
+          var y = columns[i] * fontSize;
+
+          // Bright head, dimmer trail
+          var brightness = Math.random();
+          if (brightness > 0.9) {
+            ctx.fillStyle = "#fff";
+          } else if (brightness > 0.6) {
+            ctx.fillStyle = "#00d97e";
+          } else {
+            ctx.fillStyle = "rgba(0, 217, 126, 0.4)";
+          }
+
+          ctx.fillText(ch, x, y);
+
+          if (y > canvas.height && Math.random() > 0.97) {
+            columns[i] = 0;
+          }
+          columns[i]++;
+        }
+
+        frames++;
+        if (frames < maxFrames) {
+          self.animId = requestAnimationFrame(draw);
+        } else {
+          // Fade out
+          canvas.style.opacity = "0";
+          setTimeout(function () {
+            canvas.remove();
+            self.canvas = null;
+            self.ctx = null;
+            self.animId = null;
+          }, 500);
+        }
+      }
+
+      this.animId = requestAnimationFrame(draw);
+    },
+  };
+
+  // =============================================================================
   // Footer Year
   // =============================================================================
   const FooterYear = {
@@ -479,6 +596,7 @@
       Accessibility.init();
       EventsPreview.init();
       FundingStatus.init();
+      ScrollTop.init();
       FooterYear.init();
     },
   };
