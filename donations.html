@@ -9,7 +9,9 @@
             name="description"
             content="Hilf mit deiner Spende, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt. Jeder Beitrag zählt!"
         />
+        <meta name="keywords" content="Hackspace Bonn spenden, bitcircus101 unterstützen, Hackerspace Bonn fördern" />
         <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#0d0d0d" />
         <meta property="og:type" content="website" />
         <meta
             property="og:url"
@@ -71,6 +73,7 @@
                     <li><a href="index.html">Start</a></li>
                     <li><a href="index.html#about">Über uns</a></li>
                     <li><a href="events.html">Veranstaltungen</a></li>
+                    <li><a href="raum-mieten.html">Raum mieten</a></li>
                     <li><a href="donations.html">Spenden</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
                     <li>
@@ -85,41 +88,36 @@
             <div class="container">
                 <section>
                     <h1>Unterstütze bitcircus101</h1>
-                    <p style="text-align: center; font-size: 1.1rem">
-                        Deine Spende hilft, dass bitcircus101 ein kreativer und
-                        technischer Freiraum in Bonn bleibt. Jeder Beitrag –
-                        egal wie groß oder klein – macht einen Unterschied und
-                        hält unsere Community lebendig.
+                    <p>
+                        Miete, Internet, Strom – das kostet jeden Monat Geld.
+                        bitcircus101 existiert ausschließlich durch Raumvermietungen
+                        und Spenden. Jede Spende geht direkt in den Betrieb.
                     </p>
                     <p
                         id="payment-method-text"
-                        class="payment-method-text"
-                        style="display: none"
+                        class="payment-method-text hidden"
                     >
                         Wähle deine bevorzugte Spendenmethode:
                     </p>
                     <div
-                        class="donation-buttons"
+                        class="donation-buttons hidden"
                         id="donation-content"
-                        style="display: none"
                     >
                         <!-- Inhalt wird nach Zustimmung angezeigt -->
                     </div>
                     <div
                         id="decline-message"
-                        class="decline-message"
-                        style="display: none"
+                        class="decline-message hidden"
                     >
-                        <p style="font-size: 3rem">😢</p>
                         <p>
-                            Du hast Cookies abgelehnt.<br />
-                            Du kannst uns trotzdem vor Ort unterstützen!
+                            Cookies abgelehnt –
+                            du kannst uns trotzdem vor Ort unterstützen
+                            oder den Raum mieten.
                         </p>
                     </div>
                     <div
                         id="osm-map-decline-section"
-                        class="osm-map-decline-section"
-                        style="display: none"
+                        class="osm-map-decline-section hidden"
                     >
                         <button
                             id="show-map-btn"
@@ -129,8 +127,7 @@
                         </button>
                         <div
                             id="osm-map-container"
-                            class="map-container"
-                            style="display: none"
+                            class="map-container hidden"
                         >
                             <iframe
                                 id="osm-map"
@@ -169,108 +166,69 @@
             </div>
         </footer>
         <script>
-            // Always show site notice immediately on page load, block all content until action
-            document.addEventListener("DOMContentLoaded", function () {
-                var siteNotice = document.getElementById("site-notice");
-                var donationContent =
-                    document.getElementById("donation-content");
-                var declineMessage = document.getElementById("decline-message");
+            function show(id) {
+                var el = document.getElementById(id);
+                if (el) el.classList.remove("hidden");
+            }
+            function hide(id) {
+                var el = document.getElementById(id);
+                if (el) el.classList.add("hidden");
+            }
 
-                if (donationContent) donationContent.style.display = "none";
-                if (declineMessage) declineMessage.style.display = "none";
+            document.addEventListener("DOMContentLoaded", function () {
+                hide("donation-content");
+                hide("decline-message");
+                hide("payment-method-text");
+                var siteNotice = document.getElementById("site-notice");
                 if (siteNotice) {
                     siteNotice.style.display = "block";
                     document.body.classList.add("cookie-banner-shown");
                 }
-
-                // Hide payment method text until decision is made
-                var paymentMethodText = document.getElementById(
-                    "payment-method-text",
-                );
-                if (paymentMethodText) paymentMethodText.style.display = "none";
-
             });
 
-            // Show donation content only after explicit consent, always show banner first
             function showDonationContent() {
                 var container = document.getElementById("donation-content");
                 if (container) {
-                    // PayPal und Ko-fi erst nach Zustimmung anzeigen
                     container.innerHTML = `
-                    <div class="donation-item">
-                        <h3>Spende via PayPal</h3>
-                            <a
-                                href="https://www.paypal.com/paypalme/b6m"
-                                target="_blank"
-                                class="btn btn-primary"
-                                style="background-color: #0070ba"
-                            >
+                        <div class="donation-item">
+                            <h3>PayPal</h3>
+                            <a href="https://www.paypal.com/paypalme/b6m"
+                               target="_blank"
+                               class="btn btn-primary">
                                 Mit PayPal spenden
                             </a>
                         </div>
                         <div class="donation-item">
-                            <h3>Spende via Ko‑fi</h3>
+                            <h3>Ko&#x2011;fi</h3>
                             <iframe
                                 id="kofiframe"
                                 src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
-
                                 height="712"
-                                title="bmabma"
+                                title="Ko-fi – bmabma"
                             ></iframe>
                         </div>
                     `;
-                    container.style.display = "flex";
+                    container.classList.remove("hidden");
                 }
-                var siteNotice = document.getElementById("site-notice");
-                if (siteNotice) siteNotice.style.display = "none";
+                hide("site-notice");
+                show("payment-method-text");
                 document.body.style.overflow = "auto";
                 document.body.classList.remove("cookie-banner-shown");
-
-                // Show payment method text after decision
-                var paymentMethodText = document.getElementById(
-                    "payment-method-text",
-                );
-                if (paymentMethodText)
-                    paymentMethodText.style.display = "block";
             }
 
             function acceptCookies() {
                 localStorage.setItem("bitcircus-cookie-consent", "accepted");
                 showDonationContent();
-
-                // Show payment method text after acceptance
-                var paymentMethodText = document.getElementById(
-                    "payment-method-text",
-                );
-                if (paymentMethodText)
-                    paymentMethodText.style.display = "block";
             }
 
             function declineCookies() {
-                var declineMessage = document.getElementById("decline-message");
-                var donationContent =
-                    document.getElementById("donation-content");
-                var paymentMethodText = document.getElementById(
-                    "payment-method-text",
-                );
-                var osmMapSection = document.getElementById(
-                    "osm-map-decline-section",
-                );
-                if (declineMessage) declineMessage.style.display = "block";
-                if (donationContent) donationContent.style.display = "none";
-                if (paymentMethodText) paymentMethodText.style.display = "none";
-                if (osmMapSection) osmMapSection.style.display = "block";
-                var siteNotice = document.getElementById("site-notice");
-                if (siteNotice) siteNotice.style.display = "none";
+                show("decline-message");
+                show("osm-map-decline-section");
+                hide("donation-content");
+                hide("payment-method-text");
+                hide("site-notice");
                 document.body.style.overflow = "auto";
                 document.body.classList.remove("cookie-banner-shown");
-
-                // Show payment method text after decision
-                var paymentMethodText = document.getElementById(
-                    "payment-method-text",
-                );
-                if (paymentMethodText)
-                    paymentMethodText.style.display = "block";
             }
         </script>
         <script defer src="main.js"></script>

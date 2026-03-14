@@ -425,6 +425,7 @@ select:focus {
    ============================================================================= */
 .text-center { text-align: center; }
 .mt-lg { margin-top: var(--gap-lg); }
+.hidden { display: none !important; }
 
 /* =============================================================================
    Content Components
