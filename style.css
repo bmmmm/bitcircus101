@@ -439,34 +439,74 @@ select:focus {
 .contact-info a { color: var(--accent); font-weight: bold; }
 
 .signal-group { margin: var(--gap-lg) 0; text-align: center; }
-.signal-text { margin-bottom: var(--gap-md); }
+.signal-text { margin-bottom: var(--gap-md); color: var(--text-dim); }
 
 .signal-channels {
     display: flex;
-    gap: var(--gap-lg);
+    gap: 3rem;
     justify-content: center;
     flex-wrap: wrap;
 }
 
+/* <a> is the positioning anchor for the ::after overlay */
 .signal-channel {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--gap-xs);
     text-decoration: none;
-    transition: opacity 0.2s ease;
 }
 
-/* when hovering the container, dim the sibling not being hovered */
-.signal-channels:has(.signal-channel:hover) .signal-channel:not(:hover) {
-    opacity: 0.2;
+/* Inner wrapper – this one gets dimmed, not the <a> itself */
+.signal-channel-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-sm);
+    transition: opacity 0.25s ease;
+}
+
+/* Hint overlay: sits centered on the dimmed card, pointer-events off so link still works */
+.signal-channel::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--accent);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    border: 1px solid var(--accent);
+    padding: 0.3em 0.7em;
+    background: var(--bg);
+    letter-spacing: 0.04em;
+}
+
+/* Dim right, show hint "← links scannen" */
+.signal-channels:has(.signal-channel:first-child:hover) .signal-channel:last-child .signal-channel-inner {
+    opacity: 0.1;
+}
+.signal-channels:has(.signal-channel:first-child:hover) .signal-channel:last-child::after {
+    content: '← links scannen';
+    opacity: 1;
+}
+
+/* Dim left, show hint "rechts scannen →" */
+.signal-channels:has(.signal-channel:last-child:hover) .signal-channel:first-child .signal-channel-inner {
+    opacity: 0.1;
+}
+.signal-channels:has(.signal-channel:last-child:hover) .signal-channel:first-child::after {
+    content: 'rechts scannen →';
+    opacity: 1;
 }
 
 .signal-channel-label {
-    font-family: var(--font);
     font-size: 0.9rem;
     color: var(--accent);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
 }
 
 .signal-qr {
@@ -482,12 +522,13 @@ select:focus {
 .signal-channel:hover .signal-qr { border-color: var(--accent); }
 
 .signal-channel-desc {
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--text-dim);
+    line-height: 1.5;
 }
 
 .signal-hint {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--text-dim);
     margin-top: var(--gap-md);
 }
