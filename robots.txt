@@ -1,4 +1,35 @@
+# bitcircus101 – Hackspace Bonn
+# https://bitcircus101.de
+
 User-agent: *
 Allow: /
 
 Sitemap: https://bitcircus101.de/sitemap.xml
+
+# AI / LLM crawlers – welcome
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
