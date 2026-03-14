@@ -440,6 +440,19 @@
         '<p><span class="fs--red">\u2588</span> rot \u2014 &lt;25% gedeckt</p>' +
         '<a href="donations.html">$ contribute \u2192</a>' +
         "</div>";
+
+      // Click to toggle info panel
+      el.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var info = el.querySelector(".footer__funding-info");
+        if (info) info.classList.toggle("active");
+      });
+
+      // Close on click outside
+      document.addEventListener("click", function () {
+        var info = el.querySelector(".footer__funding-info");
+        if (info) info.classList.remove("active");
+      });
     },
   };
 
