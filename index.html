@@ -63,6 +63,15 @@
         <!-- Canonical URL -->
         <link rel="canonical" href="https://bitcircus101.de/" />
 
+        <!-- Theme color -->
+        <meta name="theme-color" content="#0d0d0d" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="bitcircus101 | Technik‑ & Kreativraum in Bonn" />
+        <meta name="twitter:description" content="Ein ruhiger Technik‑ & Kreativraum in der Dorotheenstraße 101 in Bonn. Räume für Workshops, Veranstaltungen und kreative Treffen." />
+        <meta name="twitter:image" content="https://bitcircus101.de/images/bitcircus-og-image.jpg" />
+
         <!-- Privacy & Security -->
         <meta
             http-equiv="Content-Security-Policy"
@@ -70,6 +79,38 @@
         />
         <meta name="referrer" content="no-referrer-when-downgrade" />
         <link rel="stylesheet" href="style.css" />
+
+        <!-- Structured Data -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "CommunityCenter",
+            "name": "bitcircus101",
+            "description": "Ruhiger Technik- und Kreativraum in Bonn für Workshops, Schulungen und kreative Treffen.",
+            "url": "https://bitcircus101.de/",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Dorotheenstraße 101",
+                "addressLocality": "Bonn",
+                "postalCode": "53113",
+                "addressCountry": "DE"
+            },
+            "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 50.74042,
+                "longitude": 7.08942
+            },
+            "sameAs": [
+                "https://www.instagram.com/bitcircus101/",
+                "https://github.com/bmmmm/bitcircus101"
+            ],
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "email": "info@bitcircus101.de",
+                "contactType": "customer support"
+            }
+        }
+        </script>
     </head>
     <body>
         <header>
@@ -269,7 +310,7 @@
                             frisch ☕️🃏</small
                         >
                     </p>
-                    <p style="text-align: center; margin-top: 20px">
+                    <p class="text-center">
                         <a
                             href="donations.html"
                             class="btn btn-primary btn-large"

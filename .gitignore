@@ -5,9 +5,18 @@
 
 # Node
 node_modules/
+package-lock.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Playwright
+test-results/
+playwright-report/
+.playwright/
+
+# Claude Code local config
+.claude/
 
 # VSCode
 .vscode/
