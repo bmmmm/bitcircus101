@@ -260,35 +260,85 @@ nav a:focus-visible {
    Footer
    ============================================================================= */
 .footer {
-    border-top: 1px solid var(--border);
-    padding: var(--gap-xl) var(--gap-lg);
-    text-align: center;
-    color: var(--text-dim);
-    font-size: 0.85rem;
     margin-top: var(--gap-xl);
+    border-top: 1px solid var(--border);
+    padding: var(--gap-xl) var(--gap-lg) var(--gap-lg);
+    font-size: 0.8rem;
+    color: var(--text-dim);
 }
 
-.footer__container {
+.footer__grid {
+    max-width: var(--max-width);
+    margin: 0 auto var(--gap-lg);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--gap-lg);
+}
+
+.footer__col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.footer__col--links { text-align: right; }
+
+.footer__brand {
+    color: var(--accent);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+}
+
+.footer__tagline {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.footer__col a {
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.footer__col a:hover { color: var(--accent); }
+
+.footer__bar {
     max-width: var(--max-width);
     margin: 0 auto;
+    padding-top: var(--gap-sm);
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.7rem;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
 }
 
-.footer__github-link {
+.footer__bar a {
     color: var(--text-dim);
     text-decoration: none;
-    border: 1px solid var(--border);
-    padding: var(--gap-sm) var(--gap-lg);
-    display: inline-block;
-    transition: border-color var(--transition), color var(--transition);
+    transition: color var(--transition);
 }
 
-.footer__github-link:hover {
-    border-color: var(--accent);
+.footer__bar a:hover { color: var(--accent); }
+
+.footer__sep { color: var(--border); }
+
+.footer__status {
+    margin-left: auto;
     color: var(--accent);
-    text-decoration: none;
+    opacity: 0.45;
+    letter-spacing: 0.04em;
 }
 
-.footer__github-link-text { text-decoration: underline; }
+@media (max-width: 600px) {
+    .footer__grid { grid-template-columns: 1fr 1fr; }
+    .footer__col--links {
+        text-align: left;
+        grid-column: 1 / -1;
+    }
+}
 
 /* =============================================================================
    Cookie / Consent Banner
