@@ -93,6 +93,7 @@ function parseICS(text) {
         summary: clean(ev.summary || "(kein Titel)"),
         description: clean(ev.description || ""),
         location: clean(ev.location || ""),
+        categories: ev.categories || "",
         allDay,
       };
       if (ev.rrule) {
@@ -115,6 +116,7 @@ function parseICS(text) {
     else if (key === "SUMMARY") ev.summary = val;
     else if (key === "DESCRIPTION") ev.description = val;
     else if (key === "LOCATION") ev.location = val;
+    else if (key === "CATEGORIES") ev.categories = val;
     else if (key === "RRULE") ev.rrule = val;
     else if (key === "EXDATE") {
       for (const v of val.split(",")) {
@@ -143,19 +145,58 @@ function guessType(summary) {
   return "special";
 }
 
-function guessTags(summary, description) {
+/**
+ * Tag resolution — 3 sources, in priority:
+ *
+ * 1. Explicit #hashtags in the event description  (you control these in Nextcloud)
+ * 2. ICS CATEGORIES field                         (Nextcloud calendar categories)
+ * 3. Keyword auto-detection from title/description (fallback)
+ *
+ * → Write "#workshop #hardware" anywhere in the Nextcloud event description
+ *   and those tags appear on the website. No code changes needed.
+ */
+function extractHashtags(text) {
+  const matches = text.match(/#[a-zA-Z0-9äöüß_-]+/g);
+  return matches ? matches.map((t) => t.toLowerCase()) : [];
+}
+
+function keywordTags(text) {
   const tags = [];
-  const text = (summary + " " + description).toLowerCase();
   if (text.includes("lightning")) tags.push("#lightning-talks");
   if (text.includes("workshop")) tags.push("#workshop");
-  if (text.includes("hardware") || text.includes("löten")) tags.push("#hardware");
+  if (text.includes("hardware") || text.includes("löten") || text.includes("soldering")) tags.push("#hardware");
   if (text.includes("ctf") || text.includes("capture the flag")) tags.push("#ctf");
-  if (/\bsecurity\b/.test(text)) tags.push("#security");
+  if (/\bsecurity\b/.test(text) || /\bpentest\b/.test(text)) tags.push("#security");
   if (/\bllm\b/.test(text) || /\b(ai|künstliche intelligenz)\b/.test(text)) tags.push("#ai");
   if (text.includes("retro") || text.includes("gaming") || text.includes("spiele")) tags.push("#gaming");
   if (text.includes("fsfe") || text.includes("open source") || text.includes("free software")) tags.push("#foss");
-  if (tags.length === 0) tags.push("#open");
+  if (/\bchaos\b/.test(text) || /\bccc\b/.test(text) || text.includes("easterhegg") || text.includes("congress") || text.includes("camp")) tags.push("#chaos");
+  if (/\bfroscon\b/.test(text) || text.includes("froscon") || text.includes("free and open source")) tags.push("#froscon");
+  if (text.includes("nixos") || text.includes("linux") || text.includes("kernel")) tags.push("#linux");
+  if (text.includes("3d") || text.includes("druck") || text.includes("print")) tags.push("#3d");
   return tags;
+}
+
+function buildTags(summary, description, categories) {
+  // 1. Explicit hashtags from description
+  const explicit = extractHashtags(description);
+
+  // 2. ICS CATEGORIES
+  const catTags = categories
+    ? categories.split(",").map((c) => "#" + c.trim().toLowerCase().replace(/\s+/g, "-"))
+    : [];
+
+  // 3. Keyword fallback
+  const text = (summary + " " + description).toLowerCase();
+  const auto = keywordTags(text);
+
+  // Merge, deduplicate, keep order
+  const seen = new Set();
+  const merged = [];
+  for (const t of [...explicit, ...catTags, ...auto]) {
+    if (!seen.has(t)) { seen.add(t); merged.push(t); }
+  }
+  return merged.length ? merged : ["#open"];
 }
 
 /** Truncate description to ~200 chars at word boundary */
@@ -178,7 +219,7 @@ function toCards(icsEvents) {
       description: truncateDesc(e.description),
       date: `${e.dtstart.getFullYear()}-${pad(e.dtstart.getMonth() + 1)}-${pad(e.dtstart.getDate())}`,
       time: e.allDay ? "" : `${pad(e.dtstart.getHours())}:${pad(e.dtstart.getMinutes())}`,
-      tags: guessTags(e.summary, e.description),
+      tags: buildTags(e.summary, e.description, e.categories),
       type: guessType(e.summary),
     }));
 }
