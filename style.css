@@ -439,25 +439,57 @@ select:focus {
 .contact-info a { color: var(--accent); font-weight: bold; }
 
 .signal-group { margin: var(--gap-lg) 0; text-align: center; }
-.signal-text { margin-bottom: var(--gap-sm); }
+.signal-text { margin-bottom: var(--gap-md); }
+
+.signal-channels {
+    display: flex;
+    gap: var(--gap-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.signal-channel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-xs);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+/* when hovering the container, dim the sibling not being hovered */
+.signal-channels:has(.signal-channel:hover) .signal-channel:not(:hover) {
+    opacity: 0.2;
+}
+
+.signal-channel-label {
+    font-family: var(--font);
+    font-size: 0.9rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
 
 .signal-qr {
     display: block;
-    margin: var(--gap-sm) auto;
-    width: 120px;
-    height: 120px;
-    max-width: 30vw;
-    max-height: 30vw;
+    width: 130px;
+    height: 130px;
+    max-width: 38vw;
+    max-height: 38vw;
     border: 1px solid var(--border);
     transition: border-color var(--transition);
 }
 
-.signal-qr:hover { border-color: var(--accent); }
+.signal-channel:hover .signal-qr { border-color: var(--accent); }
+
+.signal-channel-desc {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
 
 .signal-hint {
     font-size: 0.85rem;
     color: var(--text-dim);
-    margin-top: var(--gap-sm);
+    margin-top: var(--gap-md);
 }
 
 .address {
