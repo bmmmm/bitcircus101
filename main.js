@@ -384,11 +384,25 @@
   // =============================================================================
   const FundingStatus = {
     init() {
-      utils.querySelectorAll(".footer__status").forEach((el) => {
-        var pct = parseInt(el.getAttribute("data-funding"), 10);
-        if (isNaN(pct)) return;
-        this.render(el, pct);
-      });
+      var elements = utils.querySelectorAll(".footer__status");
+      if (!elements.length) return;
+
+      fetch("funding.json")
+        .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+        .then(function (data) {
+          var pct = parseInt(data.percent, 10);
+          if (isNaN(pct)) return;
+          elements.forEach(function (el) {
+            FundingStatus.render(el, pct);
+          });
+        })
+        .catch(function () {
+          // fallback: try data-funding attribute
+          elements.forEach(function (el) {
+            var pct = parseInt(el.getAttribute("data-funding"), 10);
+            if (!isNaN(pct)) FundingStatus.render(el, pct);
+          });
+        });
     },
 
     render(el, pct) {
