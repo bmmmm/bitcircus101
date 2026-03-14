@@ -271,29 +271,20 @@
     },
 
     toggleMap(button, container, iframe) {
-      // Load map only on first click (check if it's the OpenStreetMap URL)
       if (!iframe.src.includes("openstreetmap.org")) {
         iframe.src =
           "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&layer=mapnik&marker=50.74052905321277%2C7.08942174911499";
       }
 
-      // Toggle visibility
       const isVisible = container.style.display === "block";
-      const newDisplay = isVisible ? "none" : "block";
-      const newButtonText = isVisible
-        ? "Auf Karte anzeigen"
-        : "Karte verstecken";
+      container.style.display = isVisible ? "none" : "block";
+      button.innerHTML = isVisible
+        ? '<span aria-hidden="true">$</span> map --load'
+        : '<span aria-hidden="true">$</span> map --unload';
 
-      container.style.display = newDisplay;
-      button.textContent = newButtonText;
-
-      // Scroll to map when showing
       if (!isVisible) {
         setTimeout(() => {
-          container.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
+          container.scrollIntoView({ behavior: "smooth", block: "center" });
         }, 100);
       }
     },
@@ -339,15 +330,27 @@
   };
 
   // =============================================================================
+  // Footer Year
+  // =============================================================================
+  const FooterYear = {
+    init() {
+      const year = new Date().getFullYear();
+      utils.querySelectorAll(".footer__year").forEach((el) => {
+        el.textContent = year;
+      });
+    },
+  };
+
+  // =============================================================================
   // Main Application
   // =============================================================================
   const App = {
     init() {
-      // Initialize all modules
       Navigation.init();
       Carousel.init();
       MapHandler.init();
       Accessibility.init();
+      FooterYear.init();
     },
   };
 
