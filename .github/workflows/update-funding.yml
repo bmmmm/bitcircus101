@@ -14,9 +14,12 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: live
           persist-credentials: true
 
       - name: Update funding.json
@@ -29,4 +32,5 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add funding.json
           git diff --cached --quiet && echo "No changes" || git commit -m "Update funding to ${{ inputs.percent }}%"
-          git push origin HEAD:${GITHUB_REF#refs/heads/}
+          git pull --rebase origin live
+          git push origin HEAD:live
