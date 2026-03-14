@@ -199,27 +199,22 @@ test.describe('Events page', () => {
         await expect(page).toHaveTitle(/Veranstaltungen/);
     });
 
-    test('shows calendar controls', async ({ page }) => {
-        await expect(page.locator('.calendar-controls')).toBeVisible();
-        await expect(page.locator('#calendar1-toggle')).toBeVisible();
-        await expect(page.locator('#calendar2-toggle')).toBeVisible();
+    test('shows events list section', async ({ page }) => {
+        await expect(page.locator('#events-list')).toBeVisible();
     });
 
-    test('calendar toggle hides/shows calendar', async ({ page }) => {
-        const cal1 = page.locator('#calendar1-container');
-        await expect(cal1).toBeVisible();
-        await page.locator('#calendar1-toggle').uncheck();
-        await expect(cal1).not.toBeVisible();
-        await page.locator('#calendar1-toggle').check();
-        await expect(cal1).toBeVisible();
-    });
-
-    test('shows calendar download links', async ({ page }) => {
-        await expect(page.locator('.calendar-downloads a').first()).toBeVisible();
+    test('shows subscribe and download links', async ({ page }) => {
+        await expect(page.locator('.events-actions a').first()).toBeVisible();
     });
 
     test('shows linkup description', async ({ page }) => {
         await expect(page.locator('.linkup-description')).toBeVisible();
+    });
+
+    test('has RSS feed link', async ({ page }) => {
+        const rssLink = page.locator('link[type="application/rss+xml"]');
+        const href = await rssLink.getAttribute('href');
+        expect(href).toContain('feed.xml');
     });
 
     test('has back link to home', async ({ page }) => {
