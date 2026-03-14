@@ -330,6 +330,56 @@
   };
 
   // =============================================================================
+  // Events Preview (homepage)
+  // =============================================================================
+  const EventsPreview = {
+    init() {
+      const el = utils.getElementById("next-events-list");
+      if (!el) return;
+
+      fetch("events-data.json")
+        .then((res) => (res.ok ? res.json() : Promise.reject()))
+        .then((events) => this.render(events, el))
+        .catch(() => {});
+    },
+
+    render(events, el) {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
+      const pad = (n) => (n < 10 ? "0" + n : "" + n);
+
+      const upcoming = events
+        .filter((e) => new Date(e.date + "T23:59:59") >= now)
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .slice(0, 3);
+
+      if (!upcoming.length) return;
+
+      let html = "";
+      upcoming.forEach((e) => {
+        const d = new Date(e.date + "T00:00:00");
+        const dow = DAYS[d.getDay()];
+        const date = pad(d.getDate()) + "." + pad(d.getMonth() + 1) + ".";
+        const typeClass = e.type ? " event-preview--" + e.type : "";
+        html += '<a class="event-preview' + typeClass + '" href="events.html">';
+        html += '<span class="event-preview__dow">' + dow + "</span>";
+        html += '<span class="event-preview__date">' + date + "</span>";
+        html +=
+          '<span class="event-preview__title">' +
+          e.title.replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+          "</span>";
+        if (e.time)
+          html +=
+            '<span class="event-preview__time">' + e.time + "</span>";
+        html += "</a>";
+      });
+
+      el.innerHTML = html;
+    },
+  };
+
+  // =============================================================================
   // Footer Year
   // =============================================================================
   const FooterYear = {
@@ -350,6 +400,7 @@
       Carousel.init();
       MapHandler.init();
       Accessibility.init();
+      EventsPreview.init();
       FooterYear.init();
     },
   };
