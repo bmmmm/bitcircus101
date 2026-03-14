@@ -1,0 +1,32 @@
+name: Update funding level
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      percent:
+        description: "Funding percentage (0-100)"
+        required: true
+        type: number
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Update funding.json
+        run: |
+          echo '{ "percent": ${{ inputs.percent }} }' > funding.json
+
+      - name: Commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add funding.json
+          git diff --cached --quiet && echo "No changes" || git commit -m "Update funding to ${{ inputs.percent }}%"
+          git push origin HEAD:${GITHUB_REF#refs/heads/}
