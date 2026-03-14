@@ -7,7 +7,7 @@
         <meta name="title" content="Veranstaltungen & Events – bitcircus101 Hackspace Bonn" />
         <meta
             name="description"
-            content="Alle Termine im bitcircus101 Hackspace Bonn: linkup@bitcircus101, Lightning Talks, offene Freitagabende und gebuchte Workshops. Kalender-Download verfügbar."
+            content="Alle Termine im bitcircus101 Hackspace Bonn: linkup@bitcircus101, Lightning Talks, offene Freitagabende. Kalender-Abo und RSS Feed verfügbar."
         />
         <meta
             name="keywords"
@@ -23,6 +23,7 @@
         />
         <meta name="theme-color" content="#0d0d0d" />
         <link rel="canonical" href="https://bitcircus101.de/events.html" />
+        <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
@@ -52,15 +53,27 @@
         <div class="container">
             <section>
                 <h1>Veranstaltungen</h1>
-                <p>
-                    Freitags ist im bitcircus101 meistens was los.
-                    Hier findest du alle aktuellen Termine.
+                <p class="events-intro">
+                    Freitags ab 20:00 · Dorotheenstraße 101 · Eintritt frei
                 </p>
-                <p class="privacy-notice">
-                    Unsere Kalender laufen auf unserer eigenen
-                    Nextcloud-Instanz (nc.6bm.de) –
-                    keine Tracker, keine Drittanbieter-Cookies.
-                </p>
+
+                <div id="events-list" class="events-list">
+                    <noscript>
+                        <p>JavaScript wird für die Kalender-Anzeige benötigt.
+                        <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" target="_blank" rel="noopener">Kalender direkt öffnen ↗</a></p>
+                    </noscript>
+                </div>
+
+                <div class="events-actions">
+                    <a
+                        href="webcal://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
+                    >↓ Kalender abonnieren</a>
+                    <a
+                        href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
+                        download="bitcircus101.ics"
+                    >↓ ICS herunterladen</a>
+                    <a href="feed.xml">↓ RSS Feed</a>
+                </div>
 
                 <div class="linkup-description">
                     <h3>linkup@bitcircus101</h3>
@@ -79,109 +92,10 @@
                     </p>
                 </div>
 
-                <div class="calendar-controls">
-                    <h3>Kalender-Ansicht</h3>
-                    <div>
-                        <label>
-                            <input
-                                type="checkbox"
-                                id="calendar1-toggle"
-                                checked
-                            />
-                            <span>Hauptkalender (Events & Workshops)</span>
-                        </label>
-                        <label>
-                            <input
-                                type="checkbox"
-                                id="calendar2-toggle"
-                                checked
-                            />
-                            <span>Zusatzkalender (Radrennen & Sporttermine)</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="calendar-downloads">
-                    <h4>Kalender-Downloads</h4>
-                    <div>
-                        <a
-                            href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
-                            target="_blank"
-                            rel="noopener"
-                            download="bitcircus101-hauptkalender.ics"
-                        >
-                            Hauptkalender (ICS)
-                        </a>
-                        <a
-                            href="https://nc.6bm.de/remote.php/dav/public-calendars/eXAebopPy9xZQCZT?export"
-                            target="_blank"
-                            rel="noopener"
-                            download="bitcircus101-zusatzkalender.ics"
-                        >
-                            Zusatzkalender (ICS)
-                        </a>
-                    </div>
-                    <p class="calendar-fallback">
-                        ICS-Datei herunterladen und in deinen eigenen Kalender importieren.
-                    </p>
-                </div>
-
-                <p class="calendar-fallback">
-                    Kalender nicht sichtbar? Privacy- oder Ad-Block-Einstellungen prüfen oder direkt öffnen:
-                    <a
-                        href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
-                        target="_blank"
-                        rel="noopener"
-                        >Hauptkalender</a
-                    >
-                    |
-                    <a
-                        href="https://nc.6bm.de/apps/calendar/p/eXAebopPy9xZQCZT"
-                        target="_blank"
-                        rel="noopener"
-                        >Zusatzkalender</a
-                    >
+                <p class="events-privacy">
+                    Kalenderdaten von unserer Nextcloud (nc.6bm.de) –
+                    keine Tracker, keine Drittanbieter.
                 </p>
-
-                <div class="calendars-container">
-                    <div class="calendar-container" id="calendar1-container">
-                        <h4 class="text-center">Hauptkalender (Events & Workshops)</h4>
-                        <iframe
-                            id="calendar1-iframe"
-                            width="800"
-                            height="600"
-                            src="https://nc.6bm.de/apps/calendar/embed/DCaFSYECrcTJRJjC/listMonth/now"
-                            frameborder="0"
-                            scrolling="no"
-                            sandbox="allow-scripts allow-same-origin allow-popups"
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            title="bitcircus101 Hauptkalender"
-                        ></iframe>
-                        <div class="calendar-placeholder" id="calendar1-placeholder">
-                            <p>Hauptkalender wird auf der Live-Site angezeigt</p>
-                        </div>
-                    </div>
-
-                    <div class="calendar-container" id="calendar2-container">
-                        <h4 class="text-center">Zusatzkalender (Radrennen & Sporttermine)</h4>
-                        <iframe
-                            id="calendar2-iframe"
-                            width="800"
-                            height="600"
-                            src="https://nc.6bm.de/apps/calendar/embed/eXAebopPy9xZQCZT/listMonth/now"
-                            frameborder="0"
-                            scrolling="no"
-                            sandbox="allow-scripts allow-same-origin allow-popups"
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            title="bitcircus101 Zusatzkalender"
-                        ></iframe>
-                        <div class="calendar-placeholder" id="calendar2-placeholder">
-                            <p>Zusatzkalender wird auf der Live-Site angezeigt</p>
-                        </div>
-                    </div>
-                </div>
             </section>
             <div class="back-link">
                 <a href="index.html">← Zurück zur Startseite</a>
@@ -210,91 +124,7 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const isDevelopment =
-                    window.location.hostname === "127.0.0.1" ||
-                    window.location.hostname === "localhost";
-
-                const calendars = [
-                    {
-                        id: "calendar1",
-                        name: "Hauptkalender",
-                        directUrl: "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-                        downloadUrl: "https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export",
-                        downloadName: "bitcircus101-hauptkalender.ics",
-                    },
-                    {
-                        id: "calendar2",
-                        name: "Zusatzkalender",
-                        directUrl: "https://nc.6bm.de/apps/calendar/p/eXAebopPy9xZQCZT",
-                        downloadUrl: "https://nc.6bm.de/remote.php/dav/public-calendars/eXAebopPy9xZQCZT?export",
-                        downloadName: "bitcircus101-zusatzkalender.ics",
-                    },
-                ];
-
-                calendars.forEach(function (cal) {
-                    const iframe = document.getElementById(cal.id + "-iframe");
-                    const placeholder = document.getElementById(cal.id + "-placeholder");
-                    const container = document.getElementById(cal.id + "-container");
-                    const toggle = document.getElementById(cal.id + "-toggle");
-
-                    if (!iframe || !placeholder || !container || !toggle) return;
-
-                    toggle.addEventListener("change", function () {
-                        container.style.display = this.checked ? "block" : "none";
-                    });
-
-                    if (isDevelopment) {
-                        iframe.style.display = "none";
-                        return;
-                    }
-
-                    placeholder.style.display = "none";
-
-                    let iframeLoaded = false;
-                    let loadTimeout;
-
-                    function showFallback() {
-                        iframe.style.display = "none";
-                        placeholder.style.display = "flex";
-                        placeholder.innerHTML =
-                            '<div class="text-center">' +
-                            '<p>' + cal.name + ' wird von deinem Browser blockiert.</p>' +
-                            '<p><a href="' + cal.directUrl + '" target="_blank" rel="noopener">' +
-                            cal.name + ' direkt öffnen</a></p>' +
-                            '<p><a href="' + cal.downloadUrl + '" target="_blank" rel="noopener" download="' + cal.downloadName + '">' +
-                            'Als ICS-Datei herunterladen</a></p>' +
-                            '</div>';
-                    }
-
-                    loadTimeout = setTimeout(function () {
-                        if (!iframeLoaded) showFallback();
-                    }, 5000);
-
-                    iframe.addEventListener("load", function () {
-                        iframeLoaded = true;
-                        clearTimeout(loadTimeout);
-                    });
-
-                    iframe.addEventListener("error", function () {
-                        clearTimeout(loadTimeout);
-                        showFallback();
-                    });
-
-                    setTimeout(function () {
-                        try {
-                            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                            if (!iframeDoc || iframeDoc.body.innerHTML.trim() === "") {
-                                showFallback();
-                            }
-                        } catch (e) {
-                            if (e.name !== "SecurityError") showFallback();
-                        }
-                    }, 3000);
-                });
-            });
-        </script>
+        <script defer src="events.js"></script>
         <script defer src="main.js"></script>
     </body>
 </html>
