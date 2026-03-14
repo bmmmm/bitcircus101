@@ -41,7 +41,7 @@ test.describe('Home page', () => {
     test('shows support section with donation and rental CTAs', async ({ page }) => {
         await expect(page.locator('#support')).toBeVisible();
         await expect(page.locator('#support a[href="donations.html"]')).toBeVisible();
-        await expect(page.locator('#support a[href="raum-mieten.html"]')).toBeVisible();
+        await expect(page.locator('#support a[href="raum-nutzen.html"]')).toBeVisible();
     });
 
     test('shows contact section', async ({ page }) => {
@@ -111,7 +111,7 @@ test.describe('SEO meta tags', () => {
     });
 
     test('raum-mieten page has rental keywords', async ({ page }) => {
-        await page.goto('/raum-mieten.html');
+        await page.goto('/raum-nutzen.html');
         const keywords = await page.locator('meta[name="keywords"]').getAttribute('content');
         expect(keywords.toLowerCase()).toContain('raum mieten bonn');
     });
@@ -164,7 +164,7 @@ test.describe('Navigation', () => {
         await page.goto('/');
         await expect(page.locator('nav a[href="events.html"]')).toBeVisible();
         await expect(page.locator('nav a[href="donations.html"]')).toBeVisible();
-        await expect(page.locator('nav a[href="raum-mieten.html"]')).toBeVisible();
+        await expect(page.locator('nav a[href="raum-nutzen.html"]')).toBeVisible();
     });
 
     test('mobile menu toggle shows/hides nav', async ({ page }) => {
@@ -251,7 +251,7 @@ test.describe('Donations page', () => {
 
 test.describe('Raum mieten page', () => {
     test.beforeEach(async ({ page }) => {
-        await page.goto('/raum-mieten.html');
+        await page.goto('/raum-nutzen.html');
     });
 
     test('loads with correct title', async ({ page }) => {
