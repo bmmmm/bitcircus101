@@ -366,7 +366,7 @@
                                     <div class="signal-channel-inner">
                                         <div class="signal-channel-header">
                                             <span class="signal-channel-label">[ TALK ]</span>
-                                            <span class="signal-channel-badge signal-channel-badge--dim">IRC</span>
+                                            <span class="signal-channel-badge signal-channel-badge--dim">#talk</span>
                                         </div>
                                         <img
                                             class="signal-qr"
@@ -381,15 +381,13 @@
                         </div>
                         <div class="location-card">
                             <div class="location-card__header">[ LOCATE ]</div>
-                            <dl class="location-card__data">
-                                <dt>name</dt><dd>bitcircus101</dd>
-                                <dt>str</dt><dd>Dorotheenstraße 101</dd>
-                                <dt>plz</dt><dd>53113 Bonn</dd>
-                                <dt>lat</dt><dd>50.74042° N</dd>
-                                <dt>lon</dt><dd>7.08942° E</dd>
-                            </dl>
+                            <div class="location-card__body">
+                                <p class="location-card__name">bitcircus101</p>
+                                <p class="location-card__address">Dorotheenstraße 101<br>53113 Bonn</p>
+                                <p class="location-card__coords">50.74042° N · 7.08942° E</p>
+                            </div>
                             <button id="show-map-btn" class="location-card__map-btn">
-                                <span aria-hidden="true">$</span> map --load
+                                <span aria-hidden="true">$</span> map --load<span class="location-card__cursor" aria-hidden="true">▋</span>
                             </button>
                             <div id="osm-map-container" style="display: none">
                                 <iframe
