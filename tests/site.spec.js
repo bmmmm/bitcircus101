@@ -201,6 +201,8 @@ test.describe('Events page', () => {
 
     test('shows events list section', async ({ page }) => {
         await expect(page.locator('#events-list')).toBeVisible();
+        // Wait for events to load from JSON
+        await expect(page.locator('.event-card').first()).toBeVisible({ timeout: 5000 });
     });
 
     test('shows subscribe and download links', async ({ page }) => {
