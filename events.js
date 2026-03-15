@@ -196,12 +196,15 @@
           html += "</span>";
         }
         html += "</div>";
-        // Action buttons
+        // Action pills (inline with tags row)
         html += '<div class="event-card__actions">';
-        html += '<a class="event-card__btn" href="#' + anchor + '">permalink</a>';
-        html += '<a class="event-card__btn" href="' + CALENDAR_URL +
-          '/timeGridDay/' + e.date +
-          '" target="_blank" rel="noopener">kalender</a>';
+        html += '<button class="event-action event-action--link" ' +
+          'data-href="#' + anchor + '" title="Link kopieren">' +
+          '<span class="event-action__icon">\u2190</span> link</button>';
+        html += '<a class="event-action event-action--cal" href="' +
+          CALENDAR_URL + '/timeGridDay/' + e.date +
+          '" target="_blank" rel="noopener" title="Im Kalender anzeigen">' +
+          '<span class="event-action__icon">\u2192</span> kalender</a>';
         html += "</div>";
         html += "</div>"; // content
         html += "</article>";
@@ -211,6 +214,25 @@
     });
 
     el.innerHTML = html;
+
+    // Permalink: copy URL to clipboard on click
+    el.querySelectorAll(".event-action--link").forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        var href = btn.getAttribute("data-href");
+        var url = window.location.origin + window.location.pathname + href;
+        window.history.replaceState(null, "", href);
+        navigator.clipboard.writeText(url).then(function () {
+          var orig = btn.innerHTML;
+          btn.innerHTML = '<span class="event-action__icon">\u2713</span> kopiert';
+          btn.classList.add("event-action--copied");
+          setTimeout(function () {
+            btn.innerHTML = orig;
+            btn.classList.remove("event-action--copied");
+          }, 1500);
+        });
+      });
+    });
 
     // Scroll to anchor if URL has hash
     if (window.location.hash) {
