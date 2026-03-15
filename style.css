@@ -1173,7 +1173,8 @@ select:focus {
     text-decoration: none;
 }
 
-.events-privacy {
+.events-privacy,
+.privacy-notice {
     color: var(--text-dim);
     font-size: 0.82rem;
     opacity: 0.7;
