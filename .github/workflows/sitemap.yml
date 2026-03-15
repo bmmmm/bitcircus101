@@ -35,7 +35,12 @@ jobs:
 
       - name: Remove verification files from sitemap
         run: |
-          sed -i '/<loc>.*google[^<]*<\/loc>/,/<\/url>/d' sitemap.xml
+          python3 -c "
+          import re
+          with open('sitemap.xml') as f: xml = f.read()
+          xml = re.sub(r'<url>\s*<loc>[^<]*google[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
+          with open('sitemap.xml', 'w') as f: f.write(xml)
+          "
 
       - name: Commit sitemap
         run: |
