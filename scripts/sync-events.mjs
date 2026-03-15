@@ -199,6 +199,18 @@ function buildTags(summary, description, categories) {
   return merged.length ? merged : ["#open"];
 }
 
+/** Clean up ICS location — normalize whitespace, strip redundant parts */
+function cleanLocation(loc) {
+  if (!loc) return "";
+  // Replace \n with ", ", collapse whitespace
+  let s = loc.replace(/\\n/gi, ", ").replace(/\s+/g, " ").trim();
+  // Remove trailing ", Germany" / ", Deutschland"
+  s = s.replace(/,\s*(Germany|Deutschland)\s*$/i, "");
+  // Remove leading "bitcircus101" if followed by address
+  s = s.replace(/^bitcircus101[,\s]*/i, "");
+  return s.trim();
+}
+
 /** Truncate description to ~200 chars at word boundary */
 function truncateDesc(s, max = 200) {
   if (!s || s.length <= max) return s;
@@ -217,6 +229,7 @@ function toCards(icsEvents) {
       title: e.summary,
       subtitle: "",
       description: truncateDesc(e.description),
+      location: cleanLocation(e.location),
       date: `${e.dtstart.getFullYear()}-${pad(e.dtstart.getMonth() + 1)}-${pad(e.dtstart.getDate())}`,
       time: e.allDay ? "" : `${pad(e.dtstart.getHours())}:${pad(e.dtstart.getMinutes())}`,
       tags: buildTags(e.summary, e.description, e.categories),
