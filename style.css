@@ -1012,11 +1012,7 @@ select:focus {
 /* Content column */
 .event-card__content { min-width: 0; }
 
-.event-card__header {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5em;
-}
+/* (header removed — title is direct child of content now) */
 
 .event-card__title {
     font-size: 1rem;
@@ -1028,23 +1024,36 @@ select:focus {
 
 .event-card__title::before { content: none; }
 
+.event-card__location {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin: 0.3rem 0 0.5rem;
+}
+
 .event-card__actions {
     display: flex;
-    gap: 0.4em;
-    flex-shrink: 0;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
 }
 
-.event-card__action {
-    color: var(--text-dim);
-    font-size: 0.8rem;
+.event-card__btn {
+    display: inline-block;
+    font-family: var(--font);
+    font-size: 0.72rem;
+    color: var(--accent-dim);
     text-decoration: none;
-    opacity: 0.4;
-    transition: opacity var(--transition), color var(--transition);
-    padding: 0.1em 0.2em;
+    border: 1px solid var(--border);
+    padding: 0.3em 0.7em;
+    letter-spacing: 0.04em;
+    transition: all var(--transition);
 }
 
-.event-card:hover .event-card__action { opacity: 1; }
-.event-card__action:hover { color: var(--accent); text-decoration: none; }
+.event-card__btn:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(0, 217, 126, 0.06);
+    text-decoration: none;
+}
 
 .event-card__subtitle {
     font-size: 0.82rem;
