@@ -171,20 +171,19 @@
 
         // Content column
         html += '<div class="event-card__content">';
-        html += '<div class="event-card__header">';
         html += '<h3 class="event-card__title">' + esc(e.title) + "</h3>";
-        html += '<div class="event-card__actions">';
-        html += '<a class="event-card__action" href="#' + anchor +
-          '" title="Permalink">\u00a7</a>';
-        html += '<a class="event-card__action" href="' + CALENDAR_URL +
-          '" target="_blank" rel="noopener" title="Kalender">\u2197</a>';
-        html += "</div></div>";
         if (e.subtitle) {
           html += '<p class="event-card__subtitle">' + esc(e.subtitle) + "</p>";
         }
         if (e.description) {
           html += '<p class="event-card__desc">' + esc(e.description) + "</p>";
         }
+        // Location
+        if (e.location) {
+          html += '<p class="event-card__location">' +
+            '\u25cb ' + esc(e.location) + "</p>";
+        }
+        // Meta: time + tags
         html += '<div class="event-card__meta">';
         if (e.time) {
           html += '<span class="event-card__time">' + esc(e.time) + "</span>";
@@ -196,7 +195,14 @@
           });
           html += "</span>";
         }
-        html += "</div>"; // meta
+        html += "</div>";
+        // Action buttons
+        html += '<div class="event-card__actions">';
+        html += '<a class="event-card__btn" href="#' + anchor + '">permalink</a>';
+        html += '<a class="event-card__btn" href="' + CALENDAR_URL +
+          '/timeGridDay/' + e.date +
+          '" target="_blank" rel="noopener">kalender</a>';
+        html += "</div>";
         html += "</div>"; // content
         html += "</article>";
       });
