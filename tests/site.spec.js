@@ -206,7 +206,7 @@ test.describe('Events page', () => {
     });
 
     test('shows subscribe and download links', async ({ page }) => {
-        await expect(page.locator('.events-actions a').first()).toBeVisible();
+        await expect(page.locator('.events-subscribe__btn').first()).toBeVisible();
     });
 
     test('shows linkup description', async ({ page }) => {
