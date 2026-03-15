@@ -1177,27 +1177,67 @@ select:focus {
 .events-fallback__err { color: #ff6b6b; }
 .events-empty { color: var(--text-dim); font-size: 0.88rem; }
 
-.events-actions {
-    display: flex;
-    gap: var(--gap-md);
-    flex-wrap: wrap;
-    margin: var(--gap-lg) 0;
-    font-size: 0.82rem;
+/* Subscribe section */
+.events-subscribe {
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    margin: var(--gap-xl) 0 var(--gap-lg);
 }
 
-.events-actions a {
+.events-subscribe__title {
+    font-size: 0.78rem;
     color: var(--accent);
+    margin: 0 0 0.6rem;
+    font-weight: normal;
+    letter-spacing: 0.06em;
+}
+.events-subscribe__title::before { content: none; }
+
+.events-subscribe__actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.events-subscribe__btn {
+    font-family: var(--font);
+    font-size: 0.72rem;
+    color: var(--text-dim);
     text-decoration: none;
     border: 1px solid var(--border);
-    padding: 0.4em 0.9em;
-    transition: background var(--transition), border-color var(--transition);
+    padding: 0.3em 0.7em;
+    transition: all var(--transition);
 }
 
-.events-actions a:hover {
-    background: var(--bg-panel);
+.events-subscribe__btn:hover {
+    color: var(--accent);
     border-color: var(--accent-dim);
+    background: rgba(0, 217, 126, 0.04);
     text-decoration: none;
 }
+
+.events-subscribe__btn--rss {
+    color: #d08030;
+    border-color: #604020;
+}
+.events-subscribe__btn--rss:hover {
+    color: #f0a050;
+    border-color: #d08030;
+    background: rgba(208, 128, 48, 0.06);
+}
+
+/* Donate options */
+.donate-option {
+    border: 1px solid var(--border);
+    padding: 1rem 1.25rem;
+    margin-bottom: var(--gap-md);
+}
+.donate-option h3 {
+    font-size: 0.88rem;
+    margin: 0 0 0.4rem;
+}
+.donate-option h3::before { content: none; }
+.donate-option p { margin: 0; font-size: 0.85rem; }
 
 .events-privacy,
 .privacy-notice {
@@ -1213,8 +1253,8 @@ select:focus {
         gap: 0 1rem;
     }
     .event-card__day { font-size: 1.25rem; }
-    .events-actions { flex-direction: column; }
-    .events-actions a { text-align: center; }
+    .events-subscribe__actions { flex-direction: column; }
+    .events-subscribe__btn { text-align: center; }
 }
 
 /* Events Preview (homepage) */
