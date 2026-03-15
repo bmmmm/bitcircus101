@@ -15,8 +15,9 @@ test-results/
 playwright-report/
 .playwright/
 
-# Claude Code local config
+# Claude Code
 .claude/
+.claudeignore
 
 # VSCode
 .vscode/
