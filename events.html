@@ -47,6 +47,7 @@
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html">Spenden</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
+                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed">&#9673;</a></li>
                 </ul>
             </nav>
         </header>
@@ -57,11 +58,22 @@
                     Alle Termine aus dem Hackspace und befreundeten Spaces in Bonn.
                 </p>
 
-                <div id="events-list" class="events-list">
-                    <noscript>
-                        <p>JavaScript wird für die Kalender-Anzeige benötigt.
-                        <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" target="_blank" rel="noopener">Kalender direkt öffnen ↗</a></p>
-                    </noscript>
+                <div class="events-info-toggle">
+                    <button class="events-info-btn" id="linkup-info-btn">
+                        ? linkup@bitcircus101
+                    </button>
+                    <div class="events-info-panel" id="linkup-info-panel" hidden>
+                        <p>
+                            Jeden <strong>dritten Freitag</strong> gibt's linkup –
+                            kurze Talks, 3 Folien, 3 Minuten, danach quatschen.
+                            Thema? Was immer dich gerade beschäftigt.
+                        </p>
+                        <p>
+                            An <strong>allen anderen Freitagen</strong>: einfach vorbeikommen.
+                            Kein Plan nötig, kein Vorwissen.
+                            <a href="index.html#contact">Fragen?</a>
+                        </p>
+                    </div>
                 </div>
 
                 <div class="events-subscribe">
@@ -81,22 +93,11 @@
                     </div>
                 </div>
 
-                <div class="linkup-description">
-                    <h3>linkup@bitcircus101</h3>
-                    <p>
-                        Jeden <strong>dritten Freitag</strong> gibt's linkup –
-                        kurze Talks, 3 Folien, 3 Minuten, danach quatschen.
-                        Thema? Was immer dich gerade beschäftigt.
-                    </p>
-                    <p>
-                        An <strong>allen anderen Freitagen</strong>: einfach vorbeikommen.
-                        Kein Plan nötig, kein Vorwissen, kein Dresscode.
-                        Projekt mitbringen oder einfach da sein –
-                        beides ist genau richtig.
-                    </p>
-                    <p>
-                        Fragen? <a href="index.html#contact">Schreib uns</a>.
-                    </p>
+                <div id="events-list" class="events-list">
+                    <noscript>
+                        <p>JavaScript wird für die Kalender-Anzeige benötigt.
+                        <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" target="_blank" rel="noopener">Kalender direkt öffnen ↗</a></p>
+                    </noscript>
                 </div>
 
                 <p class="events-privacy">
@@ -133,5 +134,13 @@
         </footer>
         <script defer src="events.js"></script>
         <script defer src="main.js"></script>
+        <script>
+            document.getElementById("linkup-info-btn").addEventListener("click", function() {
+                var panel = document.getElementById("linkup-info-panel");
+                var isHidden = panel.hidden;
+                panel.hidden = !isHidden;
+                this.textContent = isHidden ? "× linkup@bitcircus101" : "? linkup@bitcircus101";
+            });
+        </script>
     </body>
 </html>
