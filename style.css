@@ -1055,22 +1055,28 @@ select:focus {
 
 .event-action__icon { font-size: 0.8em; opacity: 0.7; }
 
-.event-action--link { color: var(--text-dim); }
+.event-action--link {
+    color: #c04040;
+    border-color: #501818;
+}
 .event-action--link:hover {
-    color: var(--text-bright);
-    border-color: var(--text-dim);
-    background: rgba(255, 255, 255, 0.04);
+    color: #e05050;
+    border-color: #c04040;
+    background: rgba(192, 64, 64, 0.08);
 }
 .event-action--copied {
     color: var(--accent);
     border-color: var(--accent);
 }
 
-.event-action--cal { color: var(--accent-dim); }
+.event-action--cal {
+    color: #4080c0;
+    border-color: #1a3858;
+}
 .event-action--cal:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: rgba(0, 217, 126, 0.06);
+    color: #60a0e0;
+    border-color: #4080c0;
+    background: rgba(64, 128, 192, 0.08);
     text-decoration: none;
 }
 
