@@ -294,19 +294,24 @@ nav li a:focus-visible {
 
 .footer__grid {
     max-width: var(--max-width);
-    margin: 0 auto var(--gap-lg);
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    margin: 0 auto var(--gap-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
     gap: var(--gap-lg);
 }
 
 .footer__col {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.25rem;
 }
 
-.footer__col--links { text-align: right; }
+.footer__col--links {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
 
 .footer__brand {
     color: var(--accent);
@@ -320,10 +325,12 @@ nav li a:focus-visible {
     opacity: 0.7;
 }
 
-.footer__col a {
+.footer__col a,
+.footer__col--links a {
     color: var(--text-dim);
     text-decoration: none;
     transition: color var(--transition);
+    font-size: 0.78rem;
 }
 
 .footer__col a:hover { color: var(--accent); }
@@ -423,8 +430,16 @@ nav li a:focus-visible {
         text-align: left;
         grid-column: 1 / -1;
     }
+    .footer__grid {
+        flex-direction: column;
+        gap: var(--gap-sm);
+    }
+    .footer__col--links {
+        gap: 1rem;
+    }
     .footer__bar {
         justify-content: center;
+        padding-bottom: 60px;
     }
     .footer__status {
         margin-left: 0;
