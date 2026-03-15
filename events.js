@@ -183,6 +183,10 @@
           html += '<p class="event-card__location">' +
             '\u25cb ' + esc(e.location) + "</p>";
         }
+        // Source badge (non-primary calendars)
+        if (e.source && e.source !== "bitcircus101") {
+          html += '<span class="event-card__source">' + esc(e.source) + "</span>";
+        }
         // Meta: time + tags
         html += '<div class="event-card__meta">';
         if (e.time) {
@@ -196,15 +200,23 @@
           html += "</span>";
         }
         html += "</div>";
-        // Action pills (inline with tags row)
+        // Action pills
+        var calUrl = e.calendarUrl || CALENDAR_URL;
         html += '<div class="event-card__actions">';
         html += '<button class="event-action event-action--link" ' +
           'data-href="#' + anchor + '" title="Link kopieren">' +
-          '<span class="event-action__icon">\u2190</span> link</button>';
+          '\u2190 link</button>';
         html += '<a class="event-action event-action--cal" href="' +
-          CALENDAR_URL + '/timeGridDay/' + e.date +
+          calUrl + '/timeGridDay/' + e.date +
           '" target="_blank" rel="noopener" title="Im Kalender anzeigen">' +
-          '<span class="event-action__icon">\u2192</span> kalender</a>';
+          '\u2192 kalender</a>';
+        if (e.location) {
+          var osmQuery = encodeURIComponent(e.location);
+          html += '<a class="event-action event-action--map" href="' +
+            'https://www.openstreetmap.org/search?query=' + osmQuery +
+            '" target="_blank" rel="noopener" title="Auf Karte anzeigen">' +
+            '\u25cb karte</a>';
+        }
         html += "</div>";
         html += "</div>"; // content
         html += "</article>";
