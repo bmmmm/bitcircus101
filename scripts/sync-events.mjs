@@ -1,15 +1,16 @@
 #!/usr/bin/env node
 /**
- * sync-events.mjs — Fetches ICS from Nextcloud, generates events-data.json + feed.xml
- * Runs in GitHub Actions (Node 20, no dependencies).
+ * sync-events.mjs — Fetches ICS from Nextcloud calendars, generates events-data.json + feed.xml
+ * Reads calendar sources from calendars.json. Add new calendars there — no code changes needed.
+ * Runs in GitHub Actions (Node 22, no dependencies).
  */
 
-const ICS_URL =
-  "https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export";
 const SITE_URL = "https://bitcircus101.de";
 const HORIZON_DAYS = 120;
 
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
+
+const calendars = JSON.parse(readFileSync("calendars.json", "utf8"));
 
 // ── ICS Parser ──────────────────────────────────────────────────────────────
 
@@ -227,7 +228,7 @@ function truncateDesc(s, max = 200) {
   return (last > 0 ? cut.slice(0, last) : cut) + " …";
 }
 
-function toCards(icsEvents) {
+function toCards(icsEvents, cal) {
   const now = new Date();
   return icsEvents
     .filter((e) => e.dtstart > now && !isInternal(e.summary))
@@ -242,6 +243,8 @@ function toCards(icsEvents) {
       time: e.allDay ? "" : `${pad(e.dtstart.getHours())}:${pad(e.dtstart.getMinutes())}`,
       tags: buildTags(e.summary, e.description, e.categories),
       type: guessType(e.summary),
+      source: cal.name,
+      calendarUrl: cal.url,
     }));
 }
 
@@ -291,26 +294,43 @@ function generateRSS(cards) {
 // ── Main ────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log("Fetching ICS from", ICS_URL);
-  const res = await fetch(ICS_URL);
-  if (!res.ok) {
-    console.error(`HTTP ${res.status} – ${res.statusText}`);
-    process.exit(1);
+  let allCards = [];
+
+  for (const cal of calendars) {
+    console.log(`[${cal.id}] Fetching ${cal.ics}`);
+    try {
+      const res = await fetch(cal.ics);
+      if (!res.ok) {
+        console.error(`[${cal.id}] HTTP ${res.status} – skipping`);
+        continue;
+      }
+      const text = await res.text();
+      console.log(`[${cal.id}] ${text.length} bytes`);
+
+      const icsEvents = parseICS(text);
+      console.log(`[${cal.id}] ${icsEvents.length} VEVENT entries`);
+
+      const cards = toCards(icsEvents, cal);
+      console.log(`[${cal.id}] ${cards.length} upcoming cards`);
+      allCards = allCards.concat(cards);
+    } catch (err) {
+      console.error(`[${cal.id}] Error: ${err.message} – skipping`);
+    }
   }
 
-  const text = await res.text();
-  console.log(`Received ${text.length} bytes`);
+  // Sort all cards by date, limit to 40
+  allCards.sort((a, b) => a.date.localeCompare(b.date));
+  allCards = allCards.slice(0, 40);
+  console.log(`Total: ${allCards.length} event cards from ${calendars.length} calendars`);
 
-  const icsEvents = parseICS(text);
-  console.log(`Parsed ${icsEvents.length} VEVENT entries`);
-
-  const cards = toCards(icsEvents);
-  console.log(`Generated ${cards.length} upcoming event cards`);
-
-  writeFileSync("events-data.json", JSON.stringify(cards, null, 2) + "\n");
+  writeFileSync("events-data.json", JSON.stringify(allCards, null, 2) + "\n");
   console.log("Written events-data.json");
 
-  const rss = generateRSS(cards);
+  // RSS only from primary calendar
+  const primaryCards = allCards.filter((c) =>
+    calendars.find((cal) => cal.name === c.source && cal.rss)
+  );
+  const rss = generateRSS(primaryCards);
   writeFileSync("feed.xml", rss);
   console.log("Written feed.xml");
 }
