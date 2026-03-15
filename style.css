@@ -1012,7 +1012,11 @@ select:focus {
 /* Content column */
 .event-card__content { min-width: 0; }
 
-/* (header removed — title is direct child of content now) */
+.event-card__header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6em;
+}
 
 .event-card__title {
     font-size: 1rem;
@@ -1093,13 +1097,13 @@ select:focus {
 
 .event-card__source {
     display: inline-block;
-    font-size: 0.65rem;
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-    padding: 0.15em 0.5em;
-    margin-top: 0.3rem;
+    font-size: 0.62rem;
+    color: #d09040;
+    border: 1px solid #604020;
+    padding: 0.15em 0.55em;
     letter-spacing: 0.04em;
-    opacity: 0.6;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .event-card__subtitle {
