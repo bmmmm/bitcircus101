@@ -143,13 +143,16 @@
     });
 
     var html = "";
-    groups.forEach(function (k) {
+    var now = new Date();
+    var currentKey = now.getFullYear() + "-" + pad(now.getMonth() + 1);
+    groups.forEach(function (k, idx) {
       var parts = k.split("-");
       var monthName = MONTHS_FULL[+parts[1] - 1];
-      html += '<section class="events-month">';
+      var isOpen = (k === currentKey || idx === 0) ? " open" : "";
+      html += '<details class="events-month"' + isOpen + '>';
       html +=
-        '<h2 class="events-month__label">[ ' +
-        monthName + " " + parts[0] + " ]</h2>";
+        '<summary class="events-month__label">[ ' +
+        monthName + " " + parts[0] + " ]</summary>";
 
       groupMap[k].forEach(function (e) {
         var d = new Date(e.date + "T00:00:00");
@@ -222,7 +225,7 @@
         html += "</article>";
       });
 
-      html += "</section>";
+      html += "</details>";
     });
 
     el.innerHTML = html;
