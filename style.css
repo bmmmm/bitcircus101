@@ -891,32 +891,12 @@ select:focus {
     min-height: 60px;
 }
 
-/* Info toggle */
-.events-info-toggle {
-    margin-bottom: var(--gap-md);
-}
-
-.events-info-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--accent-dim);
-    font-family: var(--font);
-    font-size: 0.78rem;
-    padding: 0.35em 0.8em;
-    cursor: pointer;
-    transition: all var(--transition);
-}
-
-.events-info-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
+/* Info panel (inside subscribe box) */
 .events-info-panel {
-    border: 1px solid var(--border);
-    border-top: none;
-    padding: 1rem 1.25rem;
-    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    font-size: 0.82rem;
     color: var(--text-dim);
 }
 
@@ -1237,10 +1217,17 @@ select:focus {
     margin: var(--gap-xl) 0 var(--gap-lg);
 }
 
+.events-subscribe__row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+}
+
 .events-subscribe__title {
     font-size: 0.78rem;
     color: var(--accent);
-    margin: 0 0 0.6rem;
+    margin: 0;
     font-weight: normal;
     letter-spacing: 0.06em;
 }
@@ -1277,6 +1264,17 @@ select:focus {
     color: #f0a050;
     border-color: #d08030;
     background: rgba(208, 128, 48, 0.06);
+}
+
+.events-subscribe__btn--info {
+    color: var(--accent-dim);
+    border-color: var(--border);
+    cursor: pointer;
+    font-family: var(--font);
+}
+.events-subscribe__btn--info:hover {
+    color: var(--accent);
+    border-color: var(--accent-dim);
 }
 
 /* Donate options */
