@@ -1365,7 +1365,15 @@ select:focus {
 .events-more-link a:hover { color: var(--accent); }
 
 @media (max-width: 600px) {
-    .event-preview { grid-template-columns: 1.6em 3.5em 1fr auto; gap: 0 0.5em; }
+    .event-preview {
+        grid-template-columns: 1.6em 3.5em 1fr auto;
+        gap: 0.15em 0.5em;
+    }
+    .event-preview__source {
+        grid-column: 3 / -1;
+        margin-left: 0;
+        justify-self: start;
+    }
 }
 
 .linkup-description {
@@ -1560,13 +1568,15 @@ select:focus {
 .scroll-top {
     position: fixed;
     bottom: var(--gap-lg);
-    right: var(--gap-lg);
-    width: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
     height: 40px;
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--accent);
-    font-size: 0.9rem;
+    font-family: var(--font);
+    font-size: 0.8rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1588,7 +1598,7 @@ select:focus {
     background: var(--bg-elevated);
 }
 
-.scroll-top:active { transform: scale(0.92); }
+.scroll-top:active { transform: translateX(-50%) scale(0.95); }
 
 .matrix-trail {
     position: fixed;
@@ -1601,9 +1611,10 @@ select:focus {
 @media (max-width: 600px) {
     .scroll-top {
         bottom: var(--gap-md);
-        right: var(--gap-md);
-        width: 36px;
-        height: 36px;
+        width: 80%;
+        max-width: 300px;
+        height: 44px;
+        font-size: 0.82rem;
     }
 }
 
