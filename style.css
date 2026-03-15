@@ -981,7 +981,14 @@ select:focus {
 }
 
 .events-month:not([open]) > .events-month__label::after {
-    content: " \u25b8";
+    content: "  +";
+    color: var(--accent-dim);
+    opacity: 0.7;
+}
+
+.events-month[open] > .events-month__label::after {
+    content: "  \2212";
+    color: var(--accent);
     opacity: 0.5;
 }
 
@@ -1269,12 +1276,14 @@ select:focus {
 .events-subscribe__btn--info {
     color: var(--accent-dim);
     border-color: var(--border);
+    background: none;
     cursor: pointer;
     font-family: var(--font);
 }
 .events-subscribe__btn--info:hover {
     color: var(--accent);
     border-color: var(--accent-dim);
+    background: rgba(0, 217, 126, 0.04);
 }
 
 /* Donate options */
