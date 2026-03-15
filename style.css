@@ -1080,6 +1080,28 @@ select:focus {
     text-decoration: none;
 }
 
+.event-action--map {
+    color: #6a9a5a;
+    border-color: #2a4a22;
+}
+.event-action--map:hover {
+    color: #8ac07a;
+    border-color: #6a9a5a;
+    background: rgba(106, 154, 90, 0.08);
+    text-decoration: none;
+}
+
+.event-card__source {
+    display: inline-block;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 0.15em 0.5em;
+    margin-top: 0.3rem;
+    letter-spacing: 0.04em;
+    opacity: 0.6;
+}
+
 .event-card__subtitle {
     font-size: 0.82rem;
     color: var(--accent);

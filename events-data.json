@@ -10,7 +10,9 @@
       "#datenburg",
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Look at my toys!",
@@ -24,7 +26,9 @@
       "#social",
       "#spieletreff"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Linkup@bitcircus101",
@@ -38,7 +42,9 @@
       "#lightning-talks",
       "#talk"
     ],
-    "type": "linkup"
+    "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Altstadt cleanup",
@@ -50,7 +56,9 @@
     "tags": [
       "#bonn"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Laserpointer Games mit Georg",
@@ -62,7 +70,9 @@
     "tags": [
       "#gaming"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Offene Datenburg",
@@ -75,7 +85,9 @@
       "#datenburg",
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Look at my toys!",
@@ -89,7 +101,9 @@
       "#social",
       "#spieletreff"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Spieleabend in der Burg",
@@ -102,7 +116,9 @@
       "#gaming",
       "#datenburg"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Casual Linkup@bitcircus101 (4FR)",
@@ -114,7 +130,9 @@
     "tags": [
       "#meetup"
     ],
-    "type": "linkup"
+    "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Tag des offenen Hackspaces",
@@ -126,7 +144,9 @@
     "tags": [
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Offene Datenburg",
@@ -139,7 +159,9 @@
       "#datenburg",
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Look at my toys!",
@@ -153,7 +175,9 @@
       "#social",
       "#spieletreff"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Casual Linkup@bitcircus101 (1FR)",
@@ -165,7 +189,9 @@
     "tags": [
       "#meetup"
     ],
-    "type": "linkup"
+    "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Der Bonner Schmierling kommt!",
@@ -177,7 +203,9 @@
     "tags": [
       "#community"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Offene Datenburg",
@@ -190,7 +218,9 @@
       "#datenburg",
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Look at my toys!",
@@ -204,7 +234,9 @@
       "#social",
       "#spieletreff"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Casual Linkup@bitcircus101 (2FR)",
@@ -216,7 +248,9 @@
     "tags": [
       "#meetup"
     ],
-    "type": "linkup"
+    "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Treffen: Bonner FSFE Community",
@@ -228,7 +262,9 @@
     "tags": [
       "#foss"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Offene Datenburg",
@@ -241,7 +277,9 @@
       "#datenburg",
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Look at my toys!",
@@ -255,7 +293,9 @@
       "#social",
       "#spieletreff"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Linkup@bitcircus101",
@@ -269,7 +309,9 @@
       "#lightning-talks",
       "#talk"
     ],
-    "type": "linkup"
+    "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Offene Datenburg",
@@ -282,7 +324,9 @@
       "#datenburg",
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Look at my toys!",
@@ -296,7 +340,9 @@
       "#social",
       "#spieletreff"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Spieleabend in der Burg",
@@ -309,7 +355,9 @@
       "#gaming",
       "#datenburg"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Casual Linkup@bitcircus101 (4FR)",
@@ -321,7 +369,9 @@
     "tags": [
       "#meetup"
     ],
-    "type": "linkup"
+    "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Offene Datenburg",
@@ -334,7 +384,9 @@
       "#datenburg",
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Look at my toys!",
@@ -348,7 +400,9 @@
       "#social",
       "#spieletreff"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Casual Linkup@bitcircus101 (1FR)",
@@ -360,7 +414,9 @@
     "tags": [
       "#meetup"
     ],
-    "type": "linkup"
+    "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Der Bonner Schmierling kommt!",
@@ -372,7 +428,9 @@
     "tags": [
       "#community"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
     "title": "Offene Datenburg",
@@ -385,6 +443,8 @@
       "#datenburg",
       "#offener-abend"
     ],
-    "type": "special"
+    "type": "special",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   }
 ]
