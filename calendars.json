@@ -9,9 +9,9 @@
   },
   {
     "id": "datenburg",
-    "name": "Datenburg",
-    "ics": "https://nc.6bm.de/remote.php/dav/public-calendars/eXAebopPy9xZQCZT?export",
-    "url": "https://nc.6bm.de/apps/calendar/p/eXAebopPy9xZQCZT",
+    "name": "Datenburg e.V.",
+    "ics": "https://cloud.datenb.org/remote.php/dav/public-calendars/QLmHENYXAXECozbt/?export",
+    "url": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
     "primary": false,
     "rss": false
   }
