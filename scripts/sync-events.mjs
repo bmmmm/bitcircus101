@@ -162,18 +162,26 @@ function extractHashtags(text) {
 
 function keywordTags(text) {
   const tags = [];
+  // Event format
+  if (text.includes("linkup") || text.includes("casual")) tags.push("#meetup");
   if (text.includes("lightning")) tags.push("#lightning-talks");
   if (text.includes("workshop")) tags.push("#workshop");
+  if (text.includes("vortrag") || text.includes("talk")) tags.push("#talk");
+  // Topics
   if (text.includes("hardware") || text.includes("löten") || text.includes("soldering")) tags.push("#hardware");
   if (text.includes("ctf") || text.includes("capture the flag")) tags.push("#ctf");
   if (/\bsecurity\b/.test(text) || /\bpentest\b/.test(text)) tags.push("#security");
   if (/\bllm\b/.test(text) || /\b(ai|künstliche intelligenz)\b/.test(text)) tags.push("#ai");
   if (text.includes("retro") || /\bgaming\b/.test(text) || text.includes("spieleabend")) tags.push("#gaming");
   if (text.includes("fsfe") || text.includes("open source") || text.includes("free software")) tags.push("#foss");
-  if (/\bchaos\b/.test(text) || /\bccc\b/.test(text) || text.includes("easterhegg") || text.includes("congress") || text.includes("camp")) tags.push("#chaos");
-  if (/\bfroscon\b/.test(text) || text.includes("froscon") || text.includes("free and open source")) tags.push("#froscon");
+  if (/\bchaos\b/.test(text) || /\bccc\b/.test(text) || text.includes("easterhegg") || text.includes("congress")) tags.push("#chaos");
+  if (/\bfroscon\b/i.test(text) || text.includes("free and open source")) tags.push("#froscon");
   if (text.includes("nixos") || text.includes("linux") || text.includes("kernel")) tags.push("#linux");
   if (text.includes("3d") || text.includes("druck") || text.includes("print")) tags.push("#3d");
+  // Community / venue
+  if (text.includes("datenburg")) tags.push("#datenburg");
+  if (text.includes("offen") || text.includes("tag des offenen")) tags.push("#offener-abend");
+  if (text.includes("spielen") || text.includes("puzzeln") || text.includes("toys")) tags.push("#spieletreff");
   return tags;
 }
 
@@ -196,7 +204,7 @@ function buildTags(summary, description, categories) {
   for (const t of [...explicit, ...catTags, ...auto]) {
     if (!seen.has(t)) { seen.add(t); merged.push(t); }
   }
-  return merged.length ? merged : ["#open"];
+  return merged.length ? merged : ["#community"];
 }
 
 /** Clean up ICS location — normalize whitespace, strip redundant parts */

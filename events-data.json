@@ -3,10 +3,12 @@
     "title": "Offene Datenburg",
     "subtitle": "",
     "description": "Offener Burgenabend im Hackspace Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-03-17",
     "time": "19:00",
     "tags": [
-      "#open"
+      "#datenburg",
+      "#offener-abend"
     ],
     "type": "special"
   },
@@ -14,11 +16,13 @@
     "title": "Look at my toys!",
     "subtitle": "",
     "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-03-17",
     "time": "19:00",
     "tags": [
       "#relax",
-      "#social"
+      "#social",
+      "#spieletreff"
     ],
     "type": "special"
   },
@@ -26,10 +30,13 @@
     "title": "Linkup@bitcircus101",
     "subtitle": "",
     "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-03-20",
     "time": "20:00",
     "tags": [
-      "#lightning-talks"
+      "#meetup",
+      "#lightning-talks",
+      "#talk"
     ],
     "type": "linkup"
   },
@@ -37,6 +44,7 @@
     "title": "Altstadt cleanup",
     "subtitle": "",
     "description": "Mülleinsammeln in der Alstadt  #Bonn",
+    "location": "Dorotheenstraße 79 Bonn",
     "date": "2026-03-21",
     "time": "10:00",
     "tags": [
@@ -48,6 +56,7 @@
     "title": "Laserpointer Games mit Georg",
     "subtitle": "",
     "description": "Crowd Gaming im bitcircus101 🎮  Christian und Georg haben eine eigene Form von Crowd Gaming entwickelt. Das Publikum steuert das Spiel gemeinsam – mit Laser-Pointern auf einer großen Leinwand.  …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-03-21",
     "time": "20:00",
     "tags": [
@@ -59,10 +68,12 @@
     "title": "Offene Datenburg",
     "subtitle": "",
     "description": "Offener Burgenabend im Hackspace Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-03-24",
     "time": "19:00",
     "tags": [
-      "#open"
+      "#datenburg",
+      "#offener-abend"
     ],
     "type": "special"
   },
@@ -70,11 +81,13 @@
     "title": "Look at my toys!",
     "subtitle": "",
     "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-03-24",
     "time": "19:00",
     "tags": [
       "#relax",
-      "#social"
+      "#social",
+      "#spieletreff"
     ],
     "type": "special"
   },
@@ -82,10 +95,12 @@
     "title": "Spieleabend in der Burg",
     "subtitle": "",
     "description": "Brettspieleabend in der Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-03-26",
     "time": "19:00",
     "tags": [
-      "#gaming"
+      "#gaming",
+      "#datenburg"
     ],
     "type": "special"
   },
@@ -93,10 +108,11 @@
     "title": "Casual Linkup@bitcircus101 (4FR)",
     "subtitle": "",
     "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-03-27",
     "time": "20:00",
     "tags": [
-      "#open"
+      "#meetup"
     ],
     "type": "linkup"
   },
@@ -104,10 +120,11 @@
     "title": "Tag des offenen Hackspaces",
     "subtitle": "",
     "description": "",
+    "location": "Datenburg, Bornheimerstraße 25",
     "date": "2026-03-28",
     "time": "13:00",
     "tags": [
-      "#open"
+      "#offener-abend"
     ],
     "type": "special"
   },
@@ -115,10 +132,12 @@
     "title": "Offene Datenburg",
     "subtitle": "",
     "description": "Offener Burgenabend im Hackspace Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-03-31",
     "time": "19:00",
     "tags": [
-      "#open"
+      "#datenburg",
+      "#offener-abend"
     ],
     "type": "special"
   },
@@ -126,11 +145,13 @@
     "title": "Look at my toys!",
     "subtitle": "",
     "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-03-31",
     "time": "19:00",
     "tags": [
       "#relax",
-      "#social"
+      "#social",
+      "#spieletreff"
     ],
     "type": "special"
   },
@@ -138,10 +159,11 @@
     "title": "Casual Linkup@bitcircus101 (1FR)",
     "subtitle": "",
     "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-03",
     "time": "20:00",
     "tags": [
-      "#open"
+      "#meetup"
     ],
     "type": "linkup"
   },
@@ -149,10 +171,11 @@
     "title": "Der Bonner Schmierling kommt!",
     "subtitle": "",
     "description": "zine ohne beethoven - Die neue Ausgabe wird angeliefert und liegt für Euch bereit. 100% offline, könnt ihr euch im bitcircus101 mitnehmen. Checkt es aus! 😊",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-06",
     "time": "",
     "tags": [
-      "#open"
+      "#community"
     ],
     "type": "special"
   },
@@ -160,10 +183,12 @@
     "title": "Offene Datenburg",
     "subtitle": "",
     "description": "Offener Burgenabend im Hackspace Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-04-07",
     "time": "19:00",
     "tags": [
-      "#open"
+      "#datenburg",
+      "#offener-abend"
     ],
     "type": "special"
   },
@@ -171,11 +196,13 @@
     "title": "Look at my toys!",
     "subtitle": "",
     "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-07",
     "time": "19:00",
     "tags": [
       "#relax",
-      "#social"
+      "#social",
+      "#spieletreff"
     ],
     "type": "special"
   },
@@ -183,10 +210,11 @@
     "title": "Casual Linkup@bitcircus101 (2FR)",
     "subtitle": "",
     "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-10",
     "time": "20:00",
     "tags": [
-      "#open"
+      "#meetup"
     ],
     "type": "linkup"
   },
@@ -194,6 +222,7 @@
     "title": "Treffen: Bonner FSFE Community",
     "subtitle": "",
     "description": "",
+    "location": "Dorotheenstraße 101 Bonn",
     "date": "2026-04-13",
     "time": "19:00",
     "tags": [
@@ -205,10 +234,12 @@
     "title": "Offene Datenburg",
     "subtitle": "",
     "description": "Offener Burgenabend im Hackspace Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-04-14",
     "time": "19:00",
     "tags": [
-      "#open"
+      "#datenburg",
+      "#offener-abend"
     ],
     "type": "special"
   },
@@ -216,11 +247,13 @@
     "title": "Look at my toys!",
     "subtitle": "",
     "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-14",
     "time": "19:00",
     "tags": [
       "#relax",
-      "#social"
+      "#social",
+      "#spieletreff"
     ],
     "type": "special"
   },
@@ -228,10 +261,13 @@
     "title": "Linkup@bitcircus101",
     "subtitle": "",
     "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-17",
     "time": "20:00",
     "tags": [
-      "#lightning-talks"
+      "#meetup",
+      "#lightning-talks",
+      "#talk"
     ],
     "type": "linkup"
   },
@@ -239,10 +275,12 @@
     "title": "Offene Datenburg",
     "subtitle": "",
     "description": "Offener Burgenabend im Hackspace Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-04-21",
     "time": "19:00",
     "tags": [
-      "#open"
+      "#datenburg",
+      "#offener-abend"
     ],
     "type": "special"
   },
@@ -250,11 +288,13 @@
     "title": "Look at my toys!",
     "subtitle": "",
     "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-21",
     "time": "19:00",
     "tags": [
       "#relax",
-      "#social"
+      "#social",
+      "#spieletreff"
     ],
     "type": "special"
   },
@@ -262,10 +302,12 @@
     "title": "Spieleabend in der Burg",
     "subtitle": "",
     "description": "Brettspieleabend in der Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-04-23",
     "time": "19:00",
     "tags": [
-      "#gaming"
+      "#gaming",
+      "#datenburg"
     ],
     "type": "special"
   },
@@ -273,10 +315,11 @@
     "title": "Casual Linkup@bitcircus101 (4FR)",
     "subtitle": "",
     "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-24",
     "time": "20:00",
     "tags": [
-      "#open"
+      "#meetup"
     ],
     "type": "linkup"
   },
@@ -284,10 +327,12 @@
     "title": "Offene Datenburg",
     "subtitle": "",
     "description": "Offener Burgenabend im Hackspace Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-04-28",
     "time": "19:00",
     "tags": [
-      "#open"
+      "#datenburg",
+      "#offener-abend"
     ],
     "type": "special"
   },
@@ -295,11 +340,13 @@
     "title": "Look at my toys!",
     "subtitle": "",
     "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-04-28",
     "time": "19:00",
     "tags": [
       "#relax",
-      "#social"
+      "#social",
+      "#spieletreff"
     ],
     "type": "special"
   },
@@ -307,10 +354,11 @@
     "title": "Casual Linkup@bitcircus101 (1FR)",
     "subtitle": "",
     "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-05-01",
     "time": "20:00",
     "tags": [
-      "#open"
+      "#meetup"
     ],
     "type": "linkup"
   },
@@ -318,10 +366,11 @@
     "title": "Der Bonner Schmierling kommt!",
     "subtitle": "",
     "description": "zine ohne beethoven - Die neue Ausgabe wird angeliefert und liegt für Euch bereit. 100% offline, könnt ihr euch im bitcircus101 mitnehmen. Checkt es aus! 😊",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
     "date": "2026-05-04",
     "time": "",
     "tags": [
-      "#open"
+      "#community"
     ],
     "type": "special"
   },
@@ -329,10 +378,12 @@
     "title": "Offene Datenburg",
     "subtitle": "",
     "description": "Offener Burgenabend im Hackspace Datenburg. Kommt vorbei!",
+    "location": "Bornheimer Straße 25 Bonn",
     "date": "2026-05-05",
     "time": "19:00",
     "tags": [
-      "#open"
+      "#datenburg",
+      "#offener-abend"
     ],
     "type": "special"
   }
