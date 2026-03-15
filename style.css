@@ -423,6 +423,15 @@ nav li a:focus-visible {
         text-align: left;
         grid-column: 1 / -1;
     }
+    .footer__bar {
+        justify-content: center;
+    }
+    .footer__status {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+        margin-top: var(--gap-xs);
+    }
 }
 
 /* =============================================================================
@@ -1337,6 +1346,14 @@ select:focus {
 .event-preview__date { font-size: 0.85rem; }
 .event-preview__title { font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .event-preview__time { font-size: 0.78rem; color: var(--text-dim); text-align: right; }
+.event-preview__source {
+    font-size: 0.6rem;
+    color: #d09040;
+    border: 1px solid #604020;
+    padding: 0.1em 0.4em;
+    margin-left: 0.4em;
+    vertical-align: middle;
+}
 .event-preview--linkup .event-preview__title { color: var(--accent); }
 
 .events-more-link {

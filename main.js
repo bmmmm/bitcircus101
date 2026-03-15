@@ -367,8 +367,12 @@
         html += '<span class="event-preview__date">' + date + "</span>";
         html +=
           '<span class="event-preview__title">' +
-          e.title.replace(/&/g, "&amp;").replace(/</g, "&lt;") +
-          "</span>";
+          e.title.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+        if (e.source && e.source !== "bitcircus101") {
+          html += ' <span class="event-preview__source">' +
+            e.source.replace(/&/g, "&amp;") + "</span>";
+        }
+        html += "</span>";
         if (e.time)
           html +=
             '<span class="event-preview__time">' + e.time + "</span>";
