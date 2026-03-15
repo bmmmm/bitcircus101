@@ -171,21 +171,21 @@
 
         // Content column
         html += '<div class="event-card__content">';
+        html += '<div class="event-card__header">';
         html += '<h3 class="event-card__title">' + esc(e.title) + "</h3>";
+        if (e.source && e.source !== "bitcircus101") {
+          html += '<span class="event-card__source">' + esc(e.source) + "</span>";
+        }
+        html += "</div>";
         if (e.subtitle) {
           html += '<p class="event-card__subtitle">' + esc(e.subtitle) + "</p>";
         }
         if (e.description) {
           html += '<p class="event-card__desc">' + esc(e.description) + "</p>";
         }
-        // Location
         if (e.location) {
           html += '<p class="event-card__location">' +
             '\u25cb ' + esc(e.location) + "</p>";
-        }
-        // Source badge (non-primary calendars)
-        if (e.source && e.source !== "bitcircus101") {
-          html += '<span class="event-card__source">' + esc(e.source) + "</span>";
         }
         // Meta: time + tags
         html += '<div class="event-card__meta">';
