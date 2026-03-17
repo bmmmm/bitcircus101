@@ -5,16 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Tue, 17 Mar 2026 18:36:59 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 17 Mar 2026 19:40:27 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>Look at my toys!</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
-      <pubDate>Tue, 17 Mar 2026 19:00:00 +0000</pubDate>
-      <guid isPermaLink="false">bitcircus101-20260317-special</guid>
-    </item>
     <item>
       <title>Linkup@bitcircus101</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -112,6 +105,13 @@
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
       <pubDate>Tue, 21 Apr 2026 19:00:00 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20260421-special</guid>
+    </item>
+    <item>
+      <title>Casual Linkup@bitcircus101 (4FR)</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <pubDate>Fri, 24 Apr 2026 20:00:00 +0000</pubDate>
+      <guid isPermaLink="false">bitcircus101-20260424-linkup</guid>
     </item>
   </channel>
 </rss>
