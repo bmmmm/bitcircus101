@@ -1,21 +1,5 @@
 [
   {
-    "title": "Look at my toys!",
-    "subtitle": "",
-    "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-    "location": "Dorotheenstraße 101, 53111 Bonn",
-    "date": "2026-03-17",
-    "time": "19:00",
-    "tags": [
-      "#relax",
-      "#social",
-      "#spieletreff"
-    ],
-    "type": "special",
-    "source": "bitcircus101",
-    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
-  },
-  {
     "title": "Linkup@bitcircus101",
     "subtitle": "",
     "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
@@ -591,6 +575,22 @@
       "#meetup"
     ],
     "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
+  },
+  {
+    "title": "Look at my toys!",
+    "subtitle": "",
+    "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
+    "date": "2026-05-26",
+    "time": "19:00",
+    "tags": [
+      "#relax",
+      "#social",
+      "#spieletreff"
+    ],
+    "type": "special",
     "source": "bitcircus101",
     "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   }
