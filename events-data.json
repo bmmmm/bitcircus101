@@ -16,21 +16,6 @@
     "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   },
   {
-    "title": "Offene Datenburg",
-    "subtitle": "",
-    "description": "Reminder",
-    "location": "",
-    "date": "2026-03-17",
-    "time": "18:00",
-    "tags": [
-      "#datenburg",
-      "#offener-abend"
-    ],
-    "type": "special",
-    "source": "Datenburg e.V.",
-    "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt"
-  },
-  {
     "title": "Linkup@bitcircus101",
     "subtitle": "",
     "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
@@ -594,5 +579,19 @@
     "type": "special",
     "source": "Datenburg e.V.",
     "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt"
+  },
+  {
+    "title": "Casual Linkup@bitcircus101 (4FR)",
+    "subtitle": "",
+    "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+    "location": "Dorotheenstraße 101, 53111 Bonn",
+    "date": "2026-05-22",
+    "time": "20:00",
+    "tags": [
+      "#meetup"
+    ],
+    "type": "linkup",
+    "source": "bitcircus101",
+    "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
   }
 ]
