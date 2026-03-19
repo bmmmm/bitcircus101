@@ -454,10 +454,13 @@
       var html = "";
       for (var i = 0; i < sources.length; i++) {
         var s = sources[i];
-        var ok = s.status === "ok" && s.fetchedAt;
-        html += '<span class="sync-source">';
+        var isOk = s.status === "ok";
+        var isStale = s.status === "stale";
+        var hasFetch = s.fetchedAt;
+        var staleClass = isStale ? " sync-source--stale" : "";
+        html += '<span class="sync-source' + staleClass + '">';
         html += '<span class="sync-source__name">' + esc(s.name) + "</span>";
-        if (ok) {
+        if ((isOk || isStale) && hasFetch) {
           var elapsed = Math.floor((now - new Date(s.fetchedAt).getTime()) / 60000);
           var pct = Math.min(elapsed / SYNC_INTERVAL, 1);
           html += '<span class="sync-source__ago">' + agoText(elapsed) + "</span>";
@@ -471,8 +474,13 @@
             if (s.removed) html += '<span class="sync-source__removed">-' + s.removed + '</span>';
             html += '</span>';
           }
+          if (isStale) {
+            html += '<span class="sync-source__warn" title="' + esc(s.error || "Fetch fehlgeschlagen") +
+              '">stale</span>';
+          }
         } else {
-          html += '<span class="sync-source__status sync-source__status--err">offline</span>';
+          html += '<span class="sync-source__status sync-source__status--err">' +
+            'offline' + (s.error ? " · " + esc(s.error) : "") + '</span>';
         }
         html += "</span>";
       }
