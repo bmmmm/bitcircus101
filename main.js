@@ -436,16 +436,17 @@
         p +
         "%</span>" +
         '<div class="footer__funding-info">' +
-        '<div class="footer__funding-info-head">[ SYSTEM STATUS ]</div>' +
+        '<div class="footer__funding-info-head">[ LIGHTS ON? ]</div>' +
+        "<p>Miete, Strom, Internet &mdash; der Space kostet Geld.</p>" +
         "<p>" +
         bar +
         " " +
         p +
-        "% gedeckt</p>" +
-        '<p><span class="fs--green">\u2588</span> gr\u00fcn \u2014 \u226580% gedeckt</p>' +
-        '<p><span class="fs--amber">\u2588</span> amber \u2014 33\u201380% gedeckt</p>' +
-        '<p><span class="fs--red">\u2588</span> rot \u2014 &lt;33% gedeckt</p>' +
-        '<a href="donations.html">$ contribute \u2192</a>' +
+        "% der monatlichen Kosten sind gerade gedeckt.</p>" +
+        '<p><span class="fs--green">\u2588</span> gr\u00fcn &mdash; voll gedeckt \u2013 danke! (\u226580%)</p>' +
+        '<p><span class="fs--amber">\u2588</span> amber &mdash; es werden mehr (33\u201380%)</p>' +
+        '<p><span class="fs--red">\u2588</span> rot &mdash; der Anfang ist gemacht (&lt;33%)</p>' +
+        '<a href="donations.html">$ unterst\u00fctzen \u2192</a>' +
         "</div>";
 
       // Click to toggle info panel
