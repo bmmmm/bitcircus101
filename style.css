@@ -1330,6 +1330,39 @@ select:focus {
     opacity: 0.7;
 }
 
+.events-last-sync {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: var(--gap-sm);
+    font-size: 0.72rem;
+    opacity: 0.7;
+}
+
+.sync-source {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+    border: 1px solid var(--border);
+    padding: 0.25em 0.6em;
+}
+
+.sync-source__name {
+    color: var(--accent-dim);
+}
+
+.sync-source__status {
+    color: var(--text-dim);
+}
+
+.sync-source__status--ok::before {
+    content: "· ";
+}
+
+.sync-source__status--err {
+    color: #ff6b6b;
+}
+
 @media (max-width: 600px) {
     .event-card {
         grid-template-columns: 3.5rem 1fr;
