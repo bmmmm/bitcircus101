@@ -376,14 +376,16 @@ test.describe('Events content', () => {
     test('per-calendar sync status is shown', async ({ page }) => {
         const syncEl = page.locator('#events-last-sync');
         await expect(syncEl).toBeVisible({ timeout: 5000 });
-        // Should show at least one source with timestamp
+        // Should show at least one source
         const sources = syncEl.locator('.sync-source');
         expect(await sources.count()).toBeGreaterThan(0);
-        // Each source should have a name and status
+        // Each source should have a name and progress bar
         const firstName = await sources.first().locator('.sync-source__name').textContent();
         expect(firstName.length).toBeGreaterThan(0);
-        const firstStatus = await sources.first().locator('.sync-source__status').textContent();
-        expect(firstStatus).toMatch(/\d{2}\.\d{2}\.\d{4}|offline/);
+        const bar = await sources.first().locator('.sync-source__bar').textContent();
+        expect(bar).toMatch(/^\[.*\]$/); // [████░░░░░░]
+        const ago = await sources.first().locator('.sync-source__ago').textContent();
+        expect(ago).toMatch(/jetzt|vor \d+ min/);
     });
 
     test('events show month grouping', async ({ page }) => {
