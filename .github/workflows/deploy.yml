@@ -33,8 +33,12 @@ jobs:
       - name: Run sync-events unit tests
         run: node --test tests/sync-events.spec.mjs
 
-      - name: Generate test events-data.json for local tests
-        run: node scripts/sync-events.mjs
+      - name: Generate events-data.json for E2E tests
+        run: |
+          node scripts/sync-events.mjs || {
+            echo "::warning::Calendar fetch failed — using minimal test fixture"
+            echo '{"lastSync":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","sources":[],"events":[]}' > events-data.json
+          }
 
       - name: Run Playwright tests
         run: npx playwright test
