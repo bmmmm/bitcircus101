@@ -23,6 +23,11 @@ jobs:
           ref: live
           persist-credentials: true
 
+      - name: Use scripts and config from main
+        run: |
+          git fetch origin main
+          git checkout origin/main -- scripts/ calendars.json
+
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
