@@ -332,6 +332,166 @@ test.describe('Terminal theme', () => {
     });
 });
 
+// ─── Events – Content & Functionality ────────────────────────────────────────
+
+test.describe('Events content', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('/events.html');
+        // Wait for events to fully load
+        await expect(page.locator('.event-card').first()).toBeVisible({ timeout: 5000 });
+    });
+
+    test('events have tags', async ({ page }) => {
+        const tags = page.locator('.event-tag');
+        const count = await tags.count();
+        expect(count).toBeGreaterThan(0);
+    });
+
+    test('filter bar is visible', async ({ page }) => {
+        await expect(page.locator('.events-filter')).toBeVisible();
+    });
+
+    test('tag filter works', async ({ page }) => {
+        const countBefore = await page.locator('.event-card').count();
+        // Click the first filter tag
+        const firstTag = page.locator('.events-filter__tag').first();
+        await firstTag.click();
+        await expect(firstTag).toHaveClass(/active/);
+        // Count may differ (could be same if all match, but filter should function)
+        const countAfter = await page.locator('.event-card').count();
+        expect(countAfter).toBeGreaterThan(0);
+        expect(countAfter).toBeLessThanOrEqual(countBefore);
+    });
+
+    test('filter reset works', async ({ page }) => {
+        const countBefore = await page.locator('.event-card').count();
+        // Activate a filter
+        await page.locator('.events-filter__tag').first().click();
+        // Reset
+        await page.locator('.events-filter__clear').click();
+        const countAfter = await page.locator('.event-card').count();
+        expect(countAfter).toBe(countBefore);
+    });
+
+    test('last sync timestamp is shown', async ({ page }) => {
+        const syncEl = page.locator('#events-last-sync');
+        await expect(syncEl).toBeVisible({ timeout: 5000 });
+        const text = await syncEl.textContent();
+        expect(text).toMatch(/letzter Kalender-Sync: \d{2}\.\d{2}\.\d{4}/);
+    });
+
+    test('events show month grouping', async ({ page }) => {
+        const months = page.locator('.events-month');
+        expect(await months.count()).toBeGreaterThan(0);
+    });
+
+    test('Datenburg events are included', async ({ page }) => {
+        const sourceBadges = page.locator('.event-card__source');
+        const count = await sourceBadges.count();
+        expect(count).toBeGreaterThan(0);
+        // At least one should say Datenburg
+        const texts = [];
+        for (let i = 0; i < count; i++) {
+            texts.push(await sourceBadges.nth(i).textContent());
+        }
+        expect(texts.some(t => t.includes('Datenburg'))).toBe(true);
+    });
+});
+
+// ─── Danke Page ──────────────────────────────────────────────────────────────
+
+test.describe('Danke page', () => {
+    test('loads with correct title', async ({ page }) => {
+        await page.goto('/dankedankedanke.html');
+        await expect(page).toHaveTitle(/Danke/);
+    });
+
+    test('shows thank you message', async ({ page }) => {
+        await page.goto('/dankedankedanke.html');
+        await expect(page.locator('h1')).toContainText('DANKE');
+    });
+
+    test('has noindex meta tag', async ({ page }) => {
+        await page.goto('/dankedankedanke.html');
+        const robots = await page.locator('meta[name="robots"]').getAttribute('content');
+        expect(robots).toContain('noindex');
+    });
+
+    test('has back link to home', async ({ page }) => {
+        await page.goto('/dankedankedanke.html');
+        await expect(page.locator('.back-link a')).toBeVisible();
+    });
+});
+
+// ─── No Console Errors ───────────────────────────────────────────────────────
+
+test.describe('No JavaScript errors', () => {
+    const pages = [
+        ['/', 'Home'],
+        ['/events.html', 'Events'],
+        ['/donations.html', 'Donations'],
+        ['/raum-nutzen.html', 'Raum nutzen'],
+        ['/impressum-datenschutz.html', 'Impressum'],
+        ['/dankedankedanke.html', 'Danke'],
+    ];
+
+    for (const [url, name] of pages) {
+        test(`${name} page has no JS errors`, async ({ page }) => {
+            const errors = [];
+            page.on('pageerror', (err) => errors.push(err.message));
+            await page.goto(url);
+            await page.waitForLoadState('networkidle');
+            expect(errors).toEqual([]);
+        });
+    }
+});
+
+// ─── Internal Links ──────────────────────────────────────────────────────────
+
+test.describe('Internal links', () => {
+    test('all internal links resolve to valid pages', async ({ page }) => {
+        await page.goto('/');
+        // Collect unique internal hrefs from all pages
+        const pagesToCheck = [
+            '/', '/events.html', '/donations.html',
+            '/raum-nutzen.html', '/impressum-datenschutz.html',
+            '/dankedankedanke.html',
+        ];
+        const checked = new Set();
+        const broken = [];
+
+        for (const p of pagesToCheck) {
+            await page.goto(p);
+            const links = await page.locator('a[href]').evaluateAll((els) =>
+                els
+                    .map((el) => el.getAttribute('href'))
+                    .filter((h) =>
+                        h &&
+                        !h.startsWith('http') &&
+                        !h.startsWith('mailto:') &&
+                        !h.startsWith('webcal:') &&
+                        !h.startsWith('#') &&
+                        !h.startsWith('tel:') &&
+                        !h.endsWith('.ics') &&
+                        !h.endsWith('.xml')
+                    )
+            );
+
+            for (const href of links) {
+                const clean = href.split('#')[0].split('?')[0];
+                if (!clean || checked.has(clean)) continue;
+                checked.add(clean);
+                const res = await page.goto(clean);
+                if (!res || res.status() >= 400) {
+                    broken.push(`${p} → ${clean} (${res?.status() || 'no response'})`);
+                }
+            }
+        }
+
+        expect(broken).toEqual([]);
+    });
+});
+
 // ─── Accessibility ────────────────────────────────────────────────────────────
 
 test.describe('Accessibility', () => {

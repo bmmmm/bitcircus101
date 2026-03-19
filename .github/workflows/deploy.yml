@@ -28,6 +28,9 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium firefox
 
+      - name: Run sync-events unit tests
+        run: node --test tests/sync-events.spec.mjs
+
       - name: Generate test events-data.json for local tests
         run: node scripts/sync-events.mjs
 
