@@ -1,0 +1,119 @@
+name: Test & Deploy to live
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox
+
+      - name: Run sync-events unit tests
+        run: node --test tests/sync-events.spec.mjs
+
+      - name: Generate events-data.json for E2E tests
+        run: |
+          node scripts/sync-events.mjs || {
+            echo "::warning::Calendar fetch failed — using minimal test fixture"
+            echo '{"lastSync":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","sources":[],"events":[]}' > events-data.json
+          }
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: live
+          persist-credentials: true
+
+      - name: Sync all site files from main
+        run: |
+          git fetch origin main
+
+          # Save live-only generated files before overlay
+          for f in events-data.json feed.xml funding.json sitemap.xml; do
+            [ -f "$f" ] && cp "$f" "/tmp/_live_$f"
+          done
+
+          # Overlay everything from main, then remove dev-only files
+          git checkout origin/main -- .
+          rm -rf tests/ node_modules/ .claude/
+          rm -f playwright.config.js package.json package-lock.json
+
+          # Restore live-only generated files
+          for f in events-data.json feed.xml funding.json sitemap.xml; do
+            [ -f "/tmp/_live_$f" ] && cp "/tmp/_live_$f" "$f"
+          done
+
+      - name: Cache-bust asset references
+        run: |
+          # Generate a short content hash from all cacheable assets
+          HASH=$(cat style.css main.js events.js 2>/dev/null | sha256sum | cut -c1-8)
+          echo "Asset hash: $HASH"
+          # Replace ?v=anything with ?v=<hash> in all HTML files
+          sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" *.html
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Regenerate events data if missing
+        run: |
+          if [ ! -f events-data.json ]; then
+            echo "events-data.json missing — regenerating"
+            node scripts/sync-events.mjs
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy"
+            exit 0
+          fi
+          COMMIT_MSG=$(git log origin/main -1 --pretty=format:"%s")
+          git commit -m "Deploy: ${COMMIT_MSG}"
+          for i in 1 2 3; do
+            git pull --rebase origin live && git push origin HEAD:live && exit 0
+            echo "Retry $i..."
+            sleep 5
+          done
+          echo "Push failed after 3 retries"
+          exit 1

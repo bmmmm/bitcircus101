@@ -1340,43 +1340,51 @@ select:focus {
 }
 
 .sync-source {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2em;
     border: 1px solid var(--border);
-    padding: 0.25em 0.6em;
+    padding: 0.4em 0.7em;
+    min-width: 14em;
 }
 
 .sync-source__name {
     color: var(--accent-dim);
+    font-weight: bold;
+    letter-spacing: 0.03em;
+}
+
+/* Sync freshness row */
+.sync-source__sync {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4em;
+}
+
+.sync-source__bar {
+    color: var(--accent-dim);
+    letter-spacing: -0.05em;
 }
 
 .sync-source__ago {
     color: var(--text-dim);
 }
 
-.sync-source__bar {
-    color: var(--accent-dim);
-    letter-spacing: -0.05em;
-    cursor: default;
-}
-
-.sync-source__count {
+/* Event changes row */
+.sync-source__events {
     color: var(--text-dim);
 }
 
 .sync-source__diff {
-    font-size: 0.9em;
-}
-
-.sync-source__added {
     color: var(--accent);
 }
 
-.sync-source__removed {
-    color: #ff6b6b;
+/* Alert badge */
+.sync-source__alert {
+    color: #d09040;
 }
 
+/* ── State: stale (sync delayed or fetch error) ── */
 .sync-source--stale {
     border-color: #604020;
 }
@@ -1389,14 +1397,33 @@ select:focus {
     color: #d09040;
 }
 
-.sync-source__warn {
-    color: #d09040;
-    border: 1px solid #604020;
-    padding: 0 0.4em;
-    cursor: help;
+/* ── State: overdue (sync significantly late) ── */
+.sync-source--overdue {
+    border-color: #602020;
 }
 
-.sync-source__status--err {
+.sync-source--overdue .sync-source__name {
+    color: #ff6b6b;
+}
+
+.sync-source--overdue .sync-source__bar {
+    color: #ff6b6b;
+}
+
+.sync-source--overdue .sync-source__alert {
+    color: #ff6b6b;
+}
+
+/* ── State: offline ── */
+.sync-source--offline {
+    border-color: #602020;
+}
+
+.sync-source--offline .sync-source__name {
+    color: #ff6b6b;
+}
+
+.sync-source--offline .sync-source__alert {
     color: #ff6b6b;
 }
 
