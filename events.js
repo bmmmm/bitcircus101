@@ -464,6 +464,13 @@
           html += '<span class="sync-source__bar" title="~' +
             SYNC_INTERVAL + ' min Sync-Intervall">' + syncBar(pct) + "</span>";
           html += '<span class="sync-source__count">' + s.events + " events</span>";
+          if (s.added || s.removed) {
+            html += '<span class="sync-source__diff">';
+            if (s.added) html += '<span class="sync-source__added">+' + s.added + '</span>';
+            if (s.added && s.removed) html += ' ';
+            if (s.removed) html += '<span class="sync-source__removed">-' + s.removed + '</span>';
+            html += '</span>';
+          }
         } else {
           html += '<span class="sync-source__status sync-source__status--err">offline</span>';
         }
