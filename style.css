@@ -1330,6 +1330,11 @@ select:focus {
     opacity: 0.7;
 }
 
+.events-last-sync {
+    display: block;
+    margin-top: 0.3em;
+}
+
 @media (max-width: 600px) {
     .event-card {
         grid-template-columns: 3.5rem 1fr;
