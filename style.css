@@ -1365,6 +1365,18 @@ select:focus {
     color: var(--text-dim);
 }
 
+.sync-source__diff {
+    font-size: 0.9em;
+}
+
+.sync-source__added {
+    color: var(--accent);
+}
+
+.sync-source__removed {
+    color: #ff6b6b;
+}
+
 .sync-source__status--err {
     color: #ff6b6b;
 }
