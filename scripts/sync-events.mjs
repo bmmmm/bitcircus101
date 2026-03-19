@@ -298,6 +298,7 @@ function generateRSS(cards) {
 
 async function main() {
   let allCards = [];
+  const sources = [];
 
   for (const cal of calendars) {
     console.log(`[${cal.id}] Fetching ${cal.ics}`);
@@ -305,8 +306,10 @@ async function main() {
       const res = await fetch(cal.ics);
       if (!res.ok) {
         console.error(`[${cal.id}] HTTP ${res.status} – skipping`);
+        sources.push({ id: cal.id, name: cal.name, fetchedAt: null, status: "error", events: 0 });
         continue;
       }
+      const fetchedAt = new Date().toISOString();
       const text = await res.text();
       console.log(`[${cal.id}] ${text.length} bytes`);
 
@@ -316,8 +319,10 @@ async function main() {
       const cards = toCards(icsEvents, cal);
       console.log(`[${cal.id}] ${cards.length} upcoming cards`);
       allCards = allCards.concat(cards);
+      sources.push({ id: cal.id, name: cal.name, fetchedAt, status: "ok", events: cards.length });
     } catch (err) {
       console.error(`[${cal.id}] Error: ${err.message} – skipping`);
+      sources.push({ id: cal.id, name: cal.name, fetchedAt: null, status: "error", events: 0 });
     }
   }
 
@@ -326,7 +331,7 @@ async function main() {
   allCards = allCards.slice(0, 40);
   console.log(`Total: ${allCards.length} event cards from ${calendars.length} calendars`);
 
-  const output = { lastSync: new Date().toISOString(), events: allCards };
+  const output = { lastSync: new Date().toISOString(), sources, events: allCards };
   writeFileSync("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
