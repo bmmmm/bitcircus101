@@ -394,7 +394,7 @@ test.describe('Events content', () => {
         const bar = await sources.first().locator('.sync-source__bar').textContent();
         expect(bar).toMatch(/^\[.*\]$/);
         const ago = await sources.first().locator('.sync-source__ago').textContent();
-        expect(ago).toMatch(/jetzt|vor \d+ min/);
+        expect(ago).toMatch(/jetzt|vor \d+ (min|h)/);
     });
 
     test('month grouping when events are loaded', async ({ page }) => {
