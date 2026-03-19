@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-03-19T18:57:49.068Z",
+  "lastSync": "2026-03-19T19:49:26.242Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-19T18:57:48.296Z",
+      "fetchedAt": "2026-03-19T19:49:25.498Z",
       "status": "ok",
-      "events": 22,
+      "events": 23,
       "added": 0,
       "removed": 0,
       "total": 152,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-19T18:57:49.051Z",
+      "fetchedAt": "2026-03-19T19:49:26.224Z",
       "status": "ok",
-      "events": 18,
+      "events": 17,
       "added": 0,
       "removed": 0,
       "total": 178,
@@ -363,20 +363,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Raspberry Pi Workshop",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-03-19",
-      "time": "19:00",
-      "tags": [
-        "#workshop"
-      ],
-      "type": "workshop",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt"
-    },
     {
       "title": "Linkup@bitcircus101",
       "subtitle": "",
@@ -950,6 +936,22 @@
       "type": "special",
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt"
+    },
+    {
+      "title": "Linkup@bitcircus101",
+      "subtitle": "",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-05-15",
+      "time": "20:00",
+      "tags": [
+        "#meetup",
+        "#lightning-talks",
+        "#talk"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC"
     }
   ]
 }
