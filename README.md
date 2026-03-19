@@ -30,8 +30,9 @@ scripts/
   sync-events.mjs           Fetches ICS from Nextcloud, generates events-data.json + feed.xml
 
 tests/
-  site.spec.js              Playwright end-to-end tests
-playwright.config.js        Playwright config
+  site.spec.js              Playwright end-to-end tests (204 tests × 3 browsers)
+  sync-events.spec.mjs      Unit tests for ICS parser and RRULE expansion (22 tests)
+playwright.config.js        Playwright config (Chromium, Firefox, Mobile Chrome)
 
 .github/workflows/
   deploy.yml                Test on main → deploy to live
@@ -56,14 +57,16 @@ These files are created by CI actions and committed to the `live` branch only:
 ### Deploy pipeline (`deploy.yml`)
 
 ```
-main (push) → Playwright tests → Deploy site files to live
+main (push) → Unit tests → Sync script → Playwright E2E → Deploy to live
 ```
 
 Every push to `main` triggers:
-1. **Test job:** Installs Playwright, generates test data, runs all E2E tests
-2. **Deploy job** (only if tests pass): Syncs all site files from `main` to `live`
+1. **Unit tests:** ICS parser, RRULE expansion, date parsing (node:test, 22 tests)
+2. **Sync script:** Generates `events-data.json` for E2E tests to use
+3. **E2E tests:** Playwright across 3 browsers (204 tests)
+4. **Deploy** (only if all tests pass): Syncs site files from `main` to `live`
 
-This ensures nothing reaches production without passing tests first.
+Nothing reaches production without passing all tests first.
 
 ### Sync calendar events (`sync-events.yml`)
 
@@ -140,10 +143,45 @@ python3 -m http.server 8080
 
 ```sh
 npm install
-npm test                   # headless
-npm run test:headed        # with browser window
+npm test                   # all tests (unit + E2E headless)
+npm run test:unit          # only unit tests (ICS parser, fast)
+npm run test:e2e           # only Playwright E2E
+npm run test:headed        # E2E with browser window
 npm run test:ui            # Playwright UI mode
 ```
+
+### Test coverage
+
+**Unit tests** (`tests/sync-events.spec.mjs` — 22 tests, ~100ms):
+
+| Area | What is tested |
+|------|---------------|
+| `parseDate` | All-day dates, datetime with timezone, UTC, null inputs |
+| `nthWeekday` | Nth weekday calculation, month overflow |
+| `expandRRule` | BYSETPOS + classic BYDAY, weekly, COUNT, EXDATE exclusions |
+| `parseICS` | Single events, all-day, TZID params, line folding, recurring BYSETPOS |
+| `clean` | ICS character unescaping (`\n`, `\,`, `\;`) |
+
+**E2E tests** (`tests/site.spec.js` — 68 tests × 3 browsers = 204):
+
+| Area | Tests | What is tested |
+|------|-------|---------------|
+| Home page | 10 | Title, h1, ASCII art, carousel, support CTAs, contact, map |
+| SEO / Meta | 10 | Description, canonical, OG tags, JSON-LD, keywords per page |
+| Privacy | 3 | No Google Fonts (link tags, preconnect, network requests) |
+| Navigation | 3 | Desktop links, mobile hamburger toggle, link navigation |
+| Events page | 6 | Title, event cards load, subscribe buttons, RSS, linkup info |
+| Events content | 7 | Tags present, filter works, reset, lastSync shown, month groups, Datenburg events |
+| Donations | 3 | Title, consent banner, banner dismiss |
+| Raum mieten | 6 | Title, contact CTA, map, JSON-LD, back link |
+| Impressum | 2 | Title, back link |
+| Danke page | 4 | Title, content, noindex, back link |
+| Terminal theme | 3 | Dark background, monospace font, no inline styles |
+| JS errors | 6 | All 6 pages free of console errors |
+| Internal links | 1 | Crawls all pages, verifies every internal link resolves |
+| Accessibility | 4 | Aria-labels, alt texts, footer role |
+
+Browsers: Chromium, Firefox, Mobile Chrome (Pixel 5).
 
 ### Running calendar sync locally
 
