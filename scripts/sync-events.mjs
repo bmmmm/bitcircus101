@@ -296,21 +296,17 @@ function generateRSS(cards) {
 
 // ── Main ────────────────────────────────────────────────────────────────────
 
-/** Read previous events-data.json for diff and fallback on errors */
+/** Read previous sync state for diff and fallback on errors */
 function loadPrevious() {
   try {
     const prev = JSON.parse(readFileSync("events-data.json", "utf8"));
     const events = Array.isArray(prev) ? prev : prev.events || [];
     const sources = prev.sources || [];
-    const keys = {};
-    for (const e of events) {
-      const src = e.source || "unknown";
-      if (!keys[src]) keys[src] = new Set();
-      keys[src].add(e.date + "|" + e.title);
-    }
-    return { keys, events, sources };
+    // icsKeys stores ALL calendar events (before time filtering) from previous run
+    const icsKeys = prev.icsKeys || {};
+    return { icsKeys, events, sources };
   } catch {
-    return { keys: {}, events: [], sources: [] };
+    return { icsKeys: {}, events: [], sources: [] };
   }
 }
 
@@ -318,6 +314,7 @@ async function main() {
   const prev = loadPrevious();
   let allCards = [];
   const sources = [];
+  const newIcsKeys = {};
 
   for (const cal of calendars) {
     console.log(`[${cal.id}] Fetching ${cal.ics}`);
@@ -350,11 +347,15 @@ async function main() {
       console.log(`[${cal.id}] ${cards.length} upcoming cards`);
       allCards = allCards.concat(cards);
 
-      // Diff against previous sync
-      const prevKeys = prev.keys[cal.name] || new Set();
-      const newKeys = new Set(cards.map((c) => c.date + "|" + c.title));
-      const added = [...newKeys].filter((k) => !prevKeys.has(k)).length;
-      const removed = [...prevKeys].filter((k) => !newKeys.has(k)).length;
+      // Diff against previous sync — compare ALL ICS events (not time-filtered cards)
+      // so that natural event expiry doesn't count as a "removed" change
+      const allIcsKeys = new Set(icsEvents.map((e) =>
+        e.dtstart.toISOString().slice(0, 10) + "|" + e.summary
+      ));
+      const prevIcsKeys = new Set(prev.icsKeys[cal.name] || []);
+      const added = [...allIcsKeys].filter((k) => !prevIcsKeys.has(k)).length;
+      const removed = [...prevIcsKeys].filter((k) => !allIcsKeys.has(k)).length;
+      newIcsKeys[cal.name] = [...allIcsKeys];
 
       sources.push({ id: cal.id, name: cal.name, fetchedAt, status: "ok", events: cards.length, added, removed });
     } catch (err) {
@@ -377,7 +378,7 @@ async function main() {
   allCards = allCards.slice(0, 40);
   console.log(`Total: ${allCards.length} event cards from ${calendars.length} calendars`);
 
-  const output = { lastSync: new Date().toISOString(), sources, events: allCards };
+  const output = { lastSync: new Date().toISOString(), sources, icsKeys: newIcsKeys, events: allCards };
   writeFileSync("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
