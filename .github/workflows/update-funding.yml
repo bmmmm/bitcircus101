@@ -23,14 +23,18 @@ jobs:
           persist-credentials: true
 
       - name: Update funding.json
+        env:
+          PERCENT: ${{ inputs.percent }}
         run: |
-          echo '{ "percent": ${{ inputs.percent }} }' > funding.json
+          printf '{ "percent": %d }\n' "$PERCENT" > funding.json
 
       - name: Commit
+        env:
+          PERCENT: ${{ inputs.percent }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add funding.json
-          git diff --cached --quiet && echo "No changes" || git commit -m "Update funding to ${{ inputs.percent }}%"
+          git diff --cached --quiet && echo "No changes" || git commit -m "Update funding to ${PERCENT}%"
           git pull --rebase origin live
           git push origin HEAD:live
