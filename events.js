@@ -421,13 +421,31 @@
 
   // ── Last Sync Display ────────────────────────────────────────────────────
 
-  function showLastSync(isoStr) {
+  function fmtDate(isoStr) {
     var d = new Date(isoStr);
-    var el = document.getElementById("events-last-sync");
-    if (!el) return;
-    var str = pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." +
+    return pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." +
       d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
-    el.textContent = "letzter Kalender-Sync: " + str;
+  }
+
+  function showLastSync(sources) {
+    var el = document.getElementById("events-last-sync");
+    if (!el || !sources || !sources.length) return;
+    var html = "";
+    for (var i = 0; i < sources.length; i++) {
+      var s = sources[i];
+      var ok = s.status === "ok" && s.fetchedAt;
+      html += '<span class="sync-source">';
+      html += '<span class="sync-source__name">' + esc(s.name) + '</span> ';
+      if (ok) {
+        html += '<span class="sync-source__status sync-source__status--ok">';
+        html += fmtDate(s.fetchedAt) + " · " + s.events + " events";
+      } else {
+        html += '<span class="sync-source__status sync-source__status--err">';
+        html += "offline";
+      }
+      html += "</span></span>";
+    }
+    el.innerHTML = html;
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
@@ -447,12 +465,12 @@
         return res.json();
       })
       .then(function (data) {
-        // Support both { lastSync, events } wrapper and plain array
+        // Support both { lastSync, sources, events } wrapper and plain array
         var events = Array.isArray(data) ? data : data.events;
-        var lastSync = Array.isArray(data) ? null : data.lastSync;
+        var sources = Array.isArray(data) ? null : data.sources;
         if (!events || !events.length) throw new Error("empty");
         renderCards(events, el);
-        if (lastSync) showLastSync(lastSync);
+        if (sources) showLastSync(sources);
       })
       .catch(function () {
         fetch(ICS_URL, { mode: "cors" })
