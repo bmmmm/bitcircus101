@@ -15,10 +15,8 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: live
           persist-credentials: true
@@ -28,7 +26,7 @@ jobs:
           git fetch origin main
           git checkout origin/main -- scripts/ calendars.json
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
 
