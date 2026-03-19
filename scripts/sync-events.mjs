@@ -55,9 +55,12 @@ function expandRRule(dtstart, rule, exdates) {
       cur.setDate(cur.getDate() + 7);
     }
   } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
+    // Support both "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3
     const m = p.BYDAY.match(/^(\d+)([A-Z]{2})$/);
-    if (m) {
-      const nth = +m[1], twd = WD[m[2]];
+    const nth = m ? +m[1] : (p.BYSETPOS ? +p.BYSETPOS : null);
+    const dayCode = m ? m[2] : p.BYDAY.replace(/\d/g, "").slice(-2);
+    const twd = WD[dayCode];
+    if (nth && twd != null) {
       const mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
       while (mo <= limit && out.length < max) {
         const d = nthWeekday(mo.getFullYear(), mo.getMonth(), twd, nth);
