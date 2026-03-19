@@ -378,6 +378,11 @@ async function main() {
   allCards = allCards.slice(0, 40);
   console.log(`Total: ${allCards.length} event cards from ${calendars.length} calendars`);
 
+  // Update source event counts to reflect what actually made it into the output
+  for (const s of sources) {
+    s.events = allCards.filter((c) => c.source === s.name).length;
+  }
+
   const output = { lastSync: new Date().toISOString(), sources, icsKeys: newIcsKeys, events: allCards };
   writeFileSync("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
