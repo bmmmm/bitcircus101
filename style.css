@@ -1377,6 +1377,25 @@ select:focus {
     color: #ff6b6b;
 }
 
+.sync-source--stale {
+    border-color: #604020;
+}
+
+.sync-source--stale .sync-source__name {
+    color: #d09040;
+}
+
+.sync-source--stale .sync-source__bar {
+    color: #d09040;
+}
+
+.sync-source__warn {
+    color: #d09040;
+    border: 1px solid #604020;
+    padding: 0 0.4em;
+    cursor: help;
+}
+
 .sync-source__status--err {
     color: #ff6b6b;
 }
