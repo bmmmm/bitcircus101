@@ -6,6 +6,10 @@ permissions:
 on:
   push:
     branches: [live]
+    paths:
+      - "*.html"
+      - "*.css"
+      - "*.js"
   workflow_dispatch:
 
 concurrency:
@@ -33,12 +37,15 @@ jobs:
           include-html: true
           sitemap-format: xml
 
-      - name: Remove verification files from sitemap
+      - name: Remove excluded pages from sitemap
         run: |
           python3 -c "
           import re
           with open('sitemap.xml') as f: xml = f.read()
+          # Remove Google verification files
           xml = re.sub(r'<url>\s*<loc>[^<]*google[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
+          # Remove noindex pages (dankedankedanke)
+          xml = re.sub(r'<url>\s*<loc>[^<]*dankedankedanke[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
           with open('sitemap.xml', 'w') as f: f.write(xml)
           "
 
