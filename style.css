@@ -200,6 +200,15 @@ nav li a:focus-visible {
     text-decoration: none;
 }
 
+nav li a.nav__cta {
+    color: #ff4da6;
+    font-weight: bold;
+}
+nav li a.nav__cta:hover,
+nav li a.nav__cta:focus-visible {
+    color: #ff80c0;
+}
+
 .menu-toggle {
     display: none;
     background: none;
@@ -251,13 +260,14 @@ nav li a:focus-visible {
 .btn:active { opacity: 0.85; }
 
 .btn-primary {
-    background: var(--accent);
+    background: #ff4da6;
     color: var(--bg);
+    border-color: #ff4da6;
 }
 
 .btn-primary:hover {
-    background: var(--accent-dim);
-    border-color: var(--accent-dim);
+    background: #ff80c0;
+    border-color: #ff80c0;
 }
 
 .btn-secondary {
