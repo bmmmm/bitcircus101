@@ -296,7 +296,25 @@ function generateRSS(cards) {
 
 // ── Main ────────────────────────────────────────────────────────────────────
 
+/** Read previous events-data.json and build a Set of event keys per source */
+function loadPrevious() {
+  try {
+    const prev = JSON.parse(readFileSync("events-data.json", "utf8"));
+    const events = Array.isArray(prev) ? prev : prev.events || [];
+    const map = {};
+    for (const e of events) {
+      const src = e.source || "unknown";
+      if (!map[src]) map[src] = new Set();
+      map[src].add(e.date + "|" + e.title);
+    }
+    return map;
+  } catch {
+    return {};
+  }
+}
+
 async function main() {
+  const prevBySource = loadPrevious();
   let allCards = [];
   const sources = [];
 
@@ -319,7 +337,14 @@ async function main() {
       const cards = toCards(icsEvents, cal);
       console.log(`[${cal.id}] ${cards.length} upcoming cards`);
       allCards = allCards.concat(cards);
-      sources.push({ id: cal.id, name: cal.name, fetchedAt, status: "ok", events: cards.length });
+
+      // Diff against previous sync
+      const prevKeys = prevBySource[cal.name] || new Set();
+      const newKeys = new Set(cards.map((c) => c.date + "|" + c.title));
+      const added = [...newKeys].filter((k) => !prevKeys.has(k)).length;
+      const removed = [...prevKeys].filter((k) => !newKeys.has(k)).length;
+
+      sources.push({ id: cal.id, name: cal.name, fetchedAt, status: "ok", events: cards.length, added, removed });
     } catch (err) {
       console.error(`[${cal.id}] Error: ${err.message} – skipping`);
       sources.push({ id: cal.id, name: cal.name, fetchedAt: null, status: "error", events: 0 });
