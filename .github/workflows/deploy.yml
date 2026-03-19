@@ -76,6 +76,17 @@ jobs:
             [ -f "/tmp/_live_$f" ] && cp "/tmp/_live_$f" "$f"
           done
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Regenerate events data if missing
+        run: |
+          if [ ! -f events-data.json ]; then
+            echo "events-data.json missing — regenerating"
+            node scripts/sync-events.mjs
+          fi
+
       - name: Commit and push if changed
         run: |
           git config user.name  "github-actions[bot]"
