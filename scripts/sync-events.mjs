@@ -326,7 +326,8 @@ async function main() {
   allCards = allCards.slice(0, 40);
   console.log(`Total: ${allCards.length} event cards from ${calendars.length} calendars`);
 
-  writeFileSync("events-data.json", JSON.stringify(allCards, null, 2) + "\n");
+  const output = { lastSync: new Date().toISOString(), events: allCards };
+  writeFileSync("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
   // RSS only from primary calendar
