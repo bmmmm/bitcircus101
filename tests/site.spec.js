@@ -12,8 +12,8 @@ test.describe('Home page', () => {
         await expect(page).toHaveTitle(/bitcircus101/);
     });
 
-    test('title contains Hackspace', async ({ page }) => {
-        await expect(page).toHaveTitle(/Hackspace/);
+    test('title contains Hackspace and Bonn', async ({ page }) => {
+        await expect(page).toHaveTitle(/Hackspace.*Bonn|Bonn.*Hackspace/);
     });
 
     test('has correct h1', async ({ page }) => {
