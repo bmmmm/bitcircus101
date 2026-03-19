@@ -1342,7 +1342,7 @@ select:focus {
 .sync-source {
     display: inline-flex;
     align-items: baseline;
-    gap: 0.4em;
+    gap: 0.5em;
     border: 1px solid var(--border);
     padding: 0.25em 0.6em;
 }
@@ -1351,12 +1351,18 @@ select:focus {
     color: var(--accent-dim);
 }
 
-.sync-source__status {
+.sync-source__ago {
     color: var(--text-dim);
 }
 
-.sync-source__status--ok::before {
-    content: "· ";
+.sync-source__bar {
+    color: var(--accent-dim);
+    letter-spacing: -0.05em;
+    cursor: default;
+}
+
+.sync-source__count {
+    color: var(--text-dim);
 }
 
 .sync-source__status--err {

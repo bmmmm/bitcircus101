@@ -427,25 +427,53 @@
       d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
   }
 
+  var SYNC_INTERVAL = 15; // minutes between syncs
+
+  function syncBar(pct) {
+    var total = 10;
+    var filled = Math.round(pct * total);
+    var empty = total - filled;
+    var bar = "";
+    for (var i = 0; i < filled; i++) bar += "\u2588";
+    for (var i = 0; i < empty; i++) bar += "\u2591";
+    return "[" + bar + "]";
+  }
+
+  function agoText(mins) {
+    if (mins < 1) return "jetzt";
+    if (mins === 1) return "vor 1 min";
+    return "vor " + mins + " min";
+  }
+
   function showLastSync(sources) {
     var el = document.getElementById("events-last-sync");
     if (!el || !sources || !sources.length) return;
-    var html = "";
-    for (var i = 0; i < sources.length; i++) {
-      var s = sources[i];
-      var ok = s.status === "ok" && s.fetchedAt;
-      html += '<span class="sync-source">';
-      html += '<span class="sync-source__name">' + esc(s.name) + '</span> ';
-      if (ok) {
-        html += '<span class="sync-source__status sync-source__status--ok">';
-        html += fmtDate(s.fetchedAt) + " · " + s.events + " events";
-      } else {
-        html += '<span class="sync-source__status sync-source__status--err">';
-        html += "offline";
+
+    function render() {
+      var now = Date.now();
+      var html = "";
+      for (var i = 0; i < sources.length; i++) {
+        var s = sources[i];
+        var ok = s.status === "ok" && s.fetchedAt;
+        html += '<span class="sync-source">';
+        html += '<span class="sync-source__name">' + esc(s.name) + "</span>";
+        if (ok) {
+          var elapsed = Math.floor((now - new Date(s.fetchedAt).getTime()) / 60000);
+          var pct = Math.min(elapsed / SYNC_INTERVAL, 1);
+          html += '<span class="sync-source__ago">' + agoText(elapsed) + "</span>";
+          html += '<span class="sync-source__bar" title="~' +
+            SYNC_INTERVAL + ' min Sync-Intervall">' + syncBar(pct) + "</span>";
+          html += '<span class="sync-source__count">' + s.events + " events</span>";
+        } else {
+          html += '<span class="sync-source__status sync-source__status--err">offline</span>';
+        }
+        html += "</span>";
       }
-      html += "</span></span>";
+      el.innerHTML = html;
     }
-    el.innerHTML = html;
+
+    render();
+    setInterval(render, 30000); // update every 30s
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
