@@ -339,7 +339,10 @@
 
       fetch("events-data.json")
         .then((res) => (res.ok ? res.json() : Promise.reject()))
-        .then((events) => this.render(events, el))
+        .then((data) => {
+          var events = Array.isArray(data) ? data : data.events;
+          if (events && events.length) this.render(events, el);
+        })
         .catch(() => {});
     },
 
