@@ -1,22 +1,22 @@
 {
-  "lastSync": "2026-03-19T19:49:26.242Z",
+  "lastSync": "2026-03-19T20:36:48.401Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-19T19:49:25.498Z",
+      "fetchedAt": "2026-03-19T20:36:47.432Z",
       "status": "ok",
       "events": 23,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 152,
+      "total": 153,
       "past": 106,
-      "upcoming": 46
+      "upcoming": 47
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-19T19:49:26.224Z",
+      "fetchedAt": "2026-03-19T20:36:48.383Z",
       "status": "ok",
       "events": 17,
       "added": 0,
@@ -46,6 +46,7 @@
       "2026-04-17|Linkup@bitcircus101",
       "2026-05-15|Linkup@bitcircus101",
       "2026-06-19|Linkup@bitcircus101",
+      "2026-07-17|Linkup@bitcircus101",
       "2025-10-31|Casual Linkup@bitcircus101 (5FR)",
       "2026-01-30|Casual Linkup@bitcircus101 (5FR)",
       "2026-05-29|Casual Linkup@bitcircus101 (5FR)",
