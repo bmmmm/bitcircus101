@@ -490,9 +490,10 @@
           }
           html += "</span>";
 
-          // Row 2: Event changes
+          // Row 2: Event stats
           html += '<span class="sync-source__events">';
-          html += s.events + " events";
+          html += s.events + " kommend";
+          if (s.past) html += " \u00b7 " + s.past + " vergangen";
           if (s.added || s.removed) {
             html += ' \u00b7 <span class="sync-source__diff">' + diffText(s) + "</span>";
           }

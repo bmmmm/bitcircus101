@@ -349,6 +349,7 @@ async function main() {
 
       // Diff against previous sync — compare ALL ICS events (not time-filtered cards)
       // so that natural event expiry doesn't count as a "removed" change
+      const now = new Date().toISOString().slice(0, 10);
       const allIcsKeys = new Set(icsEvents.map((e) =>
         e.dtstart.toISOString().slice(0, 10) + "|" + e.summary
       ));
@@ -357,7 +358,17 @@ async function main() {
       const removed = [...prevIcsKeys].filter((k) => !allIcsKeys.has(k)).length;
       newIcsKeys[cal.name] = [...allIcsKeys];
 
-      sources.push({ id: cal.id, name: cal.name, fetchedAt, status: "ok", events: cards.length, added, removed });
+      // Count past vs upcoming in full calendar
+      let past = 0, upcoming = 0;
+      for (const k of allIcsKeys) {
+        if (k.split("|")[0] >= now) upcoming++; else past++;
+      }
+
+      sources.push({
+        id: cal.id, name: cal.name, fetchedAt, status: "ok",
+        events: cards.length, added, removed,
+        total: allIcsKeys.size, past, upcoming,
+      });
     } catch (err) {
       const reason = err.message;
       console.error(`[${cal.id}] Error: ${reason} – using cached events`);
