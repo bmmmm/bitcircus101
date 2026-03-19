@@ -55,9 +55,12 @@ function expandRRule(dtstart, rule, exdates) {
       cur.setDate(cur.getDate() + 7);
     }
   } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
+    // Support both "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3
     const m = p.BYDAY.match(/^(\d+)([A-Z]{2})$/);
-    if (m) {
-      const nth = +m[1], twd = WD[m[2]];
+    const nth = m ? +m[1] : (p.BYSETPOS ? +p.BYSETPOS : null);
+    const dayCode = m ? m[2] : p.BYDAY.replace(/\d/g, "").slice(-2);
+    const twd = WD[dayCode];
+    if (nth && twd != null) {
       const mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
       while (mo <= limit && out.length < max) {
         const d = nthWeekday(mo.getFullYear(), mo.getMonth(), twd, nth);
@@ -295,6 +298,7 @@ function generateRSS(cards) {
 
 async function main() {
   let allCards = [];
+  const sources = [];
 
   for (const cal of calendars) {
     console.log(`[${cal.id}] Fetching ${cal.ics}`);
@@ -302,8 +306,10 @@ async function main() {
       const res = await fetch(cal.ics);
       if (!res.ok) {
         console.error(`[${cal.id}] HTTP ${res.status} – skipping`);
+        sources.push({ id: cal.id, name: cal.name, fetchedAt: null, status: "error", events: 0 });
         continue;
       }
+      const fetchedAt = new Date().toISOString();
       const text = await res.text();
       console.log(`[${cal.id}] ${text.length} bytes`);
 
@@ -313,8 +319,10 @@ async function main() {
       const cards = toCards(icsEvents, cal);
       console.log(`[${cal.id}] ${cards.length} upcoming cards`);
       allCards = allCards.concat(cards);
+      sources.push({ id: cal.id, name: cal.name, fetchedAt, status: "ok", events: cards.length });
     } catch (err) {
       console.error(`[${cal.id}] Error: ${err.message} – skipping`);
+      sources.push({ id: cal.id, name: cal.name, fetchedAt: null, status: "error", events: 0 });
     }
   }
 
@@ -323,7 +331,8 @@ async function main() {
   allCards = allCards.slice(0, 40);
   console.log(`Total: ${allCards.length} event cards from ${calendars.length} calendars`);
 
-  writeFileSync("events-data.json", JSON.stringify(allCards, null, 2) + "\n");
+  const output = { lastSync: new Date().toISOString(), sources, events: allCards };
+  writeFileSync("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
   // RSS only from primary calendar
