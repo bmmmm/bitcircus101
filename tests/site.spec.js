@@ -163,7 +163,7 @@ test.describe('Navigation', () => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await page.goto('/');
         await expect(page.locator('nav a[href="events.html"]')).toBeVisible();
-        await expect(page.locator('nav a[href="donations.html"]')).toBeVisible();
+        await expect(page.locator('nav a[href="donations.html"]')).toBeVisible(); // "Unterstützen"
         await expect(page.locator('nav a[href="raum-nutzen.html"]')).toBeVisible();
     });
 
@@ -231,7 +231,7 @@ test.describe('Events page', () => {
 test.describe('Donations page', () => {
     test('loads with correct title', async ({ page }) => {
         await page.goto('/donations.html');
-        await expect(page).toHaveTitle(/Spenden/);
+        await expect(page).toHaveTitle(/Unterstütz/);
     });
 
     test('shows consent banner on load', async ({ page }) => {
@@ -415,6 +415,9 @@ test.describe('Danke page', () => {
     test('shows thank you message', async ({ page }) => {
         await page.goto('/dankedankedanke.html');
         await expect(page.locator('h1')).toContainText('DANKE');
+        // Verify no "Spende" in visible content (legal requirement)
+        const mainText = await page.locator('main').textContent();
+        expect(mainText).not.toContain('Spende');
     });
 
     test('has noindex meta tag', async ({ page }) => {
