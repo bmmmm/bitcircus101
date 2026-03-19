@@ -34,6 +34,7 @@ tests/
 playwright.config.js        Playwright config
 
 .github/workflows/
+  deploy.yml                Test on main → deploy to live
   sync-events.yml           Calendar sync (every 15 min)
   update-funding.yml        Funding level update (manual)
   sitemap.yml               Sitemap generation (on push to live)
@@ -52,26 +53,38 @@ These files are created by CI actions and committed to the `live` branch only:
 
 ## CI / GitHub Actions
 
-### 1. Sync calendar events (`sync-events.yml`)
+### Deploy pipeline (`deploy.yml`)
+
+```
+main (push) → Playwright tests → Deploy site files to live
+```
+
+Every push to `main` triggers:
+1. **Test job:** Installs Playwright, generates test data, runs all E2E tests
+2. **Deploy job** (only if tests pass): Syncs all site files from `main` to `live`
+
+This ensures nothing reaches production without passing tests first.
+
+### Sync calendar events (`sync-events.yml`)
 
 - **Trigger:** Cron every 15 minutes + manual
-- **Branch:** `live`
+- **Branch:** Checks out `live`, pulls scripts/config from `main`
 - **What it does:**
   1. Runs `scripts/sync-events.mjs` (Node 22, zero dependencies)
   2. Fetches ICS feeds from all calendars defined in `calendars.json`
   3. Parses VEVENT entries, expands RRULE recurrences (weekly, monthly with BYDAY/BYSETPOS)
   4. Filters out internal/blocker events and past events
-  5. Generates `events-data.json` (max 40 cards, 120-day horizon)
+  5. Generates `events-data.json` with `lastSync` timestamp (max 40 cards, 120-day horizon)
   6. Generates `feed.xml` (RSS 2.0, primary calendar only, max 15 items)
   7. Commits and pushes to `live` with retry logic
 
-### 2. Update funding level (`update-funding.yml`)
+### Update funding level (`update-funding.yml`)
 
 - **Trigger:** Manual (`workflow_dispatch`) with `percent` input (0-100)
 - **Branch:** `live`
 - **What it does:** Writes `funding.json` with the given percentage, commits to `live`
 
-### 3. Generate sitemap (`sitemap.yml`)
+### Generate sitemap (`sitemap.yml`)
 
 - **Trigger:** On push to `live` + manual
 - **Branch:** `live`

@@ -303,9 +303,12 @@
         cur.setDate(cur.getDate() + 7);
       }
     } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
+      // Support both "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3
       var m = p.BYDAY.match(/^(\d+)([A-Z]{2})$/);
-      if (m) {
-        var nth = +m[1], twd = WD[m[2]];
+      var nth = m ? +m[1] : (p.BYSETPOS ? +p.BYSETPOS : null);
+      var dayCode = m ? m[2] : p.BYDAY.replace(/\d/g, "").slice(-2);
+      var twd = WD[dayCode];
+      if (nth && twd != null) {
         var mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
         while (mo <= end && out.length < max) {
           var d = nthWeekday(mo.getFullYear(), mo.getMonth(), twd, nth);
@@ -416,6 +419,17 @@
       "Kalender \u00f6ffnen \u2197</a></p></div>";
   }
 
+  // ── Last Sync Display ────────────────────────────────────────────────────
+
+  function showLastSync(isoStr) {
+    var d = new Date(isoStr);
+    var el = document.getElementById("events-last-sync");
+    if (!el) return;
+    var str = pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." +
+      d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+    el.textContent = "letzter Kalender-Sync: " + str;
+  }
+
   // ── Init ──────────────────────────────────────────────────────────────────
 
   function init() {
@@ -432,9 +446,13 @@
         if (!res.ok) throw new Error("no json");
         return res.json();
       })
-      .then(function (events) {
+      .then(function (data) {
+        // Support both { lastSync, events } wrapper and plain array
+        var events = Array.isArray(data) ? data : data.events;
+        var lastSync = Array.isArray(data) ? null : data.lastSync;
         if (!events || !events.length) throw new Error("empty");
         renderCards(events, el);
+        if (lastSync) showLastSync(lastSync);
       })
       .catch(function () {
         fetch(ICS_URL, { mode: "cors" })
