@@ -373,11 +373,17 @@ test.describe('Events content', () => {
         expect(countAfter).toBe(countBefore);
     });
 
-    test('last sync timestamp is shown', async ({ page }) => {
+    test('per-calendar sync status is shown', async ({ page }) => {
         const syncEl = page.locator('#events-last-sync');
         await expect(syncEl).toBeVisible({ timeout: 5000 });
-        const text = await syncEl.textContent();
-        expect(text).toMatch(/letzter Kalender-Sync: \d{2}\.\d{2}\.\d{4}/);
+        // Should show at least one source with timestamp
+        const sources = syncEl.locator('.sync-source');
+        expect(await sources.count()).toBeGreaterThan(0);
+        // Each source should have a name and status
+        const firstName = await sources.first().locator('.sync-source__name').textContent();
+        expect(firstName.length).toBeGreaterThan(0);
+        const firstStatus = await sources.first().locator('.sync-source__status').textContent();
+        expect(firstStatus).toMatch(/\d{2}\.\d{2}\.\d{4}|offline/);
     });
 
     test('events show month grouping', async ({ page }) => {
