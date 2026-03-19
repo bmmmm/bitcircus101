@@ -427,7 +427,9 @@
       d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
   }
 
-  var SYNC_INTERVAL = 15; // minutes between syncs
+  var SYNC_BAR_FILL = 60;   // minutes until bar is full (2 cycles)
+  var SYNC_WARN = 120;      // minutes until "stale" warning (4 cycles)
+  var SYNC_OVERDUE = 180;   // minutes until "überfällig" (6 cycles)
 
   function syncBar(pct) {
     var total = 10;
@@ -469,9 +471,9 @@
 
         if ((isOk || isStale) && hasFetch) {
           var elapsed = Math.floor((now - new Date(s.fetchedAt).getTime()) / 60000);
-          var pct = Math.min(elapsed / SYNC_INTERVAL, 1);
-          var overdue = elapsed > SYNC_INTERVAL * 2;
-          var warning = elapsed > SYNC_INTERVAL;
+          var pct = Math.min(elapsed / SYNC_BAR_FILL, 1);
+          var overdue = elapsed > SYNC_OVERDUE;
+          var warning = elapsed > SYNC_WARN;
           var stateClass = overdue ? " sync-source--overdue"
             : (warning || isStale) ? " sync-source--stale" : "";
 
