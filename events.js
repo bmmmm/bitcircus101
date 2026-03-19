@@ -441,8 +441,17 @@
 
   function agoText(mins) {
     if (mins < 1) return "jetzt";
-    if (mins === 1) return "vor 1 min";
-    return "vor " + mins + " min";
+    if (mins < 60) return "vor " + mins + " min";
+    var h = Math.floor(mins / 60);
+    return "vor " + h + " h " + (mins % 60) + " min";
+  }
+
+  function diffText(s) {
+    if (!s.added && !s.removed) return "keine \u00c4nderungen";
+    var parts = [];
+    if (s.added) parts.push("+" + s.added + " neu");
+    if (s.removed) parts.push("-" + s.removed + " entfernt");
+    return parts.join(" \u00b7 ");
   }
 
   function showLastSync(sources) {
@@ -457,30 +466,42 @@
         var isOk = s.status === "ok";
         var isStale = s.status === "stale";
         var hasFetch = s.fetchedAt;
-        var staleClass = isStale ? " sync-source--stale" : "";
-        html += '<span class="sync-source' + staleClass + '">';
-        html += '<span class="sync-source__name">' + esc(s.name) + "</span>";
+
         if ((isOk || isStale) && hasFetch) {
           var elapsed = Math.floor((now - new Date(s.fetchedAt).getTime()) / 60000);
           var pct = Math.min(elapsed / SYNC_INTERVAL, 1);
+          var overdue = elapsed > SYNC_INTERVAL * 2;
+          var warning = elapsed > SYNC_INTERVAL;
+          var stateClass = overdue ? " sync-source--overdue"
+            : (warning || isStale) ? " sync-source--stale" : "";
+
+          html += '<span class="sync-source' + stateClass + '">';
+          html += '<span class="sync-source__name">' + esc(s.name) + "</span>";
+
+          // Row 1: Sync freshness
+          html += '<span class="sync-source__sync">';
+          html += '<span class="sync-source__bar">' + syncBar(pct) + "</span> ";
           html += '<span class="sync-source__ago">' + agoText(elapsed) + "</span>";
-          html += '<span class="sync-source__bar" title="~' +
-            SYNC_INTERVAL + ' min Sync-Intervall">' + syncBar(pct) + "</span>";
-          html += '<span class="sync-source__count">' + s.events + " events</span>";
+          if (overdue) {
+            html += ' <span class="sync-source__alert">\u26a0 \u00fcberf\u00e4llig</span>';
+          } else if (isStale) {
+            html += ' <span class="sync-source__alert" title="' +
+              esc(s.error || "Fetch fehlgeschlagen") + '">\u26a0 stale</span>';
+          }
+          html += "</span>";
+
+          // Row 2: Event changes
+          html += '<span class="sync-source__events">';
+          html += s.events + " events";
           if (s.added || s.removed) {
-            html += '<span class="sync-source__diff">';
-            if (s.added) html += '<span class="sync-source__added">+' + s.added + '</span>';
-            if (s.added && s.removed) html += ' ';
-            if (s.removed) html += '<span class="sync-source__removed">-' + s.removed + '</span>';
-            html += '</span>';
+            html += ' \u00b7 <span class="sync-source__diff">' + diffText(s) + "</span>";
           }
-          if (isStale) {
-            html += '<span class="sync-source__warn" title="' + esc(s.error || "Fetch fehlgeschlagen") +
-              '">stale</span>';
-          }
+          html += "</span>";
         } else {
-          html += '<span class="sync-source__status sync-source__status--err">' +
-            'offline' + (s.error ? " · " + esc(s.error) : "") + '</span>';
+          html += '<span class="sync-source sync-source--offline">';
+          html += '<span class="sync-source__name">' + esc(s.name) + "</span>";
+          html += '<span class="sync-source__alert">offline' +
+            (s.error ? " \u00b7 " + esc(s.error) : "") + '</span>';
         }
         html += "</span>";
       }
@@ -488,7 +509,7 @@
     }
 
     render();
-    setInterval(render, 30000); // update every 30s
+    setInterval(render, 30000);
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
