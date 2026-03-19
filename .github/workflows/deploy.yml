@@ -15,12 +15,10 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
 
@@ -53,10 +51,8 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           ref: live
           persist-credentials: true
@@ -88,7 +84,7 @@ jobs:
           # Replace ?v=anything with ?v=<hash> in all HTML files
           sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" *.html
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: "22"
 
