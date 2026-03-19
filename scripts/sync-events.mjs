@@ -296,35 +296,47 @@ function generateRSS(cards) {
 
 // ── Main ────────────────────────────────────────────────────────────────────
 
-/** Read previous events-data.json and build a Set of event keys per source */
+/** Read previous events-data.json for diff and fallback on errors */
 function loadPrevious() {
   try {
     const prev = JSON.parse(readFileSync("events-data.json", "utf8"));
     const events = Array.isArray(prev) ? prev : prev.events || [];
-    const map = {};
+    const sources = prev.sources || [];
+    const keys = {};
     for (const e of events) {
       const src = e.source || "unknown";
-      if (!map[src]) map[src] = new Set();
-      map[src].add(e.date + "|" + e.title);
+      if (!keys[src]) keys[src] = new Set();
+      keys[src].add(e.date + "|" + e.title);
     }
-    return map;
+    return { keys, events, sources };
   } catch {
-    return {};
+    return { keys: {}, events: [], sources: [] };
   }
 }
 
 async function main() {
-  const prevBySource = loadPrevious();
+  const prev = loadPrevious();
   let allCards = [];
   const sources = [];
 
   for (const cal of calendars) {
     console.log(`[${cal.id}] Fetching ${cal.ics}`);
+    const prevSource = prev.sources.find((s) => s.id === cal.id);
+
     try {
       const res = await fetch(cal.ics);
       if (!res.ok) {
-        console.error(`[${cal.id}] HTTP ${res.status} – skipping`);
-        sources.push({ id: cal.id, name: cal.name, fetchedAt: null, status: "error", events: 0 });
+        const reason = `HTTP ${res.status}`;
+        console.error(`[${cal.id}] ${reason} – using cached events`);
+        // Keep previous events alive, mark source as degraded
+        const cached = prev.events.filter((e) => e.source === cal.name);
+        allCards = allCards.concat(cached);
+        sources.push({
+          id: cal.id, name: cal.name,
+          fetchedAt: prevSource?.fetchedAt || null,
+          status: "stale", error: reason,
+          events: cached.length, added: 0, removed: 0,
+        });
         continue;
       }
       const fetchedAt = new Date().toISOString();
@@ -339,15 +351,24 @@ async function main() {
       allCards = allCards.concat(cards);
 
       // Diff against previous sync
-      const prevKeys = prevBySource[cal.name] || new Set();
+      const prevKeys = prev.keys[cal.name] || new Set();
       const newKeys = new Set(cards.map((c) => c.date + "|" + c.title));
       const added = [...newKeys].filter((k) => !prevKeys.has(k)).length;
       const removed = [...prevKeys].filter((k) => !newKeys.has(k)).length;
 
       sources.push({ id: cal.id, name: cal.name, fetchedAt, status: "ok", events: cards.length, added, removed });
     } catch (err) {
-      console.error(`[${cal.id}] Error: ${err.message} – skipping`);
-      sources.push({ id: cal.id, name: cal.name, fetchedAt: null, status: "error", events: 0 });
+      const reason = err.message;
+      console.error(`[${cal.id}] Error: ${reason} – using cached events`);
+      // Keep previous events alive
+      const cached = prev.events.filter((e) => e.source === cal.name);
+      allCards = allCards.concat(cached);
+      sources.push({
+        id: cal.id, name: cal.name,
+        fetchedAt: prevSource?.fetchedAt || null,
+        status: "stale", error: reason,
+        events: cached.length, added: 0, removed: 0,
+      });
     }
   }
 
