@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-03-21T19:45:29.866Z",
+  "lastSync": "2026-03-21T20:26:04.295Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-21T19:45:28.583Z",
+      "fetchedAt": "2026-03-21T20:26:03.367Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-21T19:45:29.736Z",
+      "fetchedAt": "2026-03-21T20:26:04.274Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -364,36 +364,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Laserpointer Games mit Georg",
-      "subtitle": "",
-      "description": "Crowd Gaming im bitcircus101 🎮  Christian und Georg haben eine eigene Form von Crowd Gaming entwickelt. Das Publikum steuert das Spiel gemeinsam – mit Laser-Pointern auf einer großen Leinwand.  …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-03-21",
-      "time": "20:00",
-      "tags": [
-        "#gaming"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
-    {
-      "title": "Crowd Gaming@bitcircus101",
-      "subtitle": "",
-      "description": "https://bonn.jetzt/event/crowd-gaming-im-bitcircus101",
-      "location": "",
-      "date": "2026-03-21",
-      "time": "20:00",
-      "tags": [
-        "#gaming"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -994,6 +964,36 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-21T10:25:58.933Z"
+    },
+    {
+      "title": "Raspberry Pi Workshop",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-05-21",
+      "time": "19:00",
+      "tags": [
+        "#workshop"
+      ],
+      "type": "workshop",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-03-21T20:26:04.278Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-05-22",
+      "time": "20:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-03-21T20:26:04.278Z"
     }
   ]
 }
