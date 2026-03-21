@@ -374,3 +374,148 @@ describe("clean", () => {
     assert.equal(clean("  hello  "), "hello");
   });
 });
+
+// ── RSS generation (inline the functions so tests stay self-contained) ────
+
+function escXml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function toRFC822(isoOrDate) {
+  const d = isoOrDate instanceof Date ? isoOrDate : new Date(isoOrDate);
+  return d.toUTCString().replace("GMT", "+0000");
+}
+
+function generateRSS(cards) {
+  const SITE_URL = "https://bitcircus101.de";
+  const now = new Date().toUTCString().replace("GMT", "+0000");
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bitcircus101 – Termine</title>
+    <link>${SITE_URL}/events.html</link>
+    <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
+    <language>de-de</language>
+    <lastBuildDate>${now}</lastBuildDate>
+    <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
+`;
+
+  for (const c of cards.slice(0, 15)) {
+    const guid = `bitcircus101-${c.date.replace(/-/g, "")}-${c.type}`;
+    const titleParts = [`[${c.date}] ${c.title}`];
+    if (c.location) titleParts.push(`@ ${c.location}`);
+    const fullTitle = titleParts.join(" ");
+
+    const tags = (c.tags || []).filter((t) => t && t !== "#community");
+
+    xml += `
+    <item>
+      <title>${escXml(fullTitle)}</title>
+      <link>${SITE_URL}/events.html</link>
+      <description>${escXml(c.description || c.title + " · " + c.date)}</description>`;
+    for (const tag of tags) {
+      xml += `
+      <category>${escXml(tag)}</category>`;
+    }
+    xml += `
+      <pubDate>${toRFC822(c.firstSeen || new Date().toISOString())}</pubDate>
+      <guid isPermaLink="false">${guid}</guid>
+    </item>`;
+  }
+
+  xml += `
+  </channel>
+</rss>
+`;
+  return xml;
+}
+
+describe("escXml", () => {
+  it("escapes &, <, >, and quotes", () => {
+    assert.equal(escXml('A & B <"C">'), 'A &amp; B &lt;&quot;C&quot;&gt;');
+  });
+});
+
+describe("toRFC822", () => {
+  it("accepts an ISO string", () => {
+    const result = toRFC822("2026-03-10T22:45:00.000Z");
+    assert.match(result, /Tue, 10 Mar 2026 22:45:00 \+0000/);
+  });
+
+  it("accepts a Date object", () => {
+    const d = new Date("2026-01-01T12:00:00Z");
+    const result = toRFC822(d);
+    assert.match(result, /Thu, 01 Jan 2026 12:00:00 \+0000/);
+  });
+});
+
+describe("generateRSS", () => {
+  const baseCard = {
+    title: "Crowd Gaming",
+    subtitle: "",
+    description: "Laser pointer fun",
+    location: "Dorotheenstraße 101, 53113 Bonn",
+    date: "2026-03-21",
+    time: "20:00",
+    tags: ["Games", "HackerSpace"],
+    type: "special",
+    source: "bitcircus101",
+    firstSeen: "2026-03-10T22:45:00.000Z",
+  };
+
+  it("includes date and location in title", () => {
+    const xml = generateRSS([baseCard]);
+    assert.match(xml, /\[2026-03-21\] Crowd Gaming @ Dorotheenstraße 101, 53113 Bonn/);
+  });
+
+  it("omits @ location when location is empty", () => {
+    const card = { ...baseCard, location: "" };
+    const xml = generateRSS([card]);
+    assert.match(xml, /<title>\[2026-03-21\] Crowd Gaming<\/title>/);
+    assert.ok(!xml.includes("@ "), "should not contain @ when no location");
+  });
+
+  it("renders category tags from card tags", () => {
+    const xml = generateRSS([baseCard]);
+    assert.match(xml, /<category>Games<\/category>/);
+    assert.match(xml, /<category>HackerSpace<\/category>/);
+  });
+
+  it("filters out empty tags and #community fallback", () => {
+    const card = { ...baseCard, tags: ["#community", "", "Meetup"] };
+    const xml = generateRSS([card]);
+    assert.ok(!xml.includes("<category>#community</category>"), "should filter #community");
+    assert.ok(!xml.includes("<category></category>"), "should filter empty tags");
+    assert.match(xml, /<category>Meetup<\/category>/);
+  });
+
+  it("omits category block entirely when all tags are filtered", () => {
+    const card = { ...baseCard, tags: ["#community"] };
+    const xml = generateRSS([card]);
+    assert.ok(!xml.includes("<category>"), "no category tags when only fallback tag");
+  });
+
+  it("uses firstSeen as pubDate instead of event start time", () => {
+    const xml = generateRSS([baseCard]);
+    // pubDate should reflect firstSeen (March 10), not event date (March 21)
+    assert.match(xml, /<pubDate>Tue, 10 Mar 2026 22:45:00 \+0000<\/pubDate>/);
+  });
+
+  it("limits output to 15 items", () => {
+    const cards = Array.from({ length: 20 }, (_, i) => ({
+      ...baseCard,
+      date: `2026-04-${String(i + 1).padStart(2, "0")}`,
+      firstSeen: "2026-03-01T00:00:00.000Z",
+    }));
+    const xml = generateRSS(cards);
+    const count = (xml.match(/<item>/g) || []).length;
+    assert.equal(count, 15);
+  });
+
+  it("escapes special characters in title and description", () => {
+    const card = { ...baseCard, title: "A & B", description: '<script>alert("xss")</script>' };
+    const xml = generateRSS([card]);
+    assert.match(xml, /A &amp; B/);
+    assert.match(xml, /&lt;script&gt;/);
+  });
+});
