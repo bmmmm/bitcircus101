@@ -257,8 +257,8 @@ function escXml(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function toRFC822(dateStr, time) {
-  const d = new Date(dateStr + "T" + (time || "20:00") + ":00");
+function toRFC822(isoOrDate) {
+  const d = isoOrDate instanceof Date ? isoOrDate : new Date(isoOrDate);
   return d.toUTCString().replace("GMT", "+0000");
 }
 
@@ -277,12 +277,23 @@ function generateRSS(cards) {
 
   for (const c of cards.slice(0, 15)) {
     const guid = `bitcircus101-${c.date.replace(/-/g, "")}-${c.type}`;
+    const titleParts = [`[${c.date}] ${c.title}`];
+    if (c.location) titleParts.push(`@ ${c.location}`);
+    const fullTitle = titleParts.join(" ");
+
+    const tags = (c.tags || []).filter((t) => t && t !== "#community");
+
     xml += `
     <item>
-      <title>${escXml(c.title)}${c.subtitle ? " – " + escXml(c.subtitle) : ""}</title>
+      <title>${escXml(fullTitle)}</title>
       <link>${SITE_URL}/events.html</link>
-      <description>${escXml(c.description || c.title + " · " + c.date)}</description>
-      <pubDate>${toRFC822(c.date, c.time)}</pubDate>
+      <description>${escXml(c.description || c.title + " · " + c.date)}</description>`;
+    for (const tag of tags) {
+      xml += `
+      <category>${escXml(tag)}</category>`;
+    }
+    xml += `
+      <pubDate>${toRFC822(c.firstSeen || new Date().toISOString())}</pubDate>
       <guid isPermaLink="false">${guid}</guid>
     </item>`;
   }
@@ -382,6 +393,16 @@ async function main() {
         events: cached.length, added: 0, removed: 0,
       });
     }
+  }
+
+  // Carry over firstSeen from previous sync, set to now for new events
+  const prevFirstSeen = {};
+  for (const e of prev.events) {
+    if (e.firstSeen) prevFirstSeen[e.date + "|" + e.title] = e.firstSeen;
+  }
+  const nowISO = new Date().toISOString();
+  for (const c of allCards) {
+    c.firstSeen = prevFirstSeen[c.date + "|" + c.title] || nowISO;
   }
 
   // Sort all cards by date, limit to 40
