@@ -27,7 +27,7 @@ jobs:
           persist-credentials: true
 
       - name: Generate sitemap.xml
-        uses: cicirello/generate-sitemap@v1.10.1
+        uses: cicirello/generate-sitemap@v1.10.4
         id: sitemap
         with:
           base-url-path: https://bitcircus101.de
