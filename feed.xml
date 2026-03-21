@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Sat, 21 Mar 2026 09:31:09 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 21 Mar 2026 10:25:59 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-03-21] Altstadt cleanup @ Dorotheenstraße 79 Bonn</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>Mülleinsammeln in der Alstadt  #Bonn</description>
-      <category>#bonn</category>
-      <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
-      <guid isPermaLink="false">bitcircus101-20260321-special</guid>
-    </item>
     <item>
       <title>[2026-03-21] Laserpointer Games mit Georg @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -140,6 +132,14 @@
       <category>#spieletreff</category>
       <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20260428-special</guid>
+    </item>
+    <item>
+      <title>[2026-05-01] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <category>#meetup</category>
+      <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
+      <guid isPermaLink="false">bitcircus101-20260501-linkup</guid>
     </item>
   </channel>
 </rss>
