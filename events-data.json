@@ -1,25 +1,25 @@
 {
-  "lastSync": "2026-03-23T18:09:20.269Z",
+  "lastSync": "2026-03-23T19:26:55.008Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-23T18:09:19.533Z",
+      "fetchedAt": "2026-03-23T19:26:54.291Z",
       "status": "ok",
       "events": 22,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 153,
+      "total": 154,
       "past": 109,
-      "upcoming": 44
+      "upcoming": 45
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-23T18:09:20.251Z",
+      "fetchedAt": "2026-03-23T19:26:54.987Z",
       "status": "ok",
       "events": 18,
-      "added": 1,
+      "added": 0,
       "removed": 0,
       "total": 179,
       "past": 144,
@@ -180,7 +180,8 @@
       "2026-06-23|Look at my toys!",
       "2026-06-30|Look at my toys!",
       "2026-07-07|Look at my toys!",
-      "2026-07-14|Look at my toys!"
+      "2026-07-14|Look at my toys!",
+      "2026-07-21|Look at my toys!"
     ],
     "Datenburg e.V.": [
       "2025-04-16|Meta-Arbeitsgruppe",
