@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-03-24T19:02:09.934Z",
+  "lastSync": "2026-03-24T20:02:19.458Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-24T19:02:08.714Z",
+      "fetchedAt": "2026-03-24T20:02:18.460Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-24T19:02:09.831Z",
+      "fetchedAt": "2026-03-24T20:02:19.331Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -402,7 +402,7 @@
       "description": "",
       "location": "Datenburg, Bornheimerstraße 25",
       "date": "2026-03-28",
-      "time": "13:00",
+      "time": "13:37",
       "tags": [
         "#offener-abend"
       ],
