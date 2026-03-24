@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-03-24T17:30:24.617Z",
+  "lastSync": "2026-03-24T18:44:56.629Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-24T17:30:23.451Z",
+      "fetchedAt": "2026-03-24T18:44:55.606Z",
       "status": "ok",
-      "events": 22,
+      "events": 23,
       "added": 0,
       "removed": 0,
       "total": 154,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-24T17:30:24.364Z",
+      "fetchedAt": "2026-03-24T18:44:56.612Z",
       "status": "ok",
-      "events": 18,
+      "events": 17,
       "added": 0,
       "removed": 0,
       "total": 179,
@@ -381,22 +381,6 @@
       "type": "special",
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-03-24",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-21T01:55:42.597Z"
     },
     {
@@ -996,6 +980,23 @@
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-03-21T20:26:04.278Z"
+    },
+    {
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-05-26",
+      "time": "19:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-03-24T18:44:56.615Z"
     }
   ]
 }
