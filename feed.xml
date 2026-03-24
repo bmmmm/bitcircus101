@@ -5,19 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Tue, 24 Mar 2026 18:44:56 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 24 Mar 2026 19:02:09 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-03-24 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
-      <category>#relax</category>
-      <category>#social</category>
-      <category>#spieletreff</category>
-      <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
-      <guid isPermaLink="false">bitcircus101-20260324-special</guid>
-    </item>
     <item>
       <title>[2026-03-27 20:00] Casual Linkup@bitcircus101 (4FR) @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -139,6 +129,16 @@
       <description>zine ohne beethoven - Die neue Ausgabe wird angeliefert und liegt für Euch bereit. 100% offline, könnt ihr euch im bitcircus101 mitnehmen. Checkt es aus! 😊</description>
       <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20260504-special</guid>
+    </item>
+    <item>
+      <title>[2026-05-05 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
+      <guid isPermaLink="false">bitcircus101-20260505-special</guid>
     </item>
   </channel>
 </rss>
