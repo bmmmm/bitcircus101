@@ -277,7 +277,8 @@ function generateRSS(cards) {
 
   for (const c of cards.slice(0, 15)) {
     const guid = `bitcircus101-${c.date.replace(/-/g, "")}-${c.type}`;
-    const titleParts = [`[${c.date}] ${c.title}`];
+    const datePart = c.time ? `${c.date} ${c.time}` : c.date;
+    const titleParts = [`[${datePart}] ${c.title}`];
     if (c.location) titleParts.push(`@ ${c.location}`);
     const fullTitle = titleParts.join(" ");
 
