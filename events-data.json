@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-03-25T18:55:07.214Z",
+  "lastSync": "2026-03-25T19:46:05.403Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-25T18:55:06.460Z",
+      "fetchedAt": "2026-03-25T19:46:04.170Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-25T18:55:07.171Z",
+      "fetchedAt": "2026-03-25T19:46:05.278Z",
       "status": "ok",
       "events": 18,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 179,
+      "total": 180,
       "past": 145,
-      "upcoming": 34
+      "upcoming": 35
     }
   ],
   "icsKeys": {
@@ -285,6 +285,7 @@
       "2026-04-23|Spieleabend",
       "2026-05-28|Spieleabend",
       "2026-06-25|Spieleabend",
+      "2026-07-23|Spieleabend",
       "2025-03-22|Aufräumen  & Tine Wittler",
       "2025-07-27|Internes Haecksentreffen",
       "2025-03-29|Tag des offenen Hackspace",
