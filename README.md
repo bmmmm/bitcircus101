@@ -8,7 +8,8 @@ This repository contains the website for bitcircus101.
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Source branch — development and PRs go here |
+| `feat/…` | Feature branches — all changes land here first, then merge to `main` via PR; delete after merge |
+| `main` | Integration branch (no direct pushes for normal work; see [CONTRIBUTING.md](CONTRIBUTING.md)) |
 | `live` | Production branch — served by GitHub Pages. CI actions commit generated files here |
 
 ## Project structure
