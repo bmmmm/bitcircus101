@@ -11,8 +11,15 @@ Pure HTML/CSS/JS — **no bundler, no framework.** Shared site chrome (nav + foo
 
 | Branch | Purpose |
 |--------|---------|
-| `main` | Development. PRs go here |
+| `feat/…` | **Short-lived feature branches.** All work happens here; open a PR into `main`. Delete after merge. |
+| `main` | Integration branch. **Do not push local commits directly** — merge via PR only. |
 | `live` | Production. Deployed via GitHub Pages. Only CI commits here |
+
+**Workflow:** `git checkout -b feat/my-change` → commit → push → PR to `main` → merge → delete `feat/my-change`.
+
+### For AI agents — branches
+
+Always create a **`feat/<kebab-description>`** branch from current `main` for edits, commit there, and have the user push / open a PR. Do **not** commit on `main` unless the user explicitly asks for an exception.
 
 ## Testing strategy
 
@@ -35,7 +42,7 @@ Push to main  →  Full suite (unit + E2E × 2 browsers)  →  Deploy to live
 Tests gate deployment, not contribution. A PR with failing unit tests or layout drift gets flagged.
 The heavy Playwright suite runs after merge to `main` — before anything reaches production.
 
-### For AI agents
+### For AI agents — tests
 
 When adding or modifying tests:
 - **Consolidate, don't multiply.** One test per logical area, not one per assertion.
