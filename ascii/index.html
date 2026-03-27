@@ -29,7 +29,8 @@
                     Hier kannst du ASCII-Skulpturen bauen — inspiriert vom
                     <code class="ascii-playground__code">.ascii-art</code> auf der Startseite. Schrift nur aus
                     <strong>systemnahen Monospace-Fonts</strong> (Menlo, Monaco, Consolas, Courier …), keine
-                    Google Fonts.
+                    Google Fonts. <strong>Maximal 60 Zeichen</strong> Breite pro Zeile (Logo-Entwurf unten —
+                    absichtlich simpel).
                 </p>
             </section>
 
@@ -70,33 +71,32 @@
   "use strict";
 
   var STORAGE_KEY = "bitcircus101-ascii-playground";
-  var defaultArt =
-    "  +------------------------------------------+\n" +
-    "  |                                          |\n" +
-    "  |            bitcircus101                  |\n" +
-    "  |         Dorotheenstraße 101              |\n" +
-    "  |                                          |\n" +
-    "  |       +---------+        +-------+       |\n" +
-    "  |       |  Desk   |        |  Art  |       |\n" +
-    "  |       +---------+        +-------+       |\n" +
-    "  |                                          |\n" +
-    "  |  +------+                     +------+   |\n" +
-    "  |  |      |                     |      |   |\n" +
-    "  |  |Chair |       +-----+       | Desk |   |\n" +
-    "  |  |      |       |     |       |      |   |\n" +
-    "  |  +------+       |Table|       +------+   |\n" +
-    "  |                 |     |                  |\n" +
-    "  |  +------+       +-----+       +------+   |\n" +
-    "  |  |      |                     |      |   |\n" +
-    "  |  |Chair |                     |Shelf |   |\n" +
-    "  |  |      |                     |      |   |\n" +
-    "  |  +------+                     +------+   |\n" +
-    "  |                                          |\n" +
-    "  |              +---------+                 |\n" +
-    "  |              | Plants  |                 |\n" +
-    "  |              +---------+                 |\n" +
-    "  |                                          |\n" +
-    "  +--[ lights: on. freitags: besetzt ]-------+\n";
+  /* Einfacher bitcircus101-Logo-Entwurf (Zirkuszelt + Banner + V), je Zeile 60 Zeichen */
+  var _w = 60;
+  function _c(s) {
+    var p = Math.max(0, (_w - s.length) >> 1);
+    return " ".repeat(p) + s + " ".repeat(_w - p - s.length);
+  }
+  var _mid = "bitcircus101.de";
+  var _pad = _w - 2 - _mid.length;
+  var _pl = _pad >> 1;
+  var _pr = _pad - _pl;
+  var defaultArt = [
+    _c(">--."),
+    _c("/    \\"),
+    _c("/ |  | \\"),
+    _c("/  |  |  \\"),
+    _c("/___|__|___\\"),
+    "+" + "=".repeat(58) + "+",
+    "|" + " ".repeat(_pl) + _mid + " ".repeat(_pr) + "|",
+    "+" + "=".repeat(58) + "+",
+    _c("\\  |  |  /"),
+    _c(" \\ |  | /"),
+    _c("  \\|  |/"),
+    _c("   \\    /"),
+    _c("    \\  /"),
+    _c("     V"),
+  ].join("\n");
 
   var ta = document.getElementById("ascii-editor");
   var pre = document.getElementById("ascii-preview");
