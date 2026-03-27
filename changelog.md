@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Events (`/events.html`):** Month groups use an **animated chevron** (rotates when `<details>` opens). **Toolbar** checkbox **„Nur Events im bitcircus101 anzeigen“**; sync line **„bevorstehende Events“** / **„stattgefundene Events“**; **Datenburg** cards **„Externer Kalender: Datenburg e.V.“** ([`events.js`](events.js), [`style.css`](style.css)).
 - **Layout:** `--max-width` raised to **1000px**; tablet `@media` breakpoint aligned at **1000px** ([`style.css`](style.css)).
 - **Navigation:** Brand **&gt;_** prompt: only the underscore uses **`nav__cursor`** with a **terminal-style blink** (`nav-cursor-blink`, `step-end`); **`prefers-reduced-motion`** forces a steady underscore. Partials + **`/ascii/`** masthead updated; run `npm run build:layout` after editing [`includes/site-header.html`](includes/site-header.html).
 - **Responsive:** **`scroll-padding-top`** for sticky-header hash links; fluid **`h1`** (`clamp`), **`main`** padding, **`nav`** gap/padding (`clamp`); home hero viewport height uses **`clamp`** with **`vw`**; **≤900px** band for slightly taller/softer hero padding ([`style.css`](style.css)).
