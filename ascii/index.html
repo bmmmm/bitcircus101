@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ASCII playground – bitcircus101</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="theme-color" content="#0d0d0d" />
+        <meta
+            name="description"
+            content="Internes ASCII-Spielplatz für bitcircus101 – nicht in der Navigation verlinkt."
+        />
+        <link rel="canonical" href="https://bitcircus101.de/ascii/" />
+        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+        <link rel="stylesheet" href="../style.css?v=7bbab30a" />
+    </head>
+    <body class="ascii-playground-body">
+        <header class="ascii-playground__masthead">
+            <a class="ascii-playground__home" href="../index.html" aria-label="Zur Startseite"
+                ><span class="ascii-playground__prompt">&gt;_</span> bitcircus101</a
+            >
+            <span class="ascii-playground__tag">ASCII playground · nicht in der Navi</span>
+        </header>
+
+        <main class="ascii-playground">
+            <section class="ascii-playground__intro">
+                <h1>ASCII playground</h1>
+                <p>
+                    Hier kannst du ASCII-Skulpturen bauen — inspiriert vom
+                    <code class="ascii-playground__code">.ascii-art</code> auf der Startseite. Schrift nur aus
+                    <strong>systemnahen Monospace-Fonts</strong> (Menlo, Monaco, Consolas, Courier …), keine
+                    Google Fonts. <strong>Maximal 60 Zeichen</strong> Breite pro Zeile (Logo-Entwurf unten —
+                    absichtlich simpel).
+                </p>
+            </section>
+
+            <div class="ascii-playground__toolbar">
+                <button type="button" class="btn ascii-playground__btn" id="ascii-reset">Auf Vorlage zurücksetzen</button>
+                <button type="button" class="btn btn-primary ascii-playground__btn" id="ascii-copy">In Zwischenablage kopieren</button>
+                <span class="ascii-playground__savehint" id="ascii-savehint" aria-live="polite"></span>
+            </div>
+
+            <div class="ascii-playground__grid">
+                <label class="ascii-playground__label">
+                    <span class="ascii-playground__labeltext">Editor</span>
+                    <textarea
+                        id="ascii-editor"
+                        class="ascii-playground__editor"
+                        spellcheck="false"
+                        autocomplete="off"
+                        autocapitalize="off"
+                        rows="24"
+                        aria-label="ASCII-Editor"
+                    ></textarea>
+                </label>
+                <div class="ascii-playground__preview-wrap">
+                    <span class="ascii-playground__labeltext">Vorschau</span>
+                    <pre id="ascii-preview" class="ascii-playground__preview" aria-live="polite"></pre>
+                </div>
+            </div>
+        </main>
+
+        <footer class="ascii-playground__foot">
+            <a href="../impressum-datenschutz.html">impressum</a>
+            <span class="ascii-playground__sep">·</span>
+            <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener">github</a>
+        </footer>
+
+        <script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "bitcircus101-ascii-playground";
+  /* Einfacher bitcircus101-Logo-Entwurf (Zirkuszelt + Banner + V), je Zeile 60 Zeichen */
+  var _w = 60;
+  function _c(s) {
+    var p = Math.max(0, (_w - s.length) >> 1);
+    return " ".repeat(p) + s + " ".repeat(_w - p - s.length);
+  }
+  var _mid = "bitcircus101.de";
+  var _pad = _w - 2 - _mid.length;
+  var _pl = _pad >> 1;
+  var _pr = _pad - _pl;
+  var defaultArt = [
+    _c(">--."),
+    _c("/    \\"),
+    _c("/ |  | \\"),
+    _c("/  |  |  \\"),
+    _c("/___|__|___\\"),
+    "+" + "=".repeat(58) + "+",
+    "|" + " ".repeat(_pl) + _mid + " ".repeat(_pr) + "|",
+    "+" + "=".repeat(58) + "+",
+    _c("\\  |  |  /"),
+    _c(" \\ |  | /"),
+    _c("  \\|  |/"),
+    _c("   \\    /"),
+    _c("    \\  /"),
+    _c("     V"),
+  ].join("\n");
+
+  var ta = document.getElementById("ascii-editor");
+  var pre = document.getElementById("ascii-preview");
+  var hint = document.getElementById("ascii-savehint");
+  if (!ta || !pre) return;
+
+  function sync() {
+    pre.textContent = ta.value;
+  }
+
+  function persist() {
+    try {
+      localStorage.setItem(STORAGE_KEY, ta.value);
+      if (hint) {
+        hint.textContent = "Entwurf gespeichert (nur in diesem Browser).";
+        clearTimeout(persist._t);
+        persist._t = setTimeout(function () { hint.textContent = ""; }, 2000);
+      }
+    } catch (e) {
+      /* private mode etc. */
+    }
+  }
+
+  ta.addEventListener("input", function () {
+    sync();
+    persist();
+  });
+
+  var saved = null;
+  try {
+    saved = localStorage.getItem(STORAGE_KEY);
+  } catch (e) {}
+  ta.value = saved && saved.length ? saved : defaultArt;
+  sync();
+
+  var resetBtn = document.getElementById("ascii-reset");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+      ta.value = defaultArt;
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (e) {}
+      sync();
+      if (hint) hint.textContent = "";
+    });
+  }
+
+  var copyBtn = document.getElementById("ascii-copy");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", function () {
+      var t = ta.value;
+      if (!t) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function () {
+          if (hint) {
+            hint.textContent = "Kopiert.";
+            clearTimeout(copyBtn._t);
+            copyBtn._t = setTimeout(function () { hint.textContent = ""; }, 2000);
+          }
+        });
+      } else {
+        ta.select();
+        try {
+          document.execCommand("copy");
+          if (hint) hint.textContent = "Kopiert.";
+        } catch (e420) {
+          if (hint) hint.textContent = "Kopieren nicht möglich.";
+        }
+      }
+    });
+  }
+})();
+        </script>
+    </body>
+</html>
