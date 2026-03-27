@@ -371,19 +371,19 @@ nav li a.nav__cta:focus-visible {
 
 .footer__sep { color: var(--border); }
 
+/* opacity on this ancestor trapped .footer__funding-info z-index — use rgba instead */
 .footer__status {
     position: relative;
     margin-left: auto;
-    color: var(--accent);
-    opacity: 0.45;
+    color: rgba(0, 217, 126, 0.45); /* --accent #00d97e */
     letter-spacing: 0.04em;
     cursor: pointer;
 }
 
 /* Funding levels */
-.footer__status--green { color: var(--accent); opacity: 0.65; }
-.footer__status--amber { color: #f0a030; opacity: 0.75; }
-.footer__status--red { color: #e04040; opacity: 0.8; }
+.footer__status--green { color: rgba(0, 217, 126, 0.65); }
+.footer__status--amber { color: rgba(240, 160, 48, 0.75); }
+.footer__status--red { color: rgba(224, 64, 64, 0.8); }
 
 .footer__funding-bar { letter-spacing: 0.08em; }
 
@@ -400,11 +400,13 @@ nav li a.nav__cta:focus-visible {
     white-space: nowrap;
     display: none;
     z-index: var(--z-modal);
+    pointer-events: none;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .footer__funding-info.active {
     display: block;
+    pointer-events: auto;
 }
 
 .footer__funding-info-head {
