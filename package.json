@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "test": "node --test tests/sync-events.spec.mjs && playwright test",
+    "test:quick": "node --test tests/sync-events.spec.mjs",
     "test:unit": "node --test tests/sync-events.spec.mjs",
     "test:e2e": "playwright test",
     "test:headed": "playwright test --headed",
