@@ -8,6 +8,7 @@ on:
     branches: [live]
     paths:
       - "*.html"
+      - "ascii/**"
       - "*.css"
       - "*.js"
   workflow_dispatch:
@@ -44,6 +45,8 @@ jobs:
           xml = re.sub(r'<url>\s*<loc>[^<]*google[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
           # Remove noindex pages (dankedankedanke)
           xml = re.sub(r'<url>\s*<loc>[^<]*dankedankedanke[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
+          # Hidden ASCII playground
+          xml = re.sub(r'<url>\s*<loc>[^<]*/ascii/?[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
           with open('sitemap.xml', 'w') as f: f.write(xml)
           "
 
