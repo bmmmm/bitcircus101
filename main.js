@@ -438,7 +438,7 @@
         p +
         "%</span>" +
         '<div class="footer__funding-info">' +
-        '<div class="footer__funding-info-head">[ LIGHTS ON? ]</div>' +
+        '<h3 class="footer__funding-info-head">[ LIGHTS ON? ]</h3>' +
         "<p>Miete, Strom, Internet &mdash; der Space kostet Geld.</p>" +
         "<p>" +
         bar +
