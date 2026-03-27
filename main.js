@@ -43,7 +43,7 @@
 
       utils.addEventListenerSafe(menuToggle, "click", () => {
         const expanded = mainNav.classList.toggle("active");
-        menuToggle.setAttribute("aria-expanded", expanded);
+        menuToggle.setAttribute("aria-expanded", String(expanded));
       });
     },
   };
@@ -146,6 +146,7 @@
       });
 
       utils.addEventListenerSafe(carousel, "touchend", (e) => {
+        if (!e.changedTouches.length) return;
         const endX = e.changedTouches[0].clientX;
         const deltaX = this.state.startX - endX;
 
@@ -351,6 +352,7 @@
       now.setHours(0, 0, 0, 0);
       const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
       const pad = (n) => (n < 10 ? "0" + n : "" + n);
+      const escHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
       const upcoming = events
         .filter((e) => new Date(e.date + "T23:59:59") >= now)
@@ -370,10 +372,10 @@
         html += '<span class="event-preview__date">' + date + "</span>";
         html +=
           '<span class="event-preview__title">' +
-          e.title.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+          escHtml(e.title);
         if (e.source && e.source !== "bitcircus101") {
           html += ' <span class="event-preview__source">' +
-            e.source.replace(/&/g, "&amp;") + "</span>";
+            escHtml(e.source) + "</span>";
         }
         html += "</span>";
         if (e.time)
@@ -449,18 +451,20 @@
         '<a href="donations.html">$ unterst\u00fctzen \u2192</a>' +
         "</div>";
 
-      // Click to toggle info panel
-      el.addEventListener("click", function (e) {
-        e.stopPropagation();
-        var info = el.querySelector(".footer__funding-info");
-        if (info) info.classList.toggle("active");
-      });
+      // Click to toggle info panel (only bind once)
+      if (!el._fundingBound) {
+        el.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var info = el.querySelector(".footer__funding-info");
+          if (info) info.classList.toggle("active");
+        });
 
-      // Close on click outside
-      document.addEventListener("click", function () {
-        var info = el.querySelector(".footer__funding-info");
-        if (info) info.classList.remove("active");
-      });
+        document.addEventListener("click", function () {
+          var info = el.querySelector(".footer__funding-info");
+          if (info) info.classList.remove("active");
+        });
+        el._fundingBound = true;
+      }
     },
   };
 
