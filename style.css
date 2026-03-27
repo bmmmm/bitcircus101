@@ -441,16 +441,13 @@ nav li a.nav__cta:focus-visible {
 .fs--red { color: #e04040; }
 
 @media (max-width: 600px) {
-    .footer__grid { grid-template-columns: 1fr 1fr; }
-    .footer__col--links {
-        text-align: left;
-        grid-column: 1 / -1;
-    }
     .footer__grid {
         flex-direction: column;
         gap: var(--gap-sm);
     }
     .footer__col--links {
+        text-align: left;
+        grid-column: 1 / -1;
         gap: 1rem;
     }
     .footer__bar {
@@ -1139,40 +1136,28 @@ select:focus {
 
 .event-action__icon { font-size: 0.8em; opacity: 0.7; }
 
-.event-action--link {
-    color: #c04040;
-    border-color: #501818;
+.event-action--link { --ea: #c04040; --ea-hover: #e05050; --ea-border: #501818; }
+.event-action--cal  { --ea: #4080c0; --ea-hover: #60a0e0; --ea-border: #1a3858; }
+.event-action--map  { --ea: #6a9a5a; --ea-hover: #8ac07a; --ea-border: #2a4a22; }
+
+.event-action--link,
+.event-action--cal,
+.event-action--map {
+    color: var(--ea);
+    border-color: var(--ea-border);
 }
-.event-action--link:hover {
-    color: #e05050;
-    border-color: #c04040;
-    background: rgba(192, 64, 64, 0.08);
+.event-action--link:hover,
+.event-action--cal:hover,
+.event-action--map:hover {
+    color: var(--ea-hover);
+    border-color: var(--ea);
+    background: color-mix(in srgb, var(--ea) 8%, transparent);
+    text-decoration: none;
 }
+
 .event-action--copied {
     color: var(--accent);
     border-color: var(--accent);
-}
-
-.event-action--cal {
-    color: #4080c0;
-    border-color: #1a3858;
-}
-.event-action--cal:hover {
-    color: #60a0e0;
-    border-color: #4080c0;
-    background: rgba(64, 128, 192, 0.08);
-    text-decoration: none;
-}
-
-.event-action--map {
-    color: #6a9a5a;
-    border-color: #2a4a22;
-}
-.event-action--map:hover {
-    color: #8ac07a;
-    border-color: #6a9a5a;
-    background: rgba(106, 154, 90, 0.08);
-    text-decoration: none;
 }
 
 .event-card__source {
@@ -1401,46 +1386,20 @@ select:focus {
 }
 
 /* ── State: stale (sync delayed or fetch error) ── */
-.sync-source--stale {
-    border-color: #604020;
-}
+.sync-source--stale    { --ss: #d09040; --ss-border: #604020; }
+.sync-source--overdue  { --ss: #ff6b6b; --ss-border: #602020; }
+.sync-source--offline  { --ss: #ff6b6b; --ss-border: #602020; }
 
-.sync-source--stale .sync-source__name {
-    color: #d09040;
-}
-
-.sync-source--stale .sync-source__bar {
-    color: #d09040;
-}
-
-/* ── State: overdue (sync significantly late) ── */
-.sync-source--overdue {
-    border-color: #602020;
-}
-
-.sync-source--overdue .sync-source__name {
-    color: #ff6b6b;
-}
-
-.sync-source--overdue .sync-source__bar {
-    color: #ff6b6b;
-}
-
-.sync-source--overdue .sync-source__alert {
-    color: #ff6b6b;
-}
-
-/* ── State: offline ── */
+.sync-source--stale,
+.sync-source--overdue,
 .sync-source--offline {
-    border-color: #602020;
+    border-color: var(--ss-border);
 }
 
-.sync-source--offline .sync-source__name {
-    color: #ff6b6b;
-}
-
-.sync-source--offline .sync-source__alert {
-    color: #ff6b6b;
+.sync-source--stale :is(.sync-source__name, .sync-source__bar),
+.sync-source--overdue :is(.sync-source__name, .sync-source__bar, .sync-source__alert),
+.sync-source--offline :is(.sync-source__name, .sync-source__alert) {
+    color: var(--ss);
 }
 
 @media (max-width: 600px) {
