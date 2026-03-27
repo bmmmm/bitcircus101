@@ -107,6 +107,9 @@ jobs:
           echo "Asset hash: $HASH"
           # Replace ?v=anything with ?v=<hash> in all HTML files
           sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" *.html
+          for f in ascii/*.html; do
+            [ -f "$f" ] && sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" "$f"
+          done
 
       - uses: actions/setup-node@v6
         with:

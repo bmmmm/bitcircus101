@@ -1535,6 +1535,196 @@ select:focus {
 .ascii-art::-webkit-scrollbar-thumb { background: var(--accent); }
 
 /* =============================================================================
+   ASCII playground (/ascii/) — hidden page, strict system monospace only
+   ============================================================================= */
+.ascii-playground-body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+}
+
+.ascii-playground__masthead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-sm) var(--gap-md);
+    padding: var(--gap-md) var(--gap-lg);
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+}
+
+.ascii-playground__home {
+    font-family: var(--font);
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+}
+
+.ascii-playground__home:hover {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.ascii-playground__prompt {
+    color: var(--accent);
+    font-weight: bold;
+    margin-right: 0.25em;
+}
+
+.ascii-playground__tag {
+    font-family: var(--font);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    opacity: 0.85;
+    letter-spacing: 0.04em;
+}
+
+.ascii-playground {
+    flex: 1;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--gap-lg);
+    width: 100%;
+    /* Strict monospace: equal-width glyphs, no webfont CDN */
+    font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
+        "DejaVu Sans Mono", "Nimbus Mono PS", "Courier New", Courier, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+}
+
+.ascii-playground__intro h1 {
+    margin-top: 0;
+}
+
+.ascii-playground__intro p {
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    line-height: 1.65;
+}
+
+.ascii-playground__code {
+    font-family: inherit;
+    color: var(--accent);
+    font-size: 0.9em;
+}
+
+.ascii-playground__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-sm) var(--gap-md);
+    margin-bottom: var(--gap-md);
+}
+
+.ascii-playground__btn {
+    font-size: 0.8rem;
+    padding: var(--gap-sm) var(--gap-md);
+}
+
+.ascii-playground__savehint {
+    font-size: 0.75rem;
+    color: var(--accent-dim);
+    min-height: 1.2em;
+}
+
+.ascii-playground__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--gap-lg);
+    align-items: stretch;
+}
+
+@media (max-width: 780px) {
+    .ascii-playground__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ascii-playground__label,
+.ascii-playground__preview-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    min-width: 0;
+}
+
+.ascii-playground__labeltext {
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ascii-playground__editor,
+.ascii-playground__preview {
+    font-family: inherit;
+    font-size: 0.78rem;
+    line-height: 1.25;
+    tab-size: 4;
+    letter-spacing: 0;
+    margin: 0;
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    color: var(--accent);
+    border-radius: 0;
+}
+
+.ascii-playground__editor {
+    width: 100%;
+    min-height: 22rem;
+    padding: var(--gap-md);
+    resize: vertical;
+    white-space: pre;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.ascii-playground__preview {
+    min-height: 22rem;
+    padding: var(--gap-md);
+    white-space: pre;
+    overflow: auto;
+    text-align: left;
+}
+
+.ascii-playground__preview::-webkit-scrollbar,
+.ascii-playground__editor::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+
+.ascii-playground__preview::-webkit-scrollbar-thumb,
+.ascii-playground__editor::-webkit-scrollbar-thumb {
+    background: var(--accent-dim);
+}
+
+.ascii-playground__foot {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: var(--gap-lg);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+}
+
+.ascii-playground__foot a {
+    color: var(--text-dim);
+}
+
+.ascii-playground__foot a:hover {
+    color: var(--accent);
+}
+
+.ascii-playground__sep {
+    margin: 0 0.5em;
+    color: var(--border);
+}
+
+/* =============================================================================
    Carousel
    ============================================================================= */
 .carousel-container {
