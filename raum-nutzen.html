@@ -74,6 +74,7 @@
         </script>
     </head>
     <body>
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
                 <a class="nav__brand" href="index.html">
@@ -96,11 +97,11 @@
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed">&#9673;</a></li>
+                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673;</a></li>
                 </ul>
             </nav>
         </header>
-        <main>
+        <main id="main-content">
             <div class="container">
                 <section>
                     <h1>Raum nutzen – bitcircus101, Bonn</h1>
@@ -165,15 +166,22 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                   X                      
          //          \ V /  | | ___) | |  | |   | |\  | |_| |\ V  V / |_|      \\
         //            \_/  |___|____/___| |_|   |_| \_|\___/  \_/\_/  (_)       \\
 </pre>
-                    <ul>
-                        <li><strong>Vorderzimmer:</strong> bis 25 Personen je nach Bestuhlung – Tische, Stühle, Whiteboard, Beamer-Anschluss</li>
-                        <li><strong>Hinterzimmer:</strong> bis 7 Personen – ruhiger, für kleinere Gruppen und Workshops</li>
-                        <li><strong>Internet:</strong> 250 Mbit/s Download, 45 Mbit/s Upload</li>
-                        <li><strong>Lage:</strong> Dorotheenstraße 101, 53113 Bonn – wenige Minuten zur Innenstadt, ~15 Minuten zum Hauptbahnhof</li>
-                        <li><strong>Teeküche:</strong> Backofen, Kaffee, Wasser, Getränke</li>
-                        <li><strong>Steh-Arbeitsplätze:</strong> Wand mit Steh-Arbeitsplätzen</li>
-                        <li><strong>Nutzung:</strong> immer der gesamte Raum – stundenweise oder tageweise, flexibel nach Absprache</li>
-                    </ul>
+                    <dl class="room-spec">
+                        <dt>Vorderzimmer</dt>
+                        <dd>bis 25 Personen je nach Bestuhlung – Tische, Stühle, Whiteboard, Beamer-Anschluss</dd>
+                        <dt>Hinterzimmer</dt>
+                        <dd>bis 7 Personen – ruhiger, für kleinere Gruppen und Workshops</dd>
+                        <dt>Internet</dt>
+                        <dd>250 Mbit/s Download, 45 Mbit/s Upload</dd>
+                        <dt>Lage</dt>
+                        <dd>Dorotheenstraße 101, 53113 Bonn – wenige Minuten zur Innenstadt, ~15 Minuten zum Hauptbahnhof</dd>
+                        <dt>Teeküche</dt>
+                        <dd>Backofen, Kaffee, Wasser, Getränke</dd>
+                        <dt>Steh-Arbeitsplätze</dt>
+                        <dd>Wand mit Steh-Arbeitsplätzen</dd>
+                        <dt>Nutzung</dt>
+                        <dd>immer der gesamte Raum – stundenweise oder tageweise, flexibel nach Absprache</dd>
+                    </dl>
                 </section>
 
                 <section>
@@ -217,7 +225,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                   X                      
                 <section>
                     <h2>Adresse & Anfahrt</h2>
                     <div class="location-card">
-                        <div class="location-card__header">[ LOCATE ]</div>
+                        <h3 class="location-card__header">[ LOCATE ]</h3>
                         <div class="location-card__body">
                             <p class="location-card__name">bitcircus101</p>
                             <p class="location-card__address">Dorotheenstraße 101<br>53113 Bonn</p>
@@ -230,6 +238,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                   X                      
                             <iframe
                                 id="osm-map"
                                 class="location-card__map-frame"
+                                title="OpenStreetMap – bitcircus101"
                             ></iframe>
                             <a
                                 class="location-card__osm-link"
