@@ -28,7 +28,7 @@
     --gap-xl: 40px;
 
     /* Layout */
-    --max-width: 860px;
+    --max-width: 1000px;
 
     /* Effects */
     --transition: 140ms ease;
@@ -46,6 +46,7 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 3.25rem;
     overflow-x: hidden;
 }
 
@@ -71,7 +72,7 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.3;
 }
 
-h1 { font-size: 1.6rem; }
+h1 { font-size: clamp(1.08rem, 2.75vw + 0.55rem, 1.6rem); }
 
 h2 {
     font-size: 1.25rem;
@@ -103,7 +104,7 @@ small { color: var(--text-dim); font-size: 0.85em; }
 main {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: var(--gap-lg);
+    padding: clamp(var(--gap-md), 2.5vw + 0.35rem, var(--gap-lg));
 }
 
 .container {
@@ -133,10 +134,10 @@ header {
 nav {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 var(--gap-lg);
+    padding: 0 clamp(var(--gap-sm), 3.5vw, var(--gap-lg));
     display: flex;
     align-items: center;
-    gap: var(--gap-lg);
+    gap: clamp(var(--gap-sm), 3vw, var(--gap-lg));
 }
 
 .nav__brand {
@@ -156,6 +157,16 @@ nav {
     color: var(--accent);
     font-weight: bold;
     font-size: 0.95rem;
+}
+
+/* Terminal-style cursor on brand prompt */
+.nav__cursor {
+    animation: nav-cursor-blink 1.05s step-end infinite;
+}
+
+@keyframes nav-cursor-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
 }
 
 .nav__name {
@@ -1499,8 +1510,8 @@ select:focus {
 #home .ascii-art-viewport {
     container-type: size;
     width: 100%;
-    height: min(68vh, 440px);
-    max-height: min(68vh, 440px);
+    height: clamp(260px, min(68vh, 52vw), 480px);
+    max-height: clamp(260px, min(68vh, 52vw), 480px);
     box-sizing: border-box;
     margin: var(--gap-md) 0;
     padding: var(--gap-sm) var(--gap-md);
@@ -1515,6 +1526,8 @@ select:focus {
 #home .ascii-art-viewport .ascii-art {
     --ascii-hero-lines: 64;
     --ascii-hero-line-h: 1.18;
+    --ascii-hero-cols: 122;
+    --ascii-hero-height-pad: 3;
     flex: 0 0 auto;
     margin: 0;
     padding: 0;
@@ -1528,8 +1541,8 @@ select:focus {
         0.22rem,
         min(
             0.6rem,
-            calc(100cqw / 122),
-            calc(100cqh / (var(--ascii-hero-lines) * var(--ascii-hero-line-h) + 3))
+            calc(100cqw / var(--ascii-hero-cols)),
+            calc(100cqh / (var(--ascii-hero-lines) * var(--ascii-hero-line-h) + var(--ascii-hero-height-pad)))
         )
     );
 }
@@ -1990,9 +2003,17 @@ select:focus {
    ============================================================================= */
 
 /* Tablet */
-@media (max-width: 860px) {
-    main { padding: var(--gap-md); }
+@media (max-width: 1000px) {
     .container { padding: 0 var(--gap-md); }
+}
+
+/* Hero: a bit more vertical room before full mobile rules */
+@media (max-width: 900px) {
+    #home .ascii-art-viewport {
+        height: clamp(272px, min(70vh, 58vw), 470px);
+        max-height: clamp(272px, min(70vh, 58vw), 470px);
+        padding: var(--gap-xs) var(--gap-sm);
+    }
 }
 
 /* Mobile Navigation */
@@ -2030,7 +2051,6 @@ select:focus {
         min-height: 44px; /* touch target */
     }
 
-    h1 { font-size: 1.3rem; }
     h2 { font-size: 1.1rem; }
     h3 { font-size: 1rem; }
 
@@ -2039,9 +2059,24 @@ select:focus {
     section { padding: var(--gap-md); margin: var(--gap-lg) 0; }
 
     .ascii-art { font-size: 0.7rem; padding: var(--gap-sm); }
+    /* Hero ASCII: fill width — taller stage + less horizontal inset; height term less dominant */
     #home .ascii-art-viewport {
-        height: min(62vh, 400px);
-        max-height: min(62vh, 400px);
+        padding: var(--gap-xs) var(--gap-sm);
+        height: min(74vh, 520px);
+        max-height: min(74vh, 520px);
+    }
+    #home .ascii-art-viewport .ascii-art {
+        --ascii-hero-cols: 111;
+        --ascii-hero-height-pad: 0.35;
+        --ascii-hero-line-h: 1.14;
+        font-size: max(
+            0.22rem,
+            min(
+                0.72rem,
+                calc(100cqw / var(--ascii-hero-cols)),
+                calc(100cqh / (var(--ascii-hero-lines) * var(--ascii-hero-line-h) + var(--ascii-hero-height-pad)))
+            )
+        );
     }
     .carousel-container { aspect-ratio: 4/3; max-width: calc(100vw - 16px); }
 
@@ -2058,7 +2093,6 @@ select:focus {
 /* Small mobile */
 @media (max-width: 480px) {
     .ascii-art { font-size: 0.55rem; line-height: 1; padding: var(--gap-xs); }
-    h1 { font-size: 1.15rem; }
     h2 { font-size: 0.95rem; }
 
     .carousel-container { max-width: calc(100vw - 16px); }
@@ -2090,6 +2124,10 @@ select:focus {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+    }
+    .nav__cursor {
+        animation: none !important;
+        opacity: 1 !important;
     }
 }
 
