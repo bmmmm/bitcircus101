@@ -279,6 +279,9 @@
 
       const isVisible = container.style.display === "block";
       container.style.display = isVisible ? "none" : "block";
+      if (container.classList.contains("hidden")) {
+        container.classList.remove("hidden");
+      }
       button.innerHTML = isVisible
         ? '<span aria-hidden="true">$</span> map --load<span class="location-card__cursor" aria-hidden="true">▋</span>'
         : '<span aria-hidden="true">$</span> map --unload';
