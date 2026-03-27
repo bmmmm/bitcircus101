@@ -26,7 +26,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium firefox
+        run: npx playwright install --with-deps chromium
 
       - name: Run sync-events unit tests
         run: node --test tests/sync-events.spec.mjs

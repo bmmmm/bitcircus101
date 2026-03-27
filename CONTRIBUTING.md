@@ -28,10 +28,12 @@ CI handles the heavy testing automatically.
 
 ## What happens when you open a PR
 
-1. **CI runs unit tests** — fast, automatic feedback
+1. **CI runs unit tests** — fast, automatic, done in seconds
 2. **A maintainer reviews** your PR
-3. **On merge to main** — the full Playwright test suite (204 tests across 3 browsers) runs automatically
-4. **If tests pass** — your changes go live at [bitcircus101.de](https://bitcircus101.de)
+3. **On merge to main** — the full E2E test suite runs automatically (Playwright, 2 browsers)
+4. **If all tests pass** — your changes go live at [bitcircus101.de](https://bitcircus101.de)
+
+Nothing reaches production without passing all tests. But that's CI's job, not yours.
 
 ## What's a good first contribution?
 

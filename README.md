@@ -30,9 +30,9 @@ scripts/
   sync-events.mjs           Fetches ICS from Nextcloud, generates events-data.json + feed.xml
 
 tests/
-  site.spec.js              Playwright end-to-end tests (204 tests × 3 browsers)
+  site.spec.js              Playwright end-to-end tests (~20 tests × 2 browsers)
   sync-events.spec.mjs      Unit tests for ICS parser and RRULE expansion (22 tests)
-playwright.config.js        Playwright config (Chromium, Firefox, Mobile Chrome)
+playwright.config.js        Playwright config (Chromium, Mobile Chrome)
 
 .github/workflows/
   deploy.yml                Test on main → deploy to live
@@ -63,8 +63,10 @@ main (push) → Unit tests → Sync script → Playwright E2E → Deploy to live
 Every push to `main` triggers:
 1. **Unit tests:** ICS parser, RRULE expansion, date parsing (node:test, 22 tests)
 2. **Sync script:** Generates `events-data.json` for E2E tests to use
-3. **E2E tests:** Playwright across 3 browsers (204 tests)
+3. **E2E tests:** Playwright across 2 browsers (~20 tests × Chromium + Mobile Chrome)
 4. **Deploy** (only if all tests pass): Syncs site files from `main` to `live`
+
+PRs get lightweight CI (unit tests only) via `ci.yml`.
 
 Nothing reaches production without passing all tests first.
 
@@ -164,26 +166,26 @@ npm run test:ui            # Playwright UI mode
 | `parseICS` | Single events, all-day, TZID params, line folding, recurring BYSETPOS |
 | `clean` | ICS character unescaping (`\n`, `\,`, `\;`) |
 
-**E2E tests** (`tests/site.spec.js` — 68 tests × 3 browsers = 204):
+**E2E tests** (`tests/site.spec.js` — ~20 tests × 2 browsers):
 
 | Area | Tests | What is tested |
 |------|-------|---------------|
-| Home page | 10 | Title, h1, ASCII art, carousel, support CTAs, contact, map |
-| SEO / Meta | 10 | Description, canonical, OG tags, JSON-LD, keywords per page |
-| Privacy | 3 | No Google Fonts (link tags, preconnect, network requests) |
-| Navigation | 3 | Desktop links, mobile hamburger toggle, link navigation |
-| Events page | 6 | Title, event cards load, subscribe buttons, RSS, linkup info |
-| Events content | 7 | Tags present, filter works, reset, lastSync shown, month groups, Datenburg events |
-| Donations | 3 | Title, consent banner, banner dismiss |
-| Raum mieten | 6 | Title, contact CTA, map, JSON-LD, back link |
-| Impressum | 2 | Title, back link |
-| Danke page | 4 | Title, content, noindex, back link |
-| Terminal theme | 3 | Dark background, monospace font, no inline styles |
+| Home page | 3 | Title + heading, CTAs, carousel + map interaction |
+| SEO / Meta | 2 | All meta tags on home, subpage descriptions + keywords |
+| Privacy | 1 | No Google Fonts (HTML + network) |
+| Navigation | 2 | Desktop nav + routing, mobile hamburger toggle |
+| Events page | 1 | Title, list, subscribe, RSS, back link |
+| Events content | 2 | Tags + filtering + month groups, sync status |
+| Donations | 1 | Title, consent banner dismiss |
+| Raum nutzen | 1 | Title, CTA, structured data |
+| Impressum | 1 | Title + back link |
+| Danke page | 1 | Title, noindex, content, back link |
+| Terminal theme | 1 | Dark bg, monospace, no inline styles |
 | JS errors | 6 | All 6 pages free of console errors |
 | Internal links | 1 | Crawls all pages, verifies every internal link resolves |
-| Accessibility | 4 | Aria-labels, alt texts, footer role |
+| Accessibility | 1 | Aria-labels, alt texts, landmark roles |
 
-Browsers: Chromium, Firefox, Mobile Chrome (Pixel 5).
+Browsers: Chromium, Mobile Chrome (Pixel 5).
 
 ### Running calendar sync locally
 

@@ -22,18 +22,28 @@ Pure HTML/CSS/JS — no build step, no framework.
 |---------|------|-------------|
 | `npm run test:quick` | Unit tests only (~100ms, no browser) | Before submitting a PR |
 | `npm run test:unit` | Same as test:quick | Alias |
-| `npm run test:e2e` | Playwright across 3 browsers (204 tests) | Only if you changed JS logic |
+| `npm run test:e2e` | Playwright across 2 browsers (~20 tests × 2) | Only if you changed JS logic |
 | `npm test` | Full suite (unit + E2E) | CI runs this, you usually don't need to |
 
 ### How CI works
 
 ```
 PR to main  →  Unit tests only (fast, no Playwright)
-Push to main  →  Full suite (unit + E2E + 3 browsers)  →  Deploy to live
+Push to main  →  Full suite (unit + E2E × 2 browsers)  →  Deploy to live
 ```
 
 Tests gate deployment, not contribution. A PR with failing unit tests gets flagged,
 but the heavy Playwright suite only runs after merge — before anything reaches production.
+
+### For AI agents
+
+When adding or modifying tests:
+- **Consolidate, don't multiply.** One test per logical area, not one per assertion.
+  Each `page.goto()` is expensive — batch related checks into a single test.
+- **Don't test static content.** If it can only break by deleting HTML, it's not worth a test.
+- **Do test interactions.** Carousel, filter, mobile menu, consent banner — things with JS logic.
+- **Do test invariants.** No JS errors, no broken links, no Google Fonts, noindex on danke page.
+- Add new pages to the `pages` array in the "No JavaScript errors" test.
 
 ## Local development
 
