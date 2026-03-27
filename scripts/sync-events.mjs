@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sync-events.mjs — Fetches ICS from Nextcloud calendars, generates events-data.json + feed.xml
+ * sync-events.mjs — Fetches ICS from Nextcloud calendars, generates events-data.json + feed.xml + calendar-public.json
  * Reads calendar sources from calendars.json. Add new calendars there — no code changes needed.
  * Runs in GitHub Actions (Node 22, no dependencies).
  */
@@ -419,6 +419,16 @@ async function main() {
   const output = { lastSync: new Date().toISOString(), sources, icsKeys: newIcsKeys, events: allCards };
   writeFileSync("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
+
+  const primary = calendars.find((cal) => cal.primary) || calendars[0];
+  const calendarPublic = {
+    generatedAt: new Date().toISOString(),
+    primary: primary
+      ? { id: primary.id, name: primary.name, ics: primary.ics, url: primary.url }
+      : null,
+  };
+  writeFileSync("calendar-public.json", JSON.stringify(calendarPublic, null, 2) + "\n");
+  console.log("Written calendar-public.json");
 
   // RSS only from primary calendar
   const primaryCards = allCards.filter((c) =>

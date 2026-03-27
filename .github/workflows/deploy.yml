@@ -62,7 +62,7 @@ jobs:
           git fetch origin main
 
           # Save live-only generated files before overlay
-          for f in events-data.json feed.xml funding.json sitemap.xml; do
+          for f in events-data.json feed.xml calendar-public.json funding.json sitemap.xml; do
             [ -f "$f" ] && cp "$f" "/tmp/_live_$f"
           done
 
@@ -72,7 +72,7 @@ jobs:
           rm -f playwright.config.js package.json package-lock.json
 
           # Restore live-only generated files
-          for f in events-data.json feed.xml funding.json sitemap.xml; do
+          for f in events-data.json feed.xml calendar-public.json funding.json sitemap.xml; do
             [ -f "/tmp/_live_$f" ] && cp "/tmp/_live_$f" "$f"
           done
 
@@ -90,8 +90,8 @@ jobs:
 
       - name: Regenerate events data if missing
         run: |
-          if [ ! -f events-data.json ]; then
-            echo "events-data.json missing — regenerating"
+          if [ ! -f events-data.json ] || [ ! -f calendar-public.json ]; then
+            echo "Generated calendar files missing — regenerating"
             node scripts/sync-events.mjs
           fi
 

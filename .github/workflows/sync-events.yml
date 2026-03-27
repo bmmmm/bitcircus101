@@ -37,7 +37,7 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add events-data.json feed.xml
+          git add events-data.json feed.xml calendar-public.json
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0

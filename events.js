@@ -7,6 +7,7 @@
   "use strict";
 
   var JSON_URL = "events-data.json";
+  var CALENDAR_CONFIG_URL = "calendar-public.json";
   var ICS_URL =
     "https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export";
   var CALENDAR_URL =
@@ -526,7 +527,24 @@
       '<span class="events-loading__cmd">$ events --load</span>' +
       '<span class="events-cursor">\u258b</span></p>';
 
-    fetch(JSON_URL)
+    fetch(CALENDAR_CONFIG_URL)
+      .then(function (res) {
+        if (!res.ok) return null;
+        return res.json();
+      })
+      .then(function (cfg) {
+        var primary = cfg && cfg.primary;
+        if (primary) {
+          if (primary.ics) ICS_URL = primary.ics;
+          if (primary.url) CALENDAR_URL = primary.url;
+        }
+      })
+      .catch(function () {
+        // Keep hardcoded fallback values if config is unavailable.
+      })
+      .then(function () {
+        return fetch(JSON_URL);
+      })
       .then(function (res) {
         if (!res.ok) throw new Error("no json");
         return res.json();
