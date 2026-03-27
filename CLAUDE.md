@@ -5,7 +5,7 @@ Project conventions for contributors and Claude Code.
 ## What this is
 
 Static website for [bitcircus101](https://bitcircus101.de), a hackspace in Bonn.
-Pure HTML/CSS/JS — no build step, no framework.
+Pure HTML/CSS/JS — **no bundler, no framework.** Shared site chrome (nav + footer) uses `includes/*.html` plus a one-shot **`npm run build:layout`** (see [Shared layout](#shared-layout)); everything else is edited directly.
 
 ## Branches
 
@@ -28,12 +28,12 @@ Pure HTML/CSS/JS — no build step, no framework.
 ### How CI works
 
 ```
-PR to main  →  Unit tests only (fast, no Playwright)
+PR to main  →  Unit tests + layout sync check (fast, no Playwright)
 Push to main  →  Full suite (unit + E2E × 2 browsers)  →  Deploy to live
 ```
 
-Tests gate deployment, not contribution. A PR with failing unit tests gets flagged,
-but the heavy Playwright suite only runs after merge — before anything reaches production.
+Tests gate deployment, not contribution. A PR with failing unit tests or layout drift gets flagged.
+The heavy Playwright suite runs after merge to `main` — before anything reaches production.
 
 ### For AI agents
 
@@ -55,10 +55,21 @@ npx http-server . -p 8080
 
 Open `http://localhost:8080` in your browser. That's it.
 
+## Shared layout
+
+| Item | Role |
+|------|------|
+| `includes/site-header.html` | Single source for `<header>` / nav |
+| `includes/site-footer.html` | Single source for `<footer>` |
+| `scripts/inject-layout.mjs` | Inlines those into the six layout HTML files |
+| `npm run build:layout` | Run after editing the partials |
+
+**Workflow:** Edit the partials → `npm run build:layout` → commit partials **and** changed `*.html`. CI runs `inject-layout.mjs` and fails if there is any `git diff` on HTML (drift). Deploy also runs inject before cache-busting so `live` stays aligned.
+
 ## Code conventions
 
 - German UI text, English code comments
-- No build tools, no bundlers — edit HTML/CSS/JS directly
+- No bundlers — edit HTML/CSS/JS directly (except running `npm run build:layout` when you touch `includes/*.html`)
 - Terminal aesthetic: dark background, green accent, monospace font
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css`
@@ -79,6 +90,6 @@ Add an entry to `calendars.json` — no code changes needed.
 ## Adding a new page
 
 1. Create the HTML file
-2. Add navigation links in other pages
+2. Add the nav link in `includes/site-header.html`, run `npm run build:layout`, and commit the updated partial + HTML files (or register the page in `scripts/inject-layout.mjs` if it should share the same chrome)
 3. Add the page to the `pages` array in `tests/site.spec.js` (no-JS-errors test)
 4. Sitemap is auto-generated on deploy

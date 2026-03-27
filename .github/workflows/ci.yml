@@ -14,5 +14,13 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Verify layout HTML matches partials
+        run: |
+          node scripts/inject-layout.mjs
+          git diff --exit-code -- '*.html' || (
+            echo "::error::Layout drift: run npm run build:layout and commit the updated HTML files."
+            exit 1
+          )
+
       - name: Run unit tests
         run: node --test tests/sync-events.spec.mjs
