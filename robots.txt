@@ -3,6 +3,8 @@
 
 User-agent: *
 Allow: /
+# Internal ASCII playground (no nav link, noindex in page)
+Disallow: /ascii/
 
 Sitemap: https://bitcircus101.de/sitemap.xml
 
