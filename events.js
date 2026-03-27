@@ -25,8 +25,11 @@
   // State
   var activeFilters = [];
   var allUpcoming = [];
+  var allFutureSorted = [];
+  var onlyBitcircus = false;
   var eventsContainer = null;
   var filterBar = null;
+  var eventsToolbar = null;
 
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
 
@@ -37,6 +40,81 @@
       .replace(/>/g, "&gt;");
   }
 
+  function formatSourceLabel(name) {
+    if (name === "Datenburg e.V.") {
+      return "Externer Kalender: Datenburg e.V.";
+    }
+    return name;
+  }
+
+  function isBitcircusEvent(e) {
+    return !e.source || e.source === "bitcircus101";
+  }
+
+  function rebuildDisplayedUpcoming() {
+    var pool = onlyBitcircus
+      ? allFutureSorted.filter(isBitcircusEvent)
+      : allFutureSorted;
+    allUpcoming = pool.slice(0, 30);
+  }
+
+  function removeFilterBar() {
+    if (filterBar && filterBar.parentNode) {
+      filterBar.parentNode.removeChild(filterBar);
+    }
+    filterBar = null;
+    activeFilters = [];
+  }
+
+  function ensureEventsToolbar(insertBeforeNode) {
+    if (eventsToolbar && eventsToolbar.parentNode) return;
+    var parent = insertBeforeNode.parentNode;
+    eventsToolbar = document.createElement("div");
+    eventsToolbar.className = "events-toolbar";
+    eventsToolbar.innerHTML =
+      '<label class="events-toolbar__label">' +
+      '<input type="checkbox" id="events-only-bitcircus" class="events-toolbar__checkbox" />' +
+      "<span>Nur Events im bitcircus101 anzeigen</span></label>";
+    parent.insertBefore(eventsToolbar, insertBeforeNode);
+    document.getElementById("events-only-bitcircus").addEventListener(
+      "change",
+      function () {
+        onlyBitcircus = this.checked;
+        removeFilterBar();
+        rebuildDisplayedUpcoming();
+        buildTagsAndFilter();
+      }
+    );
+  }
+
+  function buildTagsAndFilter() {
+    var el = eventsContainer;
+    if (!allUpcoming.length) {
+      if (onlyBitcircus && allFutureSorted.length) {
+        el.innerHTML =
+          '<p class="events-empty">Keine bevorstehenden Termine nur im bitcircus101-Kalender in diesem Ausschnitt.</p>' +
+          "<p><a href=\"" + CALENDAR_URL + "\" target=\"_blank\" rel=\"noopener\">" +
+          "Kalender \u00f6ffnen \u2197</a></p>";
+      } else {
+        el.innerHTML =
+          '<p class="events-empty">Keine kommenden Termine gefunden.</p>' +
+          '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
+          "Kalender \u00f6ffnen \u2197</a></p>";
+      }
+      return;
+    }
+
+    var tagSet = {};
+    allUpcoming.forEach(function (e) {
+      (e.tags || []).forEach(function (t) { tagSet[t] = true; });
+    });
+    var allTags = Object.keys(tagSet).sort();
+    if (allTags.length) {
+      buildFilterBar(allTags, el);
+    }
+    renderFilteredCards();
+  }
+
   // ── Card Renderer ─────────────────────────────────────────────────────────
 
   function renderCards(events, el) {
@@ -44,16 +122,26 @@
     var now = new Date();
     now.setHours(0, 0, 0, 0);
 
-    allUpcoming = events
+    allFutureSorted = events
       .filter(function (e) {
         return new Date(e.date + "T23:59:59") >= now;
       })
       .sort(function (a, b) {
         return new Date(a.date) - new Date(b.date);
-      })
-      .slice(0, 30);
+      });
 
-    if (!allUpcoming.length) {
+    onlyBitcircus = false;
+    if (eventsToolbar) {
+      var resetCb = document.getElementById("events-only-bitcircus");
+      if (resetCb) resetCb.checked = false;
+    }
+
+    if (!allFutureSorted.length) {
+      if (eventsToolbar && eventsToolbar.parentNode) {
+        eventsToolbar.parentNode.removeChild(eventsToolbar);
+        eventsToolbar = null;
+      }
+      removeFilterBar();
       el.innerHTML =
         '<p class="events-empty">Keine kommenden Termine gefunden.</p>' +
         '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
@@ -61,15 +149,10 @@
       return;
     }
 
-    // Collect all tags
-    var tagSet = {};
-    allUpcoming.forEach(function (e) {
-      (e.tags || []).forEach(function (t) { tagSet[t] = true; });
-    });
-    var allTags = Object.keys(tagSet).sort();
-
-    buildFilterBar(allTags, el);
-    renderFilteredCards();
+    ensureEventsToolbar(el);
+    rebuildDisplayedUpcoming();
+    removeFilterBar();
+    buildTagsAndFilter();
   }
 
   function buildFilterBar(tags, el) {
@@ -151,8 +234,11 @@
       var isOpen = (k === currentKey || idx === 0) ? " open" : "";
       html += '<details class="events-month"' + isOpen + '>';
       html +=
-        '<summary class="events-month__label">[ ' +
-        monthName + " " + parts[0] + " ]</summary>";
+        '<summary class="events-month__label">' +
+        '<span class="events-month__title">[ ' + monthName + " " + parts[0] +
+        " ]</span>" +
+        '<span class="events-month__chevron" aria-hidden="true"></span>' +
+        "</summary>";
 
       groupMap[k].forEach(function (e) {
         var d = new Date(e.date + "T00:00:00");
@@ -177,7 +263,8 @@
         html += '<div class="event-card__header">';
         html += '<h3 class="event-card__title">' + esc(e.title) + "</h3>";
         if (e.source && e.source !== "bitcircus101") {
-          html += '<span class="event-card__source">' + esc(e.source) + "</span>";
+          html += '<span class="event-card__source">' +
+            esc(formatSourceLabel(e.source)) + "</span>";
         }
         html += "</div>";
         if (e.subtitle) {
@@ -494,8 +581,10 @@
 
           // Row 2: Event stats
           html += '<span class="sync-source__events">';
-          html += s.events + " kommend";
-          if (s.past) html += " \u00b7 " + s.past + " vergangen";
+          html += s.events + " bevorstehende Events";
+          if (s.past) {
+            html += " \u00b7 " + s.past + " stattgefundene Events";
+          }
           if (s.added || s.removed) {
             html += ' \u00b7 <span class="sync-source__diff">' + diffText(s) + "</span>";
           }
