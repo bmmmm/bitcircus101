@@ -141,10 +141,12 @@ python3 -m http.server 8080
 
 ### Running tests
 
+Contributors only need the quick check — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ```sh
 npm install
-npm test                   # all tests (unit + E2E headless)
-npm run test:unit          # only unit tests (ICS parser, fast)
+npm run test:quick         # unit tests only (~100ms, no browser needed)
+npm test                   # full suite (unit + E2E, used by CI)
 npm run test:e2e           # only Playwright E2E
 npm run test:headed        # E2E with browser window
 npm run test:ui            # Playwright UI mode
