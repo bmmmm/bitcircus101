@@ -36,7 +36,13 @@
         <link rel="stylesheet" href="style.css?v=4" />
     </head>
     <body>
-        <div id="site-notice" class="site-notice">
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+        <div
+            id="site-notice"
+            class="site-notice"
+            role="region"
+            aria-label="Hinweis zu Cookies und Zahlungsdiensten"
+        >
             <p>
                 <strong>Hinweis:</strong> Diese Seite nutzt Zahlungsdienste von
                 Drittanbietern (PayPal, Ko-fi, Stripe) sowie Google-Dienste
@@ -60,10 +66,10 @@
                 Nutzung von Cookies durch diese Dienste zu.
                 <a href="impressum-datenschutz.html">Mehr zum Datenschutz</a>.
             </p>
-            <button onclick="acceptCookies()">
+            <button type="button" onclick="acceptCookies()">
                 Akzeptieren &amp; fortfahren
             </button>
-            <button class="decline" onclick="declineCookies()">Ablehnen</button>
+            <button type="button" class="decline" onclick="declineCookies()">Ablehnen</button>
         </div>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
@@ -87,11 +93,11 @@
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed">&#9673;</a></li>
+                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673;</a></li>
                 </ul>
             </nav>
         </header>
-        <main>
+        <main id="main-content">
             <div class="container">
                 <section>
                     <h1>Keep the lights on</h1>
@@ -149,6 +155,7 @@
                                 width="425"
                                 height="350"
                                 class="map-container iframe"
+                                title="OpenStreetMap – bitcircus101"
                             ></iframe>
                             <br />
                             <small>
