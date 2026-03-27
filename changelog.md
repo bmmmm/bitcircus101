@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Home:** Replaced the room table-plan hero ASCII on [`index.html`](index.html) with the new large framed bitcircus101 / space graphic. The hero art sits in `.ascii-art-viewport` with **container query** scaling so ~111-column lines stay **unbroken** and the full logo fits inside a fixed **height** stage (`min(68vh, 440px)`); **max `font-size` 0.6rem** on desktop with tighter `cqw`/`cqh` scaling; tighter **line-height** and smaller margins than generic `.ascii-art`. **`#home h1`** is **center-aligned**. Other pages keep the original `.ascii-art` rules.
 - **ASCII playground:** Internal page at `/ascii/` (`ascii/index.html`) — editor + live preview, system monospace stack only (no Google Fonts); wider layout (1320px cap), editor/preview **60ch** wide; default art is a simple **bitcircus101** logo sketch (tent + banner + V) at 60 columns; `noindex`, `robots.txt` Disallow, sitemap excluded; not linked from the main nav.
 - **Contributing:** Document branch workflow — always use a `feat/…` branch and PR into `main`; delete feature branches after merge ([CONTRIBUTING.md](CONTRIBUTING.md), [CLAUDE.md](CLAUDE.md), [README.md](README.md)).
 - **Footer funding popover:** Fixed stacking so the funding info panel sits above page content and receives clicks (`opacity` on `.footer__status` was creating a stacking context that trapped `z-index`; replaced with `rgba` text colors and explicit `pointer-events` on the panel).
