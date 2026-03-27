@@ -21,6 +21,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "22"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -33,8 +34,20 @@ jobs:
             exit 1
           )
 
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
       - name: Install Playwright browsers
+        if: steps.pw-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright system deps (cache hit)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: npx playwright install-deps chromium
 
       - name: Run sync-events unit tests
         run: node --test tests/sync-events.spec.mjs
