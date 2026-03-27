@@ -183,6 +183,9 @@ test.describe('Events content', () => {
         // Month groups
         expect(await page.locator('.events-month').count()).toBeGreaterThan(0);
 
+        await expect(page.locator('.events-toolbar')).toBeVisible();
+        await expect(page.locator('#events-only-bitcircus')).toBeVisible();
+
         // Filter bar
         await expect(page.locator('.events-filter')).toBeVisible();
         const countBefore = await page.locator('.event-card').count();
