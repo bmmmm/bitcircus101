@@ -11,6 +11,21 @@ cd bitcircus101.de
 
 That's it for most changes. This is a static site — just open the HTML files in your browser.
 
+## Branch workflow
+
+**Use a feature branch for every change — do not push commits directly to `main`.**
+
+1. Update `main` locally, then branch:
+   ```sh
+   git checkout main
+   git pull
+   git checkout -b feat/short-description
+   ```
+2. Commit on your branch and **open a pull request into `main`** (push the branch, then create the PR on GitHub.)
+3. After the PR is merged, **delete the feature branch** (GitHub offers “Delete branch” on the merged PR, or prune locally with `git fetch --prune`).
+
+Short-lived `feat/…` branches keep history clear; `main` stays the integration line that CI deploys from.
+
 If you want to run the quick checks before submitting:
 
 ```sh
