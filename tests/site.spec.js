@@ -227,7 +227,9 @@ test.describe('Donations page', () => {
         await page.reload();
         await expect(page).toHaveTitle(/Unterstütz/);
         await expect(page.locator('#site-notice')).toBeVisible();
-        await expect(page.locator('#donations-heading')).toContainText(/Licht anlassen/);
+        await expect(page.locator('#donations-heading')).toContainText(
+            /bitcircus101 unterstützen: Licht anlassen/,
+        );
 
         await page.locator('#cookie-consent-accept').click();
         await expect(page.locator('#site-notice')).not.toBeVisible();

@@ -929,6 +929,10 @@ select:focus {
 /* =============================================================================
    Donation Components
    ============================================================================= */
+#donations-heading {
+    text-align: center;
+}
+
 .donation-buttons {
     display: flex;
     flex-direction: column;
