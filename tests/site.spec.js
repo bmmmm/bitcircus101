@@ -309,6 +309,7 @@ test.describe('No JavaScript errors', () => {
         ['/raum-nutzen.html', 'Raum nutzen'],
         ['/impressum-datenschutz.html', 'Impressum'],
         ['/dankedankedanke.html', 'Danke'],
+        ['/ascii/', 'ASCII playground'],
     ];
 
     for (const [url, name] of pages) {
