@@ -631,7 +631,4 @@
 
   // Strategy 2: Window loaded (fallback)
   window.addEventListener("load", safeInit);
-
-  // Strategy 3: Immediate retry (fallback for dynamic content)
-  setTimeout(safeInit, 100);
 })();
