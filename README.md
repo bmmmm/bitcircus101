@@ -22,6 +22,8 @@ raum-nutzen.html            Room usage info
 impressum-datenschutz.html  Legal / privacy
 dankedankedanke.html        Thank you page
 
+ascii/index.html            Internal ASCII playground (/ascii/) — noindex, not in nav; strict system monospace
+
 includes/
   site-header.html          Shared <header> (nav); inlined into pages by build:layout
   site-footer.html          Shared <footer>; inlined into pages by build:layout
