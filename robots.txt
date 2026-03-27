@@ -11,27 +11,36 @@ Sitemap: https://bitcircus101.de/sitemap.xml
 # AI / LLM crawlers – welcome
 User-agent: GPTBot
 Allow: /
+Disallow: /ascii/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /ascii/
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /ascii/
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /ascii/
 
 User-agent: Amazonbot
 Allow: /
+Disallow: /ascii/
 
 User-agent: CCBot
 Allow: /
+Disallow: /ascii/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /ascii/
 
 User-agent: YouBot
 Allow: /
+Disallow: /ascii/
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /ascii/
