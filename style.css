@@ -1487,11 +1487,256 @@ select:focus {
     text-align: center;
     color: var(--accent);
     line-height: 1.3;
+    overflow-wrap: normal;
+    word-break: normal;
+}
+
+#home h1 {
+    text-align: center;
+}
+
+/* Hero logo on home: fixed “stage” so the full piece fits without line wrap or scroll */
+#home .ascii-art-viewport {
+    container-type: size;
+    width: 100%;
+    height: min(68vh, 440px);
+    max-height: min(68vh, 440px);
+    box-sizing: border-box;
+    margin: var(--gap-md) 0;
+    padding: var(--gap-sm) var(--gap-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+}
+
+#home .ascii-art-viewport .ascii-art {
+    --ascii-hero-lines: 64;
+    --ascii-hero-line-h: 1.18;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: transparent;
+    text-align: left;
+    overflow: visible;
+    line-height: var(--ascii-hero-line-h);
+    /* ~111 columns; cap by stage width and height so whole logo stays visible */
+    font-size: max(
+        0.22rem,
+        min(
+            0.6rem,
+            calc(100cqw / 122),
+            calc(100cqh / (var(--ascii-hero-lines) * var(--ascii-hero-line-h) + 3))
+        )
+    );
 }
 
 .ascii-art::-webkit-scrollbar { height: 4px; }
 .ascii-art::-webkit-scrollbar-track { background: var(--bg-panel); }
 .ascii-art::-webkit-scrollbar-thumb { background: var(--accent); }
+
+/* =============================================================================
+   ASCII playground (/ascii/) — hidden page, strict system monospace only
+   ============================================================================= */
+.ascii-playground-body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+}
+
+.ascii-playground__masthead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-sm) var(--gap-md);
+    padding: var(--gap-md) var(--gap-lg);
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    box-sizing: border-box;
+    max-width: min(1320px, 100%);
+    margin: 0 auto;
+}
+
+.ascii-playground__home {
+    font-family: var(--font);
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+}
+
+.ascii-playground__home:hover {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.ascii-playground__prompt {
+    color: var(--accent);
+    font-weight: bold;
+    margin-right: 0.25em;
+}
+
+.ascii-playground__tag {
+    font-family: var(--font);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    opacity: 0.85;
+    letter-spacing: 0.04em;
+}
+
+.ascii-playground {
+    flex: 1;
+    /* Wider than standard pages: room for editor + preview (60ch each + gap) */
+    max-width: min(1320px, 100%);
+    margin: 0 auto;
+    padding: var(--gap-lg);
+    width: 100%;
+    box-sizing: border-box;
+    /* Strict monospace: equal-width glyphs, no webfont CDN */
+    font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono",
+        "DejaVu Sans Mono", "Nimbus Mono PS", "Courier New", Courier, monospace;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+}
+
+.ascii-playground__intro h1 {
+    margin-top: 0;
+}
+
+.ascii-playground__intro p {
+    color: var(--text-dim);
+    font-size: 0.88rem;
+    line-height: 1.65;
+}
+
+.ascii-playground__code {
+    font-family: inherit;
+    color: var(--accent);
+    font-size: 0.9em;
+}
+
+.ascii-playground__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-sm) var(--gap-md);
+    margin-bottom: var(--gap-md);
+}
+
+.ascii-playground__btn {
+    font-size: 0.8rem;
+    padding: var(--gap-sm) var(--gap-md);
+}
+
+.ascii-playground__savehint {
+    font-size: 0.75rem;
+    color: var(--accent-dim);
+    min-height: 1.2em;
+}
+
+.ascii-playground__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--gap-xl);
+    align-items: start;
+    justify-content: start;
+}
+
+@media (max-width: 780px) {
+    .ascii-playground__grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.ascii-playground__label,
+.ascii-playground__preview-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    min-width: 0;
+}
+
+.ascii-playground__labeltext {
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ascii-playground__editor,
+.ascii-playground__preview {
+    font-family: inherit;
+    font-size: 0.78rem;
+    line-height: 1.25;
+    tab-size: 4;
+    letter-spacing: 0;
+    margin: 0;
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    color: var(--accent);
+    border-radius: 0;
+}
+
+.ascii-playground__editor {
+    width: 100%;
+    max-width: 60ch;
+    min-height: 22rem;
+    padding: var(--gap-md);
+    resize: vertical;
+    white-space: pre;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.ascii-playground__preview {
+    width: 100%;
+    min-height: 22rem;
+    max-width: 60ch;
+    padding: var(--gap-md);
+    white-space: pre;
+    overflow: auto;
+    text-align: left;
+}
+
+.ascii-playground__preview::-webkit-scrollbar,
+.ascii-playground__editor::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+
+.ascii-playground__preview::-webkit-scrollbar-thumb,
+.ascii-playground__editor::-webkit-scrollbar-thumb {
+    background: var(--accent-dim);
+}
+
+.ascii-playground__foot {
+    max-width: min(1320px, 100%);
+    margin: 0 auto;
+    padding: var(--gap-lg);
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+    box-sizing: border-box;
+}
+
+.ascii-playground__foot a {
+    color: var(--text-dim);
+}
+
+.ascii-playground__foot a:hover {
+    color: var(--accent);
+}
+
+.ascii-playground__sep {
+    margin: 0 0.5em;
+    color: var(--border);
+}
 
 /* =============================================================================
    Carousel
@@ -1794,6 +2039,10 @@ select:focus {
     section { padding: var(--gap-md); margin: var(--gap-lg) 0; }
 
     .ascii-art { font-size: 0.7rem; padding: var(--gap-sm); }
+    #home .ascii-art-viewport {
+        height: min(62vh, 400px);
+        max-height: min(62vh, 400px);
+    }
     .carousel-container { aspect-ratio: 4/3; max-width: calc(100vw - 16px); }
 
     .site-notice { padding: var(--gap-md); }
