@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "build:layout": "node scripts/inject-layout.mjs",
+    "build": "npm run build:layout",
     "test": "node --test tests/sync-events.spec.mjs && playwright test",
     "test:quick": "node --test tests/sync-events.spec.mjs",
     "test:unit": "node --test tests/sync-events.spec.mjs",

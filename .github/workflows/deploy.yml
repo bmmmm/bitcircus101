@@ -25,6 +25,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify HTML matches layout partials
+        run: |
+          node scripts/inject-layout.mjs
+          git diff --exit-code -- '*.html' || (
+            echo "::error::Layout drift: edit includes/site-header.html / site-footer.html, then run npm run build:layout and commit."
+            exit 1
+          )
+
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
@@ -75,6 +83,9 @@ jobs:
           for f in events-data.json feed.xml funding.json sitemap.xml; do
             [ -f "/tmp/_live_$f" ] && cp "/tmp/_live_$f" "$f"
           done
+
+      - name: Apply layout partials to HTML
+        run: node scripts/inject-layout.mjs
 
       - name: Cache-bust asset references
         run: |
