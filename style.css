@@ -961,6 +961,31 @@ select:focus {
     font-size: 0.75rem;
 }
 
+.events-toolbar {
+    margin-bottom: var(--gap-md);
+    padding: var(--gap-sm) 0;
+}
+
+.events-toolbar__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    cursor: pointer;
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    user-select: none;
+}
+
+.events-toolbar__label:hover { color: var(--text); }
+
+.events-toolbar__checkbox {
+    width: 1.1em;
+    height: 1.1em;
+    flex-shrink: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
 .events-filter__label {
     color: var(--accent);
     margin-right: 0.3rem;
@@ -1009,6 +1034,10 @@ select:focus {
 .events-month { margin-bottom: var(--gap-xl); }
 
 .events-month__label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap-sm);
     font-size: 0.72rem;
     color: var(--accent);
     letter-spacing: 0.12em;
@@ -1021,23 +1050,42 @@ select:focus {
     user-select: none;
 }
 
+.events-month__title {
+    flex: 1;
+    min-width: 0;
+}
+
 .events-month__label::-webkit-details-marker { display: none; }
 .events-month__label::before { content: none; }
+
+.events-month__chevron {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35em;
+    color: var(--accent);
+    transition: transform 0.22s ease, color 0.15s ease;
+}
+
+.events-month__chevron::before {
+    content: "\25b8";
+    font-size: 0.72em;
+    line-height: 1;
+    display: block;
+}
 
 .events-month[open] > .events-month__label {
     border-bottom-color: var(--accent-dim);
 }
 
-.events-month:not([open]) > .events-month__label::after {
-    content: "  +";
+.events-month[open] > .events-month__label .events-month__chevron {
+    transform: rotate(90deg);
     color: var(--accent-dim);
-    opacity: 0.7;
 }
 
-.events-month[open] > .events-month__label::after {
-    content: "  \2212";
-    color: var(--accent);
-    opacity: 0.5;
+@media (prefers-reduced-motion: reduce) {
+    .events-month__chevron { transition: none; }
 }
 
 /* Event Cards */
