@@ -140,12 +140,15 @@ nav {
 }
 
 .nav__brand {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.4em;
     text-decoration: none;
     flex-shrink: 0;
+    /* Match nav link row height (see nav li a min-height) */
+    min-height: 38px;
     padding: var(--gap-sm) var(--gap-sm) var(--gap-sm) 0;
+    box-sizing: border-box;
     white-space: nowrap;
 }
 
@@ -214,11 +217,12 @@ nav li a.nav__cta:focus-visible {
     background: none;
     border: 1px solid var(--border);
     color: var(--text-dim);
-    padding: var(--gap-xs) var(--gap-sm);
+    padding: var(--gap-sm) var(--gap-sm);
     cursor: pointer;
     font-family: var(--font);
     font-size: 0.82rem;
-    min-height: 32px;
+    min-height: 38px;
+    box-sizing: border-box;
     transition: border-color var(--transition), color var(--transition);
 }
 
@@ -367,19 +371,19 @@ nav li a.nav__cta:focus-visible {
 
 .footer__sep { color: var(--border); }
 
+/* opacity on this ancestor trapped .footer__funding-info z-index — use rgba instead */
 .footer__status {
     position: relative;
     margin-left: auto;
-    color: var(--accent);
-    opacity: 0.45;
+    color: rgba(0, 217, 126, 0.45); /* --accent #00d97e */
     letter-spacing: 0.04em;
     cursor: pointer;
 }
 
 /* Funding levels */
-.footer__status--green { color: var(--accent); opacity: 0.65; }
-.footer__status--amber { color: #f0a030; opacity: 0.75; }
-.footer__status--red { color: #e04040; opacity: 0.8; }
+.footer__status--green { color: rgba(0, 217, 126, 0.65); }
+.footer__status--amber { color: rgba(240, 160, 48, 0.75); }
+.footer__status--red { color: rgba(224, 64, 64, 0.8); }
 
 .footer__funding-bar { letter-spacing: 0.08em; }
 
@@ -396,11 +400,13 @@ nav li a.nav__cta:focus-visible {
     white-space: nowrap;
     display: none;
     z-index: var(--z-modal);
+    pointer-events: none;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .footer__funding-info.active {
     display: block;
+    pointer-events: auto;
 }
 
 .footer__funding-info-head {
@@ -1787,9 +1793,18 @@ select:focus {
 
 /* Mobile Navigation */
 @media (max-width: 700px) {
-    .menu-toggle { display: flex; align-items: center; }
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-    nav { flex-wrap: wrap; padding: 0 var(--gap-md); gap: 0; justify-content: space-between; }
+    nav { flex-wrap: wrap; padding: 0 var(--gap-md); gap: 0; justify-content: space-between; align-items: center; }
+    /* Same tap height as expanded nav links */
+    .nav__brand,
+    .menu-toggle {
+        min-height: 44px;
+    }
     .nav__brand { flex: 0 0 auto; }
     nav ul {
         flex: none;
