@@ -29,6 +29,8 @@
 
     /* Layout */
     --max-width: 1000px;
+    /* Single visual row inside sticky header (desktop); mobile overrides touch targets */
+    --nav-row: 40px;
 
     /* Effects */
     --transition: 140ms ease;
@@ -46,7 +48,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 3.25rem;
+    scroll-padding-top: calc(var(--gap-xs) * 2 + var(--nav-row) + 3px);
     overflow-x: hidden;
 }
 
@@ -134,29 +136,42 @@ header {
 nav {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 clamp(var(--gap-sm), 3.5vw, var(--gap-lg));
+    padding: var(--gap-xs) clamp(var(--gap-sm), 3.5vw, var(--gap-lg));
     display: flex;
     align-items: center;
     gap: clamp(var(--gap-sm), 3vw, var(--gap-lg));
 }
 
-.nav__brand {
-    display: inline-flex;
+/* Override global `li { margin-bottom }` — it broke vertical alignment vs. brand */
+nav li {
+    margin: 0;
+    padding: 0;
+    display: flex;
     align-items: center;
+}
+
+.nav__brand {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     gap: 0.4em;
     text-decoration: none;
     flex-shrink: 0;
-    /* Match nav link row height (see nav li a min-height) */
-    min-height: 38px;
-    padding: var(--gap-sm) var(--gap-sm) var(--gap-sm) 0;
     box-sizing: border-box;
     white-space: nowrap;
+    height: var(--nav-row);
+    min-height: var(--nav-row);
+    padding: 0 var(--gap-md) 0 0;
+    font-family: var(--font);
 }
 
 .nav__prompt {
     color: var(--accent);
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: 0.88rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
 }
 
 /* Terminal-style cursor on brand prompt */
@@ -172,6 +187,7 @@ nav {
 .nav__name {
     color: var(--text-dim);
     font-size: 0.85rem;
+    line-height: 1;
     letter-spacing: 0.03em;
     transition: color var(--transition);
 }
@@ -195,17 +211,25 @@ nav ul {
     gap: 0;
     flex: 1;
     justify-content: center;
+    min-height: var(--nav-row);
+    font-family: var(--font);
 }
 
 nav li a {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     color: var(--text-dim);
-    padding: var(--gap-sm) var(--gap-sm);
-    min-height: 38px;
-    font-size: 0.82rem;
+    height: var(--nav-row);
+    min-height: var(--nav-row);
+    padding: 0 var(--gap-md);
+    font-size: 0.85rem;
+    font-weight: inherit;
+    line-height: 1;
     transition: color var(--transition);
     white-space: nowrap;
+    box-sizing: border-box;
+    font-family: inherit;
 }
 
 nav li a:hover,
@@ -228,11 +252,16 @@ nav li a.nav__cta:focus-visible {
     background: none;
     border: 1px solid var(--border);
     color: var(--text-dim);
-    padding: var(--gap-sm) var(--gap-sm);
+    align-items: center;
+    justify-content: center;
+    height: var(--nav-row);
+    min-height: var(--nav-row);
+    padding: 0 var(--gap-md);
+    margin: 0;
     cursor: pointer;
     font-family: var(--font);
-    font-size: 0.82rem;
-    min-height: 38px;
+    font-size: 0.85rem;
+    line-height: 1;
     box-sizing: border-box;
     transition: border-color var(--transition), color var(--transition);
 }
@@ -1550,6 +1579,11 @@ select:focus {
     word-break: normal;
 }
 
+/* Wide floor plans / table art: center alignment breaks column layout */
+.ascii-art--left {
+    text-align: left;
+}
+
 #home h1 {
     text-align: center;
 }
@@ -2072,10 +2106,17 @@ select:focus {
         justify-content: center;
     }
 
-    nav { flex-wrap: wrap; padding: 0 var(--gap-md); gap: 0; justify-content: space-between; align-items: center; }
-    /* Same tap height as expanded nav links */
+    nav {
+        flex-wrap: wrap;
+        padding: var(--gap-xs) var(--gap-md);
+        gap: 0;
+        justify-content: space-between;
+        align-items: center;
+    }
+    /* Touch-friendly row when menu is condensed; full-width links stay 44px */
     .nav__brand,
     .menu-toggle {
+        height: 44px;
         min-height: 44px;
     }
     .nav__brand { flex: 0 0 auto; }
@@ -2088,15 +2129,19 @@ select:focus {
         display: none;
         border-top: 1px solid var(--border);
         padding: 0;
+        min-height: 0;
+        align-items: stretch;
     }
     nav.active ul { display: flex; }
     nav li { margin: 0; width: 100%; }
     nav li a {
+        height: auto;
+        min-height: 44px;
         padding: var(--gap-sm) var(--gap-md);
         width: 100%;
+        justify-content: flex-start;
         border-bottom: 1px solid var(--border);
         font-size: 0.85rem;
-        min-height: 44px; /* touch target */
     }
 
     h2 { font-size: 1.1rem; }

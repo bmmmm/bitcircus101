@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Raum nutzen (`/raum-nutzen.html`):** „Die Zimmer“ **ASCII-Grundriss** (u. a. **STEHTHEKE**, Küche, **LAGER**-Schriftzug, WC, Hauptraum, **Dorotheenstraße**-Seitenzeile, Infokasten, **bit**-Banner); Klasse **`ascii-art--left`** in [`style.css`](style.css) für linksbündige breite ASCII-**`<pre>`**-Blöcke.
+- **Navigation:** Sticky header uses **`--nav-row`** + **explicit `nav li { margin: 0 }`** (overrides global list spacing that misaligned the row). **Brand** / **`nav ul`** / links share **40px** row, **`line-height: 1`**, **`font-family`** on bar; mobile column menu resets **`height: auto`** on links. **`scroll-padding-top`** uses **`calc()`** with **`--nav-row`**.
 - **Events (`/events.html`):** Month groups use an **animated chevron** (rotates when `<details>` opens). **Toolbar** checkbox **„Nur Events im bitcircus101 anzeigen“**; sync line **„bevorstehende Events“** / **„stattgefundene Events“**; **Datenburg** cards **„Externer Kalender: Datenburg e.V.“** ([`events.js`](events.js), [`style.css`](style.css)).
 - **Layout:** `--max-width` raised to **1000px**; tablet `@media` breakpoint aligned at **1000px** ([`style.css`](style.css)).
 - **Navigation:** Brand **&gt;_** prompt: only the underscore uses **`nav__cursor`** with a **terminal-style blink** (`nav-cursor-blink`, `step-end`); **`prefers-reduced-motion`** forces a steady underscore. Partials + **`/ascii/`** masthead updated; run `npm run build:layout` after editing [`includes/site-header.html`](includes/site-header.html).
