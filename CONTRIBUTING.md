@@ -18,6 +18,22 @@ npm install
 npm run test:quick    # ~100ms, no browser needed
 ```
 
+That runs unit tests and matches what PR CI enforces (plus a layout sync check — see below).
+
+## Navigation and footer (shared layout)
+
+Header and footer live in **`includes/site-header.html`** and **`includes/site-footer.html`**. A small Node script copies them into the layout HTML files — no bundler or framework.
+
+After you change those files:
+
+```sh
+npm run build:layout
+```
+
+Commit **`includes/`** and the updated **`*.html`** files together. **PR checks** fail if partials and pages drift apart. See [CLAUDE.md](CLAUDE.md) for details.
+
+If you only edit a page body, you do not need `build:layout`.
+
 ## You do NOT need to
 
 - Install Playwright or any browsers
@@ -28,7 +44,7 @@ CI handles the heavy testing automatically.
 
 ## What happens when you open a PR
 
-1. **CI runs unit tests** — fast, automatic, done in seconds
+1. **CI runs unit tests and checks layout HTML** — fast, automatic, done in seconds (no Playwright)
 2. **A maintainer reviews** your PR
 3. **On merge to main** — the full E2E test suite runs automatically (Playwright, 2 browsers)
 4. **If all tests pass** — your changes go live at [bitcircus101.de](https://bitcircus101.de)
