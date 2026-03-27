@@ -1579,6 +1579,11 @@ select:focus {
     word-break: normal;
 }
 
+/* Wide floor plans / table art: center alignment breaks column layout */
+.ascii-art--left {
+    text-align: left;
+}
+
 #home h1 {
     text-align: center;
 }
