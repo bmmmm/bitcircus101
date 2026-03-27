@@ -100,3 +100,7 @@ Add an entry to `calendars.json` — no code changes needed.
 2. Add the nav link in `includes/site-header.html`, run `npm run build:layout`, and commit the updated partial + HTML files (or register the page in `scripts/inject-layout.mjs` if it should share the same chrome)
 3. Add the page to the `pages` array in `tests/site.spec.js` (no-JS-errors test)
 4. Sitemap is auto-generated on deploy
+
+### Hidden pages (e.g. `/ascii/`)
+
+Use a subfolder like `ascii/index.html` when the page should **not** appear in the shared nav: keep it out of `includes/site-header.html` and **out of** `scripts/inject-layout.mjs` (partials assume root-relative links). Mark **`noindex`**, add **`Disallow`** in `robots.txt`, and extend the sitemap workflow’s exclude list if the generator would otherwise list the URL.
