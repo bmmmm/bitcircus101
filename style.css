@@ -140,12 +140,15 @@ nav {
 }
 
 .nav__brand {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.4em;
     text-decoration: none;
     flex-shrink: 0;
+    /* Match nav link row height (see nav li a min-height) */
+    min-height: 38px;
     padding: var(--gap-sm) var(--gap-sm) var(--gap-sm) 0;
+    box-sizing: border-box;
     white-space: nowrap;
 }
 
@@ -214,11 +217,12 @@ nav li a.nav__cta:focus-visible {
     background: none;
     border: 1px solid var(--border);
     color: var(--text-dim);
-    padding: var(--gap-xs) var(--gap-sm);
+    padding: var(--gap-sm) var(--gap-sm);
     cursor: pointer;
     font-family: var(--font);
     font-size: 0.82rem;
-    min-height: 32px;
+    min-height: 38px;
+    box-sizing: border-box;
     transition: border-color var(--transition), color var(--transition);
 }
 
@@ -1787,9 +1791,18 @@ select:focus {
 
 /* Mobile Navigation */
 @media (max-width: 700px) {
-    .menu-toggle { display: flex; align-items: center; }
+    .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-    nav { flex-wrap: wrap; padding: 0 var(--gap-md); gap: 0; justify-content: space-between; }
+    nav { flex-wrap: wrap; padding: 0 var(--gap-md); gap: 0; justify-content: space-between; align-items: center; }
+    /* Same tap height as expanded nav links */
+    .nav__brand,
+    .menu-toggle {
+        min-height: 44px;
+    }
     .nav__brand { flex: 0 0 auto; }
     nav ul {
         flex: none;
