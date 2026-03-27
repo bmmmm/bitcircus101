@@ -276,6 +276,17 @@ nav li a.nav__cta:focus-visible {
     color: #ff80c0;
 }
 
+/* Current page (set by main.js from pathname / hash) */
+nav li a.nav__link--current {
+    color: var(--text-bright);
+    text-decoration: none;
+    box-shadow: inset 0 -2px 0 var(--accent);
+}
+nav li a.nav__cta.nav__link--current {
+    color: var(--text-bright);
+    box-shadow: inset 0 -2px 0 #ff4da6;
+}
+
 .menu-toggle {
     display: none;
     background: none;
