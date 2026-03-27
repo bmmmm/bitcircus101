@@ -512,7 +512,18 @@
     }
 
     render();
-    setInterval(render, 30000);
+    var intervalId = setInterval(render, 30000);
+
+    // Clean up when navigating away
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        clearInterval(intervalId);
+        intervalId = null;
+      } else if (!intervalId) {
+        render();
+        intervalId = setInterval(render, 30000);
+      }
+    });
   }
 
   // ── Init ──────────────────────────────────────────────────────────────────
