@@ -20,6 +20,12 @@ donations.html              Donation / funding page (loads funding.json)
 raum-nutzen.html            Room usage info
 impressum-datenschutz.html  Legal / privacy
 dankedankedanke.html        Thank you page
+
+includes/
+  site-header.html          Shared <header> (nav); inlined into pages by build:layout
+  site-footer.html          Shared <footer>; inlined into pages by build:layout
+scripts/inject-layout.mjs   Writes header/footer into the six layout HTML files
+
 style.css                   Global styles (terminal theme, dark bg, green accent)
 
 events.js                   Frontend: fetches events-data.json, renders event cards, tag filtering
@@ -35,6 +41,7 @@ tests/
 playwright.config.js        Playwright config (Chromium, Mobile Chrome)
 
 .github/workflows/
+  ci.yml                    PR checks: layout sync + unit tests (no Playwright)
   deploy.yml                Test on main → deploy to live
   sync-events.yml           Calendar sync (every 15 min)
   update-funding.yml        Funding level update (manual)
@@ -61,12 +68,13 @@ main (push) → Unit tests → Sync script → Playwright E2E → Deploy to live
 ```
 
 Every push to `main` triggers:
-1. **Unit tests:** ICS parser, RRULE expansion, date parsing (node:test, 22 tests)
-2. **Sync script:** Generates `events-data.json` for E2E tests to use
-3. **E2E tests:** Playwright across 2 browsers (~20 tests × Chromium + Mobile Chrome)
-4. **Deploy** (only if all tests pass): Syncs site files from `main` to `live`
+1. **Layout sync check:** `scripts/inject-layout.mjs` must not change any committed `*.html`
+2. **Unit tests:** ICS parser, RRULE expansion, date parsing (node:test)
+3. **Sync script:** Generates `events-data.json` for E2E tests to use
+4. **E2E tests:** Playwright across 2 browsers (~20 tests × Chromium + Mobile Chrome)
+5. **Deploy** (only if all tests pass): Syncs site files from `main` to `live`
 
-PRs get lightweight CI (unit tests only) via `ci.yml`.
+PRs get lightweight CI via [`ci.yml`](.github/workflows/ci.yml): same layout check + unit tests (no Playwright). See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 Nothing reaches production without passing all tests first.
 
@@ -134,6 +142,8 @@ If no tags match, the event gets `#community` as default.
 - Permalink anchors with smooth scroll
 
 ## Local development
+
+**Site chrome (nav + footer):** Edit [`includes/site-header.html`](includes/site-header.html) and [`includes/site-footer.html`](includes/site-footer.html), then run `npm run build:layout` and commit the partials plus updated `*.html`. Documented in [CONTRIBUTING.md](CONTRIBUTING.md) and [CLAUDE.md](CLAUDE.md).
 
 Static site — open HTML files directly or use any local server:
 
