@@ -975,7 +975,11 @@ h3.location-card__header {
     flex-direction: column;
     gap: var(--gap-md);
     margin: var(--gap-lg) 0;
-    align-items: center;
+    align-items: stretch;
+    width: 100%;
+    max-width: min(720px, 100%);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .donation-buttons a {
@@ -985,23 +989,48 @@ h3.location-card__header {
     color: var(--bg);
 }
 
+/* Bank + online methods: same panel as PayPal/Ko-fi; width matches widened column */
+.donation-item--iban {
+    max-width: min(720px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .donation-item {
     padding: var(--gap-lg);
     border: 1px solid var(--border);
     background: var(--bg-panel);
-    text-align: center;
     margin-bottom: var(--gap-lg);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
 }
 
-.donation-item h3 {
+/* Uses global h2 rules (matches index sections); tighten top margin inside cards */
+.donation-item .donation-item__title {
     margin-top: 0;
-    border-left: none;
-    padding-left: 0;
+    margin-bottom: var(--gap-md);
+}
+
+.donation-item__text {
+    margin: 0;
+    font-size: var(--font-size);
+    color: var(--text);
+}
+
+.donation-item .btn {
+    align-self: center;
 }
 
 .donation-item iframe {
     border: none;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     background: var(--bg-panel);
 }
 
@@ -1452,20 +1481,6 @@ h3.location-card__header {
     border-color: var(--accent-dim);
     background: rgba(0, 217, 126, 0.04);
 }
-
-/* Donate options */
-.donate-option {
-    border: 1px solid var(--border);
-    padding: 1rem 1.25rem;
-    margin-bottom: var(--gap-md);
-}
-.donate-option h3 {
-    font-size: 0.88rem;
-    margin: 0 0 0.4rem;
-    border-left: none;
-    padding-left: 0;
-}
-.donate-option p { margin: 0; font-size: 0.85rem; }
 
 .events-privacy,
 .privacy-notice {
