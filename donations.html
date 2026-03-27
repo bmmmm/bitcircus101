@@ -107,9 +107,10 @@
                         Schön, dass du dabei bist.
                     </p>
 
-                    <div class="donate-option donate-option--iban">
-                        <h3>Überweisung</h3>
-                        <p>IBAN auf Anfrage per
+                    <div class="donation-item donation-item--iban">
+                        <h2 class="donation-item__title">Überweisung</h2>
+                        <p class="donation-item__text">
+                            IBAN auf Anfrage per
                             <a href="mailto:info@bitcircus101.de">E-Mail</a>.
                         </p>
                     </div>
@@ -216,18 +217,20 @@
                 if (container) {
                     container.innerHTML = `
                         <div class="donation-item">
-                            <h3>PayPal</h3>
+                            <h2 class="donation-item__title">PayPal</h2>
                             <a href="https://www.paypal.com/paypalme/b6m"
                                target="_blank"
+                               rel="noopener"
                                class="btn btn-primary">
                                 Mit PayPal unterstützen
                             </a>
                         </div>
                         <div class="donation-item">
-                            <h3>Ko&#x2011;fi</h3>
+                            <h2 class="donation-item__title">Ko&#x2011;fi</h2>
                             <iframe
                                 id="kofiframe"
                                 src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
+                                width="100%"
                                 height="712"
                                 title="Ko-fi – bmabma"
                             ></iframe>
