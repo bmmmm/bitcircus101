@@ -37,13 +37,15 @@
             href="https://bitcircus101.de/impressum-datenschutz.html"
         />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
-        <link rel="stylesheet" href="style.css?v=7bbab30a" />
+        <link rel="stylesheet" href="style.css?v=94db9cd7" />
     </head>
     <body>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
                 <a class="nav__brand" href="index.html">
-                    <span class="nav__prompt">&gt;_</span>
+                    <span class="nav__prompt" aria-hidden="true"
+                        >&gt;<span class="nav__cursor">_</span></span
+                    >
                     <span class="nav__name">bitcircus101</span>
                 </a>
                 <button
@@ -238,7 +240,7 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="main.js?v=7bbab30a"></script>
+        <script defer src="main.js?v=94db9cd7"></script>
         <script>
             document.getElementById("current-date").textContent =
                 new Date().toLocaleDateString("de-DE", {
