@@ -1,0 +1,145 @@
+name: Create release
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Determine calver tag
+        id: tag
+        run: |
+          BASE="v$(date +%Y.%m.%d)"
+          TAG="$BASE"
+          N=1
+          while git rev-parse "$TAG" >/dev/null 2>&1; do
+            TAG="${BASE}.${N}"
+            N=$((N + 1))
+          done
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "Release tag: $TAG"
+
+      - name: Generate release notes
+        run: |
+          PREV=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          if [ -n "$PREV" ]; then
+            echo "Changes since $PREV"
+            git log "${PREV}..HEAD" --pretty=format:"%s" --no-merges > /tmp/raw.txt
+          else
+            echo "First release — all commits"
+            git log --pretty=format:"%s" --no-merges > /tmp/raw.txt
+          fi
+
+          # Drop CI bot and changelog commits
+          grep -vE "^(Deploy:|Sync events|Update funding|docs: update changelog)" /tmp/raw.txt \
+            > /tmp/all.txt || true
+
+          if [ ! -s /tmp/all.txt ]; then
+            echo "::error::No commits since last release"
+            exit 1
+          fi
+
+          # --- Categorize by conventional-commit prefix ---
+
+          grep -iE "^feat(\(|:)" /tmp/all.txt \
+            | sed -E 's/^feat\(([^)]+)\): /**\1:** /' \
+            | sed -E 's/^feat: //' \
+            > /tmp/feat.txt || true
+
+          grep -iE "^fix(\(|:)" /tmp/all.txt \
+            | sed -E 's/^fix\(([^)]+)\): /**\1:** /' \
+            | sed -E 's/^fix: //' \
+            > /tmp/fix.txt || true
+
+          grep -iE "^style(\(|:)" /tmp/all.txt \
+            | sed -E 's/^style\(([^)]+)\): /**\1:** /' \
+            | sed -E 's/^style: //' \
+            > /tmp/style.txt || true
+
+          grep -iE "^docs?(\(|:)" /tmp/all.txt \
+            | sed -E 's/^docs?\(([^)]+)\): /**\1:** /' \
+            | sed -E 's/^docs?: //' \
+            > /tmp/docs.txt || true
+
+          grep -iE "^(chore|ci|build|refactor|perf|test)(\(|:)" /tmp/all.txt \
+            | sed -E 's/^[a-z]+\(([^)]+)\): /**\1:** /' \
+            | sed -E 's/^[a-z]+: //' \
+            > /tmp/maint.txt || true
+
+          grep -ivE "^(feat|fix|docs?|style|chore|ci|build|refactor|perf|test)(\(|:)" /tmp/all.txt \
+            > /tmp/other.txt || true
+
+          # --- Assemble notes ---
+
+          : > release-notes.md
+
+          for ENTRY in "feat:Features" "fix:Fixes" "style:Styling" "docs:Documentation" "maint:Maintenance" "other:Other"; do
+            FILE="/tmp/${ENTRY%%:*}.txt"
+            TITLE="${ENTRY#*:}"
+            if [ -s "$FILE" ]; then
+              {
+                echo "### $TITLE"
+                echo ""
+                sed 's/^/- /' "$FILE"
+                echo ""
+              } >> release-notes.md
+            fi
+          done
+
+          echo "--- Generated release notes ---"
+          cat release-notes.md
+
+      - name: Create tag and GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          git tag "$TAG"
+          git push origin "$TAG"
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --notes-file release-notes.md \
+            --target main
+
+      - name: Update changelog
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          DATE=$(date +%Y-%m-%d)
+
+          {
+            echo "# Changelog"
+            echo ""
+            echo "## $TAG ($DATE)"
+            echo ""
+            cat release-notes.md
+            if [ -f changelog.md ]; then
+              # Append previous content, skip the "# Changelog" header line
+              tail -n +2 changelog.md
+            fi
+          } > changelog.tmp
+          mv changelog.tmp changelog.md
+
+      - name: Commit changelog
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add changelog.md
+          git diff --cached --quiet || {
+            git commit -m "docs: update changelog for ${{ steps.tag.outputs.tag }}"
+            git push origin main
+          }

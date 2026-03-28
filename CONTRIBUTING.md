@@ -5,8 +5,8 @@ Willkommen! We're happy about every contribution, no matter how small.
 ## Quick start
 
 ```sh
-git clone https://github.com/bitcircus101/bitcircus101.de.git
-cd bitcircus101.de
+git clone https://github.com/bmmmm/bitcircus101.git
+cd bitcircus101
 ```
 
 That's it for most changes. This is a static site — just open the HTML files in your browser.
