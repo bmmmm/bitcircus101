@@ -53,58 +53,74 @@
     },
 
     /**
-     * Set aria-current and nav__link--current on the nav item that matches this URL.
-     * Index hash (#contact vs default) picks Kontakt vs Über uns.
+     * Map pathname to a logical HTML filename (root → index.html).
+     */
+    normalizePageFile(pathname) {
+      if (!pathname || pathname === "/") return "index.html";
+      const trimmed = pathname.replace(/\/+$/, "") || "/";
+      if (trimmed === "/" || trimmed === "") return "index.html";
+      const parts = trimmed.split("/").filter(Boolean);
+      const last = parts[parts.length - 1] || "";
+      if (/\.html?$/i.test(last)) return last.toLowerCase();
+      return "index.html";
+    },
+
+    /**
+     * Set aria-current and nav__link--current by resolving each nav href against
+     * the current URL (works with / vs /index.html and subdirectory deploys).
      */
     markCurrentPage(mainNav) {
       const links = mainNav.querySelectorAll("ul li a[href]:not(.nav__rss)");
       if (!links.length) return;
 
-      const parts = window.location.pathname.split("/").filter(Boolean);
-      let file = parts.length ? parts[parts.length - 1] : "";
-      if (!file || !/\.html?$/i.test(file)) {
-        file = "index.html";
-      }
-      file = file.toLowerCase();
+      const here = window.location;
+      const hereFile = Navigation.normalizePageFile(here.pathname);
+      const hereHash = (here.hash || "").toLowerCase();
 
-      const hash = (window.location.hash || "").toLowerCase();
+      links.forEach((a) => {
+        a.removeAttribute("aria-current");
+        a.classList.remove("nav__link--current");
+      });
 
-      let current = null;
-      if (file === "donations.html") {
-        current = mainNav.querySelector('a[href="donations.html"]');
-      } else if (file === "events.html") {
-        current = mainNav.querySelector('a[href="events.html"]');
-      } else if (file === "raum-nutzen.html") {
-        current = mainNav.querySelector('a[href="raum-nutzen.html"]');
-      } else if (file === "index.html") {
-        if (hash === "#contact") {
-          current = mainNav.querySelector('a[href="index.html#contact"]');
-        } else {
-          current = mainNav.querySelector('a[href="index.html#about"]');
+      for (let i = 0; i < links.length; i++) {
+        const a = links[i];
+        const raw = a.getAttribute("href");
+        if (!raw || raw === "feed.xml") continue;
+
+        let resolved;
+        try {
+          resolved = new URL(raw, here.href);
+        } catch (e) {
+          continue;
         }
+
+        const linkFile = Navigation.normalizePageFile(resolved.pathname);
+        if (linkFile !== hereFile) continue;
+
+        if (hereFile === "index.html") {
+          const rawLower = raw.toLowerCase();
+          if (hereHash === "#contact") {
+            if (!rawLower.includes("#contact")) continue;
+          } else {
+            if (rawLower.includes("#contact")) continue;
+            if (!rawLower.includes("#about")) continue;
+          }
+        }
+
+        a.setAttribute("aria-current", "page");
+        a.classList.add("nav__link--current");
+        return;
       }
-
-      if (!current) return;
-
-      current.setAttribute("aria-current", "page");
-      current.classList.add("nav__link--current");
     },
 
     /** Re-run when only the hash changes on index.html (in-page anchors). */
     bindHashUpdates() {
-      const parts = window.location.pathname.split("/").filter(Boolean);
-      let f = parts.length ? parts[parts.length - 1] : "";
-      if (!f || !/\.html?$/i.test(f)) {
-        f = "index.html";
+      if (Navigation.normalizePageFile(window.location.pathname) !== "index.html") {
+        return;
       }
-      if (f.toLowerCase() !== "index.html") return;
       window.addEventListener("hashchange", () => {
         const mainNav = utils.getElementById("main-nav");
         if (!mainNav) return;
-        mainNav.querySelectorAll("a.nav__link--current").forEach((a) => {
-          a.removeAttribute("aria-current");
-          a.classList.remove("nav__link--current");
-        });
         Navigation.markCurrentPage(mainNav);
       });
     },
