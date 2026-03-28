@@ -18,7 +18,9 @@ module.exports = defineConfig({
         // npx http-server . -p 8080 --silent
         command: 'npx --yes http-server . -p 8080 --silent',
         url: 'http://localhost:8080',
-        reuseExistingServer: !process.env.CI,
+        // Reuse :8080 when already serving (avoids bind errors if CI=1 is set locally).
+        // GitHub Actions always sets GITHUB_ACTIONS — there we always start a fresh server.
+        reuseExistingServer: !process.env.GITHUB_ACTIONS,
     },
 
     projects: [

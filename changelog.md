@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Tests:** [`playwright.config.js`](playwright.config.js) nutzt **`reuseExistingServer`** wenn **`GITHUB_ACTIONS`** nicht gesetzt ist (lokal wird **:8080** wiederverwendet statt zweiten **http-server** zu starten — vermeidet „port already in use“, selbst wenn **`CI=1`** in der Umgebung steht). Unter **GitHub Actions** weiterhin frischer Server.
 - **CI / Layout:** [`impressum-datenschutz.html`](impressum-datenschutz.html) per **`npm run build:layout`** mit Partials abgeglichen (Skip-Link, **`nav__prompt`** / **`nav__cursor`**, RSS-**`aria-label`**, **`main id="main-content"`**), damit der Layout-Drift-Check beim Deploy nicht fehlschlägt.
 - **Unterstützen (`/donations.html`):** **Überweisung** nutzt dieselbe **`donation-item`**-Kachel wie PayPal/Ko-fi; Überschriften als **`h2.donation-item__title`** (gleiche Typo wie Startseiten-**`h2`**). Online-Blöcke **`max-width: 720px`**, **`align-items: stretch`**, **`iframe width="100%"`**; PayPal-Link mit **`rel="noopener"`**.
 - **Navigation:** **Current page** in the main bar: **`aria-current="page"`** and **`nav__link--current`** (bottom accent rule) from pathname; on **`index.html`**, **`#contact`** marks Kontakt, other sections default to Über uns; **`hashchange`** refreshes the marker. Cache-bust **[`main.js?v=5`](main.js)** on layout pages. **[`style.css`](style.css)**.
