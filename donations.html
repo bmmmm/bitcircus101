@@ -33,10 +33,16 @@
         <meta name="twitter:image" content="https://bitcircus101.de/images/img1.jpeg" />
         <link rel="canonical" href="https://bitcircus101.de/donations.html" />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
-        <link rel="stylesheet" href="style.css?v=8f694a32" />
+        <link rel="stylesheet" href="style.css?v=5141413a" />
     </head>
     <body>
-        <div id="site-notice" class="site-notice">
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+        <div
+            id="site-notice"
+            class="site-notice"
+            role="region"
+            aria-label="Hinweis zu Cookies und Zahlungsdiensten"
+        >
             <p>
                 <strong>Hinweis:</strong> Diese Seite nutzt Zahlungsdienste von
                 Drittanbietern (PayPal, Ko-fi, Stripe) sowie Google-Dienste
@@ -60,10 +66,10 @@
                 Nutzung von Cookies durch diese Dienste zu.
                 <a href="impressum-datenschutz.html">Mehr zum Datenschutz</a>.
             </p>
-            <button onclick="acceptCookies()">
+            <button type="button" onclick="acceptCookies()">
                 Akzeptieren &amp; fortfahren
             </button>
-            <button class="decline" onclick="declineCookies()">Ablehnen</button>
+            <button type="button" class="decline" onclick="declineCookies()">Ablehnen</button>
         </div>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
@@ -87,11 +93,11 @@
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed">&#9673;</a></li>
+                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673;</a></li>
                 </ul>
             </nav>
         </header>
-        <main>
+        <main id="main-content">
             <div class="container">
                 <section>
                     <h1>Keep the lights on</h1>
@@ -101,9 +107,10 @@
                         Schön, dass du dabei bist.
                     </p>
 
-                    <div class="donate-option donate-option--iban">
-                        <h3>Überweisung</h3>
-                        <p>IBAN auf Anfrage per
+                    <div class="donation-item donation-item--iban">
+                        <h2 class="donation-item__title">Überweisung</h2>
+                        <p class="donation-item__text">
+                            IBAN auf Anfrage per
                             <a href="mailto:info@bitcircus101.de">E-Mail</a>.
                         </p>
                     </div>
@@ -149,6 +156,7 @@
                                 width="425"
                                 height="350"
                                 class="map-container iframe"
+                                title="OpenStreetMap – bitcircus101"
                             ></iframe>
                             <br />
                             <small>
@@ -209,18 +217,20 @@
                 if (container) {
                     container.innerHTML = `
                         <div class="donation-item">
-                            <h3>PayPal</h3>
+                            <h2 class="donation-item__title">PayPal</h2>
                             <a href="https://www.paypal.com/paypalme/b6m"
                                target="_blank"
+                               rel="noopener"
                                class="btn btn-primary">
                                 Mit PayPal unterstützen
                             </a>
                         </div>
                         <div class="donation-item">
-                            <h3>Ko&#x2011;fi</h3>
+                            <h2 class="donation-item__title">Ko&#x2011;fi</h2>
                             <iframe
                                 id="kofiframe"
                                 src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
+                                width="100%"
                                 height="712"
                                 title="Ko-fi – bmabma"
                             ></iframe>
@@ -249,6 +259,6 @@
                 document.body.classList.remove("cookie-banner-shown");
             }
         </script>
-        <script defer src="main.js?v=8f694a32"></script>
+        <script defer src="main.js?v=5141413a"></script>
     </body>
 </html>

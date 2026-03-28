@@ -31,9 +31,10 @@
         <link rel="canonical" href="https://bitcircus101.de/events.html" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
-        <link rel="stylesheet" href="style.css?v=8f694a32" />
+        <link rel="stylesheet" href="style.css?v=5141413a" />
     </head>
     <body>
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
                 <a class="nav__brand" href="index.html">
@@ -56,11 +57,11 @@
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed">&#9673;</a></li>
+                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673;</a></li>
                 </ul>
             </nav>
         </header>
-        <main>
+        <main id="main-content">
         <div class="container">
             <section>
                 <h1>Was passiert im bitcircus101?</h1>
@@ -82,9 +83,16 @@
                             <a class="events-subscribe__btn events-subscribe__btn--rss"
                                 href="feed.xml"
                                 title="RSS Feed"
+                                aria-label="RSS-Feed der Termine"
                             >&#9673; RSS</a>
-                            <button class="events-subscribe__btn events-subscribe__btn--info" id="linkup-info-btn">
-                                ? linkup
+                            <button
+                                type="button"
+                                class="events-subscribe__btn events-subscribe__btn--info"
+                                id="linkup-info-btn"
+                                aria-controls="linkup-info-panel"
+                                aria-expanded="false"
+                            >
+                                ? linkup@bitcircus101
                             </button>
                         </div>
                     </div>
@@ -102,18 +110,21 @@
                     </div>
                 </div>
 
-                <div id="events-list" class="events-list">
-                    <noscript>
-                        <p>JavaScript wird für die Kalender-Anzeige benötigt.
-                        <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" target="_blank" rel="noopener">Kalender direkt öffnen ↗</a></p>
-                    </noscript>
-                </div>
+                <section aria-labelledby="events-list-heading">
+                    <h2 id="events-list-heading" class="sr-only">Kommende Termine</h2>
+                    <div id="events-list" class="events-list">
+                        <noscript>
+                            <p>JavaScript wird für die Kalender-Anzeige benötigt.
+                            <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" target="_blank" rel="noopener">Kalender direkt öffnen ↗</a></p>
+                        </noscript>
+                    </div>
 
-                <div class="events-privacy">
-                    Kalenderdaten von unserer Nextcloud (nc.6bm.de) –
-                    keine Tracker, keine Drittanbieter.
-                </div>
-                <div id="events-last-sync" class="events-last-sync"></div>
+                    <div class="events-privacy">
+                        Kalenderdaten von unserer Nextcloud (nc.6bm.de) –
+                        keine Tracker, keine Drittanbieter.
+                    </div>
+                    <div id="events-last-sync" class="events-last-sync"></div>
+                </section>
             </section>
             <div class="back-link">
                 <a href="index.html">← Zurück zur Startseite</a>
@@ -137,13 +148,14 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="events.js?v=8f694a32"></script>
-        <script defer src="main.js?v=8f694a32"></script>
+        <script defer src="events.js?v=5141413a"></script>
+        <script defer src="main.js?v=5141413a"></script>
         <script>
             document.getElementById("linkup-info-btn").addEventListener("click", function() {
                 var panel = document.getElementById("linkup-info-panel");
                 var isHidden = panel.hidden;
                 panel.hidden = !isHidden;
+                this.setAttribute("aria-expanded", isHidden ? "true" : "false");
                 this.textContent = isHidden ? "× linkup@bitcircus101" : "? linkup@bitcircus101";
             });
         </script>

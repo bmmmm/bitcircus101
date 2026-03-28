@@ -39,11 +39,73 @@
       const menuToggle = utils.getElementById("menu-toggle");
       const mainNav = utils.getElementById("main-nav");
 
-      if (!menuToggle || !mainNav) return;
+      if (!mainNav) return;
+
+      Navigation.markCurrentPage(mainNav);
+      Navigation.bindHashUpdates();
+
+      if (!menuToggle) return;
 
       utils.addEventListenerSafe(menuToggle, "click", () => {
         const expanded = mainNav.classList.toggle("active");
         menuToggle.setAttribute("aria-expanded", String(expanded));
+      });
+    },
+
+    /**
+     * Set aria-current and nav__link--current on the nav item that matches this URL.
+     * Index hash (#contact vs default) picks Kontakt vs Über uns.
+     */
+    markCurrentPage(mainNav) {
+      const links = mainNav.querySelectorAll("ul li a[href]:not(.nav__rss)");
+      if (!links.length) return;
+
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      let file = parts.length ? parts[parts.length - 1] : "";
+      if (!file || !/\.html?$/i.test(file)) {
+        file = "index.html";
+      }
+      file = file.toLowerCase();
+
+      const hash = (window.location.hash || "").toLowerCase();
+
+      let current = null;
+      if (file === "donations.html") {
+        current = mainNav.querySelector('a[href="donations.html"]');
+      } else if (file === "events.html") {
+        current = mainNav.querySelector('a[href="events.html"]');
+      } else if (file === "raum-nutzen.html") {
+        current = mainNav.querySelector('a[href="raum-nutzen.html"]');
+      } else if (file === "index.html") {
+        if (hash === "#contact") {
+          current = mainNav.querySelector('a[href="index.html#contact"]');
+        } else {
+          current = mainNav.querySelector('a[href="index.html#about"]');
+        }
+      }
+
+      if (!current) return;
+
+      current.setAttribute("aria-current", "page");
+      current.classList.add("nav__link--current");
+    },
+
+    /** Re-run when only the hash changes on index.html (in-page anchors). */
+    bindHashUpdates() {
+      const parts = window.location.pathname.split("/").filter(Boolean);
+      let f = parts.length ? parts[parts.length - 1] : "";
+      if (!f || !/\.html?$/i.test(f)) {
+        f = "index.html";
+      }
+      if (f.toLowerCase() !== "index.html") return;
+      window.addEventListener("hashchange", () => {
+        const mainNav = utils.getElementById("main-nav");
+        if (!mainNav) return;
+        mainNav.querySelectorAll("a.nav__link--current").forEach((a) => {
+          a.removeAttribute("aria-current");
+          a.classList.remove("nav__link--current");
+        });
+        Navigation.markCurrentPage(mainNav);
       });
     },
   };
@@ -438,7 +500,7 @@
         p +
         "%</span>" +
         '<div class="footer__funding-info">' +
-        '<div class="footer__funding-info-head">[ LIGHTS ON? ]</div>' +
+        '<h3 class="footer__funding-info-head">[ LIGHTS ON? ]</h3>' +
         "<p>Miete, Strom, Internet &mdash; der Space kostet Geld.</p>" +
         "<p>" +
         bar +
