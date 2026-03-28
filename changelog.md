@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## Pre-release
 
 - **Tests:** [`playwright.config.js`](playwright.config.js) nutzt **`reuseExistingServer`** wenn **`GITHUB_ACTIONS`** nicht gesetzt ist (lokal wird **:8080** wiederverwendet statt zweiten **http-server** zu starten — vermeidet „port already in use“, selbst wenn **`CI=1`** in der Umgebung steht). Unter **GitHub Actions** weiterhin frischer Server.
 - **CI / Layout:** [`impressum-datenschutz.html`](impressum-datenschutz.html) per **`npm run build:layout`** mit Partials abgeglichen (Skip-Link, **`nav__prompt`** / **`nav__cursor`**, RSS-**`aria-label`**, **`main id="main-content"`**), damit der Layout-Drift-Check beim Deploy nicht fehlschlägt.
