@@ -355,11 +355,8 @@
           "https://www.openstreetmap.org/export/embed.html?bbox=7.057943344116212%2C50.72276418262858%2C7.12090015411377%2C50.75828718705439&layer=mapnik&marker=50.74052905321277%2C7.08942174911499";
       }
 
-      const isVisible = container.style.display === "block";
-      container.style.display = isVisible ? "none" : "block";
-      if (container.classList.contains("hidden")) {
-        container.classList.remove("hidden");
-      }
+      const isVisible = !container.classList.contains("hidden");
+      container.classList.toggle("hidden");
       button.innerHTML = isVisible
         ? '<span aria-hidden="true">$</span> map --load<span class="location-card__cursor" aria-hidden="true">▋</span>'
         : '<span aria-hidden="true">$</span> map --unload';
@@ -403,7 +400,6 @@
         (e) => {
           if (e.target.matches("img")) {
             e.target.style.display = "none";
-            console.warn("Failed to load image:", e.target.src);
           }
         },
         true,
@@ -532,20 +528,17 @@
         '<a href="donations.html">$ unterst\u00fctzen \u2192</a>' +
         "</div>";
 
-      // Click to toggle info panel (only bind once)
-      if (!el._fundingBound) {
-        el.addEventListener("click", function (e) {
-          e.stopPropagation();
-          var info = el.querySelector(".footer__funding-info");
-          if (info) info.classList.toggle("active");
-        });
+      // Click to toggle info panel
+      el.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var info = el.querySelector(".footer__funding-info");
+        if (info) info.classList.toggle("active");
+      });
 
-        document.addEventListener("click", function () {
-          var info = el.querySelector(".footer__funding-info");
-          if (info) info.classList.remove("active");
-        });
-        el._fundingBound = true;
-      }
+      document.addEventListener("click", function () {
+        var info = el.querySelector(".footer__funding-info");
+        if (info) info.classList.remove("active");
+      });
     },
   };
 
@@ -694,22 +687,9 @@
     },
   };
 
-  // Multiple initialization strategies for robustness
-  let initialized = false;
-
-  function safeInit() {
-    if (initialized) return;
-    initialized = true;
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => App.init());
+  } else {
     App.init();
   }
-
-  // Strategy 1: DOM ready
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", safeInit);
-  } else {
-    safeInit();
-  }
-
-  // Strategy 2: Window loaded (fallback)
-  window.addEventListener("load", safeInit);
 })();
