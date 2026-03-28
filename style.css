@@ -366,16 +366,6 @@ nav li a.nav__cta.nav__link--current:focus-visible {
     border-color: #ff80c0;
 }
 
-.btn-secondary {
-    border-color: var(--border);
-    color: var(--text-dim);
-}
-
-.btn-secondary:hover {
-    border-color: var(--text-dim);
-    background: var(--bg-panel);
-    color: var(--text);
-}
 
 .btn-large {
     padding: var(--gap-md) var(--gap-xl);
@@ -600,15 +590,6 @@ nav li a.nav__cta.nav__link--current:focus-visible {
     color: var(--bg);
 }
 
-.site-notice .btn-secondary {
-    border-color: var(--border);
-    color: var(--text-dim);
-}
-
-.site-notice .btn-secondary:hover {
-    background: var(--bg-elevated);
-    color: var(--text);
-}
 
 body.cookie-banner-shown {
     overflow: hidden;
