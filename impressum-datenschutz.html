@@ -40,10 +40,13 @@
         <link rel="stylesheet" href="style.css?v=4" />
     </head>
     <body>
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
                 <a class="nav__brand" href="index.html">
-                    <span class="nav__prompt">&gt;_</span>
+                    <span class="nav__prompt" aria-hidden="true"
+                        >&gt;<span class="nav__cursor">_</span></span
+                    >
                     <span class="nav__name">bitcircus101</span>
                 </a>
                 <button
@@ -60,11 +63,11 @@
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed">&#9673;</a></li>
+                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673;</a></li>
                 </ul>
             </nav>
         </header>
-        <main>
+        <main id="main-content">
             <div class="container">
                 <section>
                     <h1>Impressum &amp; Datenschutz</h1>
