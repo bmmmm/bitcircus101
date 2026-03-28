@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-03-28T12:53:53.542Z",
+  "lastSync": "2026-03-28T13:51:01.805Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-28T12:53:52.594Z",
+      "fetchedAt": "2026-03-28T13:51:00.534Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-28T12:53:53.480Z",
+      "fetchedAt": "2026-03-28T13:51:01.788Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 180,
+      "total": 181,
       "past": 146,
-      "upcoming": 34
+      "upcoming": 35
     }
   ],
   "icsKeys": {
@@ -185,6 +185,7 @@
       "2025-04-10|PPP (Putzen Plenum Pizza)",
       "2026-03-28|Tag des offenen Hackspaces",
       "2025-04-12|valetudo install party",
+      "2026-05-20|Skillshare von Studis gegen Rechts",
       "2026-03-17|Offene Datenburg",
       "2026-03-24|Offene Datenburg",
       "2026-03-31|Offene Datenburg",
@@ -362,21 +363,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Tag des offenen Hackspaces",
-      "subtitle": "",
-      "description": "",
-      "location": "Datenburg, Bornheimerstraße 25",
-      "date": "2026-03-28",
-      "time": "13:37",
-      "tags": [
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -869,6 +855,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-21T10:25:58.933Z"
+    },
+    {
+      "title": "Skillshare von Studis gegen Rechts",
+      "subtitle": "",
+      "description": "Skillshare von Studis gegen Rechts zu den Themen Tor-Netzwerk und PGP",
+      "location": "Datenburg",
+      "date": "2026-05-20",
+      "time": "18:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-03-28T13:51:01.793Z"
     },
     {
       "title": "Raspberry Pi Workshop",
