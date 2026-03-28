@@ -1679,7 +1679,6 @@ h3.location-card__header {
     container-type: size;
     width: 100%;
     height: clamp(260px, min(68vh, 52vw), 480px);
-    max-height: clamp(260px, min(68vh, 52vw), 480px);
     box-sizing: border-box;
     margin: var(--gap-md) 0;
     padding: var(--gap-sm) var(--gap-md);
@@ -1704,7 +1703,7 @@ h3.location-card__header {
     text-align: left;
     overflow: visible;
     line-height: var(--ascii-hero-line-h);
-    /* ~111 columns; cap by stage width and height so whole logo stays visible */
+    /* 112 columns; cap by stage width and height so whole logo stays visible */
     font-size: max(
         0.22rem,
         min(
@@ -2185,7 +2184,6 @@ h3.sr-only {
 @media (max-width: 900px) {
     #home .ascii-art-viewport {
         height: clamp(272px, min(70vh, 58vw), 470px);
-        max-height: clamp(272px, min(70vh, 58vw), 470px);
         padding: var(--gap-xs) var(--gap-sm);
     }
 }
@@ -2249,10 +2247,9 @@ h3.sr-only {
     #home .ascii-art-viewport {
         padding: var(--gap-xs) var(--gap-sm);
         height: min(74vh, 520px);
-        max-height: min(74vh, 520px);
     }
     #home .ascii-art-viewport .ascii-art {
-        --ascii-hero-cols: 111;
+        --ascii-hero-cols: 115;
         --ascii-hero-height-pad: 0.35;
         --ascii-hero-line-h: 1.14;
         font-size: max(
