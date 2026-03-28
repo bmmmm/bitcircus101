@@ -640,6 +640,14 @@ body.cookie-banner-shown .back-link {
 
 body.cookie-banner-shown header { filter: blur(4px); opacity: 0.2; pointer-events: none; }
 
+.site-notice__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin: 0 0 var(--gap-sm);
+    color: var(--accent);
+    letter-spacing: 0.04em;
+}
+
 .site-notice__list {
     text-align: left;
     margin: 0 auto var(--gap-sm);
@@ -654,7 +662,6 @@ body.cookie-banner-shown header { filter: blur(4px); opacity: 0.2; pointer-event
 }
 
 .decline-message {
-    display: none;
     text-align: center;
     margin-top: var(--gap-lg);
 }
@@ -662,7 +669,6 @@ body.cookie-banner-shown header { filter: blur(4px); opacity: 0.2; pointer-event
 .osm-map-decline-section {
     margin-top: var(--gap-xl);
     text-align: center;
-    display: none;
 }
 
 /* =============================================================================
@@ -982,6 +988,10 @@ h3.location-card__header {
 /* =============================================================================
    Donation Components
    ============================================================================= */
+#donations-heading {
+    text-align: center;
+}
+
 .donation-buttons {
     display: flex;
     flex-direction: column;
@@ -1044,6 +1054,46 @@ h3.location-card__header {
     max-width: 100%;
     min-width: 0;
     background: var(--bg-panel);
+}
+
+.donation-item--embed {
+    max-width: 42rem;
+    width: 100%;
+    align-self: stretch;
+    margin-inline: auto;
+}
+
+.donation-fallback {
+    margin: var(--gap-lg) 0;
+    padding: var(--gap-md) 0;
+    border-top: 1px solid var(--border);
+}
+
+.donation-fallback__lead {
+    margin: 0 0 var(--gap-md);
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    text-align: center;
+}
+
+.donation-fallback__options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+    align-items: stretch;
+}
+
+@media (min-width: 640px) {
+    .donation-fallback__options {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .donation-fallback__card {
+        flex: 1 1 240px;
+        max-width: 320px;
+    }
 }
 
 /* =============================================================================
