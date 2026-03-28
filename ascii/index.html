@@ -8,9 +8,8 @@
         <meta name="theme-color" content="#0d0d0d" />
         <meta
             name="description"
-            content="Internes ASCII-Spielplatz für bitcircus101 – nicht in der Navigation verlinkt."
+            content="Interner ASCII-Spielplatz für bitcircus101 – nicht in der Navigation verlinkt."
         />
-        <link rel="canonical" href="https://bitcircus101.de/ascii/" />
         <link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
         <link rel="stylesheet" href="../style.css?v=4" />
     </head>
@@ -59,7 +58,7 @@
                 </label>
                 <div class="ascii-playground__preview-wrap">
                     <span class="ascii-playground__labeltext">Vorschau</span>
-                    <pre id="ascii-preview" class="ascii-playground__preview" aria-live="polite"></pre>
+                    <pre id="ascii-preview" class="ascii-playground__preview"></pre>
                 </div>
             </div>
         </main>
@@ -160,13 +159,15 @@
             clearTimeout(copyBtn._t);
             copyBtn._t = setTimeout(function () { hint.textContent = ""; }, 2000);
           }
+        }).catch(function () {
+          if (hint) hint.textContent = "Kopieren nicht möglich.";
         });
       } else {
         ta.select();
         try {
           document.execCommand("copy");
           if (hint) hint.textContent = "Kopiert.";
-        } catch (e420) {
+        } catch (e) {
           if (hint) hint.textContent = "Kopieren nicht möglich.";
         }
       }
