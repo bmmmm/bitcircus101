@@ -160,13 +160,15 @@
 
     filterBar = document.createElement("div");
     filterBar.className = "events-filter";
+    filterBar.setAttribute("role", "group");
+    filterBar.setAttribute("aria-label", "Termine nach Schlagwort filtern");
 
-    var html = '<span class="events-filter__label">$ filter</span>';
+    var html = '<span class="events-filter__label" aria-hidden="true">$ filter</span>';
     tags.forEach(function (t) {
-      html += '<button class="events-filter__tag" data-tag="' +
-        esc(t) + '">' + esc(t) + "</button>";
+      html += '<button type="button" class="events-filter__tag" data-tag="' +
+        esc(t) + '" aria-pressed="false">' + esc(t) + "</button>";
     });
-    html += '<button class="events-filter__clear" style="display:none">' +
+    html += '<button type="button" class="events-filter__clear" style="display:none" aria-label="Filter zur\u00fccksetzen">' +
       "\u00d7 reset</button>";
     filterBar.innerHTML = html;
 
@@ -180,9 +182,11 @@
         if (idx > -1) {
           activeFilters.splice(idx, 1);
           btn.classList.remove("active");
+          btn.setAttribute("aria-pressed", "false");
         } else {
           activeFilters.push(tag);
           btn.classList.add("active");
+          btn.setAttribute("aria-pressed", "true");
         }
         clearBtn.style.display = activeFilters.length ? "" : "none";
         renderFilteredCards();
@@ -193,6 +197,7 @@
       activeFilters = [];
       filterBar.querySelectorAll(".events-filter__tag").forEach(function (b) {
         b.classList.remove("active");
+        b.setAttribute("aria-pressed", "false");
       });
       clearBtn.style.display = "none";
       renderFilteredCards();

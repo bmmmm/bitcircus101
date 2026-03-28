@@ -7,9 +7,10 @@
     --bg-elevated:   #141414;
     --bg-panel:      #1a1a1a;
     --accent:        #00d97e;
-    --accent-dim:    #00994f;
+    --accent-dim:    #00b868;
     --text:          #d4d4d4;
-    --text-dim:      #777;
+    /* Muted text: ~4.5:1 on --bg / --bg-elevated for typical body sizes */
+    --text-dim:      #9a9a9a;
     --text-bright:   #fff;
     --border:        #2a2a2a;
     --border-accent: #00d97e;
@@ -29,6 +30,8 @@
 
     /* Layout */
     --max-width: 1000px;
+    /* Horizontal page gutter (nav uses same clamp rhythm) */
+    --page-inline: clamp(var(--gap-sm), 3.5vw, var(--gap-lg));
     /* Single visual row inside sticky header (desktop); mobile overrides touch targets */
     --nav-row: 40px;
 
@@ -79,11 +82,15 @@ h1 { font-size: clamp(1.08rem, 2.75vw + 0.55rem, 1.6rem); }
 h2 {
     font-size: 1.25rem;
     color: var(--accent);
+    border-left: 3px solid var(--accent-dim);
+    padding-left: var(--gap-sm);
 }
-h2::before { content: ">> "; color: var(--text-dim); font-weight: normal; }
 
-h3 { font-size: 1.05rem; }
-h3::before { content: "> "; color: var(--text-dim); font-weight: normal; }
+h3 {
+    font-size: 1.05rem;
+    border-left: 2px solid var(--border);
+    padding-left: var(--gap-sm);
+}
 
 h4 { font-size: var(--font-size); }
 
@@ -106,13 +113,15 @@ small { color: var(--text-dim); font-size: 0.85em; }
 main {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: clamp(var(--gap-md), 2.5vw + 0.35rem, var(--gap-lg));
+    padding:
+        clamp(var(--gap-md), 2.5vw + 0.35rem, var(--gap-lg))
+        var(--page-inline);
 }
 
 .container {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: 0 var(--gap-lg);
+    padding: 0;
 }
 
 section {
@@ -120,6 +129,26 @@ section {
     padding: var(--gap-lg);
     background: var(--bg-elevated);
     border-left: 2px solid var(--accent);
+}
+
+/* Raum specs & similar: term / description pairs */
+.room-spec {
+    margin: 0 0 var(--gap-md);
+}
+.room-spec dt {
+    color: var(--accent);
+    font-weight: bold;
+    margin-top: var(--gap-md);
+}
+.room-spec dt:first-child {
+    margin-top: 0;
+}
+.room-spec dd {
+    margin: 0 0 var(--gap-sm);
+    color: var(--text);
+}
+.room-spec dd:last-of-type {
+    margin-bottom: 0;
 }
 
 /* =============================================================================
@@ -136,7 +165,7 @@ header {
 nav {
     max-width: var(--max-width);
     margin: 0 auto;
-    padding: var(--gap-xs) clamp(var(--gap-sm), 3.5vw, var(--gap-lg));
+    padding: var(--gap-xs) var(--page-inline);
     display: flex;
     align-items: center;
     gap: clamp(var(--gap-sm), 3vw, var(--gap-lg));
@@ -245,6 +274,17 @@ nav li a.nav__cta {
 nav li a.nav__cta:hover,
 nav li a.nav__cta:focus-visible {
     color: #ff80c0;
+}
+
+/* Current page (set by main.js from pathname / hash) */
+nav li a.nav__link--current {
+    color: var(--text-bright);
+    text-decoration: none;
+    box-shadow: inset 0 -2px 0 var(--accent);
+}
+nav li a.nav__cta.nav__link--current {
+    color: var(--text-bright);
+    box-shadow: inset 0 -2px 0 #ff4da6;
 }
 
 .menu-toggle {
@@ -449,13 +489,16 @@ nav li a.nav__cta:focus-visible {
     pointer-events: auto;
 }
 
-.footer__funding-info-head {
+.footer__funding-info .footer__funding-info-head {
     color: var(--accent);
     letter-spacing: 0.1em;
-    margin-bottom: 0.5em;
+    margin: 0 0 0.5em;
     font-size: 0.7rem;
+    font-weight: bold;
+    line-height: 1.3;
+    border: none;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 0.4em;
+    padding: 0 0 0.4em;
 }
 
 .footer__funding-info p { margin: 0; color: var(--text); }
@@ -814,13 +857,17 @@ select:focus {
 
 .location-card:hover::before { opacity: 1; }
 
-.location-card__header {
+h3.location-card__header {
     position: relative;
     z-index: 1;
+    border: none;
     border-bottom: 1px solid var(--border);
+    margin: 0;
     padding: 0.4em 1em;
     color: var(--accent);
     font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1.3;
     letter-spacing: 0.1em;
     background: var(--bg-elevated);
 }
@@ -928,7 +975,11 @@ select:focus {
     flex-direction: column;
     gap: var(--gap-md);
     margin: var(--gap-lg) 0;
-    align-items: center;
+    align-items: stretch;
+    width: 100%;
+    max-width: min(720px, 100%);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .donation-buttons a {
@@ -938,19 +989,48 @@ select:focus {
     color: var(--bg);
 }
 
+/* Bank + online methods: same panel as PayPal/Ko-fi; width matches widened column */
+.donation-item--iban {
+    max-width: min(720px, 100%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .donation-item {
     padding: var(--gap-lg);
     border: 1px solid var(--border);
     background: var(--bg-panel);
-    text-align: center;
     margin-bottom: var(--gap-lg);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
 }
 
-.donation-item h3 { margin-top: 0; }
+/* Uses global h2 rules (matches index sections); tighten top margin inside cards */
+.donation-item .donation-item__title {
+    margin-top: 0;
+    margin-bottom: var(--gap-md);
+}
+
+.donation-item__text {
+    margin: 0;
+    font-size: var(--font-size);
+    color: var(--text);
+}
+
+.donation-item .btn {
+    align-self: center;
+}
 
 .donation-item iframe {
     border: none;
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
     background: var(--bg-panel);
 }
 
@@ -1189,6 +1269,8 @@ select:focus {
     margin: 0 0 0.2rem;
     font-weight: bold;
     flex: 1;
+    border-left: none;
+    padding-left: 0;
 }
 
 .event-card__title::before { content: none; }
@@ -1350,8 +1432,9 @@ select:focus {
     margin: 0;
     font-weight: normal;
     letter-spacing: 0.06em;
+    border-left: none;
+    padding-left: 0;
 }
-.events-subscribe__title::before { content: none; }
 
 .events-subscribe__actions {
     display: flex;
@@ -1398,19 +1481,6 @@ select:focus {
     border-color: var(--accent-dim);
     background: rgba(0, 217, 126, 0.04);
 }
-
-/* Donate options */
-.donate-option {
-    border: 1px solid var(--border);
-    padding: 1rem 1.25rem;
-    margin-bottom: var(--gap-md);
-}
-.donate-option h3 {
-    font-size: 0.88rem;
-    margin: 0 0 0.4rem;
-}
-.donate-option h3::before { content: none; }
-.donate-option p { margin: 0; font-size: 0.85rem; }
 
 .events-privacy,
 .privacy-notice {
@@ -1558,7 +1628,11 @@ select:focus {
     border-left: 2px solid var(--accent);
 }
 
-.linkup-description h3 { margin-top: 0; }
+.linkup-description h3 {
+    margin-top: 0;
+    border-left: none;
+    padding-left: 0;
+}
 
 /* =============================================================================
    ASCII Art
@@ -2065,6 +2139,17 @@ select:focus {
     border: 0;
 }
 
+/* Headings only for outline: no visible left bar */
+h2.sr-only,
+h3.sr-only {
+    border: none;
+    padding: 0;
+}
+
+.signal-channel > h3.sr-only {
+    margin: 0;
+}
+
 .skip-link {
     position: absolute;
     top: -40px;
@@ -2083,11 +2168,6 @@ select:focus {
 /* =============================================================================
    Responsive Design
    ============================================================================= */
-
-/* Tablet */
-@media (max-width: 1000px) {
-    .container { padding: 0 var(--gap-md); }
-}
 
 /* Hero: a bit more vertical room before full mobile rules */
 @media (max-width: 900px) {
@@ -2147,8 +2227,9 @@ select:focus {
     h2 { font-size: 1.1rem; }
     h3 { font-size: 1rem; }
 
-    main { padding: var(--gap-sm); }
-    .container { padding: 0 var(--gap-sm); }
+    main {
+        padding: var(--gap-sm) var(--page-inline);
+    }
     section { padding: var(--gap-md); margin: var(--gap-lg) 0; }
 
     .ascii-art { font-size: 0.7rem; padding: var(--gap-sm); }
