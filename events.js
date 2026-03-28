@@ -41,8 +41,8 @@
   }
 
   function formatSourceLabel(name) {
-    if (name === "Datenburg e.V.") {
-      return "Externer Kalender: Datenburg e.V.";
+    if (name && name !== "bitcircus101") {
+      return "Externer Kalender: " + name;
     }
     return name;
   }
@@ -72,7 +72,7 @@
     eventsToolbar = document.createElement("div");
     eventsToolbar.className = "events-toolbar";
     eventsToolbar.innerHTML =
-      '<label class="events-toolbar__label">' +
+      '<label class="events-toolbar__label" for="events-only-bitcircus">' +
       '<input type="checkbox" id="events-only-bitcircus" class="events-toolbar__checkbox" />' +
       "<span>Nur Events im bitcircus101 anzeigen</span></label>";
     parent.insertBefore(eventsToolbar, insertBeforeNode);
