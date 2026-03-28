@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24"
           cache: "npm"
 
       - name: Install dependencies
@@ -97,12 +97,24 @@ jobs:
             [ -f "/tmp/_live_$f" ] && cp "/tmp/_live_$f" "$f"
           done
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
       - name: Apply layout partials to HTML
         run: node scripts/inject-layout.mjs
 
+      - name: Minify CSS and JS
+        run: |
+          echo "Before: style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B"
+          npx --yes csso-cli style.css -o style.css
+          npx --yes terser main.js -o main.js --compress --mangle
+          npx --yes terser events.js -o events.js --compress --mangle
+          echo "After:  style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B"
+
       - name: Cache-bust asset references
         run: |
-          # Generate a short content hash from all cacheable assets
+          # Generate a short content hash from all cacheable assets (post-minification)
           HASH=$(cat style.css main.js events.js 2>/dev/null | sha256sum | cut -c1-8)
           echo "Asset hash: $HASH"
           # Replace ?v=anything with ?v=<hash> in all HTML files
@@ -110,10 +122,6 @@ jobs:
           for f in ascii/*.html; do
             [ -f "$f" ] && sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" "$f"
           done
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: "22"
 
       - name: Regenerate events data if missing
         run: |

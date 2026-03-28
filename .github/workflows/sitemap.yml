@@ -38,16 +38,14 @@ jobs:
 
       - name: Remove excluded pages from sitemap
         run: |
-          python3 -c "
-          import re
-          with open('sitemap.xml') as f: xml = f.read()
-          # Remove Google verification files
-          xml = re.sub(r'<url>\s*<loc>[^<]*google[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
-          # Remove noindex pages (dankedankedanke)
-          xml = re.sub(r'<url>\s*<loc>[^<]*dankedankedanke[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
-          # Hidden ASCII playground
-          xml = re.sub(r'<url>\s*<loc>[^<]*/ascii/?[^<]*</loc>.*?</url>', '', xml, flags=re.DOTALL)
-          with open('sitemap.xml', 'w') as f: f.write(xml)
+          node -e "
+          const fs = require('fs');
+          let xml = fs.readFileSync('sitemap.xml', 'utf8');
+          // Remove Google verification files, noindex pages, hidden playground
+          for (const p of ['google', 'dankedankedanke', '/ascii/']) {
+            xml = xml.replace(new RegExp('<url>\\\\s*<loc>[^<]*' + p + '[^<]*</loc>[\\\\s\\\\S]*?</url>', 'g'), '');
+          }
+          fs.writeFileSync('sitemap.xml', xml.replace(/\\n{3,}/g, '\\n\\n'));
           "
 
       - name: Commit sitemap
