@@ -220,14 +220,50 @@ test.describe('Events content', () => {
 // ─── Subpages ────────────────────────────────────────────────────────────────
 
 test.describe('Donations page', () => {
-    test('loads and consent banner can be dismissed', async ({ page }) => {
+    test('consent, embedded widgets, decline fallbacks, and remembered consent', async ({ page, context }) => {
+        await context.clearCookies();
         await page.goto('/donations.html');
+        await page.evaluate(() => localStorage.removeItem('bitcircus-cookie-consent'));
+        await page.reload();
         await expect(page).toHaveTitle(/Unterstütz/);
         await expect(page.locator('#site-notice')).toBeVisible();
+        await expect(page.locator('#donations-heading')).toContainText(
+            /bitcircus101 unterstützen: Licht anlassen/,
+        );
 
-        const acceptBtn = page.locator('#site-notice button').first();
-        await acceptBtn.click();
+        await page.locator('#cookie-consent-accept').click();
         await expect(page.locator('#site-notice')).not.toBeVisible();
+        await expect(page.locator('#donation-content')).toBeVisible();
+        await expect(page.locator('#donation-content a[href*="paypal.com/paypalme"]')).toBeVisible();
+        const kofiIframe = page.locator('#kofiframe');
+        await expect(kofiIframe).toBeVisible();
+        expect(await kofiIframe.getAttribute('loading')).toBe('lazy');
+
+        await page.goto('/donations.html');
+        await expect(page.locator('#site-notice')).not.toBeVisible();
+        await expect(page.locator('#donation-content')).toBeVisible();
+
+        await page.evaluate(() => localStorage.removeItem('bitcircus-cookie-consent'));
+        await page.reload();
+        await expect(page.locator('#site-notice')).toBeVisible();
+        await page.locator('#cookie-consent-decline').click();
+        await expect(page.locator('#donation-fallback')).toBeVisible();
+        await expect(page.locator('#donation-fallback a[href*="ko-fi.com/bmabma"]')).toBeVisible();
+        await expect(page.locator('#donation-content')).toBeHidden();
+
+        await page.locator('#show-map-btn').click();
+        await expect(page.locator('#osm-map')).toHaveAttribute('src', /openstreetmap\.org\/export\/embed/);
+    });
+
+    test('loads widgets when consent was already saved (new session)', async ({ page, context }) => {
+        const fresh = await context.newPage();
+        await fresh.addInitScript(() => {
+            localStorage.setItem('bitcircus-cookie-consent', 'accepted');
+        });
+        await fresh.goto('/donations.html');
+        await expect(fresh.locator('#site-notice')).not.toBeVisible();
+        await expect(fresh.locator('#donation-content')).toBeVisible();
+        await fresh.close();
     });
 });
 
