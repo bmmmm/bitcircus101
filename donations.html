@@ -9,7 +9,6 @@
             name="description"
             content="bitcircus101 wird komplett durch die Community getragen. Hilf mit, dass der Hackspace in Bonn weiter läuft."
         />
-        <meta name="keywords" content="Hackspace Bonn unterstützen, bitcircus101 unterstützen, Hackerspace Bonn fördern" />
         <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#0d0d0d" />
         <meta property="og:type" content="website" />
@@ -33,43 +32,46 @@
         <meta name="twitter:image" content="https://bitcircus101.de/images/img1.jpeg" />
         <link rel="canonical" href="https://bitcircus101.de/donations.html" />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
-        <link rel="stylesheet" href="style.css?v=d2699b9d" />
+        <link rel="stylesheet" href="style.css?v=3e33261d" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
         <div
             id="site-notice"
             class="site-notice"
-            role="region"
-            aria-label="Hinweis zu Cookies und Zahlungsdiensten"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="site-notice-title"
         >
+            <h2 id="site-notice-title" class="site-notice__title">
+                Cookies und Zahlungsdienste
+            </h2>
             <p>
-                <strong>Hinweis:</strong> Diese Seite nutzt Zahlungsdienste von
-                Drittanbietern (PayPal, Ko-fi, Stripe) sowie Google-Dienste
-                (reCAPTCHA, SOCS), die Cookies setzen können, um Zahlungen sicher
-                abzuwickeln und Missbrauch zu verhindern.
+                <strong>Hinweis:</strong> Mit Zustimmung werden eingebettete Angebote von
+                <strong>PayPal</strong> und <strong>Ko-fi</strong> geladen. Diese Dienste können Cookies setzen
+                und ggf. weitere Anbieter einbinden (z.&nbsp;B. zur Betrugsprävention); siehe deren
+                Datenschutzhinweise.
             </p>
-            <ul
-                class="site-notice__list"
-            >
+            <ul class="site-notice__list">
                 <li>
-                    <strong>PayPal, Ko-fi, Stripe:</strong> Cookies für sichere
-                    Zahlungsabwicklung (siehe jeweilige Datenschutzerklärungen).
+                    <strong>PayPal:</strong> Weiterleitung und ggf. eingebettete Inhalte beim Zahlen –
+                    <a href="https://www.paypal.com/de/webapps/mpp/ua/privacy-full" target="_blank" rel="noopener noreferrer">Datenschutz PayPal</a>.
                 </li>
                 <li>
-                    <strong>Google (reCAPTCHA, SOCS):</strong> Cookies für
-                    Betrugsprävention, Bot-Schutz und Zahlungssicherheit.
+                    <strong>Ko-fi:</strong> eingebettetes Widget –
+                    <a href="https://more.ko-fi.com/privacy" target="_blank" rel="noopener noreferrer">Datenschutz Ko-fi</a>.
                 </li>
             </ul>
             <p>
-                Mit Klick auf „Akzeptieren &amp; fortfahren" stimmst du der
-                Nutzung von Cookies durch diese Dienste zu.
+                Mit Klick auf „Akzeptieren &amp; fortfahren" stimmst du der Nutzung dieser Dienste zu.
                 <a href="impressum-datenschutz.html">Mehr zum Datenschutz</a>.
             </p>
-            <button type="button" onclick="acceptCookies()">
+            <button type="button" id="cookie-consent-accept">
                 Akzeptieren &amp; fortfahren
             </button>
-            <button type="button" class="decline" onclick="declineCookies()">Ablehnen</button>
+            <button type="button" id="cookie-consent-decline" class="decline">
+                Ablehnen
+            </button>
         </div>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
@@ -99,8 +101,8 @@
         </header>
         <main id="main-content">
             <div class="container">
-                <section>
-                    <h1>Keep the lights on</h1>
+                <section aria-labelledby="donations-heading">
+                    <h1 id="donations-heading" tabindex="-1">bitcircus101 unterstützen: Licht anlassen</h1>
                     <p>
                         Miete, Internet, Strom – bitcircus101 wird komplett durch die Community getragen.
                         Der Balken im Footer zeigt, wo wir gerade stehen.
@@ -138,18 +140,56 @@
                         </p>
                     </div>
                     <div
+                        id="donation-fallback"
+                        class="donation-fallback"
+                        role="region"
+                        aria-label="Externe Zahlungsseiten ohne eingebettete Inhalte"
+                        hidden
+                    >
+                        <p class="donation-fallback__lead">
+                            Ohne eingebettete Inhalte – weiter zu den Anbietern (öffnet jeweils neues Fenster):
+                        </p>
+                        <div class="donation-fallback__options">
+                            <div class="donate-option donation-fallback__card">
+                                <h3>PayPal</h3>
+                                <p>
+                                    <a
+                                        href="https://www.paypal.com/paypalme/b6m"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="btn btn-primary"
+                                    >PayPal.me öffnen</a>
+                                </p>
+                            </div>
+                            <div class="donate-option donation-fallback__card">
+                                <h3>Ko&#x2011;fi</h3>
+                                <p>
+                                    <a
+                                        href="https://ko-fi.com/bmabma"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="btn btn-primary"
+                                    >Ko-fi-Profil öffnen</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div
                         id="osm-map-decline-section"
                         class="osm-map-decline-section hidden"
                     >
                         <button
+                            type="button"
                             id="show-map-btn"
                             class="map-button"
+                            aria-label="OpenStreetMap-Karte laden und anzeigen"
                         >
                             Auf Karte anzeigen
                         </button>
                         <div
                             id="osm-map-container"
-                            class="map-container hidden"
+                            class="map-container"
+                            style="display: none"
                         >
                             <iframe
                                 id="osm-map"
@@ -192,73 +232,121 @@
             </div>
         </footer>
         <script>
-            function show(id) {
-                var el = document.getElementById(id);
-                if (el) el.classList.remove("hidden");
-            }
-            function hide(id) {
-                var el = document.getElementById(id);
-                if (el) el.classList.add("hidden");
-            }
+            (function () {
+                var STORAGE_KEY = "bitcircus-cookie-consent";
 
-            document.addEventListener("DOMContentLoaded", function () {
-                hide("donation-content");
-                hide("decline-message");
-                hide("payment-method-text");
-                var siteNotice = document.getElementById("site-notice");
-                if (siteNotice) {
-                    siteNotice.style.display = "block";
+                function show(id) {
+                    var el = document.getElementById(id);
+                    if (el) el.classList.remove("hidden");
+                }
+
+                function hide(id) {
+                    var el = document.getElementById(id);
+                    if (el) el.classList.add("hidden");
+                }
+
+                function showDonationFallback(el) {
+                    if (!el) return;
+                    el.removeAttribute("hidden");
+                }
+
+                function hideDonationFallback(el) {
+                    if (!el) return;
+                    el.setAttribute("hidden", "");
+                }
+
+                function hideNoticeEl(notice) {
+                    if (!notice) return;
+                    notice.classList.add("hidden");
+                    notice.style.display = "none";
+                }
+
+                function showNoticeEl(notice) {
+                    if (!notice) return;
+                    notice.classList.remove("hidden");
+                    notice.style.display = "block";
+                }
+
+                function focusHeading() {
+                    var h = document.getElementById("donations-heading");
+                    if (h) h.focus();
+                }
+
+                function showDonationContent() {
+                    var container = document.getElementById("donation-content");
+                    if (container) {
+                        container.innerHTML =
+                            '<div class="donation-item">' +
+                            "<h3>PayPal</h3>" +
+                            '<a href="https://www.paypal.com/paypalme/b6m"' +
+                            ' target="_blank"' +
+                            ' rel="noopener noreferrer"' +
+                            ' class="btn btn-primary">' +
+                            "Mit PayPal unterstützen" +
+                            "</a>" +
+                            "</div>" +
+                            '<div class="donation-item donation-item--embed">' +
+                            "<h3>Ko&#x2011;fi</h3>" +
+                            '<iframe' +
+                            ' id="kofiframe"' +
+                            ' src="https://ko-fi.com/bmabma/?hidefeed=true&amp;widget=true&amp;embed=true&amp;preview=true"' +
+                            ' height="712"' +
+                            ' loading="lazy"' +
+                            ' title="Ko-fi – bmabma"' +
+                            "></iframe>" +
+                            "</div>";
+                        container.classList.remove("hidden");
+                    }
+                    hideDonationFallback(document.getElementById("donation-fallback"));
+                    var siteNotice = document.getElementById("site-notice");
+                    hideNoticeEl(siteNotice);
+                    show("payment-method-text");
+                    document.body.style.overflow = "auto";
+                    document.body.classList.remove("cookie-banner-shown");
+                }
+
+                function acceptCookies() {
+                    localStorage.setItem(STORAGE_KEY, "accepted");
+                    showDonationContent();
+                    focusHeading();
+                }
+
+                function declineCookies() {
+                    show("decline-message");
+                    showDonationFallback(document.getElementById("donation-fallback"));
+                    show("osm-map-decline-section");
+                    hide("donation-content");
+                    hide("payment-method-text");
+                    hideNoticeEl(document.getElementById("site-notice"));
+                    document.body.style.overflow = "auto";
+                    document.body.classList.remove("cookie-banner-shown");
+                    focusHeading();
+                }
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    hide("donation-content");
+                    hide("decline-message");
+                    hideDonationFallback(document.getElementById("donation-fallback"));
+                    hide("payment-method-text");
+
+                    var siteNotice = document.getElementById("site-notice");
+                    var acceptBtn = document.getElementById("cookie-consent-accept");
+                    var declineBtn = document.getElementById("cookie-consent-decline");
+
+                    if (localStorage.getItem(STORAGE_KEY) === "accepted") {
+                        showDonationContent();
+                        focusHeading();
+                        return;
+                    }
+
+                    showNoticeEl(siteNotice);
                     document.body.classList.add("cookie-banner-shown");
-                }
-            });
-
-            function showDonationContent() {
-                var container = document.getElementById("donation-content");
-                if (container) {
-                    container.innerHTML = `
-                        <div class="donation-item">
-                            <h2 class="donation-item__title">PayPal</h2>
-                            <a href="https://www.paypal.com/paypalme/b6m"
-                               target="_blank"
-                               rel="noopener"
-                               class="btn btn-primary">
-                                Mit PayPal unterstützen
-                            </a>
-                        </div>
-                        <div class="donation-item">
-                            <h2 class="donation-item__title">Ko&#x2011;fi</h2>
-                            <iframe
-                                id="kofiframe"
-                                src="https://ko-fi.com/bmabma/?hidefeed=true&widget=true&embed=true&preview=true"
-                                width="100%"
-                                height="712"
-                                title="Ko-fi – bmabma"
-                            ></iframe>
-                        </div>
-                    `;
-                    container.classList.remove("hidden");
-                }
-                hide("site-notice");
-                show("payment-method-text");
-                document.body.style.overflow = "auto";
-                document.body.classList.remove("cookie-banner-shown");
-            }
-
-            function acceptCookies() {
-                localStorage.setItem("bitcircus-cookie-consent", "accepted");
-                showDonationContent();
-            }
-
-            function declineCookies() {
-                show("decline-message");
-                show("osm-map-decline-section");
-                hide("donation-content");
-                hide("payment-method-text");
-                hide("site-notice");
-                document.body.style.overflow = "auto";
-                document.body.classList.remove("cookie-banner-shown");
-            }
+                    if (acceptBtn) acceptBtn.addEventListener("click", acceptCookies);
+                    if (declineBtn) declineBtn.addEventListener("click", declineCookies);
+                    if (acceptBtn) acceptBtn.focus();
+                });
+            })();
         </script>
-        <script defer src="main.js?v=d2699b9d"></script>
+        <script defer src="main.js?v=3e33261d"></script>
     </body>
 </html>
