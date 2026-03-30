@@ -17,6 +17,10 @@ const END = "<!-- logo-slider:end -->";
 
 const LOGO_EXT = /\.(svg|png|jpe?g)$/i;
 
+/** Transparent 1×1 SVG data URL — real assets load via JS when the section is near the viewport. */
+const PLACEHOLDER_SRC =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E";
+
 function altFromFilename(filename) {
   const base = filename.replace(LOGO_EXT, "");
   const words = base.replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim();
@@ -29,7 +33,7 @@ function buildItem(filename, emptyAlt) {
   const altAttr = alt === "" ? 'alt=""' : `alt="${escapeHtml(alt)}"`;
   return [
     "                                <div class=\"logo-slider__item\">",
-    `                                    <img src="${escapeHtml(rel)}" ${altAttr} loading="lazy" decoding="async" />`,
+    `                                    <img class="logo-slider__img" src="${PLACEHOLDER_SRC}" data-src="${escapeHtml(rel)}" ${altAttr} decoding="async" />`,
     "                                </div>",
   ].join("\n");
 }

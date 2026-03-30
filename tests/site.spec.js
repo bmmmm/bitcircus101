@@ -39,7 +39,10 @@ test.describe('Home page', () => {
 
         await expect(page.locator('#freundinnen')).toBeVisible();
         await expect(page.locator('#logo-slider-heading')).toContainText('Freund*innen');
-        await expect(page.locator('#freundinnen .logo-slider__item img').first()).toBeVisible();
+        await page.locator('#freundinnen').scrollIntoViewIfNeeded();
+        const firstLogo = page.locator('#freundinnen .logo-slider__item img.logo-slider__img').first();
+        await expect(firstLogo).toBeVisible();
+        await expect(firstLogo).toHaveAttribute('src', /images\/logo-slider\//);
     });
 });
 
