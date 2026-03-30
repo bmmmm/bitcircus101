@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-03-30T17:28:34.343Z",
+  "lastSync": "2026-03-30T18:32:16.034Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-30T17:28:33.258Z",
+      "fetchedAt": "2026-03-30T18:32:15.132Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-30T17:28:34.185Z",
+      "fetchedAt": "2026-03-30T18:32:15.990Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 181,
+      "total": 182,
       "past": 147,
-      "upcoming": 34
+      "upcoming": 35
     }
   ],
   "icsKeys": {
@@ -205,6 +205,7 @@
       "2026-07-07|Offene Datenburg",
       "2026-07-14|Offene Datenburg",
       "2026-07-21|Offene Datenburg",
+      "2026-07-28|Offene Datenburg",
       "2025-02-20|Raspberry Pi Workshop",
       "2024-11-07|PPP (Putzen Plenum Pizza)",
       "2024-12-05|PPP (Putzen Plenum Pizza)",
