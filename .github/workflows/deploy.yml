@@ -26,11 +26,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify HTML matches layout partials
+      - name: Verify HTML matches layout partials and logo slider
         run: |
           node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
           git diff --exit-code -- '*.html' || (
-            echo "::error::Layout drift: edit includes/site-header.html / site-footer.html, then run npm run build:layout and commit."
+            echo "::error::HTML drift: run npm run build:layout and npm run build:logos, then commit."
             exit 1
           )
 
@@ -101,8 +102,10 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Apply layout partials to HTML
-        run: node scripts/inject-layout.mjs
+      - name: Apply layout partials and logo slider to HTML
+        run: |
+          node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
 
       - name: Minify CSS and JS
         run: |
