@@ -20,11 +20,12 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Verify layout HTML matches partials
+      - name: Verify layout HTML matches partials and logo slider
         run: |
           node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
           git diff --exit-code -- '*.html' || (
-            echo "::error::Layout drift: run npm run build:layout and commit the updated HTML files."
+            echo "::error::HTML drift: run npm run build:layout and npm run build:logos, then commit the updated HTML files."
             exit 1
           )
 
