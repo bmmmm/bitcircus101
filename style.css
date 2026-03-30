@@ -1950,6 +1950,94 @@ h3.location-card__header {
 }
 
 /* =============================================================================
+   Logo slider (Freund*innen)
+   ============================================================================= */
+.logo-slider__viewport {
+    overflow: hidden;
+    margin-top: var(--gap-md);
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    padding-block: var(--gap-md);
+}
+
+.logo-slider__track {
+    display: flex;
+    flex-direction: row;
+    width: max-content;
+    animation: logo-slider-marquee 50s linear infinite;
+}
+
+.logo-slider__track:hover {
+    animation-play-state: paused;
+}
+
+.logo-slider__set {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-xl);
+    padding-inline: var(--gap-lg);
+    flex-shrink: 0;
+}
+
+.logo-slider__item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.5rem;
+    max-width: min(220px, 32vw);
+    padding-inline: var(--gap-sm);
+    box-sizing: border-box;
+}
+
+.logo-slider__item img {
+    display: block;
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+}
+
+@keyframes logo-slider-marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo-slider__track {
+        animation: none;
+        width: 100%;
+        max-width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+        row-gap: var(--gap-md);
+    }
+
+    .logo-slider__viewport {
+        overflow: visible;
+        padding-block: var(--gap-lg);
+    }
+
+    .logo-slider__set[aria-hidden="true"] {
+        display: none;
+    }
+
+    .logo-slider__set:not([aria-hidden="true"]) {
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* =============================================================================
    Carousel
    ============================================================================= */
 .carousel-container {
