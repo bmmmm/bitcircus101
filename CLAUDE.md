@@ -73,10 +73,20 @@ Open `http://localhost:8080` in your browser. That's it.
 
 **Workflow:** Edit the partials → `npm run build:layout` → commit partials **and** changed `*.html`. CI runs `inject-layout.mjs` and fails if there is any `git diff` on HTML (drift). Deploy also runs inject before cache-busting so `live` stays aligned.
 
+## Homepage logo strip (Freund*innen)
+
+| Item | Role |
+|------|------|
+| `images/logo-slider/` | Partner logos (`.svg`, `.png`, `.jpg`, `.jpeg`) |
+| `scripts/build-logo-slider.mjs` | Writes the marked block in `index.html` from that folder |
+| `npm run build:logos` | Run after adding or removing files under `images/logo-slider/` |
+
+**Workflow:** Add or delete logo files → `npm run build:logos` → commit `index.html` **and** the image files. CI runs `inject-layout.mjs` then `build-logo-slider.mjs` and fails on HTML drift (same check as layout). Deploy runs both before minification/cache-busting.
+
 ## Code conventions
 
 - German UI text, English code comments
-- No bundlers — edit HTML/CSS/JS directly (except running `npm run build:layout` when you touch `includes/*.html`)
+- No bundlers — edit HTML/CSS/JS directly (except `npm run build:layout` for `includes/*.html` and `npm run build:logos` when you touch `images/logo-slider/*`)
 - Terminal aesthetic: dark background, green accent, monospace font
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css`

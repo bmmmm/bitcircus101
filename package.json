@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build:layout": "node scripts/inject-layout.mjs",
-    "build": "npm run build:layout",
+    "build:logos": "node scripts/build-logo-slider.mjs",
+    "build": "npm run build:layout && npm run build:logos",
     "test": "node --test tests/sync-events.spec.mjs && playwright test",
     "test:quick": "node --test tests/sync-events.spec.mjs",
     "test:unit": "node --test tests/sync-events.spec.mjs",
