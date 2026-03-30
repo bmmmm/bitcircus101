@@ -36,6 +36,10 @@ test.describe('Home page', () => {
         await expect(page.locator('#osm-map-container')).toBeVisible();
         const iframeSrc = await page.locator('#osm-map').getAttribute('src');
         expect(iframeSrc).toContain('openstreetmap.org');
+
+        await expect(page.locator('#freundinnen')).toBeVisible();
+        await expect(page.locator('#logo-slider-heading')).toContainText('Freund*innen');
+        await expect(page.locator('#freundinnen .logo-slider__item img').first()).toBeVisible();
     });
 });
 
