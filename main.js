@@ -660,6 +660,47 @@
   };
 
   // =============================================================================
+  // Logo slider (Freund*innen) — load partner logos when section nears viewport
+  // =============================================================================
+  const LogoSliderLazy = {
+    init() {
+      const root = utils.getElementById("freundinnen");
+      if (!root) return;
+      const imgs = root.querySelectorAll("img.logo-slider__img[data-src]");
+      if (!imgs.length) return;
+
+      const hydrate = () => {
+        imgs.forEach((img) => {
+          const ds = img.getAttribute("data-src");
+          if (ds) {
+            img.src = ds;
+            img.removeAttribute("data-src");
+          }
+        });
+      };
+
+      if (typeof IntersectionObserver === "undefined") {
+        hydrate();
+        return;
+      }
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (let i = 0; i < entries.length; i++) {
+            if (entries[i].isIntersecting) {
+              io.disconnect();
+              hydrate();
+              return;
+            }
+          }
+        },
+        { root: null, rootMargin: "160px 0px 240px 0px", threshold: 0 }
+      );
+      io.observe(root);
+    },
+  };
+
+  // =============================================================================
   // Footer Year
   // =============================================================================
   const FooterYear = {
@@ -684,6 +725,7 @@
       FundingStatus.init();
       ScrollTop.init();
       FooterYear.init();
+      LogoSliderLazy.init();
     },
   };
 
