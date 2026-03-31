@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-03-31T17:56:42.515Z",
+  "lastSync": "2026-03-31T19:06:29.227Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-03-31T17:56:41.652Z",
+      "fetchedAt": "2026-03-31T19:06:28.116Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-03-31T17:56:42.502Z",
+      "fetchedAt": "2026-03-31T19:06:29.212Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -365,39 +365,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-03-31",
-      "time": "19:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-03-31",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
     {
       "title": "Casual Linkup@bitcircus101 (1FR)",
       "subtitle": "",
@@ -998,6 +965,36 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-27T20:37:45.318Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-06-05",
+      "time": "20:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-03-31T19:06:29.217Z"
+    },
+    {
+      "title": "Digital Independence Day (DID)",
+      "subtitle": "",
+      "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
+      "location": "Bornheimer Straße 25, Bonn",
+      "date": "2026-06-07",
+      "time": "14:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-03-31T19:06:29.217Z"
     }
   ]
 }
