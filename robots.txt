@@ -5,6 +5,9 @@ User-agent: *
 Allow: /
 # Internal ASCII playground (no nav link, noindex in page)
 Disallow: /ascii/
+# Signal invite redirects – noindex pages, no need to crawl
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 Sitemap: https://bitcircus101.de/sitemap.xml
 
@@ -12,35 +15,53 @@ Sitemap: https://bitcircus101.de/sitemap.xml
 User-agent: GPTBot
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 User-agent: anthropic-ai
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 User-agent: Amazonbot
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 User-agent: CCBot
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 User-agent: YouBot
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/
 
 User-agent: Applebot-Extended
 Allow: /
 Disallow: /ascii/
+Disallow: /invite-info/
+Disallow: /invite-talk/

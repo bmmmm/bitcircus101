@@ -280,8 +280,11 @@
           html += '<p class="event-card__desc">' + esc(e.description) + "</p>";
         }
         if (e.location) {
-          html += '<p class="event-card__location">' +
-            '\u25cb ' + esc(e.location) + "</p>";
+          var osmLoc = encodeURIComponent(e.location);
+          html += '<a class="event-card__location" href="' +
+            'https://www.openstreetmap.org/search?query=' + osmLoc +
+            '" target="_blank" rel="noopener" title="Auf Karte anzeigen">' +
+            '\u25cb ' + esc(e.location) + "</a>";
         }
         // Meta: time + tags
         html += '<div class="event-card__meta">';
@@ -322,6 +325,7 @@
     });
 
     el.innerHTML = html;
+    el.removeAttribute("aria-busy");
 
     // Permalink: copy URL to clipboard on click
     el.querySelectorAll(".event-action--link").forEach(function (btn) {
