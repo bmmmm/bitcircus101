@@ -102,6 +102,7 @@
           '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
           "Kalender \u00f6ffnen \u2197</a></p>";
       }
+      el.removeAttribute("aria-busy");
       return;
     }
 
@@ -514,6 +515,7 @@
       "<p>Termine direkt ansehen: " +
       '<a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
       "Kalender \u00f6ffnen \u2197</a></p></div>";
+    el.removeAttribute("aria-busy");
   }
 
   // ── Last Sync Display ────────────────────────────────────────────────────
