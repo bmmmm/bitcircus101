@@ -225,11 +225,14 @@ nav li {
 
 .nav__rss {
     color: #d08030;
-    font-size: 1.1rem;
+    font-size: 0.78rem;
+    border: 1px solid #604020;
+    padding: 0.25em 0.7em;
+    letter-spacing: 0.04em;
     line-height: 1;
     transition: color var(--transition);
 }
-.nav__rss:hover { color: #f0a050; }
+.nav__rss:hover { color: #f0a050; border-color: #d08030; }
 
 nav ul {
     list-style: none;
@@ -372,6 +375,19 @@ nav li a.nav__cta.nav__link--current:focus-visible {
     font-size: 1rem;
 }
 
+/* Static shimmer — same look as signal-decode-btn but no animation */
+.btn-shimmer {
+    border-color: var(--accent-dim);
+    box-shadow: 0 0 8px rgba(0, 217, 126, 0.2);
+}
+
+.btn-shimmer:hover {
+    background: rgba(0, 217, 126, 0.07);
+    color: var(--accent);
+    border-color: var(--accent);
+    box-shadow: 0 0 16px rgba(0, 217, 126, 0.4);
+}
+
 .btn-block {
     width: 100%;
     display: flex;
@@ -463,9 +479,9 @@ nav li a.nav__cta.nav__link--current:focus-visible {
 }
 
 /* Funding levels */
-.footer__status--green { color: rgba(0, 217, 126, 0.65); }
-.footer__status--amber { color: rgba(240, 160, 48, 0.75); }
-.footer__status--red { color: rgba(224, 64, 64, 0.8); }
+.footer__status--green { color: rgba(0, 217, 126, 0.85); }
+.footer__status--amber { color: rgba(240, 160, 48, 0.90); }
+.footer__status--red   { color: rgba(224, 64, 64, 0.95); }
 
 .footer__funding-bar { letter-spacing: 0.08em; }
 
@@ -725,6 +741,14 @@ select:focus {
     border-color: var(--accent);
 }
 
+.signal-channel--red { border-color: rgba(255, 34, 34, 0.55); }
+.signal-channel--red .signal-channel-label { color: #ff2222; }
+.signal-channel--red:hover { border-color: #ff4444; }
+
+.signal-channel--blue { border-color: rgba(34, 102, 255, 0.55); }
+.signal-channel--blue .signal-channel-label { color: #2266ff; }
+.signal-channel--blue:hover { border-color: #4488ff; }
+
 .signal-channel:not(.signal-channel--primary):hover {
     border-color: var(--accent-dim);
 }
@@ -822,6 +846,321 @@ select:focus {
     letter-spacing: 0.04em;
 }
 
+/* Signal decode block — index.html contact section */
+.signal-decode-block {
+    margin: var(--gap-lg) 0;
+    text-align: center;
+}
+
+.signal-decode-result {
+    display: inline-block;
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: var(--accent);
+    letter-spacing: 0.22em;
+    min-width: 11rem;
+    text-align: center;
+    font-family: var(--font);
+}
+
+@keyframes signal-btn-glow {
+    0%, 100% {
+        box-shadow: 0 0 4px rgba(0, 217, 126, 0.15);
+        border-color: var(--accent-dim);
+    }
+    50% {
+        box-shadow: 0 0 18px rgba(0, 217, 126, 0.5),
+                    inset 0 0 8px rgba(0, 217, 126, 0.06);
+        border-color: var(--accent);
+    }
+}
+
+.signal-decode-btn {
+    min-width: 260px;
+    justify-content: center;
+    animation: signal-btn-glow 2.6s ease-in-out infinite;
+}
+
+.signal-decode-btn:hover {
+    background: rgba(0, 217, 126, 0.07);
+    color: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .signal-decode-btn { animation: none; }
+}
+
+/* Chat page — ASCII art pills */
+.ascii-pills {
+    display: flex;
+    gap: var(--gap-xl);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: var(--gap-lg) 0;
+}
+
+.ascii-pill {
+    display: inline-block;
+    text-decoration: none;
+    transition: opacity var(--transition), filter var(--transition);
+    line-height: 1;
+}
+
+.ascii-pill:hover {
+    opacity: 0.7;
+    filter: brightness(1.4);
+    text-decoration: none;
+}
+
+.ascii-pill pre {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font);
+    font-size: clamp(0.38rem, 1.4vw, 0.5rem);
+    line-height: 1.1;
+    white-space: pre;
+    overflow: visible;
+    background: none;
+    border: none;
+    color: inherit;
+}
+
+.ascii-pill--red  { color: #ff2222; }
+.ascii-pill--blue { color: #2266ff; }
+
+/* Chat page — minimal standalone */
+.chat-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--gap-xl) var(--gap-lg);
+    box-sizing: border-box;
+}
+
+.chat-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: var(--max-width);
+    padding: 0 var(--page-inline);
+}
+
+.chat-close {
+    position: fixed;
+    bottom: var(--gap-xl);
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6em 3.5em;
+    border: 1px solid var(--accent-dim);
+    color: var(--accent);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+    background: var(--bg-elevated);
+    transition: border-color var(--transition), background var(--transition);
+    z-index: var(--z-nav);
+    white-space: nowrap;
+    min-width: 160px;
+    box-shadow: 0 0 16px rgba(0, 217, 126, 0.12);
+}
+
+.chat-close:hover {
+    border-color: var(--accent);
+    background: rgba(0, 217, 126, 0.07);
+    color: var(--accent);
+    text-decoration: none;
+}
+
+@keyframes chat-fade-out {
+    from { opacity: 1; transform: scale(1); }
+    to   { opacity: 0; transform: scale(0.97); }
+}
+
+.chat-page--closing {
+    animation: chat-fade-out 0.3s ease-out forwards;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .chat-page--closing { animation: none; opacity: 0; }
+}
+
+.chat-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    margin-bottom: var(--gap-lg);
+    width: 100%;
+    max-width: 500px;
+}
+
+.chat-link {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    padding: 0.45em 0.8em;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-family: var(--font);
+    color: var(--text-dim);
+    background: var(--bg-elevated);
+    overflow: hidden;
+    transition: border-color var(--transition);
+}
+
+.chat-link:hover { text-decoration: none; }
+
+.chat-link__group {
+    flex-shrink: 0;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+}
+
+.chat-link__url {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    opacity: 0.45;
+    font-size: 0.66rem;
+}
+
+.chat-link--red  { border-left: 2px solid #ff2222; }
+.chat-link--red  .chat-link__group { color: #ff2222; }
+.chat-link--red:hover  { border-color: rgba(255, 34, 34, 0.5); border-left-color: #ff2222; }
+.chat-link--red:hover  .chat-link__url { opacity: 0.75; }
+
+.chat-link--blue { border-left: 2px solid #2266ff; }
+.chat-link--blue .chat-link__group { color: #2266ff; }
+.chat-link--blue:hover { border-color: rgba(34, 102, 255, 0.5); border-left-color: #2266ff; }
+.chat-link--blue:hover .chat-link__url { opacity: 0.75; }
+
+/* Unified signal cards (chat page) */
+.chat-cards {
+    display: flex;
+    gap: var(--gap-xl);
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 600px;
+    padding-bottom: 5rem; /* room for floating URLs */
+}
+
+.chat-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    flex: 1 1 200px;
+    max-width: 260px;
+    background: var(--bg-elevated);
+    transition: border-color var(--transition), opacity 0.25s ease, filter 0.25s ease;
+    /* no overflow:hidden — lets URL float below */
+}
+
+/* Dim the inactive card when the other is hovered or focused */
+.chat-cards:has(.chat-card:first-child:is(:hover, :focus-within)) .chat-card:last-child,
+.chat-cards:has(.chat-card:last-child:is(:hover, :focus-within))  .chat-card:first-child {
+    opacity: 0.06;
+    filter: blur(1.5px);
+}
+
+.chat-card:hover { text-decoration: none; }
+
+/* ASCII art as background texture */
+.chat-card__art {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font);
+    font-size: 0.95rem;
+    line-height: 1.1;
+    white-space: pre;
+    color: inherit;
+    background: none;
+    border: none;
+    overflow: hidden;
+    opacity: 0.11;
+    pointer-events: none;
+    z-index: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-card:hover .chat-card__art { opacity: 0.19; }
+
+/* Content sits above the art */
+.chat-card__body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-sm);
+    padding: var(--gap-xl) var(--gap-md) var(--gap-md);
+    flex: 1;
+}
+
+.chat-card__label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    color: inherit;
+    font-family: var(--font);
+}
+
+.chat-card__qr {
+    display: block;
+    width: 130px;
+    height: 130px;
+    max-width: 80%;
+}
+
+.chat-card__desc {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.chat-card__url {
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    bottom: 0;
+    transform: translateY(calc(100% + 3px));
+    z-index: 20;
+    display: block;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    word-break: break-all;
+    white-space: normal;
+    text-align: left;
+    padding: var(--gap-sm) var(--gap-md);
+    border: 1px solid var(--border);
+    background: var(--bg-elevated);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.55);
+    font-family: var(--font);
+    line-height: 1.6;
+}
+
+.chat-card--red  { border-color: rgba(255, 34, 34, 0.5); color: #ff2222; }
+.chat-card--red:hover  { border-color: #ff4444; }
+.chat-card--blue { border-color: rgba(34, 102, 255, 0.5); color: #2266ff; }
+.chat-card--blue:hover { border-color: #4488ff; }
+
 .address {
     margin: var(--gap-lg) 0;
     line-height: var(--line-height);
@@ -838,6 +1177,30 @@ select:focus {
     margin: var(--gap-lg) 0;
     min-width: 260px;
     overflow: hidden;
+    cursor: pointer;
+    transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.location-card:hover,
+.location-card:focus-within {
+    border-color: var(--accent-dim);
+    box-shadow: 0 0 14px rgba(0, 217, 126, 0.18);
+}
+
+.location-card:hover .location-card__map-btn,
+.location-card:focus-within .location-card__map-btn {
+    background: var(--bg-elevated);
+    color: var(--text-bright);
+}
+
+.location-card:hover .location-card__map-btn span,
+.location-card:focus-within .location-card__map-btn span {
+    opacity: 1;
+}
+
+.location-card:hover .location-card__coords,
+.location-card:focus-within .location-card__coords {
+    opacity: 0.9;
 }
 
 /* Coordinate grid fades in on hover — hints at hidden map */
@@ -958,6 +1321,47 @@ h3.location-card__header {
 }
 
 .location-card__osm-link:hover { color: var(--accent); }
+
+/* Section heading anchors — appear on heading hover */
+.section-anchor {
+    display: inline-block;
+    margin-left: 0.45em;
+    color: var(--accent-dim);
+    text-decoration: none;
+    font-size: 0.72em;
+    opacity: 0;
+    transition: opacity var(--transition), color var(--transition);
+    vertical-align: middle;
+    line-height: 1;
+    user-select: none;
+}
+
+h1:hover .section-anchor,
+h1:focus-within .section-anchor,
+h2:hover .section-anchor,
+h2:focus-within .section-anchor {
+    opacity: 1;
+}
+
+.section-anchor:hover {
+    color: var(--accent);
+    opacity: 1;
+}
+
+/* Briefly flash heading green when section is navigated to via URL */
+@keyframes anchor-highlight {
+    0%   { color: var(--accent); }
+    100% { color: inherit; }
+}
+
+section:target > h1,
+section:target > h2 {
+    animation: anchor-highlight 1.8s ease-out forwards;
+}
+
+nav a[aria-current="true"] {
+    color: var(--accent);
+}
 
 .back-link {
     text-align: center;
@@ -1322,6 +1726,15 @@ h3.location-card__header {
     font-size: 0.78rem;
     color: var(--text-dim);
     margin: 0.3rem 0 0.5rem;
+    text-decoration: none;
+}
+a.event-card__location {
+    cursor: pointer;
+    transition: color var(--transition);
+}
+a.event-card__location:hover {
+    color: var(--accent-dim);
+    text-decoration: underline;
 }
 
 .event-card__actions {
