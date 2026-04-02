@@ -50,6 +50,15 @@
         const expanded = mainNav.classList.toggle("active");
         menuToggle.setAttribute("aria-expanded", String(expanded));
       });
+
+      // Close mobile menu with Escape, return focus to toggle
+      utils.addEventListenerSafe(document, "keydown", (e) => {
+        if (e.key === "Escape" && mainNav.classList.contains("active")) {
+          mainNav.classList.remove("active");
+          menuToggle.setAttribute("aria-expanded", "false");
+          menuToggle.focus();
+        }
+      });
     },
 
     /**
@@ -347,6 +356,16 @@
       utils.addEventListenerSafe(showMapBtn, "click", () => {
         this.toggleMap(showMapBtn, mapContainer, osmMap);
       });
+
+      // Clicking anywhere on the card (outside the open map area) triggers the button
+      const card = showMapBtn.closest(".location-card");
+      if (card) {
+        utils.addEventListenerSafe(card, "click", (e) => {
+          if (showMapBtn.contains(e.target)) return;
+          if (mapContainer.contains(e.target)) return;
+          this.toggleMap(showMapBtn, mapContainer, osmMap);
+        });
+      }
     },
 
     toggleMap(button, container, iframe) {
@@ -375,22 +394,57 @@
   const Accessibility = {
     init() {
       this.setupSmoothScrolling();
+      this.setupNavHighlight();
       this.handleImageErrors();
     },
 
     setupSmoothScrolling() {
       utils.addEventListenerSafe(document, "click", (e) => {
-        if (e.target.matches('a[href^="#"]')) {
-          e.preventDefault();
-          const target = document.querySelector(e.target.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
+        const anchor = e.target.closest('a[href^="#"]');
+        if (!anchor) return;
+        e.preventDefault();
+        const href = anchor.getAttribute("href");
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.pushState(null, "", href);
+        }
+        // Section anchor: share or copy URL
+        if (anchor.classList.contains("section-anchor")) {
+          const url = location.href;
+          if (navigator.share) {
+            navigator.share({ url });
+          } else if (navigator.clipboard) {
+            navigator.clipboard.writeText(url).then(() => {
+              const orig = anchor.textContent;
+              anchor.textContent = "✓";
+              setTimeout(() => { anchor.textContent = orig; }, 1200);
             });
           }
         }
       });
+    },
+
+    setupNavHighlight() {
+      if (!("IntersectionObserver" in window)) return;
+      // Build map of hash → nav link (handles both "#id" and "page.html#id")
+      const navLinks = {};
+      document.querySelectorAll("nav a[href*='#']").forEach(link => {
+        const hash = "#" + link.getAttribute("href").split("#")[1];
+        navLinks[hash] = link;
+      });
+      const observed = document.querySelectorAll("section[id]");
+      if (!observed.length) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const link = navLinks["#" + entry.target.id];
+          if (!link) return;
+          link.setAttribute("aria-current", entry.isIntersecting ? "true" : "false");
+        });
+      }, { rootMargin: "-10% 0px -75% 0px" });
+
+      observed.forEach(s => { if (navLinks["#" + s.id]) observer.observe(s); });
     },
 
     handleImageErrors() {
@@ -462,6 +516,7 @@
       });
 
       el.innerHTML = html;
+      el.removeAttribute("aria-busy");
     },
   };
 
