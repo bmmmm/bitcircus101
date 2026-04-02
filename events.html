@@ -21,17 +21,17 @@
             property="og:description"
             content="Alle Termine im bitcircus101 Hackspace Bonn. linkup, Lightning Talks, offene Freitagabende."
         />
-        <meta property="og:image" content="https://bitcircus101.de/images/img1.jpeg" />
+        <meta property="og:image" content="https://bitcircus101.de/images/og-image.png" />
         <meta property="og:locale" content="de_DE" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Veranstaltungen – bitcircus101 Hackspace Bonn" />
         <meta name="twitter:description" content="Alle Termine im bitcircus101 Hackspace Bonn. linkup, Lightning Talks, offene Freitagabende." />
-        <meta name="twitter:image" content="https://bitcircus101.de/images/img1.jpeg" />
+        <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.png" />
         <meta name="theme-color" content="#0d0d0d" />
         <link rel="canonical" href="https://bitcircus101.de/events.html" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
-        <link rel="stylesheet" href="style.css?v=c66d248c" />
+        <link rel="stylesheet" href="style.css?v=da57d191" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -57,7 +57,7 @@
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673;</a></li>
+                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a></li>
                 </ul>
             </nav>
         </header>
@@ -112,7 +112,7 @@
 
                 <section aria-labelledby="events-list-heading">
                     <h2 id="events-list-heading" class="sr-only">Kommende Termine</h2>
-                    <div id="events-list" class="events-list">
+                    <div id="events-list" class="events-list" aria-live="polite" aria-busy="true">
                         <noscript>
                             <p>JavaScript wird für die Kalender-Anzeige benötigt.
                             <a href="https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC" target="_blank" rel="noopener">Kalender direkt öffnen ↗</a></p>
@@ -127,7 +127,7 @@
                 </section>
             </section>
             <div class="back-link">
-                <a href="index.html">← Zurück zur Startseite</a>
+                <a href="index.html" class="btn btn-shimmer">← Zurück zur Startseite</a>
             </div>
         </div>
         </main>
@@ -148,8 +148,8 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="events.js?v=c66d248c"></script>
-        <script defer src="main.js?v=c66d248c"></script>
+        <script defer src="events.js?v=da57d191"></script>
+        <script defer src="main.js?v=da57d191"></script>
         <script>
             document.getElementById("linkup-info-btn").addEventListener("click", function() {
                 var panel = document.getElementById("linkup-info-panel");
