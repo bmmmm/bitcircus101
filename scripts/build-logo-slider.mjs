@@ -48,7 +48,7 @@ function escapeHtml(s) {
 function buildMarkup(files) {
   const lines = [
     '                <section id="freundinnen" class="logo-slider" aria-labelledby="logo-slider-heading">',
-    '                    <h2 id="logo-slider-heading">Freund*innen des bitcircus101</h2>',
+    '                    <h2 id="logo-slider-heading">Freund*innen des bitcircus101<a class="section-anchor" href="#freundinnen" aria-label="Link zu: Freund*innen">#</a></h2>',
     '                    <div class="logo-slider__viewport">',
     '                        <div class="logo-slider__track">',
     '                            <div class="logo-slider__set">',
