@@ -1,22 +1,22 @@
 {
-  "lastSync": "2026-04-02T19:50:51.348Z",
+  "lastSync": "2026-04-02T20:34:13.515Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-02T19:50:50.404Z",
+      "fetchedAt": "2026-04-02T20:34:12.638Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 150,
+      "total": 151,
       "past": 112,
-      "upcoming": 38
+      "upcoming": 39
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-02T19:50:51.334Z",
+      "fetchedAt": "2026-04-02T20:34:13.468Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -90,6 +90,7 @@
       "2026-05-08|Casual Linkup@bitcircus101 (2FR)",
       "2026-06-12|Casual Linkup@bitcircus101 (2FR)",
       "2026-07-10|Casual Linkup@bitcircus101 (2FR)",
+      "2026-07-31|Casual Linkup@bitcircus101 (5FR)",
       "2025-07-14|Treffen: FSFE Bonner FSFE Community",
       "2025-09-20|Offene Ateliers",
       "2025-07-23|Bikepacking Stammtisch Bonn - Ride with GPS Club Account Meetup",
