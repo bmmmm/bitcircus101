@@ -122,7 +122,7 @@ jobs:
           echo "Asset hash: $HASH"
           # Replace ?v=anything with ?v=<hash> in all HTML files
           sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" *.html
-          for d in ascii chat invite-info invite-talk; do
+          for d in ascii chat invite-info invite-talk join-info join-talk; do
             for f in "$d"/*.html; do
               [ -f "$f" ] && sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" "$f"
             done
