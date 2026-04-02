@@ -356,6 +356,7 @@ test.describe('No JavaScript errors', () => {
         ['/impressum-datenschutz.html', 'Impressum'],
         ['/dankedankedanke.html', 'Danke'],
         ['/ascii/', 'ASCII playground'],
+        ['/chat/', 'Signal'],
     ];
 
     for (const [url, name] of pages) {
