@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Fri, 03 Apr 2026 19:58:22 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 03 Apr 2026 20:46:56 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-04-03 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
-      <category>#meetup</category>
-      <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
-      <guid isPermaLink="false">bitcircus101-20260403-linkup</guid>
-    </item>
     <item>
       <title>[2026-04-07 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -143,6 +135,16 @@
       <category>#talk</category>
       <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20260515-linkup</guid>
+    </item>
+    <item>
+      <title>[2026-05-19 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
+      <guid isPermaLink="false">bitcircus101-20260519-special</guid>
     </item>
   </channel>
 </rss>
