@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-04-02T23:34:25.014Z",
+  "lastSync": "2026-04-03T02:12:00.203Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-02T23:34:24.170Z",
+      "fetchedAt": "2026-04-03T02:11:59.200Z",
       "status": "ok",
-      "events": 21,
+      "events": 22,
       "added": 0,
       "removed": 0,
       "total": 151,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-02T23:34:24.998Z",
+      "fetchedAt": "2026-04-03T02:12:00.149Z",
       "status": "ok",
-      "events": 19,
+      "events": 18,
       "added": 0,
       "removed": 0,
       "total": 182,
@@ -379,21 +379,6 @@
       "type": "linkup",
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
-    {
-      "title": "Easterhegg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-04-03",
-      "time": "",
-      "tags": [
-        "#chaos"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-21T01:55:42.597Z"
     },
     {
@@ -996,6 +981,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-31T19:06:29.217Z"
+    },
+    {
+      "title": "Treffen: Bonner FSFE Community",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-06-08",
+      "time": "19:00",
+      "tags": [
+        "#foss"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-04-03T02:12:00.154Z"
     }
   ]
 }
