@@ -1,25 +1,25 @@
 {
-  "lastSync": "2026-04-09T19:17:10.710Z",
+  "lastSync": "2026-04-09T20:12:08.025Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-09T19:17:09.620Z",
+      "fetchedAt": "2026-04-09T20:12:07.135Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 152,
+      "total": 153,
       "past": 114,
-      "upcoming": 38
+      "upcoming": 39
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-09T19:17:10.676Z",
+      "fetchedAt": "2026-04-09T20:12:08.012Z",
       "status": "ok",
       "events": 19,
-      "added": 1,
+      "added": 0,
       "removed": 0,
       "total": 185,
       "past": 150,
@@ -63,6 +63,7 @@
       "2026-05-01|Casual Linkup@bitcircus101 (1FR)",
       "2026-06-05|Casual Linkup@bitcircus101 (1FR)",
       "2026-07-03|Casual Linkup@bitcircus101 (1FR)",
+      "2026-08-07|Casual Linkup@bitcircus101 (1FR)",
       "2025-06-27|Casual Linkup@bitcircus101 (4FR)",
       "2025-07-25|Casual Linkup@bitcircus101 (4FR)",
       "2025-08-22|Casual Linkup@bitcircus101 (4FR)",
@@ -371,21 +372,6 @@
   },
   "events": [
     {
-      "title": "PPP (Putzen Plenum Pizza)",
-      "subtitle": "",
-      "description": "PPP (Putzen Plenum Pizza)",
-      "location": "",
-      "date": "2026-04-09",
-      "time": "19:30",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
-    {
       "title": "Casual Linkup@bitcircus101 (2FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
@@ -483,10 +469,10 @@
     {
       "title": "Aktionstag Umbau",
       "subtitle": "",
-      "description": "",
+      "description": "Raum reserviert für Umbau. Packt gerne mit an.",
       "location": "Datenburg",
       "date": "2026-04-18",
-      "time": "18:00",
+      "time": "10:00",
       "tags": [
         "#community"
       ],
@@ -1000,6 +986,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-04-07T19:02:06.819Z"
+    },
+    {
+      "title": "PPP (Putzen Plenum Pizza)",
+      "subtitle": "",
+      "description": "PPP (Putzen Plenum Pizza)",
+      "location": "",
+      "date": "2026-06-11",
+      "time": "19:30",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-04-09T20:12:08.015Z"
     }
   ]
 }
