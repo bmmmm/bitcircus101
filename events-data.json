@@ -1,25 +1,25 @@
 {
-  "lastSync": "2026-04-13T18:00:18.742Z",
+  "lastSync": "2026-04-13T19:25:56.483Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-13T18:00:17.619Z",
+      "fetchedAt": "2026-04-13T19:25:55.619Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 154,
+      "total": 155,
       "past": 115,
-      "upcoming": 39
+      "upcoming": 40
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-13T18:00:18.692Z",
+      "fetchedAt": "2026-04-13T19:25:56.415Z",
       "status": "ok",
       "events": 19,
-      "added": 1,
+      "added": 0,
       "removed": 0,
       "total": 186,
       "past": 151,
@@ -181,7 +181,8 @@
       "2026-07-14|Look at my toys!",
       "2026-07-21|Look at my toys!",
       "2026-07-28|Look at my toys!",
-      "2026-08-04|Look at my toys!"
+      "2026-08-04|Look at my toys!",
+      "2026-08-11|Look at my toys!"
     ],
     "Datenburg e.V.": [
       "2025-04-16|Meta-Arbeitsgruppe",
@@ -373,21 +374,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Treffen: Bonner FSFE Community",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstraße 101 Bonn",
-      "date": "2026-04-13",
-      "time": "19:00",
-      "tags": [
-        "#foss"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -1003,6 +989,23 @@
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-04-10T20:35:22.863Z"
+    },
+    {
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-06-16",
+      "time": "19:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-04-13T19:25:56.418Z"
     }
   ]
 }
