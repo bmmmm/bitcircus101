@@ -5,19 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Tue, 14 Apr 2026 18:03:47 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 14 Apr 2026 19:48:06 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-04-14 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
-      <category>#relax</category>
-      <category>#social</category>
-      <category>#spieletreff</category>
-      <pubDate>Sat, 21 Mar 2026 01:55:42 +0000</pubDate>
-      <guid isPermaLink="false">bitcircus101-20260414-special</guid>
-    </item>
     <item>
       <title>[2026-04-17 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -145,6 +135,16 @@
       <category>#meetup</category>
       <pubDate>Fri, 27 Mar 2026 10:48:41 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20260529-linkup</guid>
+    </item>
+    <item>
+      <title>[2026-06-02 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Fri, 27 Mar 2026 10:48:41 +0000</pubDate>
+      <guid isPermaLink="false">bitcircus101-20260602-special</guid>
     </item>
   </channel>
 </rss>
