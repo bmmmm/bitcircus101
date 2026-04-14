@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-04-14T16:39:59.535Z",
+  "lastSync": "2026-04-14T18:03:47.468Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-14T16:39:58.739Z",
+      "fetchedAt": "2026-04-14T18:03:46.438Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,11 +16,11 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-14T16:39:59.520Z",
+      "fetchedAt": "2026-04-14T18:03:47.453Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
-      "removed": 0,
+      "added": 1,
+      "removed": 1,
       "total": 186,
       "past": 151,
       "upcoming": 35
@@ -191,7 +191,7 @@
       "2025-04-10|PPP (Putzen Plenum Pizza)",
       "2026-03-28|Tag des offenen Hackspaces",
       "2025-04-12|valetudo install party",
-      "2026-05-20|Skillshare von Studis gegen Rechts",
+      "2026-05-13|Skillshare von Studis gegen Rechts",
       "2026-03-17|Offene Datenburg",
       "2026-03-24|Offene Datenburg",
       "2026-03-31|Offene Datenburg",
@@ -389,22 +389,6 @@
       "type": "special",
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-04-14",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-21T01:55:42.597Z"
     },
     {
@@ -677,6 +661,21 @@
       "firstSeen": "2026-03-21T01:55:42.597Z"
     },
     {
+      "title": "Skillshare von Studis gegen Rechts",
+      "subtitle": "",
+      "description": "Skillshare von Studis gegen Rechts zu den Themen Tor-Netzwerk und PGP",
+      "location": "Datenburg",
+      "date": "2026-05-13",
+      "time": "18:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-04-14T18:03:47.457Z"
+    },
+    {
       "title": "PPP (Putzen Plenum Pizza)",
       "subtitle": "",
       "description": "PPP (Putzen Plenum Pizza)",
@@ -740,21 +739,6 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-21T10:25:58.933Z"
-    },
-    {
-      "title": "Skillshare von Studis gegen Rechts",
-      "subtitle": "",
-      "description": "Skillshare von Studis gegen Rechts zu den Themen Tor-Netzwerk und PGP",
-      "location": "Datenburg",
-      "date": "2026-05-20",
-      "time": "18:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-28T13:51:01.793Z"
     },
     {
       "title": "Raspberry Pi Workshop",
@@ -1006,6 +990,22 @@
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-04-13T19:25:56.418Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-06-16",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-04-14T18:03:47.457Z"
     }
   ]
 }
