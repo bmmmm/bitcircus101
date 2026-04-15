@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-04-15T19:16:10.170Z",
+  "lastSync": "2026-04-15T20:14:07.753Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-15T19:16:09.278Z",
+      "fetchedAt": "2026-04-15T20:14:06.798Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-15T19:16:10.156Z",
+      "fetchedAt": "2026-04-15T20:14:07.690Z",
       "status": "ok",
       "events": 20,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 186,
+      "total": 187,
       "past": 152,
-      "upcoming": 34
+      "upcoming": 35
     }
   ],
   "icsKeys": {
@@ -309,6 +309,7 @@
       "2026-05-14|PPP (Putzen Plenum Pizza)",
       "2026-06-11|PPP (Putzen Plenum Pizza)",
       "2026-07-09|PPP (Putzen Plenum Pizza)",
+      "2026-08-13|PPP (Putzen Plenum Pizza)",
       "2025-12-11|Mitgliedervollversammlung",
       "2026-01-04|Digital Independence Day (DID)",
       "2026-02-01|Digital Independence Day (DID)",
