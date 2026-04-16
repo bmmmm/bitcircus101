@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-04-16T17:51:03.260Z",
+  "lastSync": "2026-04-16T19:12:02.957Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-16T17:51:02.320Z",
+      "fetchedAt": "2026-04-16T19:12:01.993Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 155,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-16T17:51:03.245Z",
+      "fetchedAt": "2026-04-16T19:12:02.847Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 187,
@@ -375,21 +375,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Raspberry Pi Workshop",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-04-16",
-      "time": "19:00",
-      "tags": [
-        "#workshop"
-      ],
-      "type": "workshop",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
     {
       "title": "Linkup@bitcircus101",
       "subtitle": "",
@@ -1005,6 +990,23 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-04-14T19:48:05.756Z"
+    },
+    {
+      "title": "Linkup@bitcircus101",
+      "subtitle": "",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-06-19",
+      "time": "20:00",
+      "tags": [
+        "#meetup",
+        "#lightning-talks",
+        "#talk"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-04-16T19:12:02.850Z"
     }
   ]
 }
