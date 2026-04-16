@@ -1,22 +1,22 @@
 {
-  "lastSync": "2026-04-16T19:12:02.957Z",
+  "lastSync": "2026-04-16T20:09:30.768Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-16T19:12:01.993Z",
+      "fetchedAt": "2026-04-16T20:09:29.815Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 155,
+      "total": 156,
       "past": 117,
-      "upcoming": 38
+      "upcoming": 39
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-16T19:12:02.847Z",
+      "fetchedAt": "2026-04-16T20:09:30.754Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -91,6 +91,7 @@
       "2026-05-08|Casual Linkup@bitcircus101 (2FR)",
       "2026-06-12|Casual Linkup@bitcircus101 (2FR)",
       "2026-07-10|Casual Linkup@bitcircus101 (2FR)",
+      "2026-08-14|Casual Linkup@bitcircus101 (2FR)",
       "2026-07-31|Casual Linkup@bitcircus101 (5FR)",
       "2025-07-14|Treffen: FSFE Bonner FSFE Community",
       "2025-09-20|Offene Ateliers",
