@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-04-18T09:47:31.740Z",
+  "lastSync": "2026-04-18T10:39:17.226Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-18T09:47:30.638Z",
+      "fetchedAt": "2026-04-18T10:39:16.283Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-18T09:47:31.655Z",
+      "fetchedAt": "2026-04-18T10:39:17.211Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -376,21 +376,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Aktionstag Umbau",
-      "subtitle": "",
-      "description": "Raum reserviert für Umbau. Packt gerne mit an.",
-      "location": "Datenburg",
-      "date": "2026-04-18",
-      "time": "10:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-09T19:17:10.680Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -1008,6 +993,22 @@
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-04-17T20:42:04.962Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-06-23",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-04-18T10:39:17.215Z"
     }
   ]
 }
