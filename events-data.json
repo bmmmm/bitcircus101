@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-04-20T16:40:21.608Z",
+  "lastSync": "2026-04-20T17:57:13.055Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-20T16:40:20.462Z",
+      "fetchedAt": "2026-04-20T17:57:12.092Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-20T16:40:21.562Z",
+      "fetchedAt": "2026-04-20T17:57:13.046Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 187,
+      "total": 188,
       "past": 154,
-      "upcoming": 33
+      "upcoming": 34
     }
   ],
   "icsKeys": {
@@ -215,6 +215,7 @@
       "2026-07-28|Offene Datenburg",
       "2026-08-04|Offene Datenburg",
       "2026-08-11|Offene Datenburg",
+      "2026-04-27|Offene Datenburg",
       "2025-02-20|Raspberry Pi Workshop",
       "2024-11-07|PPP (Putzen Plenum Pizza)",
       "2024-12-05|PPP (Putzen Plenum Pizza)",
@@ -438,6 +439,22 @@
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-03-21T01:55:42.597Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-04-27",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-04-20T17:57:13.049Z"
     },
     {
       "title": "Look at my toys!",
@@ -993,22 +1010,6 @@
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-04-17T20:42:04.962Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-06-23",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-18T10:39:17.215Z"
     }
   ]
 }
