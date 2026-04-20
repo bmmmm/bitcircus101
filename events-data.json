@@ -1,29 +1,29 @@
 {
-  "lastSync": "2026-04-20T17:57:13.055Z",
+  "lastSync": "2026-04-20T19:12:59.355Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-20T17:57:12.092Z",
+      "fetchedAt": "2026-04-20T19:12:58.313Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 156,
+      "total": 157,
       "past": 118,
-      "upcoming": 38
+      "upcoming": 39
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-20T17:57:13.046Z",
+      "fetchedAt": "2026-04-20T19:12:59.340Z",
       "status": "ok",
       "events": 19,
       "added": 1,
       "removed": 0,
-      "total": 188,
+      "total": 189,
       "past": 154,
-      "upcoming": 34
+      "upcoming": 35
     }
   ],
   "icsKeys": {
@@ -183,7 +183,8 @@
       "2026-07-21|Look at my toys!",
       "2026-07-28|Look at my toys!",
       "2026-08-04|Look at my toys!",
-      "2026-08-11|Look at my toys!"
+      "2026-08-11|Look at my toys!",
+      "2026-08-18|Look at my toys!"
     ],
     "Datenburg e.V.": [
       "2025-04-16|Meta-Arbeitsgruppe",
@@ -215,6 +216,7 @@
       "2026-07-28|Offene Datenburg",
       "2026-08-04|Offene Datenburg",
       "2026-08-11|Offene Datenburg",
+      "2026-08-18|Offene Datenburg",
       "2026-04-27|Offene Datenburg",
       "2025-02-20|Raspberry Pi Workshop",
       "2024-11-07|PPP (Putzen Plenum Pizza)",
