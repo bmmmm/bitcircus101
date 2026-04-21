@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-04-21T17:00:14.063Z",
+  "lastSync": "2026-04-21T18:07:36.388Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-21T17:00:12.924Z",
+      "fetchedAt": "2026-04-21T18:07:35.359Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-21T17:00:13.817Z",
+      "fetchedAt": "2026-04-21T18:07:36.234Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -394,22 +394,6 @@
       "type": "special",
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-04-21",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-03-21T01:55:42.597Z"
     },
     {
@@ -1012,6 +996,22 @@
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-04-17T20:42:04.962Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-06-23",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-04-21T18:07:36.238Z"
     }
   ]
 }
