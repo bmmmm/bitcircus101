@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-04-21T18:07:36.388Z",
+  "lastSync": "2026-04-21T19:44:43.225Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-21T18:07:35.359Z",
+      "fetchedAt": "2026-04-21T19:44:42.318Z",
       "status": "ok",
-      "events": 21,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 157,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-21T18:07:36.234Z",
+      "fetchedAt": "2026-04-21T19:44:43.211Z",
       "status": "ok",
-      "events": 19,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 189,
@@ -379,23 +379,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-04-21",
-      "time": "19:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
     {
       "title": "Spieleabend",
       "subtitle": "",
@@ -1012,6 +995,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-04-21T18:07:36.238Z"
+    },
+    {
+      "title": "Spieleabend",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-06-25",
+      "time": "19:00",
+      "tags": [
+        "#gaming"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-04-21T19:44:43.214Z"
     }
   ]
 }
