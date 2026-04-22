@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-04-22T18:07:18.535Z",
+  "lastSync": "2026-04-22T19:46:15.495Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-04-22T18:07:17.228Z",
+      "fetchedAt": "2026-04-22T19:46:14.585Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-04-22T18:07:18.262Z",
+      "fetchedAt": "2026-04-22T19:46:15.451Z",
       "status": "ok",
       "events": 20,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 189,
+      "total": 190,
       "past": 155,
-      "upcoming": 34
+      "upcoming": 35
     }
   ],
   "icsKeys": {
@@ -339,6 +339,7 @@
       "2026-05-21|Raspberry Pi Workshop",
       "2026-06-18|Raspberry Pi Workshop",
       "2026-07-16|Raspberry Pi Workshop",
+      "2026-08-20|Raspberry Pi Workshop",
       "2025-02-04|Sperrmüll rausbringen!!!!",
       "2026-04-03|Easterhegg",
       "2026-04-18|Aktionstag Umbau",
