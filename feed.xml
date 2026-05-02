@@ -5,16 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Sat, 02 May 2026 11:43:33 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 02 May 2026 13:08:46 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-05-02 12:15] Hackertour - OSM cleanup Bonn @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>Hackertour - OSM cleanup Bonn · 2026-05-02</description>
-      <pubDate>Fri, 01 May 2026 19:21:39 +0000</pubDate>
-      <guid isPermaLink="false">bitcircus101-20260502-special</guid>
-    </item>
     <item>
       <title>[2026-05-05 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -139,6 +132,14 @@
       <category>#spieletreff</category>
       <pubDate>Fri, 03 Apr 2026 20:46:56 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20260609-special</guid>
+    </item>
+    <item>
+      <title>[2026-06-12 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <category>#meetup</category>
+      <pubDate>Fri, 10 Apr 2026 20:35:22 +0000</pubDate>
+      <guid isPermaLink="false">bitcircus101-20260612-linkup</guid>
     </item>
   </channel>
 </rss>
