@@ -5,16 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Sat, 02 May 2026 09:41:04 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 02 May 2026 10:51:21 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-05-02 10:00] Hackers Frühstück @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>Hackers Frühstück · 2026-05-02</description>
-      <pubDate>Fri, 01 May 2026 19:21:39 +0000</pubDate>
-      <guid isPermaLink="false">bitcircus101-20260502-special</guid>
-    </item>
     <item>
       <title>[2026-05-02 12:15] Hackertour - OSM cleanup Bonn @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -136,6 +129,16 @@
       <category>#foss</category>
       <pubDate>Fri, 03 Apr 2026 02:12:00 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20260608-special</guid>
+    </item>
+    <item>
+      <title>[2026-06-09 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Fri, 03 Apr 2026 20:46:56 +0000</pubDate>
+      <guid isPermaLink="false">bitcircus101-20260609-special</guid>
     </item>
   </channel>
 </rss>
