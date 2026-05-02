@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-05-02T09:41:04.442Z",
+  "lastSync": "2026-05-02T10:51:21.545Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-02T09:41:03.452Z",
+      "fetchedAt": "2026-05-02T10:51:20.340Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-02T09:41:04.429Z",
+      "fetchedAt": "2026-05-02T10:51:21.360Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -387,21 +387,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Hackers Frühstück",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-05-02",
-      "time": "10:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-01T19:21:39.004Z"
-    },
     {
       "title": "Hackertour - OSM cleanup Bonn",
       "subtitle": "",
@@ -1017,6 +1002,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-01T20:27:46.411Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-07-03",
+      "time": "20:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-05-02T10:51:21.504Z"
     }
   ]
 }
