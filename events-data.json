@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-05-08T19:54:01.927Z",
+  "lastSync": "2026-05-08T20:58:54.394Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-08T19:54:00.825Z",
+      "fetchedAt": "2026-05-08T20:58:53.395Z",
       "status": "ok",
-      "events": 22,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 166,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-08T19:54:01.913Z",
+      "fetchedAt": "2026-05-08T20:58:54.317Z",
       "status": "ok",
-      "events": 18,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 192,
@@ -391,21 +391,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Casual Linkup@bitcircus101 (2FR)",
-      "subtitle": "",
-      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-05-08",
-      "time": "20:00",
-      "tags": [
-        "#meetup"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
     {
       "title": "BarCamp Bonn 2026",
       "subtitle": "",
@@ -1021,6 +1006,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-05T18:52:43.806Z"
+    },
+    {
+      "title": "PPP (Putzen Plenum Pizza)",
+      "subtitle": "",
+      "description": "PPP (Putzen Plenum Pizza)",
+      "location": "",
+      "date": "2026-07-09",
+      "time": "19:30",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-08T20:58:54.320Z"
     }
   ]
 }
