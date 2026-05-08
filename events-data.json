@@ -1,24 +1,24 @@
 {
-  "lastSync": "2026-05-08T08:55:22.981Z",
+  "lastSync": "2026-05-08T10:23:41.906Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-08T08:55:21.916Z",
+      "fetchedAt": "2026-05-08T10:23:40.796Z",
       "status": "ok",
-      "events": 21,
-      "added": 0,
+      "events": 22,
+      "added": 1,
       "removed": 0,
-      "total": 165,
+      "total": 166,
       "past": 125,
-      "upcoming": 40
+      "upcoming": 41
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-08T08:55:22.911Z",
+      "fetchedAt": "2026-05-08T10:23:41.890Z",
       "status": "ok",
-      "events": 19,
+      "events": 18,
       "added": 0,
       "removed": 0,
       "total": 192,
@@ -192,7 +192,8 @@
       "2026-09-01|Look at my toys!",
       "2026-05-02|Hackers Frühstück",
       "2026-05-02|Hackertour - OSM cleanup Bonn",
-      "2026-05-25|Geburstag - bitcircus101 wird 1 Jahr"
+      "2026-05-25|Geburstag - bitcircus101 wird 1 Jahr",
+      "2026-05-09|BarCamp Bonn 2026"
     ],
     "Datenburg e.V.": [
       "2025-04-16|Meta-Arbeitsgruppe",
@@ -404,6 +405,21 @@
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-03-21T01:55:42.597Z"
+    },
+    {
+      "title": "BarCamp Bonn 2026",
+      "subtitle": "",
+      "description": "Tickets: https://ticket.bonn.digital/bonndigital/bcbn26/ Einlass: 09.05.2026 09:30 Veranstalter: Bonn.digital eGbR",
+      "location": "cronn gmbh, Portlandweg 4, 53227 Bonn",
+      "date": "2026-05-09",
+      "time": "10:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-05-08T10:23:41.894Z"
     },
     {
       "title": "Treffen: Bonner FSFE Community",
@@ -1005,21 +1021,6 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-05T18:52:43.806Z"
-    },
-    {
-      "title": "PPP (Putzen Plenum Pizza)",
-      "subtitle": "",
-      "description": "PPP (Putzen Plenum Pizza)",
-      "location": "",
-      "date": "2026-07-09",
-      "time": "19:30",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-05T20:06:50.062Z"
     }
   ]
 }
