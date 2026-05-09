@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-05-09T08:58:10.065Z",
+  "lastSync": "2026-05-09T10:12:20.714Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-09T08:58:08.898Z",
+      "fetchedAt": "2026-05-09T10:12:19.583Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-09T08:58:10.050Z",
+      "fetchedAt": "2026-05-09T10:12:20.658Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -391,21 +391,6 @@
     ]
   },
   "events": [
-    {
-      "title": "BarCamp Bonn 2026",
-      "subtitle": "",
-      "description": "Tickets: https://ticket.bonn.digital/bonndigital/bcbn26/ Einlass: 09.05.2026 09:30 Veranstalter: Bonn.digital eGbR",
-      "location": "cronn gmbh, Portlandweg 4, 53227 Bonn",
-      "date": "2026-05-09",
-      "time": "10:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-08T10:23:41.894Z"
-    },
     {
       "title": "Treffen: Bonner FSFE Community",
       "subtitle": "",
@@ -1021,6 +1006,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-08T20:58:54.320Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-07-10",
+      "time": "20:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-05-09T10:12:20.662Z"
     }
   ]
 }
