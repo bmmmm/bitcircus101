@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-05-09T13:57:44.621Z",
+  "lastSync": "2026-05-09T14:57:39.374Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-09T13:57:43.525Z",
+      "fetchedAt": "2026-05-09T14:57:38.202Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-09T13:57:44.606Z",
+      "fetchedAt": "2026-05-09T14:57:39.216Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 192,
+      "total": 193,
       "past": 159,
-      "upcoming": 33
+      "upcoming": 34
     }
   ],
   "icsKeys": {
@@ -333,6 +333,7 @@
       "2026-06-07|Digital Independence Day (DID)",
       "2026-07-05|Digital Independence Day (DID)",
       "2026-08-02|Digital Independence Day (DID)",
+      "2026-09-06|Digital Independence Day (DID)",
       "2025-05-14|Datenburg für Jugendliche",
       "2025-11-08|Lötworkshop",
       "2025-07-27|Haecksenfrühstück",
