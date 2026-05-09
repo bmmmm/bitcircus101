@@ -5,16 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Sat, 09 May 2026 08:58:10 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 09 May 2026 10:12:20 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-05-09 10:00] BarCamp Bonn 2026 @ cronn gmbh, Portlandweg 4, 53227 Bonn</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>Tickets: https://ticket.bonn.digital/bonndigital/bcbn26/ Einlass: 09.05.2026 09:30 Veranstalter: Bonn.digital eGbR</description>
-      <pubDate>Fri, 08 May 2026 10:23:41 +0000</pubDate>
-      <guid isPermaLink="false">bitcircus101-20260509-special</guid>
-    </item>
     <item>
       <title>[2026-05-11 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -139,6 +132,16 @@
       <category>#spieletreff</category>
       <pubDate>Mon, 13 Apr 2026 19:25:56 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20260616-special</guid>
+    </item>
+    <item>
+      <title>[2026-06-19 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …</description>
+      <category>#meetup</category>
+      <category>#lightning-talks</category>
+      <category>#talk</category>
+      <pubDate>Thu, 16 Apr 2026 19:12:02 +0000</pubDate>
+      <guid isPermaLink="false">bitcircus101-20260619-linkup</guid>
     </item>
   </channel>
 </rss>
