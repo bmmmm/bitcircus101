@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-05-13T17:34:01.837Z",
+  "lastSync": "2026-05-13T19:53:02.940Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-13T17:34:00.956Z",
+      "fetchedAt": "2026-05-13T19:53:01.760Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-13T17:34:01.822Z",
+      "fetchedAt": "2026-05-13T19:53:02.729Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 194,
+      "total": 195,
       "past": 160,
-      "upcoming": 34
+      "upcoming": 35
     }
   ],
   "icsKeys": {
@@ -327,6 +327,7 @@
       "2026-06-11|PPP (Putzen Plenum Pizza)",
       "2026-07-09|PPP (Putzen Plenum Pizza)",
       "2026-08-13|PPP (Putzen Plenum Pizza)",
+      "2026-09-10|PPP (Putzen Plenum Pizza)",
       "2025-12-11|Mitgliedervollversammlung",
       "2026-01-04|Digital Independence Day (DID)",
       "2026-02-01|Digital Independence Day (DID)",
@@ -394,21 +395,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Skillshare von Studis gegen Rechts",
-      "subtitle": "",
-      "description": "Skillshare von Studis gegen Rechts zu den Themen Tor-Netzwerk und PGP",
-      "location": "Datenburg",
-      "date": "2026-05-13",
-      "time": "18:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-14T18:03:47.457Z"
-    },
     {
       "title": "PPP (Putzen Plenum Pizza)",
       "subtitle": "",
@@ -1024,6 +1010,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
+      "title": "Raspberry Pi Workshop",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-07-16",
+      "time": "19:00",
+      "tags": [
+        "#workshop"
+      ],
+      "type": "workshop",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-13T19:53:02.733Z"
     }
   ]
 }
