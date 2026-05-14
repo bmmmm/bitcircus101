@@ -1,25 +1,25 @@
 {
-  "lastSync": "2026-05-14T18:16:22.056Z",
+  "lastSync": "2026-05-14T20:13:12.259Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-14T18:16:20.994Z",
+      "fetchedAt": "2026-05-14T20:13:11.227Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 167,
+      "total": 168,
       "past": 129,
-      "upcoming": 38
+      "upcoming": 39
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-14T18:16:22.041Z",
+      "fetchedAt": "2026-05-14T20:13:12.108Z",
       "status": "ok",
       "events": 19,
-      "added": 2,
+      "added": 0,
       "removed": 0,
       "total": 197,
       "past": 161,
@@ -95,6 +95,7 @@
       "2026-06-12|Casual Linkup@bitcircus101 (2FR)",
       "2026-07-10|Casual Linkup@bitcircus101 (2FR)",
       "2026-08-14|Casual Linkup@bitcircus101 (2FR)",
+      "2026-09-11|Casual Linkup@bitcircus101 (2FR)",
       "2026-07-31|Casual Linkup@bitcircus101 (5FR)",
       "2025-07-14|Treffen: FSFE Bonner FSFE Community",
       "2025-09-20|Offene Ateliers",
@@ -397,21 +398,6 @@
     ]
   },
   "events": [
-    {
-      "title": "PPP (Putzen Plenum Pizza)",
-      "subtitle": "",
-      "description": "PPP (Putzen Plenum Pizza)",
-      "location": "",
-      "date": "2026-05-14",
-      "time": "19:30",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-21T01:55:42.597Z"
-    },
     {
       "title": "Linkup@bitcircus101",
       "subtitle": "",
@@ -1027,6 +1013,21 @@
       "source": "Datenburg e.V.",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
+      "title": "Raspberry Pi Workshop",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-07-16",
+      "time": "19:00",
+      "tags": [
+        "#workshop"
+      ],
+      "type": "workshop",
+      "source": "Datenburg e.V.",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-14T20:13:12.112Z"
     }
   ]
 }
