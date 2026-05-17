@@ -1,22 +1,22 @@
 {
-  "lastSync": "2026-05-17T17:58:12.044Z",
+  "lastSync": "2026-05-17T19:18:42.254Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-17T17:58:11.217Z",
+      "fetchedAt": "2026-05-17T19:18:41.314Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 168,
+      "total": 169,
       "past": 130,
-      "upcoming": 38
+      "upcoming": 39
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-17T17:58:12.024Z",
+      "fetchedAt": "2026-05-17T19:18:42.235Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -114,6 +114,7 @@
       "2026-06-08|Treffen: Bonner FSFE Community",
       "2026-07-13|Treffen: Bonner FSFE Community",
       "2026-08-10|Treffen: Bonner FSFE Community",
+      "2026-09-14|Treffen: Bonner FSFE Community",
       "2025-09-09|Apple Event",
       "2025-09-26|Critical Mass",
       "2025-11-04|GestaltBar",
