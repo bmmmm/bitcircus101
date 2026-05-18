@@ -1,14 +1,14 @@
 {
-  "lastSync": "2026-05-18T19:11:13.851Z",
+  "lastSync": "2026-05-18T20:52:26.845Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-18T19:11:12.857Z",
+      "fetchedAt": "2026-05-18T20:52:25.821Z",
       "status": "ok",
       "events": 21,
       "added": 1,
-      "removed": 0,
+      "removed": 1,
       "total": 170,
       "past": 130,
       "upcoming": 40
@@ -16,10 +16,10 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-18T19:11:13.744Z",
+      "fetchedAt": "2026-05-18T20:52:26.826Z",
       "status": "ok",
       "events": 19,
-      "added": 1,
+      "added": 0,
       "removed": 0,
       "total": 198,
       "past": 162,
@@ -196,7 +196,7 @@
       "2026-09-15|Look at my toys!",
       "2026-05-02|Hackers Frühstück",
       "2026-05-02|Hackertour - OSM cleanup Bonn",
-      "2026-05-25|Geburstag - bitcircus101 wird 1 Jahr",
+      "2026-05-25|Geburtstag - bitcircus101 wird 1 Jahr",
       "2026-05-09|BarCamp Bonn 2026"
     ],
     "Datenburg e.V.": [
@@ -480,7 +480,7 @@
       "firstSeen": "2026-03-21T20:26:04.278Z"
     },
     {
-      "title": "Geburstag - bitcircus101 wird 1 Jahr",
+      "title": "Geburtstag - bitcircus101 wird 1 Jahr",
       "subtitle": "",
       "description": "",
       "location": "Dorotheenstraße 101, 53111 Bonn",
@@ -492,7 +492,7 @@
       "type": "special",
       "source": "bitcircus101",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-01T19:21:39.004Z"
+      "firstSeen": "2026-05-18T20:52:26.830Z"
     },
     {
       "title": "Look at my toys!",
