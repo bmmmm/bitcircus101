@@ -1,29 +1,29 @@
 {
-  "lastSync": "2026-05-18T17:16:33.049Z",
+  "lastSync": "2026-05-18T19:11:13.851Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-18T17:16:31.868Z",
+      "fetchedAt": "2026-05-18T19:11:12.857Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 169,
+      "total": 170,
       "past": 130,
-      "upcoming": 39
+      "upcoming": 40
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-18T17:16:32.931Z",
+      "fetchedAt": "2026-05-18T19:11:13.744Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 197,
+      "total": 198,
       "past": 162,
-      "upcoming": 35
+      "upcoming": 36
     }
   ],
   "icsKeys": {
@@ -193,6 +193,7 @@
       "2026-08-25|Look at my toys!",
       "2026-09-01|Look at my toys!",
       "2026-09-08|Look at my toys!",
+      "2026-09-15|Look at my toys!",
       "2026-05-02|Hackers Frühstück",
       "2026-05-02|Hackertour - OSM cleanup Bonn",
       "2026-05-25|Geburstag - bitcircus101 wird 1 Jahr",
@@ -231,6 +232,7 @@
       "2026-08-25|Offene Datenburg",
       "2026-09-01|Offene Datenburg",
       "2026-09-08|Offene Datenburg",
+      "2026-09-15|Offene Datenburg",
       "2025-02-20|Raspberry Pi Workshop",
       "2024-11-07|PPP (Putzen Plenum Pizza)",
       "2024-12-05|PPP (Putzen Plenum Pizza)",
