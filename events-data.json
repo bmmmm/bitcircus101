@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-05-20T16:51:28.045Z",
+  "lastSync": "2026-05-20T19:23:34.885Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-20T16:51:26.359Z",
+      "fetchedAt": "2026-05-20T19:23:33.232Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-20T16:51:27.126Z",
+      "fetchedAt": "2026-05-20T19:23:34.048Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-05-20T16:51:27.909Z",
+      "fetchedAt": "2026-05-20T19:23:34.743Z",
       "status": "ok",
       "events": 1,
       "added": 0,
@@ -137,22 +137,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Sperrmüll Rausstellen",
-      "subtitle": "",
-      "description": "Sperrmüll Rausstellen Abholung am 21.05 Hilfe wird gebaucht",
-      "location": "",
-      "date": "2026-05-20",
-      "time": "19:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "489ee138-a1e2-484e-8af7-07326db13fb7",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-14T18:16:22.045Z"
-    },
     {
       "title": "Raspberry Pi Workshop",
       "subtitle": "",
@@ -819,6 +803,23 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-07-21",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     }
   ]
 }
