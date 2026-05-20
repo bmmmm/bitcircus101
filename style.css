@@ -2414,6 +2414,15 @@ a.event-card__location:hover {
     object-position: center;
 }
 
+.logo-slider__link {
+    display: contents;
+}
+
+.logo-slider__link:focus-visible img {
+    outline: 2px solid var(--accent, currentColor);
+    outline-offset: 4px;
+}
+
 @keyframes logo-slider-marquee {
     from {
         transform: translateX(0);
