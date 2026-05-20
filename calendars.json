@@ -14,5 +14,19 @@
     "url": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
     "primary": false,
     "rss": false
+  },
+  {
+    "id": "kult41",
+    "name": "Kult 41",
+    "type": "ics-filtered",
+    "ics": "https://kult41.de/events.ics",
+    "url": "https://kult41.de/veranstaltungen/programm",
+    "primary": false,
+    "rss": false,
+    "cap": 15,
+    "tags": ["#kult41"],
+    "filter": {
+      "categoryDeny": ["Konzert"]
+    }
   }
 ]
