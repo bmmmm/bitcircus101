@@ -24,7 +24,7 @@ jobs:
       - name: Use scripts and config from main
         run: |
           git fetch origin main
-          git checkout origin/main -- scripts/ calendars.json calendars/
+          git checkout origin/main -- scripts/ calendars/
 
       - uses: actions/setup-node@v6
         with:

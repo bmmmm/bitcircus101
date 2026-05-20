@@ -8,42 +8,37 @@
 const SITE_URL = "https://bitcircus101.de";
 const HORIZON_DAYS = 120;
 
-import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
-const EXTERNAL_DIR = "calendars/external";
+const CAL_DIR = "calendars";
+const CAL_CONFIG = `${CAL_DIR}/config.json`;
 
 /**
- * Merge the primary calendars.json (stable upstream ICS feeds) with one-file-per-source
- * curated entries under calendars/external/. Each external JSON file holds exactly one
- * source object — same shape as a calendars.json array entry. Easier to add/edit/remove
- * curated events without churning the central file.
- *
- * Entries without `id` or `ics` are skipped with a warning so a malformed external file
- * never breaks the whole sync.
+ * Load calendar sources via the manifest at calendars/config.json. Each source
+ * lives in its own JSON file (calendars/bitcircus.json, calendars/external/foo.json,
+ * etc.) and is included by listing its path under `sources`. Order in the manifest
+ * = order of processing. Remove an entry to disable a source without deleting its
+ * file. Entries without `id` or `ics` are skipped with a warning so one malformed
+ * file never breaks the whole sync.
  */
 function loadCalendars() {
-  const primary = JSON.parse(readFileSync("calendars.json", "utf8"));
-  let externals = [];
-  try {
-    const files = readdirSync(EXTERNAL_DIR)
-      .filter((f) => f.endsWith(".json"))
-      .sort();
-    for (const f of files) {
-      try {
-        const entry = JSON.parse(readFileSync(`${EXTERNAL_DIR}/${f}`, "utf8"));
-        if (!entry?.id || !entry?.ics) {
-          console.warn(`[${EXTERNAL_DIR}/${f}] missing id or ics — skipped`);
-          continue;
-        }
-        externals.push(entry);
-      } catch (e) {
-        console.warn(`[${EXTERNAL_DIR}/${f}] parse error: ${e.message} — skipped`);
+  const config = JSON.parse(readFileSync(CAL_CONFIG, "utf8"));
+  const sources = Array.isArray(config?.sources) ? config.sources : [];
+  const loaded = [];
+  for (const rel of sources) {
+    const path = `${CAL_DIR}/${rel}`;
+    try {
+      const entry = JSON.parse(readFileSync(path, "utf8"));
+      if (!entry?.id || !entry?.ics) {
+        console.warn(`[${path}] missing id or ics — skipped`);
+        continue;
       }
+      loaded.push(entry);
+    } catch (e) {
+      console.warn(`[${path}] load error: ${e.message} — skipped`);
     }
-  } catch {
-    // Directory missing — fine, nothing to merge
   }
-  return [...primary, ...externals];
+  return loaded;
 }
 
 // ── ICS Parser ──────────────────────────────────────────────────────────────
