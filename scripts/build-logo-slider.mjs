@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const LOGO_DIR = path.join(root, "images", "logo-slider");
+const LOGO_META = path.join(LOGO_DIR, "logos.json");
 const INDEX = path.join(root, "index.html");
 
 const START = "<!-- logo-slider:start -->";
@@ -27,13 +28,32 @@ function altFromFilename(filename) {
   return words || "Logo";
 }
 
-function buildItem(filename, emptyAlt) {
+/** Load optional logos.json mapping. Missing file is fine — logos render unlinked. */
+function loadMeta() {
+  try {
+    const raw = fs.readFileSync(LOGO_META, "utf8");
+    return JSON.parse(raw).logos || {};
+  } catch {
+    return {};
+  }
+}
+
+function buildItem(filename, meta, emptyAlt) {
   const rel = encodeURI(`images/logo-slider/${filename}`);
-  const alt = emptyAlt ? "" : altFromFilename(filename);
+  const entry = meta[filename] || {};
+  const displayName = entry.name || altFromFilename(filename);
+  const alt = emptyAlt ? "" : displayName;
   const altAttr = alt === "" ? 'alt=""' : `alt="${escapeHtml(alt)}"`;
+  const img = `<img class="logo-slider__img" src="${PLACEHOLDER_SRC}" data-src="${escapeHtml(rel)}" ${altAttr} decoding="async" />`;
+  // Second (aria-hidden) slider set is just a visual duplicate for seamless scrolling —
+  // skip from tab order to avoid double focus stops
+  const tabAttr = emptyAlt ? ' tabindex="-1" aria-hidden="true"' : "";
+  const inner = entry.url
+    ? `<a class="logo-slider__link" href="${escapeHtml(entry.url)}" target="_blank" rel="noopener"${tabAttr} aria-label="${escapeHtml(displayName)} (externer Link)">${img}</a>`
+    : img;
   return [
     "                                <div class=\"logo-slider__item\">",
-    `                                    <img class="logo-slider__img" src="${PLACEHOLDER_SRC}" data-src="${escapeHtml(rel)}" ${altAttr} decoding="async" />`,
+    `                                    ${inner}`,
     "                                </div>",
   ].join("\n");
 }
@@ -45,7 +65,7 @@ function escapeHtml(s) {
     .replace(/</g, "&lt;");
 }
 
-function buildMarkup(files) {
+function buildMarkup(files, meta) {
   const lines = [
     '                <section id="freundinnen" class="logo-slider" aria-labelledby="logo-slider-heading">',
     '                    <h2 id="logo-slider-heading">Freund*innen des bitcircus101<a class="section-anchor" href="#freundinnen" aria-label="Link zu: Freund*innen">#</a></h2>',
@@ -55,14 +75,14 @@ function buildMarkup(files) {
   ];
 
   for (const f of files) {
-    lines.push(buildItem(f, false));
+    lines.push(buildItem(f, meta, false));
   }
 
   lines.push("                            </div>");
   lines.push('                            <div class="logo-slider__set" aria-hidden="true">');
 
   for (const f of files) {
-    lines.push(buildItem(f, true));
+    lines.push(buildItem(f, meta, true));
   }
 
   lines.push("                            </div>");
@@ -83,6 +103,7 @@ function main() {
   }
 
   const files = entries.filter((name) => LOGO_EXT.test(name)).sort((a, b) => a.localeCompare(b));
+  const meta = loadMeta();
 
   const html = fs.readFileSync(INDEX, "utf8");
   const i0 = html.indexOf(START);
@@ -94,7 +115,7 @@ function main() {
 
   const before = html.slice(0, i0);
   const afterEnd = html.slice(i1 + END.length);
-  const block = START + "\n" + buildMarkup(files) + "\n                " + END;
+  const block = START + "\n" + buildMarkup(files, meta) + "\n                " + END;
   const next = before + block + afterEnd;
 
   if (next === html) {
