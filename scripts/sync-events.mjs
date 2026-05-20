@@ -8,7 +8,43 @@
 const SITE_URL = "https://bitcircus101.de";
 const HORIZON_DAYS = 120;
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+
+const EXTERNAL_DIR = "calendars/external";
+
+/**
+ * Merge the primary calendars.json (stable upstream ICS feeds) with one-file-per-source
+ * curated entries under calendars/external/. Each external JSON file holds exactly one
+ * source object — same shape as a calendars.json array entry. Easier to add/edit/remove
+ * curated events without churning the central file.
+ *
+ * Entries without `id` or `ics` are skipped with a warning so a malformed external file
+ * never breaks the whole sync.
+ */
+function loadCalendars() {
+  const primary = JSON.parse(readFileSync("calendars.json", "utf8"));
+  let externals = [];
+  try {
+    const files = readdirSync(EXTERNAL_DIR)
+      .filter((f) => f.endsWith(".json"))
+      .sort();
+    for (const f of files) {
+      try {
+        const entry = JSON.parse(readFileSync(`${EXTERNAL_DIR}/${f}`, "utf8"));
+        if (!entry?.id || !entry?.ics) {
+          console.warn(`[${EXTERNAL_DIR}/${f}] missing id or ics — skipped`);
+          continue;
+        }
+        externals.push(entry);
+      } catch (e) {
+        console.warn(`[${EXTERNAL_DIR}/${f}] parse error: ${e.message} — skipped`);
+      }
+    }
+  } catch {
+    // Directory missing — fine, nothing to merge
+  }
+  return [...primary, ...externals];
+}
 
 // ── ICS Parser ──────────────────────────────────────────────────────────────
 
@@ -382,7 +418,7 @@ function loadPrevious() {
 }
 
 async function main() {
-  const calendars = JSON.parse(readFileSync("calendars.json", "utf8"));
+  const calendars = loadCalendars();
   const prev = loadPrevious();
   let allCards = [];
   const sources = [];
@@ -510,6 +546,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 
 export {
+  loadCalendars,
   parseDate, nthWeekday, expandRRule, clean, parseTzid, parseICS,
   isInternal, applyFilter, guessType, extractHashtags, keywordTags,
   buildTags, cleanLocation, truncateDesc, toCards,

@@ -131,14 +131,41 @@ Releases are **decoupled from deploys** — every merge to `main` deploys automa
 
 ## Calendar system
 
-### Data sources (`calendars.json`)
+### Data sources
+
+Two layers — both are merged by `sync-events.mjs`:
+
+**`calendars.json`** — stable upstream feeds (own + partner Nextclouds):
 
 | ID | Name | Nextcloud instance | Primary | In RSS |
 |----|------|--------------------|---------|--------|
 | `bitcircus` | bitcircus101 | nc.6bm.de | yes | yes |
 | `datenburg` | Datenburg e.V. | cloud.datenb.org | no | no |
 
-To add a new calendar, add an entry to `calendars.json` — no code changes needed.
+**`calendars/external/*.json`** — one file per curated external event/source. Easier to add, edit, remove without churning the central file. Each file holds exactly one source object (same shape as a `calendars.json` entry). Filename = source id.
+
+#### Source `type`s
+
+| `type` | Use | Filter |
+|--------|-----|--------|
+| `ics-full` (default) | Pull entire calendar | – |
+| `ics-single` | Single curated event ICS URL | – |
+| `ics-filtered` | Full calendar, narrowed by lists | `categoryAllow`, `categoryDeny`, `titleAllow`, `titleDeny` |
+
+External sources also accept `tags` (always-added hashtags), `cap` (per-source slot override), and `eventUrl` (overrides the per-event link when ICS has no `URL` field).
+
+Example `calendars/external/kult41-theater-tumult-k-i-abel.json`:
+
+```json
+{
+  "id": "kult41-theater-tumult-k-i-abel",
+  "name": "Kult 41",
+  "type": "ics-single",
+  "ics": "https://kult41.de/events/theater-tumult-k-i-und-abel-reggae-2/ical/",
+  "url": "https://kult41.de/veranstaltungen/programm",
+  "tags": ["#kult41", "#theater"]
+}
+```
 
 ### How events get tagged
 
