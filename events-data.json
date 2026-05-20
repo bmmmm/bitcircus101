@@ -1,14 +1,14 @@
 {
-  "lastSync": "2026-05-20T16:36:21.964Z",
+  "lastSync": "2026-05-20T16:51:28.045Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-20T16:36:20.133Z",
+      "fetchedAt": "2026-05-20T16:51:26.359Z",
       "status": "ok",
       "events": 21,
-      "added": 47,
-      "removed": 170,
+      "added": 0,
+      "removed": 0,
       "total": 47,
       "past": 3,
       "upcoming": 44
@@ -16,11 +16,11 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-20T16:36:21.126Z",
+      "fetchedAt": "2026-05-20T16:51:27.126Z",
       "status": "ok",
       "events": 18,
-      "added": 42,
-      "removed": 198,
+      "added": 0,
+      "removed": 0,
       "total": 42,
       "past": 5,
       "upcoming": 37
@@ -28,10 +28,10 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-05-20T16:36:21.948Z",
+      "fetchedAt": "2026-05-20T16:51:27.909Z",
       "status": "ok",
       "events": 1,
-      "added": 1,
+      "added": 0,
       "removed": 0,
       "total": 1,
       "past": 0,
@@ -167,7 +167,7 @@
       "source": "Datenburg e.V.",
       "uid": "64487F08-C72F-4C70-96F4-C62AB9D8E979",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-21T20:26:04.278Z"
+      "firstSeen": "2026-05-14T20:13:12.112Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (4FR)",
@@ -184,7 +184,7 @@
       "uid": "casual-linkup-4fr@bitcircus101.de",
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-03-21T20:26:04.278Z"
+      "firstSeen": "2026-04-23T19:09:53.469Z"
     },
     {
       "title": "Geburtstag - bitcircus101 wird 1 Jahr",
@@ -218,7 +218,7 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-24T18:44:56.615Z"
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
       "title": "Offene Datenburg",
@@ -235,7 +235,7 @@
       "source": "Datenburg e.V.",
       "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-24T19:02:09.917Z"
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Spieleabend",
@@ -251,7 +251,7 @@
       "source": "Datenburg e.V.",
       "uid": "FCD62406-4CA7-4BA5-8AEA-067D9F42E09B",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-26T19:54:36.353Z"
+      "firstSeen": "2026-04-21T19:44:43.214Z"
     },
     {
       "title": "Theater Tumult: K.I. und Abel + Reggae",
@@ -304,7 +304,7 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-03-27T10:48:41.690Z"
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
       "title": "Offene Datenburg",
@@ -321,7 +321,7 @@
       "source": "Datenburg e.V.",
       "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-27T20:37:45.318Z"
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (1FR)",
@@ -338,7 +338,7 @@
       "uid": "casual-linkup-1fr@bitcircus101.de",
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-03-31T19:06:29.217Z"
+      "firstSeen": "2026-05-02T10:51:21.504Z"
     },
     {
       "title": "Digital Independence Day (DID)",
@@ -354,7 +354,7 @@
       "source": "Datenburg e.V.",
       "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-03-31T19:06:29.217Z"
+      "firstSeen": "2026-05-02T13:08:46.350Z"
     },
     {
       "title": "Treffen: Bonner FSFE Community",
@@ -371,7 +371,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
-      "firstSeen": "2026-04-03T02:12:00.154Z"
+      "firstSeen": "2026-05-11T19:45:03.502Z"
     },
     {
       "title": "Look at my toys!",
@@ -389,7 +389,7 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-04-03T20:46:56.387Z"
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
       "title": "Offene Datenburg",
@@ -406,7 +406,7 @@
       "source": "Datenburg e.V.",
       "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-07T19:02:06.819Z"
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "PPP (Putzen Plenum Pizza)",
@@ -422,7 +422,7 @@
       "source": "Datenburg e.V.",
       "uid": "433849E2-7F98-4A69-BD49-07D33397B19B",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-09T20:12:08.015Z"
+      "firstSeen": "2026-05-08T20:58:54.320Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (2FR)",
@@ -439,7 +439,7 @@
       "uid": "casual-linkup-2fr@bitcircus101.de",
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-04-10T20:35:22.863Z"
+      "firstSeen": "2026-05-09T10:12:20.662Z"
     },
     {
       "title": "Look at my toys!",
@@ -457,7 +457,7 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-04-13T19:25:56.418Z"
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
       "title": "Offene Datenburg",
@@ -474,7 +474,7 @@
       "source": "Datenburg e.V.",
       "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-14T18:03:47.457Z"
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Raspberry Pi Workshop",
@@ -490,7 +490,7 @@
       "source": "Datenburg e.V.",
       "uid": "64487F08-C72F-4C70-96F4-C62AB9D8E979",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-14T19:48:05.756Z"
+      "firstSeen": "2026-05-14T20:13:12.112Z"
     },
     {
       "title": "Linkup@bitcircus101",
@@ -509,7 +509,7 @@
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-04-16T19:12:02.850Z"
+      "firstSeen": "2026-05-15T21:15:10.361Z"
     },
     {
       "title": "Look at my toys!",
@@ -527,7 +527,7 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-04-17T20:42:04.962Z"
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
       "title": "Offene Datenburg",
@@ -544,7 +544,7 @@
       "source": "Datenburg e.V.",
       "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-21T18:07:36.238Z"
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Spieleabend",
@@ -595,7 +595,7 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-04-24T20:09:10.828Z"
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
       "title": "Offene Datenburg",
@@ -612,7 +612,7 @@
       "source": "Datenburg e.V.",
       "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-01T20:27:46.411Z"
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (1FR)",
@@ -663,7 +663,7 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-03T14:28:07.544Z"
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
       "title": "Offene Datenburg",
@@ -680,7 +680,7 @@
       "source": "Datenburg e.V.",
       "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-05T18:52:43.806Z"
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "PPP (Putzen Plenum Pizza)",
@@ -748,7 +748,7 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-12T18:54:39.534Z"
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
       "title": "Offene Datenburg",
