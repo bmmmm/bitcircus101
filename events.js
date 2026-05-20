@@ -301,15 +301,21 @@
         }
         html += "</div>";
         // Action pills
-        var calUrl = e.calendarUrl || CALENDAR_URL;
+        // External event URLs (e.g. Kult 41) link directly; Nextcloud calendar URLs
+        // get the timeGridDay suffix for day view
+        var calHref = e.eventUrl
+          ? e.eventUrl
+          : (e.calendarUrl || CALENDAR_URL) + '/timeGridDay/' + e.date;
+        var calLabel = e.eventUrl ? '\u2192 link' : '\u2192 kalender';
+        var calTitle = e.eventUrl ? 'Auf externer Seite \u00f6ffnen' : 'Im Kalender anzeigen';
         html += '<div class="event-card__actions">';
         html += '<button class="event-action event-action--link" ' +
           'data-href="#' + anchor + '" title="Link kopieren">' +
           '\u2190 link</button>';
         html += '<a class="event-action event-action--cal" href="' +
-          calUrl + '/timeGridDay/' + e.date +
-          '" target="_blank" rel="noopener" title="Im Kalender anzeigen">' +
-          '\u2192 kalender</a>';
+          calHref +
+          '" target="_blank" rel="noopener" title="' + calTitle + '">' +
+          calLabel + '</a>';
         if (e.location) {
           var osmQuery = encodeURIComponent(e.location);
           html += '<a class="event-action event-action--map" href="' +

@@ -2,138 +2,25 @@
  * Unit tests for the ICS parser and event pipeline in sync-events.mjs.
  * Runs with: node --test tests/sync-events.spec.mjs
  *
- * These tests use synthetic ICS data — no network access needed.
+ * These tests import the real functions from sync-events.mjs (no inline drift)
+ * and use synthetic ICS data — no network access needed.
  */
 
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
+import {
+  parseDate, nthWeekday, expandRRule, clean, parseICS,
+  applyFilter, buildTags, toCards,
+  escXml, toRFC822, generateRSS,
+} from "../scripts/sync-events.mjs";
 
-// ── Inline the parser functions so we can test them in isolation ──────────
-
-function parseDate(v) {
-  if (!v) return null;
-  const y = +v.slice(0, 4), m = +v.slice(4, 6) - 1, d = +v.slice(6, 8);
-  if (v.length === 8) return new Date(y, m, d);
-  const h = +v.slice(9, 11), mi = +v.slice(11, 13);
-  return v.endsWith("Z")
-    ? new Date(Date.UTC(y, m, d, h, mi))
-    : new Date(y, m, d, h, mi);
-}
-
-function nthWeekday(year, month, wd, nth) {
-  const d = new Date(year, month, 1);
-  while (d.getDay() !== wd) d.setDate(d.getDate() + 1);
-  d.setDate(d.getDate() + (nth - 1) * 7);
-  return d.getMonth() === month ? d : null;
-}
-
-function expandRRule(dtstart, rule, exdates, horizonDays = 120) {
-  const horizon = new Date();
-  horizon.setDate(horizon.getDate() + horizonDays);
-  const p = Object.fromEntries(
-    rule.split(";").map((s) => s.split("=")).filter((a) => a.length === 2)
-  );
-  const WD = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
-  const end = p.UNTIL ? parseDate(p.UNTIL) : null;
-  const limit = end && end < horizon ? end : horizon;
-  const max = p.COUNT ? +p.COUNT : 200;
-  const exSet = new Set(exdates.map((d) => d.toDateString()));
-  const out = [];
-
-  if (p.FREQ === "WEEKLY") {
-    const wd = p.BYDAY
-      ? WD[p.BYDAY.replace(/\d/g, "").slice(-2)] ?? dtstart.getDay()
-      : dtstart.getDay();
-    const cur = new Date(dtstart);
-    while (cur.getDay() !== wd) cur.setDate(cur.getDate() + 1);
-    while (cur <= limit && out.length < max) {
-      if (!exSet.has(cur.toDateString())) out.push(new Date(cur));
-      cur.setDate(cur.getDate() + 7);
-    }
-  } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
-    const m = p.BYDAY.match(/^(\d+)([A-Z]{2})$/);
-    const nth = m ? +m[1] : (p.BYSETPOS ? +p.BYSETPOS : null);
-    const dayCode = m ? m[2] : p.BYDAY.replace(/\d/g, "").slice(-2);
-    const twd = WD[dayCode];
-    if (nth && twd != null) {
-      const mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
-      while (mo <= limit && out.length < max) {
-        const d = nthWeekday(mo.getFullYear(), mo.getMonth(), twd, nth);
-        if (d) {
-          d.setHours(dtstart.getHours(), dtstart.getMinutes(), 0, 0);
-          if (d >= dtstart && d <= limit && !exSet.has(d.toDateString()))
-            out.push(new Date(d));
-        }
-        mo.setMonth(mo.getMonth() + 1);
-      }
-    }
-  }
-  return out;
-}
-
-function clean(s) {
-  return s.replace(/\\n/gi, " ").replace(/\\,/g, ",").replace(/\\;/g, ";").trim();
-}
-
-function parseICS(text) {
-  const lines = text.replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
-  const events = [];
-  let ev = null;
-
-  for (const line of lines) {
-    if (line === "BEGIN:VEVENT") { ev = { exdates: [] }; continue; }
-    if (line === "END:VEVENT") {
-      if (!ev?.dtstart) { ev = null; continue; }
-      const dtstart = parseDate(ev.dtstart);
-      if (!dtstart) { ev = null; continue; }
-      const dtend = ev.dtend ? parseDate(ev.dtend) : null;
-      const allDay = !ev.dtstart.includes("T");
-      const base = {
-        summary: clean(ev.summary || "(kein Titel)"),
-        description: clean(ev.description || ""),
-        location: clean(ev.location || ""),
-        categories: ev.categories || "",
-        allDay,
-      };
-      if (ev.rrule) {
-        const dur = dtend ? dtend - dtstart : 7200000;
-        for (const d of expandRRule(dtstart, ev.rrule, ev.exdates)) {
-          events.push({ ...base, dtstart: d, dtend: new Date(d.getTime() + dur) });
-        }
-      } else {
-        events.push({ ...base, dtstart, dtend });
-      }
-      ev = null; continue;
-    }
-    if (!ev) continue;
-    const ci = line.indexOf(":");
-    if (ci === -1) continue;
-    const key = line.slice(0, ci).split(";")[0].toUpperCase();
-    const val = line.slice(ci + 1);
-    if (key === "DTSTART") ev.dtstart = val;
-    else if (key === "DTEND") ev.dtend = val;
-    else if (key === "SUMMARY") ev.summary = val;
-    else if (key === "DESCRIPTION") ev.description = val;
-    else if (key === "LOCATION") ev.location = val;
-    else if (key === "CATEGORIES") ev.categories = val;
-    else if (key === "RRULE") ev.rrule = val;
-    else if (key === "EXDATE") {
-      for (const v of val.split(",")) {
-        const d = parseDate(v.trim());
-        if (d) ev.exdates.push(d);
-      }
-    }
-  }
-  return events;
-}
-
-// ── Tests ─────────────────────────────────────────────────────────────────
+// ── parseDate ─────────────────────────────────────────────────────────────
 
 describe("parseDate", () => {
   it("parses all-day date (YYYYMMDD)", () => {
     const d = parseDate("20260315");
     assert.equal(d.getFullYear(), 2026);
-    assert.equal(d.getMonth(), 2); // March = 2
+    assert.equal(d.getMonth(), 2);
     assert.equal(d.getDate(), 15);
   });
 
@@ -157,45 +44,42 @@ describe("parseDate", () => {
 
 describe("nthWeekday", () => {
   it("finds 3rd Thursday of March 2026", () => {
-    const d = nthWeekday(2026, 2, 4, 3); // month=2 (March), wd=4 (Thursday), nth=3
+    const d = nthWeekday(2026, 2, 4, 3);
     assert.equal(d.getDate(), 19);
   });
 
   it("finds 1st Sunday of May 2026", () => {
-    const d = nthWeekday(2026, 4, 0, 1); // month=4 (May), wd=0 (Sunday), nth=1
+    const d = nthWeekday(2026, 4, 0, 1);
     assert.equal(d.getDate(), 3);
   });
 
   it("returns null if nth overflows the month", () => {
-    const d = nthWeekday(2026, 1, 1, 5); // 5th Monday of February — doesn't exist
+    const d = nthWeekday(2026, 1, 1, 5);
     assert.equal(d, null);
   });
 });
 
 describe("expandRRule — MONTHLY with BYSETPOS", () => {
   it("expands BYDAY=TH;BYSETPOS=3 (3rd Thursday)", () => {
-    const dtstart = new Date(2026, 0, 15, 19, 0); // Jan 15 2026 19:00
+    const dtstart = new Date(2026, 0, 15, 19, 0);
     const rule = "FREQ=MONTHLY;BYDAY=TH;BYSETPOS=3";
     const dates = expandRRule(dtstart, rule, []);
-    assert(dates.length > 0, "should produce at least one occurrence");
+    assert(dates.length > 0);
     for (const d of dates) {
-      assert.equal(d.getDay(), 4, "every occurrence should be a Thursday");
-      // Check it's the 3rd Thursday: date should be between 15-21
-      assert(d.getDate() >= 15 && d.getDate() <= 21,
-        `3rd Thursday should be day 15-21, got ${d.getDate()}`);
-      assert.equal(d.getHours(), 19, "should preserve start hour");
+      assert.equal(d.getDay(), 4);
+      assert(d.getDate() >= 15 && d.getDate() <= 21);
+      assert.equal(d.getHours(), 19);
     }
   });
 
   it("expands BYDAY=SU;BYSETPOS=1 (1st Sunday)", () => {
-    const dtstart = new Date(2026, 0, 4, 14, 0); // Jan 4 2026 14:00
+    const dtstart = new Date(2026, 0, 4, 14, 0);
     const rule = "FREQ=MONTHLY;BYDAY=SU;BYSETPOS=1";
     const dates = expandRRule(dtstart, rule, []);
-    assert(dates.length > 0, "should produce at least one occurrence");
+    assert(dates.length > 0);
     for (const d of dates) {
-      assert.equal(d.getDay(), 0, "every occurrence should be a Sunday");
-      assert(d.getDate() <= 7,
-        `1st Sunday should be day 1-7, got ${d.getDate()}`);
+      assert.equal(d.getDay(), 0);
+      assert(d.getDate() <= 7);
     }
   });
 
@@ -204,35 +88,29 @@ describe("expandRRule — MONTHLY with BYSETPOS", () => {
     const rule = "FREQ=MONTHLY;BYDAY=3TH";
     const dates = expandRRule(dtstart, rule, []);
     assert(dates.length > 0);
-    for (const d of dates) {
-      assert.equal(d.getDay(), 4);
-    }
+    for (const d of dates) assert.equal(d.getDay(), 4);
   });
 
   it("respects EXDATE exclusions", () => {
     const dtstart = new Date(2026, 0, 4, 14, 0);
     const rule = "FREQ=MONTHLY;BYDAY=SU;BYSETPOS=1";
-    // Exclude the first occurrence in Feb (1st Sunday = Feb 1)
     const exdates = [new Date(2026, 1, 1)];
     const dates = expandRRule(dtstart, rule, exdates);
-    const febDates = dates.filter(d => d.getMonth() === 1);
-    assert.equal(febDates.length, 0, "February should be excluded");
+    const febDates = dates.filter((d) => d.getMonth() === 1);
+    assert.equal(febDates.length, 0);
   });
 });
 
 describe("expandRRule — WEEKLY", () => {
   it("expands weekly recurrence", () => {
-    const dtstart = new Date(2026, 2, 2, 19, 0); // Mon March 2
+    const dtstart = new Date(2026, 2, 2, 19, 0);
     const rule = "FREQ=WEEKLY;BYDAY=MO";
     const dates = expandRRule(dtstart, rule, []);
     assert(dates.length > 0);
-    for (const d of dates) {
-      assert.equal(d.getDay(), 1, "should all be Mondays");
-    }
-    // Check they're 7 days apart (use date math to avoid DST issues)
+    for (const d of dates) assert.equal(d.getDay(), 1);
     for (let i = 1; i < dates.length; i++) {
       const diff = Math.round((dates[i] - dates[i - 1]) / (1000 * 60 * 60 * 24));
-      assert.equal(diff, 7, "should be 7 days apart");
+      assert.equal(diff, 7);
     }
   });
 
@@ -243,6 +121,8 @@ describe("expandRRule — WEEKLY", () => {
     assert.equal(dates.length, 3);
   });
 });
+
+// ── parseICS ──────────────────────────────────────────────────────────────
 
 describe("parseICS", () => {
   it("parses a simple single event", () => {
@@ -275,7 +155,6 @@ describe("parseICS", () => {
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
-
     const events = parseICS(ics);
     assert.equal(events.length, 1);
     assert.equal(events[0].allDay, true);
@@ -290,11 +169,47 @@ describe("parseICS", () => {
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
-
     const events = parseICS(ics);
-    assert.equal(events.length, 1);
     assert.equal(events[0].summary, "Berlin Event");
     assert.equal(events[0].dtstart.getHours(), 19);
+  });
+
+  it("extracts UID and URL fields", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART:20260601T190000",
+      "SUMMARY:Linked Event",
+      "UID:2418@kult41.de",
+      "URL:https://kult41.de/events/linked-event",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const events = parseICS(ics);
+    assert.equal(events[0].uid, "2418@kult41.de");
+    assert.equal(events[0].url, "https://kult41.de/events/linked-event");
+  });
+
+  it("warns once per source/zone for non-Europe TZID", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART;TZID=America/New_York:20260601T190000",
+      "SUMMARY:NY Event",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const origWarn = console.warn;
+    const warnings = [];
+    console.warn = (msg) => warnings.push(msg);
+    try {
+      parseICS(ics, "test-ny");
+      parseICS(ics, "test-ny"); // second call should NOT warn again
+    } finally {
+      console.warn = origWarn;
+    }
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /test-ny.*America\/New_York/);
   });
 
   it("handles line folding (continuation lines)", () => {
@@ -307,7 +222,6 @@ describe("parseICS", () => {
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
-
     const events = parseICS(ics);
     assert.equal(events[0].summary, "This is a very longevent title that wraps");
   });
@@ -323,13 +237,12 @@ describe("parseICS", () => {
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
-
     const events = parseICS(ics);
-    assert(events.length > 1, `Expected multiple occurrences, got ${events.length}`);
+    assert(events.length > 1);
     for (const e of events) {
       assert.equal(e.summary, "Digital Independence Day (DID)");
-      assert.equal(e.dtstart.getDay(), 0, "should be Sunday");
-      assert(e.dtstart.getDate() <= 7, "should be 1st Sunday");
+      assert.equal(e.dtstart.getDay(), 0);
+      assert(e.dtstart.getDate() <= 7);
     }
   });
 
@@ -341,9 +254,7 @@ describe("parseICS", () => {
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
-
-    const events = parseICS(ics);
-    assert.equal(events.length, 0);
+    assert.equal(parseICS(ics).length, 0);
   });
 
   it("unescapes ICS special characters", () => {
@@ -356,7 +267,6 @@ describe("parseICS", () => {
       "END:VEVENT",
       "END:VCALENDAR",
     ].join("\r\n");
-
     const events = parseICS(ics);
     assert.equal(events[0].summary, "Hello, World");
     assert.equal(events[0].description, "Line1 Line2;end");
@@ -369,66 +279,172 @@ describe("clean", () => {
     assert.equal(clean("a\\,b"), "a,b");
     assert.equal(clean("a\\;b"), "a;b");
   });
-
   it("trims whitespace", () => {
     assert.equal(clean("  hello  "), "hello");
   });
 });
 
-// ── RSS generation (inline the functions so tests stay self-contained) ────
+// ── applyFilter ───────────────────────────────────────────────────────────
 
-function escXml(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
+describe("applyFilter", () => {
+  const ev = (summary, categories) => ({ summary, categories, dtstart: new Date() });
+  const events = [
+    ev("Konzert: Punk-Band", "Konzert, KULT41"),
+    ev("Theater Tumult", "Theater, KULT41"),
+    ev("Buchtreff", "Literatur, KULT41"),
+    ev("Klimatreff", "Info, KULT41"),
+    ev("Vernissage Trash Art", "Ausstellung, KULT41, Vernissage"),
+  ];
 
-function toRFC822(isoOrDate) {
-  const d = isoOrDate instanceof Date ? isoOrDate : new Date(isoOrDate);
-  return d.toUTCString().replace("GMT", "+0000");
-}
+  it("returns all events when filter is undefined", () => {
+    assert.equal(applyFilter(events, undefined).length, events.length);
+  });
 
-function generateRSS(cards) {
-  const SITE_URL = "https://bitcircus101.de";
-  const now = new Date().toUTCString().replace("GMT", "+0000");
-  let xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>bitcircus101 – Termine</title>
-    <link>${SITE_URL}/events.html</link>
-    <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
-    <language>de-de</language>
-    <lastBuildDate>${now}</lastBuildDate>
-    <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
-`;
+  it("excludes events whose category matches categoryDeny (case-insensitive)", () => {
+    const r = applyFilter(events, { categoryDeny: ["konzert"] });
+    assert.equal(r.length, 4);
+    assert.ok(!r.some((e) => e.summary.includes("Konzert")));
+  });
 
-  for (const c of cards.slice(0, 15)) {
-    const guid = `bitcircus101-${c.date.replace(/-/g, "")}-${c.type}`;
-    const titleParts = [`[${c.date}] ${c.title}`];
-    if (c.location) titleParts.push(`@ ${c.location}`);
-    const fullTitle = titleParts.join(" ");
+  it("excludes by titleDeny substring (case-insensitive)", () => {
+    const r = applyFilter(events, { titleDeny: ["punk"] });
+    assert.equal(r.length, 4);
+  });
 
-    const tags = (c.tags || []).filter((t) => t && t !== "#community");
+  it("with categoryAllow set, only matching categories pass", () => {
+    const r = applyFilter(events, { categoryAllow: ["Theater", "Literatur"] });
+    assert.equal(r.length, 2);
+    assert.ok(r.some((e) => e.summary === "Theater Tumult"));
+    assert.ok(r.some((e) => e.summary === "Buchtreff"));
+  });
 
-    xml += `
-    <item>
-      <title>${escXml(fullTitle)}</title>
-      <link>${SITE_URL}/events.html</link>
-      <description>${escXml(c.description || c.title + " · " + c.date)}</description>`;
-    for (const tag of tags) {
-      xml += `
-      <category>${escXml(tag)}</category>`;
-    }
-    xml += `
-      <pubDate>${toRFC822(c.firstSeen || new Date().toISOString())}</pubDate>
-      <guid isPermaLink="false">${guid}</guid>
-    </item>`;
-  }
+  it("deny rules take precedence over allow rules", () => {
+    const r = applyFilter(events, {
+      categoryAllow: ["Theater", "Konzert"],
+      categoryDeny: ["Konzert"],
+    });
+    assert.equal(r.length, 1);
+    assert.equal(r[0].summary, "Theater Tumult");
+  });
 
-  xml += `
-  </channel>
-</rss>
-`;
-  return xml;
-}
+  it("titleAllow narrows further", () => {
+    const r = applyFilter(events, { titleAllow: ["tumult"] });
+    assert.equal(r.length, 1);
+    assert.equal(r[0].summary, "Theater Tumult");
+  });
+
+  it("events without CATEGORIES are excluded when categoryAllow is set", () => {
+    const list = [...events, ev("Picanha de Chernobill", "")];
+    const r = applyFilter(list, { categoryAllow: ["Konzert"] });
+    assert.ok(!r.some((e) => e.summary === "Picanha de Chernobill"));
+  });
+});
+
+// ── buildTags ─────────────────────────────────────────────────────────────
+
+describe("buildTags", () => {
+  it("includes cal.tags first and deduplicates against auto-detected tags", () => {
+    const tags = buildTags("Workshop Löten", "", "", ["#kult41", "#workshop"]);
+    assert.equal(tags[0], "#kult41");
+    assert.equal(tags[1], "#workshop");
+    // Auto-detection would also produce #workshop and #hardware; dedup keeps first occurrence
+    assert.equal(tags.filter((t) => t === "#workshop").length, 1);
+    assert.ok(tags.includes("#hardware"));
+  });
+
+  it("falls back to #community when nothing matches", () => {
+    assert.deepEqual(buildTags("xyz", "", "", []), ["#community"]);
+  });
+
+  it("uses ICS CATEGORIES as fallback when no calTags", () => {
+    const tags = buildTags("xyz", "", "Theater, KULT41", []);
+    assert.ok(tags.includes("#theater"));
+    assert.ok(tags.includes("#kult41"));
+  });
+});
+
+// ── toCards ───────────────────────────────────────────────────────────────
+
+describe("toCards", () => {
+  const futureDate = () => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() + 1);
+    return d;
+  };
+
+  const mkEvent = (extra = {}) => ({
+    summary: "Future Event",
+    description: "",
+    location: "",
+    categories: "",
+    uid: "evt-1@example.com",
+    url: "",
+    dtstart: futureDate(),
+    dtend: null,
+    allDay: false,
+    ...extra,
+  });
+
+  it("respects cal.cap override", () => {
+    const events = Array.from({ length: 50 }, (_, i) => mkEvent({ uid: `evt-${i}` }));
+    const r = toCards(events, { name: "X", url: "https://x.example", cap: 5 });
+    assert.equal(r.length, 5);
+  });
+
+  it("falls back to default cap of 30 when cal.cap missing", () => {
+    const events = Array.from({ length: 50 }, (_, i) => mkEvent({ uid: `evt-${i}` }));
+    const r = toCards(events, { name: "X", url: "https://x.example" });
+    assert.equal(r.length, 30);
+  });
+
+  it("propagates ICS URL field to card.eventUrl and overrides calendarUrl", () => {
+    const events = [mkEvent({ url: "https://kult41.de/events/foo" })];
+    const r = toCards(events, { name: "Kult 41", url: "https://kult41.de/program" });
+    assert.equal(r[0].eventUrl, "https://kult41.de/events/foo");
+    assert.equal(r[0].calendarUrl, "https://kult41.de/events/foo");
+  });
+
+  it("uses cal.eventUrl when ICS URL is missing", () => {
+    const events = [mkEvent({ url: "" })];
+    const r = toCards(events, {
+      name: "Kult 41",
+      url: "https://kult41.de/program",
+      eventUrl: "https://kult41.de/events/specific",
+    });
+    assert.equal(r[0].eventUrl, "https://kult41.de/events/specific");
+  });
+
+  it("falls back to cal.url and no eventUrl when no per-event link (built-in source)", () => {
+    const events = [mkEvent({ url: "" })];
+    const r = toCards(events, { name: "X", url: "https://x.example" });
+    assert.equal(r[0].calendarUrl, "https://x.example");
+    assert.equal(r[0].eventUrl, undefined);
+  });
+
+  it("for ics-filtered sources, eventUrl falls back to cal.url so external links never get timeGridDay suffix", () => {
+    const events = [mkEvent({ url: "" })];
+    const r = toCards(events, {
+      name: "Kult 41",
+      type: "ics-filtered",
+      url: "https://kult41.de/programm",
+    });
+    assert.equal(r[0].eventUrl, "https://kult41.de/programm");
+  });
+
+  it("passes uid through to card", () => {
+    const events = [mkEvent({ uid: "abc-123" })];
+    const r = toCards(events, { name: "X", url: "https://x.example" });
+    assert.equal(r[0].uid, "abc-123");
+  });
+
+  it("merges cal.tags into card.tags", () => {
+    const events = [mkEvent()];
+    const r = toCards(events, { name: "X", url: "https://x.example", tags: ["#kult41"] });
+    assert.ok(r[0].tags.includes("#kult41"));
+  });
+});
+
+// ── RSS ───────────────────────────────────────────────────────────────────
 
 describe("escXml", () => {
   it("escapes &, <, >, and quotes", () => {
@@ -438,14 +454,10 @@ describe("escXml", () => {
 
 describe("toRFC822", () => {
   it("accepts an ISO string", () => {
-    const result = toRFC822("2026-03-10T22:45:00.000Z");
-    assert.match(result, /Tue, 10 Mar 2026 22:45:00 \+0000/);
+    assert.match(toRFC822("2026-03-10T22:45:00.000Z"), /Tue, 10 Mar 2026 22:45:00 \+0000/);
   });
-
   it("accepts a Date object", () => {
-    const d = new Date("2026-01-01T12:00:00Z");
-    const result = toRFC822(d);
-    assert.match(result, /Thu, 01 Jan 2026 12:00:00 \+0000/);
+    assert.match(toRFC822(new Date("2026-01-01T12:00:00Z")), /Thu, 01 Jan 2026 12:00:00 \+0000/);
   });
 });
 
@@ -465,14 +477,13 @@ describe("generateRSS", () => {
 
   it("includes date and location in title", () => {
     const xml = generateRSS([baseCard]);
-    assert.match(xml, /\[2026-03-21\] Crowd Gaming @ Dorotheenstraße 101, 53113 Bonn/);
+    assert.match(xml, /\[2026-03-21 20:00\] Crowd Gaming @ Dorotheenstraße 101, 53113 Bonn/);
   });
 
   it("omits @ location when location is empty", () => {
-    const card = { ...baseCard, location: "" };
-    const xml = generateRSS([card]);
-    assert.match(xml, /<title>\[2026-03-21\] Crowd Gaming<\/title>/);
-    assert.ok(!xml.includes("@ "), "should not contain @ when no location");
+    const xml = generateRSS([{ ...baseCard, location: "" }]);
+    assert.match(xml, /<title>\[2026-03-21 20:00\] Crowd Gaming<\/title>/);
+    assert.ok(!xml.includes("@ "));
   });
 
   it("renders category tags from card tags", () => {
@@ -482,22 +493,19 @@ describe("generateRSS", () => {
   });
 
   it("filters out empty tags and #community fallback", () => {
-    const card = { ...baseCard, tags: ["#community", "", "Meetup"] };
-    const xml = generateRSS([card]);
-    assert.ok(!xml.includes("<category>#community</category>"), "should filter #community");
-    assert.ok(!xml.includes("<category></category>"), "should filter empty tags");
+    const xml = generateRSS([{ ...baseCard, tags: ["#community", "", "Meetup"] }]);
+    assert.ok(!xml.includes("<category>#community</category>"));
+    assert.ok(!xml.includes("<category></category>"));
     assert.match(xml, /<category>Meetup<\/category>/);
   });
 
   it("omits category block entirely when all tags are filtered", () => {
-    const card = { ...baseCard, tags: ["#community"] };
-    const xml = generateRSS([card]);
-    assert.ok(!xml.includes("<category>"), "no category tags when only fallback tag");
+    const xml = generateRSS([{ ...baseCard, tags: ["#community"] }]);
+    assert.ok(!xml.includes("<category>"));
   });
 
   it("uses firstSeen as pubDate instead of event start time", () => {
     const xml = generateRSS([baseCard]);
-    // pubDate should reflect firstSeen (March 10), not event date (March 21)
     assert.match(xml, /<pubDate>Tue, 10 Mar 2026 22:45:00 \+0000<\/pubDate>/);
   });
 
@@ -508,8 +516,7 @@ describe("generateRSS", () => {
       firstSeen: "2026-03-01T00:00:00.000Z",
     }));
     const xml = generateRSS(cards);
-    const count = (xml.match(/<item>/g) || []).length;
-    assert.equal(count, 15);
+    assert.equal((xml.match(/<item>/g) || []).length, 15);
   });
 
   it("escapes special characters in title and description", () => {
@@ -517,5 +524,15 @@ describe("generateRSS", () => {
     const xml = generateRSS([card]);
     assert.match(xml, /A &amp; B/);
     assert.match(xml, /&lt;script&gt;/);
+  });
+
+  it("uses uid as guid when available", () => {
+    const xml = generateRSS([{ ...baseCard, uid: "stable-uid-123" }]);
+    assert.match(xml, /<guid isPermaLink="false">stable-uid-123<\/guid>/);
+  });
+
+  it("falls back to date+type guid when no uid", () => {
+    const xml = generateRSS([baseCard]);
+    assert.match(xml, /<guid isPermaLink="false">bitcircus101-20260321-special<\/guid>/);
   });
 });

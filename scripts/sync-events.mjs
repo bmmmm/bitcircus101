@@ -10,7 +10,36 @@ const HORIZON_DAYS = 120;
 
 import { readFileSync, writeFileSync } from "node:fs";
 
-const calendars = JSON.parse(readFileSync("calendars.json", "utf8"));
+const CAL_DIR = "calendars";
+const CAL_CONFIG = `${CAL_DIR}/config.json`;
+
+/**
+ * Load calendar sources via the manifest at calendars/config.json. Each source
+ * lives in its own JSON file (calendars/bitcircus.json, calendars/external/foo.json,
+ * etc.) and is included by listing its path under `sources`. Order in the manifest
+ * = order of processing. Remove an entry to disable a source without deleting its
+ * file. Entries without `id` or `ics` are skipped with a warning so one malformed
+ * file never breaks the whole sync.
+ */
+function loadCalendars() {
+  const config = JSON.parse(readFileSync(CAL_CONFIG, "utf8"));
+  const sources = Array.isArray(config?.sources) ? config.sources : [];
+  const loaded = [];
+  for (const rel of sources) {
+    const path = `${CAL_DIR}/${rel}`;
+    try {
+      const entry = JSON.parse(readFileSync(path, "utf8"));
+      if (!entry?.id || !entry?.ics) {
+        console.warn(`[${path}] missing id or ics — skipped`);
+        continue;
+      }
+      loaded.push(entry);
+    } catch (e) {
+      console.warn(`[${path}] load error: ${e.message} — skipped`);
+    }
+  }
+  return loaded;
+}
 
 // ── ICS Parser ──────────────────────────────────────────────────────────────
 
@@ -80,7 +109,15 @@ function clean(s) {
   return s.replace(/\\n/gi, " ").replace(/\\,/g, ",").replace(/\\;/g, ";").trim();
 }
 
-function parseICS(text) {
+/** Pull TZID parameter out of a property like "DTSTART;TZID=Europe/Berlin" */
+function parseTzid(rawKey) {
+  const m = rawKey.match(/TZID=([^;:]+)/i);
+  return m ? m[1] : null;
+}
+
+const tzidWarned = new Set();
+
+function parseICS(text, sourceId = "?") {
   const lines = text.replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
   const events = [];
   let ev = null;
@@ -93,7 +130,17 @@ function parseICS(text) {
       if (!dtstart) { ev = null; continue; }
       const dtend = ev.dtend ? parseDate(ev.dtend) : null;
       const allDay = !ev.dtstart.includes("T");
+      // Warn (once per source/zone) for foreign timezones — values stay as floating local
+      if (ev.tzid && ev.tzid !== "Europe/Berlin" && !ev.dtstart.endsWith("Z")) {
+        const key = `${sourceId}|${ev.tzid}`;
+        if (!tzidWarned.has(key)) {
+          tzidWarned.add(key);
+          console.warn(`[${sourceId}] non-Europe/Berlin TZID seen (${ev.tzid}); times treated as local`);
+        }
+      }
       const base = {
+        uid: ev.uid || "",
+        url: ev.url || "",
         summary: clean(ev.summary || "(kein Titel)"),
         description: clean(ev.description || ""),
         location: clean(ev.location || ""),
@@ -113,14 +160,17 @@ function parseICS(text) {
     if (!ev) continue;
     const ci = line.indexOf(":");
     if (ci === -1) continue;
-    const key = line.slice(0, ci).split(";")[0].toUpperCase();
+    const rawKey = line.slice(0, ci);
+    const key = rawKey.split(";")[0].toUpperCase();
     const val = line.slice(ci + 1);
-    if (key === "DTSTART") ev.dtstart = val;
+    if (key === "DTSTART") { ev.dtstart = val; ev.tzid = parseTzid(rawKey); }
     else if (key === "DTEND") ev.dtend = val;
     else if (key === "SUMMARY") ev.summary = val;
     else if (key === "DESCRIPTION") ev.description = val;
     else if (key === "LOCATION") ev.location = val;
     else if (key === "CATEGORIES") ev.categories = val;
+    else if (key === "UID") ev.uid = val.trim();
+    else if (key === "URL") ev.url = val.trim();
     else if (key === "RRULE") ev.rrule = val;
     else if (key === "EXDATE") {
       for (const v of val.split(",")) {
@@ -140,6 +190,34 @@ function pad(n) { return String(n).padStart(2, "0"); }
 function isInternal(summary) {
   const s = summary.toLowerCase();
   return s.includes("blocker") || s.includes("interne veranstaltung");
+}
+
+/**
+ * Filter ICS events by calendar config. Used by ics-filtered sources.
+ *
+ *   filter.categoryAllow  — array of category names; event must have at least one (case-insensitive exact match)
+ *   filter.categoryDeny   — array of category names; event with any match is excluded
+ *   filter.titleAllow     — array of substrings; event title must contain at least one (case-insensitive)
+ *   filter.titleDeny      — array of substrings; event title matching any is excluded
+ *
+ * Deny-first: if any deny rule matches, event is out. Allow-rules only narrow further.
+ * Empty/missing rule = "no constraint".
+ */
+function applyFilter(icsEvents, filter) {
+  if (!filter) return icsEvents;
+  const { categoryAllow, categoryDeny, titleAllow, titleDeny } = filter;
+  const lc = (s) => (s || "").toLowerCase();
+  const catMatch = (cats, needles) => needles?.some((n) => cats.includes(lc(n)));
+  const titleMatch = (title, needles) => needles?.some((n) => title.includes(lc(n)));
+  return icsEvents.filter((e) => {
+    const cats = (e.categories || "").split(",").map((c) => lc(c.trim())).filter(Boolean);
+    const title = lc(e.summary);
+    if (catMatch(cats, categoryDeny)) return false;
+    if (titleMatch(title, titleDeny)) return false;
+    if (categoryAllow?.length && !catMatch(cats, categoryAllow)) return false;
+    if (titleAllow?.length && !titleMatch(title, titleAllow)) return false;
+    return true;
+  });
 }
 
 function guessType(summary) {
@@ -189,7 +267,7 @@ function keywordTags(text) {
   return tags;
 }
 
-function buildTags(summary, description, categories) {
+function buildTags(summary, description, categories, calTags = []) {
   // 1. Explicit hashtags from description
   const explicit = extractHashtags(description);
 
@@ -202,11 +280,13 @@ function buildTags(summary, description, categories) {
   const text = (summary + " " + description).toLowerCase();
   const auto = keywordTags(text);
 
-  // Merge, deduplicate, keep order
+  // Merge, deduplicate, keep order. cal.tags first so source-pinned tags always survive.
   const seen = new Set();
   const merged = [];
-  for (const t of [...explicit, ...catTags, ...auto]) {
-    if (!seen.has(t)) { seen.add(t); merged.push(t); }
+  const normalize = (t) => t.toLowerCase();
+  for (const t of [...calTags, ...explicit, ...catTags, ...auto]) {
+    const n = normalize(t);
+    if (!seen.has(n)) { seen.add(n); merged.push(t); }
   }
   return merged.length ? merged : ["#community"];
 }
@@ -233,22 +313,32 @@ function truncateDesc(s, max = 200) {
 
 function toCards(icsEvents, cal) {
   const now = new Date();
+  const cap = Number.isFinite(cal.cap) ? cal.cap : 30;
+  // External calendars (ics-single, ics-filtered) link directly to event/program pages;
+  // built-in Nextcloud sources use the timeGridDay day view, so we keep eventUrl unset.
+  const isExternal = cal.type === "ics-filtered" || cal.type === "ics-single";
   return icsEvents
     .filter((e) => e.dtstart > now && !isInternal(e.summary))
     .sort((a, b) => a.dtstart - b.dtstart)
-    .slice(0, 30)
-    .map((e) => ({
-      title: e.summary,
-      subtitle: "",
-      description: truncateDesc(e.description),
-      location: cleanLocation(e.location),
-      date: `${e.dtstart.getFullYear()}-${pad(e.dtstart.getMonth() + 1)}-${pad(e.dtstart.getDate())}`,
-      time: e.allDay ? "" : `${pad(e.dtstart.getHours())}:${pad(e.dtstart.getMinutes())}`,
-      tags: buildTags(e.summary, e.description, e.categories),
-      type: guessType(e.summary),
-      source: cal.name,
-      calendarUrl: cal.url,
-    }));
+    .slice(0, cap)
+    .map((e) => {
+      // ICS URL > config-level eventUrl > calendar-level url (external only)
+      const eventLink = e.url || cal.eventUrl || (isExternal ? cal.url : null);
+      return {
+        title: e.summary,
+        subtitle: "",
+        description: truncateDesc(e.description),
+        location: cleanLocation(e.location),
+        date: `${e.dtstart.getFullYear()}-${pad(e.dtstart.getMonth() + 1)}-${pad(e.dtstart.getDate())}`,
+        time: e.allDay ? "" : `${pad(e.dtstart.getHours())}:${pad(e.dtstart.getMinutes())}`,
+        tags: buildTags(e.summary, e.description, e.categories, cal.tags || []),
+        type: guessType(e.summary),
+        source: cal.name,
+        uid: e.uid || "",
+        calendarUrl: eventLink || cal.url,
+        ...(eventLink ? { eventUrl: eventLink } : {}),
+      };
+    });
 }
 
 // ── Generate RSS feed ───────────────────────────────────────────────────────
@@ -276,7 +366,7 @@ function generateRSS(cards) {
 `;
 
   for (const c of cards.slice(0, 15)) {
-    const guid = `bitcircus101-${c.date.replace(/-/g, "")}-${c.type}`;
+    const guid = c.uid || `bitcircus101-${c.date.replace(/-/g, "")}-${c.type}`;
     const datePart = c.time ? `${c.date} ${c.time}` : c.date;
     const titleParts = [`[${datePart}] ${c.title}`];
     if (c.location) titleParts.push(`@ ${c.location}`);
@@ -323,6 +413,7 @@ function loadPrevious() {
 }
 
 async function main() {
+  const calendars = loadCalendars();
   const prev = loadPrevious();
   let allCards = [];
   const sources = [];
@@ -352,19 +443,24 @@ async function main() {
       const text = await res.text();
       console.log(`[${cal.id}] ${text.length} bytes`);
 
-      const icsEvents = parseICS(text);
+      let icsEvents = parseICS(text, cal.id);
       console.log(`[${cal.id}] ${icsEvents.length} VEVENT entries`);
+
+      if (cal.filter) {
+        const before = icsEvents.length;
+        icsEvents = applyFilter(icsEvents, cal.filter);
+        console.log(`[${cal.id}] filter: ${before} → ${icsEvents.length}`);
+      }
 
       const cards = toCards(icsEvents, cal);
       console.log(`[${cal.id}] ${cards.length} upcoming cards`);
       allCards = allCards.concat(cards);
 
-      // Diff against previous sync — compare ALL ICS events (not time-filtered cards)
-      // so that natural event expiry doesn't count as a "removed" change
+      // Diff against previous sync — prefer UID (stable), fall back to date|summary
+      // so natural event expiry doesn't count as a "removed" change.
+      const keyOf = (e) => e.uid || (e.dtstart.toISOString().slice(0, 10) + "|" + e.summary);
       const now = new Date().toISOString().slice(0, 10);
-      const allIcsKeys = new Set(icsEvents.map((e) =>
-        e.dtstart.toISOString().slice(0, 10) + "|" + e.summary
-      ));
+      const allIcsKeys = new Set(icsEvents.map(keyOf));
       const prevIcsKeys = new Set(prev.icsKeys[cal.name] || []);
       const added = [...allIcsKeys].filter((k) => !prevIcsKeys.has(k)).length;
       const removed = [...prevIcsKeys].filter((k) => !allIcsKeys.has(k)).length;
@@ -396,14 +492,21 @@ async function main() {
     }
   }
 
-  // Carry over firstSeen from previous sync, set to now for new events
-  const prevFirstSeen = {};
+  // Carry over firstSeen from previous sync, set to now for new events.
+  // Prefer UID lookup (stable across title edits), fall back to date|title for migration
+  // from pre-UID events-data.json — first run after rollout still picks up old entries.
+  const prevByUid = {};
+  const prevByDateTitle = {};
   for (const e of prev.events) {
-    if (e.firstSeen) prevFirstSeen[e.date + "|" + e.title] = e.firstSeen;
+    if (!e.firstSeen) continue;
+    if (e.uid) prevByUid[e.uid] = e.firstSeen;
+    prevByDateTitle[e.date + "|" + e.title] = e.firstSeen;
   }
   const nowISO = new Date().toISOString();
   for (const c of allCards) {
-    c.firstSeen = prevFirstSeen[c.date + "|" + c.title] || nowISO;
+    c.firstSeen = (c.uid && prevByUid[c.uid])
+      || prevByDateTitle[c.date + "|" + c.title]
+      || nowISO;
   }
 
   // Sort all cards by date, limit to 40
@@ -429,7 +532,18 @@ async function main() {
   console.log("Written feed.xml");
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+// Run main() only when executed directly (not when imported by tests)
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
+
+export {
+  loadCalendars,
+  parseDate, nthWeekday, expandRRule, clean, parseTzid, parseICS,
+  isInternal, applyFilter, guessType, extractHashtags, keywordTags,
+  buildTags, cleanLocation, truncateDesc, toCards,
+  escXml, toRFC822, generateRSS,
+};

@@ -1,0 +1,33 @@
+{
+  "_comment": "Maps logo filenames to display name (used for alt text + link title) and optional URL. Files without an entry render as plain images. URL empty → no link wrapper.",
+  "logos": {
+    "FrOSCon-Logo-rgb-cyan.svg": {
+      "name": "FrOSCon — Free and Open Source Conference",
+      "url": "https://froscon.org"
+    },
+    "Mittel (Logo_BSB_Selbstwerk-Logo_gross-Gross).png": {
+      "name": "BSB Selbstwerk",
+      "url": ""
+    },
+    "di.day.png": {
+      "name": "di.day",
+      "url": ""
+    },
+    "fsfe.png": {
+      "name": "Free Software Foundation Europe",
+      "url": "https://fsfe.org"
+    },
+    "inlaws.png": {
+      "name": "inlaws",
+      "url": ""
+    },
+    "kult41.png": {
+      "name": "Kult 41",
+      "url": "https://kult41.de/veranstaltungen/programm"
+    },
+    "leihbar.png": {
+      "name": "leihbar",
+      "url": ""
+    }
+  }
+}
