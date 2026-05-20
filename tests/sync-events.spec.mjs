@@ -190,6 +190,21 @@ describe("parseICS", () => {
     assert.equal(events[0].url, "https://kult41.de/events/linked-event");
   });
 
+  it("normalizes bare-domain URL to https://", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART:20260601T190000",
+      "SUMMARY:Test",
+      "UID:test@example.de",
+      "URL:bitcircus101.de",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const events = parseICS(ics);
+    assert.equal(events[0].url, "https://bitcircus101.de");
+  });
+
   it("warns once per source/zone for non-Europe TZID", () => {
     const ics = [
       "BEGIN:VCALENDAR",
