@@ -170,7 +170,7 @@ function parseICS(text, sourceId = "?") {
     else if (key === "LOCATION") ev.location = val;
     else if (key === "CATEGORIES") ev.categories = val;
     else if (key === "UID") ev.uid = val.trim();
-    else if (key === "URL") ev.url = val.trim();
+    else if (key === "URL") { const u = val.trim(); ev.url = u && !/^https?:\/\//i.test(u) ? `https://${u}` : u; }
     else if (key === "RRULE") ev.rrule = val;
     else if (key === "EXDATE") {
       for (const v of val.split(",")) {
