@@ -1,24 +1,24 @@
 {
-  "lastSync": "2026-05-22T17:26:00.009Z",
+  "lastSync": "2026-05-22T19:12:17.016Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-22T17:25:58.204Z",
+      "fetchedAt": "2026-05-22T19:12:15.479Z",
       "status": "ok",
-      "events": 21,
-      "added": 0,
+      "events": 22,
+      "added": 2,
       "removed": 0,
-      "total": 47,
+      "total": 49,
       "past": 3,
-      "upcoming": 44
+      "upcoming": 46
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-22T17:25:59.106Z",
+      "fetchedAt": "2026-05-22T19:12:16.249Z",
       "status": "ok",
-      "events": 18,
+      "events": 17,
       "added": 0,
       "removed": 0,
       "total": 42,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-05-22T17:25:59.865Z",
+      "fetchedAt": "2026-05-22T19:12:16.998Z",
       "status": "ok",
       "events": 1,
       "added": 0,
@@ -86,7 +86,9 @@
       "FE179D13-58CE-4235-9939-012AD23E73FD",
       "389605B6-81C2-4B8A-9E0D-845B182C9E9A",
       "310FC895-5CDB-40AA-BD1A-26AB2C427432",
-      "EEC2D2D1-3DC4-4237-8934-7CD8403B60A0"
+      "EEC2D2D1-3DC4-4237-8934-7CD8403B60A0",
+      "B354382B-F062-4757-840F-16C0C77178D9",
+      "7856CDF7-054E-46BC-9EA9-AECA10B0FDF3"
     ],
     "Datenburg e.V.": [
       "a027fbdd-6b08-4f8b-89c4-65fbcd7f2c66",
@@ -771,6 +773,23 @@
       "firstSeen": "2026-05-15T21:15:10.361Z"
     },
     {
+      "title": "Pride Bonn",
+      "subtitle": "",
+      "description": "Es gibt wieder eine queere Pride Demonstration in Bonn. Sie ist am 18. Juli 2026. Wir starten an der Rheinlust. Das ist in Beuel am Rhein. Die Demonstration endet am Münsterplatz. Da gibt es noch …",
+      "location": "TBA",
+      "date": "2026-07-18",
+      "time": "11:00",
+      "tags": [
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B354382B-F062-4757-840F-16C0C77178D9",
+      "calendarUrl": "https://pridebonn.org/einfache-sprache/",
+      "eventUrl": "https://pridebonn.org/einfache-sprache/",
+      "firstSeen": "2026-05-22T19:12:16.999Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -804,22 +823,6 @@
       "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-12T20:27:57.991Z"
-    },
-    {
-      "title": "Spieleabend",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-07-23",
-      "time": "19:00",
-      "tags": [
-        "#gaming"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "FCD62406-4CA7-4BA5-8AEA-067D9F42E09B",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-21T19:44:43.214Z"
     }
   ]
 }
