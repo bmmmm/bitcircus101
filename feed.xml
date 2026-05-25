@@ -5,16 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Mon, 25 May 2026 12:48:07 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 25 May 2026 15:49:15 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-05-25 13:01] Geburtstag - bitcircus101 wird 1 Jahr @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html</link>
-      <description>Geburtstag - bitcircus101 wird 1 Jahr · 2026-05-25</description>
-      <pubDate>Mon, 18 May 2026 20:52:26 +0000</pubDate>
-      <guid isPermaLink="false">310FC895-5CDB-40AA-BD1A-26AB2C427432</guid>
-    </item>
     <item>
       <title>[2026-05-26 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html</link>
@@ -142,6 +135,14 @@
       <category>#spieletreff</category>
       <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
       <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC</guid>
+    </item>
+    <item>
+      <title>[2026-07-10 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <category>#meetup</category>
+      <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de</guid>
     </item>
   </channel>
 </rss>
