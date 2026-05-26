@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-05-26T17:25:46.223Z",
+  "lastSync": "2026-05-26T19:33:09.842Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-26T17:25:43.624Z",
+      "fetchedAt": "2026-05-26T19:33:07.761Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,19 +16,19 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-26T17:25:44.696Z",
+      "fetchedAt": "2026-05-26T19:33:08.670Z",
       "status": "ok",
       "events": 18,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 42,
+      "total": 43,
       "past": 5,
-      "upcoming": 37
+      "upcoming": 38
     },
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-05-26T17:25:46.217Z",
+      "fetchedAt": "2026-05-26T19:33:09.828Z",
       "status": "ok",
       "events": 1,
       "added": 0,
@@ -104,6 +104,7 @@
       "385579fd-dab7-42c0-826b-173d49f87b51",
       "1206d599-7531-45e8-9cdb-34098d7d6820",
       "1564bdba-e01d-4dee-bc2b-8fe799d5c5f5",
+      "3cb508ed-3976-494d-9918-a93d66dad84a",
       "1f8f256f-a5f5-40fe-be83-26d418b22fbb",
       "e91e3595-b8d3-49d6-9529-17d1c27153b8",
       "3232a73b-5408-4657-b756-cdfc10f62676",
@@ -139,41 +140,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-05-26",
-      "time": "19:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-05-26",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
-    },
     {
       "title": "Spieleabend",
       "subtitle": "",
@@ -823,6 +789,41 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-04-23T19:09:53.469Z"
+    },
+    {
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-07-28",
+      "time": "19:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-07-28",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
     }
   ]
 }
