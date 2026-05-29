@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-05-29T19:07:53.617Z",
+  "lastSync": "2026-05-29T21:21:46.836Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-05-29T19:07:51.886Z",
+      "fetchedAt": "2026-05-29T21:21:44.757Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-05-29T19:07:52.851Z",
+      "fetchedAt": "2026-05-29T21:21:45.883Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-05-29T19:07:53.602Z",
+      "fetchedAt": "2026-05-29T21:21:46.829Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -142,23 +142,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Casual Linkup@bitcircus101 (5FR)",
-      "subtitle": "",
-      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de",
-      "location": "Dorotheenstraße 101",
-      "date": "2026-05-29",
-      "time": "20:00",
-      "tags": [
-        "#meetup"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "uid": "casual-linkup-5fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
-      "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-03-27T10:48:41.690Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -825,6 +808,23 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-28T20:42:40.578Z"
+    },
+    {
+      "title": "1 August  2026 CSD Beethovens Bunte",
+      "subtitle": "",
+      "description": "Am 1. August 2026 feiern wir auf dem Münsterplatz in Bonn den CSD 2026 / Beethovens Bunte mit Euch.   Das offizielle Bühnenprogramm beginnt am Samstag um ca. 13 Uhr und endet ca. um 21 Uhr. Die Demo …",
+      "location": "Münsterplatz Bonn, Münsterplatz, Bonn, NRW, 53111",
+      "date": "2026-08-01",
+      "time": "12:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "7856CDF7-054E-46BC-9EA9-AECA10B0FDF3",
+      "calendarUrl": "https://www.rheinqueer-bonn.de/event/1-august-2026-csd-beethovens-bunte/",
+      "eventUrl": "https://www.rheinqueer-bonn.de/event/1-august-2026-csd-beethovens-bunte/",
+      "firstSeen": "2026-05-29T21:21:46.830Z"
     }
   ]
 }
