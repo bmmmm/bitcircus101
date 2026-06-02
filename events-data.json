@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-06-02T18:13:18.997Z",
+  "lastSync": "2026-06-02T21:30:48.471Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-02T18:13:16.871Z",
+      "fetchedAt": "2026-06-02T21:30:46.629Z",
       "status": "ok",
-      "events": 22,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 49,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-02T18:13:17.989Z",
+      "fetchedAt": "2026-06-02T21:30:47.529Z",
       "status": "ok",
-      "events": 18,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 45,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-02T18:13:18.990Z",
+      "fetchedAt": "2026-06-02T21:30:48.370Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -142,24 +142,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-06-02",
-      "time": "19:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
     {
       "title": "Casual Linkup@bitcircus101 (1FR)",
       "subtitle": "",
@@ -824,6 +806,22 @@
       "uid": "7ea4047f-0452-4d91-beae-1b23b7a9735c",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-02T18:13:18.990Z"
+    },
+    {
+      "title": "Digital Independence Day (DID)",
+      "subtitle": "",
+      "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
+      "location": "Bornheimer Straße 25, Bonn",
+      "date": "2026-08-02",
+      "time": "14:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-02T13:08:46.350Z"
     }
   ]
 }
