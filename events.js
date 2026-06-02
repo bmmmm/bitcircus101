@@ -20,7 +20,6 @@
     "JULI", "AUGUST", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DEZEMBER",
   ];
   var DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
-  var HORIZON = 120;
 
   // State
   var activeFilters = [];
@@ -253,10 +252,8 @@
       groupMap[k].forEach(function (e) {
         var d = new Date(e.date + "T00:00:00");
         var typeClass = e.type ? " event-card--" + e.type : "";
-        var slug = e.date + "-" + e.title.toLowerCase()
-          .replace(/[^a-z0-9\u00e4\u00f6\u00fc]+/g, "-")
-          .replace(/^-|-$/g, "").slice(0, 40);
-        var anchor = "ev-" + slug;
+        // Shared with the RSS feed's deep-link (ics-core.js) so anchors stay in sync.
+        var anchor = ICSCore.eventAnchor(e);
 
         html += '<article class="event-card' + typeClass +
           '" id="' + anchor + '">';
@@ -367,146 +364,8 @@
   }
 
   // ── ICS Parser (fallback) ─────────────────────────────────────────────────
-
-  function icsDate(v) {
-    if (!v) return null;
-    var y = +v.slice(0, 4), m = +v.slice(4, 6) - 1, d = +v.slice(6, 8);
-    if (v.length === 8) return new Date(y, m, d);
-    var h = +v.slice(9, 11), mi = +v.slice(11, 13);
-    return v.charAt(v.length - 1) === "Z"
-      ? new Date(Date.UTC(y, m, d, h, mi))
-      : new Date(y, m, d, h, mi);
-  }
-
-  function nthWeekday(year, month, wd, nth) {
-    var d = new Date(year, month, 1);
-    while (d.getDay() !== wd) d.setDate(d.getDate() + 1);
-    d.setDate(d.getDate() + (nth - 1) * 7);
-    return d.getMonth() === month ? d : null;
-  }
-
-  function expandRRule(dtstart, rule, exdates) {
-    var horizon = new Date();
-    horizon.setDate(horizon.getDate() + HORIZON);
-    var p = {};
-    rule.split(";").forEach(function (s) {
-      var i = s.indexOf("=");
-      if (i > -1) p[s.slice(0, i)] = s.slice(i + 1);
-    });
-    var WD = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
-    var end = p.UNTIL ? icsDate(p.UNTIL) : null;
-    if (!end || end > horizon) end = horizon;
-    var max = p.COUNT ? +p.COUNT : 200;
-    var exSet = {};
-    exdates.forEach(function (d) { exSet[d.toDateString()] = true; });
-    var out = [];
-
-    if (p.FREQ === "WEEKLY") {
-      var wd = p.BYDAY
-        ? WD[p.BYDAY.replace(/\d/g, "").slice(-2)]
-        : dtstart.getDay();
-      if (wd === undefined) wd = dtstart.getDay();
-      var cur = new Date(dtstart);
-      while (cur.getDay() !== wd) cur.setDate(cur.getDate() + 1);
-      while (cur <= end && out.length < max) {
-        if (!exSet[cur.toDateString()]) out.push(new Date(cur));
-        cur.setDate(cur.getDate() + 7);
-      }
-    } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
-      // Support both "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3
-      var m = p.BYDAY.match(/^(\d+)([A-Z]{2})$/);
-      var nth = m ? +m[1] : (p.BYSETPOS ? +p.BYSETPOS : null);
-      var dayCode = m ? m[2] : p.BYDAY.replace(/\d/g, "").slice(-2);
-      var twd = WD[dayCode];
-      if (nth && twd != null) {
-        var mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
-        while (mo <= end && out.length < max) {
-          var d = nthWeekday(mo.getFullYear(), mo.getMonth(), twd, nth);
-          if (d) {
-            d.setHours(dtstart.getHours(), dtstart.getMinutes(), 0, 0);
-            if (d >= dtstart && d <= end && !exSet[d.toDateString()])
-              out.push(new Date(d));
-          }
-          mo.setMonth(mo.getMonth() + 1);
-        }
-      }
-    } else if (p.FREQ === "DAILY") {
-      var interval = p.INTERVAL ? +p.INTERVAL : 1;
-      var cd = new Date(dtstart);
-      while (cd <= end && out.length < max) {
-        if (!exSet[cd.toDateString()]) out.push(new Date(cd));
-        cd.setDate(cd.getDate() + interval);
-      }
-    } else if (p.FREQ === "YEARLY") {
-      var cy = new Date(dtstart);
-      while (cy <= end && out.length < max) {
-        if (!exSet[cy.toDateString()]) out.push(new Date(cy));
-        cy.setFullYear(cy.getFullYear() + 1);
-      }
-    }
-    return out;
-  }
-
-  function cleanICS(s) {
-    return s.replace(/\\n/gi, " ").replace(/\\,/g, ",").replace(/\\;/g, ";").trim();
-  }
-
-  function parseICS(text) {
-    var lines = text.replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
-    var events = [];
-    var ev = null;
-
-    for (var i = 0; i < lines.length; i++) {
-      var line = lines[i];
-      if (line === "BEGIN:VEVENT") { ev = { exdates: [] }; continue; }
-      if (line === "END:VEVENT") {
-        if (!ev || !ev.dtstart) { ev = null; continue; }
-        var dtstart = icsDate(ev.dtstart);
-        if (!dtstart) { ev = null; continue; }
-        var dtend = ev.dtend ? icsDate(ev.dtend) : null;
-        var allDay = !ev.dtstart.includes("T");
-        var base = {
-          summary: cleanICS(ev.summary || "(kein Titel)"),
-          description: cleanICS(ev.description || ""),
-          location: cleanICS(ev.location || ""),
-          allDay: allDay,
-        };
-        if (ev.rrule) {
-          var dur = dtend ? dtend - dtstart : 7200000;
-          expandRRule(dtstart, ev.rrule, ev.exdates).forEach(function (d) {
-            events.push({
-              summary: base.summary, description: base.description,
-              location: base.location, allDay: base.allDay,
-              dtstart: d, dtend: new Date(d.getTime() + dur),
-            });
-          });
-        } else {
-          base.dtstart = dtstart;
-          base.dtend = dtend;
-          events.push(base);
-        }
-        ev = null; continue;
-      }
-      if (!ev) continue;
-      var ci = line.indexOf(":");
-      if (ci === -1) continue;
-      var key = line.slice(0, ci).split(";")[0].toUpperCase();
-      var val = line.slice(ci + 1);
-      if (key === "DTSTART") ev.dtstart = val;
-      else if (key === "DTEND") ev.dtend = val;
-      else if (key === "SUMMARY") ev.summary = val;
-      else if (key === "DESCRIPTION") ev.description = val;
-      else if (key === "LOCATION") ev.location = val;
-      else if (key === "RRULE") ev.rrule = val;
-      else if (key === "EXDATE") {
-        val.split(",").forEach(function (v) {
-          var d = icsDate(v.trim());
-          if (d) ev.exdates.push(d);
-        });
-      }
-    }
-    return events;
-  }
+  // The parser itself lives in ics-core.js (window.ICSCore), shared with the Node
+  // sync script. This block only maps parsed events onto card objects.
 
   // Mirror of guessType() in sync-events.mjs so the ICS fallback applies the same
   // card styling as the generated JSON (the type drives the event-card--* border).
@@ -701,7 +560,7 @@
             return res.text();
           })
           .then(function (text) {
-            renderCards(icsToCards(parseICS(text)), el);
+            renderCards(icsToCards(ICSCore.parseICS(text)), el);
           })
           .catch(function () {
             renderError(el);
