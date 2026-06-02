@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-06-02T14:00:32.936Z",
+  "lastSync": "2026-06-02T18:13:18.997Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-02T14:00:31.313Z",
+      "fetchedAt": "2026-06-02T18:13:16.871Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-02T14:00:32.240Z",
+      "fetchedAt": "2026-06-02T18:13:17.989Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-02T14:00:32.922Z",
+      "fetchedAt": "2026-06-02T18:13:18.990Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -159,23 +159,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-06-02",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (1FR)",
@@ -825,6 +808,22 @@
       "calendarUrl": "https://www.rheinqueer-bonn.de/event/1-august-2026-csd-beethovens-bunte/",
       "eventUrl": "https://www.rheinqueer-bonn.de/event/1-august-2026-csd-beethovens-bunte/",
       "firstSeen": "2026-05-29T21:21:46.830Z"
+    },
+    {
+      "title": "Beethovens Bunte 🌈",
+      "subtitle": "",
+      "description": "Beethovens Bunte 🌈",
+      "location": "Münsterplatz",
+      "date": "2026-08-01",
+      "time": "13:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "7ea4047f-0452-4d91-beae-1b23b7a9735c",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-02T18:13:18.990Z"
     }
   ]
 }
