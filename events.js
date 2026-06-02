@@ -41,6 +41,15 @@
       .replace(/"/g, "&quot;");
   }
 
+  // Bare-domain URLs (e.g. "bitcircus101.de") would render as a relative href
+  // and 404. Prepend https:// when neither a scheme nor a root-relative path is
+  // present. Mirrors the sync-side normalization in sync-events.mjs (5ee7f07).
+  function httpUrl(u) {
+    if (!u) return u;
+    if (u.charAt(0) === "/" || /^[a-z][\w+.-]*:\/\//i.test(u)) return u;
+    return "https://" + u;
+  }
+
   function isBitcircusEvent(e) {
     return !e.source || e.source === "bitcircus101";
   }
@@ -297,8 +306,8 @@
         // External event URLs (e.g. Kult 41) link directly; Nextcloud calendar URLs
         // get the timeGridDay suffix for day view
         var calHref = e.eventUrl
-          ? e.eventUrl
-          : (e.calendarUrl || CALENDAR_URL) + '/timeGridDay/' + e.date;
+          ? httpUrl(e.eventUrl)
+          : httpUrl(e.calendarUrl || CALENDAR_URL) + '/timeGridDay/' + e.date;
         var calLabel = e.eventUrl ? '\u2192 link' : '\u2192 kalender';
         var calTitle = e.eventUrl ? 'Auf externer Seite \u00f6ffnen' : 'Im Kalender anzeigen';
         html += '<div class="event-card__actions">';
