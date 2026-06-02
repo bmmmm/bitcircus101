@@ -41,13 +41,6 @@
       .replace(/"/g, "&quot;");
   }
 
-  function formatSourceLabel(name) {
-    if (name && name !== "bitcircus101") {
-      return "Externer Kalender: " + name;
-    }
-    return name;
-  }
-
   function isBitcircusEvent(e) {
     return !e.source || e.source === "bitcircus101";
   }
@@ -271,7 +264,7 @@
         html += '<h3 class="event-card__title">' + esc(e.title) + "</h3>";
         if (e.source && e.source !== "bitcircus101") {
           html += '<span class="event-card__source">' +
-            esc(formatSourceLabel(e.source)) + "</span>";
+            esc("Externer Kalender: " + e.source) + "</span>";
         }
         html += "</div>";
         if (e.subtitle) {
