@@ -19,7 +19,11 @@
         <meta property="og:locale" content="de_DE" />
         <link rel="canonical" href="https://bitcircus101.de/chat/" />
         <link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
-        <link rel="stylesheet" href="../style.css?v=5" />
+        <script>
+            // No-flash: apply persisted calm theme before stylesheet paints.
+            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="../style.css?v=6" />
     </head>
     <body class="chat-page">
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
