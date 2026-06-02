@@ -15,6 +15,10 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    # ICS values from Nextcloud are floating-local Europe/Berlin; pin the runner TZ
+    # so date/time formatting (and UTC→local conversion) matches the calendar, not UTC.
+    env:
+      TZ: Europe/Berlin
     steps:
       - uses: actions/checkout@v6
         with:

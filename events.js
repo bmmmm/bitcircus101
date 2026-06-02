@@ -131,7 +131,8 @@
         return new Date(e.date + "T23:59:59") >= now;
       })
       .sort(function (a, b) {
-        return new Date(a.date) - new Date(b.date);
+        // Date then time, so same-day events run chronologically (all-day first).
+        return (a.date + (a.time || "")).localeCompare(b.date + (b.time || ""));
       });
 
     onlyBitcircus = false;
@@ -315,7 +316,7 @@
           'data-href="#' + anchor + '" title="Link kopieren">' +
           '\u2190 link</button>';
         html += '<a class="event-action event-action--cal" href="' +
-          calHref +
+          esc(calHref) +
           '" target="_blank" rel="noopener" title="' + calTitle + '">' +
           calLabel + '</a>';
         if (e.location) {
@@ -343,6 +344,7 @@
         var href = btn.getAttribute("data-href");
         var url = window.location.origin + window.location.pathname + href;
         window.history.replaceState(null, "", href);
+        if (!navigator.clipboard || !navigator.clipboard.writeText) return;
         navigator.clipboard.writeText(url).then(function () {
           var orig = btn.innerHTML;
           btn.innerHTML = '<span class="event-action__icon">\u2713</span> kopiert';
@@ -351,6 +353,8 @@
             btn.innerHTML = orig;
             btn.classList.remove("event-action--copied");
           }, 1500);
+        }).catch(function () {
+          // Clipboard denied (e.g. non-secure context) \u2014 fail silently, URL is in the bar.
         });
       });
     });
@@ -426,6 +430,19 @@
           mo.setMonth(mo.getMonth() + 1);
         }
       }
+    } else if (p.FREQ === "DAILY") {
+      var interval = p.INTERVAL ? +p.INTERVAL : 1;
+      var cd = new Date(dtstart);
+      while (cd <= end && out.length < max) {
+        if (!exSet[cd.toDateString()]) out.push(new Date(cd));
+        cd.setDate(cd.getDate() + interval);
+      }
+    } else if (p.FREQ === "YEARLY") {
+      var cy = new Date(dtstart);
+      while (cy <= end && out.length < max) {
+        if (!exSet[cy.toDateString()]) out.push(new Date(cy));
+        cy.setFullYear(cy.getFullYear() + 1);
+      }
     }
     return out;
   }
@@ -491,23 +508,41 @@
     return events;
   }
 
+  // Mirror of guessType() in sync-events.mjs so the ICS fallback applies the same
+  // card styling as the generated JSON (the type drives the event-card--* border).
+  function guessType(summary) {
+    var s = (summary || "").toLowerCase();
+    if (s.indexOf("linkup") > -1) return "linkup";
+    if (s.indexOf("workshop") > -1 || s.indexOf("löten") > -1 ||
+        s.indexOf("hands-on") > -1) return "workshop";
+    return "special";
+  }
+
   function icsToCards(icsEvents) {
     var now = new Date();
+    var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     return icsEvents
-      .filter(function (e) { return e.dtstart > now; })
+      .filter(function (e) {
+        // All-day events (no time) stay until the day is over; timed events must be future.
+        return e.allDay ? e.dtstart >= startOfToday : e.dtstart > now;
+      })
       .sort(function (a, b) { return a.dtstart - b.dtstart; })
       .slice(0, 30)
       .map(function (e) {
+        // Local date components (not toISOString, which is UTC and would shift an
+        // all-day event's date by a day in non-UTC browsers).
+        var date = e.dtstart.getFullYear() + "-" +
+          pad(e.dtstart.getMonth() + 1) + "-" + pad(e.dtstart.getDate());
         return {
           title: e.summary,
           subtitle: "",
           description: e.description,
-          date: e.dtstart.toISOString().slice(0, 10),
+          date: date,
           time: e.allDay
             ? ""
             : pad(e.dtstart.getHours()) + ":" + pad(e.dtstart.getMinutes()),
           tags: [],
-          type: "regular",
+          type: guessType(e.summary),
         };
       });
   }
