@@ -320,6 +320,27 @@ nav li a.nav__cta.nav__link--current:focus-visible {
     color: var(--accent);
 }
 
+/* Calm/loud theme toggle — compact pill in the nav, styled like .nav__rss */
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--font);
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    padding: 0.3em 0.7em;
+    cursor: pointer;
+    transition: color var(--transition), border-color var(--transition);
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible,
+.theme-toggle[aria-pressed="true"] {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
 /* =============================================================================
    Buttons
    ============================================================================= */
@@ -2602,6 +2623,93 @@ h3.sr-only {
         --border: #ffffff;
         --text-dim: #cccccc;
     }
+}
+
+/* =============================================================================
+   Calm theme — opt-in via data-theme="calm"
+   Same override mechanism as the prefers-contrast block above: re-points the
+   existing tokens, collapses the off-accents onto one, freezes decorative
+   motion, dims the hero. Purely additive — :root stays untouched.
+   ============================================================================= */
+:root[data-theme="calm"] {
+    /* Lifted, lower-contrast surfaces — less black void, less neon */
+    --bg:            #14171a;
+    --bg-elevated:   #1b1f23;
+    --bg-panel:      #1f2429;
+    /* One desaturated teal collapses the green/pink/orange chorus */
+    --accent:        #5fb89a;
+    --accent-dim:    #4d9a80;
+    --border-accent: #5fb89a;
+    --text:          #c9cdd2;
+    --text-dim:      #8a9099;
+    --text-bright:   #eef1f4;
+    --border:        #313840;
+    /* Calmer rhythm: more air, no snappy 140ms flashes */
+    --line-height:   1.85;
+    --transition:    220ms ease;
+}
+
+/* Pull the loud off-accents (pink CTA, orange RSS) onto the single accent */
+[data-theme="calm"] nav li a.nav__cta { color: var(--accent); }
+[data-theme="calm"] nav li a.nav__cta:hover,
+[data-theme="calm"] nav li a.nav__cta:focus-visible { color: var(--text-bright); }
+[data-theme="calm"] nav li a.nav__cta.nav__link--current,
+[data-theme="calm"] nav li a.nav__cta.nav__link--current:hover,
+[data-theme="calm"] nav li a.nav__cta.nav__link--current:focus-visible {
+    box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+[data-theme="calm"] .btn-primary {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
+}
+[data-theme="calm"] .btn-primary:hover {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+}
+
+[data-theme="calm"] .nav__rss { color: var(--text-dim); border-color: var(--border); }
+[data-theme="calm"] .nav__rss:hover { color: var(--accent); border-color: var(--accent); }
+
+/* Kill decorative glow halos */
+[data-theme="calm"] .btn-shimmer,
+[data-theme="calm"] .btn-shimmer:hover,
+[data-theme="calm"] .location-card:hover,
+[data-theme="calm"] .location-card:focus-within,
+[data-theme="calm"] .chat-close,
+[data-theme="calm"] .signal-decode-btn { box-shadow: none; }
+
+/* Freeze blinking cursors and the glow pulse — visible, but still */
+[data-theme="calm"] .nav__cursor,
+[data-theme="calm"] .location-card__cursor,
+[data-theme="calm"] .events-cursor {
+    animation: none;
+    opacity: 1;
+}
+[data-theme="calm"] .signal-decode-btn { animation: none; }
+
+/* Marquee → static wrapped row (reuse of the reduced-motion fallback) */
+[data-theme="calm"] .logo-slider__track {
+    animation: none;
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: var(--gap-md);
+}
+[data-theme="calm"] .logo-slider__viewport {
+    overflow: visible;
+    padding-block: var(--gap-lg);
+}
+[data-theme="calm"] .logo-slider__set[aria-hidden="true"] { display: none; }
+
+/* Hero ASCII steps back: smaller stage, dimmed, lower contrast */
+[data-theme="calm"] #home .ascii-art-viewport {
+    height: clamp(180px, 32vh, 300px);
+    background: var(--bg-elevated);
+    opacity: 0.82;
 }
 
 /* =============================================================================
