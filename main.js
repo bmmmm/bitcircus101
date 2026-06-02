@@ -219,7 +219,7 @@
       this.elements.dots.forEach((dot, index) => {
         utils.addEventListenerSafe(dot, "click", (e) => {
           utils.preventDefaultAndStop(e);
-          this.goToSlide(index);
+          this.showSlide(index);
           this.resetAutoRotateIfEnabled();
         });
       });
@@ -295,10 +295,6 @@
         (this.state.current - 1 + this.elements.items.length) %
         this.elements.items.length;
       this.showSlide(prevIndex);
-    },
-
-    goToSlide(index) {
-      this.showSlide(index);
     },
 
     startAutoRotate() {
