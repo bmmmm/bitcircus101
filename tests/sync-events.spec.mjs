@@ -122,6 +122,46 @@ describe("expandRRule — WEEKLY", () => {
   });
 });
 
+describe("expandRRule — DAILY / YEARLY / unsupported", () => {
+  it("expands daily recurrence one day apart", () => {
+    const dtstart = new Date(2026, 2, 2, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=DAILY", []);
+    assert(dates.length > 1);
+    const diff = Math.round((dates[1] - dates[0]) / 86400000);
+    assert.equal(diff, 1);
+  });
+
+  it("honours DAILY INTERVAL", () => {
+    const dtstart = new Date(2026, 2, 2, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=DAILY;INTERVAL=3", []);
+    assert(dates.length > 1);
+    const diff = Math.round((dates[1] - dates[0]) / 86400000);
+    assert.equal(diff, 3);
+  });
+
+  it("expands yearly recurrence keeping month/day", () => {
+    const dtstart = new Date(2026, 2, 2, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=YEARLY", []);
+    assert(dates.length >= 1);
+    assert.equal(dates[0].getMonth(), 2);
+    assert.equal(dates[0].getDate(), 2);
+  });
+
+  it("warns once on an unsupported FREQ instead of silently dropping", () => {
+    const origWarn = console.warn;
+    const warnings = [];
+    console.warn = (m) => warnings.push(m);
+    try {
+      const dates = expandRRule(new Date(2026, 2, 2, 19, 0), "FREQ=HOURLY", []);
+      assert.equal(dates.length, 0);
+    } finally {
+      console.warn = origWarn;
+    }
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /unsupported FREQ=HOURLY/);
+  });
+});
+
 // ── parseICS ──────────────────────────────────────────────────────────────
 
 describe("parseICS", () => {
@@ -457,6 +497,22 @@ describe("toCards", () => {
     const r = toCards(events, { name: "X", url: "https://x.example", tags: ["#kult41"] });
     assert.ok(r[0].tags.includes("#kult41"));
   });
+
+  it("keeps an all-day event happening today (not dropped as past)", () => {
+    const t = new Date();
+    const midnightToday = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+    const events = [mkEvent({ allDay: true, dtstart: midnightToday, uid: "allday-today" })];
+    const r = toCards(events, { name: "X", url: "https://x.example" });
+    assert.equal(r.length, 1);
+  });
+
+  it("still drops an all-day event from yesterday", () => {
+    const t = new Date();
+    const yesterday = new Date(t.getFullYear(), t.getMonth(), t.getDate() - 1);
+    const events = [mkEvent({ allDay: true, dtstart: yesterday, uid: "allday-past" })];
+    const r = toCards(events, { name: "X", url: "https://x.example" });
+    assert.equal(r.length, 0);
+  });
 });
 
 // ── RSS ───────────────────────────────────────────────────────────────────
@@ -541,13 +597,30 @@ describe("generateRSS", () => {
     assert.match(xml, /&lt;script&gt;/);
   });
 
-  it("uses uid as guid when available", () => {
+  it("uses uid + date/time slot as guid when available", () => {
     const xml = generateRSS([{ ...baseCard, uid: "stable-uid-123" }]);
-    assert.match(xml, /<guid isPermaLink="false">stable-uid-123<\/guid>/);
+    assert.match(xml, /<guid isPermaLink="false">stable-uid-123-20260321T2000<\/guid>/);
   });
 
   it("falls back to date+type guid when no uid", () => {
     const xml = generateRSS([baseCard]);
-    assert.match(xml, /<guid isPermaLink="false">bitcircus101-20260321-special<\/guid>/);
+    assert.match(xml, /<guid isPermaLink="false">bitcircus101-20260321T2000-special<\/guid>/);
+  });
+
+  it("gives recurring instances (shared uid) distinct GUIDs", () => {
+    const xml = generateRSS([
+      { ...baseCard, uid: "weekly@x", date: "2026-03-21", time: "20:00" },
+      { ...baseCard, uid: "weekly@x", date: "2026-03-28", time: "20:00" },
+    ]);
+    const guids = [...xml.matchAll(/<guid[^>]*>([^<]+)<\/guid>/g)].map((m) => m[1]);
+    assert.equal(guids.length, 2);
+    assert.notEqual(guids[0], guids[1]);
+  });
+
+  it("XML-escapes the guid (uid with & and <)", () => {
+    const xml = generateRSS([{ ...baseCard, uid: "a&b<c" }]);
+    assert.match(xml, /<guid isPermaLink="false">a&amp;b&lt;c-20260321T2000<\/guid>/);
+    // no raw, unescaped ampersand anywhere in the feed
+    assert.ok(!/&(?!amp;|lt;|gt;|quot;|#)/.test(xml));
   });
 });
