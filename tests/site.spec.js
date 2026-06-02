@@ -439,3 +439,52 @@ test.describe('Accessibility', () => {
         await expect(page.locator('[role="contentinfo"]')).toBeVisible();
     });
 });
+
+// ─── Calm Theme Toggle ───────────────────────────────────────────────────────
+
+test.describe('Calm theme toggle', () => {
+    test('toggles data-theme, persists across reload, applies calm tokens', async ({ page, context }) => {
+        const errors = [];
+        page.on('pageerror', (err) => errors.push(err.message));
+
+        // Desktop viewport so the nav toggle isn't inside the collapsed mobile menu
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await context.clearCookies();
+        await page.goto('/');
+        await page.evaluate(() => { try { localStorage.removeItem('theme'); } catch (e) {} });
+        await page.reload();
+
+        const toggle = page.locator('#theme-toggle');
+        await expect(toggle).toBeVisible();
+        await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+
+        // Default (loud): green accent token
+        const accent = () => page.evaluate(() =>
+            getComputedStyle(document.documentElement).getPropertyValue('--accent').trim().toLowerCase()
+        );
+        expect(await accent()).toBe('#00d97e');
+
+        // Switch to calm: attribute, localStorage, aria-pressed all flip…
+        await toggle.click();
+        await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+        expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('calm');
+        expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('calm');
+        // …and the calm token block is actually in effect (teal accent)
+        expect(await accent()).toBe('#5fb89a');
+
+        // Persists across reload without flashing back to loud (no-flash head script)
+        await page.reload();
+        expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('calm');
+        await expect(page.locator('#theme-toggle')).toHaveAttribute('aria-pressed', 'true');
+        expect(await accent()).toBe('#5fb89a');
+
+        // Toggle back to loud
+        await page.locator('#theme-toggle').click();
+        await expect(page.locator('#theme-toggle')).toHaveAttribute('aria-pressed', 'false');
+        expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('loud');
+        expect(await page.evaluate(() => document.documentElement.dataset.theme || '')).toBe('');
+        expect(await accent()).toBe('#00d97e');
+
+        expect(errors).toEqual([]);
+    });
+});
