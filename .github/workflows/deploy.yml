@@ -15,6 +15,10 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Match the calendar's Europe/Berlin floating-local times when generating
+    # events-data.json / feed.xml and running the (date-sensitive) unit tests.
+    env:
+      TZ: Europe/Berlin
     steps:
       - uses: actions/checkout@v6
 
@@ -73,6 +77,9 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    # Same TZ pin as the test job for the events-data.json regeneration fallback.
+    env:
+      TZ: Europe/Berlin
     steps:
       - uses: actions/checkout@v6
         with:
