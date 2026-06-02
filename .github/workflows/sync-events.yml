@@ -28,7 +28,7 @@ jobs:
       - name: Use scripts and config from main
         run: |
           git fetch origin main
-          git checkout origin/main -- scripts/ calendars/
+          git checkout origin/main -- scripts/ calendars/ ics-core.js
 
       - uses: actions/setup-node@v6
         with:
