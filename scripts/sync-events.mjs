@@ -101,6 +101,23 @@ function expandRRule(dtstart, rule, exdates) {
         mo.setMonth(mo.getMonth() + 1);
       }
     }
+  } else if (p.FREQ === "DAILY") {
+    const interval = p.INTERVAL ? +p.INTERVAL : 1;
+    const cur = new Date(dtstart);
+    while (cur <= limit && out.length < max) {
+      if (!exSet.has(cur.toDateString())) out.push(new Date(cur));
+      cur.setDate(cur.getDate() + interval);
+    }
+  } else if (p.FREQ === "YEARLY") {
+    const cur = new Date(dtstart);
+    while (cur <= limit && out.length < max) {
+      if (!exSet.has(cur.toDateString())) out.push(new Date(cur));
+      cur.setFullYear(cur.getFullYear() + 1);
+    }
+  } else {
+    // MONTHLY-by-monthday, hourly, etc. are not expanded — surface it instead of
+    // silently dropping the event so a missing series is debuggable from CI logs.
+    console.warn(`[rrule] unsupported FREQ=${p.FREQ || "?"} — event not expanded`);
   }
   return out;
 }
@@ -313,12 +330,16 @@ function truncateDesc(s, max = 200) {
 
 function toCards(icsEvents, cal) {
   const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const cap = Number.isFinite(cal.cap) ? cal.cap : 30;
   // External calendars (ics-single, ics-filtered) link directly to event/program pages;
   // built-in Nextcloud sources use the timeGridDay day view, so we keep eventUrl unset.
   const isExternal = cal.type === "ics-filtered" || cal.type === "ics-single";
   return icsEvents
-    .filter((e) => e.dtstart > now && !isInternal(e.summary))
+    // All-day events carry no time (midnight). Comparing them against `now` would
+    // drop an all-day event happening *today* at any moment past 00:00, so gate them
+    // on the start of today instead; timed events keep the strict "future" check.
+    .filter((e) => (e.allDay ? e.dtstart >= startOfToday : e.dtstart > now) && !isInternal(e.summary))
     .sort((a, b) => a.dtstart - b.dtstart)
     .slice(0, cap)
     .map((e) => {
@@ -366,7 +387,11 @@ function generateRSS(cards) {
 `;
 
   for (const c of cards.slice(0, 15)) {
-    const guid = c.uid || `bitcircus101-${c.date.replace(/-/g, "")}-${c.type}`;
+    // Recurring events share a single UID across every instance. Append the
+    // occurrence's date+time slot so each item gets a unique GUID — otherwise feed
+    // readers dedupe on GUID and collapse the whole series into one entry.
+    const slot = c.date.replace(/-/g, "") + (c.time ? "T" + c.time.replace(":", "") : "");
+    const guid = c.uid ? `${c.uid}-${slot}` : `bitcircus101-${slot}-${c.type}`;
     const datePart = c.time ? `${c.date} ${c.time}` : c.date;
     const titleParts = [`[${datePart}] ${c.title}`];
     if (c.location) titleParts.push(`@ ${c.location}`);
@@ -385,7 +410,7 @@ function generateRSS(cards) {
     }
     xml += `
       <pubDate>${toRFC822(c.firstSeen || new Date().toISOString())}</pubDate>
-      <guid isPermaLink="false">${guid}</guid>
+      <guid isPermaLink="false">${escXml(guid)}</guid>
     </item>`;
   }
 
@@ -463,7 +488,12 @@ async function main() {
       const allIcsKeys = new Set(icsEvents.map(keyOf));
       const prevIcsKeys = new Set(prev.icsKeys[cal.name] || []);
       const added = [...allIcsKeys].filter((k) => !prevIcsKeys.has(k)).length;
-      const removed = [...prevIcsKeys].filter((k) => !allIcsKeys.has(k)).length;
+      // Only count upcoming events as "removed". A past event ageing out of the ICS
+      // export window is natural expiry, not a real change. Bare-UID keys carry no
+      // date part and keep the old behaviour (can't be dated).
+      const removed = [...prevIcsKeys].filter(
+        (k) => !allIcsKeys.has(k) && (!k.includes("|") || k.split("|")[0] >= now)
+      ).length;
       newIcsKeys[cal.name] = [...allIcsKeys];
 
       // Count past vs upcoming in full calendar
@@ -509,8 +539,22 @@ async function main() {
       || nowISO;
   }
 
-  // Sort all cards by date, limit to 40
-  allCards.sort((a, b) => a.date.localeCompare(b.date));
+  // Dedupe across sources: the same event cross-posted to two calendars should appear
+  // once. Key on UID-or-title PLUS the date+time slot so recurring instances (shared
+  // UID, different slot) are NOT collapsed. First occurrence wins → source order in
+  // the manifest acts as priority (bitcircus before datenburg before external).
+  const seenCards = new Set();
+  allCards = allCards.filter((c) => {
+    const k = (c.uid || c.title.toLowerCase()) + "|" + c.date + "|" + (c.time || "");
+    if (seenCards.has(k)) return false;
+    seenCards.add(k);
+    return true;
+  });
+
+  // Sort by date then time so same-day events run chronologically (all-day first).
+  allCards.sort((a, b) =>
+    (a.date + (a.time || "")).localeCompare(b.date + (b.time || ""))
+  );
   allCards = allCards.slice(0, 40);
   console.log(`Total: ${allCards.length} event cards from ${calendars.length} calendars`);
 
