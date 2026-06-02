@@ -6,9 +6,13 @@
  */
 
 const SITE_URL = "https://bitcircus101.de";
-const HORIZON_DAYS = 120;
 
 import { readFileSync, writeFileSync } from "node:fs";
+import ICSCore from "../ics-core.js";
+
+// ICS parsing primitives are shared with the browser fallback (events.js) via the
+// UMD module ics-core.js — single source of truth, no drift between the two parsers.
+const { parseDate, nthWeekday, expandRRule, clean, parseTzid, parseICS, eventAnchor } = ICSCore;
 
 const CAL_DIR = "calendars";
 const CAL_CONFIG = `${CAL_DIR}/config.json`;
@@ -39,164 +43,6 @@ function loadCalendars() {
     }
   }
   return loaded;
-}
-
-// ── ICS Parser ──────────────────────────────────────────────────────────────
-
-function parseDate(v) {
-  if (!v) return null;
-  const y = +v.slice(0, 4), m = +v.slice(4, 6) - 1, d = +v.slice(6, 8);
-  if (v.length === 8) return new Date(y, m, d);
-  const h = +v.slice(9, 11), mi = +v.slice(11, 13);
-  return v.endsWith("Z")
-    ? new Date(Date.UTC(y, m, d, h, mi))
-    : new Date(y, m, d, h, mi);
-}
-
-function nthWeekday(year, month, wd, nth) {
-  const d = new Date(year, month, 1);
-  while (d.getDay() !== wd) d.setDate(d.getDate() + 1);
-  d.setDate(d.getDate() + (nth - 1) * 7);
-  return d.getMonth() === month ? d : null;
-}
-
-function expandRRule(dtstart, rule, exdates) {
-  const horizon = new Date();
-  horizon.setDate(horizon.getDate() + HORIZON_DAYS);
-  const p = Object.fromEntries(
-    rule.split(";").map((s) => s.split("=")).filter((a) => a.length === 2)
-  );
-  const WD = { SU: 0, MO: 1, TU: 2, WE: 3, TH: 4, FR: 5, SA: 6 };
-  const end = p.UNTIL ? parseDate(p.UNTIL) : null;
-  const limit = end && end < horizon ? end : horizon;
-  const max = p.COUNT ? +p.COUNT : 200;
-  const exSet = new Set(exdates.map((d) => d.toDateString()));
-  const out = [];
-
-  if (p.FREQ === "WEEKLY") {
-    const wd = p.BYDAY
-      ? WD[p.BYDAY.replace(/\d/g, "").slice(-2)] ?? dtstart.getDay()
-      : dtstart.getDay();
-    const cur = new Date(dtstart);
-    while (cur.getDay() !== wd) cur.setDate(cur.getDate() + 1);
-    while (cur <= limit && out.length < max) {
-      if (!exSet.has(cur.toDateString())) out.push(new Date(cur));
-      cur.setDate(cur.getDate() + 7);
-    }
-  } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
-    // Support both "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3
-    const m = p.BYDAY.match(/^(\d+)([A-Z]{2})$/);
-    const nth = m ? +m[1] : (p.BYSETPOS ? +p.BYSETPOS : null);
-    const dayCode = m ? m[2] : p.BYDAY.replace(/\d/g, "").slice(-2);
-    const twd = WD[dayCode];
-    if (nth && twd != null) {
-      const mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
-      while (mo <= limit && out.length < max) {
-        const d = nthWeekday(mo.getFullYear(), mo.getMonth(), twd, nth);
-        if (d) {
-          d.setHours(dtstart.getHours(), dtstart.getMinutes(), 0, 0);
-          if (d >= dtstart && d <= limit && !exSet.has(d.toDateString()))
-            out.push(new Date(d));
-        }
-        mo.setMonth(mo.getMonth() + 1);
-      }
-    }
-  } else if (p.FREQ === "DAILY") {
-    const interval = p.INTERVAL ? +p.INTERVAL : 1;
-    const cur = new Date(dtstart);
-    while (cur <= limit && out.length < max) {
-      if (!exSet.has(cur.toDateString())) out.push(new Date(cur));
-      cur.setDate(cur.getDate() + interval);
-    }
-  } else if (p.FREQ === "YEARLY") {
-    const cur = new Date(dtstart);
-    while (cur <= limit && out.length < max) {
-      if (!exSet.has(cur.toDateString())) out.push(new Date(cur));
-      cur.setFullYear(cur.getFullYear() + 1);
-    }
-  } else {
-    // MONTHLY-by-monthday, hourly, etc. are not expanded — surface it instead of
-    // silently dropping the event so a missing series is debuggable from CI logs.
-    console.warn(`[rrule] unsupported FREQ=${p.FREQ || "?"} — event not expanded`);
-  }
-  return out;
-}
-
-function clean(s) {
-  return s.replace(/\\n/gi, " ").replace(/\\,/g, ",").replace(/\\;/g, ";").trim();
-}
-
-/** Pull TZID parameter out of a property like "DTSTART;TZID=Europe/Berlin" */
-function parseTzid(rawKey) {
-  const m = rawKey.match(/TZID=([^;:]+)/i);
-  return m ? m[1] : null;
-}
-
-const tzidWarned = new Set();
-
-function parseICS(text, sourceId = "?") {
-  const lines = text.replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
-  const events = [];
-  let ev = null;
-
-  for (const line of lines) {
-    if (line === "BEGIN:VEVENT") { ev = { exdates: [] }; continue; }
-    if (line === "END:VEVENT") {
-      if (!ev?.dtstart) { ev = null; continue; }
-      const dtstart = parseDate(ev.dtstart);
-      if (!dtstart) { ev = null; continue; }
-      const dtend = ev.dtend ? parseDate(ev.dtend) : null;
-      const allDay = !ev.dtstart.includes("T");
-      // Warn (once per source/zone) for foreign timezones — values stay as floating local
-      if (ev.tzid && ev.tzid !== "Europe/Berlin" && !ev.dtstart.endsWith("Z")) {
-        const key = `${sourceId}|${ev.tzid}`;
-        if (!tzidWarned.has(key)) {
-          tzidWarned.add(key);
-          console.warn(`[${sourceId}] non-Europe/Berlin TZID seen (${ev.tzid}); times treated as local`);
-        }
-      }
-      const base = {
-        uid: ev.uid || "",
-        url: ev.url || "",
-        summary: clean(ev.summary || "(kein Titel)"),
-        description: clean(ev.description || ""),
-        location: clean(ev.location || ""),
-        categories: ev.categories || "",
-        allDay,
-      };
-      if (ev.rrule) {
-        const dur = dtend ? dtend - dtstart : 7200000;
-        for (const d of expandRRule(dtstart, ev.rrule, ev.exdates)) {
-          events.push({ ...base, dtstart: d, dtend: new Date(d.getTime() + dur) });
-        }
-      } else {
-        events.push({ ...base, dtstart, dtend });
-      }
-      ev = null; continue;
-    }
-    if (!ev) continue;
-    const ci = line.indexOf(":");
-    if (ci === -1) continue;
-    const rawKey = line.slice(0, ci);
-    const key = rawKey.split(";")[0].toUpperCase();
-    const val = line.slice(ci + 1);
-    if (key === "DTSTART") { ev.dtstart = val; ev.tzid = parseTzid(rawKey); }
-    else if (key === "DTEND") ev.dtend = val;
-    else if (key === "SUMMARY") ev.summary = val;
-    else if (key === "DESCRIPTION") ev.description = val;
-    else if (key === "LOCATION") ev.location = val;
-    else if (key === "CATEGORIES") ev.categories = val;
-    else if (key === "UID") ev.uid = val.trim();
-    else if (key === "URL") { const u = val.trim(); ev.url = u && !/^https?:\/\//i.test(u) ? `https://${u}` : u; }
-    else if (key === "RRULE") ev.rrule = val;
-    else if (key === "EXDATE") {
-      for (const v of val.split(",")) {
-        const d = parseDate(v.trim());
-        if (d) ev.exdates.push(d);
-      }
-    }
-  }
-  return events;
 }
 
 // ── Transform to card format ────────────────────────────────────────────────
@@ -402,7 +248,7 @@ function generateRSS(cards) {
     xml += `
     <item>
       <title>${escXml(fullTitle)}</title>
-      <link>${SITE_URL}/events.html</link>
+      <link>${SITE_URL}/events.html#${eventAnchor(c)}</link>
       <description>${escXml(c.description || c.title + " · " + c.date)}</description>`;
     for (const tag of tags) {
       xml += `
@@ -437,94 +283,109 @@ function loadPrevious() {
   }
 }
 
-async function main() {
-  const calendars = loadCalendars();
-  const prev = loadPrevious();
-  let allCards = [];
-  const sources = [];
-  const newIcsKeys = {};
+const FETCH_TIMEOUT_MS = 15000;
 
-  for (const cal of calendars) {
-    console.log(`[${cal.id}] Fetching ${cal.ics}`);
-    const prevSource = prev.sources.find((s) => s.id === cal.id);
+/** fetch() with an abort timeout so one hanging source can't stall the whole sync. */
+function fetchWithTimeout(url, ms = FETCH_TIMEOUT_MS) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
+}
 
-    try {
-      const res = await fetch(cal.ics);
-      if (!res.ok) {
-        const reason = `HTTP ${res.status}`;
-        console.error(`[${cal.id}] ${reason} – using cached events`);
-        // Keep previous events alive, mark source as degraded
-        const cached = prev.events.filter((e) => e.source === cal.name);
-        allCards = allCards.concat(cached);
-        sources.push({
-          id: cal.id, name: cal.name,
-          fetchedAt: prevSource?.fetchedAt || null,
-          status: "stale", error: reason,
-          events: cached.length, added: 0, removed: 0,
-        });
-        continue;
-      }
-      const fetchedAt = new Date().toISOString();
-      const text = await res.text();
-      console.log(`[${cal.id}] ${text.length} bytes`);
-
-      let icsEvents = parseICS(text, cal.id);
-      console.log(`[${cal.id}] ${icsEvents.length} VEVENT entries`);
-
-      if (cal.filter) {
-        const before = icsEvents.length;
-        icsEvents = applyFilter(icsEvents, cal.filter);
-        console.log(`[${cal.id}] filter: ${before} → ${icsEvents.length}`);
-      }
-
-      const cards = toCards(icsEvents, cal);
-      console.log(`[${cal.id}] ${cards.length} upcoming cards`);
-      allCards = allCards.concat(cards);
-
-      // Diff against previous sync — prefer UID (stable), fall back to date|summary
-      // so natural event expiry doesn't count as a "removed" change.
-      const keyOf = (e) => e.uid || (e.dtstart.toISOString().slice(0, 10) + "|" + e.summary);
-      const now = new Date().toISOString().slice(0, 10);
-      const allIcsKeys = new Set(icsEvents.map(keyOf));
-      const prevIcsKeys = new Set(prev.icsKeys[cal.name] || []);
-      const added = [...allIcsKeys].filter((k) => !prevIcsKeys.has(k)).length;
-      // Only count upcoming events as "removed". A past event ageing out of the ICS
-      // export window is natural expiry, not a real change. Bare-UID keys carry no
-      // date part and keep the old behaviour (can't be dated).
-      const removed = [...prevIcsKeys].filter(
-        (k) => !allIcsKeys.has(k) && (!k.includes("|") || k.split("|")[0] >= now)
-      ).length;
-      newIcsKeys[cal.name] = [...allIcsKeys];
-
-      // Count past vs upcoming in full calendar
-      let past = 0, upcoming = 0;
-      for (const k of allIcsKeys) {
-        if (k.split("|")[0] >= now) upcoming++; else past++;
-      }
-
-      sources.push({
-        id: cal.id, name: cal.name, fetchedAt, status: "ok",
-        events: cards.length, added, removed,
-        total: allIcsKeys.size, past, upcoming,
-      });
-    } catch (err) {
-      const reason = err.message;
-      console.error(`[${cal.id}] Error: ${reason} – using cached events`);
-      // Keep previous events alive
-      const cached = prev.events.filter((e) => e.source === cal.name);
-      allCards = allCards.concat(cached);
-      sources.push({
+/**
+ * Fetch + parse + filter + diff a single source. Always resolves (never rejects):
+ * on any failure it returns the previous run's cached cards with status "stale", so
+ * one dead source never takes the others down. Returns a uniform shape consumed by
+ * aggregate(): { cards, source (meta), icsKeys ({name: [...]} | null) }.
+ */
+async function processSource(cal, prev) {
+  console.log(`[${cal.id}] Fetching ${cal.ics}`);
+  const prevSource = prev.sources.find((s) => s.id === cal.id);
+  const stale = (reason) => {
+    console.error(`[${cal.id}] ${reason} – using cached events`);
+    const cached = prev.events.filter((e) => e.source === cal.name);
+    return {
+      cards: cached,
+      source: {
         id: cal.id, name: cal.name,
         fetchedAt: prevSource?.fetchedAt || null,
         status: "stale", error: reason,
         events: cached.length, added: 0, removed: 0,
-      });
+      },
+      icsKeys: null,
+    };
+  };
+
+  try {
+    const res = await fetchWithTimeout(cal.ics);
+    if (!res.ok) return stale(`HTTP ${res.status}`);
+
+    const fetchedAt = new Date().toISOString();
+    const text = await res.text();
+    console.log(`[${cal.id}] ${text.length} bytes`);
+
+    let icsEvents = parseICS(text, cal.id);
+    console.log(`[${cal.id}] ${icsEvents.length} VEVENT entries`);
+
+    if (cal.filter) {
+      const before = icsEvents.length;
+      icsEvents = applyFilter(icsEvents, cal.filter);
+      console.log(`[${cal.id}] filter: ${before} → ${icsEvents.length}`);
     }
+
+    const cards = toCards(icsEvents, cal);
+    console.log(`[${cal.id}] ${cards.length} upcoming cards`);
+
+    // Diff against previous sync — prefer UID (stable), fall back to date|summary
+    // so natural event expiry doesn't count as a "removed" change.
+    const keyOf = (e) => e.uid || (e.dtstart.toISOString().slice(0, 10) + "|" + e.summary);
+    const today = new Date().toISOString().slice(0, 10);
+    const allIcsKeys = new Set(icsEvents.map(keyOf));
+    const prevIcsKeys = new Set(prev.icsKeys[cal.name] || []);
+    const added = [...allIcsKeys].filter((k) => !prevIcsKeys.has(k)).length;
+    // Only count upcoming events as "removed". A past event ageing out of the ICS
+    // export window is natural expiry, not a real change. Bare-UID keys carry no
+    // date part and keep the old behaviour (can't be dated).
+    const removed = [...prevIcsKeys].filter(
+      (k) => !allIcsKeys.has(k) && (!k.includes("|") || k.split("|")[0] >= today)
+    ).length;
+
+    let past = 0, upcoming = 0;
+    for (const k of allIcsKeys) {
+      if (k.split("|")[0] >= today) upcoming++; else past++;
+    }
+
+    return {
+      cards,
+      source: {
+        id: cal.id, name: cal.name, fetchedAt, status: "ok",
+        events: cards.length, added, removed,
+        total: allIcsKeys.size, past, upcoming,
+      },
+      icsKeys: { [cal.name]: [...allIcsKeys] },
+    };
+  } catch (err) {
+    return stale(err.name === "AbortError" ? `timeout after ${FETCH_TIMEOUT_MS}ms` : err.message);
+  }
+}
+
+/**
+ * Pure aggregation step — merges per-source results into the final output. No I/O,
+ * so it is unit-testable. `results` preserves manifest order, which drives dedupe
+ * priority (earlier source wins). `nowISO` is injected for deterministic firstSeen.
+ */
+function aggregate(results, prev, nowISO) {
+  let allCards = [];
+  const sources = [];
+  const icsKeys = {};
+  for (const r of results) {
+    allCards = allCards.concat(r.cards);
+    sources.push(r.source);
+    if (r.icsKeys) Object.assign(icsKeys, r.icsKeys);
   }
 
-  // Carry over firstSeen from previous sync, set to now for new events.
-  // Prefer UID lookup (stable across title edits), fall back to date|title for migration
-  // from pre-UID events-data.json — first run after rollout still picks up old entries.
+  // Carry over firstSeen from previous sync, set to now for new events. Prefer UID
+  // (stable across title edits), fall back to date|title for pre-UID migration.
   const prevByUid = {};
   const prevByDateTitle = {};
   for (const e of prev.events) {
@@ -532,7 +393,6 @@ async function main() {
     if (e.uid) prevByUid[e.uid] = e.firstSeen;
     prevByDateTitle[e.date + "|" + e.title] = e.firstSeen;
   }
-  const nowISO = new Date().toISOString();
   for (const c of allCards) {
     c.firstSeen = (c.uid && prevByUid[c.uid])
       || prevByDateTitle[c.date + "|" + c.title]
@@ -541,8 +401,7 @@ async function main() {
 
   // Dedupe across sources: the same event cross-posted to two calendars should appear
   // once. Key on UID-or-title PLUS the date+time slot so recurring instances (shared
-  // UID, different slot) are NOT collapsed. First occurrence wins → source order in
-  // the manifest acts as priority (bitcircus before datenburg before external).
+  // UID, different slot) are NOT collapsed. First occurrence wins.
   const seenCards = new Set();
   allCards = allCards.filter((c) => {
     const k = (c.uid || c.title.toLowerCase()) + "|" + c.date + "|" + (c.time || "");
@@ -556,19 +415,32 @@ async function main() {
     (a.date + (a.time || "")).localeCompare(b.date + (b.time || ""))
   );
   allCards = allCards.slice(0, 40);
-  console.log(`Total: ${allCards.length} event cards from ${calendars.length} calendars`);
 
-  // Update source event counts to reflect what actually made it into the output
+  // Reflect what actually made it into the output (after dedupe + cap).
   for (const s of sources) {
     s.events = allCards.filter((c) => c.source === s.name).length;
   }
 
-  const output = { lastSync: new Date().toISOString(), sources, icsKeys: newIcsKeys, events: allCards };
+  return { events: allCards, sources, icsKeys };
+}
+
+async function main() {
+  const calendars = loadCalendars();
+  const prev = loadPrevious();
+
+  // Fetch every source concurrently; Promise.all preserves array order so the
+  // manifest order still drives dedupe priority in aggregate().
+  const results = await Promise.all(calendars.map((cal) => processSource(cal, prev)));
+
+  const { events, sources, icsKeys } = aggregate(results, prev, new Date().toISOString());
+  console.log(`Total: ${events.length} event cards from ${calendars.length} calendars`);
+
+  const output = { lastSync: new Date().toISOString(), sources, icsKeys, events };
   writeFileSync("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
-  // RSS only from primary calendar
-  const primaryCards = allCards.filter((c) =>
+  // RSS only from calendars flagged rss:true (the primary feed).
+  const primaryCards = events.filter((c) =>
     calendars.find((cal) => cal.name === c.source && cal.rss)
   );
   const rss = generateRSS(primaryCards);
@@ -590,4 +462,5 @@ export {
   isInternal, applyFilter, guessType, extractHashtags, keywordTags,
   buildTags, cleanLocation, truncateDesc, toCards,
   escXml, toRFC822, generateRSS,
+  aggregate, eventAnchor,
 };
