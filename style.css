@@ -1136,10 +1136,6 @@ section:target > h2 {
     animation: anchor-highlight 1.8s ease-out forwards;
 }
 
-nav a[aria-current="true"] {
-    color: var(--accent);
-}
-
 .back-link {
     text-align: center;
     margin: var(--gap-xl) 0;
