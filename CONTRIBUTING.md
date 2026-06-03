@@ -29,8 +29,8 @@ Short-lived `feat/…` branches keep history clear; `main` stays the integration
 If you want to run the quick checks before submitting:
 
 ```sh
-npm install
-npm run test:quick    # ~100ms, no browser needed
+pnpm install          # pnpm-only — npm/yarn are blocked by a preinstall guard
+pnpm run test:quick   # ~100ms, no browser needed
 ```
 
 That runs unit tests and matches what PR CI enforces (plus a layout sync check — see below).
@@ -42,7 +42,7 @@ Header and footer live in **`includes/site-header.html`** and **`includes/site-f
 After you change those files:
 
 ```sh
-npm run build:layout
+pnpm run build:layout
 ```
 
 Commit **`includes/`** and the updated **`*.html`** files together. **PR checks** fail if partials and pages drift apart. See [CLAUDE.md](CLAUDE.md) for details.
@@ -52,7 +52,7 @@ If you only edit a page body, you do not need `build:layout`.
 ## You do NOT need to
 
 - Install Playwright or any browsers
-- Run the full test suite (`npm test`)
+- Run the full test suite (`pnpm test`)
 - Set up Node.js (unless you want to run unit tests)
 
 CI handles the heavy testing automatically.

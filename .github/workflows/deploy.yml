@@ -34,20 +34,22 @@ jobs:
       - name: Trust workspace for git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Verify HTML matches layout partials and logo slider
         run: |
           node scripts/inject-layout.mjs
           node scripts/build-logo-slider.mjs
           git diff --exit-code -- '*.html' || (
-            echo "::error::HTML drift: run npm run build:layout and npm run build:logos, then commit."
+            echo "::error::HTML drift: run pnpm run build:layout and pnpm run build:logos, then commit."
             exit 1
           )
 
@@ -62,7 +64,7 @@ jobs:
           }
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: pnpm exec playwright test
 
       - uses: actions/upload-artifact@v7
         if: failure()
@@ -95,12 +97,18 @@ jobs:
           # Overlay everything from main, then remove dev-only files
           git checkout origin/main -- .
           rm -rf tests/ node_modules/ .claude/
-          rm -f playwright.config.js package.json package-lock.json
+          rm -f playwright.config.js package.json package-lock.json pnpm-lock.yaml pnpm-workspace.yaml
 
           # Restore live-only generated files
           for f in events-data.json feed.xml funding.json sitemap.xml; do
             [ -f "/tmp/_live_$f" ] && cp "/tmp/_live_$f" "$f"
           done
+
+      - uses: pnpm/action-setup@v4
+        with:
+          # package.json was removed from the live overlay above, so action-setup
+          # cannot read the version from packageManager — pin it explicitly here.
+          version: 11.5.1
 
       - uses: actions/setup-node@v6
         with:
@@ -114,10 +122,10 @@ jobs:
       - name: Minify CSS and JS
         run: |
           echo "Before: style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
-          npx --yes csso-cli style.css -o style.css
-          npx --yes terser main.js -o main.js --compress --mangle
-          npx --yes terser events.js -o events.js --compress --mangle
-          npx --yes terser ics-core.js -o ics-core.js --compress --mangle
+          pnpm dlx csso-cli style.css -o style.css
+          pnpm dlx terser main.js -o main.js --compress --mangle
+          pnpm dlx terser events.js -o events.js --compress --mangle
+          pnpm dlx terser ics-core.js -o ics-core.js --compress --mangle
           echo "After:  style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
 
       - name: Cache-bust asset references

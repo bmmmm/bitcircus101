@@ -25,7 +25,7 @@ jobs:
           node scripts/inject-layout.mjs
           node scripts/build-logo-slider.mjs
           git diff --exit-code -- '*.html' || (
-            echo "::error::HTML drift: run npm run build:layout and npm run build:logos, then commit the updated HTML files."
+            echo "::error::HTML drift: run pnpm run build:layout and pnpm run build:logos, then commit the updated HTML files."
             exit 1
           )
 

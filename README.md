@@ -203,7 +203,7 @@ If no tags match, the event gets `#community` as default.
 
 ## Local development
 
-**Site chrome (nav + footer):** Edit [`includes/site-header.html`](includes/site-header.html) and [`includes/site-footer.html`](includes/site-footer.html), then run `npm run build:layout` and commit the partials plus updated `*.html`. Documented in [CONTRIBUTING.md](CONTRIBUTING.md) and [CLAUDE.md](CLAUDE.md).
+**Site chrome (nav + footer):** Edit [`includes/site-header.html`](includes/site-header.html) and [`includes/site-footer.html`](includes/site-footer.html), then run `pnpm run build:layout` and commit the partials plus updated `*.html`. Documented in [CONTRIBUTING.md](CONTRIBUTING.md) and [CLAUDE.md](CLAUDE.md).
 
 Static site — open HTML files directly or use any local server:
 
@@ -216,12 +216,12 @@ python3 -m http.server 8080
 Contributors only need the quick check — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ```sh
-npm install
-npm run test:quick         # unit tests only (~100ms, no browser needed)
-npm test                   # full suite (unit + E2E, used by CI)
-npm run test:e2e           # only Playwright E2E
-npm run test:headed        # E2E with browser window
-npm run test:ui            # Playwright UI mode
+pnpm install               # pnpm-only — npm/yarn are blocked by a preinstall guard
+pnpm run test:quick        # unit tests only (~100ms, no browser needed)
+pnpm test                  # full suite (unit + E2E, used by CI)
+pnpm run test:e2e          # only Playwright E2E (needs: pnpm exec playwright install)
+pnpm run test:headed       # E2E with browser window
+pnpm run test:ui           # Playwright UI mode
 ```
 
 ### Test coverage

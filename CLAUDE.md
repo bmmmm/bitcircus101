@@ -5,7 +5,7 @@ Project conventions for contributors and Claude Code.
 ## What this is
 
 Static website for [bitcircus101](https://bitcircus101.de), a hackspace in Bonn.
-Pure HTML/CSS/JS — **no bundler, no framework.** Shared site chrome (nav + footer) uses `includes/*.html` plus a one-shot **`npm run build:layout`** (see [Shared layout](#shared-layout)); everything else is edited directly.
+Pure HTML/CSS/JS — **no bundler, no framework.** Shared site chrome (nav + footer) uses `includes/*.html` plus a one-shot **`pnpm run build:layout`** (see [Shared layout](#shared-layout)); everything else is edited directly.
 
 ## Branches
 
@@ -27,10 +27,10 @@ Always create a **`feat/<kebab-description>`** branch from current `main` for ed
 
 | Command | What | When to use |
 |---------|------|-------------|
-| `npm run test:quick` | Unit tests only (~100ms, no browser) | Before submitting a PR |
-| `npm run test:unit` | Same as test:quick | Alias |
-| `npm run test:e2e` | Playwright across 2 browsers (~20 tests × 2) | Only if you changed JS logic |
-| `npm test` | Full suite (unit + E2E) | CI runs this, you usually don't need to |
+| `pnpm run test:quick` | Unit tests only (~100ms, no browser) | Before submitting a PR |
+| `pnpm run test:unit` | Same as test:quick | Alias |
+| `pnpm run test:e2e` | Playwright across 2 browsers (~20 tests × 2) | Only if you changed JS logic |
+| `pnpm test` | Full suite (unit + E2E) | CI runs this, you usually don't need to |
 
 ### How CI works
 
@@ -57,10 +57,19 @@ When adding or modifying tests:
 ```sh
 python3 -m http.server 8080
 # or
-npx http-server . -p 8080
+pnpm dlx http-server . -p 8080
 ```
 
 Open `http://localhost:8080` in your browser. That's it.
+
+## Package manager — pnpm only
+
+This repo is **pnpm-only** (supply-chain policy). npm and yarn are blocked by a
+`preinstall` guard. Install deps with **`pnpm install`**; `package-lock.json` /
+`yarn.lock` are git-ignored. `pnpm-workspace.yaml` enforces a 3-day release cooldown
+(`minimumReleaseAge`) and blocks dependency build scripts (`onlyBuiltDependencies: []`).
+Local E2E needs browsers once: `pnpm exec playwright install` (CI uses the Playwright
+container, which has them baked in).
 
 ## Shared layout
 
@@ -69,9 +78,9 @@ Open `http://localhost:8080` in your browser. That's it.
 | `includes/site-header.html` | Single source for `<header>` / nav |
 | `includes/site-footer.html` | Single source for `<footer>` |
 | `scripts/inject-layout.mjs` | Inlines those into the six layout HTML files |
-| `npm run build:layout` | Run after editing the partials |
+| `pnpm run build:layout` | Run after editing the partials |
 
-**Workflow:** Edit the partials → `npm run build:layout` → commit partials **and** changed `*.html`. CI runs `inject-layout.mjs` and fails if there is any `git diff` on HTML (drift). Deploy also runs inject before cache-busting so `live` stays aligned.
+**Workflow:** Edit the partials → `pnpm run build:layout` → commit partials **and** changed `*.html`. CI runs `inject-layout.mjs` and fails if there is any `git diff` on HTML (drift). Deploy also runs inject before cache-busting so `live` stays aligned.
 
 ## Homepage logo strip (Freund*innen)
 
@@ -79,14 +88,14 @@ Open `http://localhost:8080` in your browser. That's it.
 |------|------|
 | `images/logo-slider/` | Partner logos (`.svg`, `.png`, `.jpg`, `.jpeg`) |
 | `scripts/build-logo-slider.mjs` | Writes the marked block in `index.html` from that folder |
-| `npm run build:logos` | Run after adding or removing files under `images/logo-slider/` |
+| `pnpm run build:logos` | Run after adding or removing files under `images/logo-slider/` |
 
-**Workflow:** Add or delete logo files → `npm run build:logos` → commit `index.html` **and** the image files. CI runs `inject-layout.mjs` then `build-logo-slider.mjs` and fails on HTML drift (same check as layout). Deploy runs both before minification/cache-busting.
+**Workflow:** Add or delete logo files → `pnpm run build:logos` → commit `index.html` **and** the image files. CI runs `inject-layout.mjs` then `build-logo-slider.mjs` and fails on HTML drift (same check as layout). Deploy runs both before minification/cache-busting.
 
 ## Code conventions
 
 - German UI text, English code comments
-- No bundlers — edit HTML/CSS/JS directly (except `npm run build:layout` for `includes/*.html` and `npm run build:logos` when you touch `images/logo-slider/*`)
+- No bundlers — edit HTML/CSS/JS directly (except `pnpm run build:layout` for `includes/*.html` and `pnpm run build:logos` when you touch `images/logo-slider/*`)
 - Terminal aesthetic: dark background, green accent, monospace font
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css` (applies to JS-built markup too: use the `hidden` attribute or a class, not `style="display:…"` in template strings)
@@ -142,7 +151,7 @@ Each source can also set `tags` (always-added hashtags), `cap` (per-source slot 
 ## Adding a new page
 
 1. Create the HTML file
-2. Add the nav link in `includes/site-header.html`, run `npm run build:layout`, and commit the updated partial + HTML files (or register the page in `scripts/inject-layout.mjs` if it should share the same chrome)
+2. Add the nav link in `includes/site-header.html`, run `pnpm run build:layout`, and commit the updated partial + HTML files (or register the page in `scripts/inject-layout.mjs` if it should share the same chrome)
 3. Add the page to the `pages` array in `tests/site.spec.js` (no-JS-errors test)
 4. Sitemap is auto-generated on deploy
 
