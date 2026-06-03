@@ -31,6 +31,16 @@
     },
   };
 
+  // True when the user wants calm motion: explicit calm theme OR OS reduced-motion.
+  // Single source of truth for all JS-driven motion (carousel, matrix trail, scramble).
+  function prefersCalm() {
+    if (document.documentElement.dataset.theme === "calm") return true;
+    return !!(
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }
+
   // =============================================================================
   // Navigation Module
   // =============================================================================
@@ -169,7 +179,20 @@
       this.cacheElements();
       this.bindEvents();
       this.showSlide(this.state.current);
-      this.startAutoRotate();
+      this.applyMotionPreference();
+    },
+
+    // Auto-rotate only when the user hasn't asked for calm/reduced motion.
+    // Safe on pages without a carousel and on live theme switches.
+    applyMotionPreference() {
+      if (!this.elements.carousel) return;
+      if (prefersCalm()) {
+        this.state.isAutoRotateEnabled = false;
+        this.stopAutoRotate();
+      } else {
+        this.state.isAutoRotateEnabled = true;
+        this.startAutoRotate();
+      }
     },
 
     cacheElements() {
@@ -219,7 +242,7 @@
       this.elements.dots.forEach((dot, index) => {
         utils.addEventListenerSafe(dot, "click", (e) => {
           utils.preventDefaultAndStop(e);
-          this.goToSlide(index);
+          this.showSlide(index);
           this.resetAutoRotateIfEnabled();
         });
       });
@@ -295,10 +318,6 @@
         (this.state.current - 1 + this.elements.items.length) %
         this.elements.items.length;
       this.showSlide(prevIndex);
-    },
-
-    goToSlide(index) {
-      this.showSlide(index);
     },
 
     startAutoRotate() {
@@ -639,6 +658,7 @@
     },
 
     fireMatrixTrail() {
+      if (prefersCalm()) return; // calm/reduced-motion: skip the rain, scroll still runs
       if (this.canvas) return; // already running
 
       var canvas = document.createElement("canvas");
@@ -768,6 +788,28 @@
   };
 
   // =============================================================================
+  // Theme toggle (calm / loud)
+  // =============================================================================
+  const Theme = {
+    init() {
+      const btn = utils.getElementById("theme-toggle");
+      if (!btn) return;
+      const isCalm = () => document.documentElement.dataset.theme === "calm";
+      btn.setAttribute("aria-pressed", String(isCalm()));
+      utils.addEventListenerSafe(btn, "click", () => {
+        const nowCalm = !isCalm();
+        document.documentElement.dataset.theme = nowCalm ? "calm" : "";
+        try {
+          localStorage.setItem("theme", nowCalm ? "calm" : "loud");
+        } catch (e) {}
+        btn.setAttribute("aria-pressed", String(nowCalm));
+        // Re-apply JS-driven motion policy live (carousel auto-rotate).
+        Carousel.applyMotionPreference();
+      });
+    },
+  };
+
+  // =============================================================================
   // Main Application
   // =============================================================================
   const App = {
@@ -781,6 +823,7 @@
       ScrollTop.init();
       FooterYear.init();
       LogoSliderLazy.init();
+      Theme.init();
     },
   };
 

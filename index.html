@@ -65,7 +65,11 @@
         />
         <meta name="referrer" content="no-referrer-when-downgrade" />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
-        <link rel="stylesheet" href="style.css?v=5" />
+        <script>
+            // No-flash: apply persisted calm theme before stylesheet paints.
+            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="style.css?v=6" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -124,6 +128,7 @@
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
                     <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a></li>
+                    <li><button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button></li>
                 </ul>
             </nav>
         </header>
@@ -466,12 +471,13 @@
             </div>
         </footer>
 
-        <script defer src="main.js?v=7"></script>
+        <script defer src="main.js?v=8"></script>
         <script>
         (function () {
             var el = document.getElementById('signal-decode-result');
             if (!el) return;
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            if (document.documentElement.dataset.theme === 'calm' ||
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 el.textContent = 'SIGNAL CHATS';
                 return;
             }

@@ -31,7 +31,11 @@
         <link rel="canonical" href="https://bitcircus101.de/events.html" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
-        <link rel="stylesheet" href="style.css?v=5" />
+        <script>
+            // No-flash: apply persisted calm theme before stylesheet paints.
+            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="style.css?v=6" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -58,6 +62,7 @@
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
                     <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a></li>
+                    <li><button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button></li>
                 </ul>
             </nav>
         </header>
@@ -148,8 +153,8 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="events.js?v=6"></script>
-        <script defer src="main.js?v=7"></script>
+        <script defer src="events.js?v=7"></script>
+        <script defer src="main.js?v=8"></script>
         <script>
             document.getElementById("linkup-info-btn").addEventListener("click", function() {
                 var panel = document.getElementById("linkup-info-panel");
