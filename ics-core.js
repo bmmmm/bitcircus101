@@ -129,7 +129,6 @@
         if (!ev || !ev.dtstart) { ev = null; continue; }
         var dtstart = parseDate(ev.dtstart);
         if (!dtstart) { ev = null; continue; }
-        var dtend = ev.dtend ? parseDate(ev.dtend) : null;
         var allDay = ev.dtstart.indexOf("T") === -1;
         // Warn (once per source/zone) for foreign timezones — values stay floating local
         if (ev.tzid && ev.tzid !== "Europe/Berlin" && ev.dtstart.charAt(ev.dtstart.length - 1) !== "Z") {
@@ -149,17 +148,14 @@
           allDay: allDay,
         };
         if (ev.rrule) {
-          var dur = dtend ? dtend - dtstart : 7200000;
           expandRRule(dtstart, ev.rrule, ev.exdates).forEach(function (d) {
             var inst = {};
             for (var k in base) inst[k] = base[k];
             inst.dtstart = d;
-            inst.dtend = new Date(d.getTime() + dur);
             events.push(inst);
           });
         } else {
           base.dtstart = dtstart;
-          base.dtend = dtend;
           events.push(base);
         }
         ev = null; continue;
@@ -171,7 +167,6 @@
       var key = rawKey.split(";")[0].toUpperCase();
       var val = line.slice(ci + 1);
       if (key === "DTSTART") { ev.dtstart = val; ev.tzid = parseTzid(rawKey); }
-      else if (key === "DTEND") ev.dtend = val;
       else if (key === "SUMMARY") ev.summary = val;
       else if (key === "DESCRIPTION") ev.description = val;
       else if (key === "LOCATION") ev.location = val;
