@@ -15,8 +15,24 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Browsers + OS deps are baked into the image, so there is no fragile
+    # `playwright install --with-deps` download step (which hung repeatedly and
+    # which caching can't save us from: this site deploys less often than the
+    # 7-day cache-eviction window, so the browser cache is always cold). The tag
+    # MUST match the pinned @playwright/test version in package.json.
+    container: mcr.microsoft.com/playwright:v1.58.2-jammy
+    # Match the calendar's Europe/Berlin floating-local times when generating
+    # events-data.json / feed.xml and running the (date-sensitive) unit tests.
+    env:
+      TZ: Europe/Berlin
     steps:
       - uses: actions/checkout@v6
+
+      # The container runs as root but the checkout is owned by the runner uid, so
+      # git refuses the repo ("dubious ownership" → "not a git repository") and the
+      # `git diff` drift check below fails. Mark the workspace trusted first.
+      - name: Trust workspace for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - uses: actions/setup-node@v6
         with:
@@ -34,21 +50,6 @@ jobs:
             echo "::error::HTML drift: run npm run build:layout and npm run build:logos, then commit."
             exit 1
           )
-
-      - name: Cache Playwright browsers
-        id: pw-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Playwright browsers
-        if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-
-      - name: Install Playwright system deps (cache hit)
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
 
       - name: Run sync-events unit tests
         run: node --test tests/sync-events.spec.mjs
@@ -73,6 +74,9 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    # Same TZ pin as the test job for the events-data.json regeneration fallback.
+    env:
+      TZ: Europe/Berlin
     steps:
       - uses: actions/checkout@v6
         with:
@@ -109,16 +113,17 @@ jobs:
 
       - name: Minify CSS and JS
         run: |
-          echo "Before: style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B"
+          echo "Before: style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
           npx --yes csso-cli style.css -o style.css
           npx --yes terser main.js -o main.js --compress --mangle
           npx --yes terser events.js -o events.js --compress --mangle
-          echo "After:  style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B"
+          npx --yes terser ics-core.js -o ics-core.js --compress --mangle
+          echo "After:  style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
 
       - name: Cache-bust asset references
         run: |
           # Generate a short content hash from all cacheable assets (post-minification)
-          HASH=$(cat style.css main.js events.js 2>/dev/null | sha256sum | cut -c1-8)
+          HASH=$(cat style.css main.js events.js ics-core.js 2>/dev/null | sha256sum | cut -c1-8)
           echo "Asset hash: $HASH"
           # Replace ?v=anything with ?v=<hash> in all HTML files
           sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" *.html

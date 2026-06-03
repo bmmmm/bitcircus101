@@ -37,7 +37,11 @@
             href="https://bitcircus101.de/impressum-datenschutz.html"
         />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
-        <link rel="stylesheet" href="style.css?v=6b436629" />
+        <script>
+            // No-flash: apply persisted calm theme before stylesheet paints.
+            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="style.css?v=c59bb96c" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -64,6 +68,7 @@
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
                     <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a></li>
+                    <li><button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button></li>
                 </ul>
             </nav>
         </header>
@@ -241,7 +246,7 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="main.js?v=6b436629"></script>
+        <script defer src="main.js?v=c59bb96c"></script>
         <script>
             document.getElementById("current-date").textContent =
                 new Date().toLocaleDateString("de-DE", {
