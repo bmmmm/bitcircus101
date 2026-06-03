@@ -28,6 +28,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      # The container runs as root but the checkout is owned by the runner uid, so
+      # git refuses the repo ("dubious ownership" → "not a git repository") and the
+      # `git diff` drift check below fails. Mark the workspace trusted first.
+      - name: Trust workspace for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
