@@ -2708,6 +2708,12 @@ h3.sr-only {
     padding-block: var(--gap-lg);
 }
 [data-theme="calm"] .logo-slider__set[aria-hidden="true"] { display: none; }
+[data-theme="calm"] .logo-slider__set:not([aria-hidden="true"]) {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 100%;
+}
 
 /* Hero ASCII steps back: smaller stage, dimmed, lower contrast */
 [data-theme="calm"] #home .ascii-art-viewport {
