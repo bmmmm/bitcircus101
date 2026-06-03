@@ -43,10 +43,20 @@ test.describe('Home page', () => {
         }));
         await page.locator('#show-map-btn').click();
         await page.waitForTimeout(300);
-        const _after = await page.evaluate(() => ({
-            classAfter: (document.getElementById('osm-map-container') || {}).className,
-            btnText: ((document.getElementById('show-map-btn') || {}).textContent || '').trim(),
-        }));
+        const _after = await page.evaluate(() => {
+            const b = document.getElementById('show-map-btn');
+            const r = b.getBoundingClientRect();
+            const topEl = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+            // Now try a DOM-level click (bypasses Playwright hit-testing/coords)
+            b.click();
+            return {
+                classAfter: (document.getElementById('osm-map-container') || {}).className,
+                btnText: (b.textContent || '').trim(),
+                rect: { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) },
+                topElAtCenter: topEl ? (topEl.tagName + '#' + topEl.id + '.' + topEl.className) : null,
+                classAfterJsClick: (document.getElementById('osm-map-container') || {}).className,
+            };
+        });
         console.log('DIAGMAP ' + JSON.stringify({ ..._diag, ..._after, logs: _logs }));
         await expect(page.locator('#osm-map-container')).toBeVisible();
         const iframeSrc = await page.locator('#osm-map').getAttribute('src');
