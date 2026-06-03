@@ -436,7 +436,6 @@ describe("toCards", () => {
     uid: "evt-1@example.com",
     url: "",
     dtstart: futureDate(),
-    dtend: null,
     allDay: false,
     ...extra,
   });
