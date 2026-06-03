@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-06-02T23:44:06.790Z",
+  "lastSync": "2026-06-03T03:58:48.412Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-02T23:44:04.807Z",
+      "fetchedAt": "2026-06-03T03:58:48.204Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-02T23:44:05.675Z",
+      "fetchedAt": "2026-06-03T03:58:48.252Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-02T23:44:06.770Z",
+      "fetchedAt": "2026-06-03T03:58:48.391Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -193,6 +193,23 @@
       "firstSeen": "2026-05-11T19:45:03.502Z"
     },
     {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-06-09",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -209,23 +226,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-06-09",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "PPP (Putzen Plenum Pizza)",
@@ -261,6 +261,23 @@
       "firstSeen": "2026-05-09T10:12:20.662Z"
     },
     {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-06-16",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -277,23 +294,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-06-16",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Raspberry Pi Workshop",
@@ -331,6 +331,23 @@
       "firstSeen": "2026-05-15T21:15:10.361Z"
     },
     {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-06-23",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -347,23 +364,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-06-23",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Spieleabend",
@@ -399,6 +399,23 @@
       "firstSeen": "2026-04-23T19:09:53.469Z"
     },
     {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-06-30",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -415,23 +432,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-06-30",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (1FR)",
@@ -467,6 +467,23 @@
       "firstSeen": "2026-05-02T13:08:46.350Z"
     },
     {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-07-07",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -483,23 +500,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-07-07",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "PPP (Putzen Plenum Pizza)",
@@ -552,6 +552,23 @@
       "firstSeen": "2026-05-11T19:45:03.502Z"
     },
     {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-07-14",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -568,23 +585,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-07-14",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Raspberry Pi Workshop",
@@ -655,6 +655,23 @@
       "firstSeen": "2026-05-28T20:42:40.578Z"
     },
     {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-07-21",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -671,23 +688,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-07-21",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Spieleabend",
@@ -723,6 +723,23 @@
       "firstSeen": "2026-04-23T19:09:53.469Z"
     },
     {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "Reminder",
+      "location": "",
+      "date": "2026-07-28",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-12T20:27:57.991Z"
+    },
+    {
       "title": "Look at my toys!",
       "subtitle": "",
       "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
@@ -739,23 +756,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-07-28",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (5FR)",
