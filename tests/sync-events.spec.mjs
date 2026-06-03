@@ -12,6 +12,7 @@ import {
   parseDate, nthWeekday, expandRRule, clean, parseICS,
   applyFilter, buildTags, toCards,
   escXml, toRFC822, generateRSS,
+  aggregate, eventAnchor,
 } from "../scripts/sync-events.mjs";
 
 // ── parseDate ─────────────────────────────────────────────────────────────
@@ -119,6 +120,46 @@ describe("expandRRule — WEEKLY", () => {
     const rule = "FREQ=WEEKLY;BYDAY=MO;COUNT=3";
     const dates = expandRRule(dtstart, rule, []);
     assert.equal(dates.length, 3);
+  });
+});
+
+describe("expandRRule — DAILY / YEARLY / unsupported", () => {
+  it("expands daily recurrence one day apart", () => {
+    const dtstart = new Date(2026, 2, 2, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=DAILY", []);
+    assert(dates.length > 1);
+    const diff = Math.round((dates[1] - dates[0]) / 86400000);
+    assert.equal(diff, 1);
+  });
+
+  it("honours DAILY INTERVAL", () => {
+    const dtstart = new Date(2026, 2, 2, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=DAILY;INTERVAL=3", []);
+    assert(dates.length > 1);
+    const diff = Math.round((dates[1] - dates[0]) / 86400000);
+    assert.equal(diff, 3);
+  });
+
+  it("expands yearly recurrence keeping month/day", () => {
+    const dtstart = new Date(2026, 2, 2, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=YEARLY", []);
+    assert(dates.length >= 1);
+    assert.equal(dates[0].getMonth(), 2);
+    assert.equal(dates[0].getDate(), 2);
+  });
+
+  it("warns once on an unsupported FREQ instead of silently dropping", () => {
+    const origWarn = console.warn;
+    const warnings = [];
+    console.warn = (m) => warnings.push(m);
+    try {
+      const dates = expandRRule(new Date(2026, 2, 2, 19, 0), "FREQ=HOURLY", []);
+      assert.equal(dates.length, 0);
+    } finally {
+      console.warn = origWarn;
+    }
+    assert.equal(warnings.length, 1);
+    assert.match(warnings[0], /unsupported FREQ=HOURLY/);
   });
 });
 
@@ -457,6 +498,22 @@ describe("toCards", () => {
     const r = toCards(events, { name: "X", url: "https://x.example", tags: ["#kult41"] });
     assert.ok(r[0].tags.includes("#kult41"));
   });
+
+  it("keeps an all-day event happening today (not dropped as past)", () => {
+    const t = new Date();
+    const midnightToday = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+    const events = [mkEvent({ allDay: true, dtstart: midnightToday, uid: "allday-today" })];
+    const r = toCards(events, { name: "X", url: "https://x.example" });
+    assert.equal(r.length, 1);
+  });
+
+  it("still drops an all-day event from yesterday", () => {
+    const t = new Date();
+    const yesterday = new Date(t.getFullYear(), t.getMonth(), t.getDate() - 1);
+    const events = [mkEvent({ allDay: true, dtstart: yesterday, uid: "allday-past" })];
+    const r = toCards(events, { name: "X", url: "https://x.example" });
+    assert.equal(r.length, 0);
+  });
 });
 
 // ── RSS ───────────────────────────────────────────────────────────────────
@@ -541,13 +598,143 @@ describe("generateRSS", () => {
     assert.match(xml, /&lt;script&gt;/);
   });
 
-  it("uses uid as guid when available", () => {
+  it("uses uid + date/time slot as guid when available", () => {
     const xml = generateRSS([{ ...baseCard, uid: "stable-uid-123" }]);
-    assert.match(xml, /<guid isPermaLink="false">stable-uid-123<\/guid>/);
+    assert.match(xml, /<guid isPermaLink="false">stable-uid-123-20260321T2000<\/guid>/);
   });
 
   it("falls back to date+type guid when no uid", () => {
     const xml = generateRSS([baseCard]);
-    assert.match(xml, /<guid isPermaLink="false">bitcircus101-20260321-special<\/guid>/);
+    assert.match(xml, /<guid isPermaLink="false">bitcircus101-20260321T2000-special<\/guid>/);
+  });
+
+  it("gives recurring instances (shared uid) distinct GUIDs", () => {
+    const xml = generateRSS([
+      { ...baseCard, uid: "weekly@x", date: "2026-03-21", time: "20:00" },
+      { ...baseCard, uid: "weekly@x", date: "2026-03-28", time: "20:00" },
+    ]);
+    const guids = [...xml.matchAll(/<guid[^>]*>([^<]+)<\/guid>/g)].map((m) => m[1]);
+    assert.equal(guids.length, 2);
+    assert.notEqual(guids[0], guids[1]);
+  });
+
+  it("XML-escapes the guid (uid with & and <)", () => {
+    const xml = generateRSS([{ ...baseCard, uid: "a&b<c" }]);
+    assert.match(xml, /<guid isPermaLink="false">a&amp;b&lt;c-20260321T2000<\/guid>/);
+    // no raw, unescaped ampersand anywhere in the feed
+    assert.ok(!/&(?!amp;|lt;|gt;|quot;|#)/.test(xml));
+  });
+
+  it("deep-links the item to the event anchor", () => {
+    const xml = generateRSS([baseCard]);
+    assert.ok(
+      xml.includes("<link>https://bitcircus101.de/events.html#" + eventAnchor(baseCard) + "</link>")
+    );
+  });
+
+  it("stays well-formed XML with hostile field content", () => {
+    const nasty = {
+      ...baseCard,
+      title: 'A & B <x> "q"',
+      description: "<b>&amp;</b>",
+      location: "M&Ms <i>",
+      tags: ["<bad>&"],
+      uid: "u&<id",
+    };
+    const xml = generateRSS([nasty]);
+    assert.ok(!/&(?!amp;|lt;|gt;|quot;|#)/.test(xml), "no unescaped ampersand");
+    for (const tag of ["item", "title", "link", "description", "guid", "pubDate"]) {
+      const open = (xml.match(new RegExp("<" + tag + "[ >]", "g")) || []).length;
+      const close = (xml.match(new RegExp("</" + tag + ">", "g")) || []).length;
+      assert.equal(open, close, tag + " tags balanced");
+    }
+  });
+});
+
+// ── eventAnchor (shared deep-link slug) ───────────────────────────────────────
+
+describe("eventAnchor", () => {
+  it("builds a stable ev- anchor from date + title", () => {
+    assert.equal(
+      eventAnchor({ date: "2026-05-22", title: "Casual Linkup@bitcircus101 (4FR)" }),
+      "ev-2026-05-22-casual-linkup-bitcircus101-4fr"
+    );
+  });
+
+  it("keeps German umlauts and trims trailing separators", () => {
+    assert.equal(
+      eventAnchor({ date: "2026-06-01", title: "Löten für Anfänger!!!" }),
+      "ev-2026-06-01-löten-für-anfänger"
+    );
+  });
+});
+
+// ── aggregate (cross-source merge) ────────────────────────────────────────────
+
+describe("aggregate", () => {
+  const NOW = "2026-04-01T00:00:00.000Z";
+  const emptyPrev = { events: [], sources: [], icsKeys: {} };
+  const card = (over) => ({
+    title: "E", date: "2026-05-01", time: "20:00", uid: "",
+    source: "A", tags: [], type: "special", ...over,
+  });
+  const result = (cards, name) => ({
+    cards,
+    source: { id: name, name, status: "ok", events: cards.length },
+    icsKeys: { [name]: [] },
+  });
+
+  it("dedupes the same event cross-posted to two sources (first wins)", () => {
+    const a = result([card({ uid: "shared@x", source: "A" })], "A");
+    const b = result([card({ uid: "shared@x", source: "B" })], "B");
+    const { events } = aggregate([a, b], emptyPrev, NOW);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].source, "A");
+  });
+
+  it("keeps recurring instances (same uid, different date slot)", () => {
+    const a = result([
+      card({ uid: "weekly@x", date: "2026-05-01" }),
+      card({ uid: "weekly@x", date: "2026-05-08" }),
+    ], "A");
+    const { events } = aggregate([a], emptyPrev, NOW);
+    assert.equal(events.length, 2);
+  });
+
+  it("sorts same-day events by time, all-day first", () => {
+    const a = result([
+      card({ uid: "u1", time: "22:00", title: "late" }),
+      card({ uid: "u2", time: "", title: "allday" }),
+      card({ uid: "u3", time: "18:00", title: "early" }),
+    ], "A");
+    const { events } = aggregate([a], emptyPrev, NOW);
+    assert.deepEqual(events.map((e) => e.title), ["allday", "early", "late"]);
+  });
+
+  it("caps the merged output at 40 cards", () => {
+    const cards = Array.from({ length: 50 }, (_, i) =>
+      card({ uid: "u" + i, date: "2026-05-" + String((i % 28) + 1).padStart(2, "0") })
+    );
+    const { events } = aggregate([result(cards, "A")], emptyPrev, NOW);
+    assert.equal(events.length, 40);
+  });
+
+  it("carries firstSeen over by uid and defaults new events to nowISO", () => {
+    const prev = {
+      events: [{ uid: "old@x", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
+      sources: [], icsKeys: {},
+    };
+    const a = result([card({ uid: "old@x" }), card({ uid: "new@x", date: "2026-05-02" })], "A");
+    const { events } = aggregate([a], prev, NOW);
+    const seen = Object.fromEntries(events.map((e) => [e.uid, e.firstSeen]));
+    assert.equal(seen["old@x"], "2026-01-01T00:00:00.000Z");
+    assert.equal(seen["new@x"], NOW);
+  });
+
+  it("recomputes source.events to reflect the deduped output", () => {
+    const a = result([card({ uid: "shared@x", source: "A" })], "A");
+    const b = result([card({ uid: "shared@x", source: "B" })], "B");
+    const { sources } = aggregate([a, b], emptyPrev, NOW);
+    assert.equal(sources.find((s) => s.name === "B").events, 0);
   });
 });
