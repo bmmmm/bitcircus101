@@ -1042,6 +1042,10 @@ h3.location-card__header {
     display: inline-block;
     margin-left: 0.15em;
     animation: blink 1.1s step-start infinite;
+    /* Decorative blinking cursor sits at the map button's centre; without this it
+       intercepts pointer hit-testing and a coordinate click landing mid-blink can
+       miss the button handler (flaky in headless CI). Never an interaction target. */
+    pointer-events: none;
 }
 
 .location-card__map-btn {
