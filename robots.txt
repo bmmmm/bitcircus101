@@ -5,11 +5,6 @@ User-agent: *
 Allow: /
 # Internal ASCII playground (no nav link, noindex in page)
 Disallow: /ascii/
-# Signal invite/join redirects – noindex pages, no need to crawl
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 Sitemap: https://bitcircus101.de/sitemap.xml
 
@@ -17,71 +12,35 @@ Sitemap: https://bitcircus101.de/sitemap.xml
 User-agent: GPTBot
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 User-agent: anthropic-ai
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 User-agent: Amazonbot
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 User-agent: CCBot
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 User-agent: YouBot
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
 
 User-agent: Applebot-Extended
 Allow: /
 Disallow: /ascii/
-Disallow: /invite-info/
-Disallow: /invite-talk/
-Disallow: /join-info/
-Disallow: /join-talk/
