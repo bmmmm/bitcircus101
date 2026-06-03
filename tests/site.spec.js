@@ -27,9 +27,8 @@ test.describe('Home page', () => {
         // Carousel navigation
         const activeDotBefore = await page.locator('.dot.active').getAttribute('aria-label');
         await page.locator('.carousel-button.next').click();
-        await page.waitForTimeout(200);
-        const activeDotAfter = await page.locator('.dot.active').getAttribute('aria-label');
-        expect(activeDotAfter).not.toBe(activeDotBefore);
+        // Wait for the actual state change, not a fixed sleep — race-free on slow CI.
+        await expect.poll(() => page.locator('.dot.active').getAttribute('aria-label')).not.toBe(activeDotBefore);
 
         // Map
         await page.locator('#show-map-btn').click();
