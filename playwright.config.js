@@ -15,9 +15,12 @@ module.exports = defineConfig({
     },
 
     webServer: {
-        // npx http-server . -p 8080 --silent
-        command: 'npx --yes http-server . -p 8080 --silent',
+        // Python's stdlib server (preinstalled on macOS/CI, ThreadingHTTPServer
+        // since 3.7) — same server the README documents for local dev. Avoids
+        // depending on `npx http-server` being fetchable/usable at run time.
+        command: 'python3 -m http.server 8080',
         url: 'http://localhost:8080',
+        stdout: 'ignore',
         // Reuse :8080 when already serving (avoids bind errors if CI=1 is set locally).
         // GitHub Actions always sets GITHUB_ACTIONS — there we always start a fresh server.
         reuseExistingServer: !process.env.GITHUB_ACTIONS,
