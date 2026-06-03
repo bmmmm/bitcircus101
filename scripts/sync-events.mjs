@@ -12,7 +12,7 @@ import ICSCore from "../ics-core.js";
 
 // ICS parsing primitives are shared with the browser fallback (events.js) via the
 // UMD module ics-core.js — single source of truth, no drift between the two parsers.
-const { parseDate, nthWeekday, expandRRule, clean, parseTzid, parseICS, eventAnchor } = ICSCore;
+const { parseDate, nthWeekday, expandRRule, clean, parseICS, eventAnchor } = ICSCore;
 
 const CAL_DIR = "calendars";
 const CAL_CONFIG = `${CAL_DIR}/config.json`;
@@ -211,7 +211,7 @@ function toCards(icsEvents, cal) {
 // ── Generate RSS feed ───────────────────────────────────────────────────────
 
 function escXml(s) {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 function toRFC822(isoOrDate) {
@@ -303,7 +303,13 @@ async function processSource(cal, prev) {
   const prevSource = prev.sources.find((s) => s.id === cal.id);
   const stale = (reason) => {
     console.error(`[${cal.id}] ${reason} – using cached events`);
-    const cached = prev.events.filter((e) => e.source === cal.name);
+    // Re-apply the date filter to the cached fallback: a flapping source must not
+    // resurrect events that have since passed. Cards store `date` as local
+    // YYYY-MM-DD (see toCards), so a lexical ">= today" keeps all of today plus
+    // future and drops past ones — mirroring the all-day rule in toCards.
+    const now = new Date();
+    const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    const cached = prev.events.filter((e) => e.source === cal.name && e.date >= today);
     return {
       cards: cached,
       source: {
@@ -458,7 +464,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
 export {
   loadCalendars,
-  parseDate, nthWeekday, expandRRule, clean, parseTzid, parseICS,
+  parseDate, nthWeekday, expandRRule, clean, parseICS,
   isInternal, applyFilter, guessType, extractHashtags, keywordTags,
   buildTags, cleanLocation, truncateDesc, toCards,
   escXml, toRFC822, generateRSS,
