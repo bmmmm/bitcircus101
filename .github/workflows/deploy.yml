@@ -34,7 +34,7 @@ jobs:
       - name: Trust workspace for git
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v6
         with:
@@ -104,7 +104,7 @@ jobs:
             [ -f "/tmp/_live_$f" ] && cp "/tmp/_live_$f" "$f"
           done
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           # package.json was removed from the live overlay above, so action-setup
           # cannot read the version from packageManager — pin it explicitly here.
