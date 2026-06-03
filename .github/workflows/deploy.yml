@@ -15,6 +15,12 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Browsers + OS deps are baked into the image, so there is no fragile
+    # `playwright install --with-deps` download step (which hung repeatedly and
+    # which caching can't save us from: this site deploys less often than the
+    # 7-day cache-eviction window, so the browser cache is always cold). The tag
+    # MUST match the pinned @playwright/test version in package.json.
+    container: mcr.microsoft.com/playwright:v1.58.2-jammy
     # Match the calendar's Europe/Berlin floating-local times when generating
     # events-data.json / feed.xml and running the (date-sensitive) unit tests.
     env:
@@ -38,21 +44,6 @@ jobs:
             echo "::error::HTML drift: run npm run build:layout and npm run build:logos, then commit."
             exit 1
           )
-
-      - name: Cache Playwright browsers
-        id: pw-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Playwright browsers
-        if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-
-      - name: Install Playwright system deps (cache hit)
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
 
       - name: Run sync-events unit tests
         run: node --test tests/sync-events.spec.mjs
