@@ -459,7 +459,11 @@
         entries.forEach(entry => {
           const link = navLinks["#" + entry.target.id];
           if (!link) return;
-          link.setAttribute("aria-current", entry.isIntersecting ? "true" : "false");
+          // Drive the scroll-spy via the same class markCurrentPage uses, so the two
+          // never fight over `aria-current` (markCurrentPage owns that, setting "page"
+          // on the URL-targeted anchor). Toggling the class lets the section in view
+          // win visually without corrupting the AT/semantic current-page state.
+          link.classList.toggle("nav__link--current", entry.isIntersecting);
         });
       }, { rootMargin: "-10% 0px -75% 0px" });
 
