@@ -20,9 +20,6 @@ test.describe('Home page', () => {
     });
 
     test('carousel works and map loads on click', async ({ page }) => {
-        const _logs = [];
-        page.on('console', (m) => _logs.push('C:' + m.type() + ':' + m.text()));
-        page.on('pageerror', (e) => _logs.push('PE:' + e.message));
         await page.goto('/');
         await expect(page.locator('.carousel-container')).toBeVisible();
         await expect(page.locator('.carousel-item.active img')).toBeVisible();
@@ -35,29 +32,7 @@ test.describe('Home page', () => {
         expect(activeDotAfter).not.toBe(activeDotBefore);
 
         // Map
-        const _diag = await page.evaluate(() => ({
-            hasBtn: !!document.getElementById('show-map-btn'),
-            hasContainer: !!document.getElementById('osm-map-container'),
-            hasMap: !!document.getElementById('osm-map'),
-            classBefore: (document.getElementById('osm-map-container') || {}).className,
-        }));
         await page.locator('#show-map-btn').click();
-        await page.waitForTimeout(300);
-        const _after = await page.evaluate(() => {
-            const b = document.getElementById('show-map-btn');
-            const r = b.getBoundingClientRect();
-            const topEl = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-            // Now try a DOM-level click (bypasses Playwright hit-testing/coords)
-            b.click();
-            return {
-                classAfter: (document.getElementById('osm-map-container') || {}).className,
-                btnText: (b.textContent || '').trim(),
-                rect: { x: Math.round(r.left), y: Math.round(r.top), w: Math.round(r.width), h: Math.round(r.height) },
-                topElAtCenter: topEl ? (topEl.tagName + '#' + topEl.id + '.' + topEl.className) : null,
-                classAfterJsClick: (document.getElementById('osm-map-container') || {}).className,
-            };
-        });
-        console.log('DIAGMAP ' + JSON.stringify({ ..._diag, ..._after, logs: _logs }));
         await expect(page.locator('#osm-map-container')).toBeVisible();
         const iframeSrc = await page.locator('#osm-map').getAttribute('src');
         expect(iframeSrc).toContain('openstreetmap.org');
