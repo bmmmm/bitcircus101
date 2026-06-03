@@ -172,7 +172,7 @@
       html += '<button type="button" class="events-filter__tag" data-tag="' +
         esc(t) + '" aria-pressed="false">' + esc(t) + "</button>";
     });
-    html += '<button type="button" class="events-filter__clear" style="display:none" aria-label="Filter zur\u00fccksetzen">' +
+    html += '<button type="button" class="events-filter__clear" hidden aria-label="Filter zur\u00fccksetzen">' +
       "\u00d7 reset</button>";
     filterBar.innerHTML = html;
 
@@ -192,7 +192,7 @@
           btn.classList.add("active");
           btn.setAttribute("aria-pressed", "true");
         }
-        clearBtn.style.display = activeFilters.length ? "" : "none";
+        clearBtn.hidden = !activeFilters.length;
         renderFilteredCards();
       });
     });
@@ -203,7 +203,7 @@
         b.classList.remove("active");
         b.setAttribute("aria-pressed", "false");
       });
-      clearBtn.style.display = "none";
+      clearBtn.hidden = true;
       renderFilteredCards();
     });
   }
@@ -421,12 +421,6 @@
   }
 
   // ── Last Sync Display ────────────────────────────────────────────────────
-
-  function fmtDate(isoStr) {
-    var d = new Date(isoStr);
-    return pad(d.getDate()) + "." + pad(d.getMonth() + 1) + "." +
-      d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
-  }
 
   var SYNC_BAR_FILL = 60;   // minutes until bar is full (2 cycles)
   var SYNC_WARN = 120;      // minutes until "stale" warning (4 cycles)
