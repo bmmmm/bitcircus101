@@ -2,10 +2,12 @@
   "name": "bitcircus101",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@11.5.1",
   "scripts": {
+    "preinstall": "node -e \"const ua=process.env.npm_config_user_agent||'';if(!ua.startsWith('pnpm/')){console.error('\\n  bitcircus101 is pnpm-only (supply-chain policy). Use: pnpm install - npm/yarn are blocked.\\n');process.exit(1)}\"",
     "build:layout": "node scripts/inject-layout.mjs",
     "build:logos": "node scripts/build-logo-slider.mjs",
-    "build": "npm run build:layout && npm run build:logos",
+    "build": "pnpm run build:layout && pnpm run build:logos",
     "test": "node --test tests/sync-events.spec.mjs && playwright test",
     "test:quick": "node --test tests/sync-events.spec.mjs",
     "test:unit": "node --test tests/sync-events.spec.mjs",
