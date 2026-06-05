@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Fri, 05 Jun 2026 16:28:34 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 05 Jun 2026 18:23:29 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-06-05 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html#ev-2026-06-05-casual-linkup-bitcircus101-1fr</link>
-      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
-      <category>#meetup</category>
-      <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
-      <guid isPermaLink="false">casual-linkup-1fr@bitcircus101.de-20260605T2000</guid>
-    </item>
     <item>
       <title>[2026-06-08 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/events.html#ev-2026-06-08-treffen-bonner-fsfe-community</link>
@@ -143,6 +135,14 @@
       <category>#talk</category>
       <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
       <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20260717T2000</guid>
+    </item>
+    <item>
+      <title>[2026-07-18 11:00] Pride Bonn @ TBA</title>
+      <link>https://bitcircus101.de/events.html#ev-2026-07-18-pride-bonn</link>
+      <description>Es gibt wieder eine queere Pride Demonstration in Bonn. Sie ist am 18. Juli 2026. Wir starten an der Rheinlust. Das ist in Beuel am Rhein. Die Demonstration endet am Münsterplatz. Da gibt es noch …</description>
+      <category>#offener-abend</category>
+      <pubDate>Fri, 22 May 2026 19:12:16 +0000</pubDate>
+      <guid isPermaLink="false">B354382B-F062-4757-840F-16C0C77178D9-20260718T1100</guid>
     </item>
   </channel>
 </rss>
