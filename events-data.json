@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-06-08T14:32:56.388Z",
+  "lastSync": "2026-06-08T17:51:22.496Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-08T14:32:56.168Z",
+      "fetchedAt": "2026-06-08T17:51:22.379Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-08T14:32:56.206Z",
+      "fetchedAt": "2026-06-08T17:51:22.475Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-08T14:32:56.203Z",
+      "fetchedAt": "2026-06-08T17:51:22.437Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -142,23 +142,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Treffen: Bonner FSFE Community",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstraße 101 Bonn",
-      "date": "2026-06-08",
-      "time": "19:00",
-      "tags": [
-        "#foss"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
-      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
-      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
-      "firstSeen": "2026-05-11T19:45:03.502Z"
-    },
     {
       "title": "Offene Datenburg",
       "subtitle": "",
@@ -824,6 +807,23 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-08-07",
+      "time": "20:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-1fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-05-02T10:51:21.504Z"
     }
   ]
 }

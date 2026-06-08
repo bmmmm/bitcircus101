@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Mon, 08 Jun 2026 14:32:56 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 08 Jun 2026 17:51:22 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-06-08 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/events.html#ev-2026-06-08-treffen-bonner-fsfe-community</link>
-      <description>Treffen: Bonner FSFE Community · 2026-06-08</description>
-      <category>#foss</category>
-      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
-      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20260608T1900</guid>
-    </item>
     <item>
       <title>[2026-06-09 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html#ev-2026-06-09-look-at-my-toys</link>
@@ -143,6 +135,16 @@
       <category>#offener-abend</category>
       <pubDate>Fri, 22 May 2026 19:12:16 +0000</pubDate>
       <guid isPermaLink="false">B354382B-F062-4757-840F-16C0C77178D9-20260718T1100</guid>
+    </item>
+    <item>
+      <title>[2026-07-21 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html#ev-2026-07-21-look-at-my-toys</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
+      <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260721T1900</guid>
     </item>
   </channel>
 </rss>
