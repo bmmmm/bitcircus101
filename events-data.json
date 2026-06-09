@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-06-09T13:43:28.615Z",
+  "lastSync": "2026-06-09T16:30:17.077Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-09T13:43:28.292Z",
+      "fetchedAt": "2026-06-09T16:30:16.854Z",
       "status": "ok",
-      "events": 21,
+      "events": 22,
       "added": 0,
       "removed": 0,
       "total": 49,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-09T13:43:28.368Z",
+      "fetchedAt": "2026-06-09T16:30:16.823Z",
       "status": "ok",
-      "events": 19,
+      "events": 18,
       "added": 0,
       "removed": 0,
       "total": 45,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-09T13:43:28.598Z",
+      "fetchedAt": "2026-06-09T16:30:17.059Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -142,23 +142,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-06-09",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -824,6 +807,23 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-02T10:51:21.504Z"
+    },
+    {
+      "title": "Treffen: Bonner FSFE Community",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-08-10",
+      "time": "19:00",
+      "tags": [
+        "#foss"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
+      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "firstSeen": "2026-05-11T19:45:03.502Z"
     }
   ]
 }
