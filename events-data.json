@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-06-11T15:03:05.728Z",
+  "lastSync": "2026-06-11T18:34:04.268Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-11T15:03:05.552Z",
+      "fetchedAt": "2026-06-11T18:34:04.146Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,19 +16,19 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-11T15:03:05.529Z",
+      "fetchedAt": "2026-06-11T18:34:03.972Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 45,
+      "total": 46,
       "past": 5,
-      "upcoming": 40
+      "upcoming": 41
     },
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-11T15:03:05.665Z",
+      "fetchedAt": "2026-06-11T18:34:04.039Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -124,6 +124,7 @@
       "2a828714-52b9-4074-a76e-56790ff4720b",
       "D698EA39-FEEF-4D4C-99AC-50D186FBD679",
       "5a70c528-c571-44d8-ae9d-e94f05c5ad4e",
+      "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
       "D6351EF4-F6AD-4459-9EDA-333581BA8F14",
       "64487F08-C72F-4C70-96F4-C62AB9D8E979",
       "5ead1d8a-efdf-4b30-a0f8-fc2c2957b902",
@@ -142,22 +143,6 @@
     ]
   },
   "events": [
-    {
-      "title": "PPP (Putzen Plenum Pizza)",
-      "subtitle": "",
-      "description": "PPP (Putzen Plenum Pizza)",
-      "location": "",
-      "date": "2026-06-11",
-      "time": "19:30",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "433849E2-7F98-4A69-BD49-07D33397B19B",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-08T20:58:54.320Z"
-    },
     {
       "title": "Casual Linkup@bitcircus101 (2FR)",
       "subtitle": "",
@@ -347,6 +332,22 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Interner Burgabend",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-07-02",
+      "time": "18:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-11T18:34:04.184Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (1FR)",
@@ -774,6 +775,22 @@
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
+      "title": "Interner Burgabend",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-08-06",
+      "time": "18:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-11T18:34:04.184Z"
+    },
+    {
       "title": "Casual Linkup@bitcircus101 (1FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
@@ -806,23 +823,6 @@
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-05-11T19:45:03.502Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "Reminder",
-      "location": "",
-      "date": "2026-08-11",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
     }
   ]
 }
