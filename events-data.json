@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-06-12T06:40:53.569Z",
+  "lastSync": "2026-06-12T11:00:08.474Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-12T06:40:53.387Z",
+      "fetchedAt": "2026-06-12T11:00:08.202Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,11 +16,11 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-12T06:40:53.414Z",
+      "fetchedAt": "2026-06-12T11:00:08.188Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
-      "removed": 0,
+      "added": 1,
+      "removed": 1,
       "total": 46,
       "past": 5,
       "upcoming": 41
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-12T06:40:53.476Z",
+      "fetchedAt": "2026-06-12T11:00:08.315Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -118,7 +118,7 @@
       "1AB911F6-25E5-4945-9739-0BE219C04434",
       "3FACEB28-23DE-4595-9D1E-82BAF78D6E55",
       "22122d95-1a89-4a7e-964f-661266a1fe82",
-      "433849E2-7F98-4A69-BD49-07D33397B19B",
+      "72BC9C7D-9136-4894-925E-DC33F51A9936",
       "8A7E2DC2-EA46-435A-88F5-A78CD0936C3C",
       "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
       "2a828714-52b9-4074-a76e-56790ff4720b",
@@ -420,7 +420,7 @@
     {
       "title": "PPP (Putzen Plenum Pizza)",
       "subtitle": "",
-      "description": "PPP (Putzen Plenum Pizza)",
+      "description": "Reminder",
       "location": "",
       "date": "2026-07-09",
       "time": "19:30",
@@ -429,7 +429,7 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "433849E2-7F98-4A69-BD49-07D33397B19B",
+      "uid": "72BC9C7D-9136-4894-925E-DC33F51A9936",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-08T20:58:54.320Z"
     },
