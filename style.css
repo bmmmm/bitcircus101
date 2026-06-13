@@ -936,8 +936,8 @@ select:focus {
 
 .chat-card--red  { border-color: rgba(255, 34, 34, 0.5); color: #ff2222; }
 .chat-card--red:hover  { border-color: #ff4444; }
-.chat-card--blue { border-color: rgba(34, 102, 255, 0.5); color: #2266ff; }
-.chat-card--blue:hover { border-color: #4488ff; }
+.chat-card--blue { border-color: rgba(34, 102, 255, 0.5); color: #4488ff; }
+.chat-card--blue:hover { border-color: #66a0ff; }
 
 /* =============================================================================
    Location Card
@@ -1329,7 +1329,7 @@ section:target > h2 {
     font-family: var(--font);
     font-size: 0.72rem;
     cursor: pointer;
-    transition: all var(--transition);
+    transition: color var(--transition), border-color var(--transition), background-color var(--transition);
 }
 
 .events-filter__tag:hover {
@@ -1352,7 +1352,7 @@ section:target > h2 {
     font-size: 0.72rem;
     cursor: pointer;
     margin-left: 0.3rem;
-    transition: all var(--transition);
+    transition: color var(--transition), border-color var(--transition), background-color var(--transition);
 }
 
 .events-filter__clear:hover {
@@ -1469,8 +1469,8 @@ section:target > h2 {
 
 .event-card__dow {
     font-size: 0.6rem;
-    color: var(--text-dim);
-    opacity: 0.5;
+    /* Direct mid-grey, not text-dim @ opacity 0.5 (which collapsed to ~2.5:1). */
+    color: #808080;
     letter-spacing: 0.06em;
 }
 
@@ -1528,15 +1528,15 @@ a.event-card__location:hover {
     background: none;
     text-decoration: none;
     cursor: pointer;
-    transition: all var(--transition);
+    transition: color var(--transition), border-color var(--transition), background-color var(--transition);
     letter-spacing: 0.03em;
     line-height: 1.4;
 }
 
 .event-action__icon { font-size: 0.8em; opacity: 0.7; }
 
-.event-action--link { --ea: #c04040; --ea-hover: #e05050; --ea-border: #501818; }
-.event-action--cal  { --ea: #4080c0; --ea-hover: #60a0e0; --ea-border: #1a3858; }
+.event-action--link { --ea: #dd5555; --ea-hover: #ee6666; --ea-border: #501818; }
+.event-action--cal  { --ea: #5090d0; --ea-hover: #70a8e0; --ea-border: #1a3858; }
 .event-action--map  { --ea: #6a9a5a; --ea-hover: #8ac07a; --ea-border: #2a4a22; }
 
 .event-action--link,
@@ -1678,7 +1678,7 @@ a.event-card__location:hover {
     text-decoration: none;
     border: 1px solid var(--border);
     padding: 0.3em 0.7em;
-    transition: all var(--transition);
+    transition: color var(--transition), border-color var(--transition), background-color var(--transition);
 }
 
 .events-subscribe__btn:hover {
@@ -2317,6 +2317,11 @@ a.event-card__location:hover {
 
 .dot {
     display: inline-block;
+    /* Reset native <button> chrome so the real button matches the old span dot. */
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0;
+    font: inherit;
     height: 8px;
     width: 8px;
     margin: 0 4px;
@@ -2420,6 +2425,8 @@ a.event-card__location:hover {
     pointer-events: none;
     transition: opacity 0.5s ease;
 }
+
+.matrix-trail--out { opacity: 0; }
 
 @media (max-width: 600px) {
     .scroll-top {

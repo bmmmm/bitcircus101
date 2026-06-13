@@ -304,7 +304,13 @@
       if (index < 0 || index >= items.length) return;
 
       items.forEach((item, i) => item.classList.toggle("active", i === index));
-      dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+      dots.forEach((dot, i) => {
+        const on = i === index;
+        dot.classList.toggle("active", on);
+        // Expose the active slide to assistive tech (dots are real buttons now).
+        if (on) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
+      });
       this.state.current = index;
     },
 
@@ -476,7 +482,7 @@
         "error",
         (e) => {
           if (e.target.matches("img")) {
-            e.target.style.display = "none";
+            e.target.classList.add("hidden");
           }
         },
         true,
@@ -534,7 +540,7 @@
         html += "</span>";
         if (e.time)
           html +=
-            '<span class="event-preview__time">' + e.time + "</span>";
+            '<span class="event-preview__time">' + escHtml(e.time) + "</span>";
         html += "</a>";
       });
 
@@ -652,7 +658,7 @@
           });
           ticking = true;
         }
-      });
+      }, { passive: true });
 
       // Click: matrix trail + scroll
       btn.addEventListener("click", function () {
@@ -723,8 +729,8 @@
         if (frames < maxFrames) {
           self.animId = requestAnimationFrame(draw);
         } else {
-          // Fade out
-          canvas.style.opacity = "0";
+          // Fade out (CSS transition on .matrix-trail handles the animation)
+          canvas.classList.add("matrix-trail--out");
           setTimeout(function () {
             canvas.remove();
             self.canvas = null;
