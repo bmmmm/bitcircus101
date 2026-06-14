@@ -45,7 +45,11 @@
   // present. Mirrors the sync-side normalization in sync-events.mjs (5ee7f07).
   function httpUrl(u) {
     if (!u) return u;
-    if (u.charAt(0) === "/" || /^[a-z][\w+.-]*:\/\//i.test(u)) return u;
+    if (u.charAt(0) === "/") return u;
+    // Pass through http(s) as-is; force any other scheme (javascript:, data:, …)
+    // onto https:// so a poisoned feed value can't survive as an executable href.
+    var scheme = /^([a-z][\w+.-]*):\/\//i.exec(u);
+    if (scheme) return /^https?$/i.test(scheme[1]) ? u : "https://" + u;
     return "https://" + u;
   }
 
@@ -95,12 +99,12 @@
       if (onlyBitcircus && allFutureSorted.length) {
         el.innerHTML =
           '<p class="events-empty">Keine bevorstehenden Termine nur im bitcircus101-Kalender in diesem Ausschnitt.</p>' +
-          "<p><a href=\"" + CALENDAR_URL + "\" target=\"_blank\" rel=\"noopener\">" +
+          "<p><a href=\"" + CALENDAR_URL + "\" target=\"_blank\" rel=\"noopener noreferrer\">" +
           "Kalender \u00f6ffnen \u2197</a></p>";
       } else {
         el.innerHTML =
           '<p class="events-empty">Keine kommenden Termine gefunden.</p>' +
-          '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
+          '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener noreferrer">' +
           "Kalender \u00f6ffnen \u2197</a></p>";
       }
       el.removeAttribute("aria-busy");
@@ -148,7 +152,7 @@
       removeFilterBar();
       el.innerHTML =
         '<p class="events-empty">Keine kommenden Termine gefunden.</p>' +
-        '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
+        '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener noreferrer">' +
         "Kalender \u00f6ffnen \u2197</a></p>";
       return;
     }
@@ -284,7 +288,7 @@
           var osmLoc = encodeURIComponent(e.location);
           html += '<a class="event-card__location" href="' +
             'https://www.openstreetmap.org/search?query=' + osmLoc +
-            '" target="_blank" rel="noopener" title="Auf Karte anzeigen">' +
+            '" target="_blank" rel="noopener noreferrer" title="Auf Karte anzeigen">' +
             '\u25cb ' + esc(e.location) + "</a>";
         }
         // Meta: time + tags
@@ -314,13 +318,13 @@
           '\u2190 link</button>';
         html += '<a class="event-action event-action--cal" href="' +
           esc(calHref) +
-          '" target="_blank" rel="noopener" title="' + calTitle + '">' +
+          '" target="_blank" rel="noopener noreferrer" title="' + calTitle + '">' +
           calLabel + '</a>';
         if (e.location) {
           var osmQuery = encodeURIComponent(e.location);
           html += '<a class="event-action event-action--map" href="' +
             'https://www.openstreetmap.org/search?query=' + osmQuery +
-            '" target="_blank" rel="noopener" title="Auf Karte anzeigen">' +
+            '" target="_blank" rel="noopener noreferrer" title="Auf Karte anzeigen">' +
             '\u25cb karte</a>';
         }
         html += "</div>";
@@ -415,7 +419,7 @@
       "$ events --load " +
       '<span class="events-fallback__err">ERR</span></p>' +
       "<p>Termine direkt ansehen: " +
-      '<a href="' + CALENDAR_URL + '" target="_blank" rel="noopener">' +
+      '<a href="' + CALENDAR_URL + '" target="_blank" rel="noopener noreferrer">' +
       "Kalender \u00f6ffnen \u2197</a></p></div>";
     el.removeAttribute("aria-busy");
   }
