@@ -53,13 +53,34 @@
     var out = [];
 
     if (p.FREQ === "WEEKLY") {
-      var wd = p.BYDAY ? WD[p.BYDAY.replace(/\d/g, "").slice(-2)] : dtstart.getDay();
-      if (wd === undefined) wd = dtstart.getDay();
+      var interval = p.INTERVAL ? +p.INTERVAL : 1;
+      // BYDAY may list several weekdays ("MO,WE,FR") — expand every one, not just
+      // the last. Each token may carry an ordinal (ignored for WEEKLY): "2MO" -> MO.
+      var wdays = {};
+      if (p.BYDAY) {
+        p.BYDAY.split(",").forEach(function (tok) {
+          var code = tok.replace(/[^A-Za-z]/g, "").slice(-2).toUpperCase();
+          if (WD[code] != null) wdays[WD[code]] = true;
+        });
+      }
+      if (!Object.keys(wdays).length) wdays[dtstart.getDay()] = true;
+      // Walk day by day (cheap over the 120-day horizon), emitting each matching
+      // weekday. INTERVAL keeps every Nth week, counted from dtstart's week.
+      var weekRef = new Date(dtstart);
+      weekRef.setHours(0, 0, 0, 0);
+      weekRef.setDate(weekRef.getDate() - weekRef.getDay()); // Sunday of start week
       var cur = new Date(dtstart);
-      while (cur.getDay() !== wd) cur.setDate(cur.getDate() + 1);
       while (cur <= limit && out.length < max) {
-        if (!exSet[cur.toDateString()]) out.push(new Date(cur));
-        cur.setDate(cur.getDate() + 7);
+        if (cur >= dtstart && wdays[cur.getDay()]) {
+          var wkStart = new Date(cur);
+          wkStart.setHours(0, 0, 0, 0);
+          wkStart.setDate(wkStart.getDate() - wkStart.getDay());
+          var weeksApart = Math.round((wkStart - weekRef) / 604800000);
+          if (weeksApart % interval === 0 && !exSet[cur.toDateString()]) {
+            out.push(new Date(cur));
+          }
+        }
+        cur.setDate(cur.getDate() + 1);
       }
     } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
       // Support both "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3
