@@ -380,7 +380,7 @@ test.describe('No JavaScript errors', () => {
 // ─── Internal Links ──────────────────────────────────────────────────────────
 
 test.describe('Internal links', () => {
-    test('all internal links resolve to valid pages', async ({ page }) => {
+    test('all internal links and <link>/manifest resources resolve', async ({ page }) => {
         const pagesToCheck = [
             '/', '/events.html', '/donations.html',
             '/raum-nutzen.html', '/impressum-datenschutz.html',
@@ -414,6 +414,37 @@ test.describe('Internal links', () => {
                 if (!res || res.status() >= 400) {
                     broken.push(`${p} → ${clean} (${res?.status() || 'no response'})`);
                 }
+            }
+        }
+
+        // <link href> resources + manifest-internal icons — a[href] above only
+        // covers anchors, so favicon / apple-touch-icon / manifest / stylesheet
+        // and the PWA icons referenced inside the manifest JSON went unchecked.
+        // request.get probes each asset without navigating; serve.mjs strips ?v=.
+        await page.goto('/');
+        const resources = [];
+        const linkHrefs = await page.locator('link[href]').evaluateAll((els) =>
+            els
+                .map((el) => el.getAttribute('href'))
+                .filter((h) => h && !h.startsWith('http')) // canonical is absolute
+        );
+        for (const h of linkHrefs) resources.push(new URL(h, page.url()).href);
+
+        const manifestHref = await page
+            .locator('link[rel="manifest"]')
+            .getAttribute('href');
+        const manifestUrl = new URL(manifestHref, page.url()).href;
+        const manifest = await (await page.request.get(manifestUrl)).json();
+        for (const icon of manifest.icons || []) {
+            resources.push(new URL(icon.src, manifestUrl).href);
+        }
+
+        for (const url of resources) {
+            if (checked.has(url)) continue;
+            checked.add(url);
+            const res = await page.request.get(url);
+            if (!res || res.status() >= 400) {
+                broken.push(`resource → ${url} (${res?.status() || 'no response'})`);
             }
         }
 
