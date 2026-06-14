@@ -88,6 +88,10 @@ test.describe('SEO meta tags', () => {
         // Raum nutzen
         await page.goto('/raum-nutzen.html');
         expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
+
+        // Spendenziele
+        await page.goto('/goals.html');
+        expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
     });
 });
 
@@ -215,6 +219,45 @@ test.describe('Events content', () => {
         expect(bar).toMatch(/^\[.*\]$/);
         const ago = await sources.first().locator('.sync-source__ago').textContent();
         expect(ago).toMatch(/jetzt|vor \d+ (min|h)/);
+    });
+});
+
+// ─── Goals Page ──────────────────────────────────────────────────────────────
+
+test.describe('Goals page', () => {
+    test('renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
+        await page.goto('/goals.html');
+        await expect(page).toHaveTitle(/Spendenziele|Ziele/);
+
+        // Wait for JS to render panels (or a fallback) before asserting.
+        await page.waitForFunction(() =>
+            document.querySelector('.goal-panel') ||
+            document.querySelector('.goals-fallback') ||
+            document.querySelector('.goals-empty'),
+            { timeout: 8000 });
+
+        const panels = page.locator('.goal-panel');
+        const count = await panels.count();
+        if (count === 0) return; // no seed data in this environment
+
+        // progressbar exposes a numeric aria-valuenow
+        const firstBar = panels.first().locator('.goal-bar[role="progressbar"]');
+        await expect(firstBar).toHaveAttribute('aria-valuenow', /^\d+$/);
+
+        // bar is pure ASCII (block / shade glyphs), not an image
+        const filled = await panels.first().locator('.goal-bar__filled').textContent();
+        const empty = await panels.first().locator('.goal-bar__empty').textContent();
+        expect(filled + empty).toMatch(/[█░]/);
+
+        // donate link is rel-hardened and opens Ko-fi in a new tab
+        const donate = panels.first().locator('.goal-action--donate');
+        await expect(donate).toHaveAttribute('href', /ko-fi\.com/);
+        expect(await donate.getAttribute('rel')).toContain('noopener');
+        expect(await donate.getAttribute('target')).toBe('_blank');
+
+        // total overview bar + back link present
+        await expect(page.locator('.goal-bar--total[role="progressbar"]')).toBeVisible();
+        await expect(page.locator('.back-link a')).toBeVisible();
     });
 });
 
@@ -362,6 +405,7 @@ test.describe('No JavaScript errors', () => {
         ['/raum-nutzen.html', 'Raum nutzen'],
         ['/impressum-datenschutz.html', 'Impressum'],
         ['/dankedankedanke.html', 'Danke'],
+        ['/goals.html', 'Spendenziele'],
         ['/ascii/', 'ASCII playground'],
         ['/chat/', 'Signal'],
     ];
@@ -405,7 +449,7 @@ test.describe('Internal links', () => {
         const pagesToCheck = [
             '/', '/events.html', '/donations.html',
             '/raum-nutzen.html', '/impressum-datenschutz.html',
-            '/dankedankedanke.html',
+            '/dankedankedanke.html', '/goals.html',
         ];
         const checked = new Set();
         const broken = [];

@@ -14,6 +14,7 @@ const LAYOUT_PAGES = [
   "index.html",
   "events.html",
   "donations.html",
+  "goals.html",
   "raum-nutzen.html",
   "impressum-datenschutz.html",
   "dankedankedanke.html",
