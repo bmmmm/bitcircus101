@@ -33,14 +33,14 @@
         <meta name="twitter:description" content="Hilf mit deinem Beitrag, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt." />
         <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
         <link rel="canonical" href="https://bitcircus101.de/donations.html" />
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=6d3b9262" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=6d3b9262" />
-        <link rel="manifest" href="site.webmanifest?v=6d3b9262" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=9a7e9fc7" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=9a7e9fc7" />
+        <link rel="manifest" href="site.webmanifest?v=9a7e9fc7" />
         <script>
             // No-flash: apply persisted calm theme before stylesheet paints.
             try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=6d3b9262" />
+        <link rel="stylesheet" href="style.css?v=9a7e9fc7" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -228,7 +228,7 @@
                     <span class="footer__tagline">Hackspace · Bonn · Dorotheenstraße 101</span>
                 </div>
                 <div class="footer__col footer__col--links">
-                    <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener">github ↗</a>
+                    <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener noreferrer">github ↗</a>
                     <a href="impressum-datenschutz.html">impressum</a>
                 </div>
             </div>
@@ -301,15 +301,11 @@
                 }
 
                 function hideNoticeEl(notice) {
-                    if (!notice) return;
-                    notice.classList.add("hidden");
-                    notice.style.display = "none";
+                    if (notice) notice.classList.remove("site-notice--open");
                 }
 
                 function showNoticeEl(notice) {
-                    if (!notice) return;
-                    notice.classList.remove("hidden");
-                    notice.style.display = "block";
+                    if (notice) notice.classList.add("site-notice--open");
                 }
 
                 function focusHeading() {
@@ -393,6 +389,6 @@
                 });
             })();
         </script>
-        <script defer src="main.js?v=6d3b9262"></script>
+        <script defer src="main.js?v=9a7e9fc7"></script>
     </body>
 </html>

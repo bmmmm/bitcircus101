@@ -7,7 +7,7 @@
 
 const SITE_URL = "https://bitcircus101.de";
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, renameSync } from "node:fs";
 import ICSCore from "../ics-core.js";
 
 // ICS parsing primitives are shared with the browser fallback (events.js) via the
@@ -269,17 +269,37 @@ function generateRSS(cards) {
 
 // ── Main ────────────────────────────────────────────────────────────────────
 
+/** Atomic write: write to a temp file then rename over the target (atomic on POSIX),
+ *  so a killed run can never leave a half-written events-data.json / feed.xml. */
+function writeFileAtomic(file, data) {
+  const tmp = `${file}.tmp`;
+  writeFileSync(tmp, data);
+  renameSync(tmp, file);
+}
+
 /** Read previous sync state for diff and fallback on errors */
 function loadPrevious() {
+  let raw;
   try {
-    const prev = JSON.parse(readFileSync("events-data.json", "utf8"));
+    raw = readFileSync("events-data.json", "utf8");
+  } catch (e) {
+    if (e.code === "ENOENT") return { icsKeys: {}, events: [], sources: [] }; // legit first run
+    throw e;
+  }
+  try {
+    const prev = JSON.parse(raw);
     const events = Array.isArray(prev) ? prev : prev.events || [];
     const sources = prev.sources || [];
     // icsKeys stores ALL calendar events (before time filtering) from previous run
     const icsKeys = prev.icsKeys || {};
     return { icsKeys, events, sources };
-  } catch {
-    return { icsKeys: {}, events: [], sources: [] };
+  } catch (e) {
+    // A present-but-unparseable file (truncated/partial write, merge markers, bad edit)
+    // must NOT be silently treated as "first run": a stale/dead source would then
+    // aggregate to an empty feed and get committed to live. Fail loud so CI flags it.
+    throw new Error(
+      `events-data.json exists but is not valid JSON (${e.message}); refusing to overwrite with empty state`
+    );
   }
 }
 
@@ -397,7 +417,10 @@ function aggregate(results, prev, nowISO) {
   for (const e of prev.events) {
     if (!e.firstSeen) continue;
     if (e.uid) prevByUid[e.uid] = e.firstSeen;
-    prevByDateTitle[e.date + "|" + e.title] = e.firstSeen;
+    // Index only UID-less events by date|title, so the fallback below stays a one-time
+    // pre-UID migration path and can't leak a firstSeen onto a *different* UID event
+    // that merely shares the same date and title.
+    else prevByDateTitle[e.date + "|" + e.title] = e.firstSeen;
   }
   for (const c of allCards) {
     c.firstSeen = (c.uid && prevByUid[c.uid])
@@ -405,14 +428,27 @@ function aggregate(results, prev, nowISO) {
       || nowISO;
   }
 
-  // Dedupe across sources: the same event cross-posted to two calendars should appear
-  // once. Key on UID-or-title PLUS the date+time slot so recurring instances (shared
-  // UID, different slot) are NOT collapsed. First occurrence wins.
-  const seenCards = new Set();
+  // Dedupe across sources. The same event cross-posted to two calendars should appear
+  // once, even when only one calendar exports a UID. Two cards collide on the same
+  // date+time slot when they share a non-empty UID, OR when their titles match and at
+  // least one side lacks a UID (a UID-less cross-post). Two *different* UIDs are always
+  // distinct events and never merge, so genuine same-title events survive. First wins.
+  const seenUidSlot = new Set();
+  const seenTitleSlotNoUid = new Set();   // title+slot of kept UID-less cards
+  const seenTitleSlotWithUid = new Set(); // title+slot of kept UID-bearing cards
   allCards = allCards.filter((c) => {
-    const k = (c.uid || c.title.toLowerCase()) + "|" + c.date + "|" + (c.time || "");
-    if (seenCards.has(k)) return false;
-    seenCards.add(k);
+    const slot = "|" + c.date + "|" + (c.time || "");
+    const titleSlot = c.title.toLowerCase() + slot;
+    if (c.uid) {
+      // Drop only on an exact UID repeat, or when a UID-less twin came first.
+      if (seenUidSlot.has(c.uid + slot) || seenTitleSlotNoUid.has(titleSlot)) return false;
+      seenUidSlot.add(c.uid + slot);
+      seenTitleSlotWithUid.add(titleSlot);
+    } else {
+      // A UID-less card collides with any same-title card already kept.
+      if (seenTitleSlotNoUid.has(titleSlot) || seenTitleSlotWithUid.has(titleSlot)) return false;
+      seenTitleSlotNoUid.add(titleSlot);
+    }
     return true;
   });
 
@@ -442,7 +478,7 @@ async function main() {
   console.log(`Total: ${events.length} event cards from ${calendars.length} calendars`);
 
   const output = { lastSync: new Date().toISOString(), sources, icsKeys, events };
-  writeFileSync("events-data.json", JSON.stringify(output, null, 2) + "\n");
+  writeFileAtomic("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
   // RSS only from calendars flagged rss:true (the primary feed).
@@ -450,7 +486,7 @@ async function main() {
     calendars.find((cal) => cal.name === c.source && cal.rss)
   );
   const rss = generateRSS(primaryCards);
-  writeFileSync("feed.xml", rss);
+  writeFileAtomic("feed.xml", rss);
   console.log("Written feed.xml");
 }
 
