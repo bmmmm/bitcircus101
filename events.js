@@ -46,10 +46,11 @@
   function httpUrl(u) {
     if (!u) return u;
     if (u.charAt(0) === "/") return u;
-    // Pass through http(s) as-is; force any other scheme (javascript:, data:, …)
-    // onto https:// so a poisoned feed value can't survive as an executable href.
+    // Only http(s)://… passes through unchanged. Other scheme://-URLs (ftp:, …)
+    // and opaque schemes with no "//" (javascript:, data:, mailto:) both fall to
+    // the https:// prepend below, which defuses any executable-href payload.
     var scheme = /^([a-z][\w+.-]*):\/\//i.exec(u);
-    if (scheme) return /^https?$/i.test(scheme[1]) ? u : "https://" + u;
+    if (scheme && /^https?$/i.test(scheme[1])) return u;
     return "https://" + u;
   }
 
