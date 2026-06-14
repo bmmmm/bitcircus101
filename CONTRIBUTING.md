@@ -89,18 +89,24 @@ Cloudflare proxy in front of the site via a *Response Header Transform Rule*
 (Rules → Transform Rules → Modify Response Header), on all routes:
 
 ```
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://nc.6bm.de; frame-src https://ko-fi.com https://www.openstreetmap.org; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://nc.6bm.de; frame-src https://ko-fi.com https://www.openstreetmap.org; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+Strict-Transport-Security: max-age=31536000
+X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
 Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: geolocation=(), camera=(), microphone=()
 ```
 
-- `script-src`/`style-src` need `'unsafe-inline'`: every page uses inline
-  `<script>` blocks (theme no-flash, consent, date) and JS-set styles, and
-  static hosting can't issue per-request nonces. The real wins are therefore
-  `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`
-  (clickjacking — header-only, no `<meta>` equivalent) and the `frame-src`
-  allowlist. Add a host to `frame-src` before embedding any new third party.
+- `script-src` keeps `'unsafe-inline'`: every page ships inline `<script>`
+  blocks (theme no-flash, consent, date) and static hosting can't mint
+  per-request nonces. `style-src` is `'self'` (no `'unsafe-inline'`): the site
+  carries no inline `<style>` / `style=`, and JS-set styles via the CSSOM
+  (`el.style.x = …`) aren't governed by `style-src`, so it doesn't need it.
+- The hardening wins: `object-src 'none'`, `base-uri 'self'`, clickjacking
+  defence via `frame-ancestors 'none'` + `X-Frame-Options: DENY` (the header for
+  older browsers; no `<meta>` equivalent), the `frame-src` allowlist, and
+  `Strict-Transport-Security` (pins HTTPS for a year). Add a host to `frame-src`
+  before embedding any new third party.
 - `img-src data:` covers the logo-slider placeholders; `connect-src` the events
   page's Nextcloud ICS fallback fetch.
 - `Referrer-Policy` is also a `<meta>` on every page (so it applies even without
