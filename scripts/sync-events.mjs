@@ -417,9 +417,11 @@ function aggregate(results, prev, nowISO) {
   for (const e of prev.events) {
     if (!e.firstSeen) continue;
     if (e.uid) prevByUid[e.uid] = e.firstSeen;
-    // Index only UID-less events by date|title, so the fallback below stays a one-time
-    // pre-UID migration path and can't leak a firstSeen onto a *different* UID event
-    // that merely shares the same date and title.
+    // Index UID-less prev events by date|title so a card that LATER gains a UID still
+    // inherits its firstSeen (a one-time pre-UID migration path). date|title is the only
+    // join key here, so a genuinely different event reusing the same date+title as a
+    // former UID-less entry can inherit its firstSeen until that entry rotates out — an
+    // accepted limit of the migration heuristic (UID-bearing prev events never seed it).
     else prevByDateTitle[e.date + "|" + e.title] = e.firstSeen;
   }
   for (const c of allCards) {
@@ -428,29 +430,33 @@ function aggregate(results, prev, nowISO) {
       || nowISO;
   }
 
-  // Dedupe across sources. The same event cross-posted to two calendars should appear
-  // once, even when only one calendar exports a UID. Two cards collide on the same
-  // date+time slot when they share a non-empty UID, OR when their titles match and at
-  // least one side lacks a UID (a UID-less cross-post). Two *different* UIDs are always
-  // distinct events and never merge, so genuine same-title events survive. First wins.
+  // Dedupe across sources. The same event cross-posted to several calendars should
+  // appear once, even when only one calendar exports a UID. Two passes, so the result
+  // is independent of source order: pass 1 keeps UID-bearing cards deduped by UID+slot,
+  // so two *different* UIDs in the same slot ALWAYS both survive (genuine same-title
+  // events are never merged); pass 2 keeps a UID-less card only when no already-kept
+  // card occupies its title+slot (otherwise it is a UID-less cross-post). Within a slot
+  // the earlier source wins among same-identity cards, and a UID-bearing card is always
+  // preferred over a UID-less twin regardless of source order.
+  const slotOf = (c) => "|" + c.date + "|" + (c.time || "");
+  const titleSlotOf = (c) => c.title.toLowerCase() + slotOf(c);
   const seenUidSlot = new Set();
-  const seenTitleSlotNoUid = new Set();   // title+slot of kept UID-less cards
-  const seenTitleSlotWithUid = new Set(); // title+slot of kept UID-bearing cards
-  allCards = allCards.filter((c) => {
-    const slot = "|" + c.date + "|" + (c.time || "");
-    const titleSlot = c.title.toLowerCase() + slot;
-    if (c.uid) {
-      // Drop only on an exact UID repeat, or when a UID-less twin came first.
-      if (seenUidSlot.has(c.uid + slot) || seenTitleSlotNoUid.has(titleSlot)) return false;
-      seenUidSlot.add(c.uid + slot);
-      seenTitleSlotWithUid.add(titleSlot);
-    } else {
-      // A UID-less card collides with any same-title card already kept.
-      if (seenTitleSlotNoUid.has(titleSlot) || seenTitleSlotWithUid.has(titleSlot)) return false;
-      seenTitleSlotNoUid.add(titleSlot);
-    }
-    return true;
-  });
+  const keptTitleSlot = new Set(); // title+slot of every kept card (UID-bearing or not)
+  const keep = new Set();          // card objects to retain
+  for (const c of allCards) {
+    if (!c.uid) continue;
+    if (seenUidSlot.has(c.uid + slotOf(c))) continue; // exact UID repeat
+    seenUidSlot.add(c.uid + slotOf(c));
+    keptTitleSlot.add(titleSlotOf(c));
+    keep.add(c);
+  }
+  for (const c of allCards) {
+    if (c.uid) continue;
+    if (keptTitleSlot.has(titleSlotOf(c))) continue; // cross-post of an already-kept card
+    keptTitleSlot.add(titleSlotOf(c));
+    keep.add(c);
+  }
+  allCards = allCards.filter((c) => keep.has(c)); // preserve original order
 
   // Sort by date then time so same-day events run chronologically (all-day first).
   allCards.sort((a, b) =>

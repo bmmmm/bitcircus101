@@ -71,11 +71,13 @@ function insertSkipLink(html, skipFragment) {
 function ensureMainId(html) {
   return html.replace(/<main(\s[^>]*)?>/i, (full, attrs = "") => {
     const a = attrs || "";
-    if (/\bid\s*=\s*["']main-content["']/i.test(a)) return full; // already correct
+    if (/(?<=\s)id\s*=\s*["']main-content["']/i.test(a)) return full; // already correct
     // A different existing id must be rewritten, not prepended — appending a second
     // id="main-content" would emit invalid <main id="main-content" id="other"> markup.
-    if (/\bid\s*=\s*["'][^"']*["']/i.test(a)) {
-      return `<main${a.replace(/\bid\s*=\s*["'][^"']*["']/i, 'id="main-content"')}>`;
+    // Use a whitespace-lookbehind, not \b, so the "id" inside data-id / aria-*-id is
+    // not mistaken for a real id attribute (which would clobber the wrong attribute).
+    if (/(?<=\s)id\s*=\s*["'][^"']*["']/i.test(a)) {
+      return `<main${a.replace(/(?<=\s)id\s*=\s*["'][^"']*["']/i, 'id="main-content"')}>`;
     }
     const idAttr = ' id="main-content"';
     if (!a.trim()) return `<main${idAttr}>`;
