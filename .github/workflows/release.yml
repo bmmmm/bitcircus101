@@ -13,6 +13,10 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # CalVer tag derives from `date`; pin TZ so a late-evening release doesn't
+    # roll to the next UTC day (matches the deploy/sync jobs' Europe/Berlin pin).
+    env:
+      TZ: Europe/Berlin
     steps:
       - uses: actions/checkout@v6
         with:
