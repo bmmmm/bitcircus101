@@ -46,6 +46,9 @@
       if (i > -1) p[s.slice(0, i)] = s.slice(i + 1);
     });
     var end = p.UNTIL ? parseDate(p.UNTIL) : null;
+    // A date-only UNTIL (no "T") bounds the whole day per RFC5545; without pushing
+    // it to end-of-day a timed occurrence on the UNTIL date (19:00 > 00:00) is lost.
+    if (end && p.UNTIL.indexOf("T") === -1) end.setHours(23, 59, 59, 999);
     var limit = end && end < horizon ? end : horizon;
     var max = p.COUNT ? +p.COUNT : 200;
     var exSet = {};
@@ -70,14 +73,17 @@
       weekRef.setHours(0, 0, 0, 0);
       weekRef.setDate(weekRef.getDate() - weekRef.getDay()); // Sunday of start week
       var cur = new Date(dtstart);
-      while (cur <= limit && out.length < max) {
+      var genW = 0;
+      while (cur <= limit && genW < max) {
         if (cur >= dtstart && wdays[cur.getDay()]) {
           var wkStart = new Date(cur);
           wkStart.setHours(0, 0, 0, 0);
           wkStart.setDate(wkStart.getDate() - wkStart.getDay());
           var weeksApart = Math.round((wkStart - weekRef) / 604800000);
-          if (weeksApart % interval === 0 && !exSet[cur.toDateString()]) {
-            out.push(new Date(cur));
+          if (weeksApart % interval === 0) {
+            // A matching slot counts toward COUNT even when EXDATE-excluded (RFC5545).
+            genW++;
+            if (!exSet[cur.toDateString()]) out.push(new Date(cur));
           }
         }
         cur.setDate(cur.getDate() + 1);
@@ -90,24 +96,32 @@
       var twd = WD[dayCode];
       if (nth && twd != null) {
         var mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
-        while (mo <= limit && out.length < max) {
+        var genM = 0;
+        while (mo <= limit && genM < max) {
           var d = nthWeekday(mo.getFullYear(), mo.getMonth(), twd, nth);
           if (d) {
             d.setHours(dtstart.getHours(), dtstart.getMinutes(), 0, 0);
-            if (d >= dtstart && d <= limit && !exSet[d.toDateString()]) out.push(new Date(d));
+            if (d >= dtstart && d <= limit) {
+              genM++; // counts toward COUNT regardless of EXDATE (RFC5545)
+              if (!exSet[d.toDateString()]) out.push(new Date(d));
+            }
           }
           mo.setMonth(mo.getMonth() + 1);
         }
       }
     } else if (p.FREQ === "DAILY") {
       var cd = new Date(dtstart);
-      while (cd <= limit && out.length < max) {
+      var genD = 0;
+      while (cd <= limit && genD < max) {
+        genD++; // counts toward COUNT regardless of EXDATE (RFC5545)
         if (!exSet[cd.toDateString()]) out.push(new Date(cd));
         cd.setDate(cd.getDate() + interval);
       }
     } else if (p.FREQ === "YEARLY") {
       var cy = new Date(dtstart);
-      while (cy <= limit && out.length < max) {
+      var genY = 0;
+      while (cy <= limit && genY < max) {
+        genY++; // counts toward COUNT regardless of EXDATE (RFC5545)
         if (!exSet[cy.toDateString()]) out.push(new Date(cy));
         cy.setFullYear(cy.getFullYear() + 1);
       }
@@ -120,7 +134,12 @@
   }
 
   function clean(s) {
-    return s.replace(/\\n/gi, " ").replace(/\\,/g, ",").replace(/\\;/g, ";").trim();
+    // Unescape RFC5545 text escapes in a single pass. Crucially "\\" is consumed
+    // atomically with its escaped char, so a literal backslash is never mistaken
+    // for a "\n" newline marker (e.g. "C:\\nope" -> "C:\nope", not "C:\ ope").
+    return s.replace(/\\([\\;,nN])/g, function (_, c) {
+      return c === "n" || c === "N" ? " " : c;
+    }).trim();
   }
 
   /** Pull TZID parameter out of a property like "DTSTART;TZID=Europe/Berlin" */
@@ -219,12 +238,10 @@
   }
 
   return {
-    HORIZON_DAYS: HORIZON_DAYS,
     parseDate: parseDate,
     nthWeekday: nthWeekday,
     expandRRule: expandRRule,
     clean: clean,
-    parseTzid: parseTzid,
     parseICS: parseICS,
     eventAnchor: eventAnchor,
   };
