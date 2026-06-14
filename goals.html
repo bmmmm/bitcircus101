@@ -4,15 +4,29 @@
         <meta charset="UTF-8" />
         <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Danke für deinen Beitrag – bitcircus101 Hackspace Bonn</title>
-        <meta name="description" content="Danke für deinen Beitrag! Du unterstützt den bitcircus101 Hackspace in Bonn – Miete, Internet, Infrastruktur." />
-        <meta name="robots" content="noindex, nofollow" />
+        <title>Spendenziele – bitcircus101 Hackspace Bonn unterstützen</title>
+        <meta name="title" content="Spendenziele – bitcircus101 Hackspace Bonn unterstützen" />
+        <meta
+            name="description"
+            content="Konkrete Spendenziele für den bitcircus101 Hackspace in Bonn: Live-Fortschritt pro Anschaffung, unterstützen über Ko-fi."
+        />
+        <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#0d0d0d" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Danke für deinen Beitrag – bitcircus101" />
-        <meta property="og:description" content="Dein Beitrag hält den Hackspace am Laufen. Danke!" />
+        <meta property="og:url" content="https://bitcircus101.de/goals.html" />
+        <meta property="og:title" content="Spendenziele – bitcircus101 Hackspace Bonn unterstützen" />
+        <meta
+            property="og:description"
+            content="Live-Fortschritt der Spendenziele im bitcircus101 Hackspace Bonn. Pro Anschaffung ein Balken – unterstützen über Ko-fi."
+        />
         <meta property="og:image" content="https://bitcircus101.de/images/og-image.jpg" />
         <meta property="og:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
+        <meta property="og:locale" content="de_DE" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Spendenziele – bitcircus101 Hackspace Bonn" />
+        <meta name="twitter:description" content="Live-Fortschritt der Spendenziele im bitcircus101 Hackspace Bonn – unterstützen über Ko-fi." />
+        <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
+        <link rel="canonical" href="https://bitcircus101.de/goals.html" />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=6" />
         <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=6" />
         <link rel="manifest" href="site.webmanifest?v=6" />
@@ -53,28 +67,38 @@
             </nav>
         </header>
         <main id="main-content">
-            <div class="container">
-                <section>
-                    <h1>DANKE.</h1>
-                    <p>
-                        Dein Beitrag landet direkt dort, wo er gebraucht wird –
-                        Miete, Internet, Infrastruktur.
-                    </p>
-                    <p>
-                        Der Hackspace läuft weiter. Das ist dein Anteil daran.
-                    </p>
-                    <pre class="ascii-art" aria-hidden="true">
-  +--[ bitcircus101 ]--+
-  |                    |
-  |   funded. running. |
-  |   lights: on.      |
-  |                    |
-  +--------------------+</pre>
-                    <div class="back-link">
-                        <a href="index.html" class="btn btn-shimmer">← Zurück zur Startseite</a>
+        <div class="container">
+            <section aria-labelledby="goals-heading">
+                <h1 id="goals-heading" tabindex="-1">Spendenziele</h1>
+                <p class="goals-intro">
+                    Konkrete Anschaffungen für den Space – ein Balken pro Ziel zeigt, wie weit wir sind.
+                    Gespendet wird über Ko-fi; den Stand pflegen wir regelmäßig nach.
+                </p>
+
+                <div id="goals-overview" class="goals-overview" aria-live="polite"></div>
+
+                <section aria-labelledby="goals-list-heading">
+                    <h2 id="goals-list-heading" class="sr-only">Aktuelle Spendenziele</h2>
+                    <div id="goals-list" class="goals-list" aria-live="polite" aria-busy="true">
+                        <noscript>
+                            <p>
+                                Für die Live-Anzeige der Spendenziele wird JavaScript benötigt.
+                                <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">Direkt auf Ko-fi unterstützen ↗</a>
+                            </p>
+                        </noscript>
                     </div>
                 </section>
+
+                <p class="goals-privacy">
+                    Die Beträge pflegen wir selbst – beim Anzeigen keine Tracker, keine Drittanbieter.
+                    Erst beim Klick auf „spenden“ geht es zu Ko-fi.
+                </p>
+                <div id="goals-updated" class="goals-updated"></div>
+            </section>
+            <div class="back-link">
+                <a href="index.html" class="btn btn-shimmer">← Zurück zur Startseite</a>
             </div>
+        </div>
         </main>
         <footer role="contentinfo" class="footer">
             <div class="footer__grid">
@@ -93,18 +117,8 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <!-- canvas-confetti v1.9.3 (catdad, ISC) — self-hosted, no third-party CDN call -->
-        <script src="confetti.min.js"></script>
-        <script>
-            window.addEventListener("load", function () {
-                confetti({
-                    particleCount: 200,
-                    spread: 100,
-                    origin: { y: 0.6 },
-                    colors: ["#00d97e", "#ffffff", "#0d0d0d"],
-                });
-            });
-        </script>
+        <script defer src="goals-core.js?v=8"></script>
+        <script defer src="goals.js?v=8"></script>
         <script defer src="main.js?v=8"></script>
     </body>
 </html>
