@@ -1469,8 +1469,9 @@ section:target > h2 {
 
 .event-card__dow {
     font-size: 0.6rem;
-    /* Direct mid-grey, not text-dim @ opacity 0.5 (which collapsed to ~2.5:1). */
-    color: #808080;
+    /* Direct mid-grey, not text-dim @ opacity 0.5 (which collapsed to ~2.5:1).
+       #888 clears 4.5:1 on every theme's elevated bg incl. calm (#1b1f23 -> 4.68). */
+    color: #888888;
     letter-spacing: 0.06em;
 }
 
@@ -1535,7 +1536,7 @@ a.event-card__location:hover {
 
 .event-action__icon { font-size: 0.8em; opacity: 0.7; }
 
-.event-action--link { --ea: #dd5555; --ea-hover: #ee6666; --ea-border: #501818; }
+.event-action--link { --ea: #e05f5f; --ea-hover: #ee6666; --ea-border: #501818; }
 .event-action--cal  { --ea: #5090d0; --ea-hover: #70a8e0; --ea-border: #1a3858; }
 .event-action--map  { --ea: #6a9a5a; --ea-hover: #8ac07a; --ea-border: #2a4a22; }
 
