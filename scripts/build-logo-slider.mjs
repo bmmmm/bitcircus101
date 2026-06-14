@@ -49,7 +49,7 @@ function buildItem(filename, meta, emptyAlt) {
   // skip from tab order to avoid double focus stops
   const tabAttr = emptyAlt ? ' tabindex="-1" aria-hidden="true"' : "";
   const inner = entry.url
-    ? `<a class="logo-slider__link" href="${escapeHtml(entry.url)}" target="_blank" rel="noopener"${tabAttr} aria-label="${escapeHtml(displayName)} (externer Link)">${img}</a>`
+    ? `<a class="logo-slider__link" href="${escapeHtml(entry.url)}" target="_blank" rel="noopener noreferrer"${tabAttr} aria-label="${escapeHtml(displayName)} (externer Link)">${img}</a>`
     : img;
   return [
     "                                <div class=\"logo-slider__item\">",
