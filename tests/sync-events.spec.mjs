@@ -773,4 +773,32 @@ describe("aggregate", () => {
     const { sources } = aggregate([a, b], emptyPrev, NOW);
     assert.equal(sources.find((s) => s.name === "B").events, 0);
   });
+
+  it("dedupes a cross-posted event when only one source carries a UID", () => {
+    const a = result([card({ uid: "shared@x", title: "Linkup", source: "A" })], "A");
+    const b = result([card({ uid: "", title: "Linkup", source: "B" })], "B");
+    const { events } = aggregate([a, b], emptyPrev, NOW);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].source, "A");
+  });
+
+  it("does not leak firstSeen onto a different-UID event sharing date+title", () => {
+    const prev = {
+      events: [{ uid: "real@x", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
+      sources: [], icsKeys: {},
+    };
+    const a = result([card({ uid: "other@y", date: "2026-05-01", title: "E" })], "A");
+    const { events } = aggregate([a], prev, NOW);
+    assert.equal(events[0].firstSeen, NOW);
+  });
+
+  it("migrates firstSeen by date+title for a once-UID-less event", () => {
+    const prev = {
+      events: [{ uid: "", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
+      sources: [], icsKeys: {},
+    };
+    const a = result([card({ uid: "nowhas@x", date: "2026-05-01", title: "E" })], "A");
+    const { events } = aggregate([a], prev, NOW);
+    assert.equal(events[0].firstSeen, "2026-01-01T00:00:00.000Z");
+  });
 });
