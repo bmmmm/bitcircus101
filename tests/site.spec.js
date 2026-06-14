@@ -232,6 +232,19 @@ test.describe('Donations page', () => {
             /bitcircus101 unterstützen: Licht anlassen/,
         );
 
+        // Focus trap: Tab past the last control and Shift+Tab past the first both
+        // keep focus inside the modal dialog instead of escaping to the page.
+        const focusInDialog = () =>
+            page.evaluate(() =>
+                document.getElementById('site-notice').contains(document.activeElement),
+            );
+        await page.locator('#cookie-consent-decline').focus();
+        await page.keyboard.press('Tab');
+        expect(await focusInDialog()).toBe(true);
+        await page.locator('#site-notice a[href]').first().focus();
+        await page.keyboard.press('Shift+Tab');
+        expect(await focusInDialog()).toBe(true);
+
         await page.locator('#cookie-consent-accept').click();
         await expect(page.locator('#site-notice')).not.toBeVisible();
         await expect(page.locator('#donation-content')).toBeVisible();
