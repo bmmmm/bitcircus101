@@ -14,14 +14,8 @@
             name="description"
             content="bitcircus101 ist Bonns offener Hackspace in der Dorotheenstraße 101. Projekte, Elektronik, Software, Freitagabende. Getragen durch Community-Beiträge und Raumnutzung."
         />
-        <meta
-            name="keywords"
-            content="Hackspace Bonn, Hackerspace Bonn, Makerspace Bonn, bitcircus101, Tech Community Bonn, Open Source Bonn, Elektronik Workshop Bonn, Löten Bonn, Programmieren Bonn"
-        />
         <meta name="author" content="bitcircus101" />
         <meta name="robots" content="index, follow" />
-        <meta name="language" content="Deutsch" />
-        <meta name="revisit-after" content="7 days" />
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website" />
@@ -38,6 +32,7 @@
             property="og:image"
             content="https://bitcircus101.de/images/og-image.jpg"
         />
+        <meta property="og:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
         <meta property="og:locale" content="de_DE" />
 
         <!-- Twitter Card -->
@@ -53,17 +48,13 @@
         <meta name="ICBM" content="50.74042, 7.08942" />
 
         <!-- Theme color -->
-        <meta name="theme-color" content="#00d97e" />
+        <meta name="theme-color" content="#0d0d0d" />
 
         <!-- Canonical URL -->
         <link rel="canonical" href="https://bitcircus101.de/" />
 
         <!-- Privacy & Security -->
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="frame-src 'self' https://nc.6bm.de https://www.openstreetmap.org;"
-        />
-        <meta name="referrer" content="no-referrer-when-downgrade" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
         <link rel="icon" type="image/svg+xml" href="images/favicon.svg" />
         <script>
             // No-flash: apply persisted calm theme before stylesheet paints.
@@ -250,21 +241,30 @@
                                 <img
                                     src="images/img1.jpeg"
                                     alt="Werkraum bitcircus101 – Tische und Arbeitsflächen"
-                                    loading="lazy"
+                                    width="1024"
+                                    height="768"
+                                    decoding="async"
+                                    fetchpriority="high"
                                 />
                             </div>
                             <div class="carousel-item">
                                 <img
                                     src="images/img2.jpeg"
                                     alt="Gemeinschaftsbereich bitcircus101"
+                                    width="1024"
+                                    height="768"
                                     loading="lazy"
+                                    decoding="async"
                                 />
                             </div>
                             <div class="carousel-item">
                                 <img
                                     src="images/img3.jpeg"
                                     alt="Raumansicht bitcircus101, Bonn"
+                                    width="1024"
+                                    height="768"
                                     loading="lazy"
+                                    decoding="async"
                                 />
                             </div>
                         </div>
@@ -375,7 +375,7 @@
                                 <p class="location-card__address">Dorotheenstraße 101<br>53113 Bonn</p>
                                 <p class="location-card__coords">50.74042° N · 7.08942° E</p>
                             </div>
-                            <button id="show-map-btn" class="location-card__map-btn">
+                            <button id="show-map-btn" class="location-card__map-btn" aria-label="OpenStreetMap-Karte laden und anzeigen">
                                 <span aria-hidden="true">$</span> map --load<span class="location-card__cursor" aria-hidden="true">▋</span>
                             </button>
                             <div id="osm-map-container" class="hidden">

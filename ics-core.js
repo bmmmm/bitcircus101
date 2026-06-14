@@ -51,9 +51,9 @@
     var exSet = {};
     exdates.forEach(function (d) { exSet[d.toDateString()] = true; });
     var out = [];
+    var interval = p.INTERVAL ? +p.INTERVAL : 1; // shared by the WEEKLY + DAILY branches
 
     if (p.FREQ === "WEEKLY") {
-      var interval = p.INTERVAL ? +p.INTERVAL : 1;
       // BYDAY may list several weekdays ("MO,WE,FR") — expand every one, not just
       // the last. Each token may carry an ordinal (ignored for WEEKLY): "2MO" -> MO.
       var wdays = {};
@@ -100,7 +100,6 @@
         }
       }
     } else if (p.FREQ === "DAILY") {
-      var interval = p.INTERVAL ? +p.INTERVAL : 1;
       var cd = new Date(dtstart);
       while (cd <= limit && out.length < max) {
         if (!exSet[cd.toDateString()]) out.push(new Date(cd));
