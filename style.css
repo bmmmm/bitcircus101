@@ -592,6 +592,9 @@ nav li a.nav__cta.nav__link--current:focus-visible {
     line-height: 1.6;
 }
 
+/* JS opens the consent dialog by toggling this class — keeps display out of inline styles. */
+.site-notice.site-notice--open { display: block; }
+
 .site-notice p { color: var(--text); }
 .site-notice ul { text-align: left; display: inline-block; margin: var(--gap-sm) 0; }
 .site-notice li { color: var(--text); margin: 6px 0; }
