@@ -401,6 +401,9 @@
           title: e.summary,
           subtitle: "",
           description: e.description,
+          // The parser extracts location; map it through so the live-ICS fallback
+          // shows the place/map pill like the JSON path does (escaped at render time).
+          location: e.location || "",
           date: date,
           time: e.allDay
             ? ""
