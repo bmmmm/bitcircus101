@@ -133,12 +133,19 @@ jobs:
           node scripts/build-logo-slider.mjs
 
       - name: Minify CSS and JS
+        # Versions are pinned: npm releases are immutable, so a pinned version
+        # can never be swapped for a freshly-compromised "latest" between deploys
+        # — that swap is the main supply-chain risk of a bare `pnpm dlx <tool>`.
+        # A full lockfile approach (csso/terser as devDeps + pnpm exec) was
+        # considered but rejected: it needs package.json kept past the live
+        # overlay cleanup, and this deploy job can't be exercised locally, so the
+        # only smoke test would be a real production push. Bump these manually.
         run: |
           echo "Before: style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
-          pnpm dlx csso-cli style.css -o style.css
-          pnpm dlx terser main.js -o main.js --compress --mangle
-          pnpm dlx terser events.js -o events.js --compress --mangle
-          pnpm dlx terser ics-core.js -o ics-core.js --compress --mangle
+          pnpm dlx csso-cli@4.0.2 style.css -o style.css
+          pnpm dlx terser@5.48.0 main.js -o main.js --compress --mangle
+          pnpm dlx terser@5.48.0 events.js -o events.js --compress --mangle
+          pnpm dlx terser@5.48.0 ics-core.js -o ics-core.js --compress --mangle
           echo "After:  style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
 
       - name: Cache-bust asset references
