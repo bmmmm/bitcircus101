@@ -82,6 +82,31 @@ Nothing reaches production without passing all tests. But that's CI's job, not y
 - No inline styles — use `style.css`
 - Terminal aesthetic: dark bg, green accents, monospace
 
+## Security headers (Cloudflare)
+
+GitHub Pages can't set HTTP response headers, so they're applied at the
+Cloudflare proxy in front of the site via a *Response Header Transform Rule*
+(Rules → Transform Rules → Modify Response Header), on all routes:
+
+```
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://nc.6bm.de; frame-src https://ko-fi.com https://www.openstreetmap.org; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: geolocation=(), camera=(), microphone=()
+```
+
+- `script-src`/`style-src` need `'unsafe-inline'`: every page uses inline
+  `<script>` blocks (theme no-flash, consent, date) and JS-set styles, and
+  static hosting can't issue per-request nonces. The real wins are therefore
+  `object-src 'none'`, `base-uri 'self'`, `frame-ancestors 'none'`
+  (clickjacking — header-only, no `<meta>` equivalent) and the `frame-src`
+  allowlist. Add a host to `frame-src` before embedding any new third party.
+- `img-src data:` covers the logo-slider placeholders; `connect-src` the events
+  page's Nextcloud ICS fallback fetch.
+- `Referrer-Policy` is also a `<meta>` on every page (so it applies even without
+  the rule); the header is the authoritative copy. The old `frame-src`-only CSP
+  `<meta>` on the homepage was removed in favour of this single complete policy.
+
 ## Questions?
 
 Open an issue or reach out at the space. Freitags ab 20:00 sind wir da.
