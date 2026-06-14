@@ -11,7 +11,7 @@ Pure HTML/CSS/JS — **no bundler, no framework.** Shared site chrome (nav + foo
 
 | Branch | Purpose |
 |--------|---------|
-| `feat/…` | **Short-lived feature branches.** All work happens here; open a PR into `main`. Delete after merge. |
+| `feat/…` or `fix/…` | **Short-lived branches.** All work happens here; open a PR into `main`. Delete after merge. |
 | `main` | Integration branch. **Do not push local commits directly** — merge via PR only. |
 | `live` | Production. Deployed via GitHub Pages. Only CI commits here |
 
@@ -19,7 +19,7 @@ Pure HTML/CSS/JS — **no bundler, no framework.** Shared site chrome (nav + foo
 
 ### For AI agents — branches
 
-Always create a **`feat/<kebab-description>`** branch from current `main` for edits, commit there, and have the user push / open a PR. Do **not** commit on `main` unless the user explicitly asks for an exception.
+Always create a **`feat/<kebab-description>`** or **`fix/<kebab-description>`** branch from current `main` for edits, commit there, and have the user push / open a PR. Do **not** commit on `main` unless the user explicitly asks for an exception.
 
 ## Testing strategy
 
@@ -56,11 +56,9 @@ When adding or modifying tests:
 
 ```sh
 python3 -m http.server 8080
-# or
-pnpm dlx http-server . -p 8080
 ```
 
-Open `http://localhost:8080` in your browser. That's it.
+Open `http://localhost:8080` in your browser. For visual inspection use Chrome directly — no Playwright needed locally.
 
 ## Package manager — pnpm only
 
