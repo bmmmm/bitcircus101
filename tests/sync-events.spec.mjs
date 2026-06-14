@@ -796,6 +796,26 @@ describe("aggregate", () => {
     assert.equal(events[0].source, "A");
   });
 
+  it("prefers the UID-bearing card when a UID-less twin from another source sorts first", () => {
+    // The kept card flips to the UID-bearer (stable identity) regardless of source order.
+    const a = result([card({ uid: "", title: "Linkup", date: "2026-07-01", time: "19:00", source: "A" })], "A");
+    const b = result([card({ uid: "real@x", title: "Linkup", date: "2026-07-01", time: "19:00", source: "B" })], "B");
+    const { events } = aggregate([a, b], emptyPrev, NOW);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].uid, "real@x");
+  });
+
+  it("keeps two different-UID events in one slot even when a UID-less twin sorts first", () => {
+    // Order-independence: a UID-less card listed first must not drop genuinely-distinct
+    // UID events that share its title+slot — only the ambiguous UID-less card is dropped.
+    const a = result([card({ uid: "", title: "T", date: "2026-07-01", time: "19:00" })], "A");
+    const b = result([card({ uid: "bc@x", title: "T", date: "2026-07-01", time: "19:00" })], "B");
+    const c = result([card({ uid: "db@y", title: "T", date: "2026-07-01", time: "19:00" })], "C");
+    const { events } = aggregate([a, b, c], emptyPrev, NOW);
+    assert.equal(events.length, 2);
+    assert.deepEqual(events.map((e) => e.uid).sort(), ["bc@x", "db@y"]);
+  });
+
   it("does not leak firstSeen onto a different-UID event sharing date+title", () => {
     const prev = {
       events: [{ uid: "real@x", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
