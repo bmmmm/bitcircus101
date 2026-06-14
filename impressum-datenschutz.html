@@ -41,7 +41,7 @@
             // No-flash: apply persisted calm theme before stylesheet paints.
             try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=7c33ea4f" />
+        <link rel="stylesheet" href="style.css?v=20d570bd" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -149,10 +149,12 @@
                             Spenden werden über PayPal (<a
                                 href="https://www.paypal.com/privacy"
                                 target="_blank"
+                                rel="noopener"
                                 >Datenschutz</a
                             >) und Ko-fi (<a
                                 href="https://ko-fi.com/privacy"
                                 target="_blank"
+                                rel="noopener"
                                 >Datenschutz</a
                             >) abgewickelt.
                         </li>
@@ -160,6 +162,7 @@
                             Karten werden von OpenStreetMap (<a
                                 href="https://osmfoundation.org/wiki/Privacy_Policy"
                                 target="_blank"
+                                rel="noopener"
                                 >Datenschutz</a
                             >) bereitgestellt.
                         </li>
@@ -167,6 +170,7 @@
                             Cloudflare stellt Hosting und Sicherheit bereit (<a
                                 href="https://www.cloudflare.com/privacypolicy/"
                                 target="_blank"
+                                rel="noopener"
                                 >Datenschutz</a
                             >).
                         </li>
@@ -196,6 +200,7 @@
                             <a
                                 href="https://www.cloudflare.com/privacypolicy/"
                                 target="_blank"
+                                rel="noopener"
                                 >Datenschutzerklärung</a
                             >.
                         </li>
@@ -246,7 +251,7 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="main.js?v=7c33ea4f"></script>
+        <script defer src="main.js?v=20d570bd"></script>
         <script>
             document.getElementById("current-date").textContent =
                 new Date().toLocaleDateString("de-DE", {

@@ -16,7 +16,7 @@
             // No-flash: apply persisted calm theme before stylesheet paints.
             try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=7c33ea4f" />
+        <link rel="stylesheet" href="style.css?v=20d570bd" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -88,7 +88,8 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+        <!-- canvas-confetti v1.9.3 (catdad, ISC) — self-hosted, no third-party CDN call -->
+        <script src="confetti.min.js"></script>
         <script>
             window.addEventListener("load", function () {
                 confetti({
@@ -99,6 +100,6 @@
                 });
             });
         </script>
-        <script defer src="main.js?v=7c33ea4f"></script>
+        <script defer src="main.js?v=20d570bd"></script>
     </body>
 </html>

@@ -69,7 +69,7 @@
             // No-flash: apply persisted calm theme before stylesheet paints.
             try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=7c33ea4f" />
+        <link rel="stylesheet" href="style.css?v=20d570bd" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -269,24 +269,22 @@
                             </div>
                         </div>
                         <div class="carousel-indicators">
-                            <span
+                            <button
+                                type="button"
                                 class="dot active"
-                                tabindex="0"
-                                role="button"
                                 aria-label="Zu Bild 1"
-                            ></span>
-                            <span
+                                aria-current="true"
+                            ></button>
+                            <button
+                                type="button"
                                 class="dot"
-                                tabindex="0"
-                                role="button"
                                 aria-label="Zu Bild 2"
-                            ></span>
-                            <span
+                            ></button>
+                            <button
+                                type="button"
                                 class="dot"
-                                tabindex="0"
-                                role="button"
                                 aria-label="Zu Bild 3"
-                            ></span>
+                            ></button>
                         </div>
                         <button
                             class="carousel-button prev"
@@ -471,7 +469,7 @@
             </div>
         </footer>
 
-        <script defer src="main.js?v=7c33ea4f"></script>
+        <script defer src="main.js?v=20d570bd"></script>
         <script>
         (function () {
             var el = document.getElementById('signal-decode-result');
