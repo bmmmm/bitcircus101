@@ -193,6 +193,9 @@
         this.state.isAutoRotateEnabled = true;
         this.startAutoRotate();
       }
+      // Keep the toggle button in sync with the resolved state, else calm mode shows
+      // a "pause" glyph while frozen and the first click starts motion instead of pausing.
+      this.syncToggleUI();
     },
 
     cacheElements() {
@@ -348,22 +351,24 @@
     },
 
     toggleAutoRotate() {
-      const { toggleButton, container } = this.elements;
       this.state.isAutoRotateEnabled = !this.state.isAutoRotateEnabled;
+      this.syncToggleUI();
+      if (this.state.isAutoRotateEnabled) this.startAutoRotate();
+      else this.stopAutoRotate();
+    },
 
-      if (this.state.isAutoRotateEnabled) {
-        toggleButton.innerHTML = "⏸️";
-        toggleButton.setAttribute("aria-label", "Auto-Rotate pausieren");
-        toggleButton.setAttribute("title", "Auto-Rotate pausieren");
-        container.classList.remove("manual-mode");
-        this.startAutoRotate();
-      } else {
-        toggleButton.innerHTML = "▶️";
-        toggleButton.setAttribute("aria-label", "Auto-Rotate starten");
-        toggleButton.setAttribute("title", "Auto-Rotate starten");
-        container.classList.add("manual-mode");
-        this.stopAutoRotate();
+    // Reflect isAutoRotateEnabled on the toggle button + container. Guarded so it is
+    // safe on pages where the carousel has no toggle button.
+    syncToggleUI() {
+      const { toggleButton, container } = this.elements;
+      const playing = this.state.isAutoRotateEnabled;
+      if (toggleButton) {
+        toggleButton.innerHTML = playing ? "⏸️" : "▶️";
+        const label = playing ? "Auto-Rotate pausieren" : "Auto-Rotate starten";
+        toggleButton.setAttribute("aria-label", label);
+        toggleButton.setAttribute("title", label);
       }
+      if (container) container.classList.toggle("manual-mode", !playing);
     },
   };
 
@@ -431,20 +436,28 @@
         const href = anchor.getAttribute("href");
         const target = document.querySelector(href);
         if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          const isSkip = anchor.classList.contains("skip-link");
+          // Skip links jump instantly and must move keyboard focus to the target —
+          // smooth-scrolling without focusing leaves the next Tab in the nav, which
+          // defeats the skip link for keyboard/AT users.
+          target.scrollIntoView({ behavior: isSkip ? "auto" : "smooth", block: "start" });
           history.pushState(null, "", href);
+          if (isSkip) {
+            if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+            target.focus();
+          }
         }
         // Section anchor: share or copy URL
         if (anchor.classList.contains("section-anchor")) {
           const url = location.href;
           if (navigator.share) {
-            navigator.share({ url });
+            navigator.share({ url }).catch(() => {});
           } else if (navigator.clipboard) {
             navigator.clipboard.writeText(url).then(() => {
               const orig = anchor.textContent;
               anchor.textContent = "✓";
               setTimeout(() => { anchor.textContent = orig; }, 1200);
-            });
+            }).catch(() => {});
           }
         }
       });
@@ -452,25 +465,40 @@
 
     setupNavHighlight() {
       if (!("IntersectionObserver" in window)) return;
+      const mainNav = utils.getElementById("main-nav");
       // Build map of hash → nav link (handles both "#id" and "page.html#id")
       const navLinks = {};
       document.querySelectorAll("nav a[href*='#']").forEach(link => {
-        const hash = "#" + link.getAttribute("href").split("#")[1];
-        navLinks[hash] = link;
+        const parts = link.getAttribute("href").split("#");
+        if (parts[1]) navLinks["#" + parts[1]] = link;
       });
       const observed = document.querySelectorAll("section[id]");
       if (!observed.length) return;
 
+      // Links the spy manages (those mapping to an observed section).
+      const spied = [];
+      observed.forEach(s => {
+        const l = navLinks["#" + s.id];
+        if (l && spied.indexOf(l) === -1) spied.push(l);
+      });
+      if (!spied.length) return;
+
+      const visible = new Set();
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           const link = navLinks["#" + entry.target.id];
           if (!link) return;
-          // Drive the scroll-spy via the same class markCurrentPage uses, so the two
-          // never fight over `aria-current` (markCurrentPage owns that, setting "page"
-          // on the URL-targeted anchor). Toggling the class lets the section in view
-          // win visually without corrupting the AT/semantic current-page state.
-          link.classList.toggle("nav__link--current", entry.isIntersecting);
+          if (entry.isIntersecting) visible.add(link);
+          else visible.delete(link);
         });
+        // markCurrentPage owns aria-current (the stable page marker); the spy only
+        // drives the visual class. Highlight the in-view section(s); when none is in
+        // view, restore the page default so the highlight never vanishes mid-scroll.
+        if (visible.size) {
+          spied.forEach(l => l.classList.toggle("nav__link--current", visible.has(l)));
+        } else if (mainNav) {
+          Navigation.markCurrentPage(mainNav);
+        }
       }, { rootMargin: "-10% 0px -75% 0px" });
 
       observed.forEach(s => { if (navLinks["#" + s.id]) observer.observe(s); });
@@ -631,7 +659,6 @@
   // =============================================================================
   const ScrollTop = {
     chars: "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
-    columns: [],
     canvas: null,
     ctx: null,
     animId: null,
@@ -688,8 +715,6 @@
       for (var i = 0; i < colCount; i++) {
         columns[i] = Math.random() * canvas.height / fontSize;
       }
-      this.columns = columns;
-
       var self = this;
       var chars = this.chars;
       var frames = 0;

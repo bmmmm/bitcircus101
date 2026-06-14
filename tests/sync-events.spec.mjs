@@ -139,6 +139,21 @@ describe("expandRRule — WEEKLY", () => {
       assert.equal(diff, 14);
     }
   });
+
+  it("keeps a timed occurrence on a date-only UNTIL day", () => {
+    const dtstart = new Date(2026, 5, 15, 19, 0); // Mon 2026-06-15 19:00
+    const dates = expandRRule(dtstart, "FREQ=WEEKLY;BYDAY=MO;UNTIL=20260629", []);
+    // 6/15, 6/22, 6/29 — the 29th must survive despite 19:00 > local midnight
+    assert.ok(dates.some((d) => d.getMonth() === 5 && d.getDate() === 29));
+  });
+
+  it("counts EXDATE-excluded slots toward COUNT (RFC5545)", () => {
+    const dtstart = new Date(2026, 0, 5, 19, 0); // Mon 2026-01-05
+    // COUNT=3 generates 1/5, 1/12, 1/19; excluding 1/12 leaves [1/5, 1/19], NOT +1/26
+    const dates = expandRRule(dtstart, "FREQ=WEEKLY;BYDAY=MO;COUNT=3", [new Date(2026, 0, 12)]);
+    assert.equal(dates.length, 2);
+    assert.ok(!dates.some((d) => d.getDate() === 26));
+  });
 });
 
 describe("expandRRule — DAILY / YEARLY / unsupported", () => {
@@ -264,6 +279,20 @@ describe("parseICS", () => {
     assert.equal(events[0].url, "https://bitcircus101.de");
   });
 
+  it("leaves a root-relative URL alone (no https:/// corruption)", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART:20260601T190000",
+      "SUMMARY:Rel",
+      "UID:rel@example.de",
+      "URL:/events/foo",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    assert.equal(parseICS(ics)[0].url, "/events/foo");
+  });
+
   it("warns once per source/zone for non-Europe TZID", () => {
     const ics = [
       "BEGIN:VCALENDAR",
@@ -355,6 +384,10 @@ describe("clean", () => {
   });
   it("trims whitespace", () => {
     assert.equal(clean("  hello  "), "hello");
+  });
+  it("unescapes a literal backslash without mangling the next char", () => {
+    assert.equal(clean("C:\\\\nope"), "C:\\nope"); // \\ -> \, not "C:\ ope"
+    assert.equal(clean("a\\\\b"), "a\\b");
   });
 });
 
@@ -753,5 +786,33 @@ describe("aggregate", () => {
     const b = result([card({ uid: "shared@x", source: "B" })], "B");
     const { sources } = aggregate([a, b], emptyPrev, NOW);
     assert.equal(sources.find((s) => s.name === "B").events, 0);
+  });
+
+  it("dedupes a cross-posted event when only one source carries a UID", () => {
+    const a = result([card({ uid: "shared@x", title: "Linkup", source: "A" })], "A");
+    const b = result([card({ uid: "", title: "Linkup", source: "B" })], "B");
+    const { events } = aggregate([a, b], emptyPrev, NOW);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].source, "A");
+  });
+
+  it("does not leak firstSeen onto a different-UID event sharing date+title", () => {
+    const prev = {
+      events: [{ uid: "real@x", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
+      sources: [], icsKeys: {},
+    };
+    const a = result([card({ uid: "other@y", date: "2026-05-01", title: "E" })], "A");
+    const { events } = aggregate([a], prev, NOW);
+    assert.equal(events[0].firstSeen, NOW);
+  });
+
+  it("migrates firstSeen by date+title for a once-UID-less event", () => {
+    const prev = {
+      events: [{ uid: "", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
+      sources: [], icsKeys: {},
+    };
+    const a = result([card({ uid: "nowhas@x", date: "2026-05-01", title: "E" })], "A");
+    const { events } = aggregate([a], prev, NOW);
+    assert.equal(events[0].firstSeen, "2026-01-01T00:00:00.000Z");
   });
 });
