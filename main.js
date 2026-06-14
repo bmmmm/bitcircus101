@@ -253,7 +253,7 @@
 
       utils.addEventListenerSafe(carousel, "touchstart", (e) => {
         this.state.startX = e.touches[0].clientX;
-      });
+      }, { passive: true });
 
       utils.addEventListenerSafe(carousel, "touchend", (e) => {
         if (!e.changedTouches.length) return;
@@ -268,7 +268,7 @@
           }
           this.resetAutoRotateIfEnabled();
         }
-      });
+      }, { passive: true });
     },
 
     bindVisibilityEvents() {

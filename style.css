@@ -13,7 +13,6 @@
     --text-dim:      #9a9a9a;
     --text-bright:   #fff;
     --border:        #2a2a2a;
-    --border-accent: #00d97e;
 
     /* Typography – system monospace stack, no external fonts */
     --font: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco,
@@ -2647,7 +2646,6 @@ h3.sr-only {
     /* One desaturated teal collapses the green/pink/orange chorus */
     --accent:        #5fb89a;
     --accent-dim:    #4d9a80;
-    --border-accent: #5fb89a;
     --text:          #c9cdd2;
     --text-dim:      #8a9099;
     --text-bright:   #eef1f4;
