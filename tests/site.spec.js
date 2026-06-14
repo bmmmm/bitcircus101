@@ -377,6 +377,27 @@ test.describe('No JavaScript errors', () => {
     }
 });
 
+// ─── Signal Redirect Stubs ───────────────────────────────────────────────────
+
+test.describe('Signal redirect stubs', () => {
+    // invite-*/join-* are 0-second redirects to Signal: reachable but noindex and out
+    // of the sitemap. They redirect off-site to signal.group, so we fetch the static
+    // HTML directly instead of adding them to the no-JS-errors page list (a browser
+    // goto would follow the redirect off-site and hang on networkidle).
+    const stubs = ['/join-info/', '/join-talk/', '/invite-info/', '/invite-talk/'];
+
+    for (const url of stubs) {
+        test(`${url} is noindex and redirects to Signal`, async ({ request }) => {
+            const res = await request.get(url);
+            expect(res.status()).toBe(200);
+            const html = await res.text();
+            expect(html).toMatch(/name=["']robots["'][^>]*noindex/i);
+            expect(html).toMatch(/http-equiv=["']refresh["'][^>]*signal\.group/i);
+            expect(html).toMatch(/window\.location\.replace\(['"]https:\/\/signal\.group\//);
+        });
+    }
+});
+
 // ─── Internal Links ──────────────────────────────────────────────────────────
 
 test.describe('Internal links', () => {
