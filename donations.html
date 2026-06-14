@@ -199,7 +199,6 @@
                                 id="osm-map"
                                 width="425"
                                 height="350"
-                                class="map-container iframe"
                                 title="OpenStreetMap – bitcircus101"
                             ></iframe>
                             <br />
@@ -305,7 +304,6 @@
                     var siteNotice = document.getElementById("site-notice");
                     hideNoticeEl(siteNotice);
                     show("payment-method-text");
-                    document.body.style.overflow = "auto";
                     document.body.classList.remove("cookie-banner-shown");
                 }
 
@@ -322,7 +320,6 @@
                     hide("donation-content");
                     hide("payment-method-text");
                     hideNoticeEl(document.getElementById("site-notice"));
-                    document.body.style.overflow = "auto";
                     document.body.classList.remove("cookie-banner-shown");
                     focusHeading();
                 }
