@@ -139,6 +139,21 @@ describe("expandRRule — WEEKLY", () => {
       assert.equal(diff, 14);
     }
   });
+
+  it("keeps a timed occurrence on a date-only UNTIL day", () => {
+    const dtstart = new Date(2026, 5, 15, 19, 0); // Mon 2026-06-15 19:00
+    const dates = expandRRule(dtstart, "FREQ=WEEKLY;BYDAY=MO;UNTIL=20260629", []);
+    // 6/15, 6/22, 6/29 — the 29th must survive despite 19:00 > local midnight
+    assert.ok(dates.some((d) => d.getMonth() === 5 && d.getDate() === 29));
+  });
+
+  it("counts EXDATE-excluded slots toward COUNT (RFC5545)", () => {
+    const dtstart = new Date(2026, 0, 5, 19, 0); // Mon 2026-01-05
+    // COUNT=3 generates 1/5, 1/12, 1/19; excluding 1/12 leaves [1/5, 1/19], NOT +1/26
+    const dates = expandRRule(dtstart, "FREQ=WEEKLY;BYDAY=MO;COUNT=3", [new Date(2026, 0, 12)]);
+    assert.equal(dates.length, 2);
+    assert.ok(!dates.some((d) => d.getDate() === 26));
+  });
 });
 
 describe("expandRRule — DAILY / YEARLY / unsupported", () => {
@@ -355,6 +370,10 @@ describe("clean", () => {
   });
   it("trims whitespace", () => {
     assert.equal(clean("  hello  "), "hello");
+  });
+  it("unescapes a literal backslash without mangling the next char", () => {
+    assert.equal(clean("C:\\\\nope"), "C:\\nope"); // \\ -> \, not "C:\ ope"
+    assert.equal(clean("a\\\\b"), "a\\b");
   });
 });
 
