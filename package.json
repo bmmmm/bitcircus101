@@ -8,9 +8,9 @@
     "build:layout": "node scripts/inject-layout.mjs",
     "build:logos": "node scripts/build-logo-slider.mjs",
     "build": "pnpm run build:layout && pnpm run build:logos",
-    "test": "node --test tests/sync-events.spec.mjs && playwright test",
-    "test:quick": "node --test tests/sync-events.spec.mjs",
-    "test:unit": "node --test tests/sync-events.spec.mjs",
+    "test": "node --test tests/sync-events.spec.mjs tests/goals-core.spec.mjs && playwright test",
+    "test:quick": "node --test tests/sync-events.spec.mjs tests/goals-core.spec.mjs",
+    "test:unit": "node --test tests/sync-events.spec.mjs tests/goals-core.spec.mjs",
     "test:e2e": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui"
