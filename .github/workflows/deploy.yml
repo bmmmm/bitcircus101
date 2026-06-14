@@ -6,6 +6,17 @@ permissions:
 on:
   push:
     branches: [main]
+    # Doc/meta-only pushes can't change the served site, so skip the full
+    # E2E + deploy run for them (a mixed push touching any other file still
+    # deploys — paths-ignore only skips when EVERY changed path matches).
+    # NOTE: deliberately unlike ci.yml's list — llms.txt is omitted here
+    # because it IS live content and must still trigger a deploy when it
+    # changes; it only sits in ci.yml because it needs no tests.
+    paths-ignore:
+      - "*.md"
+      - "LICENSE"
+      - ".claudeignore"
+      - ".gitignore"
   workflow_dispatch:
 
 concurrency:
