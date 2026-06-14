@@ -121,6 +121,24 @@ describe("expandRRule — WEEKLY", () => {
     const dates = expandRRule(dtstart, rule, []);
     assert.equal(dates.length, 3);
   });
+
+  it("expands every weekday when BYDAY lists several (MO,WE,FR)", () => {
+    const dtstart = new Date(2026, 2, 2, 19, 0); // Mon 2026-03-02
+    const dates = expandRRule(dtstart, "FREQ=WEEKLY;BYDAY=MO,WE,FR", []);
+    const days = [...new Set(dates.map((d) => d.getDay()))].sort((a, b) => a - b);
+    assert.deepEqual(days, [1, 3, 5]); // Mon, Wed, Fri all present, not just the last
+    assert(dates.every((d) => d.getHours() === 19));
+  });
+
+  it("honours WEEKLY INTERVAL=2 (every other week)", () => {
+    const dtstart = new Date(2026, 2, 2, 19, 0); // Mon
+    const dates = expandRRule(dtstart, "FREQ=WEEKLY;BYDAY=MO;INTERVAL=2", []);
+    assert(dates.length > 1);
+    for (let i = 1; i < dates.length; i++) {
+      const diff = Math.round((dates[i] - dates[i - 1]) / 86400000);
+      assert.equal(diff, 14);
+    }
+  });
 });
 
 describe("expandRRule — DAILY / YEARLY / unsupported", () => {
