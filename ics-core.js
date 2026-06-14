@@ -213,7 +213,10 @@
       else if (key === "UID") ev.uid = val.trim();
       else if (key === "URL") {
         var u = val.trim();
-        ev.url = u && !/^https?:\/\//i.test(u) ? "https://" + u : u;
+        // Leave a root- or protocol-relative path ("/x", "//x") alone; only prefix a
+        // bare host, so the result never becomes "https:///x". Matches httpUrl() in
+        // events.js so the sync output and the browser fallback agree.
+        ev.url = u && u.charAt(0) !== "/" && !/^https?:\/\//i.test(u) ? "https://" + u : u;
       }
       else if (key === "RRULE") ev.rrule = val;
       else if (key === "EXDATE") {

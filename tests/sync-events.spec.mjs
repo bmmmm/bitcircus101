@@ -279,6 +279,20 @@ describe("parseICS", () => {
     assert.equal(events[0].url, "https://bitcircus101.de");
   });
 
+  it("leaves a root-relative URL alone (no https:/// corruption)", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART:20260601T190000",
+      "SUMMARY:Rel",
+      "UID:rel@example.de",
+      "URL:/events/foo",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    assert.equal(parseICS(ics)[0].url, "/events/foo");
+  });
+
   it("warns once per source/zone for non-Europe TZID", () => {
     const ics = [
       "BEGIN:VCALENDAR",
