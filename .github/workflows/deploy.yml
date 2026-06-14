@@ -150,8 +150,13 @@ jobs:
 
       - name: Cache-bust asset references
         run: |
-          # Generate a short content hash from all cacheable assets (post-minification)
-          HASH=$(cat style.css main.js events.js ics-core.js 2>/dev/null | sha256sum | cut -c1-8)
+          # Generate a short content hash from all cacheable assets (post-minification).
+          # Icons + manifest are included so swapping a PWA/favicon asset changes the
+          # hash and busts the ?v= on their <link> refs — CSS/JS alone wouldn't.
+          HASH=$(cat style.css main.js events.js ics-core.js \
+                     images/favicon.svg images/apple-touch-icon.png \
+                     images/icon-192.png images/icon-512.png images/icon-maskable-512.png \
+                     site.webmanifest 2>/dev/null | sha256sum | cut -c1-8)
           echo "Asset hash: $HASH"
           # Replace ?v=anything with ?v=<hash> in all HTML files
           sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" *.html
