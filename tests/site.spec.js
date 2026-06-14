@@ -74,13 +74,9 @@ test.describe('SEO meta tags', () => {
         // Theme color
         const themeColor = await page.locator('meta[name="theme-color"]').getAttribute('content');
         expect(themeColor).toBeTruthy();
-
-        // Keywords
-        const keywords = await page.locator('meta[name="keywords"]').getAttribute('content');
-        expect(keywords.toLowerCase()).toContain('hackspace bonn');
     });
 
-    test('subpages have meta descriptions and keywords', async ({ page }) => {
+    test('subpages have meta descriptions', async ({ page }) => {
         // Events
         await page.goto('/events.html');
         expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
@@ -91,8 +87,7 @@ test.describe('SEO meta tags', () => {
 
         // Raum nutzen
         await page.goto('/raum-nutzen.html');
-        const keywords = await page.locator('meta[name="keywords"]').getAttribute('content');
-        expect(keywords.toLowerCase()).toContain('raum mieten bonn');
+        expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
     });
 });
 

@@ -109,6 +109,8 @@ jobs:
           git checkout origin/main -- .
           rm -rf tests/ node_modules/ .claude/
           rm -f playwright.config.js package.json package-lock.json pnpm-lock.yaml pnpm-workspace.yaml
+          # Contributor docs + repo meta are not part of the served site
+          rm -f CLAUDE.md CONTRIBUTING.md README.md .gitignore .claudeignore
 
           # Restore live-only generated files
           for f in events-data.json feed.xml funding.json sitemap.xml; do
