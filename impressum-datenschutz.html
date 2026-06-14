@@ -2,6 +2,7 @@
 <html lang="de">
     <head>
         <meta charset="UTF-8" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Impressum &amp; Datenschutz – bitcircus101 Hackspace Bonn</title>
         <meta
@@ -12,7 +13,6 @@
             name="description"
             content="Impressum und Datenschutzerklärung für bitcircus101 in Bonn. Kontakt, rechtliche Hinweise und Informationen zum Datenschutz auf einen Blick."
         />
-        <meta name="keywords" content="Hackspace Bonn, bitcircus101, Impressum, Datenschutz" />
         <meta name="robots" content="index, follow" />
         <meta name="theme-color" content="#0d0d0d" />
         <meta property="og:type" content="website" />
@@ -41,7 +41,7 @@
             // No-flash: apply persisted calm theme before stylesheet paints.
             try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=20d570bd" />
+        <link rel="stylesheet" href="style.css?v=7f2a813f" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -251,7 +251,7 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="main.js?v=20d570bd"></script>
+        <script defer src="main.js?v=7f2a813f"></script>
         <script>
             document.getElementById("current-date").textContent =
                 new Date().toLocaleDateString("de-DE", {

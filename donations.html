@@ -2,6 +2,7 @@
 <html lang="de">
     <head>
         <meta charset="UTF-8" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Unterstütze bitcircus101 | Hackspace Bonn unterstützen</title>
         <meta name="title" content="Unterstütze bitcircus101 | Hackspace Bonn unterstützen" />
@@ -25,6 +26,7 @@
             content="bitcircus101 wird komplett durch die Community getragen. Hilf mit, dass der Hackspace in Bonn weiter läuft."
         />
         <meta property="og:image" content="https://bitcircus101.de/images/og-image.jpg" />
+        <meta property="og:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
         <meta property="og:locale" content="de_DE" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Unterstütze bitcircus101 | Hackspace Bonn unterstützen" />
@@ -36,7 +38,7 @@
             // No-flash: apply persisted calm theme before stylesheet paints.
             try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=20d570bd" />
+        <link rel="stylesheet" href="style.css?v=7f2a813f" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -199,7 +201,6 @@
                                 id="osm-map"
                                 width="425"
                                 height="350"
-                                class="map-container iframe"
                                 title="OpenStreetMap – bitcircus101"
                             ></iframe>
                             <br />
@@ -305,7 +306,6 @@
                     var siteNotice = document.getElementById("site-notice");
                     hideNoticeEl(siteNotice);
                     show("payment-method-text");
-                    document.body.style.overflow = "auto";
                     document.body.classList.remove("cookie-banner-shown");
                 }
 
@@ -322,7 +322,6 @@
                     hide("donation-content");
                     hide("payment-method-text");
                     hideNoticeEl(document.getElementById("site-notice"));
-                    document.body.style.overflow = "auto";
                     document.body.classList.remove("cookie-banner-shown");
                     focusHeading();
                 }
@@ -351,6 +350,6 @@
                 });
             })();
         </script>
-        <script defer src="main.js?v=20d570bd"></script>
+        <script defer src="main.js?v=7f2a813f"></script>
     </body>
 </html>
