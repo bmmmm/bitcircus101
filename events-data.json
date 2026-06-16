@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-06-16T09:32:19.505Z",
+  "lastSync": "2026-06-16T15:09:02.312Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-16T09:32:19.385Z",
+      "fetchedAt": "2026-06-16T15:09:02.082Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,19 +16,19 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-16T09:32:19.332Z",
+      "fetchedAt": "2026-06-16T15:09:02.293Z",
       "status": "ok",
       "events": 20,
-      "added": 0,
-      "removed": 0,
-      "total": 46,
-      "past": 5,
+      "added": 16,
+      "removed": 15,
+      "total": 47,
+      "past": 6,
       "upcoming": 41
     },
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-16T09:32:19.345Z",
+      "fetchedAt": "2026-06-16T15:09:02.153Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -94,14 +94,15 @@
       "a027fbdd-6b08-4f8b-89c4-65fbcd7f2c66",
       "ffc8a6f4-9889-4add-85b4-d161db2091fd",
       "5197a815-e709-4fc2-a570-7b3d8d035e65",
-      "179882D4-6DC8-468B-81A1-37885A6BD27D",
-      "F501BB71-4237-43CB-8875-BC5D7F7637D9",
-      "472136E0-E6EB-4B8D-AF4B-6F7371615766",
+      "996c6e4a-6bce-4d6d-8d0f-5c4ea743a6ec",
+      "54ee729f-ef74-4715-97c8-79b914921add",
+      "5cb1b061-902d-47f8-b914-738088844d2c",
       "437b745c-e0aa-4b58-ac93-0d9d4cdec857",
       "21889663-ee19-434a-919e-1f3edc57d309",
-      "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "8c6271c1-ea1d-413e-8f2f-7a911367ab33",
       "58773c77-368b-4c52-8d9b-3c812ca035f6",
+      "5c289c88-a38b-4427-9aa0-dd49aa088d39",
       "385579fd-dab7-42c0-826b-173d49f87b51",
       "1206d599-7531-45e8-9cdb-34098d7d6820",
       "1564bdba-e01d-4dee-bc2b-8fe799d5c5f5",
@@ -111,32 +112,32 @@
       "3232a73b-5408-4657-b756-cdfc10f62676",
       "a5fd3482-f2bc-468a-af95-2db79c810728",
       "859eb418-e35c-4774-838e-ebeb31f3fb45",
-      "54BDA070-DA5D-4DC9-8384-8752974E8250",
-      "FCD62406-4CA7-4BA5-8AEA-067D9F42E09B",
+      "b03a011e-f657-46f3-961d-7e66be6fadf0",
+      "19efb037-b521-4f7b-b508-bd63eb3b292b",
       "7ea4047f-0452-4d91-beae-1b23b7a9735c",
       "6a2fa097-b5ad-4a39-a837-5899adbc130f",
-      "1AB911F6-25E5-4945-9739-0BE219C04434",
-      "3FACEB28-23DE-4595-9D1E-82BAF78D6E55",
+      "9ffe6aca-1cdf-493a-9cf8-f0f1ac415583",
+      "0b2b16af-5a0e-43e9-81ce-33e999b85294",
       "22122d95-1a89-4a7e-964f-661266a1fe82",
-      "72BC9C7D-9136-4894-925E-DC33F51A9936",
-      "8A7E2DC2-EA46-435A-88F5-A78CD0936C3C",
+      "974a5337-34e5-496f-8f2c-62f74cd766ce",
       "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
       "2a828714-52b9-4074-a76e-56790ff4720b",
-      "D698EA39-FEEF-4D4C-99AC-50D186FBD679",
+      "3b5920c5-f75a-4d45-98ef-3753bb50f0a1",
       "5a70c528-c571-44d8-ae9d-e94f05c5ad4e",
       "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
-      "D6351EF4-F6AD-4459-9EDA-333581BA8F14",
-      "64487F08-C72F-4C70-96F4-C62AB9D8E979",
+      "05458f62-8dee-4e3b-a085-ef0639af63ff",
+      "dccb0e70-ca58-42f6-892d-55909fd35805",
       "5ead1d8a-efdf-4b30-a0f8-fc2c2957b902",
       "891ef4cf-6d5b-4656-9a6d-df860a33376f",
       "46cfd4a2-1266-494b-8d74-33fbeeb2d531",
       "d5deb939-30a1-4927-a062-bbcadeb411e5",
       "ff353089-674d-449d-8c10-b255a42ea5d6",
       "95937cf3-ddfe-458f-a57c-53f5273599b6",
-      "7AADE624-1482-4FAC-82AD-08FA0E4FCD5D",
-      "74B61F9F-2232-47C9-9FDB-659B2ABAEBBC",
+      "756cc3d0-6e3a-4d36-820b-b60eb2d9c2d3",
+      "30648a7a-fe00-4aaa-b2fe-63d167941ce5",
       "489ee138-a1e2-484e-8af7-07326db13fb7",
-      "616b35a9-4e04-4be3-aa63-199b3bf93e8a"
+      "616b35a9-4e04-4be3-aa63-199b3bf93e8a",
+      "57633315-cc75-4e91-b65a-ae41aad699c4"
     ],
     "Kult 41": [
       "2504@kult41.de"
@@ -146,7 +147,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-06-16",
       "time": "18:00",
@@ -156,9 +157,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Look at my toys!",
@@ -181,18 +182,19 @@
     {
       "title": "Raspberry Pi Workshop",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
       "location": "",
       "date": "2026-06-18",
       "time": "19:00",
       "tags": [
-        "#workshop"
+        "#workshop",
+        "#datenburg"
       ],
       "type": "workshop",
       "source": "Datenburg e.V.",
-      "uid": "64487F08-C72F-4C70-96F4-C62AB9D8E979",
+      "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-14T20:13:12.112Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Linkup@bitcircus101",
@@ -216,7 +218,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-06-23",
       "time": "18:00",
@@ -226,9 +228,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Look at my toys!",
@@ -251,7 +253,7 @@
     {
       "title": "Spieleabend",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-06-25",
       "time": "19:00",
@@ -260,9 +262,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "FCD62406-4CA7-4BA5-8AEA-067D9F42E09B",
+      "uid": "19efb037-b521-4f7b-b508-bd63eb3b292b",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-21T19:44:43.214Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (4FR)",
@@ -284,7 +286,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-06-30",
       "time": "18:00",
@@ -294,9 +296,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Look at my toys!",
@@ -368,7 +370,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-07-07",
       "time": "18:00",
@@ -378,9 +380,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Look at my toys!",
@@ -403,7 +405,7 @@
     {
       "title": "PPP (Putzen Plenum Pizza)",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-07-09",
       "time": "19:30",
@@ -412,9 +414,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "72BC9C7D-9136-4894-925E-DC33F51A9936",
+      "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-08T20:58:54.320Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (2FR)",
@@ -453,7 +455,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-07-14",
       "time": "18:00",
@@ -463,9 +465,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Look at my toys!",
@@ -488,18 +490,19 @@
     {
       "title": "Raspberry Pi Workshop",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
       "location": "",
       "date": "2026-07-16",
       "time": "19:00",
       "tags": [
-        "#workshop"
+        "#workshop",
+        "#datenburg"
       ],
       "type": "workshop",
       "source": "Datenburg e.V.",
-      "uid": "64487F08-C72F-4C70-96F4-C62AB9D8E979",
+      "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-14T20:13:12.112Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Linkup@bitcircus101",
@@ -540,7 +543,7 @@
     {
       "title": "Bonn Pride 🌈",
       "subtitle": "",
-      "description": "Bonn Pride 🌈",
+      "description": "",
       "location": "",
       "date": "2026-07-18",
       "time": "11:00",
@@ -556,7 +559,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-07-21",
       "time": "18:00",
@@ -566,9 +569,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Look at my toys!",
@@ -591,7 +594,7 @@
     {
       "title": "Spieleabend",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-07-23",
       "time": "19:00",
@@ -600,9 +603,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "FCD62406-4CA7-4BA5-8AEA-067D9F42E09B",
+      "uid": "19efb037-b521-4f7b-b508-bd63eb3b292b",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-04-21T19:44:43.214Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Casual Linkup@bitcircus101 (4FR)",
@@ -624,7 +627,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-07-28",
       "time": "18:00",
@@ -634,9 +637,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Look at my toys!",
@@ -693,7 +696,7 @@
     {
       "title": "Beethovens Bunte 🌈",
       "subtitle": "",
-      "description": "Beethovens Bunte 🌈",
+      "description": "",
       "location": "Münsterplatz",
       "date": "2026-08-01",
       "time": "13:00",
@@ -725,7 +728,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-08-04",
       "time": "18:00",
@@ -735,9 +738,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "title": "Look at my toys!",
@@ -810,7 +813,7 @@
     {
       "title": "Offene Datenburg",
       "subtitle": "",
-      "description": "Reminder",
+      "description": "",
       "location": "",
       "date": "2026-08-11",
       "time": "18:00",
@@ -820,9 +823,9 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "3524BAB6-899E-4CD4-BCC7-920DD9F32F06",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-12T20:27:57.991Z"
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
