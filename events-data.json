@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-06-16T15:09:02.312Z",
+  "lastSync": "2026-06-16T19:01:47.613Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-16T15:09:02.082Z",
+      "fetchedAt": "2026-06-16T19:01:47.442Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,11 +16,11 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-16T15:09:02.293Z",
+      "fetchedAt": "2026-06-16T19:01:47.398Z",
       "status": "ok",
       "events": 20,
-      "added": 16,
-      "removed": 15,
+      "added": 0,
+      "removed": 0,
       "total": 47,
       "past": 6,
       "upcoming": 41
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-16T15:09:02.153Z",
+      "fetchedAt": "2026-06-16T19:01:47.526Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -144,41 +144,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-06-16",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-06-16",
-      "time": "19:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
     {
       "title": "Raspberry Pi Workshop",
       "subtitle": "",
@@ -824,6 +789,40 @@
       "type": "special",
       "source": "Datenburg e.V.",
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-08-11",
+      "time": "19:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "PPP (Putzen Plenum Pizza)",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-08-13",
+      "time": "19:30",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
     }
