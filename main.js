@@ -89,7 +89,7 @@
      * the current URL (works with / vs /index.html and subdirectory deploys).
      */
     markCurrentPage(mainNav) {
-      const links = mainNav.querySelectorAll("ul li a[href]:not(.nav__rss)");
+      const links = mainNav.querySelectorAll("ul li a[href]");
       if (!links.length) return;
 
       const here = window.location;
