@@ -2507,41 +2507,63 @@ h3.sr-only {
     }
 }
 
-/* Mobile Navigation */
-@media (max-width: 700px) {
-    .menu-toggle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
+/* Mobile / condensed navigation.
+   The utility cluster (lite · RSS · calm) stays visible on its own full-width
+   row at every width below this breakpoint — only the content links collapse
+   into the toggle menu. The one-row desktop layout (brand + 6 links + cluster)
+   runs ~77px past the 1000px --max-width box and needs ~1155px of viewport
+   before the cluster clears the right edge, so the breakpoint sits at 1160px:
+   above it the cluster shows inline, below it it drops to its own row and is
+   never clipped (previously the cluster vanished between ~700-1155px). */
+@media (max-width: 1160px) {
     nav {
         flex-wrap: wrap;
         padding: var(--gap-xs) var(--gap-md);
         gap: 0;
-        justify-content: space-between;
         align-items: center;
     }
-    /* Touch-friendly row when menu is condensed; full-width links stay 44px */
-    .nav__brand,
     .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        order: 2;
         height: 44px;
         min-height: 44px;
     }
-    .nav__brand { flex: 0 0 auto; }
-    nav ul {
+    /* Brand grows to push the toggle to the right edge of row 1 */
+    .nav__brand {
+        order: 1;
+        flex: 1;
+        height: 44px;
+        min-height: 44px;
+    }
+    /* Utility cluster: always shown, full-bleed row directly under the brand */
+    nav .nav__utils {
+        order: 3;
+        display: flex;
+        width: calc(100% + 2 * var(--gap-md));
+        margin: 0 calc(-1 * var(--gap-md));
+        border-left: 0;
+        border-top: 1px solid var(--border);
+        padding: var(--gap-sm) var(--gap-md);
+        gap: var(--gap-sm);
+        flex-wrap: wrap;
+    }
+    /* Content links collapse into the toggle-controlled dropdown */
+    nav ul.nav__links {
+        order: 4;
         flex: none;
         width: calc(100% + 2 * var(--gap-md));
         margin: 0 calc(-1 * var(--gap-md));
         flex-direction: column;
         justify-content: flex-start;
+        align-items: stretch;
         display: none;
         border-top: 1px solid var(--border);
         padding: 0;
         min-height: 0;
-        align-items: stretch;
     }
-    nav.active ul { display: flex; }
+    nav.active ul.nav__links { display: flex; }
     nav li { margin: 0; width: 100%; }
     nav li a {
         height: auto;
@@ -2552,19 +2574,10 @@ h3.sr-only {
         border-bottom: 1px solid var(--border);
         font-size: 0.85rem;
     }
-    /* Utility pills drop into the menu below the links */
-    nav .nav__utils {
-        display: none;
-        width: calc(100% + 2 * var(--gap-md));
-        margin: 0 calc(-1 * var(--gap-md));
-        border-left: 0;
-        border-top: 1px solid var(--border);
-        padding: var(--gap-sm) var(--gap-md);
-        gap: var(--gap-sm);
-        flex-wrap: wrap;
-    }
-    nav.active .nav__utils { display: flex; }
+}
 
+/* Content-only tweaks for small screens (nav handled above) */
+@media (max-width: 700px) {
     h2 { font-size: 1.1rem; }
     h3 { font-size: 1rem; }
 
