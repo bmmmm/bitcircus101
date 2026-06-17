@@ -127,6 +127,8 @@ test.describe('Navigation', () => {
         await expect(page.locator('nav a[href="events.html"]')).toBeVisible();
         await expect(page.locator('nav a[href="donations.html"]')).toBeVisible();
         await expect(page.locator('nav a[href="raum-nutzen.html"]')).toBeVisible();
+        // Utility cluster: the lite link sits beside RSS/calm
+        await expect(page.locator('nav a[href="lite/"]')).toBeVisible();
 
         await page.locator('nav a[href="events.html"]').click();
         await expect(page).toHaveURL(/events\.html/);
