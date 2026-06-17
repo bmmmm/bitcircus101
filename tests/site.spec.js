@@ -408,6 +408,7 @@ test.describe('No JavaScript errors', () => {
         ['/goals.html', 'Spendenziele'],
         ['/ascii/', 'ASCII playground'],
         ['/chat/', 'Signal'],
+        ['/lite/', 'Lite'],
     ];
 
     for (const [url, name] of pages) {
@@ -440,6 +441,25 @@ test.describe('Signal redirect stubs', () => {
             expect(html).toMatch(/window\.location\.replace\(['"]https:\/\/signal\.group\//);
         });
     }
+});
+
+// ─── Lite version ────────────────────────────────────────────────────────────
+
+test.describe('Lite version', () => {
+    // /lite/ is the ultra-light, zero-JS text view of the homepage. The point is
+    // that it stays minimal — so we pin the invariants, not the prose.
+    test('/lite/ is self-contained, script-free and noindex', async ({ request }) => {
+        const res = await request.get('/lite/');
+        expect(res.status()).toBe(200);
+        const html = await res.text();
+        // Alternate view of the homepage → kept out of the index
+        expect(html).toMatch(/name=["']robots["'][^>]*noindex/i);
+        // Minimal forever: no scripts, no external stylesheet (all CSS inline)
+        expect(html).not.toMatch(/<script/i);
+        expect(html).not.toMatch(/<link[^>]+rel=["']stylesheet/i);
+        // Always offers the way back to the full site
+        expect(html).toMatch(/href=["']\.\.\/index\.html["']/);
+    });
 });
 
 // ─── Internal Links ──────────────────────────────────────────────────────────
