@@ -145,6 +145,21 @@ test.describe('Navigation', () => {
         await toggle.click();
         await expect(page.locator('nav ul')).not.toBeVisible();
     });
+
+    test('lite link stays reachable at every width', async ({ page }) => {
+        // Regression: the utility cluster (lite · RSS · calm) used to be pushed
+        // off-screen between ~700-1155px. It now shows inline on desktop and
+        // drops to its own always-visible row in the condensed layout.
+        await page.goto('/');
+        const lite = page.locator('nav a[href="lite/"]');
+        for (const width of [1280, 900, 400]) {
+            await page.setViewportSize({ width, height: 800 });
+            await expect(lite).toBeVisible();
+        }
+        // Condensed layout: the cluster shows without opening the menu, while
+        // the content links stay collapsed behind the toggle.
+        await expect(page.locator('nav ul.nav__links')).not.toBeVisible();
+    });
 });
 
 // ─── Events Page ─────────────────────────────────────────────────────────────
