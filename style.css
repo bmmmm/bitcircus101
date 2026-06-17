@@ -2656,6 +2656,8 @@ h3.sr-only {
     /* Calmer rhythm: more air, no snappy 140ms flashes */
     --line-height:   1.85;
     --transition:    220ms ease;
+    /* Anchor jumps land instantly — no smooth glide */
+    scroll-behavior: auto;
 }
 
 /* Pull the loud off-accents (pink CTA, orange RSS) onto the single accent */
@@ -2698,6 +2700,19 @@ h3.sr-only {
     opacity: 1;
 }
 [data-theme="calm"] .signal-decode-btn { animation: none; }
+
+/* Motion off. The freezes above only cover the decorative few; this mirrors the
+   prefers-reduced-motion kill so *every* animation and transition stops in calm
+   — carousel fade, hover tints, the goal-reached pulse, all of it. Fewer
+   repaints, lower CPU, genuinely still. 0.01ms (not 0s) keeps transitionend-
+   based JS firing, same trick as the reduced-motion block above. */
+[data-theme="calm"] *,
+[data-theme="calm"] *::before,
+[data-theme="calm"] *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+}
 
 /* Marquee → static wrapped row (reuse of the reduced-motion fallback) */
 [data-theme="calm"] .logo-slider__track {
