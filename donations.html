@@ -102,7 +102,7 @@
                     <li><a href="events.html">Veranstaltungen</a></li>
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
-                    <li><a href="goals.html">Ziele</a></li>
+                    <li><a href="donations.html#ziele">Ziele</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
                 </ul>
                 <div class="nav__utils">
@@ -121,6 +121,67 @@
                         Der Balken im Footer zeigt, wo wir gerade stehen.
                         Schön, dass du dabei bist.
                     </p>
+
+                    <div class="support-stage">
+                        <div class="term" id="term">
+                            <div class="term__chrome">
+                                <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                <span class="term__path">~/unterstützen</span>
+                                <span class="term__scene" id="sceneName">—</span>
+                                <span class="term__live">funding daemon</span>
+                                <span class="egg-hint" id="eggHint" role="button" tabindex="0" title="psst … tippe „pride“ oder klick mich ♡" aria-label="Kleines Geheimnis auslösen">♡</span>
+                            </div>
+                            <div class="stage" id="stage" aria-hidden="true">
+                                <div class="scene" id="scene"></div>
+                                <div class="flash glow" id="flash"></div>
+                            </div>
+                            <p class="term__hint" id="stageHint" aria-hidden="true"></p>
+                            <div class="stage-body">
+                                <p class="prompt glow">$ <b>ls ~/unterstützen/</b></p>
+                                <ul class="ways" id="ways">
+                                    <li><a class="way way--tatkraft" href="raum-nutzen.html" id="way-tatkraft" aria-expanded="false" aria-controls="tatkraft"><span class="ico" aria-hidden="true">⧖</span><span class="key">tuwat!</span><span class="lbl">was tun :)</span></a></li>
+                                    <li><a class="way" href="#ziele"><span class="ico" aria-hidden="true">⚡</span><span class="key">ein&nbsp;ziel</span><span class="lbl">ein Ziel boosten</span></a></li>
+                                    <li><a class="way" href="#dauerhaft"><span class="ico" aria-hidden="true">∞</span><span class="key">dauerhaft</span><span class="lbl">Patin/Pate werden</span></a></li>
+                                </ul>
+                                <div class="tatkraft" id="tatkraft" hidden>
+                                    <p class="h">tuwat — vor Ort mit anpacken:</p>
+                                    <ul>
+                                        <li><span class="e" aria-hidden="true">🧹</span><span>aufräumen &amp; durchfegen</span></li>
+                                        <li><span class="e" aria-hidden="true">🧺</span><span>Handtücher &amp; Wäsche</span></li>
+                                        <li><span class="e" aria-hidden="true">🥤</span><span>Getränke &amp; Snacks auffüllen</span></li>
+                                        <li><span class="e" aria-hidden="true">🔧</span><span>beim Auf- &amp; Umbau helfen</span></li>
+                                        <li class="info"><span class="e" aria-hidden="true">📡</span><span>im Loop bleiben → <a href="join-info/" target="_blank" rel="noopener noreferrer">Signal INFO ↗</a></span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="gallery-h" aria-hidden="true">$ ls ~/ideen/ <span>— klick eine Bewegung in die Bühne</span></p>
+                        <div class="gallery" id="gallery" role="group" aria-label="Animation für die Bühne wählen"></div>
+                    </div>
+
+                    <section id="ziele" aria-labelledby="ziele-heading">
+                        <h2 id="ziele-heading">Ziele — konkrete Anschaffungen</h2>
+                        <p class="goals-intro">
+                            Ein Balken pro Ziel zeigt, wie weit wir sind. Gespendet wird über Ko-fi;
+                            den Stand pflegen wir selbst nach.
+                        </p>
+                        <div id="goals-overview" class="goals-overview"></div>
+                        <div id="goals-list" class="goals-list" aria-live="polite" aria-busy="true">
+                            <noscript>
+                                <p>
+                                    Für die Live-Anzeige der Ziele wird JavaScript benötigt.
+                                    <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">Direkt auf Ko-fi unterstützen ↗</a>
+                                </p>
+                            </noscript>
+                        </div>
+                        <p class="goals-privacy">
+                            Die Beträge pflegen wir selbst – beim Anzeigen keine Tracker, keine Drittanbieter.
+                            Erst beim Klick auf „spenden“ geht es zu Ko-fi.
+                        </p>
+                        <div id="goals-updated" class="goals-updated"></div>
+                    </section>
+
+                    <h2 id="dauerhaft">Dauerhaft &amp; direkt</h2>
 
                     <div class="donation-item donation-item--iban">
                         <h2 class="donation-item__title">Überweisung</h2>
@@ -393,6 +454,9 @@
                 });
             })();
         </script>
+        <script defer src="goals-core.js?v=8"></script>
+        <script defer src="goals.js?v=8"></script>
+        <script defer src="stage.js?v=8"></script>
         <script defer src="main.js?v=8"></script>
     </body>
 </html>
