@@ -238,47 +238,47 @@ test.describe('Events content', () => {
 // ─── Goals Page ──────────────────────────────────────────────────────────────
 
 test.describe('Funding goals (fused into donations.html)', () => {
-    test('goals.html is a noindex redirect to donations.html#ziele', async ({ request }) => {
+    test('goals.html is a noindex redirect to donations.html#projekte', async ({ request }) => {
         const res = await request.get('/goals.html');
         expect(res.status()).toBe(200);
         const html = await res.text();
         expect(html).toMatch(/name=["']robots["'][^>]*noindex/i);
-        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*donations\.html#ziele/i);
+        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*donations\.html#projekte/i);
     });
 
     test('donations.html renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
         await page.goto('/donations.html');
         await expect(page).toHaveTitle(/Unterstütz/);
 
-        // goals.js renders independently of the cookie-consent overlay.
-        // Wait for JS to render panels (or a fallback) before asserting.
+        // Wait for JS (goals.js / projects.js) to render panels (or a fallback)
+        // before asserting.
         await page.waitForFunction(() =>
-            document.querySelector('.goal-panel') ||
-            document.querySelector('.goals-fallback') ||
-            document.querySelector('.goals-empty'),
+            document.querySelector('.projekt-panel') ||
+            document.querySelector('.projekte-fallback') ||
+            document.querySelector('.projekte-empty'),
             { timeout: 8000 });
 
-        const panels = page.locator('.goal-panel');
+        const panels = page.locator('.projekt-panel');
         const count = await panels.count();
         if (count === 0) return; // no seed data in this environment
 
         // progressbar exposes a numeric aria-valuenow
-        const firstBar = panels.first().locator('.goal-bar[role="progressbar"]');
+        const firstBar = panels.first().locator('.projekt-bar[role="progressbar"]');
         await expect(firstBar).toHaveAttribute('aria-valuenow', /^\d+$/);
 
         // bar is pure ASCII (block / shade glyphs), not an image
-        const filled = await panels.first().locator('.goal-bar__filled').textContent();
-        const empty = await panels.first().locator('.goal-bar__empty').textContent();
+        const filled = await panels.first().locator('.projekt-bar__filled').textContent();
+        const empty = await panels.first().locator('.projekt-bar__empty').textContent();
         expect(filled + empty).toMatch(/[█░]/);
 
         // donate link is rel-hardened and opens Ko-fi in a new tab
-        const donate = panels.first().locator('.goal-action--donate');
+        const donate = panels.first().locator('.projekt-action--donate');
         await expect(donate).toHaveAttribute('href', /ko-fi\.com/);
         expect(await donate.getAttribute('rel')).toContain('noopener');
         expect(await donate.getAttribute('target')).toBe('_blank');
 
         // total overview bar + back link present
-        await expect(page.locator('.goal-bar--total[role="progressbar"]')).toBeVisible();
+        await expect(page.locator('.projekt-bar--total[role="progressbar"]')).toBeVisible();
         await expect(page.locator('.back-link a')).toBeVisible();
     });
 });
@@ -286,77 +286,55 @@ test.describe('Funding goals (fused into donations.html)', () => {
 // ─── Subpages ────────────────────────────────────────────────────────────────
 
 test.describe('Donations page', () => {
-    test('consent, embedded widgets, decline fallbacks, and remembered consent', async ({ page, context }) => {
-        await context.clearCookies();
+    test('online support options are directly visible — no consent gate, no embeds', async ({ page }) => {
         await page.goto('/donations.html');
-        await page.evaluate(() => localStorage.removeItem('bitcircus-cookie-consent'));
-        await page.reload();
         await expect(page).toHaveTitle(/Unterstütz/);
-        await expect(page.locator('#site-notice')).toBeVisible();
         await expect(page.locator('#donations-heading')).toContainText(
             /bitcircus101 unterstützen: Licht anlassen/,
         );
 
-        // Focus trap: Tab past the last control and Shift+Tab past the first both
-        // keep focus inside the modal dialog instead of escaping to the page.
-        const focusInDialog = () =>
-            page.evaluate(() =>
-                document.getElementById('site-notice').contains(document.activeElement),
-            );
-        await page.locator('#cookie-consent-decline').focus();
-        await page.keyboard.press('Tab');
-        expect(await focusInDialog()).toBe(true);
-        await page.locator('#site-notice a[href]').first().focus();
-        await page.keyboard.press('Shift+Tab');
-        expect(await focusInDialog()).toBe(true);
+        // The consent banner and the embedded Ko-fi widget are gone: PayPal and
+        // Ko-fi are plain outbound links now, so nothing third-party loads here.
+        await expect(page.locator('#site-notice')).toHaveCount(0);
+        await expect(page.locator('#kofiframe')).toHaveCount(0);
 
-        await page.locator('#cookie-consent-accept').click();
-        await expect(page.locator('#site-notice')).not.toBeVisible();
-        await expect(page.locator('#donation-content')).toBeVisible();
-        await expect(page.locator('#donation-content a[href*="paypal.com/paypalme"]')).toBeVisible();
-        const kofiIframe = page.locator('#kofiframe');
-        await expect(kofiIframe).toBeVisible();
-        expect(await kofiIframe.getAttribute('loading')).toBe('lazy');
+        // Both online options are reachable straight away — no click-through
+        // gate — and open rel-hardened in a new tab.
+        const paypal = page.locator('#donation-fallback a[href*="paypal.com/paypalme"]');
+        await expect(paypal).toBeVisible();
+        expect(await paypal.getAttribute('rel')).toContain('noopener');
+        expect(await paypal.getAttribute('target')).toBe('_blank');
+        await expect(
+            page.locator('#donation-fallback a[href*="ko-fi.com/bmabma"]'),
+        ).toBeVisible();
 
-        await page.goto('/donations.html');
-        await expect(page.locator('#site-notice')).not.toBeVisible();
-        await expect(page.locator('#donation-content')).toBeVisible();
-
-        await page.evaluate(() => localStorage.removeItem('bitcircus-cookie-consent'));
-        await page.reload();
-        await expect(page.locator('#site-notice')).toBeVisible();
-        await page.locator('#cookie-consent-decline').click();
-        await expect(page.locator('#donation-fallback')).toBeVisible();
-        await expect(page.locator('#donation-fallback a[href*="ko-fi.com/bmabma"]')).toBeVisible();
-        await expect(page.locator('#donation-content')).toBeHidden();
-
-        await page.locator('#show-map-btn').click();
-        await expect(page.locator('#osm-map')).toHaveAttribute('src', /openstreetmap\.org\/export\/embed/);
-    });
-
-    test('loads widgets when consent was already saved (new session)', async ({ page, context }) => {
-        const fresh = await context.newPage();
-        await fresh.addInitScript(() => {
-            localStorage.setItem('bitcircus-cookie-consent', 'accepted');
-        });
-        await fresh.goto('/donations.html');
-        await expect(fresh.locator('#site-notice')).not.toBeVisible();
-        await expect(fresh.locator('#donation-content')).toBeVisible();
-        await fresh.close();
+        // Floating Ko-fi shortcut: a styled outbound link, not the Ko-fi script.
+        const float = page.locator('a.kofi-float');
+        await expect(float).toBeVisible();
+        await expect(float).toHaveAttribute('href', /ko-fi\.com\/bmabma/);
+        expect(await float.getAttribute('rel')).toContain('noopener');
+        expect(await float.getAttribute('target')).toBe('_blank');
     });
 });
 
 test.describe('Raum nutzen page', () => {
-    test('loads with title, CTA and structured data', async ({ page }) => {
+    test('loads with title, structured data, and a collapsible room-rental note', async ({ page }) => {
         await page.goto('/raum-nutzen.html');
         await expect(page).toHaveTitle(/Raum nutzen|Raum mieten/);
-        await expect(page.locator('a[href^="mailto:"][class*="btn"]')).toBeVisible();
         await expect(page.locator('#show-map-btn')).toBeVisible();
         await expect(page.locator('.back-link a')).toBeVisible();
 
         const jsonLd = await page.locator('script[type="application/ld+json"]').textContent();
         const data = JSON.parse(jsonLd);
         expect(data['@type']).toBe('EventVenue');
+
+        // The de-emphasised room-rental note is a <details>, collapsed by default;
+        // its mailto CTA only becomes reachable once the summary is expanded.
+        const rentFold = page.locator('details.sidenote');
+        const rentMail = rentFold.locator('a[href^="mailto:"][href*="Raumanfrage"]');
+        await expect(rentMail).toBeHidden();
+        await rentFold.locator('summary').click();
+        await expect(rentMail).toBeVisible();
     });
 });
 
