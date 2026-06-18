@@ -4,8 +4,10 @@
  * Loads finanz.json and renders terminal-style panels using the shared math in
  * finanz-core.js (window.FinanzCore). Two kinds of cost are kept apart on
  * purpose:
- *   • einmalig  — one-time goals with target/raised → animated ASCII bar + an
- *                 overview total (one-time money only, never mixed with monthly).
+ *   • einmalig  — one-time goals with target/raised → animated ASCII bar per
+ *                 project. No grand total is printed: the symbolic overall
+ *                 progress lives in the footer "[ LIGHTS ON? ]" bar, never a
+ *                 summed € figure (recurring + one-time money are never added).
  *   • monatlich — recurring monthly costs → NO bar, NO total; each shows its
  *                 per-month need and a "Pat*in werden" link.
  * The bars are pure ASCII — no third-party resource is needed to display
@@ -147,38 +149,6 @@
     html += "</div>";
 
     html += "</div></article>"; // body + article
-    return html;
-  }
-
-  function overviewMarkup(agg, currency) {
-    var html = '<div class="projekte-overview__panel">';
-    html +=
-      '<p class="projekte-overview__cmd" aria-hidden="true">$ funding --einmalig</p>';
-    html +=
-      '<div class="projekt-bar projekt-bar--total" role="progressbar"' +
-      ' aria-valuemin="0" aria-valuemax="100" aria-valuenow="' +
-      agg.pct +
-      '" aria-label="Einmalige Projekte gesamt: ' +
-      agg.pct +
-      '% finanziert">';
-    html += barMarkup(agg.bar);
-    html += '<span class="projekt-bar__pct">' + agg.pct + "%</span>";
-    html += "</div>";
-    html +=
-      '<p class="projekte-overview__stats">' +
-      agg.reachedCount +
-      "/" +
-      agg.count +
-      " Projekte erreicht · " +
-      Core.formatAmount(agg.totalRaised, currency) +
-      " / " +
-      Core.formatAmount(agg.totalTarget, currency) +
-      "</p>";
-    html +=
-      '<a class="btn btn-primary projekte-overview__cta" href="' +
-      KOFI_PROFILE +
-      '" target="_blank" rel="noopener noreferrer">Auf Ko-fi unterstützen ↗</a>';
-    html += "</div>";
     return html;
   }
 
@@ -331,7 +301,6 @@
 
   function render(data) {
     var list = document.getElementById("projekte-list");
-    var overviewEl = document.getElementById("projekte-overview");
     var updatedEl = document.getElementById("projekte-updated");
     var monatlichEl = document.getElementById("kosten-monatlich");
     if (!list) return;
@@ -340,10 +309,9 @@
     var einmalig = (data && data.einmalig) || [];
     var monatlich = (data && data.monatlich) || [];
 
-    // ── One-time items → list + overview ──
+    // ── One-time items → project list (no grand total) ──
     if (!einmalig.length) {
       renderEmpty(list);
-      if (overviewEl) overviewEl.innerHTML = "";
     } else {
       var html = "";
       for (var i = 0; i < einmalig.length; i++) {
@@ -358,13 +326,6 @@
       }
       list.innerHTML = html;
       list.removeAttribute("aria-busy");
-
-      if (overviewEl) {
-        overviewEl.innerHTML = overviewMarkup(
-          Core.aggregate(einmalig, { currency: currency }),
-          currency
-        );
-      }
       setupAnimations(list, currency);
     }
 
