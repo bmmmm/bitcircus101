@@ -288,8 +288,9 @@ test.describe('Funding goals (fused into donations.html)', () => {
         expect(await donate.getAttribute('rel')).toContain('noopener');
         expect(await donate.getAttribute('target')).toBe('_blank');
 
-        // total overview bar + back link present
-        await expect(page.locator('.projekt-bar--total[role="progressbar"]')).toBeVisible();
+        // back link present — there is deliberately NO grand-total bar: one-time
+        // and recurring costs are shown per item and never summed into one figure.
+        expect(await page.locator('.projekt-bar--total').count()).toBe(0);
         await expect(page.locator('.back-link a')).toBeVisible();
     });
 });
