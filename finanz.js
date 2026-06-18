@@ -1,17 +1,22 @@
 /**
- * goals.js — bitcircus101 funding-goal renderer.
+ * finanz.js — bitcircus101 "Projekte & Kosten" renderer (donations.html#projekte).
  *
- * Loads goals.json and renders terminal-style progress panels using the shared
- * math in goals-core.js (window.GoalsCore). The bars are pure ASCII — no
- * third-party resource is needed to display progress; only the "unterstützen" links
- * leave the site (to Ko-fi). Mirrors the structure of events.js.
+ * Loads finanz.json and renders terminal-style panels using the shared math in
+ * finanz-core.js (window.FinanzCore). Two kinds of cost are kept apart on
+ * purpose:
+ *   • einmalig  — one-time goals with target/raised → animated ASCII bar + an
+ *                 overview total (one-time money only, never mixed with monthly).
+ *   • monatlich — recurring monthly costs → NO bar, NO total; each shows its
+ *                 per-month need and a "Pat*in werden" link.
+ * The bars are pure ASCII — no third-party resource is needed to display
+ * progress; only the "unterstützen" links leave the site (to Ko-fi).
  */
 (function () {
   "use strict";
 
-  var JSON_URL = "goals.json";
+  var JSON_URL = "finanz.json";
   var KOFI_PROFILE = "https://ko-fi.com/bmabma";
-  var Core = window.GoalsCore;
+  var Core = window.FinanzCore;
   var ANIM_MS = 750;
 
   var ICONS = {
@@ -40,7 +45,10 @@
   }
 
   function iconFor(key) {
-    return ICONS[key] || "❖"; // ✦ default
+    // key may be a named glyph ("solar") or already a literal symbol ("☀").
+    // Fall back to the key itself so finanz.json can carry symbols directly —
+    // projects.js renders the icon verbatim, this keeps both views in sync.
+    return ICONS[key] || key || "❖"; // ❖ default
   }
 
   function barMarkup(bar) {
@@ -54,7 +62,7 @@
     );
   }
 
-  // ── Markup ──────────────────────────────────────────────────────────────
+  // ── Markup: one-time items (einmalig) ─────────────────────────────────────
 
   function panelMarkup(g) {
     var reachedCls = g.reached ? " projekt-panel--reached" : "";
@@ -145,12 +153,12 @@
   function overviewMarkup(agg, currency) {
     var html = '<div class="projekte-overview__panel">';
     html +=
-      '<p class="projekte-overview__cmd" aria-hidden="true">$ funding --status</p>';
+      '<p class="projekte-overview__cmd" aria-hidden="true">$ funding --einmalig</p>';
     html +=
       '<div class="projekt-bar projekt-bar--total" role="progressbar"' +
       ' aria-valuemin="0" aria-valuemax="100" aria-valuenow="' +
       agg.pct +
-      '" aria-label="Gesamtfortschritt: ' +
+      '" aria-label="Einmalige Projekte gesamt: ' +
       agg.pct +
       '% finanziert">';
     html += barMarkup(agg.bar);
@@ -174,7 +182,50 @@
     return html;
   }
 
-  // ── Count-up animation ────────────────────────────────────────────────────
+  // ── Markup: recurring monthly costs (monatlich) ───────────────────────────
+  // No bar and no total — recurring need is shown per item, "werde Pat*in".
+
+  function monatlichMarkup(items, currency) {
+    var html = '<div class="kosten-monatlich__panel">';
+    html +=
+      '<p class="kosten-monatlich__cmd" aria-hidden="true">$ funding --monatlich</p>';
+    html +=
+      '<p class="kosten-monatlich__lead">Laufende Kosten — Monat für Monat. ' +
+      "Werde Pat*in und trag einen Teil davon.</p>";
+    html += '<ul class="kosten-monatlich__list">';
+    for (var i = 0; i < items.length; i++) {
+      var m = items[i];
+      var icon = iconFor(m.icon);
+      html += '<li class="kosten-monatlich__item">';
+      html +=
+        '<p class="kosten-monatlich__title">' +
+        '<span class="kosten-monatlich__icon" aria-hidden="true">' +
+        icon +
+        "</span> " +
+        esc(m.title) +
+        ' <span class="kosten-monatlich__rate">' +
+        Core.formatAmount(m.monthly, currency) +
+        " / Monat</span></p>";
+      if (m.tagline) {
+        html +=
+          '<p class="kosten-monatlich__tagline">' + esc(m.tagline) + "</p>";
+      }
+      if (m.description) {
+        html +=
+          '<p class="kosten-monatlich__desc">' + esc(m.description) + "</p>";
+      }
+      html +=
+        '<a class="projekt-action projekt-action--donate" href="' +
+        esc(m.kofi || KOFI_PROFILE) +
+        '" target="_blank" rel="noopener noreferrer">&gt;&nbsp;Pat*in werden' +
+        '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
+      html += "</li>";
+    }
+    html += "</ul></div>";
+    return html;
+  }
+
+  // ── Count-up animation (einmalig bars only) ───────────────────────────────
 
   function setText(el, sel, text) {
     var n = el.querySelector(sel);
@@ -263,11 +314,17 @@
 
   function renderEmpty(el) {
     el.innerHTML =
-      '<p class="projekte-empty">Aktuell stehen keine Projekte zur Unterstützung aus. ' +
+      '<p class="projekte-empty">Aktuell stehen keine einmaligen Projekte aus. ' +
       '<a href="' +
       KOFI_PROFILE +
       '" target="_blank" rel="noopener noreferrer">Trotzdem unterstützen ↗</a></p>';
     el.removeAttribute("aria-busy");
+  }
+
+  function setHidden(el, hide) {
+    if (!el) return;
+    if (hide) el.setAttribute("hidden", "");
+    else el.removeAttribute("hidden");
   }
 
   // ── Init ────────────────────────────────────────────────────────────────
@@ -276,40 +333,56 @@
     var list = document.getElementById("projekte-list");
     var overviewEl = document.getElementById("projekte-overview");
     var updatedEl = document.getElementById("projekte-updated");
+    var monatlichEl = document.getElementById("kosten-monatlich");
     if (!list) return;
 
-    var goals = (data && data.goals) || [];
     var currency = (data && data.currency) || "EUR";
-    if (!goals.length) {
+    var einmalig = (data && data.einmalig) || [];
+    var monatlich = (data && data.monatlich) || [];
+
+    // ── One-time items → list + overview ──
+    if (!einmalig.length) {
       renderEmpty(list);
-      return;
+      if (overviewEl) overviewEl.innerHTML = "";
+    } else {
+      var html = "";
+      for (var i = 0; i < einmalig.length; i++) {
+        var src = einmalig[i];
+        var view = Core.computeGoal(src, { currency: currency });
+        view.icon = src.icon;
+        view.tagline = src.tagline;
+        view.description = src.description;
+        view.kofi = src.kofi;
+        view.kofiShop = src.kofiShop;
+        html += panelMarkup(view);
+      }
+      list.innerHTML = html;
+      list.removeAttribute("aria-busy");
+
+      if (overviewEl) {
+        overviewEl.innerHTML = overviewMarkup(
+          Core.aggregate(einmalig, { currency: currency }),
+          currency
+        );
+      }
+      setupAnimations(list, currency);
     }
 
-    var html = "";
-    for (var i = 0; i < goals.length; i++) {
-      var src = goals[i];
-      var view = Core.computeGoal(src, { currency: currency });
-      view.icon = src.icon;
-      view.tagline = src.tagline;
-      view.description = src.description;
-      view.kofi = src.kofi;
-      view.kofiShop = src.kofiShop;
-      html += panelMarkup(view);
+    // ── Recurring monthly costs → own always-visible block ──
+    if (monatlichEl) {
+      if (monatlich.length) {
+        monatlichEl.innerHTML = monatlichMarkup(monatlich, currency);
+        setHidden(monatlichEl, false);
+        monatlichEl.removeAttribute("aria-busy");
+      } else {
+        monatlichEl.innerHTML = "";
+        setHidden(monatlichEl, true);
+      }
     }
-    list.innerHTML = html;
-    list.removeAttribute("aria-busy");
 
-    if (overviewEl) {
-      overviewEl.innerHTML = overviewMarkup(
-        Core.aggregate(goals, { currency: currency }),
-        currency
-      );
-    }
     if (updatedEl && data.updated) {
       updatedEl.textContent = "zuletzt aktualisiert: " + data.updated;
     }
-
-    setupAnimations(list, currency);
   }
 
   function init() {
