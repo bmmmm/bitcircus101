@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, follow">
 <meta name="theme-color" content="#0d0d0d">
-<meta name="description" content="bitcircus101 — Hackspace in Bonn. Dorotheenstraße 101, freitags ab 20 Uhr. Alle Infos auf einer Seite: Ort, Fotos, Termine, Unterstützen, Ziele, Raum buchen.">
+<meta name="description" content="bitcircus101 — Hackspace in Bonn. Dorotheenstraße 101, freitags ab 20 Uhr. Alle Infos auf einer Seite: Ort, Fotos, Termine, Unterstützen, Projekte, Raum nutzen.">
 <title>bitcircus101 — lite</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230d0d0d'/%3E%3Ctext x='2' y='23' font-family='monospace' font-size='16' font-weight='bold' fill='%2300d97e'%3E101%3C/text%3E%3C/svg%3E">
 <style>
@@ -42,12 +42,17 @@ dt { color: #9a9a9a; margin-top: .6rem }
 dt::before { content: "— " }
 dd { margin: 0 0 0 1rem }
 .dim { color: #9a9a9a }
-/* ASCII hero ("Buehne") — the homepage logo, scaled to fit the column */
-.hero { overflow-x: auto; margin: 0 0 1.6rem }
+/* ASCII hero ("Buehne") — the homepage logo, scaled to the column width so the
+   fixed-width art always fits with no horizontal scroll. */
+.hero { overflow: hidden; container-type: inline-size; margin: 0 0 1.6rem }
 .hero pre {
   margin: 0;
   font-family: inherit;
-  font-size: clamp(0.26rem, 1.35vw, 0.5rem);
+  /* cqw = % of the .hero width; coefficient calibrated so the art fills ~96 % of
+     the column and never scrolls. Capped at 0.5rem for the desktop size;
+     0.3rem fallback for browsers without container-query units. */
+  font-size: 0.3rem;
+  font-size: min(1.42cqw, 0.5rem);
   line-height: 1.04;
   color: #00d97e;
   white-space: pre;
@@ -65,15 +70,15 @@ dd { margin: 0 0 0 1rem }
 }
 @media (max-width: 30rem) { .shots { grid-template-columns: repeat(2, 1fr) } }
 /* Funding goals — static snapshot bars */
-.goal { margin: 0 0 1rem }
-.goal__t { margin: 0 0 .15rem; color: #d4d4d4 }
+.projekt { margin: 0 0 1rem }
+.projekt__t { margin: 0 0 .15rem; color: #d4d4d4 }
 .bar { margin: 0 0 .15rem; font-family: inherit; letter-spacing: .02em; word-break: break-all }
 .bar__f { color: #00d97e }
 .bar__e { color: #4a4a4a }
 .bar__pct { color: #9a9a9a }
-.goal__done { color: #00d97e }
-.goal__amt { margin: 0; color: #9a9a9a; font-size: .9rem }
-.goals-total { margin: 1.2rem 0 .3rem; padding-top: .7rem; border-top: 1px solid #2a2a2a }
+.projekt__done { color: #00d97e }
+.projekt__amt { margin: 0; color: #9a9a9a; font-size: .9rem }
+.projekte-total { margin: 1.2rem 0 .3rem; padding-top: .7rem; border-top: 1px solid #2a2a2a }
 footer {
   margin-top: 3rem;
   padding-top: 1rem;
@@ -188,7 +193,7 @@ footer a:hover, footer a:focus { color: #00d97e }
 </ul>
 
 <h2>Unterstützen</h2>
-<p>Miete, Strom, Internet werden komplett von der Community getragen — kein Verein, keine Förderung, kein Backup.</p>
+<p>Miete, Strom, Internet werden komplett von der Community getragen — kein Verein, keine Förderung, kein Backup. Helfen geht auch ohne Geld: vor Ort anpacken oder Wissen einbringen.</p>
 <dl>
 <dt>Überweisung</dt>
 <dd>IBAN auf Anfrage per <a href="mailto:info@bitcircus101.de">E-Mail</a></dd>
@@ -198,54 +203,40 @@ footer a:hover, footer a:focus { color: #00d97e }
 <dd><a href="https://ko-fi.com/bmabma" rel="noopener noreferrer">ko-fi.com/bmabma ↗</a></dd>
 </dl>
 
-<h2>Ziele</h2>
-<p>Konkrete Anschaffungen für den Space — ein Balken pro Ziel. Stand 15.06.2026; Live-Werte auf der <a href="../donations.html#ziele">Ziele-Seite</a>.</p>
+<h2>Projekte</h2>
+<p>Anschaffungen und Vorhaben für den Space — Mitmachen mit Geld, Eigenleistung oder Wissen; ein Balken pro Projekt zeigt den Geld-Stand. Stand 15.06.2026; Live-Werte auf der <a href="../donations.html#projekte">Projekte-Seite</a>.</p>
 
-<div class="goal">
-<p class="goal__t">☀ Balkonkraftwerk <span class="dim">· Solarstrom für den Space</span></p>
+<div class="projekt">
+<p class="projekt__t">☀ Balkonkraftwerk <span class="dim">· Solarstrom für den Space</span></p>
 <p class="bar"><span class="bar__f" aria-hidden="true">████</span><span class="bar__e" aria-hidden="true">░░░░░░░░░░░░░░░░</span> <span class="bar__pct">18 %</span></p>
-<p class="goal__amt">145 € / 800 € · noch 655 €</p>
+<p class="projekt__amt">145 € / 800 € · noch 655 €</p>
 </div>
 
-<div class="goal">
-<p class="goal__t">⚙ Lötstation <span class="dim">· Ordentlich löten in der Werkstatt</span></p>
+<div class="projekt">
+<p class="projekt__t">⚙ Lötstation <span class="dim">· Ordentlich löten in der Werkstatt</span></p>
 <p class="bar"><span class="bar__f" aria-hidden="true">███████</span><span class="bar__e" aria-hidden="true">░░░░░░░░░░░░░</span> <span class="bar__pct">36 %</span></p>
-<p class="goal__amt">90 € / 250 € · noch 160 €</p>
+<p class="projekt__amt">90 € / 250 € · noch 160 €</p>
 </div>
 
-<div class="goal">
-<p class="goal__t">≡ Technik-Bibliothek <span class="dim">· Regal voller Fachbücher</span></p>
-<p class="bar"><span class="bar__f" aria-hidden="true">████████████████████</span> <span class="bar__pct goal__done">100 % ✓ erreicht</span></p>
-<p class="goal__amt">120 € / 120 €</p>
+<div class="projekt">
+<p class="projekt__t">≡ Technik-Bibliothek <span class="dim">· Regal voller Fachbücher</span></p>
+<p class="bar"><span class="bar__f" aria-hidden="true">████████████████████</span> <span class="bar__pct projekt__done">100 % ✓ erreicht</span></p>
+<p class="projekt__amt">120 € / 120 €</p>
 </div>
 
-<p class="goals-total"><span class="bar__f" aria-hidden="true">██████</span><span class="bar__e" aria-hidden="true">░░░░░░░░░░░░░░</span> <span class="bar__pct">gesamt 30 %</span></p>
-<p class="goal__amt">355 € / 1.170 € · 1 von 3 Zielen erreicht · <a href="https://ko-fi.com/bmabma" rel="noopener noreferrer">auf Ko-fi unterstützen ↗</a></p>
+<p class="projekte-total"><span class="bar__f" aria-hidden="true">██████</span><span class="bar__e" aria-hidden="true">░░░░░░░░░░░░░░</span> <span class="bar__pct">gesamt 30 %</span></p>
+<p class="projekt__amt">355 € / 1.170 € · 1 von 3 Projekten erreicht · <a href="https://ko-fi.com/bmabma" rel="noopener noreferrer">auf Ko-fi unterstützen ↗</a></p>
+<p class="dim">Beträge pflegen wir selbst — beim Anzeigen keine Tracker, keine Drittanbieter. Erst beim Klick auf „unterstützen“ geht es zu Ko-fi.</p>
 
-<h2>Raum nutzen</h2>
-<p>Den ganzen Raum buchen — für Workshops, Meetups, Schulungen, Hackathons, Drehs.</p>
-<dl>
-<dt>Vorderzimmer</dt>
-<dd>bis 25 Personen — Whiteboard, Beamer-Anschluss</dd>
-<dt>Hinterzimmer</dt>
-<dd>bis 7 Personen — ruhig, für kleinere Gruppen</dd>
-<dt>Internet</dt>
-<dd>250&nbsp;Mbit/s Down · 45&nbsp;Mbit/s Up</dd>
-<dt>Teeküche</dt>
-<dd>Backofen, Kaffee, Wasser, Getränke</dd>
-<dt>Steh-Arbeitsplätze</dt>
-<dd>Wand mit Steh-Arbeitsplätzen</dd>
-<dt>Buchung</dt>
-<dd>per E-Mail (<a href="mailto:info@bitcircus101.de">info@bitcircus101.de</a>) — stundenweise oder tageweise, kein Formular</dd>
-</dl>
-<p class="dim">Details → <a href="../raum-nutzen.html">Raum nutzen</a></p>
+<h2>Raum selber nutzen</h2>
+<p>Du kannst den ganzen Raum auch selber nutzen — für Workshops, Meetups, Schulungen, Hackathons oder Drehs. Frag einfach per <a href="mailto:info@bitcircus101.de">E-Mail</a>. <span class="dim">Details → <a href="../raum-nutzen.html">Raum nutzen</a></span></p>
 
 <h2>Mehr</h2>
 <ul>
 <li><a href="../events.html">Termine &amp; Veranstaltungen</a></li>
 <li><a href="../donations.html">Unterstützen</a></li>
 <li><a href="../raum-nutzen.html">Raum nutzen</a></li>
-<li><a href="../donations.html#ziele">Ziele</a></li>
+<li><a href="../donations.html#projekte">Projekte</a></li>
 <li><a href="https://github.com/bmmmm/bitcircus101" rel="noopener noreferrer">GitHub ↗</a></li>
 <li><a href="../feed.xml">RSS-Feed</a></li>
 </ul>

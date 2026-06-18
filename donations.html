@@ -44,43 +44,6 @@
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
-        <div
-            id="site-notice"
-            class="site-notice"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="site-notice-title"
-        >
-            <h2 id="site-notice-title" class="site-notice__title">
-                Cookies und Zahlungsdienste
-            </h2>
-            <p>
-                <strong>Hinweis:</strong> Mit Zustimmung werden eingebettete Angebote von
-                <strong>PayPal</strong> und <strong>Ko-fi</strong> geladen. Diese Dienste können Cookies setzen
-                und ggf. weitere Anbieter einbinden (z.&nbsp;B. zur Betrugsprävention); siehe deren
-                Datenschutzhinweise.
-            </p>
-            <ul class="site-notice__list">
-                <li>
-                    <strong>PayPal:</strong> Weiterleitung und ggf. eingebettete Inhalte beim Zahlen –
-                    <a href="https://www.paypal.com/de/webapps/mpp/ua/privacy-full" target="_blank" rel="noopener noreferrer">Datenschutz PayPal</a>.
-                </li>
-                <li>
-                    <strong>Ko-fi:</strong> eingebettetes Widget –
-                    <a href="https://more.ko-fi.com/privacy" target="_blank" rel="noopener noreferrer">Datenschutz Ko-fi</a>.
-                </li>
-            </ul>
-            <p>
-                Mit Klick auf „Akzeptieren &amp; fortfahren" stimmst du der Nutzung dieser Dienste zu.
-                <a href="impressum-datenschutz.html">Mehr zum Datenschutz</a>.
-            </p>
-            <button type="button" id="cookie-consent-accept">
-                Akzeptieren &amp; fortfahren
-            </button>
-            <button type="button" id="cookie-consent-decline">
-                Ablehnen
-            </button>
-        </div>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
                 <a class="nav__brand" href="index.html">
@@ -102,7 +65,7 @@
                     <li><a href="events.html">Veranstaltungen</a></li>
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
                     <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
-                    <li><a href="donations.html#ziele">Ziele</a></li>
+                    <li><a href="donations.html#projekte">Projekte</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
                 </ul>
                 <div class="nav__utils">
@@ -139,8 +102,8 @@
                             <div class="stage-body">
                                 <p class="prompt glow">$ <b>ls ~/unterstützen/</b></p>
                                 <ul class="ways" id="ways">
-                                    <li><a class="way way--tatkraft" href="raum-nutzen.html" id="way-tatkraft" aria-expanded="false" aria-controls="tatkraft"><span class="ico" aria-hidden="true">⧖</span><span class="key">tuwat!</span><span class="lbl">was tun :)</span></a></li>
-                                    <li><a class="way" href="#ziele"><span class="ico" aria-hidden="true">⚡</span><span class="key">ein&nbsp;ziel</span><span class="lbl">ein Ziel boosten</span></a></li>
+                                    <li><a class="way way--tatkraft" href="#tatkraft" id="way-tatkraft" aria-expanded="false" aria-controls="tatkraft"><span class="ico" aria-hidden="true">⧖</span><span class="key">tuwat!</span><span class="lbl">was tun :)</span></a></li>
+                                    <li><a class="way" href="#projekte"><span class="ico" aria-hidden="true">⚡</span><span class="key">ein&nbsp;projekt</span><span class="lbl">ein Projekt boosten</span></a></li>
                                     <li><a class="way" href="#dauerhaft"><span class="ico" aria-hidden="true">∞</span><span class="key">dauerhaft</span><span class="lbl">Patin/Pate werden</span></a></li>
                                 </ul>
                                 <div class="tatkraft" id="tatkraft" hidden>
@@ -155,30 +118,51 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="gallery-h" aria-hidden="true">$ ls ~/ideen/ <span>— klick eine Bewegung in die Bühne</span></p>
-                        <div class="gallery" id="gallery" role="group" aria-label="Animation für die Bühne wählen"></div>
+                        <details class="fold">
+                            <summary class="fold__summary">
+                                <span class="fold__caret" aria-hidden="true">▸</span>
+                                <span class="fold__cmd">$ ls ~/ideen/</span>
+                                <span class="fold__hint">andere Animation für die Bühne</span>
+                            </summary>
+                            <div class="fold__body">
+                                <div class="gallery" id="gallery" role="group" aria-label="Animation für die Bühne wählen"></div>
+                            </div>
+                        </details>
                     </div>
 
-                    <section id="ziele" aria-labelledby="ziele-heading">
-                        <h2 id="ziele-heading">Ziele — konkrete Anschaffungen</h2>
-                        <p class="goals-intro">
-                            Ein Balken pro Ziel zeigt, wie weit wir sind. Gespendet wird über Ko-fi;
-                            den Stand pflegen wir selbst nach.
+                    <section id="projekte" aria-labelledby="projekte-heading">
+                        <h2 id="projekte-heading">Projekte — Anschaffungen &amp; Vorhaben</h2>
+                        <p class="projekte-intro">
+                            Anschaffungen und Vorhaben für den Space – vom Balkonkraftwerk bis zu
+                            Workshops und Förderanträgen. Mitmachen kannst du mit <strong>Geld</strong>,
+                            mit <strong>Eigenleistung</strong> oder mit <strong>Wissen</strong>;
+                            ein Balken pro Projekt zeigt den Geld-Stand.
                         </p>
-                        <div id="goals-overview" class="goals-overview"></div>
-                        <div id="goals-list" class="goals-list" aria-live="polite" aria-busy="true">
+                        <div id="projekte-overview" class="projekte-overview"></div>
+                        <div id="projekte-list" class="projekte-list" aria-live="polite" aria-busy="true">
                             <noscript>
                                 <p>
-                                    Für die Live-Anzeige der Ziele wird JavaScript benötigt.
+                                    Für die Live-Anzeige der Projekte wird JavaScript benötigt.
                                     <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">Direkt auf Ko-fi unterstützen ↗</a>
                                 </p>
                             </noscript>
                         </div>
-                        <p class="goals-privacy">
+                        <div id="projects-alt" class="projects-alt" hidden></div>
+                        <details class="fold">
+                            <summary class="fold__summary">
+                                <span class="fold__caret" aria-hidden="true">▸</span>
+                                <span class="fold__cmd">$ view --pick</span>
+                                <span class="fold__hint">Darstellung wählen — Liste, ASCII-Board, Cockpit …</span>
+                            </summary>
+                            <div class="fold__body">
+                                <div id="projects-picker" class="pj-pick" role="group" aria-label="Ansicht für die Projekte wählen"></div>
+                            </div>
+                        </details>
+                        <p class="projekte-privacy">
                             Die Beträge pflegen wir selbst – beim Anzeigen keine Tracker, keine Drittanbieter.
-                            Erst beim Klick auf „spenden“ geht es zu Ko-fi.
+                            Erst beim Klick auf „unterstützen“ geht es zu Ko-fi.
                         </p>
-                        <div id="goals-updated" class="goals-updated"></div>
+                        <div id="projekte-updated" class="projekte-updated"></div>
                     </section>
 
                     <h2 id="dauerhaft">Dauerhaft &amp; direkt</h2>
@@ -191,37 +175,14 @@
                         </p>
                     </div>
 
-                    <p
-                        id="payment-method-text"
-                        class="payment-method-text hidden"
-                    >
-                        Oder online:
-                    </p>
-                    <div
-                        class="donation-buttons hidden"
-                        id="donation-content"
-                    >
-                        <!-- Inhalt wird nach Zustimmung angezeigt -->
-                    </div>
-                    <div
-                        id="decline-message"
-                        class="decline-message hidden"
-                    >
-                        <p>
-                            Cookies abgelehnt –
-                            du kannst uns trotzdem vor Ort unterstützen
-                            oder den Raum nutzen.
-                        </p>
-                    </div>
                     <div
                         id="donation-fallback"
                         class="donation-fallback"
                         role="region"
-                        aria-label="Externe Zahlungsseiten ohne eingebettete Inhalte"
-                        hidden
+                        aria-label="Online unterstützen"
                     >
                         <p class="donation-fallback__lead">
-                            Ohne eingebettete Inhalte – weiter zu den Anbietern (öffnet jeweils neues Fenster):
+                            Online unterstützen – öffnet jeweils einen neuen Tab:
                         </p>
                         <div class="donation-fallback__options">
                             <div class="donation-fallback__card">
@@ -248,43 +209,21 @@
                             </div>
                         </div>
                     </div>
-                    <div
-                        id="osm-map-decline-section"
-                        class="osm-map-decline-section hidden"
-                    >
-                        <button
-                            type="button"
-                            id="show-map-btn"
-                            class="map-button"
-                            aria-label="OpenStreetMap-Karte laden und anzeigen"
-                        >
-                            Auf Karte anzeigen
-                        </button>
-                        <div
-                            id="osm-map-container"
-                            class="map-container hidden"
-                        >
-                            <iframe
-                                id="osm-map"
-                                width="425"
-                                height="350"
-                                title="OpenStreetMap – bitcircus101"
-                            ></iframe>
-                            <br />
-                            <small>
-                                <a
-                                    href="https://www.openstreetmap.org/?mlat=50.74053&amp;mlon=7.08942#map=15/50.74053/7.08942"
-                                >
-                                    Größere Karte öffnen
-                                </a>
-                            </small>
-                        </div>
-                    </div>
                     <div class="back-link">
                         <a href="index.html" class="btn btn-shimmer">← Zurück zur Startseite</a>
                     </div>
                 </section>
             </div>
+            <a
+                href="https://ko-fi.com/bmabma"
+                class="kofi-float"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Auf Ko-fi unterstützen (öffnet neuen Tab)"
+            >
+                <span class="kofi-float__icon" aria-hidden="true">☕</span>
+                <span class="kofi-float__label">Ko-fi unterstützen</span>
+            </a>
         </main>
         <footer role="contentinfo" class="footer">
             <div class="footer__grid">
@@ -303,159 +242,9 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script>
-            (function () {
-                var STORAGE_KEY = "bitcircus-cookie-consent";
-                var releaseTrap = null;
-
-                // Keep keyboard focus inside the modal consent dialog while open.
-                // aria-modal only tells screen readers the rest is inert; without
-                // this, Tab still escapes into the visually-covered page behind it.
-                function trapFocus(container) {
-                    function onKeydown(e) {
-                        if (e.key !== "Tab") return;
-                        var focusable = container.querySelectorAll(
-                            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-                        );
-                        if (focusable.length === 0) return;
-                        var first = focusable[0];
-                        var last = focusable[focusable.length - 1];
-                        var active = document.activeElement;
-                        if (!container.contains(active)) {
-                            e.preventDefault();
-                            first.focus();
-                        } else if (e.shiftKey && active === first) {
-                            e.preventDefault();
-                            last.focus();
-                        } else if (!e.shiftKey && active === last) {
-                            e.preventDefault();
-                            first.focus();
-                        }
-                    }
-                    document.addEventListener("keydown", onKeydown);
-                    return function () {
-                        document.removeEventListener("keydown", onKeydown);
-                    };
-                }
-
-                function teardownTrap() {
-                    if (releaseTrap) {
-                        releaseTrap();
-                        releaseTrap = null;
-                    }
-                }
-
-                function show(id) {
-                    var el = document.getElementById(id);
-                    if (el) el.classList.remove("hidden");
-                }
-
-                function hide(id) {
-                    var el = document.getElementById(id);
-                    if (el) el.classList.add("hidden");
-                }
-
-                function showDonationFallback(el) {
-                    if (!el) return;
-                    el.removeAttribute("hidden");
-                }
-
-                function hideDonationFallback(el) {
-                    if (!el) return;
-                    el.setAttribute("hidden", "");
-                }
-
-                function hideNoticeEl(notice) {
-                    if (notice) notice.classList.remove("site-notice--open");
-                }
-
-                function showNoticeEl(notice) {
-                    if (notice) notice.classList.add("site-notice--open");
-                }
-
-                function focusHeading() {
-                    var h = document.getElementById("donations-heading");
-                    if (h) h.focus();
-                }
-
-                function showDonationContent() {
-                    var container = document.getElementById("donation-content");
-                    if (container) {
-                        container.innerHTML =
-                            '<div class="donation-item">' +
-                            "<h3>PayPal</h3>" +
-                            '<a href="https://www.paypal.com/paypalme/b6m"' +
-                            ' target="_blank"' +
-                            ' rel="noopener noreferrer"' +
-                            ' class="btn btn-primary">' +
-                            "Mit PayPal unterstützen" +
-                            "</a>" +
-                            "</div>" +
-                            '<div class="donation-item donation-item--embed">' +
-                            "<h3>Ko&#x2011;fi</h3>" +
-                            '<iframe' +
-                            ' id="kofiframe"' +
-                            ' src="https://ko-fi.com/bmabma/?hidefeed=true&amp;widget=true&amp;embed=true&amp;preview=true"' +
-                            ' height="712"' +
-                            ' loading="lazy"' +
-                            ' title="Ko-fi – bmabma"' +
-                            "></iframe>" +
-                            "</div>";
-                        container.classList.remove("hidden");
-                    }
-                    hideDonationFallback(document.getElementById("donation-fallback"));
-                    var siteNotice = document.getElementById("site-notice");
-                    hideNoticeEl(siteNotice);
-                    show("payment-method-text");
-                    teardownTrap();
-                    document.body.classList.remove("cookie-banner-shown");
-                }
-
-                function acceptCookies() {
-                    localStorage.setItem(STORAGE_KEY, "accepted");
-                    showDonationContent();
-                    focusHeading();
-                }
-
-                function declineCookies() {
-                    show("decline-message");
-                    showDonationFallback(document.getElementById("donation-fallback"));
-                    show("osm-map-decline-section");
-                    hide("donation-content");
-                    hide("payment-method-text");
-                    hideNoticeEl(document.getElementById("site-notice"));
-                    teardownTrap();
-                    document.body.classList.remove("cookie-banner-shown");
-                    focusHeading();
-                }
-
-                document.addEventListener("DOMContentLoaded", function () {
-                    hide("donation-content");
-                    hide("decline-message");
-                    hideDonationFallback(document.getElementById("donation-fallback"));
-                    hide("payment-method-text");
-
-                    var siteNotice = document.getElementById("site-notice");
-                    var acceptBtn = document.getElementById("cookie-consent-accept");
-                    var declineBtn = document.getElementById("cookie-consent-decline");
-
-                    if (localStorage.getItem(STORAGE_KEY) === "accepted") {
-                        showDonationContent();
-                        focusHeading();
-                        return;
-                    }
-
-                    showNoticeEl(siteNotice);
-                    document.body.classList.add("cookie-banner-shown");
-                    if (siteNotice) releaseTrap = trapFocus(siteNotice);
-                    if (acceptBtn) acceptBtn.addEventListener("click", acceptCookies);
-                    if (declineBtn) declineBtn.addEventListener("click", declineCookies);
-                    if (acceptBtn) acceptBtn.focus();
-                });
-            })();
-        </script>
         <script defer src="goals-core.js?v=8"></script>
         <script defer src="goals.js?v=8"></script>
+        <script defer src="projects.js?v=8"></script>
         <script defer src="stage.js?v=8"></script>
         <script defer src="main.js?v=8"></script>
     </body>

@@ -3,7 +3,7 @@
  *
  * Loads goals.json and renders terminal-style progress panels using the shared
  * math in goals-core.js (window.GoalsCore). The bars are pure ASCII — no
- * third-party resource is needed to display progress; only the "spenden" links
+ * third-party resource is needed to display progress; only the "unterstützen" links
  * leave the site (to Ko-fi). Mirrors the structure of events.js.
  */
 (function () {
@@ -35,7 +35,8 @@
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
   function iconFor(key) {
@@ -44,10 +45,10 @@
 
   function barMarkup(bar) {
     return (
-      '<span class="goal-bar__filled" aria-hidden="true">' +
+      '<span class="projekt-bar__filled" aria-hidden="true">' +
       bar.filled +
       "</span>" +
-      '<span class="goal-bar__empty" aria-hidden="true">' +
+      '<span class="projekt-bar__empty" aria-hidden="true">' +
       bar.empty +
       "</span>"
     );
@@ -56,9 +57,9 @@
   // ── Markup ──────────────────────────────────────────────────────────────
 
   function panelMarkup(g) {
-    var reachedCls = g.reached ? " goal-panel--reached" : "";
+    var reachedCls = g.reached ? " projekt-panel--reached" : "";
     var html =
-      '<article class="goal-panel' +
+      '<article class="projekt-panel' +
       reachedCls +
       '" id="goal-' +
       esc(g.id) +
@@ -69,29 +70,29 @@
       '">';
 
     html +=
-      '<div class="goal-panel__chrome" aria-hidden="true">' +
-      '<span class="goal-panel__dot"></span>' +
-      '<span class="goal-panel__path">~/ziele/' +
+      '<div class="projekt-panel__chrome" aria-hidden="true">' +
+      '<span class="projekt-panel__dot"></span>' +
+      '<span class="projekt-panel__path">~/projekte/' +
       esc(g.id) +
       "</span></div>";
 
-    html += '<div class="goal-panel__body">';
+    html += '<div class="projekt-panel__body">';
     html +=
-      '<h2 class="goal-panel__title">' +
-      '<span class="goal-panel__icon" aria-hidden="true">' +
+      '<h2 class="projekt-panel__title">' +
+      '<span class="projekt-panel__icon" aria-hidden="true">' +
       iconFor(g.icon) +
       "</span> " +
       esc(g.title) +
       "</h2>";
     if (g.tagline) {
-      html += '<p class="goal-panel__tagline">' + esc(g.tagline) + "</p>";
+      html += '<p class="projekt-panel__tagline">' + esc(g.tagline) + "</p>";
     }
     if (g.description) {
-      html += '<p class="goal-panel__desc">' + esc(g.description) + "</p>";
+      html += '<p class="projekt-panel__desc">' + esc(g.description) + "</p>";
     }
 
     html +=
-      '<div class="goal-bar" role="progressbar" aria-valuemin="0"' +
+      '<div class="projekt-bar" role="progressbar" aria-valuemin="0"' +
       ' aria-valuemax="100" aria-valuenow="' +
       g.pct +
       '" aria-label="' +
@@ -100,38 +101,38 @@
       g.pct +
       '% finanziert">';
     html += barMarkup(g.bar);
-    html += '<span class="goal-bar__pct">' + g.pct + "%</span>";
+    html += '<span class="projekt-bar__pct">' + g.pct + "%</span>";
     html += "</div>";
 
-    html += '<p class="goal-panel__amounts">';
+    html += '<p class="projekt-panel__amounts">';
     html +=
-      '<span class="goal-panel__raised">' +
+      '<span class="projekt-panel__raised">' +
       Core.formatAmount(g.raised, g.currency) +
       "</span>";
-    html += ' <span class="goal-panel__slash">/</span> ';
+    html += ' <span class="projekt-panel__slash">/</span> ';
     html +=
-      '<span class="goal-panel__targetv">' +
+      '<span class="projekt-panel__targetv">' +
       Core.formatAmount(g.target, g.currency) +
       "</span>";
     if (g.reached) {
-      html += ' <span class="goal-panel__reached">*** ZIEL ERREICHT ***</span>';
+      html += ' <span class="projekt-panel__reached">*** PROJEKT ERREICHT ***</span>';
     } else {
       html +=
-        ' <span class="goal-panel__remaining">· noch ' +
+        ' <span class="projekt-panel__remaining">· noch ' +
         Core.formatAmount(g.remaining, g.currency) +
         "</span>";
     }
     html += "</p>";
 
-    html += '<div class="goal-panel__actions">';
+    html += '<div class="projekt-panel__actions">';
     html +=
-      '<a class="goal-action goal-action--donate" href="' +
+      '<a class="projekt-action projekt-action--donate" href="' +
       esc(g.kofi || KOFI_PROFILE) +
-      '" target="_blank" rel="noopener noreferrer">&gt;&nbsp;spenden' +
-      '<span class="goal-cursor" aria-hidden="true">▏</span></a>';
+      '" target="_blank" rel="noopener noreferrer">&gt;&nbsp;unterstützen' +
+      '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
     if (g.kofiShop) {
       html +=
-        '<a class="goal-action goal-action--shop" href="' +
+        '<a class="projekt-action projekt-action--shop" href="' +
         esc(g.kofiShop) +
         '" target="_blank" rel="noopener noreferrer">[ Ko-fi-Shop ]</a>';
     }
@@ -142,31 +143,31 @@
   }
 
   function overviewMarkup(agg, currency) {
-    var html = '<div class="goals-overview__panel">';
+    var html = '<div class="projekte-overview__panel">';
     html +=
-      '<p class="goals-overview__cmd" aria-hidden="true">$ funding --status</p>';
+      '<p class="projekte-overview__cmd" aria-hidden="true">$ funding --status</p>';
     html +=
-      '<div class="goal-bar goal-bar--total" role="progressbar"' +
+      '<div class="projekt-bar projekt-bar--total" role="progressbar"' +
       ' aria-valuemin="0" aria-valuemax="100" aria-valuenow="' +
       agg.pct +
       '" aria-label="Gesamtfortschritt: ' +
       agg.pct +
       '% finanziert">';
     html += barMarkup(agg.bar);
-    html += '<span class="goal-bar__pct">' + agg.pct + "%</span>";
+    html += '<span class="projekt-bar__pct">' + agg.pct + "%</span>";
     html += "</div>";
     html +=
-      '<p class="goals-overview__stats">' +
+      '<p class="projekte-overview__stats">' +
       agg.reachedCount +
       "/" +
       agg.count +
-      " Ziele erreicht · " +
+      " Projekte erreicht · " +
       Core.formatAmount(agg.totalRaised, currency) +
       " / " +
       Core.formatAmount(agg.totalTarget, currency) +
       "</p>";
     html +=
-      '<a class="btn btn-primary goals-overview__cta" href="' +
+      '<a class="btn btn-primary projekte-overview__cta" href="' +
       KOFI_PROFILE +
       '" target="_blank" rel="noopener noreferrer">Auf Ko-fi unterstützen ↗</a>';
     html += "</div>";
@@ -185,10 +186,10 @@
       Math.min(100, Math.max(0, Core.rawPercent(raised, target)))
     );
     var bar = Core.asciiBar(pct, Core.BAR_WIDTH);
-    setText(el, ".goal-bar__filled", bar.filled);
-    setText(el, ".goal-bar__empty", bar.empty);
-    setText(el, ".goal-bar__pct", pct + "%");
-    setText(el, ".goal-panel__raised", Core.formatAmount(raised, currency));
+    setText(el, ".projekt-bar__filled", bar.filled);
+    setText(el, ".projekt-bar__empty", bar.empty);
+    setText(el, ".projekt-bar__pct", pct + "%");
+    setText(el, ".projekt-panel__raised", Core.formatAmount(raised, currency));
   }
 
   function animatePanel(el, currency) {
@@ -206,7 +207,7 @@
   }
 
   function setupAnimations(container, currency) {
-    var panels = container.querySelectorAll(".goal-panel");
+    var panels = container.querySelectorAll(".projekt-panel");
     if (!panels.length) return;
     if (
       reduceMotion ||
@@ -242,17 +243,17 @@
 
   function loadingMarkup() {
     return (
-      '<p class="goals-loading"><span class="goals-loading__cmd">' +
+      '<p class="projekte-loading"><span class="projekte-loading__cmd">' +
       "$ funding --load</span>" +
-      '<span class="goals-cursor" aria-hidden="true">▋</span></p>'
+      '<span class="projekte-cursor" aria-hidden="true">▋</span></p>'
     );
   }
 
   function renderError(el) {
     el.innerHTML =
-      '<div class="goals-fallback">' +
-      '<p class="goals-fallback__cmd">$ funding --load ' +
-      '<span class="goals-fallback__err">ERR</span></p>' +
+      '<div class="projekte-fallback">' +
+      '<p class="projekte-fallback__cmd">$ funding --load ' +
+      '<span class="projekte-fallback__err">ERR</span></p>' +
       "<p>Du kannst uns trotzdem direkt unterstützen: " +
       '<a href="' +
       KOFI_PROFILE +
@@ -262,7 +263,7 @@
 
   function renderEmpty(el) {
     el.innerHTML =
-      '<p class="goals-empty">Aktuell sind keine Spendenziele ausgeschrieben. ' +
+      '<p class="projekte-empty">Aktuell stehen keine Projekte zur Unterstützung aus. ' +
       '<a href="' +
       KOFI_PROFILE +
       '" target="_blank" rel="noopener noreferrer">Trotzdem unterstützen ↗</a></p>';
@@ -272,9 +273,9 @@
   // ── Init ────────────────────────────────────────────────────────────────
 
   function render(data) {
-    var list = document.getElementById("goals-list");
-    var overviewEl = document.getElementById("goals-overview");
-    var updatedEl = document.getElementById("goals-updated");
+    var list = document.getElementById("projekte-list");
+    var overviewEl = document.getElementById("projekte-overview");
+    var updatedEl = document.getElementById("projekte-updated");
     if (!list) return;
 
     var goals = (data && data.goals) || [];
@@ -312,7 +313,7 @@
   }
 
   function init() {
-    var list = document.getElementById("goals-list");
+    var list = document.getElementById("projekte-list");
     if (!list) return;
     if (!Core) {
       renderError(list);
