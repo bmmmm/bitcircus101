@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-06-18T15:20:47.781Z",
+  "lastSync": "2026-06-18T18:13:46.404Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-18T15:20:47.565Z",
+      "fetchedAt": "2026-06-18T18:13:45.896Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 49,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-18T15:20:47.763Z",
+      "fetchedAt": "2026-06-18T18:13:45.900Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 47,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-18T15:20:47.612Z",
+      "fetchedAt": "2026-06-18T18:13:46.390Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -144,23 +144,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Raspberry Pi Workshop",
-      "subtitle": "",
-      "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
-      "location": "",
-      "date": "2026-06-18",
-      "time": "19:00",
-      "tags": [
-        "#workshop",
-        "#datenburg"
-      ],
-      "type": "workshop",
-      "source": "Datenburg e.V.",
-      "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Linkup@bitcircus101",
       "subtitle": "",
@@ -825,6 +808,23 @@
       "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-08-14",
+      "time": "20:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-05-09T10:12:20.662Z"
     }
   ]
 }
