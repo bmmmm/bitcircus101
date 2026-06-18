@@ -102,20 +102,10 @@
                             <div class="stage-body">
                                 <p class="prompt glow">$ <b>ls ~/unterstützen/</b></p>
                                 <ul class="ways" id="ways">
-                                    <li><a class="way way--tatkraft" href="#tatkraft" id="way-tatkraft" aria-expanded="false" aria-controls="tatkraft"><span class="ico" aria-hidden="true">⧖</span><span class="key">tuwat!</span><span class="lbl">was tun :)</span></a></li>
+                                    <li><a class="way way--tatkraft" href="#tatkraft"><span class="ico" aria-hidden="true">⧖</span><span class="key">tuwat!</span><span class="lbl">was tun :)</span></a></li>
                                     <li><a class="way" href="#projekte"><span class="ico" aria-hidden="true">⚡</span><span class="key">ein&nbsp;projekt</span><span class="lbl">ein Projekt boosten</span></a></li>
                                     <li><a class="way" href="#dauerhaft"><span class="ico" aria-hidden="true">∞</span><span class="key">dauerhaft</span><span class="lbl">Patin/Pate werden</span></a></li>
                                 </ul>
-                                <div class="tatkraft" id="tatkraft" hidden>
-                                    <p class="h">tuwat — vor Ort mit anpacken:</p>
-                                    <ul>
-                                        <li><span class="e" aria-hidden="true">🧹</span><span>aufräumen &amp; durchfegen</span></li>
-                                        <li><span class="e" aria-hidden="true">🧺</span><span>Handtücher &amp; Wäsche</span></li>
-                                        <li><span class="e" aria-hidden="true">🥤</span><span>Getränke &amp; Snacks auffüllen</span></li>
-                                        <li><span class="e" aria-hidden="true">🔧</span><span>beim Auf- &amp; Umbau helfen</span></li>
-                                        <li class="info"><span class="e" aria-hidden="true">📡</span><span>im Loop bleiben → <a href="join-info/" target="_blank" rel="noopener noreferrer">Signal INFO ↗</a></span></li>
-                                    </ul>
-                                </div>
                             </div>
                         </div>
                         <details class="fold">
@@ -131,12 +121,12 @@
                     </div>
 
                     <section id="projekte" aria-labelledby="projekte-heading">
-                        <h2 id="projekte-heading">Projekte — Anschaffungen &amp; Vorhaben</h2>
+                        <h2 id="projekte-heading">Projekte &amp; Kosten</h2>
                         <p class="projekte-intro">
-                            Anschaffungen und Vorhaben für den Space – vom Balkonkraftwerk bis zu
-                            Workshops und Förderanträgen. Mitmachen kannst du mit <strong>Geld</strong>,
-                            mit <strong>Eigenleistung</strong> oder mit <strong>Wissen</strong>;
-                            ein Balken pro Projekt zeigt den Geld-Stand.
+                            Womit wir rechnen — in zwei Sorten: <strong>einmalige Anschaffungen</strong>
+                            zeigen einen Balken bis zum Ziel, <strong>laufende Kosten</strong> fallen
+                            Monat für Monat an. Lieber mit Tatkraft als mit Geld helfen?
+                            <a href="#tatkraft">Das geht hier ↓</a>
                         </p>
                         <div id="projekte-overview" class="projekte-overview"></div>
                         <div id="projekte-list" class="projekte-list" aria-live="polite" aria-busy="true">
@@ -158,11 +148,54 @@
                                 <div id="projects-picker" class="pj-pick" role="group" aria-label="Ansicht für die Projekte wählen"></div>
                             </div>
                         </details>
+                        <div id="kosten-monatlich" class="kosten-monatlich" aria-live="polite">
+                            <noscript>
+                                <p>Laufende Kosten zeigen wir per JavaScript – <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">dauerhaft unterstützen ↗</a>.</p>
+                            </noscript>
+                        </div>
                         <p class="projekte-privacy">
                             Die Beträge pflegen wir selbst – beim Anzeigen keine Tracker, keine Drittanbieter.
                             Erst beim Klick auf „unterstützen“ geht es zu Ko-fi.
                         </p>
                         <div id="projekte-updated" class="projekte-updated"></div>
+                    </section>
+
+                    <section id="tatkraft" aria-labelledby="tatkraft-heading">
+                        <h2 id="tatkraft-heading">tuwat — anpacken statt überweisen</h2>
+                        <p class="tatkraft-intro">
+                            Helfen geht auch ohne Geld. Hier sind Sachen, bei denen wir gerade Hände
+                            brauchen — von schnell erledigt bis größeres Vorhaben.
+                        </p>
+                        <div class="tuwat-board">
+                            <div class="tuwat-group">
+                                <h3 class="tuwat-group__title">Aufgaben — schnell übernommen</h3>
+                                <ul class="tuwat-list">
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🧹</span><span>putzen &amp; aufräumen</span></li>
+                                    <li><span class="tuwat-emoji" aria-hidden="true">♻</span><span>Leergut wegbringen</span></li>
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🧺</span><span>Wäsche waschen</span></li>
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🥤</span><span>Getränke kaufen</span></li>
+                                </ul>
+                            </div>
+                            <div class="tuwat-group">
+                                <h3 class="tuwat-group__title">Vorhaben — mit Eigenleistung</h3>
+                                <ul class="tuwat-list">
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🪟</span><span>Schaufenster-Rolladen wieder in Betrieb nehmen</span></li>
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🔇</span><span>Akustikpanele aufhängen</span></li>
+                                </ul>
+                            </div>
+                            <div class="tuwat-group">
+                                <h3 class="tuwat-group__title">Aktionen &amp; Workshops</h3>
+                                <p>
+                                    Bei vielen Terminen brauchen wir Hände — Auf- und Abbau, Betreuung,
+                                    Material. Wo gerade Hilfe gesucht ist, steht direkt am Termin:
+                                    <a href="events.html">Veranstaltungen ansehen →</a>
+                                </p>
+                                <p class="tuwat-info">
+                                    <span class="tuwat-emoji" aria-hidden="true">📡</span> im Loop bleiben →
+                                    <a href="join-info/" target="_blank" rel="noopener noreferrer">Signal INFO ↗</a>
+                                </p>
+                            </div>
+                        </div>
                     </section>
 
                     <h2 id="dauerhaft">Dauerhaft &amp; direkt</h2>
@@ -242,8 +275,8 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="goals-core.js?v=8"></script>
-        <script defer src="goals.js?v=8"></script>
+        <script defer src="finanz-core.js?v=8"></script>
+        <script defer src="finanz.js?v=8"></script>
         <script defer src="projects.js?v=8"></script>
         <script defer src="stage.js?v=8"></script>
         <script defer src="main.js?v=8"></script>
