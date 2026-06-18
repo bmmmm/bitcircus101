@@ -14,7 +14,7 @@ const LAYOUT_PAGES = [
   "index.html",
   "events.html",
   "donations.html",
-  // goals.html is now a thin redirect stub to donations.html#ziele — no shared chrome.
+  // goals.html is now a thin redirect stub to donations.html#projekte — no shared chrome.
   "raum-nutzen.html",
   "impressum-datenschutz.html",
   "dankedankedanke.html",

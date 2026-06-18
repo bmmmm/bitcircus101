@@ -150,6 +150,37 @@ section {
     margin-bottom: 0;
 }
 
+/* Sidenote: a de-emphasised, collapsible aside — e.g. room rental below the
+   community CTA. A <details> so the business-y "mieten" stays tucked away by
+   default; same disclosure mechanics as .fold, but keeps its dashed identity. */
+.sidenote {
+    margin-top: calc(var(--gap-lg) * 2);
+    border: 1px dashed var(--border);
+    color: var(--text-dim);
+    font-size: 0.92rem;
+}
+.sidenote__summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    padding: var(--gap-md) var(--gap-lg);
+    user-select: none;
+}
+.sidenote__summary::-webkit-details-marker { display: none; }
+.sidenote__summary::marker { content: ""; }
+.sidenote__summary:hover { color: var(--text); }
+.sidenote__summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sidenote__caret { color: var(--accent); transition: transform var(--transition); }
+.sidenote[open] .sidenote__caret { transform: rotate(90deg); }
+.sidenote__title { font-size: 1.15rem; color: var(--text-dim); }
+.sidenote__body { padding: 0 var(--gap-lg) var(--gap-md); }
+.sidenote__body > p:first-child { margin-top: 0; }
+.sidenote .room-spec dd {
+    color: var(--text-dim);
+}
+
 /* =============================================================================
    Navigation
    ============================================================================= */
@@ -581,114 +612,6 @@ nav li a.nav__cta.nav__link--current:focus-visible {
         text-align: center;
         margin-top: var(--gap-xs);
     }
-}
-
-/* =============================================================================
-   Cookie / Consent Banner
-   ============================================================================= */
-.site-notice {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--bg-panel);
-    border-bottom: 2px solid var(--accent);
-    color: var(--text);
-    padding: var(--gap-lg);
-    text-align: center;
-    z-index: var(--z-modal);
-    display: none;
-    max-height: 80vh;
-    overflow-y: auto;
-    font-size: 0.9rem;
-    line-height: 1.6;
-}
-
-/* JS opens the consent dialog by toggling this class — keeps display out of inline styles. */
-.site-notice.site-notice--open { display: block; }
-
-.site-notice p { color: var(--text); }
-.site-notice ul { text-align: left; display: inline-block; margin: var(--gap-sm) 0; }
-.site-notice li { color: var(--text); margin: 6px 0; }
-
-.site-notice button {
-    background: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-    padding: var(--gap-sm) var(--gap-lg);
-    margin: 0 var(--gap-sm);
-    cursor: pointer;
-    font-family: var(--font);
-    font-size: 0.9rem;
-    min-width: 120px;
-    transition: background var(--transition), color var(--transition);
-}
-
-.site-notice button:hover {
-    background: var(--accent);
-    color: var(--bg);
-}
-
-
-body.cookie-banner-shown {
-    overflow: hidden;
-    padding-top: 200px;
-}
-
-body.cookie-banner-shown main,
-body.cookie-banner-shown footer {
-    filter: blur(4px);
-    opacity: 0.2;
-    pointer-events: none;
-}
-
-body.cookie-banner-shown .back-link {
-    filter: none !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    position: fixed;
-    bottom: var(--gap-lg);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: var(--z-modal);
-    background: var(--bg-panel);
-    padding: var(--gap-md) var(--gap-xl);
-    border: 1px solid var(--accent);
-    max-width: 300px;
-    text-align: center;
-}
-
-body.cookie-banner-shown header { filter: blur(4px); opacity: 0.2; pointer-events: none; }
-
-.site-notice__title {
-    font-size: 1.05rem;
-    font-weight: 600;
-    margin: 0 0 var(--gap-sm);
-    color: var(--accent);
-    letter-spacing: 0.04em;
-}
-
-.site-notice__list {
-    text-align: left;
-    margin: 0 auto var(--gap-sm);
-    max-width: 500px;
-    font-size: 0.9em;
-}
-
-.payment-method-text {
-    text-align: center;
-    color: var(--text-dim);
-    margin: var(--gap-lg) 0;
-}
-
-.decline-message {
-    text-align: center;
-    margin-top: var(--gap-lg);
-}
-
-.osm-map-decline-section {
-    margin-top: var(--gap-xl);
-    text-align: center;
 }
 
 /* =============================================================================
@@ -1220,21 +1143,6 @@ section:target > h2 {
     align-self: center;
 }
 
-.donation-item iframe {
-    border: none;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    background: var(--bg-panel);
-}
-
-.donation-item--embed {
-    max-width: 42rem;
-    width: 100%;
-    align-self: stretch;
-    margin-inline: auto;
-}
-
 .donation-fallback {
     margin: var(--gap-lg) 0;
     padding: var(--gap-md) 0;
@@ -1265,6 +1173,49 @@ section:target > h2 {
     .donation-fallback__card {
         flex: 1 1 240px;
         max-width: 320px;
+    }
+}
+
+/* Floating Ko-fi shortcut (donations page): a plain outbound link styled like a
+   button — no Ko-fi script, no iframe, no third-party cookies. */
+.kofi-float {
+    position: fixed;
+    right: var(--page-inline);
+    bottom: var(--page-inline);
+    z-index: var(--z-nav);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    min-height: 44px;
+    padding: var(--gap-sm) var(--gap-md);
+    border: 1px solid var(--accent);
+    background: var(--bg-panel);
+    color: var(--accent);
+    font-family: var(--font);
+    font-size: var(--font-size);
+    text-decoration: none;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+    transition: background var(--transition), color var(--transition);
+}
+
+.kofi-float:hover {
+    background: var(--accent);
+    color: var(--bg);
+    text-decoration: none;
+}
+
+.kofi-float:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.kofi-float__icon { font-size: 1.15rem; line-height: 1; }
+
+@media (max-width: 480px) {
+    .kofi-float {
+        gap: var(--gap-xs);
+        padding: var(--gap-xs) var(--gap-sm);
+        font-size: 0.85rem;
     }
 }
 
@@ -2606,15 +2557,6 @@ h3.sr-only {
         );
     }
     .carousel-container { aspect-ratio: 4/3; max-width: calc(100vw - 16px); }
-
-    .site-notice { padding: var(--gap-md); }
-    .site-notice button {
-        padding: var(--gap-sm) var(--gap-md);
-        margin: var(--gap-sm) 0;
-        width: 100%;
-    }
-
-    body.cookie-banner-shown { padding-top: 180px; }
 }
 
 /* Small mobile */
@@ -2629,17 +2571,7 @@ h3.sr-only {
     .dot { min-height: 30px; min-width: 30px; }
     .carousel-toggle { width: 32px; height: 32px; }
 
-    .site-notice { font-size: 0.85em; }
-    .site-notice button {
-        display: block;
-        width: 100%;
-        max-width: 200px;
-        margin: var(--gap-xs) auto;
-    }
-
     .donation-item { padding: var(--gap-sm); }
-    .donation-item iframe { height: 500px; }
-    body.cookie-banner-shown { padding-top: 160px; }
 }
 
 /* =============================================================================
@@ -2791,7 +2723,6 @@ h3.sr-only {
 
     a[href]::after { content: " (" attr(href) ")"; }
 
-    .site-notice,
     .carousel-button,
     .carousel-toggle,
     .menu-toggle,
@@ -2813,47 +2744,61 @@ h3.sr-only {
 }
 
 /* =============================================================================
-   Funding goals (goals.html)
+   Funding goals (donations.html#projekte) — default "Liste" view
    ============================================================================= */
-.goals-intro { color: var(--text-dim); margin-bottom: var(--gap-lg); }
+/* #projekte is a <section> nested inside the donations <section>; the global
+   section rule (padding + border-left + background) would double-indent and
+   double-decorate it. Neutralize so its content aligns at the page baseline. */
+#projekte {
+    padding: 0;
+    background: none;
+    border-left: 0;
+}
+
+.projekte-intro { color: var(--text-dim); margin-bottom: var(--gap-lg); }
 
 /* Overview hero */
-.goals-overview { margin-bottom: var(--gap-lg); }
+.projekte-overview { margin-bottom: var(--gap-lg); }
 
-.goals-overview__panel {
+.projekte-overview__panel {
     background: var(--bg-panel);
     border: 1px solid var(--accent-dim);
     padding: var(--gap-md) var(--gap-lg);
 }
 
-.goals-overview__cmd {
+.projekte-overview__cmd {
     color: var(--accent);
     margin: 0 0 var(--gap-sm);
     font-size: 0.9rem;
     letter-spacing: 0.04em;
 }
 
-.goals-overview__stats {
+.projekte-overview__stats {
     color: var(--text-dim);
     margin: var(--gap-sm) 0 var(--gap-md);
     font-size: 0.9rem;
 }
 
-.goals-overview__cta { margin: 0; }
+.projekte-overview__cta { margin: 0; }
 
-/* Goal panels */
-.goals-list { display: flex; flex-direction: column; gap: var(--gap-lg); }
+/* Project panels */
+.projekte-list { display: flex; flex-direction: column; gap: var(--gap-lg); }
+/* projects.js switches to an alternate view by hiding these default mounts via
+   the hidden attribute — the display rule above would otherwise beat [hidden]. */
+.projekte-overview[hidden],
+.projekte-list[hidden],
+.projekte-updated[hidden] { display: none; }
 
-.goal-panel {
+.projekt-panel {
     background: var(--bg-panel);
     border: 1px solid var(--border);
     transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.goal-panel:hover { border-color: var(--accent-dim); }
+.projekt-panel:hover { border-color: var(--accent-dim); }
 
 /* Window chrome / titlebar */
-.goal-panel__chrome {
+.projekt-panel__chrome {
     display: flex;
     align-items: center;
     gap: var(--gap-sm);
@@ -2864,7 +2809,7 @@ h3.sr-only {
     color: var(--text-dim);
 }
 
-.goal-panel__dot {
+.projekt-panel__dot {
     width: 9px;
     height: 9px;
     border-radius: 50%;
@@ -2872,12 +2817,12 @@ h3.sr-only {
     flex: 0 0 auto;
 }
 
-.goal-panel__path { letter-spacing: 0.03em; }
+.projekt-panel__path { letter-spacing: 0.03em; }
 
-.goal-panel__body { padding: var(--gap-md) var(--gap-lg) var(--gap-lg); }
+.projekt-panel__body { padding: var(--gap-md) var(--gap-lg) var(--gap-lg); }
 
 /* Title overrides the global h2 accent/border inside the panel */
-.goal-panel__title {
+.projekt-panel__title {
     border-left: none;
     padding-left: 0;
     color: var(--text-bright);
@@ -2888,18 +2833,18 @@ h3.sr-only {
     gap: var(--gap-sm);
 }
 
-.goal-panel__icon { color: var(--accent); font-size: 1.15em; }
+.projekt-panel__icon { color: var(--accent); font-size: 1.15em; }
 
-.goal-panel__tagline {
+.projekt-panel__tagline {
     color: var(--accent-dim);
     margin: 0 0 var(--gap-sm);
     font-size: 0.9rem;
 }
 
-.goal-panel__desc { margin: 0 0 var(--gap-md); }
+.projekt-panel__desc { margin: 0 0 var(--gap-md); }
 
 /* ASCII progress bar — character count is the data, colour via class */
-.goal-bar {
+.projekt-bar {
     font-family: var(--font);
     /* 20 block chars + percent: scale down on narrow screens so it never wraps */
     font-size: clamp(0.62rem, 2.7vw, 0.95rem);
@@ -2912,10 +2857,10 @@ h3.sr-only {
     align-items: center;
 }
 
-.goal-bar__filled { color: var(--accent); }
-.goal-bar__empty { color: var(--border); }
+.projekt-bar__filled { color: var(--accent); }
+.projekt-bar__empty { color: var(--border); }
 
-.goal-bar__pct {
+.projekt-bar__pct {
     margin-left: var(--gap-sm);
     color: var(--accent);
     font-weight: bold;
@@ -2923,22 +2868,22 @@ h3.sr-only {
     flex: 0 0 auto;
 }
 
-.goal-bar--total { font-size: clamp(0.6rem, 3vw, 1rem); margin: var(--gap-sm) 0; }
+.projekt-bar--total { font-size: clamp(0.6rem, 3vw, 1rem); margin: var(--gap-sm) 0; }
 
 /* Amounts */
-.goal-panel__amounts {
+.projekt-panel__amounts {
     margin: var(--gap-sm) 0 var(--gap-md);
     color: var(--text-dim);
     font-size: 0.95rem;
 }
 
-.goal-panel__raised { color: var(--text-bright); font-weight: bold; }
-.goal-panel__slash { color: var(--border); }
-.goal-panel__remaining { color: var(--text-dim); }
-.goal-panel__reached { color: var(--accent); font-weight: bold; letter-spacing: 0.08em; }
+.projekt-panel__raised { color: var(--text-bright); font-weight: bold; }
+.projekt-panel__slash { color: var(--border); }
+.projekt-panel__remaining { color: var(--text-dim); }
+.projekt-panel__reached { color: var(--accent); font-weight: bold; letter-spacing: 0.08em; }
 
 /* Actions */
-.goal-panel__actions {
+.projekt-panel__actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--gap-md);
@@ -2946,19 +2891,19 @@ h3.sr-only {
     margin-top: var(--gap-sm);
 }
 
-.goal-action {
+.projekt-action {
     font-family: var(--font);
     font-size: 0.95rem;
     text-decoration: none;
     transition: color var(--transition);
 }
 
-.goal-action--donate { color: var(--accent); font-weight: bold; }
-.goal-action--donate:hover { text-decoration: underline; }
-.goal-action--shop { color: var(--text-dim); }
-.goal-action--shop:hover { color: var(--accent); text-decoration: none; }
+.projekt-action--donate { color: var(--accent); font-weight: bold; }
+.projekt-action--donate:hover { text-decoration: underline; }
+.projekt-action--shop { color: var(--text-dim); }
+.projekt-action--shop:hover { color: var(--accent); text-decoration: none; }
 
-.goal-cursor {
+.projekt-cursor {
     display: inline-block;
     margin-left: 2px;
     color: var(--accent);
@@ -2971,12 +2916,12 @@ h3.sr-only {
 }
 
 /* Reached state — accent frame + gentle glow */
-.goal-panel--reached {
+.projekt-panel--reached {
     border-color: var(--accent);
     box-shadow: 0 0 14px rgba(0, 217, 126, 0.12);
 }
-.goal-panel--reached .goal-panel__dot { background: var(--accent); }
-.goal-panel--reached .goal-panel__reached {
+.projekt-panel--reached .projekt-panel__dot { background: var(--accent); }
+.projekt-panel--reached .projekt-panel__reached {
     animation: goal-reached-pulse 2.6s ease-in-out infinite;
 }
 
@@ -2986,7 +2931,7 @@ h3.sr-only {
 }
 
 /* Footnotes */
-.goals-privacy {
+.projekte-privacy {
     color: var(--text-dim);
     font-size: 0.8rem;
     margin-top: var(--gap-lg);
@@ -2994,7 +2939,7 @@ h3.sr-only {
     padding-top: var(--gap-md);
 }
 
-.goals-updated {
+.projekte-updated {
     color: var(--text-dim);
     font-size: 0.75rem;
     letter-spacing: 0.04em;
@@ -3002,23 +2947,23 @@ h3.sr-only {
 }
 
 /* Loading / error / empty */
-.goals-loading, .goals-fallback__cmd { color: var(--accent); font-family: var(--font); }
-.goals-loading__cmd { margin-right: 2px; }
+.projekte-loading, .projekte-fallback__cmd { color: var(--accent); font-family: var(--font); }
+.projekte-loading__cmd { margin-right: 2px; }
 
-.goals-cursor {
+.projekte-cursor {
     display: inline-block;
     color: var(--accent);
     animation: goal-blink 1.1s step-end infinite;
 }
 
-.goals-fallback { color: var(--text); }
-.goals-fallback__err { color: #ff5f56; font-weight: bold; }
-.goals-empty { color: var(--text-dim); }
+.projekte-fallback { color: var(--text); }
+.projekte-fallback__err { color: #ff5f56; font-weight: bold; }
+.projekte-empty { color: var(--text-dim); }
 
 @media (prefers-reduced-motion: reduce) {
-    .goal-cursor,
-    .goals-cursor,
-    .goal-panel--reached .goal-panel__reached { animation: none; }
+    .projekt-cursor,
+    .projekte-cursor,
+    .projekt-panel--reached .projekt-panel__reached { animation: none; }
 }
 
 /* =============================================================================
@@ -3184,10 +3129,53 @@ h3.sr-only {
 .support-stage .tatkraft li.info a { color: var(--st-text); text-decoration: none; }
 .support-stage .tatkraft li.info a:hover { color: var(--st-green); }
 
+/* Foldable disclosure — calm-by-default switchers (stage gallery, view picker):
+   the active animation / view shows on load, the chooser tucks away. */
+.fold {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-panel);
+    margin: 0 0 var(--gap-lg);
+}
+.fold__summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5em;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    user-select: none;
+}
+.fold__summary::-webkit-details-marker { display: none; }
+.fold__summary::marker { content: ""; }
+.fold__summary:hover { color: var(--text); }
+.fold__summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fold__caret { color: var(--accent); transition: transform var(--transition); }
+.fold[open] .fold__caret { transform: rotate(90deg); }
+.fold__cmd { color: var(--accent-dim); }
+.fold__hint { color: var(--text-dim); }
+.fold__body { padding: 0 0.8rem 0.8rem; }
+.fold__body .pj-pick { margin: 0; }
+
+/* Stage gallery fold — terminal palette, keeps the old centered gallery width. */
+.support-stage .fold {
+    width: min(760px, 94vw);
+    margin: 0;
+    border-color: var(--st-dim);
+    background: var(--st-hl);
+}
+.support-stage .fold__summary { color: var(--st-mute); }
+.support-stage .fold__summary:hover { color: var(--st-text); }
+.support-stage .fold__caret { color: var(--st-green); }
+.support-stage .fold__cmd { color: var(--st-text); }
+.support-stage .fold__hint { color: var(--st-mute); }
+.support-stage .fold .gallery { width: 100%; }
+
 /* Showcase (small + clickable) */
-.support-stage .gallery-h { color: var(--st-mute); font-size: 11px; font-weight: normal; margin: 30px 0 0; text-align: center; }
-.support-stage .gallery-h span { color: var(--st-mute); }
-.support-stage .gallery { width: min(760px, 94vw); display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 7px; }
+.support-stage .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 7px; }
 .support-stage .idea {
     border: 1px solid var(--st-dim); border-radius: 5px; padding: 5px 6px 4px;
     background: var(--st-hl); position: relative; overflow: hidden; cursor: pointer;
@@ -3201,3 +3189,1139 @@ h3.sr-only {
 .support-stage .idea[aria-current="true"] .idea__title { color: var(--st-green); }
 .support-stage .idea .m { font-size: 8px; color: var(--st-dim); margin: 0 0 4px; }
 .support-stage .idea pre { font-size: 8px; line-height: 1.1; min-height: 34px; color: var(--st-green); }
+
+/* =============================================================================
+   Projekte view switcher (donations.html#projekte) — picker + template canvas
+   The default "Liste" view is rendered by goals.js; the alternate templates
+   below live under .projects-alt .pj-<id> and are assembled into projects.js.
+   ============================================================================= */
+.pj-pick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap-sm);
+    margin: 0 0 var(--gap-lg);
+}
+
+.pj-pick__tile {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--gap-xs);
+    min-width: 88px;
+    padding: var(--gap-xs) var(--gap-sm);
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--font);
+    cursor: pointer;
+    transition: border-color var(--transition), color var(--transition);
+}
+
+.pj-pick__tile:hover { border-color: var(--accent-dim); color: var(--text); }
+.pj-pick__tile:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.pj-pick__tile[aria-current="true"] {
+    border-color: var(--accent);
+    color: var(--text-bright);
+}
+
+.pj-pick__mini {
+    margin: 0;
+    font-family: var(--font);
+    font-size: 0.5rem;
+    line-height: 1.15;
+    color: var(--accent);
+    white-space: pre;
+    overflow: hidden;
+    min-height: 3.2em;
+}
+
+.pj-pick__label {
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    text-align: center;
+}
+
+/* Alternate template canvas — bounded, never full-viewport */
+.projects-alt {
+    position: relative;
+    margin: var(--gap-md) 0 var(--gap-lg);
+    min-height: 220px;
+}
+
+.projects-alt[hidden] { display: none; }
+/* ── ASCII-Board template ────────────────────────────────────────────────────
+   All selectors scoped under ".projects-alt .pj-ascii".
+   No :root, no own palette. Token refs: var(--accent), var(--text),
+   var(--text-dim), var(--border), var(--bg-panel).
+   Structural vars namespaced --pj-ascii-*.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* Sensible sizing: responsive height, no fixed/100vh/inset. */
+.projects-alt .pj-ascii {
+  min-height: 20rem;
+  /* No max-height / inner scroll: grow with content so the page keeps a single
+     scrollbar (no nested scroll viewport). Horizontal width is handled by the
+     inner .pj-ascii__wrap (overflow-x: auto). */
+  overflow: visible;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem 0.5rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+/* Outer flex column: board stacked above the donate links. */
+.projects-alt .pj-ascii .pj-ascii__wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* The box-drawing board. */
+.projects-alt .pj-ascii .pj-ascii__board {
+  --pj-ascii-filled-color: var(--accent);
+  --pj-ascii-empty-color:  var(--text-dim);
+  --pj-ascii-border-color: var(--border);
+  --pj-ascii-head-color:   var(--text);
+
+  margin: 0;
+  padding: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: none;
+  white-space: pre;
+  overflow: visible;
+
+  /* Box-drawing and block characters use the site's text color by default.
+     Filled blocks (█) get accent color via CSS class if we need it in future;
+     for now they render in var(--text) which reads cleanly as a bar fill.
+     Override below for filled/empty distinction via character-class spans
+     if the host ever injects them. */
+}
+
+/* sr-only progressbars — hide visually, keep in a11y tree. */
+.projects-alt .pj-ascii .pj-ascii__a11y {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Donate links row — inline tags. */
+.projects-alt .pj-ascii .pj-ascii__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  padding: 0 0.1rem;
+}
+
+.projects-alt .pj-ascii .pj-ascii__link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  padding: 0.15rem 0.55rem;
+  border-radius: 2px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.projects-alt .pj-ascii .pj-ascii__link:hover,
+.projects-alt .pj-ascii .pj-ascii__link:focus-visible {
+  border-color: var(--accent);
+  background: transparent;
+  outline: none;
+  text-decoration: underline;
+}
+
+/* Mobile: shrink font slightly so the board doesn't scroll horizontally
+   on narrow viewports — the board is pre-formatted ASCII, so we can only
+   scale, not reflow. */
+@media (max-width: 600px) {
+  .projects-alt .pj-ascii .pj-ascii__board {
+    font-size: 0.62rem;
+    line-height: 1.4;
+  }
+}
+/* ── bootlog template — scoped to .projects-alt .pj-bootlog ── */
+/* All selectors start with .projects-alt .pj-bootlog */
+/* No :root, no palette re-definitions — uses site tokens only */
+
+.projects-alt .pj-bootlog {
+  font-family: ui-monospace, "Cascadia Code", "SF Mono", "Fira Mono",
+               "Consolas", "Menlo", monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ── wrapper: constrained column, grows with content (no inner scroll) ── */
+.projects-alt .pj-bootlog .bl-wrap {
+  max-width: 72ch;
+  min-height: 18rem;
+  overflow-x: hidden;
+  padding: 1.25rem 1rem 1.25rem;
+  /* subtle panel background */
+  background: var(--bg-panel, var(--bg));
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  /* thin scrollbar for webkit */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.projects-alt .pj-bootlog .bl-wrap::-webkit-scrollbar {
+  width: 4px;
+}
+.projects-alt .pj-bootlog .bl-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
+.projects-alt .pj-bootlog .bl-wrap::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+/* ── log <pre>: full width, no extra spacing ── */
+.projects-alt .pj-bootlog .bl-log {
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  background: transparent;
+}
+
+/* ── line types ── */
+
+/* system message — dim */
+.projects-alt .pj-bootlog .bl-sys {
+  color: var(--text-dim);
+}
+
+/* info message — dim */
+.projects-alt .pj-bootlog .bl-inf {
+  color: var(--text-dim);
+}
+
+/* OK / success — accent */
+.projects-alt .pj-bootlog .bl-ok {
+  color: var(--accent);
+}
+
+/* in-progress / amber status — use a namespaced var with site-token fallback */
+.projects-alt .pj-bootlog .bl-amb {
+  --pj-bootlog-amber: #f0c040;
+  color: var(--pj-bootlog-amber);
+}
+
+/* dim / secondary info */
+.projects-alt .pj-bootlog .bl-dim {
+  color: var(--text-dim);
+  font-size: 0.92em;
+}
+
+/* goal heading line */
+.projects-alt .pj-bootlog .bl-hdr {
+  color: var(--text);
+  font-weight: bold;
+  margin-top: 0.1em;
+}
+
+/* summary heading */
+.projects-alt .pj-bootlog .bl-sum-hdr {
+  color: var(--text);
+  font-weight: bold;
+  border-top: 1px solid var(--border);
+  padding-top: 0.35em;
+  margin-top: 0.1em;
+}
+
+/* goal title inside heading */
+.projects-alt .pj-bootlog .bl-title {
+  color: var(--accent);
+}
+
+/* decorative icon — inherits accent via parent usually */
+.projects-alt .pj-bootlog .bl-icon {
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* progress bar row */
+.projects-alt .pj-bootlog .bl-bar {
+  white-space: pre;
+  color: var(--text-dim);
+}
+
+.projects-alt .pj-bootlog .bl-bar-filled {
+  color: var(--accent);
+  letter-spacing: 0;
+}
+
+.projects-alt .pj-bootlog .bl-bar-empty {
+  color: var(--text-dim);
+  opacity: 0.4;
+  letter-spacing: 0;
+}
+
+/* amounts line */
+.projects-alt .pj-bootlog .bl-amt {
+  color: var(--text-dim);
+  font-size: 0.92em;
+}
+
+.projects-alt .pj-bootlog .bl-raised {
+  color: var(--text);
+  font-weight: bold;
+}
+
+.projects-alt .pj-bootlog .bl-target {
+  color: var(--text-dim);
+}
+
+/* donate / thanks link */
+.projects-alt .pj-bootlog .bl-link-line {
+  /* line wrapper, no extra styling */
+}
+
+.projects-alt .pj-bootlog .bl-link {
+  display: inline-block;
+  font-size: 0.88em;
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  color: var(--bg, #07120c);
+  background: var(--accent);
+  padding: 1px 8px;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.projects-alt .pj-bootlog .bl-link:hover,
+.projects-alt .pj-bootlog .bl-link:focus-visible {
+  background: color-mix(in srgb, var(--accent) 80%, #fff 20%);
+  outline: none;
+}
+
+.projects-alt .pj-bootlog .bl-link:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+/* reached state: ghost button */
+.projects-alt .pj-bootlog .bl-link-reached {
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  letter-spacing: 0.07em;
+}
+
+.projects-alt .pj-bootlog .bl-link-reached:hover,
+.projects-alt .pj-bootlog .bl-link-reached:focus-visible {
+  background: color-mix(in srgb, var(--accent) 12%, transparent 88%);
+}
+
+/* timestamp */
+.projects-alt .pj-bootlog .bl-ts {
+  color: var(--text-dim);
+  opacity: 0.55;
+  font-size: 0.85em;
+}
+
+/* screen-reader-only spans (invisible progressbar elements) */
+.projects-alt .pj-bootlog .bl-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  font-size: 0;
+  line-height: 0;
+}
+
+/* ── cursor ── */
+.projects-alt .pj-bootlog .bl-cursor-line {
+  display: inline-block;
+  color: var(--text-dim);
+}
+
+.projects-alt .pj-bootlog .bl-prompt {
+  color: var(--text-dim);
+}
+
+.projects-alt .pj-bootlog .bl-cursor {
+  display: inline-block;
+  width: 0.6ch;
+  height: 1em;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  opacity: 1;
+}
+
+/* blink only when motion is allowed (not calm, not reduced-motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .projects-alt .pj-bootlog .bl-cursor {
+    animation: bl-blink 1.1s step-end infinite;
+  }
+}
+
+/* calm theme: freeze cursor (no JS needed — pure CSS) */
+[data-theme="calm"] .projects-alt .pj-bootlog .bl-cursor {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes bl-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── responsive: shrink on narrow viewports ── */
+@media (max-width: 480px) {
+  .projects-alt .pj-bootlog {
+    font-size: 12px;
+  }
+  .projects-alt .pj-bootlog .bl-wrap {
+    padding: 0.85rem 0.65rem;
+  }
+}
+/* === Cockpit Gauges template — all selectors scoped to .projects-alt .pj-gauges === */
+
+/* @property declarations for animatable conic-gradient angles (one per possible goal slot) */
+@property --pj-gauges-angle-master {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --pj-gauges-angle-0 {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --pj-gauges-angle-1 {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --pj-gauges-angle-2 {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --pj-gauges-angle-3 {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --pj-gauges-angle-4 {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* === Panel container === */
+.projects-alt .pj-gauges {
+  width: 100%;
+  min-height: 280px;
+  /* No max-height: on mobile the dials stack tall and a fixed cap clipped the
+     lower dials/buttons (overflow: hidden below). Grow with content so the page
+     scrolls once; the rounded corners still clip the panel background. */
+  box-sizing: border-box;
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--bg-panel) 60%, var(--bg) 40%) 0%, var(--bg-panel) 70%);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.5rem 1.5rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Decorative corner screw marks */
+.projects-alt .pj-gauges .pjg-panel::before,
+.projects-alt .pj-gauges .pjg-panel::after {
+  content: '\2715'; /* ✕ */
+  position: absolute;
+  font-size: 0.45rem;
+  color: var(--border);
+  width: 10px;
+  height: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+}
+.projects-alt .pj-gauges .pjg-panel::before { top: 6px; left: 6px; }
+.projects-alt .pj-gauges .pjg-panel::after  { top: 6px; right: 6px; }
+
+/* === Panel header label === */
+.projects-alt .pj-gauges .pjg-label {
+  text-align: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* === Master dial section === */
+.projects-alt .pj-gauges .pjg-master-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1.75rem;
+}
+
+.projects-alt .pj-gauges .pjg-master-lbl {
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+/* === Aggregate stats strip === */
+.projects-alt .pj-gauges .pjg-agg-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.6rem;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+}
+.projects-alt .pj-gauges .pjg-agg-strip b {
+  color: var(--accent);
+}
+
+/* === Dials row (individual goals) === */
+.projects-alt .pj-gauges .pjg-dials-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+  align-items: flex-start;
+}
+
+/* === Dial wrapper (one per goal) === */
+.projects-alt .pj-gauges .pjg-dial-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 0 0 auto;
+}
+
+/* === Bezel ring === */
+.projects-alt .pj-gauges .pjg-bezel {
+  position: relative;
+  width: clamp(100px, 18vw, 160px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 35% 30%,
+    color-mix(in srgb, var(--border) 120%, var(--bg)) 0%,
+    var(--bg) 70%
+  );
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 3px 12px rgba(0, 0, 0, 0.6),
+    inset 0 1px 2px rgba(255, 255, 255, 0.04),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.5);
+  padding: 5px;
+}
+
+/* Screw dots top/bottom on bezel */
+.projects-alt .pj-gauges .pjg-bezel::before,
+.projects-alt .pj-gauges .pjg-bezel::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, var(--border), var(--bg));
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.07), 0 1px 2px rgba(0, 0, 0, 0.5);
+  left: 50%;
+  transform: translateX(-50%);
+}
+.projects-alt .pj-gauges .pjg-bezel::before { top: 3px; }
+.projects-alt .pj-gauges .pjg-bezel::after  { bottom: 3px; }
+
+/* Hover glow through bezel */
+.projects-alt .pj-gauges .pjg-bezel:hover .pjg-dial {
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 50%, transparent));
+}
+
+/* Master bezel is larger */
+.projects-alt .pj-gauges .pjg-bezel--master {
+  width: clamp(130px, 24vw, 220px);
+}
+
+/* Reached bezel glow */
+.projects-alt .pj-gauges .pjg-bezel--reached {
+  box-shadow:
+    0 0 0 2px var(--bg),
+    0 3px 12px rgba(0, 0, 0, 0.6),
+    inset 0 1px 2px rgba(255, 255, 255, 0.04),
+    inset 0 -2px 5px rgba(0, 0, 0, 0.5),
+    0 0 14px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+/* === Dial face === */
+.projects-alt .pj-gauges .pjg-dial {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* background set inline by JS (conic-gradient referencing per-dial @property) */
+  box-shadow:
+    inset 0 2px 7px rgba(0, 0, 0, 0.55),
+    inset 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+/* Tick ring overlay */
+.projects-alt .pj-gauges .pjg-dial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent calc(1deg),
+    color-mix(in srgb, var(--accent) 15%, transparent) calc(1deg),
+    color-mix(in srgb, var(--accent) 15%, transparent) calc(2deg),
+    transparent calc(2deg)
+  );
+  mask: radial-gradient(circle, transparent 80%, black 81%, black 85%, transparent 86%);
+  -webkit-mask: radial-gradient(circle, transparent 80%, black 81%, black 85%, transparent 86%);
+  pointer-events: none;
+}
+
+/* Reached dial glow */
+.projects-alt .pj-gauges .pjg-dial--reached {
+  box-shadow:
+    inset 0 2px 7px rgba(0, 0, 0, 0.55),
+    0 0 10px color-mix(in srgb, var(--accent) 55%, transparent),
+    0 0 20px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* === Dial inner text === */
+.projects-alt .pj-gauges .pjg-dial-inner {
+  text-align: center;
+  z-index: 1;
+  pointer-events: none;
+}
+.projects-alt .pj-gauges .pjg-dial-icon {
+  display: block;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  line-height: 1;
+  margin-bottom: 0.05rem;
+}
+.projects-alt .pj-gauges .pjg-dial-pct {
+  font-size: clamp(0.9rem, 3vw, 1.4rem);
+  font-weight: bold;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.projects-alt .pj-gauges .pjg-dial-pct--master {
+  font-size: clamp(1.3rem, 4.5vw, 2rem);
+}
+
+/* === Reached badge === */
+.projects-alt .pj-gauges .pjg-reached-badge {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.5rem;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 6px color-mix(in srgb, var(--accent) 70%, transparent);
+  z-index: 2;
+}
+
+/* === Dial meta below bezel === */
+.projects-alt .pj-gauges .pjg-dial-meta {
+  text-align: center;
+  max-width: clamp(100px, 18vw, 160px);
+}
+.projects-alt .pj-gauges .pjg-dial-title {
+  font-size: clamp(0.6rem, 1.3vw, 0.75rem);
+  color: var(--text);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+}
+.projects-alt .pj-gauges .pjg-dial-tagline {
+  font-size: clamp(0.5rem, 1.1vw, 0.6rem);
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+.projects-alt .pj-gauges .pjg-dial-amount {
+  margin-top: 4px;
+  font-size: clamp(0.5rem, 1.1vw, 0.6rem);
+  color: var(--accent);
+  opacity: 0.8;
+}
+
+/* === Donate button === */
+.projects-alt .pj-gauges .pjg-donate-btn {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  font-family: inherit;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.projects-alt .pj-gauges .pjg-donate-btn:hover,
+.projects-alt .pj-gauges .pjg-donate-btn:focus-visible {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  border-color: var(--accent);
+  box-shadow: 0 0 7px color-mix(in srgb, var(--accent) 35%, transparent);
+  outline: none;
+  color: var(--text);
+}
+
+/* === Updated timestamp === */
+.projects-alt .pj-gauges .pjg-updated {
+  text-align: center;
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  margin-top: 1rem;
+  letter-spacing: 0.08em;
+}
+
+/* === Error panel === */
+.projects-alt .pj-gauges .pjg-error {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+}
+.projects-alt .pj-gauges .pjg-error a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* === Needle animation (only if motion allowed) === */
+@media (prefers-reduced-motion: no-preference) {
+  .projects-alt .pj-gauges .pjg-dial[data-slot="master"] {
+    transition: --pj-gauges-angle-master 1.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .projects-alt .pj-gauges .pjg-dial[data-slot="0"] {
+    transition: --pj-gauges-angle-0 1.1s cubic-bezier(0.4, 0, 0.2, 1) 0.1s;
+  }
+  .projects-alt .pj-gauges .pjg-dial[data-slot="1"] {
+    transition: --pj-gauges-angle-1 1.1s cubic-bezier(0.4, 0, 0.2, 1) 0.25s;
+  }
+  .projects-alt .pj-gauges .pjg-dial[data-slot="2"] {
+    transition: --pj-gauges-angle-2 1.1s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+  }
+  .projects-alt .pj-gauges .pjg-dial[data-slot="3"] {
+    transition: --pj-gauges-angle-3 1.1s cubic-bezier(0.4, 0, 0.2, 1) 0.55s;
+  }
+  .projects-alt .pj-gauges .pjg-dial[data-slot="4"] {
+    transition: --pj-gauges-angle-4 1.1s cubic-bezier(0.4, 0, 0.2, 1) 0.7s;
+  }
+
+  /* Reached dials pulse */
+  @keyframes pjg-reached-pulse {
+    0%, 100% {
+      box-shadow:
+        inset 0 2px 7px rgba(0, 0, 0, 0.55),
+        0 0 10px color-mix(in srgb, var(--accent) 55%, transparent),
+        0 0 20px color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+    50% {
+      box-shadow:
+        inset 0 2px 7px rgba(0, 0, 0, 0.55),
+        0 0 18px color-mix(in srgb, var(--accent) 75%, white),
+        0 0 36px color-mix(in srgb, var(--accent) 50%, transparent);
+    }
+  }
+  .projects-alt .pj-gauges .pjg-dial--reached {
+    animation: pjg-reached-pulse 2.5s ease-in-out infinite 1.5s;
+  }
+}
+
+/* === Responsive: stack on narrow screens === */
+@media (max-width: 500px) {
+  .projects-alt .pj-gauges {
+    padding: 1rem 0.75rem 1rem;
+  }
+  .projects-alt .pj-gauges .pjg-bezel {
+    width: clamp(110px, 40vw, 160px);
+  }
+  .projects-alt .pj-gauges .pjg-bezel--master {
+    width: clamp(130px, 50vw, 200px);
+  }
+  .projects-alt .pj-gauges .pjg-dials-row {
+    gap: 1rem;
+  }
+}
+/* ── Pixel-Wells template — all selectors scoped under .projects-alt .pj-wells ── */
+/* Uses only site tokens: var(--accent), var(--text), var(--text-dim),             */
+/* var(--border), var(--bg), var(--bg-panel). No :root. No own palette.            */
+
+/* ── Layout custom vars (structural, namespaced) ─────────────────────────────── */
+.projects-alt .pj-wells {
+  --pj-wells-cols:  4;             /* cells per well column */
+  --pj-wells-rows:  16;            /* cells per well row */
+  --pj-wells-cw:    24px;          /* cell width */
+  --pj-wells-ch:    15px;          /* cell height */
+  --pj-wells-gap:   3px;           /* cell gap */
+  /* derived well inner width: cols*cw + (cols-1)*gap */
+  --pj-wells-inner: calc(
+    var(--pj-wells-cols) * var(--pj-wells-cw) +
+    (var(--pj-wells-cols) - 1) * var(--pj-wells-gap)
+  );
+}
+
+/* ── Host box: bounded, in-flow, responsive ──────────────────────────────────── */
+.projects-alt .pj-wells {
+  width: 100%;
+  min-height: 420px;
+  /* No max-height / inner scroll — grow with content, page scrolls once. */
+  overflow: visible;
+  padding: 16px 12px 20px;
+  box-sizing: border-box;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ── Aggregate bar ────────────────────────────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-agg {
+  max-width: 520px;
+  margin: 0 auto 20px;
+}
+
+.projects-alt .pj-wells .pj-wells-agg-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 5px;
+}
+
+.projects-alt .pj-wells .pj-wells-agg-track {
+  height: 6px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+.projects-alt .pj-wells .pj-wells-agg-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.8s ease;
+  width: 0; /* driven by inline style */
+}
+
+/* ── Wells outer grid: row of wells, wrapping on narrow screens ──────────────── */
+.projects-alt .pj-wells .pj-wells-grid-outer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+/* ── Single well wrapper ─────────────────────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-well {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  /* width = inner grid + silo padding + border */
+  width: calc(var(--pj-wells-inner) + 32px);
+  flex-shrink: 0;
+}
+
+/* ── Well header (icon + title + tagline) ────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-header {
+  width: 100%;
+  text-align: center;
+  padding: 0 4px 10px;
+  border-bottom: 1px solid var(--border);
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.projects-alt .pj-wells .pj-wells-icon {
+  font-size: 20px;
+  display: block;
+}
+
+.projects-alt .pj-wells .pj-wells-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text);
+  text-transform: uppercase;
+}
+
+.projects-alt .pj-wells .pj-wells-tagline {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+}
+
+/* ── Silo (the pixel grid container) ────────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-silo {
+  padding: 10px 8px 4px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-top: none;
+  position: relative;
+}
+
+/* Inner cell grid */
+.projects-alt .pj-wells .pj-wells-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--pj-wells-cols), var(--pj-wells-cw));
+  grid-template-rows: repeat(var(--pj-wells-rows), var(--pj-wells-ch));
+  gap: var(--pj-wells-gap);
+}
+
+/* ── Cells ────────────────────────────────────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-cell {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 1px;
+}
+
+/* Lit cell: gradient driven by --pj-wells-cb (set inline per cell) */
+.projects-alt .pj-wells .pj-wells-cell.pj-wells-lit {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--accent) calc(55% + var(--pj-wells-cb, 0%)), #000) 0%,
+    color-mix(in srgb, var(--accent) calc(35% + var(--pj-wells-cb, 0%)), #000) 100%
+  );
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  box-shadow:
+    0 0 4px color-mix(in srgb, var(--accent) 45%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 12%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, #000 25%, transparent);
+}
+
+/* Drop-in animation for non-still mode */
+@keyframes pj-wells-drop {
+  0%   { opacity: 0; transform: translateY(-6px); }
+  60%  { opacity: 1; transform: translateY(1px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .projects-alt .pj-wells .pj-wells-cell.pj-wells-lit.pj-wells-animate {
+    opacity: 0;
+    animation: pj-wells-drop 0.22s ease-out forwards;
+    /* animation-delay driven by inline style */
+  }
+}
+
+/* Reduced-motion override: lit = visible immediately, no animation */
+@media (prefers-reduced-motion: reduce) {
+  .projects-alt .pj-wells .pj-wells-cell.pj-wells-lit {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── Complete state ────────────────────────────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-well.pj-wells-complete .pj-wells-silo {
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
+
+.projects-alt .pj-wells .pj-wells-well.pj-wells-complete .pj-wells-title {
+  color: var(--accent);
+}
+
+/* Line-clear flash for complete wells */
+@keyframes pj-wells-clear {
+  0%   { opacity: 1; }
+  30%  { opacity: 0.1; }
+  55%  { opacity: 1; }
+  75%  { opacity: 0.1; }
+  100% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .projects-alt .pj-wells .pj-wells-well.pj-wells-complete .pj-wells-cell.pj-wells-lit {
+    animation: pj-wells-clear 0.7s ease 0.5s both;
+  }
+}
+
+/* Complete badge overlay */
+.projects-alt .pj-wells .pj-wells-badge {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 4px 8px;
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.projects-alt .pj-wells .pj-wells-well.pj-wells-complete .pj-wells-badge {
+  display: block;
+}
+
+/* ── HUD (readout below each silo) ──────────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-hud {
+  width: 100%;
+  padding: 8px 4px 0;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+/* Progress bar (carries a11y role=progressbar) */
+.projects-alt .pj-wells .pj-wells-pbwrap {
+  height: 3px;
+  background: var(--border);
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.projects-alt .pj-wells .pj-wells-pb {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.6s ease;
+}
+
+/* Percent readout */
+.projects-alt .pj-wells .pj-wells-pct {
+  color: var(--accent);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin: 3px 0;
+}
+
+/* Label/value rows */
+.projects-alt .pj-wells .pj-wells-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.projects-alt .pj-wells .pj-wells-lbl {
+  color: var(--text-dim);
+}
+
+.projects-alt .pj-wells .pj-wells-val {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.projects-alt .pj-wells .pj-wells-rem {
+  color: var(--accent);
+  opacity: 0.7;
+  font-weight: 700;
+}
+
+.projects-alt .pj-wells .pj-wells-rem.pj-wells-done {
+  opacity: 1;
+}
+
+/* ── Donate button ────────────────────────────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-btn {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  color: var(--accent);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.projects-alt .pj-wells .pj-wells-btn:hover,
+.projects-alt .pj-wells .pj-wells-btn:focus-visible {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ── Updated timestamp ────────────────────────────────────────────────────────── */
+.projects-alt .pj-wells .pj-wells-updated {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+/* ── Mobile: shrink cells a bit so wells fit on small screens ─────────────────── */
+@media (max-width: 440px) {
+  .projects-alt .pj-wells {
+    --pj-wells-cw: 18px;
+    --pj-wells-ch: 12px;
+    --pj-wells-gap: 2px;
+  }
+}
