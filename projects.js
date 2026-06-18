@@ -2,7 +2,7 @@
  * projects.js — bitcircus101 "Projekte" view switcher (donations.html#projekte).
  *
  * The funding section ships a quiet default "Liste" view (rendered by finanz.js
- * into #projekte-overview / #projekte-list / #projekte-updated) plus alternate visual
+ * into #projekte-list / #projekte-updated) plus alternate visual
  * templates the visitor can pick. The choice persists in localStorage
  * (bc-projects-tpl) and is switchable any time. Calm theme + OS reduced-motion
  * freeze animated templates to a still frame (consistent with stage.js).
@@ -10,8 +10,11 @@
  * Templates are self-contained modules registered via
  * registerProjectTemplate({ id, title, mini, render }); they receive the parsed
  * finanz.json (the einmalig list) plus a small env and build into a host element.
- * The modules below
- * are inlined from tmp/projects-build/<id>.js (assembled by cat — no CI step).
+ * The template modules below are maintained DIRECTLY in this file. (They were
+ * originally assembled by `cat` from tmp/projects-build/<id>.js, but that
+ * scratch is gitignored, unscripted and stale — it predates the goals→finanz
+ * rename and the no-grand-total rework — so do NOT rebuild from it; this file is
+ * the source of truth.)
  * Plain vanilla ES5 — no dependencies.
  */
 (function () {
@@ -43,7 +46,6 @@
 
   // Default mounts owned by finanz.js (the quiet "Liste" view).
   var defaultMounts = [
-    document.getElementById("projekte-overview"),
     document.getElementById("projekte-list"),
     document.getElementById("projekte-updated")
   ];
@@ -221,8 +223,9 @@ registerProjectTemplate({
       views.push({ goal: g, view: v });
     }
 
-    // Aggregate row.
-    var agg = Core.aggregate(data.einmalig, { currency: data.currency, barWidth: BAR_W });
+    // No grand total — costs are shown per project, never summed into a
+    // GESAMT figure (see finanz.js header: the footer bar carries the symbolic
+    // overall progress instead).
 
     // Column widths (we size to the content then fix them so all rows align).
     // Name column: longest title (with icon prefix) or minimum 16 chars.
@@ -232,10 +235,6 @@ registerProjectTemplate({
       var nameCandidate = views[i].goal.icon + " " + views[i].goal.title;
       if (nameCandidate.length > nameW) { nameW = nameCandidate.length; }
     }
-    // Total row label:
-    var TOTAL_LABEL = "GESAMT";
-    if (TOTAL_LABEL.length > nameW) { nameW = TOTAL_LABEL.length; }
-
     // Amount column: raised / target, e.g. "1.450 € / 3.000 €".
     // Pre-render to find max width.
     var amtParts = [];
@@ -246,8 +245,6 @@ registerProjectTemplate({
       amtParts.push(amtStr);
       if (amtStr.length > amtW) { amtW = amtStr.length; }
     }
-    var aggAmtStr = Core.formatAmount(agg.totalRaised, data.currency) + " / " + Core.formatAmount(agg.totalTarget, data.currency);
-    if (aggAmtStr.length > amtW) { amtW = aggAmtStr.length; }
 
     // PCT column: "100%" — always 4 chars.
     var PCT_W = 4;
@@ -255,7 +252,6 @@ registerProjectTemplate({
     // Status column: "✓ erreicht" or "unterstützen ↗" (for unreached goals).
     var STATUS_REACHED  = "✓ erreicht";       // ✓ erreicht
     var STATUS_DONATE   = "unterstützen ↗";   // unterstützen ↗
-    var STATUS_AGG      = "";
     // Width fits the longer of the two states so neither gets truncated by pad().
     var STATUS_W = Math.max(STATUS_REACHED.length, STATUS_DONATE.length);
 
@@ -319,7 +315,7 @@ registerProjectTemplate({
       pad("Projekt", nameW) + " " +
       pad("Fortschritt", BAR_W) + " " +
       rpad("", PCT_W) + " " +
-      pad("Gesammelt / Gesamt", amtW) + " " +
+      pad("Gesammelt / Ziel", amtW) + " " +
       pad("", STATUS_W)
     );
     // Trim to INNER_W (safety).
@@ -347,20 +343,7 @@ registerProjectTemplate({
       lines.push(V + " " + rowStr + " " + V);
     }
 
-    // ── Separator + aggregate row ────────────────────────────────────────────
-    lines.push(DL + rep(DH, INNER_W + 2) + DR);
-
-    var aggName    = pad(TOTAL_LABEL, nameW);
-    var aggBar     = agg.bar.filled + agg.bar.empty;
-    var aggPct     = rpad(agg.pct + "%", PCT_W);
-    var aggAmt     = pad(aggAmtStr, amtW);
-    var aggReached = agg.reachedCount + "/" + agg.count + " erreicht";
-    // Fit aggReached into STATUS_W.
-    var aggStatus  = pad(aggReached, STATUS_W);
-    var aggRow     = aggName + " " + aggBar + " " + aggPct + " " + aggAmt + " " + aggStatus;
-    aggRow = pad(aggRow, INNER_W);
-    lines.push(V + " " + aggRow + " " + V);
-
+    // ── Bottom border (no grand-total row) ───────────────────────────────────
     lines.push(BL + rep(H, INNER_W + 2) + BR);
 
     // ── Build DOM ────────────────────────────────────────────────────────────
@@ -381,14 +364,6 @@ registerProjectTemplate({
       pb.setAttribute("aria-label", esc(v.title) + ": " + v.pct + "% finanziert");
       a11yDiv.appendChild(pb);
     }
-    // Total progressbar.
-    var totalPb = document.createElement("div");
-    totalPb.setAttribute("role", "progressbar");
-    totalPb.setAttribute("aria-valuemin", "0");
-    totalPb.setAttribute("aria-valuemax", "100");
-    totalPb.setAttribute("aria-valuenow", String(agg.pct));
-    totalPb.setAttribute("aria-label", "Gesamt: " + agg.pct + "% finanziert");
-    a11yDiv.appendChild(totalPb);
     wrap.appendChild(a11yDiv);
 
     // The visual board — a <pre> for monospace/box-drawing.
@@ -475,9 +450,6 @@ registerProjectTemplate({
     pre.setAttribute("aria-live", "polite");
     pre.setAttribute("aria-label", "Funding-Log");
     wrap.appendChild(pre);
-
-    // Aggregate numbers
-    var agg = Core.aggregate(data.einmalig, { currency: data.currency });
 
     // --- line builders ---
 
@@ -568,30 +540,8 @@ registerProjectTemplate({
       addLine("bl-blank", "");
     }
 
-    // aggregate summary
-    var aggRaisedFmt = Core.formatAmount(agg.totalRaised, data.currency);
-    var aggTargetFmt = Core.formatAmount(agg.totalTarget, data.currency);
-    var aggBarFilled = esc(agg.bar.filled);
-    var aggBarEmpty  = esc(agg.bar.empty);
-
-    addLine("bl-sum-hdr", "▸ GESAMT-FORTSCHRITT");
-    addLine("bl-bar",
-      "  <span class='bl-bar-filled' aria-hidden='true'>" + aggBarFilled + "</span>" +
-      "<span class='bl-bar-empty' aria-hidden='true'>" + aggBarEmpty + "</span>" +
-      " <span class='bl-ok'>" + agg.pct + "%</span>"
-    );
-    addLine("bl-amt",
-      "  <span class='bl-raised'>" + esc(aggRaisedFmt) + "</span>" +
-      " / " + esc(aggTargetFmt) +
-      " &mdash; <span class='bl-ok'>" + agg.reachedCount + "/" + agg.count + " Projekte</span>"
-    );
-
-    // invisible aggregate progressbar for a11y (rendered upfront)
-    srBars.push(
-      "<span role='progressbar'" +
-      " aria-valuemin='0' aria-valuemax='100' aria-valuenow='" + agg.pct + "'" +
-      " aria-label='Gesamt: " + agg.pct + "% finanziert'></span>"
-    );
+    // No GESAMT-FORTSCHRITT block — recurring and one-time costs are shown per
+    // item and never rolled into a grand total.
 
     // timestamp
     if (data.updated) {
@@ -674,8 +624,7 @@ registerProjectTemplate({
       " .--.  .--.\n" +
       "( 73%) (42%)\n" +
       " '--'  '--'\n" +
-      "  COCKPIT\n" +
-      " GESAMT:61%"
+      "  COCKPIT"
     );
   },
 
@@ -683,7 +632,7 @@ registerProjectTemplate({
     var Core = env.Core;
     var esc  = env.esc;
 
-    // Compute individual goal views and the aggregate
+    // Compute individual goal views (no aggregate — costs aren't summed)
     var goals    = data.einmalig || [];
     var currency = data.currency || "EUR";
     var views    = [];
@@ -691,8 +640,6 @@ registerProjectTemplate({
     for (i = 0; i < goals.length; i++) {
       views.push(Core.computeGoal(goals[i], { currency: currency }));
     }
-    var agg = Core.aggregate(goals, { currency: currency });
-
     // --- helpers ---
 
     // Map pct 0..100 to degrees 0..360 (capped)
@@ -782,51 +729,12 @@ registerProjectTemplate({
     label.textContent = "◈ FUNDING STATUS PANEL ◈"; // ◈ … ◈
     panel.appendChild(label);
 
-    // -- Master dial section --
-    var masterSection = document.createElement("div");
-    masterSection.className = "pjg-master-section";
-
-    var masterLbl = document.createElement("div");
-    masterLbl.className = "pjg-master-lbl";
-    masterLbl.setAttribute("aria-hidden", "true");
-    masterLbl.textContent = "── GESAMT ──"; // ── GESAMT ──
-    masterSection.appendChild(masterLbl);
-
-    var allReached = agg.count > 0 && agg.reachedCount === agg.count;
-    var masterResult = buildDial(
-      "Gesamt",
-      "▣ GESAMT",  // ▣ GESAMT
-      agg.pct,
-      allReached,
-      true,
-      "master"
-    );
-    masterSection.appendChild(masterResult.bezel);
-
-    // Aggregate stats strip
-    var aggStrip = document.createElement("div");
-    aggStrip.className = "pjg-agg-strip";
-
-    var aggTotal = document.createElement("span");
-    aggTotal.innerHTML =
-      "Gesamt: <b>" + esc(Core.formatAmount(agg.totalRaised, currency)) + "</b>" +
-      " / " + esc(Core.formatAmount(agg.totalTarget, currency));
-    aggStrip.appendChild(aggTotal);
-
-    var aggProj = document.createElement("span");
-    aggProj.innerHTML =
-      "Projekte: <b>" + agg.reachedCount + " / " + agg.count + "</b> erreicht";
-    aggStrip.appendChild(aggProj);
-
-    masterSection.appendChild(aggStrip);
-    panel.appendChild(masterSection);
-
-    // -- Individual goals row --
+    // -- Goal dials row (no master/aggregate dial — costs aren't summed) --
     var row = document.createElement("div");
     row.className = "pjg-dials-row";
 
     // Collect dials for the post-insert animation queue
-    var animQueue = [masterResult];
+    var animQueue = [];
 
     for (i = 0; i < goals.length; i++) {
       var g    = goals[i];
@@ -1109,42 +1017,7 @@ registerProjectTemplate({
       return wrapper;
     }
 
-    // ── Compute aggregate ─────────────────────────────────────────────────
-    var agg = Core.aggregate(data.einmalig, { currency: data.currency });
-
-    // ── Aggregate bar at the top ──────────────────────────────────────────
-    var aggSection = document.createElement("div");
-    aggSection.className = "pj-wells-agg";
-
-    var aggLabel = document.createElement("div");
-    aggLabel.className = "pj-wells-agg-label";
-    aggLabel.innerHTML =
-      "<span>ALLE PROJEKTE</span>" +
-      "<span>" +
-        esc(Core.formatAmount(agg.totalRaised, data.currency)) +
-        " / " +
-        esc(Core.formatAmount(agg.totalTarget, data.currency)) +
-        " (" + agg.pct + "%)" +
-      "</span>";
-    aggSection.appendChild(aggLabel);
-
-    var aggTrack = document.createElement("div");
-    aggTrack.className = "pj-wells-agg-track";
-    aggTrack.setAttribute("role", "progressbar");
-    aggTrack.setAttribute("aria-valuemin", "0");
-    aggTrack.setAttribute("aria-valuemax", "100");
-    aggTrack.setAttribute("aria-valuenow", String(agg.pct));
-    aggTrack.setAttribute("aria-label", "Gesamtfortschritt aller Projekte: " + agg.pct + "% finanziert");
-
-    var aggFill = document.createElement("div");
-    aggFill.className = "pj-wells-agg-fill";
-    aggFill.style.width = agg.pct + "%";
-    aggTrack.appendChild(aggFill);
-    aggSection.appendChild(aggTrack);
-
-    host.appendChild(aggSection);
-
-    // ── Wells grid ────────────────────────────────────────────────────────
+    // ── Wells grid (no aggregate bar — per-project only, costs aren't summed) ──
     var wellsGrid = document.createElement("div");
     wellsGrid.className = "pj-wells-grid-outer";
 
