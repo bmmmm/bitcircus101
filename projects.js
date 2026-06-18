@@ -1,7 +1,7 @@
 /**
  * projects.js — bitcircus101 "Projekte" view switcher (donations.html#projekte).
  *
- * The funding section ships a quiet default "Liste" view (rendered by goals.js
+ * The funding section ships a quiet default "Liste" view (rendered by finanz.js
  * into #projekte-overview / #projekte-list / #projekte-updated) plus alternate visual
  * templates the visitor can pick. The choice persists in localStorage
  * (bc-projects-tpl) and is switchable any time. Calm theme + OS reduced-motion
@@ -9,7 +9,8 @@
  *
  * Templates are self-contained modules registered via
  * registerProjectTemplate({ id, title, mini, render }); they receive the parsed
- * goals.json plus a small env and build into a host element. The modules below
+ * finanz.json (the einmalig list) plus a small env and build into a host element.
+ * The modules below
  * are inlined from tmp/projects-build/<id>.js (assembled by cat — no CI step).
  * Plain vanilla ES5 — no dependencies.
  */
@@ -22,10 +23,10 @@
   if (!section || !pickerHost || !altHost) return; // not on this page
 
   var root = document.documentElement;
-  var Core = window.GoalsCore;
+  var Core = window.FinanzCore;
   var KOFI_PROFILE = "https://ko-fi.com/bmabma";
   var STORE_KEY = "bc-projects-tpl";
-  var JSON_URL = "goals.json";
+  var JSON_URL = "finanz.json";
 
   var reduce = false;
   try { reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) {}
@@ -40,7 +41,7 @@
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
-  // Default mounts owned by goals.js (the quiet "Liste" view).
+  // Default mounts owned by finanz.js (the quiet "Liste" view).
   var defaultMounts = [
     document.getElementById("projekte-overview"),
     document.getElementById("projekte-list"),
@@ -171,7 +172,16 @@
     if (!Core) { activate("list", false); return; }
     fetch(JSON_URL)
       .then(function (res) { if (!res.ok) throw new Error("HTTP " + res.status); return res.json(); })
-      .then(function (d) { DATA = d; activate(activeId, false); })
+      .then(function (d) {
+        // Normalise so every template can read data.einmalig/.monatlich as
+        // arrays (some templates deref .length directly) — a missing key in
+        // finanz.json then degrades to "empty", never throws.
+        d = d || {};
+        d.einmalig = d.einmalig || [];
+        d.monatlich = d.monatlich || [];
+        DATA = d;
+        activate(activeId, false);
+      })
       .catch(function () { activate("list", false); });
   }
 
@@ -205,14 +215,14 @@ registerProjectTemplate({
     // Compute per-goal views.
     var views = [];
     var i, g, v;
-    for (i = 0; i < data.goals.length; i++) {
-      g = data.goals[i];
+    for (i = 0; i < data.einmalig.length; i++) {
+      g = data.einmalig[i];
       v = Core.computeGoal(g, { currency: data.currency, barWidth: BAR_W });
       views.push({ goal: g, view: v });
     }
 
     // Aggregate row.
-    var agg = Core.aggregate(data.goals, { currency: data.currency, barWidth: BAR_W });
+    var agg = Core.aggregate(data.einmalig, { currency: data.currency, barWidth: BAR_W });
 
     // Column widths (we size to the content then fix them so all rows align).
     // Name column: longest title (with icon prefix) or minimum 16 chars.
@@ -467,7 +477,7 @@ registerProjectTemplate({
     wrap.appendChild(pre);
 
     // Aggregate numbers
-    var agg = Core.aggregate(data.goals, { currency: data.currency });
+    var agg = Core.aggregate(data.einmalig, { currency: data.currency });
 
     // --- line builders ---
 
@@ -483,17 +493,17 @@ registerProjectTemplate({
 
     // preamble
     addLine("bl-sys", "[SYS] bitcircus101 funding-daemon v1.0.0");
-    addLine("bl-inf", "[INF] Lade Projekte aus /funding.json …");
+    addLine("bl-inf", "[INF] Lade Projekte aus /finanz.json …");
     addLine("bl-ok",
-      "[OK ] " + data.goals.length + " Projekt" +
-      (data.goals.length === 1 ? "" : "e") + " geladen"
+      "[OK ] " + data.einmalig.length + " Projekt" +
+      (data.einmalig.length === 1 ? "" : "e") + " geladen"
     );
     addLine("bl-blank", "");
 
     // one block per goal
     var i;
-    for (i = 0; i < data.goals.length; i++) {
-      var g    = data.goals[i];
+    for (i = 0; i < data.einmalig.length; i++) {
+      var g    = data.einmalig[i];
       var view = Core.computeGoal(g, { currency: data.currency });
 
       var iconGlyph = esc(g.icon ? g.icon : "");
@@ -674,7 +684,7 @@ registerProjectTemplate({
     var esc  = env.esc;
 
     // Compute individual goal views and the aggregate
-    var goals    = data.goals || [];
+    var goals    = data.einmalig || [];
     var currency = data.currency || "EUR";
     var views    = [];
     var i;
@@ -1100,7 +1110,7 @@ registerProjectTemplate({
     }
 
     // ── Compute aggregate ─────────────────────────────────────────────────
-    var agg = Core.aggregate(data.goals, { currency: data.currency });
+    var agg = Core.aggregate(data.einmalig, { currency: data.currency });
 
     // ── Aggregate bar at the top ──────────────────────────────────────────
     var aggSection = document.createElement("div");
@@ -1139,8 +1149,8 @@ registerProjectTemplate({
     wellsGrid.className = "pj-wells-grid-outer";
 
     var i, g, view, well;
-    for (i = 0; i < data.goals.length; i++) {
-      g = data.goals[i];
+    for (i = 0; i < data.einmalig.length; i++) {
+      g = data.einmalig[i];
       view = Core.computeGoal(g, { currency: data.currency });
       well = buildWell(g, view);
       wellsGrid.appendChild(well);

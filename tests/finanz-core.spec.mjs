@@ -1,15 +1,16 @@
 /**
- * Unit tests for goals-core.js — funding-goal math shared by the browser
- * renderer and the future Ko-fi sync. Runs with:
- *   node --test tests/goals-core.spec.mjs
- * Pure functions, no DOM, no network.
+ * Unit tests for finanz-core.js — cost/funding math for the one-time
+ * (`einmalig`) items shown on donations.html#projekte. Runs with:
+ *   node --test tests/finanz-core.spec.mjs
+ * Pure functions, no DOM, no network. Recurring monthly costs carry no target
+ * and never pass through here, so they are intentionally out of scope.
  */
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
-import GoalsCore from "../goals-core.js";
+import FinanzCore from "../finanz-core.js";
 
 const { rawPercent, asciiBar, formatAmount, computeGoal, aggregate, BAR_WIDTH } =
-  GoalsCore;
+  FinanzCore;
 
 describe("rawPercent", () => {
   it("computes the ratio in percent", () => {
@@ -60,17 +61,17 @@ describe("asciiBar", () => {
 
 describe("formatAmount", () => {
   it("groups thousands and appends the euro symbol", () => {
-    assert.equal(formatAmount(1450, "EUR"), "1.450 €");
+    assert.equal(formatAmount(1450, "EUR"), "1.450 €");
   });
   it("handles small amounts and zero", () => {
-    assert.equal(formatAmount(0, "EUR"), "0 €");
-    assert.equal(formatAmount(145, "EUR"), "145 €");
+    assert.equal(formatAmount(0, "EUR"), "0 €");
+    assert.equal(formatAmount(145, "EUR"), "145 €");
   });
   it("rounds to whole units", () => {
-    assert.equal(formatAmount(99.6, "EUR"), "100 €");
+    assert.equal(formatAmount(99.6, "EUR"), "100 €");
   });
   it("falls back to the euro symbol for an unknown currency", () => {
-    assert.equal(formatAmount(5, "XYZ"), "5 €");
+    assert.equal(formatAmount(5, "XYZ"), "5 €");
   });
 });
 
@@ -94,7 +95,7 @@ describe("computeGoal", () => {
     assert.equal(g.rawPct, 125);
     assert.equal(g.bar.filledCount, BAR_WIDTH);
   });
-  it("never divides by zero on a missing target", () => {
+  it("never divides by zero on a missing target (e.g. a monthly item shape)", () => {
     const g = computeGoal({ raised: 50, target: 0 });
     assert.equal(g.pct, 0);
     assert.equal(g.reached, false);
@@ -108,7 +109,7 @@ describe("computeGoal", () => {
 });
 
 describe("aggregate", () => {
-  it("sums raised/target across goals and counts reached", () => {
+  it("sums raised/target across one-time items and counts reached", () => {
     const a = aggregate([
       { raised: 145, target: 800 },
       { raised: 200, target: 200 },
@@ -126,5 +127,14 @@ describe("aggregate", () => {
     assert.equal(a.pct, 0);
     assert.equal(a.totalTarget, 0);
     assert.equal(a.bar.filledCount, 0);
+  });
+  it("only totals what it is given — monthly costs stay out of the one-time total", () => {
+    // The renderer passes ONLY the einmalig list here; recurring monthly items
+    // (no target) are never included, so the total reflects one-time money only.
+    const einmalig = [{ raised: 145, target: 2000 }];
+    const a = aggregate(einmalig);
+    assert.equal(a.count, 1);
+    assert.equal(a.totalTarget, 2000);
+    assert.equal(a.totalRaised, 145);
   });
 });

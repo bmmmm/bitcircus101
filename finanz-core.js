@@ -1,10 +1,16 @@
 /**
- * goals-core.js — shared funding-goal math used by BOTH the browser renderer
- * (goals.js) and the future Ko-fi sync/endpoint.
+ * finanz-core.js — shared cost/funding math for the "Projekte & Kosten" board
+ * (donations.html#projekte), used by BOTH the browser renderer (finanz.js) and
+ * the alternate view templates (projects.js).
+ *
+ * Scope: this module only does the math for ONE-TIME items (`einmalig`) — those
+ * have a `target`/`raised` and therefore a progress bar. Recurring monthly costs
+ * (`monatlich`) have no target to "reach", so they carry no bar and are rendered
+ * directly by finanz.js without going through here.
  *
  * Single source of truth: edit the math here and every consumer updates. UMD
- * wrapper exposes `module.exports` under Node (imported by the tests / sync)
- * and a global `GoalsCore` in the browser (loaded via <script> before goals.js).
+ * wrapper exposes `module.exports` under Node (imported by the tests) and a
+ * global `FinanzCore` in the browser (loaded via <script> before finanz.js).
  *
  * Written in ES5 so the browser needs no transpilation. Pure functions only —
  * no DOM, no I/O — so the percentages and ASCII bars are unit-testable in ~ms.
@@ -13,7 +19,7 @@
   if (typeof module === "object" && module.exports) {
     module.exports = factory();
   } else {
-    root.GoalsCore = factory();
+    root.FinanzCore = factory();
   }
 })(typeof self !== "undefined" ? self : this, function () {
   "use strict";
@@ -39,7 +45,7 @@
   }
 
   // Raw funding ratio in percent (can exceed 100 when over-funded). Guards a
-  // zero/negative target so a missing goal amount never divides by zero.
+  // zero/negative target so a missing amount never divides by zero.
   function rawPercent(raised, target) {
     var r = Math.max(0, num(raised));
     var t = num(target);
@@ -62,7 +68,7 @@
     };
   }
 
-  // Thousands-grouped amount with currency symbol, no decimals (donations are
+  // Thousands-grouped amount with currency symbol, no decimals (amounts are
   // tracked in whole units). 1450 + EUR -> "1.450 €" (non-breaking space).
   function formatAmount(value, currency) {
     var n = Math.round(num(value));
@@ -74,10 +80,11 @@
       grouped += digits.charAt(i);
     }
     var sym = SYMBOLS[currency] || SYMBOLS.EUR;
-    return sign + grouped + " " + sym;
+    return sign + grouped + " " + sym;
   }
 
-  // Normalise one goal into the shape the renderer consumes.
+  // Normalise one ONE-TIME item (target/raised) into the shape the renderer
+  // consumes. Monthly items never pass through here — they have no target.
   function computeGoal(goal, opts) {
     goal = goal || {};
     opts = opts || {};
@@ -101,7 +108,9 @@
     };
   }
 
-  // Roll several goals into one overview (total bar + reached count).
+  // Roll several ONE-TIME items into one overview (total bar + reached count).
+  // Callers pass ONLY the `einmalig` list — monthly costs are deliberately kept
+  // out of any total so recurring and one-time money are never summed together.
   function aggregate(goals, opts) {
     opts = opts || {};
     var width = opts.barWidth || BAR_WIDTH;
