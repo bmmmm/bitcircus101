@@ -3020,3 +3020,184 @@ h3.sr-only {
     .goals-cursor,
     .goal-panel--reached .goal-panel__reached { animation: none; }
 }
+
+/* =============================================================================
+   Support stage (donations.html) — animated ASCII scene picker
+   Ported from the approved tmp/entry-stage.html prototype. Colour vars are
+   namespaced --st-* and scoped to .support-stage so they never touch the site
+   palette (--bg / --text). The stage has no own theme switch — it follows the
+   site `calm` toggle; calm and reduced-motion freeze it (handled in stage.js).
+   ============================================================================= */
+.support-stage {
+    --st-bg: #0d0d0d;
+    --st-green: #4ade80;
+    --st-dim: #2f6b43;
+    /* readable muted text (>=4.5:1 on the stage bg); --st-dim stays for deco/borders */
+    --st-mute: #3f9560;
+    --st-text: #cfe9d6;
+    --st-hl: #0a0a0a;
+    --st-glow: 0 0 6px rgba(74, 222, 128, .35);
+    --st-rain-op: .18;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin: var(--gap-lg) 0 var(--gap-xl);
+    color: var(--st-green);
+    font-family: var(--font);
+    line-height: 1.4;
+}
+/* calm theme — muted, no glow (driven by the site-wide nav toggle) */
+[data-theme="calm"] .support-stage {
+    --st-green: #7fb89a;
+    --st-dim: #3c5447;
+    --st-mute: #6f9e87;
+    --st-text: #bccfc4;
+    --st-glow: none;
+}
+.support-stage pre { margin: 0; font: inherit; white-space: pre; }
+.support-stage .glow { text-shadow: var(--st-glow); }
+
+/* Terminal window */
+.support-stage .term {
+    width: min(600px, 96vw);
+    border: 1px solid var(--st-dim);
+    border-radius: 8px;
+    background: var(--st-hl);
+    overflow: hidden;
+}
+.support-stage .term__chrome {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--st-dim);
+    color: var(--st-mute);
+    font-size: 11.5px;
+}
+.support-stage .term__dots { display: flex; gap: 5px; }
+.support-stage .term__dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--st-dim); display: block; }
+.support-stage .term__path { margin-left: 4px; }
+.support-stage .term__scene { margin-left: auto; color: var(--st-text); }
+.support-stage .term__live { display: flex; align-items: center; gap: 6px; margin-left: 14px; }
+.support-stage .term__live::before {
+    content: "";
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--st-green);
+    box-shadow: 0 0 7px var(--st-green);
+    animation: st-pulse 4.6s ease-in-out infinite;
+}
+[data-theme="calm"] .support-stage .term__live::before { animation: none; box-shadow: none; }
+@keyframes st-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+
+/* easter-egg bait in the chrome bar: dim, easy to miss; hover/focus reveals it */
+.support-stage .egg-hint {
+    margin-left: 12px;
+    color: var(--st-dim);
+    opacity: .4;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity .3s ease, color .3s ease, text-shadow .3s ease;
+}
+.support-stage .egg-hint:hover,
+.support-stage .egg-hint:focus-visible { opacity: 1; color: var(--st-green); text-shadow: var(--st-glow); outline: none; }
+
+/* Stage: the active scene fills it */
+.support-stage .stage { position: relative; height: 260px; overflow: hidden; }
+.support-stage .rain {
+    position: absolute; inset: 0; margin: 0; padding: 6px 8px;
+    font-size: 12px; line-height: 1.2; white-space: pre; overflow: hidden;
+    color: var(--st-green); opacity: var(--st-rain-op); pointer-events: none; z-index: 0;
+    transition: opacity .3s ease;
+}
+.support-stage .rain[hidden] { display: none; }
+.support-stage .scene { position: absolute; inset: 0; z-index: 1; pointer-events: none; display: flex; align-items: center; justify-content: center; }
+.support-stage .actor {
+    position: absolute; left: 0; top: 0; margin: 0; z-index: 2;
+    font-size: 14px; line-height: 1.25; white-space: pre; color: var(--st-green);
+    text-shadow: var(--st-glow);
+}
+.support-stage .scene .thread { color: var(--st-text); }
+.support-stage .flash {
+    position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%);
+    text-align: center; font-size: 15px; letter-spacing: 2px; color: var(--st-text);
+    opacity: 0; pointer-events: none; z-index: 3;
+}
+
+/* Status hint line under the stage (aria-live) */
+.support-stage .term__hint {
+    padding: 4px 16px 0;
+    min-height: 1.5em;
+    color: var(--st-mute);
+    font-size: 11.5px;
+    text-align: center;
+}
+
+/* Ways */
+.support-stage .stage-body { padding: 4px 16px 14px; }
+.support-stage .prompt { color: var(--st-mute); }
+.support-stage .prompt b { color: var(--st-green); font-weight: normal; }
+.support-stage .ways { margin: 6px 0 0; padding: 0; list-style: none; }
+.support-stage .way {
+    display: flex; gap: 14px; align-items: baseline; padding: 6px 10px;
+    color: var(--st-green); text-decoration: none; border-radius: 3px;
+    transition: background .25s ease, color .25s ease;
+}
+.support-stage .way::before { content: "  "; white-space: pre; color: var(--st-dim); }
+.support-stage .way .key { min-width: 96px; }
+.support-stage .way .ico { display: inline-block; width: 1.4em; }
+.support-stage .way .lbl { color: var(--st-mute); margin-left: auto; }
+.support-stage .way:hover,
+.support-stage .way:focus-visible { background: var(--st-green); color: var(--st-hl); outline: none; }
+.support-stage .way:hover::before,
+.support-stage .way:focus-visible::before { content: "❯ "; color: var(--st-hl); }
+.support-stage .way:hover .lbl,
+.support-stage .way:focus-visible .lbl { color: var(--st-hl); }
+
+/* tuwat = primary "Taten statt Cookies" path: persistent ❯, breathing icon
+   (loud theme only; calm + reduced-motion keep it still) */
+.support-stage .way--tatkraft::before { content: "❯ "; color: var(--st-green); }
+.support-stage .way--tatkraft .ico { animation: st-tatPulse 3.8s ease-in-out infinite; }
+@keyframes st-tatPulse {
+    0%, 100% { opacity: .72; text-shadow: none; }
+    50% { opacity: 1; text-shadow: var(--st-glow); }
+}
+[data-theme="calm"] .support-stage .way--tatkraft .ico { animation: none; opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+    .support-stage .way--tatkraft .ico,
+    .support-stage .term__live::before { animation: none; opacity: 1; }
+}
+
+/* tatkraft: on-site help panel (emoji) */
+.support-stage .tatkraft {
+    margin: 8px 2px 0; padding: 10px 14px; border: 1px dashed var(--st-dim);
+    border-radius: 6px; background: var(--st-hl);
+}
+.support-stage .tatkraft[hidden] { display: none; }
+.support-stage .tatkraft .h { margin: 0 0 8px; color: var(--st-text); font-size: 12px; }
+.support-stage .tatkraft ul { list-style: none; margin: 0; padding: 0; }
+.support-stage .tatkraft li { display: flex; gap: 13px; align-items: baseline; padding: 3px 2px; color: var(--st-green); font-size: 12.5px; }
+.support-stage .tatkraft li .e { width: 1.6em; display: inline-block; text-align: center; }
+.support-stage .tatkraft li.info { margin-top: 6px; padding-top: 7px; border-top: 1px solid var(--st-dim); color: var(--st-dim); }
+.support-stage .tatkraft li.info a { color: var(--st-text); text-decoration: none; }
+.support-stage .tatkraft li.info a:hover { color: var(--st-green); }
+
+/* Showcase (small + clickable) */
+.support-stage .gallery-h { color: var(--st-mute); font-size: 11px; font-weight: normal; margin: 30px 0 0; text-align: center; }
+.support-stage .gallery-h span { color: var(--st-mute); }
+.support-stage .gallery { width: min(760px, 94vw); display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 7px; }
+.support-stage .idea {
+    border: 1px solid var(--st-dim); border-radius: 5px; padding: 5px 6px 4px;
+    background: var(--st-hl); position: relative; overflow: hidden; cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.support-stage .idea:hover,
+.support-stage .idea:focus-visible { border-color: var(--st-green); outline: none; }
+.support-stage .idea[aria-current="true"] { border-color: var(--st-green); box-shadow: var(--st-glow); }
+.support-stage .idea .idea__title { display: block; font-size: 8.5px; color: var(--st-text); margin: 0 0 2px; }
+.support-stage .idea .idea__title .n { color: var(--st-mute); }
+.support-stage .idea[aria-current="true"] .idea__title { color: var(--st-green); }
+.support-stage .idea .m { font-size: 8px; color: var(--st-dim); margin: 0 0 4px; }
+.support-stage .idea pre { font-size: 8px; line-height: 1.1; min-height: 34px; color: var(--st-green); }
