@@ -88,10 +88,6 @@ test.describe('SEO meta tags', () => {
         // Raum nutzen
         await page.goto('/raum-nutzen.html');
         expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
-
-        // Spendenziele
-        await page.goto('/goals.html');
-        expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
     });
 });
 
@@ -241,11 +237,20 @@ test.describe('Events content', () => {
 
 // ─── Goals Page ──────────────────────────────────────────────────────────────
 
-test.describe('Goals page', () => {
-    test('renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
-        await page.goto('/goals.html');
-        await expect(page).toHaveTitle(/Spendenziele|Ziele/);
+test.describe('Funding goals (fused into donations.html)', () => {
+    test('goals.html is a noindex redirect to donations.html#ziele', async ({ request }) => {
+        const res = await request.get('/goals.html');
+        expect(res.status()).toBe(200);
+        const html = await res.text();
+        expect(html).toMatch(/name=["']robots["'][^>]*noindex/i);
+        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*donations\.html#ziele/i);
+    });
 
+    test('donations.html renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
+        await page.goto('/donations.html');
+        await expect(page).toHaveTitle(/Unterstütz/);
+
+        // goals.js renders independently of the cookie-consent overlay.
         // Wait for JS to render panels (or a fallback) before asserting.
         await page.waitForFunction(() =>
             document.querySelector('.goal-panel') ||
@@ -422,7 +427,6 @@ test.describe('No JavaScript errors', () => {
         ['/raum-nutzen.html', 'Raum nutzen'],
         ['/impressum-datenschutz.html', 'Impressum'],
         ['/dankedankedanke.html', 'Danke'],
-        ['/goals.html', 'Spendenziele'],
         ['/ascii/', 'ASCII playground'],
         ['/chat/', 'Signal'],
         ['/lite/', 'Lite'],
@@ -486,7 +490,7 @@ test.describe('Internal links', () => {
         const pagesToCheck = [
             '/', '/events.html', '/donations.html',
             '/raum-nutzen.html', '/impressum-datenschutz.html',
-            '/dankedankedanke.html', '/goals.html',
+            '/dankedankedanke.html',
         ];
         const checked = new Set();
         const broken = [];
