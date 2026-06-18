@@ -2757,35 +2757,10 @@ h3.sr-only {
 
 .projekte-intro { color: var(--text-dim); margin-bottom: var(--gap-lg); }
 
-/* Overview hero */
-.projekte-overview { margin-bottom: var(--gap-lg); }
-
-.projekte-overview__panel {
-    background: var(--bg-panel);
-    border: 1px solid var(--accent-dim);
-    padding: var(--gap-md) var(--gap-lg);
-}
-
-.projekte-overview__cmd {
-    color: var(--accent);
-    margin: 0 0 var(--gap-sm);
-    font-size: 0.9rem;
-    letter-spacing: 0.04em;
-}
-
-.projekte-overview__stats {
-    color: var(--text-dim);
-    margin: var(--gap-sm) 0 var(--gap-md);
-    font-size: 0.9rem;
-}
-
-.projekte-overview__cta { margin: 0; }
-
 /* Project panels */
 .projekte-list { display: flex; flex-direction: column; gap: var(--gap-lg); }
 /* projects.js switches to an alternate view by hiding these default mounts via
    the hidden attribute — the display rule above would otherwise beat [hidden]. */
-.projekte-overview[hidden],
 .projekte-list[hidden],
 .projekte-updated[hidden] { display: none; }
 
@@ -2867,8 +2842,6 @@ h3.sr-only {
     letter-spacing: 0;
     flex: 0 0 auto;
 }
-
-.projekt-bar--total { font-size: clamp(0.6rem, 3vw, 1rem); margin: var(--gap-sm) 0; }
 
 /* Amounts */
 .projekt-panel__amounts {
@@ -3005,6 +2978,8 @@ h3.sr-only {
 .tuwat-group p { color: var(--text-dim); margin: 0 0 var(--gap-sm); font-size: 0.9rem; }
 .tuwat-group a { color: var(--accent); }
 .tuwat-info { margin-top: var(--gap-md); padding-top: var(--gap-sm); border-top: 1px solid var(--border); }
+.tuwat-contact { margin-top: var(--gap-lg); color: var(--text-dim); }
+.tuwat-contact a { color: var(--accent); }
 
 @media (prefers-reduced-motion: reduce) {
     .projekt-cursor,
@@ -3052,7 +3027,7 @@ h3.sr-only {
 
 /* Terminal window */
 .support-stage .term {
-    width: min(600px, 96vw);
+    width: 100%;
     border: 1px solid var(--st-dim);
     border-radius: 8px;
     background: var(--st-hl);
@@ -3192,9 +3167,10 @@ h3.sr-only {
 .fold__body { padding: 0 0.8rem 0.8rem; }
 .fold__body .pj-pick { margin: 0; }
 
-/* Stage gallery fold — terminal palette, keeps the old centered gallery width. */
+/* Stage gallery fold — terminal palette, spans the full content column so the
+   stage lines up with the project board below (consistent page width). */
 .support-stage .fold {
-    width: min(760px, 94vw);
+    width: 100%;
     margin: 0;
     border-color: var(--st-dim);
     background: var(--st-hl);
@@ -3474,15 +3450,6 @@ h3.sr-only {
   margin-top: 0.1em;
 }
 
-/* summary heading */
-.projects-alt .pj-bootlog .bl-sum-hdr {
-  color: var(--text);
-  font-weight: bold;
-  border-top: 1px solid var(--border);
-  padding-top: 0.35em;
-  margin-top: 0.1em;
-}
-
 /* goal title inside heading */
 .projects-alt .pj-bootlog .bl-title {
   color: var(--accent);
@@ -3718,36 +3685,6 @@ h3.sr-only {
   border-bottom: 1px solid var(--border);
 }
 
-/* === Master dial section === */
-.projects-alt .pj-gauges .pjg-master-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 1.75rem;
-}
-
-.projects-alt .pj-gauges .pjg-master-lbl {
-  font-size: 0.55rem;
-  letter-spacing: 0.2em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-}
-
-/* === Aggregate stats strip === */
-.projects-alt .pj-gauges .pjg-agg-strip {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 0.6rem;
-  font-size: 0.6rem;
-  color: var(--text-dim);
-}
-.projects-alt .pj-gauges .pjg-agg-strip b {
-  color: var(--accent);
-}
-
 /* === Dials row (individual goals) === */
 .projects-alt .pj-gauges .pjg-dials-row {
   display: flex;
@@ -3804,11 +3741,6 @@ h3.sr-only {
 /* Hover glow through bezel */
 .projects-alt .pj-gauges .pjg-bezel:hover .pjg-dial {
   filter: drop-shadow(0 0 5px color-mix(in srgb, var(--accent) 50%, transparent));
-}
-
-/* Master bezel is larger */
-.projects-alt .pj-gauges .pjg-bezel--master {
-  width: clamp(130px, 24vw, 220px);
 }
 
 /* Reached bezel glow */
@@ -3880,9 +3812,6 @@ h3.sr-only {
   color: var(--accent);
   line-height: 1;
   letter-spacing: -0.02em;
-}
-.projects-alt .pj-gauges .pjg-dial-pct--master {
-  font-size: clamp(1.3rem, 4.5vw, 2rem);
 }
 
 /* === Reached badge === */
@@ -4024,9 +3953,6 @@ h3.sr-only {
   .projects-alt .pj-gauges .pjg-bezel {
     width: clamp(110px, 40vw, 160px);
   }
-  .projects-alt .pj-gauges .pjg-bezel--master {
-    width: clamp(130px, 50vw, 200px);
-  }
   .projects-alt .pj-gauges .pjg-dials-row {
     gap: 1rem;
   }
@@ -4062,35 +3988,6 @@ h3.sr-only {
   line-height: 1.4;
   color: var(--text);
   background: var(--bg);
-}
-
-/* ── Aggregate bar ────────────────────────────────────────────────────────────── */
-.projects-alt .pj-wells .pj-wells-agg {
-  max-width: 520px;
-  margin: 0 auto 20px;
-}
-
-.projects-alt .pj-wells .pj-wells-agg-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  color: var(--text-dim);
-  margin-bottom: 5px;
-}
-
-.projects-alt .pj-wells .pj-wells-agg-track {
-  height: 6px;
-  background: var(--border);
-  position: relative;
-  overflow: hidden;
-}
-
-.projects-alt .pj-wells .pj-wells-agg-fill {
-  height: 100%;
-  background: var(--accent);
-  transition: width 0.8s ease;
-  width: 0; /* driven by inline style */
 }
 
 /* ── Wells outer grid: row of wells, wrapping on narrow screens ──────────────── */
