@@ -206,18 +206,8 @@
     } else buffer = "";
   });
 
-  // ── Ways: native href navigates; tatkraft expands the help list first ──────
-  var tatkraft = document.getElementById("tatkraft");
-  var ways = document.querySelectorAll(".way"), w;
-  for (w = 0; w < ways.length; w++) {
-    ways[w].addEventListener("click", function (e) {
-      if (this.id === "way-tatkraft" && tatkraft && tatkraft.hasAttribute("hidden")) {
-        e.preventDefault();
-        tatkraft.removeAttribute("hidden");
-        this.setAttribute("aria-expanded", "true");
-      }
-    });
-  }
+  // ── Ways are plain scroll-anchors: tuwat/projekte/dauerhaft are real
+  //    sections now, so the native href handles navigation (no JS toggle). ──
 
   // ── Gallery: render from the registry, small + clickable ───────────────────
   function renderGallery() {

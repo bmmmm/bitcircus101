@@ -250,7 +250,7 @@ test.describe('Funding goals (fused into donations.html)', () => {
         await page.goto('/donations.html');
         await expect(page).toHaveTitle(/Unterstütz/);
 
-        // Wait for JS (goals.js / projects.js) to render panels (or a fallback)
+        // Wait for JS (finanz.js / projects.js) to render panels (or a fallback)
         // before asserting.
         await page.waitForFunction(() =>
             document.querySelector('.projekt-panel') ||
@@ -261,6 +261,17 @@ test.describe('Funding goals (fused into donations.html)', () => {
         const panels = page.locator('.projekt-panel');
         const count = await panels.count();
         if (count === 0) return; // no seed data in this environment
+
+        // Recurring monthly costs render in their OWN block with no progress bar
+        // — the type-split fix, so a monthly cost is never folded into the
+        // one-time total (which would mix one-off and recurring money).
+        const monatlich = page.locator('#kosten-monatlich');
+        await expect(monatlich.locator('.kosten-monatlich__item').first()).toBeVisible();
+        await expect(monatlich).toContainText('Monat');
+        expect(await monatlich.locator('[role="progressbar"]').count()).toBe(0);
+
+        // tuwat is its own always-visible section: Aufgaben / Vorhaben / Aktionen.
+        await expect(page.locator('#tatkraft .tuwat-group')).toHaveCount(3);
 
         // progressbar exposes a numeric aria-valuenow
         const firstBar = panels.first().locator('.projekt-bar[role="progressbar"]');

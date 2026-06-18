@@ -2744,7 +2744,7 @@ h3.sr-only {
 }
 
 /* =============================================================================
-   Funding goals (donations.html#projekte) — default "Liste" view
+   Funding / Kosten (donations.html#projekte) — default "Liste" view
    ============================================================================= */
 /* #projekte is a <section> nested inside the donations <section>; the global
    section rule (padding + border-left + background) would double-indent and
@@ -2907,10 +2907,10 @@ h3.sr-only {
     display: inline-block;
     margin-left: 2px;
     color: var(--accent);
-    animation: goal-blink 1.1s step-end infinite;
+    animation: projekt-blink 1.1s step-end infinite;
 }
 
-@keyframes goal-blink {
+@keyframes projekt-blink {
     0%, 49% { opacity: 1; }
     50%, 100% { opacity: 0; }
 }
@@ -2922,10 +2922,10 @@ h3.sr-only {
 }
 .projekt-panel--reached .projekt-panel__dot { background: var(--accent); }
 .projekt-panel--reached .projekt-panel__reached {
-    animation: goal-reached-pulse 2.6s ease-in-out infinite;
+    animation: projekt-reached-pulse 2.6s ease-in-out infinite;
 }
 
-@keyframes goal-reached-pulse {
+@keyframes projekt-reached-pulse {
     0%, 100% { opacity: 0.7; }
     50% { opacity: 1; }
 }
@@ -2953,12 +2953,58 @@ h3.sr-only {
 .projekte-cursor {
     display: inline-block;
     color: var(--accent);
-    animation: goal-blink 1.1s step-end infinite;
+    animation: projekt-blink 1.1s step-end infinite;
 }
 
 .projekte-fallback { color: var(--text); }
 .projekte-fallback__err { color: #ff5f56; font-weight: bold; }
 .projekte-empty { color: var(--text-dim); }
+
+/* Recurring monthly costs — own always-visible block (no bar, no total) */
+.kosten-monatlich { margin-top: var(--gap-lg); }
+.kosten-monatlich[hidden] { display: none; }
+.kosten-monatlich__panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--accent-dim);
+    border-left: 3px solid var(--accent);
+    padding: var(--gap-md) var(--gap-lg);
+}
+.kosten-monatlich__cmd {
+    color: var(--accent);
+    margin: 0 0 var(--gap-sm);
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+}
+.kosten-monatlich__lead { color: var(--text-dim); margin: 0 0 var(--gap-md); font-size: 0.9rem; }
+.kosten-monatlich__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--gap-md); }
+.kosten-monatlich__item { padding-top: var(--gap-md); border-top: 1px solid var(--border); }
+.kosten-monatlich__item:first-child { padding-top: 0; border-top: 0; }
+.kosten-monatlich__title { margin: 0 0 var(--gap-xs); color: var(--text); font-weight: bold; }
+.kosten-monatlich__icon { color: var(--accent); }
+.kosten-monatlich__rate { color: var(--accent); font-weight: bold; white-space: nowrap; }
+.kosten-monatlich__tagline { color: var(--text-dim); margin: 0 0 var(--gap-xs); font-size: 0.9rem; }
+.kosten-monatlich__desc { color: var(--text-dim); margin: 0 0 var(--gap-sm); font-size: 0.85rem; }
+
+/* tuwat — "anpacken" section (#tatkraft): Aufgaben / Vorhaben / Aktionen */
+#tatkraft { padding: 0; background: none; border-left: 0; }
+.tatkraft-intro { color: var(--text-dim); margin-bottom: var(--gap-lg); }
+.tuwat-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--gap-lg);
+}
+.tuwat-group {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    padding: var(--gap-md) var(--gap-lg);
+}
+.tuwat-group__title { color: var(--accent); font-size: 0.95rem; margin: 0 0 var(--gap-md); letter-spacing: 0.02em; }
+.tuwat-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--gap-sm); }
+.tuwat-list li { display: flex; gap: var(--gap-sm); align-items: baseline; color: var(--text); }
+.tuwat-emoji { width: 1.6em; display: inline-block; text-align: center; flex: 0 0 auto; }
+.tuwat-group p { color: var(--text-dim); margin: 0 0 var(--gap-sm); font-size: 0.9rem; }
+.tuwat-group a { color: var(--accent); }
+.tuwat-info { margin-top: var(--gap-md); padding-top: var(--gap-sm); border-top: 1px solid var(--border); }
 
 @media (prefers-reduced-motion: reduce) {
     .projekt-cursor,
@@ -3115,20 +3161,6 @@ h3.sr-only {
     .support-stage .term__live::before { animation: none; opacity: 1; }
 }
 
-/* tatkraft: on-site help panel (emoji) */
-.support-stage .tatkraft {
-    margin: 8px 2px 0; padding: 10px 14px; border: 1px dashed var(--st-dim);
-    border-radius: 6px; background: var(--st-hl);
-}
-.support-stage .tatkraft[hidden] { display: none; }
-.support-stage .tatkraft .h { margin: 0 0 8px; color: var(--st-text); font-size: 12px; }
-.support-stage .tatkraft ul { list-style: none; margin: 0; padding: 0; }
-.support-stage .tatkraft li { display: flex; gap: 13px; align-items: baseline; padding: 3px 2px; color: var(--st-green); font-size: 12.5px; }
-.support-stage .tatkraft li .e { width: 1.6em; display: inline-block; text-align: center; }
-.support-stage .tatkraft li.info { margin-top: 6px; padding-top: 7px; border-top: 1px solid var(--st-dim); color: var(--st-dim); }
-.support-stage .tatkraft li.info a { color: var(--st-text); text-decoration: none; }
-.support-stage .tatkraft li.info a:hover { color: var(--st-green); }
-
 /* Foldable disclosure — calm-by-default switchers (stage gallery, view picker):
    the active animation / view shows on load, the chooser tucks away. */
 .fold {
@@ -3192,7 +3224,7 @@ h3.sr-only {
 
 /* =============================================================================
    Projekte view switcher (donations.html#projekte) — picker + template canvas
-   The default "Liste" view is rendered by goals.js; the alternate templates
+   The default "Liste" view is rendered by finanz.js; the alternate templates
    below live under .projects-alt .pj-<id> and are assembled into projects.js.
    ============================================================================= */
 .pj-pick {
