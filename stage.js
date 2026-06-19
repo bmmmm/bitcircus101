@@ -112,6 +112,36 @@
     return (isFinite(v) && v >= 0.5 && v <= 8) ? Math.round(v * 4) / 4 : 1;
   }());
 
+  var stageOff = lsGet("bc-stage-off") === "1";
+
+  function applyStageOff(off) {
+    stageOff = off;
+    lsSet("bc-stage-off", off ? "1" : "0");
+
+    var sceneEl = document.getElementById("scene");
+    var flashEl = document.getElementById("flash");
+    var notice  = document.getElementById("stageOffNotice");
+    var toggle  = document.getElementById("stageToggle");
+    var fold    = document.querySelector(".support-stage .fold");
+
+    if (sceneEl) sceneEl.hidden = off;
+    if (flashEl) flashEl.hidden = off;
+    if (notice)  notice.hidden  = !off;
+    if (fold)    fold.hidden    = off;
+    if (toggle) {
+      toggle.setAttribute("aria-pressed", String(!off));
+      toggle.setAttribute("aria-label", off ? "Animation einschalten" : "Animation ausschalten");
+      toggle.setAttribute("title",      off ? "Animation einschalten" : "Animation ausschalten");
+    }
+
+    if (off) {
+      teardownActive();
+      ctxHint("");
+    } else {
+      renderActive();
+    }
+  }
+
   // ctx.reduce is refreshed to isStill() before every scene create() (below), so
   // a live calm toggle makes the next render a still frame.
   var ctx = {
@@ -1870,6 +1900,12 @@ registerScene({
   // ── Boot ───────────────────────────────────────────────────────────────────
   renderGallery();
   initSpeedSlider();
+
+  var toggleBtn  = document.getElementById("stageToggle");
+  var resumeBtn  = document.getElementById("stageResumeBtn");
+  if (toggleBtn) toggleBtn.addEventListener("click", function () { applyStageOff(!stageOff); });
+  if (resumeBtn) resumeBtn.addEventListener("click", function () { applyStageOff(false); });
+
   // Scene on load: a saved pick (explicit gallery click) always wins. With no
   // saved pick, the Pride month (June) opens on the Pride-Sweep; other months
   // pick a random scene each visit. Boot passes persist=false so a random
@@ -1881,5 +1917,10 @@ registerScene({
       : SCENES[Math.floor(Math.random() * SCENES.length)].id;
   }
   activeId = startId;
-  renderActive();
+
+  if (stageOff) {
+    applyStageOff(true);
+  } else {
+    renderActive();
+  }
 })();
