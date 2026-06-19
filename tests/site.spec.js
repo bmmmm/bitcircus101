@@ -262,11 +262,12 @@ test.describe('Funding goals (fused into donations.html)', () => {
         const count = await panels.count();
         if (count === 0) return; // no seed data in this environment
 
-        // Recurring monthly costs render in their OWN block with no progress bar
-        // — the type-split fix, so a monthly cost is never folded into the
-        // one-time total (which would mix one-off and recurring money).
+        // Recurring monthly costs render as projekt-panel cards in their OWN
+        // always-visible block, but with no progress bar — the type-split fix,
+        // so a monthly cost is never folded into the one-time total (which
+        // would mix one-off and recurring money).
         const monatlich = page.locator('#kosten-monatlich');
-        await expect(monatlich.locator('.kosten-monatlich__item').first()).toBeVisible();
+        await expect(monatlich.locator('.projekt-panel--monatlich').first()).toBeVisible();
         await expect(monatlich).toContainText('Monat');
         expect(await monatlich.locator('[role="progressbar"]').count()).toBe(0);
 
