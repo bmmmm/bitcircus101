@@ -87,6 +87,7 @@ h2 {
 
 h3 {
     font-size: 1.05rem;
+    color: var(--accent);
     border-left: 2px solid var(--border);
     padding-left: var(--gap-sm);
 }
@@ -163,7 +164,7 @@ section {
     list-style: none;
     cursor: pointer;
     display: flex;
-    align-items: baseline;
+    align-items: flex-start;
     gap: 0.5em;
     padding: var(--gap-md) var(--gap-lg);
     user-select: none;
@@ -172,9 +173,10 @@ section {
 .sidenote__summary::marker { content: ""; }
 .sidenote__summary:hover { color: var(--text); }
 .sidenote__summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.sidenote__caret { color: var(--accent); transition: transform var(--transition); }
+.sidenote__caret { color: var(--accent); transition: transform var(--transition); flex-shrink: 0; }
 .sidenote[open] .sidenote__caret { transform: rotate(90deg); }
-.sidenote__title { font-size: 1.15rem; color: var(--text-dim); }
+.sidenote__label { display: flex; flex-direction: column; gap: 0.15em; }
+.sidenote__title { font-size: 1.15rem; color: var(--accent); }
 .sidenote__body { padding: 0 var(--gap-lg) var(--gap-md); }
 .sidenote__body > p:first-child { margin-top: 0; }
 .sidenote .room-spec dd {
@@ -2906,7 +2908,7 @@ h3.sr-only {
     border: 1px solid var(--border);
     padding: var(--gap-md) var(--gap-lg);
 }
-.tuwat-group__title { color: var(--accent); font-size: 0.95rem; margin: 0 0 var(--gap-md); letter-spacing: 0.02em; }
+.tuwat-group__title { font-size: 0.95rem; margin: 0 0 var(--gap-md); letter-spacing: 0.02em; }
 .tuwat-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--gap-sm); }
 .tuwat-list li { display: flex; gap: var(--gap-sm); align-items: baseline; color: var(--text); }
 .tuwat-emoji { width: 1.6em; display: inline-block; text-align: center; flex: 0 0 auto; }
@@ -3132,6 +3134,17 @@ h3.sr-only {
 .support-stage .idea[aria-current="true"] .idea__title { color: var(--st-green); }
 .support-stage .idea .m { font-size: 8px; color: var(--st-dim); margin: 0 0 4px; }
 .support-stage .idea pre { font-size: 8px; line-height: 1.1; min-height: 34px; color: var(--st-green); }
+
+/* Speed control row */
+.speed-ctrl { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.speed-ctrl__label { font-size: 9px; color: var(--st-mute); flex-shrink: 0; }
+.speed-btn {
+    font-family: var(--mono); font-size: 9px; color: var(--st-text);
+    background: var(--st-hl); border: 1px solid var(--st-dim); border-radius: 4px;
+    padding: 2px 7px; cursor: pointer; transition: border-color .2s, box-shadow .2s;
+}
+.speed-btn:hover { border-color: var(--st-green); }
+.speed-btn[aria-pressed="true"] { border-color: var(--st-green); box-shadow: var(--st-glow); color: var(--st-green); }
 
 /* =============================================================================
    Projekte view switcher (support.html#projekte) — picker + template canvas
