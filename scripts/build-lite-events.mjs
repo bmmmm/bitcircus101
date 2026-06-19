@@ -16,6 +16,8 @@ const BITCIRCUS_CAL = path.join(root, "calendars", "bitcircus.json");
 
 const START = "<!-- lite-events:start -->";
 const END = "<!-- lite-events:end -->";
+const STAND_START = "<!-- lite-stand-date -->";
+const STAND_END = "<!-- /lite-stand-date -->";
 const MAX_EVENTS = 8;
 
 const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
@@ -38,6 +40,10 @@ function formatDate(dateStr, timeStr) {
   return `${day} ${d}. ${month}${time}`;
 }
 
+function toDatetime(dateStr, timeStr) {
+  return timeStr ? `${dateStr}T${timeStr}` : dateStr;
+}
+
 function normalizeUrl(u) {
   if (!u) return null;
   if (/^https?:\/\//i.test(u)) return u;
@@ -56,7 +62,7 @@ function buildMarkup(events, icsUrl) {
       const label = url
         ? `<a href="${esc(url)}" rel="noopener noreferrer">${esc(e.title)}</a>`
         : esc(e.title);
-      return `<li><span class="dim">${formatDate(e.date, e.time)}</span> — ${label}</li>`;
+      return `<li><time datetime="${esc(toDatetime(e.date, e.time))}" class="dim">${formatDate(e.date, e.time)}</time> — ${label}</li>`;
     })
     .join("\n");
 
@@ -106,6 +112,18 @@ function main() {
   }
 
   html = html.slice(0, si + START.length) + "\n" + markup + "\n" + html.slice(ei);
+
+  const todayDisplay = [
+    String(now.getDate()).padStart(2, "0"),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    now.getFullYear(),
+  ].join(".");
+  const sdi = html.indexOf(STAND_START);
+  const edi = html.indexOf(STAND_END);
+  if (sdi !== -1 && edi !== -1) {
+    html = html.slice(0, sdi + STAND_START.length) + todayDisplay + html.slice(edi);
+  }
+
   fs.writeFileSync(LITE, html, "utf8");
   console.log(`lite-events: injected ${upcoming.length} event(s) into lite/index.html`);
 }
