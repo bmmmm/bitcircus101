@@ -340,7 +340,7 @@ test.describe('Support page', () => {
 test.describe('Raum nutzen page', () => {
     test('loads with title, structured data, and a collapsible room-rental note', async ({ page }) => {
         await page.goto('/raum-nutzen.html');
-        await expect(page).toHaveTitle(/Raum nutzen|Raum mieten/);
+        await expect(page).toHaveTitle(/Raum nutzen/);
         await expect(page.locator('#show-map-btn')).toBeVisible();
         await expect(page.locator('.back-link a')).toBeVisible();
 
