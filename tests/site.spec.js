@@ -238,6 +238,17 @@ test.describe('Events content', () => {
 // ─── Goals Page ──────────────────────────────────────────────────────────────
 
 test.describe('Funding goals (fused into support.html)', () => {
+    test('donations.html instant-redirects to support.html (kept for the search index)', async ({ request }) => {
+        // donations.html is in the search index; it stays as an instant
+        // meta-refresh redirect to the renamed support.html (deliberately no
+        // noindex) so ranking and existing hits move over via refresh + canonical.
+        const res = await request.get('/donations.html');
+        expect(res.status()).toBe(200);
+        const html = await res.text();
+        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*support\.html/i);
+        expect(html).toMatch(/rel=["']canonical["'][^>]*support\.html/i);
+    });
+
     test('support.html renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
         await page.goto('/support.html');
         await expect(page).toHaveTitle(/Unterstütz/);
