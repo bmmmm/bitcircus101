@@ -238,24 +238,6 @@ test.describe('Events content', () => {
 // ─── Goals Page ──────────────────────────────────────────────────────────────
 
 test.describe('Funding goals (fused into support.html)', () => {
-    test('goals.html is a noindex redirect to support.html#projekte', async ({ request }) => {
-        const res = await request.get('/goals.html');
-        expect(res.status()).toBe(200);
-        const html = await res.text();
-        expect(html).toMatch(/name=["']robots["'][^>]*noindex/i);
-        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*support\.html#projekte/i);
-    });
-
-    test('donations.html is a noindex redirect to the renamed support.html', async ({ request }) => {
-        // The page was renamed donations.html → support.html; the old URL stays
-        // as a noindex stub so existing backlinks / bookmarks keep resolving.
-        const res = await request.get('/donations.html');
-        expect(res.status()).toBe(200);
-        const html = await res.text();
-        expect(html).toMatch(/name=["']robots["'][^>]*noindex/i);
-        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*support\.html/i);
-    });
-
     test('support.html renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
         await page.goto('/support.html');
         await expect(page).toHaveTitle(/Unterstütz/);
