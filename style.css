@@ -4310,3 +4310,58 @@ h3.sr-only {
     --pj-wells-gap: 2px;
   }
 }
+
+/* =============================================================================
+   Terminal vocabulary for content pages
+   events.html / raum-nutzen.html / impressum-datenschutz.html / dankedankedanke.html
+   share one vocabulary here. index.html and support.html keep their own
+   `.support-stage` overrides — those are more specific, so the support stage is
+   unaffected by these lower-specificity globals.
+   ============================================================================= */
+
+/* $ command prompt line — dim text, accent command */
+.prompt {
+    font-family: var(--font);
+    color: var(--text-dim);
+    margin: 0 0 var(--gap-md);
+}
+.prompt b { color: var(--accent); font-weight: normal; }
+.glow { text-shadow: 0 0 8px rgba(0, 217, 126, 0.5); }
+[data-theme="calm"] .glow { text-shadow: none; }
+
+/* Way cards — terminal file-listing navigation rows (global variant of the
+   .support-stage .way rows, using the normal palette tokens) */
+.ways { margin: 0 0 var(--gap-md); padding: 0; list-style: none; }
+.way {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    padding: 6px 10px;
+    color: var(--accent);
+    text-decoration: none;
+    border-radius: 3px;
+    transition: background var(--transition), color var(--transition);
+}
+.way::before { content: "  "; white-space: pre; color: var(--text-dim); }
+.way .ico { display: inline-block; width: 1.4em; }
+.way .key { min-width: 110px; }
+.way .lbl { color: var(--text-dim); margin-left: auto; }
+.way:hover,
+.way:focus-visible { background: var(--accent); color: var(--bg); outline: none; }
+.way:hover::before,
+.way:focus-visible::before { content: "❯ "; color: var(--bg); }
+.way:hover .lbl,
+.way:focus-visible .lbl { color: var(--bg); }
+
+/* sidenote: $ command label in the summary (reuses the fold visual language) */
+.sidenote__cmd { color: var(--accent-dim); font-family: var(--font); }
+
+/* section-anchor also reveals on h3 hover — the long impressum page deep-links
+   its h3 subsections */
+h3:hover .section-anchor,
+h3:focus-within .section-anchor { opacity: 1; }
+
+/* events: subtle accent left-border on the subscribe panel to echo terminal
+   panels; muted in calm theme */
+.events-subscribe { border-left: 2px solid var(--accent-dim); }
+[data-theme="calm"] .events-subscribe { border-left-color: var(--border); }
