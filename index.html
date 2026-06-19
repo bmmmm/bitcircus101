@@ -60,7 +60,7 @@
         <link rel="manifest" href="site.webmanifest?v=6" />
         <script>
             // No-flash: apply persisted calm theme before stylesheet paints.
-            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+            try { if (localStorage.getItem("bc.theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
         <link rel="stylesheet" href="style.css?v=6" />
 
@@ -475,6 +475,7 @@
             </div>
         </footer>
 
+        <script defer src="storage.js?v=1"></script>
         <script defer src="main.js?v=8"></script>
         <script>
         (function () {
