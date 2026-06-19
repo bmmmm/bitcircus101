@@ -3007,6 +3007,34 @@ h3.sr-only {
 .support-stage .egg-hint:hover,
 .support-stage .egg-hint:focus-visible { opacity: 1; color: var(--st-green); text-shadow: var(--st-glow); outline: none; }
 
+/* Stage power toggle in chrome */
+.support-stage .term__toggle {
+    margin-left: 8px;
+    background: none; border: none; padding: 0;
+    font-size: 13px; color: var(--st-dim); opacity: .5;
+    cursor: pointer; line-height: 1; transition: opacity .2s, color .2s;
+}
+.support-stage .term__toggle:hover,
+.support-stage .term__toggle:focus-visible { opacity: 1; color: var(--st-text); outline: none; }
+.support-stage .term__toggle[aria-pressed="false"] { color: var(--st-green); opacity: .7; }
+
+/* Off-notice fills the stage area */
+.stage-off-notice {
+    position: absolute; inset: 0; z-index: 5;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+}
+.stage-off-notice[hidden] { display: none; }
+.stage-off-notice__msg { margin: 0; font-family: var(--mono); font-size: 11px; color: var(--st-mute); }
+.stage-off-notice__btn {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--st-green); background: none;
+    border: 1px solid var(--st-green); border-radius: 4px;
+    padding: 4px 12px; cursor: pointer;
+    transition: box-shadow .2s;
+}
+.stage-off-notice__btn:hover,
+.stage-off-notice__btn:focus-visible { box-shadow: var(--st-glow); outline: none; }
+
 /* Stage: the active scene fills it */
 .support-stage .stage { position: relative; height: 260px; overflow: hidden; }
 .support-stage .rain {
