@@ -39,14 +39,14 @@
             rel="canonical"
             href="https://bitcircus101.de/impressum-datenschutz.html"
         />
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=10c015b1" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=10c015b1" />
-        <link rel="manifest" href="site.webmanifest?v=10c015b1" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=2570e834" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=2570e834" />
+        <link rel="manifest" href="site.webmanifest?v=2570e834" />
         <script>
             // No-flash: apply persisted calm theme before stylesheet paints.
-            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+            try { if (localStorage.getItem("bc.theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=10c015b1" />
+        <link rel="stylesheet" href="style.css?v=2570e834" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -66,27 +66,31 @@
                 >
                     ☰ Menü
                 </button>
-                <ul>
+                <ul class="nav__links">
                     <li><a href="index.html#about">Über uns</a></li>
                     <li><a href="events.html">Veranstaltungen</a></li>
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
-                    <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
-                    <li><a href="goals.html">Ziele</a></li>
+                    <li><a href="support.html" class="nav__cta">Unterstützen</a></li>
+                    <li><a href="support.html#projekte">Projekte</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a></li>
-                    <li><button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button></li>
                 </ul>
+                <div class="nav__utils">
+                    <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="feed.xml" class="nav__util nav__util--rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button>
+                </div>
             </nav>
         </header>
         <main id="main-content">
             <div class="container">
-                <section>
+                <section id="impressum">
                     <h1>Impressum &amp; Datenschutz</h1>
+                    <p class="prompt glow">$ <b>less impressum-datenschutz.md</b></p>
                     <p>
                         <strong>Letzte Aktualisierung: </strong
                         ><span id="current-date"></span>
                     </p>
-                    <h2>Kontakt &amp; Verantwortlich für den Inhalt</h2>
+                    <h2 id="kontakt">Kontakt &amp; Verantwortlich für den Inhalt<a class="section-anchor" href="#kontakt" aria-label="Link zu: Kontakt und Verantwortlich für den Inhalt">#</a></h2>
                     <div class="contact-info">
                         <p>
                             <strong>bitcircus101</strong><br />Dorotheenstraße
@@ -96,7 +100,7 @@
                             >
                         </p>
                     </div>
-                    <h2>Rechtliche Hinweise</h2>
+                    <h2 id="rechtliche-hinweise">Rechtliche Hinweise<a class="section-anchor" href="#rechtliche-hinweise" aria-label="Link zu: Rechtliche Hinweise">#</a></h2>
                     <p>
                         bitcircus101 ist ein privat und nicht-kommerziell
                         betriebener Hackspace und Treffpunkt in Bonn. Die Inhalte dieser Website werden
@@ -110,21 +114,21 @@
                         geschützt. Jegliche Nutzung außerhalb der engen Grenzen
                         des Urheberrechts bedarf der Zustimmung.
                     </p>
-                    <h2>Datenschutz</h2>
+                    <h2 id="datenschutz">Datenschutz<a class="section-anchor" href="#datenschutz" aria-label="Link zu: Datenschutz">#</a></h2>
                     <p>
                         Wir speichern <strong>keine</strong> personenbezogenen
                         oder sensiblen Daten von Website-Besucher*innen, außer
                         du stellst uns diese freiwillig zur Verfügung (z.B. per
-                        E‑Mail oder Spende). Technische Cookies zur Sicherheit
+                        E‑Mail oder wenn du uns unterstützt). Technische Cookies zur Sicherheit
                         und Zugriffszuverlässigkeit werden von unserem
                         Hosting-Anbieter (Cloudflare) verwaltet.
                     </p>
-                    <h3>Welche Daten werden erfasst?</h3>
+                    <h3 id="daten-erfassung">Welche Daten werden erfasst?<a class="section-anchor" href="#daten-erfassung" aria-label="Link zu: Welche Daten werden erfasst?">#</a></h3>
                     <ul>
                         <li>
                             Wir erfassen oder speichern keine personenbezogenen
                             Daten, außer du kontaktierst uns direkt (z.B. per
-                            E‑Mail) oder spendest.
+                            E‑Mail) oder unterstützt uns.
                         </li>
                         <li>
                             Technische Cookies (wie
@@ -132,12 +136,14 @@
                             Sicherheitsgründen gesetzt.
                         </li>
                         <li>
-                            Drittanbieter-Cookies können durch PayPal, Ko-fi
-                            (für Spenden) und OpenStreetMap (bei Kartenansicht)
-                            gesetzt werden.
+                            Eingebettete Karten (OpenStreetMap) laden erst nach
+                            einem Klick; dabei können Cookies des Anbieters
+                            gesetzt werden. PayPal und Ko-fi binden wir nicht ein
+                            – sie werden nur über externe Links erreicht (du
+                            verlässt dann unsere Seite).
                         </li>
                     </ul>
-                    <h3>Rechtsgrundlage</h3>
+                    <h3 id="rechtsgrundlage">Rechtsgrundlage<a class="section-anchor" href="#rechtsgrundlage" aria-label="Link zu: Rechtsgrundlage">#</a></h3>
                     <ul>
                         <li>
                             Essenzielle technische Cookies sind für den Betrieb
@@ -145,14 +151,15 @@
                             (berechtigtes Interesse).
                         </li>
                         <li>
-                            Nicht-essenzielle Cookies (z.B. für Spenden oder
-                            Karten) werden nur mit deiner Zustimmung gesetzt.
+                            Karten (OpenStreetMap) werden erst nach deiner
+                            ausdrücklichen Handlung (Klick) geladen; PayPal und
+                            Ko-fi binden wir gar nicht ein.
                         </li>
                     </ul>
-                    <h3>Drittanbieter-Dienste</h3>
+                    <h3 id="drittanbieter">Drittanbieter-Dienste<a class="section-anchor" href="#drittanbieter" aria-label="Link zu: Drittanbieter-Dienste">#</a></h3>
                     <ul>
                         <li>
-                            Spenden werden über PayPal (<a
+                            Unterstützung läuft über PayPal (<a
                                 href="https://www.paypal.com/privacy"
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -162,7 +169,9 @@
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 >Datenschutz</a
-                            >) abgewickelt.
+                            >). Wir betten deren Inhalte nicht ein – beide werden
+                            nur über externe Links erreicht; du verlässt dabei
+                            unsere Seite.
                         </li>
                         <li>
                             Karten werden von OpenStreetMap (<a
@@ -181,7 +190,7 @@
                             >).
                         </li>
                     </ul>
-                    <h3>Cookies</h3>
+                    <h3 id="cookies">Cookies<a class="section-anchor" href="#cookies" aria-label="Link zu: Cookies">#</a></h3>
                     <ul>
                         <li>
                             Essenzielle technische Cookies (z.B.
@@ -190,11 +199,12 @@
                             werden.
                         </li>
                         <li>
-                            Drittanbieter-Cookies (PayPal, Ko-fi, OpenStreetMap)
-                            werden nur mit deiner Zustimmung gesetzt.
+                            Karten (OpenStreetMap) laden erst nach Klick; PayPal
+                            und Ko-fi werden nur über externe Links erreicht – wir
+                            setzen dafür keine Cookies.
                         </li>
                     </ul>
-                    <h3>Speicherdauer</h3>
+                    <h3 id="speicherdauer">Speicherdauer<a class="section-anchor" href="#speicherdauer" aria-label="Link zu: Speicherdauer">#</a></h3>
                     <ul>
                         <li>
                             Wir speichern keine personenbezogenen oder sensiblen
@@ -215,20 +225,20 @@
                             Löschanfrage aufbewahrt.
                         </li>
                     </ul>
-                    <h3>Deine Rechte</h3>
+                    <h3 id="deine-rechte">Deine Rechte<a class="section-anchor" href="#deine-rechte" aria-label="Link zu: Deine Rechte">#</a></h3>
                     <ul>
                         <li>
                             Du kannst uns jederzeit kontaktieren, um Auskunft
                             oder Löschung deiner bereitgestellten Daten zu
-                            verlangen (z.B. per E‑Mail oder Spende).
+                            verlangen (z.B. per E‑Mail oder wenn du uns unterstützt).
                         </li>
                     </ul>
-                    <h3>Datensicherheit</h3>
+                    <h3 id="datensicherheit">Datensicherheit<a class="section-anchor" href="#datensicherheit" aria-label="Link zu: Datensicherheit">#</a></h3>
                     <p>
                         Unsere Website nutzt HTTPS-Verschlüsselung und
                         Cloudflare-Sicherheitsfunktionen.
                     </p>
-                    <h3>Änderungen</h3>
+                    <h3 id="aenderungen">Änderungen<a class="section-anchor" href="#aenderungen" aria-label="Link zu: Änderungen">#</a></h3>
                     <p>
                         Wir können diese Hinweise gelegentlich aktualisieren.
                         Die aktuelle Version ist immer auf dieser Seite mit dem
@@ -257,7 +267,8 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="main.js?v=10c015b1"></script>
+        <script defer src="storage.js?v=2570e834"></script>
+        <script defer src="main.js?v=2570e834"></script>
         <script>
             document.getElementById("current-date").textContent =
                 new Date().toLocaleDateString("de-DE", {

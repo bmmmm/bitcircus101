@@ -11,14 +11,14 @@
             name="description"
             content="Interner ASCII-Spielplatz für bitcircus101 – nicht in der Navigation verlinkt."
         />
-        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg?v=10c015b1" />
-        <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=10c015b1" />
-        <link rel="manifest" href="../site.webmanifest?v=10c015b1" />
+        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg?v=2570e834" />
+        <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=2570e834" />
+        <link rel="manifest" href="../site.webmanifest?v=2570e834" />
         <script>
             // No-flash: apply persisted calm theme before stylesheet paints.
-            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+            try { if (localStorage.getItem("bc.theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="../style.css?v=10c015b1" />
+        <link rel="stylesheet" href="../style.css?v=2570e834" />
     </head>
     <body class="ascii-playground-body">
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -80,7 +80,7 @@
 (function () {
   "use strict";
 
-  var STORAGE_KEY = "bitcircus101-ascii-playground";
+  var STORAGE_KEY = "bc.ascii-draft";
   /* Einfacher bitcircus101-Logo-Entwurf (Zirkuszelt + Banner + V), je Zeile 60 Zeichen */
   var _w = 60;
   function _c(s) {

@@ -13,14 +13,14 @@
         <meta property="og:description" content="Dein Beitrag hält den Hackspace am Laufen. Danke!" />
         <meta property="og:image" content="https://bitcircus101.de/images/og-image.jpg" />
         <meta property="og:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=10c015b1" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=10c015b1" />
-        <link rel="manifest" href="site.webmanifest?v=10c015b1" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=2570e834" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=2570e834" />
+        <link rel="manifest" href="site.webmanifest?v=2570e834" />
         <script>
             // No-flash: apply persisted calm theme before stylesheet paints.
-            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+            try { if (localStorage.getItem("bc.theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=10c015b1" />
+        <link rel="stylesheet" href="style.css?v=2570e834" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -40,21 +40,24 @@
                 >
                     ☰ Menü
                 </button>
-                <ul>
+                <ul class="nav__links">
                     <li><a href="index.html#about">Über uns</a></li>
                     <li><a href="events.html">Veranstaltungen</a></li>
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
-                    <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
-                    <li><a href="goals.html">Ziele</a></li>
+                    <li><a href="support.html" class="nav__cta">Unterstützen</a></li>
+                    <li><a href="support.html#projekte">Projekte</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a></li>
-                    <li><button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button></li>
                 </ul>
+                <div class="nav__utils">
+                    <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="feed.xml" class="nav__util nav__util--rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button>
+                </div>
             </nav>
         </header>
         <main id="main-content">
             <div class="container">
-                <section>
+                <section id="danke">
                     <h1>DANKE.</h1>
                     <p>
                         Dein Beitrag landet direkt dort, wo er gebraucht wird –
@@ -63,6 +66,7 @@
                     <p>
                         Der Hackspace läuft weiter. Das ist dein Anteil daran.
                     </p>
+                    <p class="prompt glow" aria-hidden="true">$ <b>./thanks.sh</b></p>
                     <pre class="ascii-art" aria-hidden="true">
   +--[ bitcircus101 ]--+
   |                    |
@@ -105,6 +109,7 @@
                 });
             });
         </script>
-        <script defer src="main.js?v=10c015b1"></script>
+        <script defer src="storage.js?v=2570e834"></script>
+        <script defer src="main.js?v=2570e834"></script>
     </body>
 </html>

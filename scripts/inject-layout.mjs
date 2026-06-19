@@ -13,8 +13,7 @@ const root = path.join(__dirname, "..");
 const LAYOUT_PAGES = [
   "index.html",
   "events.html",
-  "donations.html",
-  "goals.html",
+  "support.html",
   "raum-nutzen.html",
   "impressum-datenschutz.html",
   "dankedankedanke.html",

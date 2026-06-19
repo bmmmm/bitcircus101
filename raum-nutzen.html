@@ -45,14 +45,14 @@
         <!-- Canonical URL -->
         <link rel="canonical" href="https://bitcircus101.de/raum-nutzen.html" />
 
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=10c015b1" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=10c015b1" />
-        <link rel="manifest" href="site.webmanifest?v=10c015b1" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=2570e834" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=2570e834" />
+        <link rel="manifest" href="site.webmanifest?v=2570e834" />
         <script>
             // No-flash: apply persisted calm theme before stylesheet paints.
-            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+            try { if (localStorage.getItem("bc.theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=10c015b1" />
+        <link rel="stylesheet" href="style.css?v=2570e834" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -95,141 +95,44 @@
                 >
                     ☰ Menü
                 </button>
-                <ul>
+                <ul class="nav__links">
                     <li><a href="index.html#about">Über uns</a></li>
                     <li><a href="events.html">Veranstaltungen</a></li>
                     <li><a href="raum-nutzen.html">Raum nutzen</a></li>
-                    <li><a href="donations.html" class="nav__cta">Unterstützen</a></li>
-                    <li><a href="goals.html">Ziele</a></li>
+                    <li><a href="support.html" class="nav__cta">Unterstützen</a></li>
+                    <li><a href="support.html#projekte">Projekte</a></li>
                     <li><a href="index.html#contact">Kontakt</a></li>
-                    <li><a href="feed.xml" class="nav__rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a></li>
-                    <li><button type="button" class="theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button></li>
                 </ul>
+                <div class="nav__utils">
+                    <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="feed.xml" class="nav__util nav__util--rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button>
+                </div>
             </nav>
         </header>
         <main id="main-content">
             <div class="container">
-                <section>
-                    <h1>Raum nutzen – bitcircus101, Bonn</h1>
+                <section id="raum-nutzen">
+                    <h1>Mitmachen &amp; Raum nutzen – bitcircus101, Bonn<a class="section-anchor" href="#raum-nutzen" aria-label="Link zu: Mitmachen und Raum nutzen">#</a></h1>
                     <p>
-                        bitcircus101 ist der Raum – Hackspace, Treffpunkt, Werkstatt.
-                        Zwei Zimmer: Vorderzimmer für größere Gruppen,
-                        Hinterzimmer für kleinere Runden.
-                        Direkt in der Bonner Altstadt – für Workshops, Meetups,
-                        Drehs und alles, was einen guten Raum braucht.
-                    </p>
-                    <p>
-                        Reserviert wird immer der ganze Raum –
-                        du bekommst bitcircus101 für dich.
-                        Der Umkostenbeitrag deckt laufende Kosten
-                        und hält den Hackspace offen.
+                        bitcircus101 ist ein offener Hackspace in der Bonner Altstadt –
+                        er lebt von Leuten, die vorbeikommen und mitmachen, nicht von
+                        Mitgliedsbeiträgen. Komm vorbei, pack mit an, werde Teil.
                     </p>
                 </section>
 
-                <section>
-                    <h2>Die Zimmer</h2>
-                    <pre class="ascii-art ascii-art--left" aria-hidden="true">
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X                                    STEHTHEKE                                                   X 
-X                                                                                                X   
-X                                                                                                X   
-X      KUECHE                                                                                    X   
-X      MIT                           XXXXXXXXXXXXXXXXXXXXX                                       X  D
-X      KUEHLSCHRANK                  X                   X                                       X  O
-X      OFEN                          X                   X                                       X  R
-X      GETRAENKE                     X                   X                                       X  O
-X                                    X                   X        +---------------------+        X  T
-X                                    X                   X        ⎮ HAUPTRAUM           ⎮        X  H
-XXXXXXXXXXXXXXXXX                L   X                   X        ⎮ FUER                ⎮        X  E
-X               X                A   X                   X        ⎮ WORKSHOPS / EVENTS  ⎮        X  E
-X               X                G   X                   X        +---------------------+        X  N
-X       WC      X                E   X                   X                                       X  S
-X               X                R   X                   X         - 25 PERSONEN                 X  T
-X               X                    X                   X         - BEAMER                      X  R
-X               X                    X                   X         - WHITEBOARD                  X  A
-X               X                    X                   X         - RUHIGE ATMOSPHAERE          X  S
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                   X                                       X  S
-                                                         X                                       X  E
-                                                         X                                       X   
-                                                         X                                       X  1
-                                                         X                                       X  0
-                                                         X                                       X  1
-                                                         X                                       X   
-                                                         X                                       X   
-                                                         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX   
-
-
-              +--[ bitcircus101 ]------------------------------+
-              |  250 Mbit/s Down / 45 Mbit/s Up                |
-              |  Teeküche, Backofen &amp; Getränke             |
-              |  Mitten in Bonn – ÖPNV-nah                     |
-              +------------------------------------------------+
-
-
-                   __     _____ ____ ___ _____   _   _  _____        ___
-        \\         \ \   / /_ _/ ___|_ _|_   _| | \ | |/ _ \ \      / / |       //
-         \\         \ \ / / | |\___ \| |  | |   |  \| | | | \ \ /\ / /| |      //
-         //          \ V /  | | ___) | |  | |   | |\  | |_| |\ V  V / |_|      \\
-        //            \_/  |___|____/___| |_|   |_| \_|\___/  \_/\_/  (_)       \\
-</pre>
-                    <dl class="room-spec">
-                        <dt>Vorderzimmer</dt>
-                        <dd>bis 25 Personen je nach Bestuhlung – Tische, Stühle, Whiteboard, Beamer-Anschluss</dd>
-                        <dt>Hinterzimmer</dt>
-                        <dd>bis 7 Personen – ruhiger, für kleinere Gruppen und Workshops</dd>
-                        <dt>Internet</dt>
-                        <dd>250 Mbit/s Download, 45 Mbit/s Upload</dd>
-                        <dt>Lage</dt>
-                        <dd>Dorotheenstraße 101, 53113 Bonn – wenige Minuten zur Innenstadt, ~15 Minuten zum Hauptbahnhof</dd>
-                        <dt>Teeküche</dt>
-                        <dd>Backofen, Kaffee, Wasser, Getränke</dd>
-                        <dt>Steh-Arbeitsplätze</dt>
-                        <dd>Wand mit Steh-Arbeitsplätzen</dd>
-                        <dt>Nutzung</dt>
-                        <dd>immer der gesamte Raum – stundenweise oder tageweise, flexibel nach Absprache</dd>
-                    </dl>
-                </section>
-
-                <section>
-                    <h2>Geeignet für</h2>
-                    <ul>
-                        <li>Tech-Workshops und Coding-Sessions</li>
-                        <li>Schulungen und Trainings (intern oder extern)</li>
-                        <li>Meetups, Community-Treffen, Barcamps</li>
-                        <li>Präsentationen und Pitches</li>
-                        <li>Hackathons und Projekttage</li>
-                        <li>Alles, wofür du einen Raum mit gutem Internet brauchst</li>
+                <section id="mitmachen">
+                    <h2>Teil von bitcircus101 werden<a class="section-anchor" href="#mitmachen" aria-label="Link zu: Teil von bitcircus101 werden">#</a></h2>
+                    <p class="prompt glow">$ <b>ls ~/wege-rein/</b></p>
+                    <ul class="ways">
+                        <li><a class="way" href="events.html"><span class="ico" aria-hidden="true">📅</span><span class="key">vorbeikommen</span><span class="lbl">Offenen Termin besuchen</span></a></li>
+                        <li><a class="way" href="support.html#tatkraft"><span class="ico" aria-hidden="true">⚡</span><span class="key">tuwat!</span><span class="lbl">Vor Ort anpacken</span></a></li>
+                        <li><a class="way" href="join-info/" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">📡</span><span class="key">signal&nbsp;info</span><span class="lbl">Im Loop bleiben ↗</span></a></li>
                     </ul>
                 </section>
 
-                <section>
-                    <h2>Anfragen</h2>
-                    <p>
-                        Kein Formular, kein Portal.
-                        Schreib uns einfach – wir antworten.
-                    </p>
-                    <p>
-                        Kurz sagen: wann, wie viele Leute, was ihr vorhabt.
-                        Den Rest klären wir direkt.
-                    </p>
-                    <p class="text-center">
-                        <a
-                            href="mailto:info@bitcircus101.de?subject=Raumanfrage%20bitcircus101"
-                            class="btn btn-primary btn-large"
-                        >
-                            Anfrage per E-Mail
-                        </a>
-                    </p>
-                    <p class="privacy-notice">
-                        Alternativ: Instagram
-                        <a href="https://instagram.com/bitcircus101" target="_blank" rel="noopener noreferrer">@bitcircus101</a>
-                        oder die
-                        <a href="index.html#contact">Signal-Gruppe</a>.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Adresse & Anfahrt</h2>
+                <section id="anfahrt">
+                    <h2>Adresse &amp; Anfahrt<a class="section-anchor" href="#anfahrt" aria-label="Link zu: Adresse und Anfahrt">#</a></h2>
                     <div class="location-card">
                         <h3 class="location-card__header">[ LOCATE ]</h3>
                         <div class="location-card__body">
@@ -256,6 +159,42 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                   X                      
                     </div>
                 </section>
 
+                <details class="sidenote">
+                    <summary class="sidenote__summary">
+                        <span class="sidenote__caret" aria-hidden="true">▸</span>
+                        <span class="sidenote__label">
+                            <span class="sidenote__cmd">$ cat ~/ort</span>
+                            <span class="sidenote__title">Der Ort</span>
+                        </span>
+                    </summary>
+                    <div class="sidenote__body">
+                        <p>
+                            Du brauchst Platz für Workshop, Schulung, Meetup oder Dreh?
+                            bitcircus101 lässt sich als Ganzes nutzen – ganzer Raum,
+                            der Umkostenbeitrag deckt die laufenden Kosten.
+                        </p>
+                        <dl class="room-spec">
+                            <dt>Vorderzimmer</dt>
+                            <dd>bis 25 Personen – Tische, Stühle, Whiteboard, Beamer-Anschluss</dd>
+                            <dt>Hinterzimmer</dt>
+                            <dd>bis 7 Personen – ruhiger, für kleine Runden</dd>
+                            <dt>Internet</dt>
+                            <dd>250 Mbit/s ↓ · 45 Mbit/s ↑</dd>
+                            <dt>Teeküche</dt>
+                            <dd>Backofen, Kaffee, Wasser, Getränke</dd>
+                            <dt>Nutzung</dt>
+                            <dd>ganzer Raum, stunden- oder tageweise nach Absprache</dd>
+                        </dl>
+                        <p>
+                            Kurze Mail genügt: wann, wie viele Leute, was ihr vorhabt –
+                            <a href="mailto:info@bitcircus101.de?subject=Raumanfrage%20bitcircus101">Raum anfragen</a>.
+                            Alternativ
+                            <a href="https://instagram.com/bitcircus101" target="_blank" rel="noopener noreferrer">@bitcircus101</a>
+                            oder die <a href="index.html#contact">Signal-Gruppe</a>.
+                        </p>
+                    </div>
+                </details>
+
                 <div class="back-link">
                     <a href="index.html" class="btn btn-shimmer">← Zurück zur Startseite</a>
                 </div>
@@ -279,6 +218,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX                   X                      
             </div>
         </footer>
 
-        <script defer src="main.js?v=10c015b1"></script>
+        <script defer src="storage.js?v=2570e834"></script>
+        <script defer src="main.js?v=2570e834"></script>
     </body>
 </html>
