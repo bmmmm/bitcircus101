@@ -92,11 +92,16 @@
                                 <span class="term__path">~/unterstützen</span>
                                 <span class="term__scene" id="sceneName">—</span>
                                 <span class="term__live">funding daemon</span>
-                                <span class="egg-hint" id="eggHint" role="button" tabindex="0" title="psst … tippe „pride“ oder klick mich ♡" aria-label="Kleines Geheimnis auslösen">♡</span>
+                                <span class=”egg-hint” id=”eggHint” role=”button” tabindex=”0” title=”psst … tippe „pride” oder klick mich ♡” aria-label=”Kleines Geheimnis auslösen”>♡</span>
+                                <button type=”button” class=”term__toggle” id=”stageToggle” aria-pressed=”true” aria-label=”Animation ausschalten” title=”Animation ausschalten”>⏻</button>
                             </div>
-                            <div class="stage" id="stage" aria-hidden="true">
-                                <div class="scene" id="scene"></div>
-                                <div class="flash glow" id="flash"></div>
+                            <div class=”stage” id=”stage” aria-hidden=”true”>
+                                <div class=”scene” id=”scene”></div>
+                                <div class=”flash glow” id=”flash”></div>
+                                <div class=”stage-off-notice” id=”stageOffNotice” hidden>
+                                    <p class=”stage-off-notice__msg”>$ stage --off</p>
+                                    <button type=”button” class=”stage-off-notice__btn” id=”stageResumeBtn”>⏻ einschalten</button>
+                                </div>
                             </div>
                             <p class="term__hint" id="stageHint" aria-hidden="true"></p>
                             <div class="stage-body">
@@ -150,7 +155,7 @@
                         <details class="fold">
                             <summary class="fold__summary">
                                 <span class="fold__caret" aria-hidden="true">▸</span>
-                                <span class="fold__cmd">$ view --pick</span>
+                                <span class="fold__cmd">$ ls ~/ansicht/</span>
                                 <span class="fold__hint">Darstellung wählen — Liste, ASCII-Board, Cockpit …</span>
                             </summary>
                             <div class="fold__body">
