@@ -4361,7 +4361,16 @@ h3.sr-only {
 h3:hover .section-anchor,
 h3:focus-within .section-anchor { opacity: 1; }
 
-/* events: subtle accent left-border on the subscribe panel to echo terminal
-   panels; muted in calm theme */
-.events-subscribe { border-left: 2px solid var(--accent-dim); }
-[data-theme="calm"] .events-subscribe { border-left-color: var(--border); }
+/* events.html: neutralize global section box/rail on #termine and its nested
+   subsection — same pattern as #projekte / #tatkraft on support.html */
+#termine {
+    padding: 0;
+    background: none;
+    border-left: 0;
+}
+#termine > section {
+    padding: 0;
+    background: none;
+    border-left: 0;
+    margin: 0;
+}
