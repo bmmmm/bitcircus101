@@ -1,7 +1,7 @@
 /**
  * stage.js — bitcircus101 "Unterstützen" entry stage.
  *
- * Renders the animated ASCII support stage on donations.html: a 9-scene picker,
+ * Renders the animated ASCII support stage on support.html: a 9-scene picker,
  * an easter egg, and three support ways. Pure vanilla JS, no dependencies.
  * Scenes are self-contained modules registered via registerScene({id, title,
  * family, mini, create}); they talk to the shell only through `ctx`.

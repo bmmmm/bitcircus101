@@ -1,5 +1,5 @@
 /**
- * projects.js — bitcircus101 "Projekte" view switcher (donations.html#projekte).
+ * projects.js — bitcircus101 "Projekte" view switcher (support.html#projekte).
  *
  * The funding section ships a quiet default "Liste" view (rendered by finanz.js
  * into #projekte-list / #projekte-updated) plus alternate visual

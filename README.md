@@ -17,7 +17,7 @@ This repository contains the website for bitcircus101.
 ```
 index.html                  Main landing page
 events.html                 Events page (loads events-data.json)
-donations.html              Donation / funding page (loads funding.json)
+support.html                Donation / funding page (loads funding.json)
 raum-nutzen.html            Room usage info
 impressum-datenschutz.html  Legal / privacy
 dankedankedanke.html        Thank you page
