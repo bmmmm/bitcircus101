@@ -9,15 +9,16 @@
  *                 progress lives in the footer "[ LIGHTS ON? ]" bar, never a
  *                 summed € figure (recurring + one-time money are never added).
  *   • monatlich — recurring monthly costs → NO bar, NO total; each shows its
- *                 per-month need and a "Pat*in werden" link.
+ *                 per-month need and an "Unterstützer:in werden" link.
  * The bars are pure ASCII — no third-party resource is needed to display
- * progress; only the "unterstützen" links leave the site (to Ko-fi).
+ * progress. Donate buttons stay on-site (jump to #dauerhaft) unless a project
+ * ships its own Ko-fi page; the shared href policy lives in
+ * FinanzCore.donateTarget so every view links consistently.
  */
 (function () {
   "use strict";
 
   var JSON_URL = "finanz.json";
-  var KOFI_PROFILE = "https://ko-fi.com/bmabma";
   var Core = window.FinanzCore;
   var ANIM_MS = 750;
 
@@ -134,11 +135,14 @@
     }
     html += "</p>";
 
+    var dt = Core.donateTarget(p);
     html += '<div class="projekt-panel__actions">';
     html +=
       '<a class="projekt-action projekt-action--donate" href="' +
-      esc(p.kofi || KOFI_PROFILE) +
-      '" target="_blank" rel="noopener noreferrer">&gt;&nbsp;unterstützen' +
+      esc(dt.href) +
+      '"' +
+      (dt.external ? ' target="_blank" rel="noopener noreferrer"' : "") +
+      ">&gt;&nbsp;unterstützen" +
       '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
     if (p.kofiShop) {
       html +=
@@ -155,8 +159,8 @@
   // ── Markup: recurring monthly costs (monatlich) ───────────────────────────
   // Same card language as the one-time panels (projekt-panel) so both kinds
   // of cost read as one board; only the chrome path (~/kosten/ vs ~/projekte/),
-  // the "/ Monat" rate (no bar, no total) and the "Pat*in werden" link mark
-  // them recurring.
+  // the "/ Monat" rate (no bar, no total) and the "Unterstützer:in werden" link
+  // mark them recurring.
 
   function monatlichCard(m, currency) {
     var html =
@@ -193,11 +197,14 @@
       "</span>" +
       ' <span class="projekt-panel__permonth">/ Monat</span></p>';
 
+    var dt = Core.donateTarget(m);
     html += '<div class="projekt-panel__actions">';
     html +=
       '<a class="projekt-action projekt-action--donate" href="' +
-      esc(m.kofi || KOFI_PROFILE) +
-      '" target="_blank" rel="noopener noreferrer">&gt;&nbsp;Pat*in werden' +
+      esc(dt.href) +
+      '"' +
+      (dt.external ? ' target="_blank" rel="noopener noreferrer"' : "") +
+      ">&gt;&nbsp;Unterstützer:in werden" +
       '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
     html += "</div>";
 
@@ -294,18 +301,14 @@
       '<p class="projekte-fallback__cmd">$ funding --load ' +
       '<span class="projekte-fallback__err">ERR</span></p>' +
       "<p>Du kannst uns trotzdem direkt unterstützen: " +
-      '<a href="' +
-      KOFI_PROFILE +
-      '" target="_blank" rel="noopener noreferrer">Ko-fi öffnen ↗</a></p></div>';
+      '<a href="#dauerhaft">zu den Spendenwegen ↓</a></p></div>';
     el.removeAttribute("aria-busy");
   }
 
   function renderEmpty(el) {
     el.innerHTML =
       '<p class="projekte-empty">Aktuell stehen keine einmaligen Projekte aus. ' +
-      '<a href="' +
-      KOFI_PROFILE +
-      '" target="_blank" rel="noopener noreferrer">Trotzdem unterstützen ↗</a></p>';
+      '<a href="#dauerhaft">Trotzdem unterstützen ↓</a></p>';
     el.removeAttribute("aria-busy");
   }
 
