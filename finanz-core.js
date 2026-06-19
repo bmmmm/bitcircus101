@@ -83,20 +83,20 @@
     return sign + grouped + " " + sym;
   }
 
-  // Normalise one ONE-TIME item (target/raised) into the shape the renderer
-  // consumes. Monthly items never pass through here — they have no target.
-  function computeGoal(goal, opts) {
-    goal = goal || {};
+  // Normalise one ONE-TIME project (`einmalig`, target/raised) into the shape
+  // the renderer consumes. Monthly items never pass through here — no target.
+  function computeProject(project, opts) {
+    project = project || {};
     opts = opts || {};
     var width = opts.barWidth || BAR_WIDTH;
-    var currency = goal.currency || opts.currency || "EUR";
-    var raised = Math.max(0, num(goal.raised));
-    var target = num(goal.target);
+    var currency = project.currency || opts.currency || "EUR";
+    var raised = Math.max(0, num(project.raised));
+    var target = num(project.target);
     var raw = rawPercent(raised, target);
     var pct = Math.round(clamp(raw, 0, 100));
     return {
-      id: goal.id || "",
-      title: goal.title || "",
+      id: project.id || "",
+      title: project.title || "",
       currency: currency,
       raised: raised,
       target: target,
@@ -108,41 +108,11 @@
     };
   }
 
-  // Roll several ONE-TIME items into one overview (total bar + reached count).
-  // Callers pass ONLY the `einmalig` list — monthly costs are deliberately kept
-  // out of any total so recurring and one-time money are never summed together.
-  function aggregate(goals, opts) {
-    opts = opts || {};
-    var width = opts.barWidth || BAR_WIDTH;
-    var list = goals && goals.length ? goals : [];
-    var totalRaised = 0;
-    var totalTarget = 0;
-    var reachedCount = 0;
-    for (var i = 0; i < list.length; i++) {
-      var g = computeGoal(list[i], opts);
-      totalRaised += g.raised;
-      totalTarget += g.target;
-      if (g.reached) reachedCount++;
-    }
-    var raw = rawPercent(totalRaised, totalTarget);
-    var pct = Math.round(clamp(raw, 0, 100));
-    return {
-      count: list.length,
-      reachedCount: reachedCount,
-      totalRaised: totalRaised,
-      totalTarget: totalTarget,
-      pct: pct,
-      rawPct: Math.round(raw),
-      bar: asciiBar(pct, width),
-    };
-  }
-
   return {
     BAR_WIDTH: BAR_WIDTH,
     rawPercent: rawPercent,
     asciiBar: asciiBar,
     formatAmount: formatAmount,
-    computeGoal: computeGoal,
-    aggregate: aggregate,
+    computeProject: computeProject,
   };
 });
