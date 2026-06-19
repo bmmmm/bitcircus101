@@ -81,8 +81,6 @@ h1 { font-size: clamp(1.08rem, 2.75vw + 0.55rem, 1.6rem); }
 h2 {
     font-size: 1.25rem;
     color: var(--accent);
-    border-left: 3px solid var(--accent-dim);
-    padding-left: var(--gap-sm);
 }
 
 h3 {
@@ -1066,8 +1064,8 @@ h2:focus-within .section-anchor {
 
 /* Briefly flash heading green when section is navigated to via URL */
 @keyframes anchor-highlight {
-    0%   { color: var(--accent); }
-    100% { color: inherit; }
+    0%   { color: var(--text-bright); }
+    100% { color: var(--accent); }
 }
 
 section:target > h1,
@@ -1789,6 +1787,12 @@ a.event-card__location:hover {
 /* Wide floor plans / table art: center alignment breaks column layout */
 .ascii-art--left {
     text-align: left;
+}
+
+#home {
+    padding: 0;
+    background: none;
+    border-left: 0;
 }
 
 #home h1 {
@@ -2695,11 +2699,12 @@ h3.sr-only {
 }
 
 /* =============================================================================
-   Funding / Kosten (support.html#projekte) — default "Liste" view
+   Funding / Kosten (support.html) — section neutralization + default "Liste" view
    ============================================================================= */
-/* #projekte is a <section> nested inside the support <section>; the global
-   section rule (padding + border-left + background) would double-indent and
-   double-decorate it. Neutralize so its content aligns at the page baseline. */
+/* The outer support wrapper and all sub-sections sit inside <main> which
+   already provides page-level spacing. Neutralize the global section box so
+   content aligns at the page baseline, consistent with index.html / events.html. */
+section[aria-labelledby="support-heading"],
 #projekte {
     padding: 0;
     background: none;
@@ -2889,7 +2894,7 @@ h3.sr-only {
     gap: var(--gap-lg);
 }
 .kosten-monatlich[hidden] { display: none; }
-.projekt-panel--monatlich { border-left: 3px solid var(--accent-dim); }
+.projekt-panel--monatlich { border-color: var(--border); }
 .projekt-panel__permonth { color: var(--text-dim); }
 
 /* tuwat — "anpacken" section (#tatkraft): Aufgaben / Vorhaben / Aktionen */
@@ -2908,7 +2913,7 @@ h3.sr-only {
     border: 1px solid var(--border);
     padding: var(--gap-md) var(--gap-lg);
 }
-.tuwat-group__title { font-size: 0.95rem; margin: 0 0 var(--gap-md); letter-spacing: 0.02em; }
+.tuwat-group__title { font-size: 0.95rem; margin: 0 0 var(--gap-md); letter-spacing: 0.02em; border-left: none; padding-left: 0; }
 .tuwat-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--gap-sm); }
 .tuwat-list li { display: flex; gap: var(--gap-sm); align-items: baseline; color: var(--text); }
 .tuwat-emoji { width: 1.6em; display: inline-block; text-align: center; flex: 0 0 auto; }
@@ -4409,4 +4414,18 @@ h3:focus-within .section-anchor { opacity: 1; }
     background: none;
     border-left: 0;
     margin: 0;
+}
+
+/* raum-nutzen.html: neutralize global section box/rail */
+#raum-nutzen, #mitmachen, #anfahrt {
+    padding: 0;
+    background: none;
+    border-left: 0;
+}
+
+/* impressum-datenschutz.html + dankedankedanke.html: neutralize global section box/rail */
+#impressum, #danke {
+    padding: 0;
+    background: none;
+    border-left: 0;
 }
