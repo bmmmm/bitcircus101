@@ -51,8 +51,8 @@
   }
   function ctxEvery(baseMs, fn) {
     var stopped = false, h;
-    function tick() { if (stopped) return; fn(); h = setTimeout(tick, Math.max(16, baseMs)); }
-    h = setTimeout(tick, Math.max(16, baseMs));
+    function tick() { if (stopped) return; fn(); h = setTimeout(tick, Math.max(16, baseMs / speedMult)); }
+    h = setTimeout(tick, Math.max(16, baseMs / speedMult));
     track(function () { stopped = true; clearTimeout(h); });
   }
   function ctxRaf(fn) {
@@ -107,12 +107,16 @@
     }
   }
 
+  var speedMult = (function () {
+    var v = parseFloat(lsGet("bc-speed"));
+    return (v === 0.5 || v === 1 || v === 2) ? v : 1;
+  }());
+
   // ctx.reduce is refreshed to isStill() before every scene create() (below), so
-  // a live calm toggle makes the next render a still frame. speed/colorMode/
-  // contrast are fixed in this production port (the keyboard tweaks were dropped).
+  // a live calm toggle makes the next render a still frame.
   var ctx = {
     reduce: isStill(),
-    speed: function () { return 1; },
+    speed: function () { return speedMult; },
     calm: isCalm,
     colorMode: function () { return "color"; },
     contrast: function () { return 0; },
@@ -241,6 +245,27 @@
         card.addEventListener("click", function () { switchScene(def.id); });
         card.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); switchScene(def.id); } });
       })(SCENES[i], i + 1);
+    }
+  }
+
+  function setSpeed(v) {
+    speedMult = v;
+    lsSet("bc-speed", String(v));
+    var btns = document.querySelectorAll(".speed-btn"), i;
+    for (i = 0; i < btns.length; i++) {
+      btns[i].setAttribute("aria-pressed", String(parseFloat(btns[i].getAttribute("data-speed")) === v));
+    }
+    renderActive();
+  }
+
+  function initSpeedButtons() {
+    var btns = document.querySelectorAll(".speed-btn"), i;
+    for (i = 0; i < btns.length; i++) {
+      (function (btn) {
+        var v = parseFloat(btn.getAttribute("data-speed"));
+        btn.setAttribute("aria-pressed", String(v === speedMult));
+        btn.addEventListener("click", function () { setSpeed(v); });
+      })(btns[i]);
     }
   }
 
@@ -1846,6 +1871,7 @@ registerScene({
 
   // ── Boot ───────────────────────────────────────────────────────────────────
   renderGallery();
+  initSpeedButtons();
   // Scene on load: a saved pick (explicit gallery click) always wins. With no
   // saved pick, the Pride month (June) opens on the Pride-Sweep; other months
   // pick a random scene each visit. Boot passes persist=false so a random
