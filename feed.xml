@@ -5,19 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Fri, 19 Jun 2026 17:56:01 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 19 Jun 2026 19:50:13 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-06-19 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html#ev-2026-06-19-linkup-bitcircus101</link>
-      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …</description>
-      <category>#meetup</category>
-      <category>#lightning-talks</category>
-      <category>#talk</category>
-      <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
-      <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20260619T2000</guid>
-    </item>
     <item>
       <title>[2026-06-23 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html#ev-2026-06-23-look-at-my-toys</link>
@@ -143,6 +133,13 @@
       <category>#meetup</category>
       <pubDate>Thu, 28 May 2026 20:42:40 +0000</pubDate>
       <guid isPermaLink="false">A181B019-30E9-40E0-8250-45DC8DF5B788-20260731T2000</guid>
+    </item>
+    <item>
+      <title>[2026-08-01 12:00] 1 August  2026 CSD Beethovens Bunte @ Münsterplatz Bonn, Münsterplatz, Bonn, NRW, 53111</title>
+      <link>https://bitcircus101.de/events.html#ev-2026-08-01-1-august-2026-csd-beethovens-bunte</link>
+      <description>Am 1. August 2026 feiern wir auf dem Münsterplatz in Bonn den CSD 2026 / Beethovens Bunte mit Euch.   Das offizielle Bühnenprogramm beginnt am Samstag um ca. 13 Uhr und endet ca. um 21 Uhr. Die Demo …</description>
+      <pubDate>Fri, 29 May 2026 21:21:46 +0000</pubDate>
+      <guid isPermaLink="false">7856CDF7-054E-46BC-9EA9-AECA10B0FDF3-20260801T1200</guid>
     </item>
   </channel>
 </rss>
