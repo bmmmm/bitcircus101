@@ -1,6 +1,6 @@
 /**
  * Unit tests for finanz-core.js — cost/funding math for the one-time
- * (`einmalig`) items shown on donations.html#projekte. Runs with:
+ * (`einmalig`) items shown on support.html#projekte. Runs with:
  *   node --test tests/finanz-core.spec.mjs
  * Pure functions, no DOM, no network. Recurring monthly costs carry no target
  * and never pass through here, so they are intentionally out of scope.

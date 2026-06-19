@@ -1,6 +1,6 @@
 /**
  * finanz-core.js — shared cost/funding math for the "Projekte & Kosten" board
- * (donations.html#projekte), used by BOTH the browser renderer (finanz.js) and
+ * (support.html#projekte), used by BOTH the browser renderer (finanz.js) and
  * the alternate view templates (projects.js).
  *
  * Scope: this module only does the math for ONE-TIME items (`einmalig`) — those

@@ -637,7 +637,7 @@
         '<p><span class="fs--green">\u2588</span> gr\u00fcn &mdash; voll gedeckt \u2013 danke! (\u226580%)</p>' +
         '<p><span class="fs--amber">\u2588</span> amber &mdash; es werden mehr (33\u201380%)</p>' +
         '<p><span class="fs--red">\u2588</span> rot &mdash; der Anfang ist gemacht (&lt;33%)</p>' +
-        '<a href="donations.html#dauerhaft">$ unterst\u00fctzen \u2192</a>' +
+        '<a href="support.html#dauerhaft">$ unterst\u00fctzen \u2192</a>' +
         "</div>";
 
       // Click to toggle info panel

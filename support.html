@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Unterstütze bitcircus101 | Hackspace Bonn unterstützen</title>
+        <meta name="title" content="Unterstütze bitcircus101 | Hackspace Bonn unterstützen" />
+        <meta
+            name="description"
+            content="bitcircus101 wird komplett durch die Community getragen. Hilf mit, dass der Hackspace in Bonn weiter läuft."
+        />
+        <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#0d0d0d" />
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:url"
+            content="https://bitcircus101.de/support.html"
+        />
+        <meta
+            property="og:title"
+            content="Unterstütze bitcircus101 | Hackspace Bonn unterstützen"
+        />
+        <meta
+            property="og:description"
+            content="bitcircus101 wird komplett durch die Community getragen. Hilf mit, dass der Hackspace in Bonn weiter läuft."
+        />
+        <meta property="og:image" content="https://bitcircus101.de/images/og-image.jpg" />
+        <meta property="og:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
+        <meta property="og:locale" content="de_DE" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Unterstütze bitcircus101 | Hackspace Bonn unterstützen" />
+        <meta name="twitter:description" content="Hilf mit deinem Beitrag, dass bitcircus101 ein kreativer und technischer Freiraum in Bonn bleibt." />
+        <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
+        <link rel="canonical" href="https://bitcircus101.de/support.html" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=6" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=6" />
+        <link rel="manifest" href="site.webmanifest?v=6" />
+        <script>
+            // No-flash: apply persisted calm theme before stylesheet paints.
+            try { if (localStorage.getItem("theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="style.css?v=6" />
+    </head>
+    <body>
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+        <header>
+            <nav id="main-nav" aria-label="Hauptnavigation">
+                <a class="nav__brand" href="index.html">
+                    <span class="nav__prompt" aria-hidden="true"
+                        >&gt;<span class="nav__cursor">_</span></span
+                    >
+                    <span class="nav__name">bitcircus101</span>
+                </a>
+                <button
+                    class="menu-toggle"
+                    id="menu-toggle"
+                    aria-controls="main-nav"
+                    aria-expanded="false"
+                >
+                    ☰ Menü
+                </button>
+                <ul class="nav__links">
+                    <li><a href="index.html#about">Über uns</a></li>
+                    <li><a href="events.html">Veranstaltungen</a></li>
+                    <li><a href="raum-nutzen.html">Raum nutzen</a></li>
+                    <li><a href="support.html" class="nav__cta">Unterstützen</a></li>
+                    <li><a href="support.html#projekte">Projekte</a></li>
+                    <li><a href="index.html#contact">Kontakt</a></li>
+                </ul>
+                <div class="nav__utils">
+                    <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="feed.xml" class="nav__util nav__util--rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button>
+                </div>
+            </nav>
+        </header>
+        <main id="main-content">
+            <div class="container">
+                <section aria-labelledby="support-heading">
+                    <h1 id="support-heading" tabindex="-1">bitcircus101 unterstützen: Licht anlassen</h1>
+                    <p>
+                        Miete, Internet, Strom – bitcircus101 wird komplett durch die Community getragen.
+                        Der Balken im Footer zeigt, wo wir gerade stehen.
+                        Schön, dass du dabei bist.
+                    </p>
+
+                    <div class="support-stage">
+                        <div class="term" id="term">
+                            <div class="term__chrome">
+                                <span class="term__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                                <span class="term__path">~/unterstützen</span>
+                                <span class="term__scene" id="sceneName">—</span>
+                                <span class="term__live">funding daemon</span>
+                                <span class="egg-hint" id="eggHint" role="button" tabindex="0" title="psst … tippe „pride“ oder klick mich ♡" aria-label="Kleines Geheimnis auslösen">♡</span>
+                            </div>
+                            <div class="stage" id="stage" aria-hidden="true">
+                                <div class="scene" id="scene"></div>
+                                <div class="flash glow" id="flash"></div>
+                            </div>
+                            <p class="term__hint" id="stageHint" aria-hidden="true"></p>
+                            <div class="stage-body">
+                                <p class="prompt glow">$ <b>ls ~/unterstützen/</b></p>
+                                <ul class="ways" id="ways">
+                                    <li><a class="way way--tatkraft" href="#tatkraft"><span class="ico" aria-hidden="true">⧖</span><span class="key">tuwat!</span><span class="lbl">was tun :)</span></a></li>
+                                    <li><a class="way" href="#projekte"><span class="ico" aria-hidden="true">⚡</span><span class="key">ein&nbsp;projekt</span><span class="lbl">ein Projekt boosten</span></a></li>
+                                    <li><a class="way" href="#dauerhaft"><span class="ico" aria-hidden="true">∞</span><span class="key">dauerhaft</span><span class="lbl">Unterstützer:in werden</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <details class="fold">
+                            <summary class="fold__summary">
+                                <span class="fold__caret" aria-hidden="true">▸</span>
+                                <span class="fold__cmd">$ ls ~/ideen/</span>
+                                <span class="fold__hint">andere Animation für die Bühne</span>
+                            </summary>
+                            <div class="fold__body">
+                                <div class="gallery" id="gallery" role="group" aria-label="Animation für die Bühne wählen"></div>
+                            </div>
+                        </details>
+                    </div>
+
+                    <section id="projekte" aria-labelledby="projekte-heading">
+                        <h2 id="projekte-heading">Projekte &amp; Kosten</h2>
+                        <p class="projekte-intro">
+                            Hier siehst du, wofür wir gerade Geld brauchen. Einmalige Anschaffungen
+                            zeigen einen Balken bis zum Ziel, laufende Kosten fallen jeden Monat an.
+                            Du magst lieber mit anpacken als mit Geld helfen?
+                            <a href="#tatkraft">Das geht hier ↓</a>
+                        </p>
+                        <div id="projekte-list" class="projekte-list" aria-live="polite" aria-busy="true">
+                            <noscript>
+                                <p>
+                                    Für die Live-Anzeige der Projekte wird JavaScript benötigt.
+                                    <a href="#dauerhaft">Zu den Spendenwegen ↓</a>
+                                </p>
+                            </noscript>
+                        </div>
+                        <div id="projects-alt" class="projects-alt" hidden></div>
+                        <div id="kosten-monatlich" class="kosten-monatlich" aria-live="polite">
+                            <noscript>
+                                <p>Laufende Kosten zeigen wir per JavaScript – <a href="#dauerhaft">dauerhaft unterstützen ↓</a>.</p>
+                            </noscript>
+                        </div>
+                        <details class="fold">
+                            <summary class="fold__summary">
+                                <span class="fold__caret" aria-hidden="true">▸</span>
+                                <span class="fold__cmd">$ view --pick</span>
+                                <span class="fold__hint">Darstellung wählen — Liste, ASCII-Board, Cockpit …</span>
+                            </summary>
+                            <div class="fold__body">
+                                <div id="projects-picker" class="pj-pick" role="group" aria-label="Ansicht für die Projekte wählen"></div>
+                            </div>
+                        </details>
+                        <div id="projekte-updated" class="projekte-updated"></div>
+                    </section>
+
+                    <section id="tatkraft" aria-labelledby="tatkraft-heading">
+                        <h2 id="tatkraft-heading">tuwat — anpacken statt überweisen</h2>
+                        <p class="tatkraft-intro">
+                            Helfen geht auch ohne Geld — hier brauchen wir gerade Hände.
+                        </p>
+                        <div class="tuwat-board">
+                            <div class="tuwat-group">
+                                <h3 class="tuwat-group__title">Aufgaben — schnell übernommen</h3>
+                                <ul class="tuwat-list">
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🧹</span><span>putzen &amp; aufräumen</span></li>
+                                    <li><span class="tuwat-emoji" aria-hidden="true">♻</span><span>Leergut wegbringen</span></li>
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🧺</span><span>Wäsche waschen</span></li>
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🥤</span><span>Getränke kaufen</span></li>
+                                </ul>
+                            </div>
+                            <div class="tuwat-group">
+                                <h3 class="tuwat-group__title">Vorhaben — mit Eigenleistung</h3>
+                                <ul class="tuwat-list">
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🪟</span><span>Schaufenster-Rolladen wieder in Betrieb nehmen</span></li>
+                                    <li><span class="tuwat-emoji" aria-hidden="true">🔇</span><span>Akustikpanele aufhängen</span></li>
+                                </ul>
+                            </div>
+                            <div class="tuwat-group">
+                                <h3 class="tuwat-group__title">Aktionen &amp; Workshops</h3>
+                                <p>
+                                    Bei vielen Terminen brauchen wir Hände — Auf- und Abbau, Betreuung,
+                                    Material. Wo gerade Hilfe gesucht ist, steht direkt am Termin:
+                                    <a href="events.html">Veranstaltungen ansehen →</a>
+                                </p>
+                                <p class="tuwat-info">
+                                    <span class="tuwat-emoji" aria-hidden="true">📡</span> im Loop bleiben →
+                                    <a href="join-info/" target="_blank" rel="noopener noreferrer">Signal INFO ↗</a>
+                                </p>
+                            </div>
+                        </div>
+                        <p class="tuwat-contact">
+                            Wobei du anpacken magst? Sag uns kurz Bescheid —
+                            <a href="mailto:info@bitcircus101.de">per E-Mail</a> oder
+                            <a href="index.html#contact">über Kontakt</a>.
+                        </p>
+                    </section>
+
+                    <section id="dauerhaft" aria-labelledby="dauerhaft-heading">
+                        <h2 id="dauerhaft-heading">Dauerhaft &amp; direkt</h2>
+                        <p class="dauerhaft-intro">
+                            Werde Unterstützer:in oder gib einmalig – such dir den Weg aus, der dir am liebsten ist.
+                        </p>
+                        <div
+                            id="donation-fallback"
+                            class="donation-grid"
+                            role="group"
+                            aria-label="Wege zu spenden"
+                        >
+                            <div class="donation-item">
+                                <h3 class="donation-item__title">Überweisung</h3>
+                                <p class="donation-item__text">Klassisch per Bank – IBAN auf Anfrage.</p>
+                                <a class="btn donation-item__action" href="mailto:info@bitcircus101.de">IBAN anfragen</a>
+                            </div>
+                            <div class="donation-item">
+                                <h3 class="donation-item__title">PayPal</h3>
+                                <p class="donation-item__text">Direkt über PayPal.me.</p>
+                                <a
+                                    class="btn btn-primary donation-item__action"
+                                    href="https://www.paypal.com/paypalme/b6m"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >PayPal öffnen&nbsp;↗</a>
+                            </div>
+                            <div class="donation-item">
+                                <h3 class="donation-item__title">Ko&#x2011;fi</h3>
+                                <p class="donation-item__text">Einmalig oder monatlich als Unterstützer:in.</p>
+                                <a
+                                    class="btn btn-primary donation-item__action"
+                                    href="https://ko-fi.com/bmabma"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >Ko-fi öffnen&nbsp;↗</a>
+                            </div>
+                        </div>
+                        <p class="dauerhaft-note">Online-Wege öffnen jeweils einen neuen Tab.</p>
+                    </section>
+                    <div class="back-link">
+                        <a href="index.html" class="btn btn-shimmer">← Zurück zur Startseite</a>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <footer role="contentinfo" class="footer">
+            <div class="footer__grid">
+                <div class="footer__col">
+                    <span class="footer__brand">bitcircus101</span>
+                    <span class="footer__tagline">Hackspace · Bonn · Dorotheenstraße 101</span>
+                </div>
+                <div class="footer__col footer__col--links">
+                    <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener noreferrer">github ↗</a>
+                    <a href="impressum-datenschutz.html">impressum</a>
+                </div>
+            </div>
+            <div class="footer__bar">
+                <span class="footer__year"></span>
+                <span class="footer__sep">·</span>
+                <span class="footer__status">lights: on</span>
+            </div>
+        </footer>
+        <script defer src="finanz-core.js?v=8"></script>
+        <script defer src="finanz.js?v=8"></script>
+        <script defer src="projects.js?v=8"></script>
+        <script defer src="stage.js?v=8"></script>
+        <script defer src="main.js?v=8"></script>
+    </body>
+</html>

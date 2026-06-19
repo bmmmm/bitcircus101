@@ -1083,7 +1083,7 @@ section:target > h2 {
 /* =============================================================================
    Donation Components
    ============================================================================= */
-#donations-heading {
+#support-heading {
     text-align: center;
 }
 
@@ -2693,9 +2693,9 @@ h3.sr-only {
 }
 
 /* =============================================================================
-   Funding / Kosten (donations.html#projekte) — default "Liste" view
+   Funding / Kosten (support.html#projekte) — default "Liste" view
    ============================================================================= */
-/* #projekte is a <section> nested inside the donations <section>; the global
+/* #projekte is a <section> nested inside the support <section>; the global
    section rule (padding + border-left + background) would double-indent and
    double-decorate it. Neutralize so its content aligns at the page baseline. */
 #projekte {
@@ -2891,7 +2891,7 @@ h3.sr-only {
 .projekt-panel__permonth { color: var(--text-dim); }
 
 /* tuwat — "anpacken" section (#tatkraft): Aufgaben / Vorhaben / Aktionen */
-/* #tatkraft + #dauerhaft are nested sub-sections inside the donations section;
+/* #tatkraft + #dauerhaft are nested sub-sections inside the support section;
    neutralize the global section box/rail so they align at the page baseline
    (same treatment as #projekte). */
 #tatkraft, #dauerhaft { padding: 0; background: none; border-left: 0; }
@@ -2923,7 +2923,7 @@ h3.sr-only {
 }
 
 /* =============================================================================
-   Support stage (donations.html) — animated ASCII scene picker
+   Support stage (support.html) — animated ASCII scene picker
    Ported from the approved tmp/entry-stage.html prototype. Colour vars are
    namespaced --st-* and scoped to .support-stage so they never touch the site
    palette (--bg / --text). The stage has no own theme switch — it follows the
@@ -3134,7 +3134,7 @@ h3.sr-only {
 .support-stage .idea pre { font-size: 8px; line-height: 1.1; min-height: 34px; color: var(--st-green); }
 
 /* =============================================================================
-   Projekte view switcher (donations.html#projekte) — picker + template canvas
+   Projekte view switcher (support.html#projekte) — picker + template canvas
    The default "Liste" view is rendered by finanz.js; the alternate templates
    below live under .projects-alt .pj-<id> and are assembled into projects.js.
    ============================================================================= */
