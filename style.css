@@ -1127,10 +1127,15 @@ section:target > h2 {
     text-align: left;
 }
 
-/* Uses global h2 rules (matches index sections); tighten top margin inside cards */
-.donation-item .donation-item__title {
+/* Card titles sit inside a bordered panel already — drop the global heading
+   accent rail so they read as a quiet label, not a second section heading
+   stacked under the <h2> (avoids the "h3-in-h2" double bar). */
+.donation-item .donation-item__title,
+.donation-fallback__card h3 {
     margin-top: 0;
     margin-bottom: var(--gap-md);
+    border-left: 0;
+    padding-left: 0;
 }
 
 .donation-item__text {
@@ -1173,49 +1178,6 @@ section:target > h2 {
     .donation-fallback__card {
         flex: 1 1 240px;
         max-width: 320px;
-    }
-}
-
-/* Floating Ko-fi shortcut (donations page): a plain outbound link styled like a
-   button — no Ko-fi script, no iframe, no third-party cookies. */
-.kofi-float {
-    position: fixed;
-    right: var(--page-inline);
-    bottom: var(--page-inline);
-    z-index: var(--z-nav);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--gap-sm);
-    min-height: 44px;
-    padding: var(--gap-sm) var(--gap-md);
-    border: 1px solid var(--accent);
-    background: var(--bg-panel);
-    color: var(--accent);
-    font-family: var(--font);
-    font-size: var(--font-size);
-    text-decoration: none;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
-    transition: background var(--transition), color var(--transition);
-}
-
-.kofi-float:hover {
-    background: var(--accent);
-    color: var(--bg);
-    text-decoration: none;
-}
-
-.kofi-float:focus-visible {
-    outline: none;
-    box-shadow: var(--focus-ring);
-}
-
-.kofi-float__icon { font-size: 1.15rem; line-height: 1; }
-
-@media (max-width: 480px) {
-    .kofi-float {
-        gap: var(--gap-xs);
-        padding: var(--gap-xs) var(--gap-sm);
-        font-size: 0.85rem;
     }
 }
 
@@ -2934,9 +2896,11 @@ h3.sr-only {
 .projekte-empty { color: var(--text-dim); }
 
 /* Recurring monthly costs — same card language as the one-time panels, so
-   einmalig + monatlich read as one board. The mount stays always-visible
-   (it survives the projects.js view switch); a card differs only by a subtle
-   accent rail, the ~/kosten/ chrome path and a "/ Monat" rate (no bar). */
+   einmalig + monatlich read as one board in the "Liste" view. Visibility is
+   owned by the view switch (projects.js hides this mount for the alternate
+   templates, which fold the monthly costs into their own layout); a card
+   differs only by a subtle accent rail, the ~/kosten/ path and a "/ Monat"
+   rate (no bar). */
 .kosten-monatlich {
     margin-top: var(--gap-lg);
     display: flex;

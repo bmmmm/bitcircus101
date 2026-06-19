@@ -44,9 +44,13 @@
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
 
-  // Default mounts owned by finanz.js (the quiet "Liste" view).
+  // Default mounts owned by finanz.js (the quiet "Liste" view). The monthly
+  // costs mount lives here too: it shows alongside the one-time list in "Liste",
+  // and is hidden for the alternate templates (which fold the costs in
+  // themselves) so it never dangles below them.
   var defaultMounts = [
     document.getElementById("projekte-list"),
+    document.getElementById("kosten-monatlich"),
     document.getElementById("projekte-updated")
   ];
   function setHidden(el, h) { if (!el) return; if (h) el.setAttribute("hidden", ""); else el.removeAttribute("hidden"); }
@@ -223,37 +227,57 @@ registerProjectTemplate({
       views.push({ item: item, view: v });
     }
 
+    // Recurring monthly costs share the same board — they have no target/bar,
+    // so they render as their own rows under a "Laufende Kosten" divider with a
+    // "/ Monat" rate instead of a progress bar.
+    var monatlich = data.monatlich || [];
+    var monAmtParts = [];
+    for (i = 0; i < monatlich.length; i++) {
+      monAmtParts.push(Core.formatAmount(monatlich[i].monthly, data.currency) + "/Monat");
+    }
+
     // No grand total — costs are shown per project, never summed into a
     // GESAMT figure (see finanz.js header: the footer bar carries the symbolic
     // overall progress instead).
 
     // Column widths (we size to the content then fix them so all rows align).
-    // Name column: longest title (with icon prefix) or minimum 16 chars.
+    // Name column: longest title (with icon prefix) or minimum 16 chars —
+    // measured across one-time AND monthly items so every row lines up.
     var NAME_MIN = 16;
     var nameW = NAME_MIN;
     for (i = 0; i < views.length; i++) {
       var nameCandidate = views[i].item.icon + " " + views[i].item.title;
       if (nameCandidate.length > nameW) { nameW = nameCandidate.length; }
     }
-    // Amount column: raised / target, e.g. "1.450 € / 3.000 €".
-    // Pre-render to find max width.
+    for (i = 0; i < monatlich.length; i++) {
+      var mNameCandidate = (monatlich[i].icon || "") + " " + (monatlich[i].title || "");
+      if (mNameCandidate.length > nameW) { nameW = mNameCandidate.length; }
+    }
+    // Amount column: raised / target, e.g. "1.450 € / 3.000 €" — or a monthly
+    // rate like "30 €/Monat". Pre-render to find max width across both kinds;
+    // seed it with the header label so "Gesammelt / Ziel" is never truncated.
+    var AMT_LABEL = "Gesammelt / Ziel";
     var amtParts = [];
-    var amtW = 0;
+    var amtW = AMT_LABEL.length;
     for (i = 0; i < views.length; i++) {
       v = views[i].view;
       var amtStr = Core.formatAmount(v.raised, v.currency) + " / " + Core.formatAmount(v.target, v.currency);
       amtParts.push(amtStr);
       if (amtStr.length > amtW) { amtW = amtStr.length; }
     }
+    for (i = 0; i < monAmtParts.length; i++) {
+      if (monAmtParts[i].length > amtW) { amtW = monAmtParts[i].length; }
+    }
 
     // PCT column: "100%" — always 4 chars.
     var PCT_W = 4;
 
-    // Status column: "✓ erreicht" or "unterstützen ↗" (for unreached projects).
+    // Status column: "✓ erreicht" / "unterstützen ↗" (one-time) or "Pat*in ↗"
+    // (recurring). Width fits the longest so none gets truncated by pad().
     var STATUS_REACHED  = "✓ erreicht";       // ✓ erreicht
     var STATUS_DONATE   = "unterstützen ↗";   // unterstützen ↗
-    // Width fits the longer of the two states so neither gets truncated by pad().
-    var STATUS_W = Math.max(STATUS_REACHED.length, STATUS_DONATE.length);
+    var STATUS_PATIN    = "Pat*in ↗";         // recurring → become a patron
+    var STATUS_W = Math.max(STATUS_REACHED.length, STATUS_DONATE.length, STATUS_PATIN.length);
 
     // Inner content width:
     // "| " + name(nameW) + " " + bar(BAR_W) + " " + pct(PCT_W) + " " + amt(amtW) + " " + status(STATUS_W) + " |"
@@ -280,6 +304,15 @@ registerProjectTemplate({
       var s = "";
       for (var k = 0; k < n; k++) { s += ch; }
       return s;
+    }
+
+    // Helper: centre a string in n chars (for the recurring "laufend" marker
+    // that fills the bar column where a one-time project would show its bar).
+    function padCenter(s, n) {
+      if (s.length >= n) { return s.slice(0, n); }
+      var total = n - s.length;
+      var left  = Math.floor(total / 2);
+      return rep(" ", left) + s + rep(" ", total - left);
     }
 
     // Box-drawing chars.
@@ -315,7 +348,7 @@ registerProjectTemplate({
       pad("Projekt", nameW) + " " +
       pad("Fortschritt", BAR_W) + " " +
       rpad("", PCT_W) + " " +
-      pad("Gesammelt / Ziel", amtW) + " " +
+      pad(AMT_LABEL, amtW) + " " +
       pad("", STATUS_W)
     );
     // Trim to INNER_W (safety).
@@ -343,6 +376,23 @@ registerProjectTemplate({
       lines.push(V + " " + rowStr + " " + V);
     }
 
+    // ── Laufende Kosten (monatlich) — own rows, no bar, "/ Monat" rate ────────
+    if (monatlich.length) {
+      lines.push(DL + rep(DH, INNER_W + 2) + DR);
+      lines.push(V + " " + pad("Laufende Kosten · monatlich", INNER_W) + " " + V);
+      for (i = 0; i < monatlich.length; i++) {
+        var m       = monatlich[i];
+        var mIcon   = m.icon || "";
+        var mName   = pad(mIcon + (mIcon ? " " : "") + (m.title || ""), nameW);
+        var mBar    = padCenter("↻ laufend", BAR_W);  // no progress for recurring
+        var mPct    = rpad("", PCT_W);                 // …so no percentage either
+        var mAmt    = pad(monAmtParts[i], amtW);
+        var mStatus = pad(STATUS_PATIN, STATUS_W);
+        var mRow    = mName + " " + mBar + " " + mPct + " " + mAmt + " " + mStatus;
+        lines.push(V + " " + pad(mRow, INNER_W) + " " + V);
+      }
+    }
+
     // ── Bottom border (no grand-total row) ───────────────────────────────────
     lines.push(BL + rep(H, INNER_W + 2) + BR);
 
@@ -363,6 +413,14 @@ registerProjectTemplate({
       pb.setAttribute("aria-valuenow", String(v.pct));
       pb.setAttribute("aria-label", esc(v.title) + ": " + v.pct + "% finanziert");
       a11yDiv.appendChild(pb);
+    }
+    // Recurring costs have no progress — expose them as plain sr-only text.
+    for (i = 0; i < monatlich.length; i++) {
+      var mInfo = document.createElement("div");
+      mInfo.textContent = (monatlich[i].title || "") + ": " +
+        Core.formatAmount(monatlich[i].monthly, data.currency) +
+        " pro Monat (laufende Kosten)";
+      a11yDiv.appendChild(mInfo);
     }
     wrap.appendChild(a11yDiv);
 
@@ -388,7 +446,18 @@ registerProjectTemplate({
         linksRow.appendChild(a);
       }
     }
-    // If all reached, a generic link.
+    // One "Pat*in werden" link per recurring cost.
+    for (i = 0; i < monatlich.length; i++) {
+      var mItem = monatlich[i];
+      var ma = document.createElement("a");
+      ma.href   = mItem.kofi || env.kofiProfile;
+      ma.target = "_blank";
+      ma.rel    = "noopener noreferrer";
+      ma.className = "pj-ascii__link";
+      ma.innerHTML = (mItem.icon ? esc(mItem.icon) + " " : "") + esc(mItem.title || "") + " &#x2197;";
+      linksRow.appendChild(ma);
+    }
+    // If nothing above produced a link, a generic fallback.
     if (linksRow.childNodes.length === 0) {
       var allA = document.createElement("a");
       allA.href   = env.kofiProfile;
@@ -538,6 +607,37 @@ registerProjectTemplate({
       );
 
       addLine("bl-blank", "");
+    }
+
+    // Recurring monthly costs — own log block, no bar (they carry no target).
+    var monatlich = data.monatlich || [];
+    if (monatlich.length) {
+      addLine("bl-sys", "[SYS] laufende Kosten (monatlich)");
+      addLine("bl-blank", "");
+      for (i = 0; i < monatlich.length; i++) {
+        var mItem  = monatlich[i];
+        var mTitle = esc(mItem.title || "");
+        var mIcon  = esc(mItem.icon || "");
+        var mTag   = esc(mItem.tagline || "");
+        var mRate  = Core.formatAmount(mItem.monthly, data.currency);
+        var mHref  = esc(mItem.kofi || env.kofiProfile);
+
+        addLine("bl-hdr",
+          "▸ KOSTEN: <span class='bl-title'>" + mTitle + "</span>" +
+          (mIcon ? " <span class='bl-icon' aria-hidden='true'>" + mIcon + "</span>" : "")
+        );
+        if (mTag) { addLine("bl-dim", "  " + mTag); }
+        addLine("bl-amt",
+          "  <span class='bl-raised'>" + esc(mRate) + "</span> / Monat"
+        );
+        addLine("bl-link-line",
+          "  <a class='bl-link'" +
+          " href='" + mHref + "'" +
+          " target='_blank' rel='noopener noreferrer'" +
+          " aria-label='" + mTitle + ": Pat*in werden'>+ PAT*IN WERDEN</a>"
+        );
+        addLine("bl-blank", "");
+      }
     }
 
     // No GESAMT-FORTSCHRITT block — recurring and one-time costs are shown per

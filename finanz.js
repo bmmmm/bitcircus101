@@ -347,11 +347,13 @@
       setupAnimations(list, currency);
     }
 
-    // ── Recurring monthly costs → own always-visible block ──
+    // ── Recurring monthly costs → rendered here, shown in the "Liste" view ──
+    // Visibility is owned by the view switch (projects.js): it hides this mount
+    // for the alternate templates, which fold the monthly costs in themselves.
+    // So only fill it here; never force it visible (that would fight the switch).
     if (monatlichEl) {
       if (monatlich.length) {
         monatlichEl.innerHTML = monatlichMarkup(monatlich, currency);
-        setHidden(monatlichEl, false);
         monatlichEl.removeAttribute("aria-busy");
       } else {
         monatlichEl.innerHTML = "";
