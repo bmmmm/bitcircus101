@@ -27,7 +27,6 @@
 
   var root = document.documentElement;
   var Core = window.FinanzCore;
-  var KOFI_PROFILE = "https://ko-fi.com/bmabma";
   var STORE_KEY = "bc-projects-tpl";
   var JSON_URL = "finanz.json";
 
@@ -77,7 +76,6 @@
   function envFor() {
     return {
       Core: Core, still: isStill(), calm: isCalm(), esc: esc,
-      kofiProfile: KOFI_PROFILE,
       onTeardown: function (fn) { if (typeof fn === "function") teardowns.push(fn); }
     };
   }
@@ -272,12 +270,14 @@ registerProjectTemplate({
     // PCT column: "100%" — always 4 chars.
     var PCT_W = 4;
 
-    // Status column: "✓ erreicht" / "unterstützen ↗" (one-time) or "Pat*in ↗"
-    // (recurring). Width fits the longest so none gets truncated by pad().
-    var STATUS_REACHED  = "✓ erreicht";       // ✓ erreicht
-    var STATUS_DONATE   = "unterstützen ↗";   // unterstützen ↗
-    var STATUS_PATIN    = "Pat*in ↗";         // recurring → become a patron
-    var STATUS_W = Math.max(STATUS_REACHED.length, STATUS_DONATE.length, STATUS_PATIN.length);
+    // Status column: "✓ erreicht" / "unterstützen" (one-time) or
+    // "Unterstützer:in" (recurring). This column is aria-hidden chrome — the
+    // real jump arrow (↓ on-site / ↗ external) sits on the actual links below,
+    // so no arrow here. Width fits the longest so none gets truncated by pad().
+    var STATUS_REACHED   = "✓ erreicht";
+    var STATUS_DONATE    = "unterstützen";
+    var STATUS_RECURRING = "Unterstützer:in";
+    var STATUS_W = Math.max(STATUS_REACHED.length, STATUS_DONATE.length, STATUS_RECURRING.length);
 
     // Inner content width:
     // "| " + name(nameW) + " " + bar(BAR_W) + " " + pct(PCT_W) + " " + amt(amtW) + " " + status(STATUS_W) + " |"
@@ -387,7 +387,7 @@ registerProjectTemplate({
         var mBar    = padCenter("↻ laufend", BAR_W);  // no progress for recurring
         var mPct    = rpad("", PCT_W);                 // …so no percentage either
         var mAmt    = pad(monAmtParts[i], amtW);
-        var mStatus = pad(STATUS_PATIN, STATUS_W);
+        var mStatus = pad(STATUS_RECURRING, STATUS_W);
         var mRow    = mName + " " + mBar + " " + mPct + " " + mAmt + " " + mStatus;
         lines.push(V + " " + pad(mRow, INNER_W) + " " + V);
       }
@@ -437,34 +437,34 @@ registerProjectTemplate({
       item = views[i].item;
       v = views[i].view;
       if (!v.reached) {
+        var t = Core.donateTarget(item);
         var a = document.createElement("a");
-        a.href   = item.kofi || env.kofiProfile;
-        a.target = "_blank";
-        a.rel    = "noopener noreferrer";
+        a.href = t.href;
+        if (t.external) { a.target = "_blank"; a.rel = "noopener noreferrer"; }
         a.className = "pj-ascii__link";
-        a.innerHTML = (item.icon ? esc(item.icon) + " " : "") + esc(item.title) + " &#x2197;";
+        a.innerHTML = (item.icon ? esc(item.icon) + " " : "") + esc(item.title) +
+          (t.external ? " &#x2197;" : " &#x2193;");
         linksRow.appendChild(a);
       }
     }
-    // One "Pat*in werden" link per recurring cost.
+    // One donate link per recurring cost.
     for (i = 0; i < monatlich.length; i++) {
       var mItem = monatlich[i];
+      var mt = Core.donateTarget(mItem);
       var ma = document.createElement("a");
-      ma.href   = mItem.kofi || env.kofiProfile;
-      ma.target = "_blank";
-      ma.rel    = "noopener noreferrer";
+      ma.href = mt.href;
+      if (mt.external) { ma.target = "_blank"; ma.rel = "noopener noreferrer"; }
       ma.className = "pj-ascii__link";
-      ma.innerHTML = (mItem.icon ? esc(mItem.icon) + " " : "") + esc(mItem.title || "") + " &#x2197;";
+      ma.innerHTML = (mItem.icon ? esc(mItem.icon) + " " : "") + esc(mItem.title || "") +
+        (mt.external ? " &#x2197;" : " &#x2193;");
       linksRow.appendChild(ma);
     }
-    // If nothing above produced a link, a generic fallback.
+    // If nothing above produced a link, a generic fallback to the on-site ways.
     if (linksRow.childNodes.length === 0) {
       var allA = document.createElement("a");
-      allA.href   = env.kofiProfile;
-      allA.target = "_blank";
-      allA.rel    = "noopener noreferrer";
+      allA.href = "#dauerhaft";
       allA.className = "pj-ascii__link";
-      allA.textContent = "Ko-fi ↗";
+      allA.innerHTML = "Spendenwege &#x2193;";
       linksRow.appendChild(allA);
     }
     wrap.appendChild(linksRow);
@@ -555,7 +555,7 @@ registerProjectTemplate({
       var remainStr = view.reached
         ? "Projekt erreicht"
         : ("noch " + Core.formatAmount(view.remaining, view.currency));
-      var donateHref = esc(item.kofi || env.kofiProfile);
+      var dt         = Core.donateTarget(item);
       var statusTag  = view.reached ? "[OK ]" : ("[" + view.pct + "%]");
       var statusCls  = view.reached ? "bl-ok" : "bl-amb";
       var barFilled  = esc(view.bar.filled);
@@ -590,12 +590,12 @@ registerProjectTemplate({
       var linkCls  = "bl-link" + (view.reached ? " bl-link-reached" : "");
       var ariaLbl  = view.reached
         ? "Danke – " + esc(item.title || "") + " wurde erreicht"
-        : esc(item.title || "") + " via Ko-fi unterstuetzen";
+        : esc(item.title || "") + (dt.external ? " via Ko-fi unterstützen" : " unterstützen");
 
       addLine("bl-link-line",
         "  <a class='" + linkCls + "'" +
-        " href='" + donateHref + "'" +
-        " target='_blank' rel='noopener noreferrer'" +
+        " href='" + esc(dt.href) + "'" +
+        (dt.external ? " target='_blank' rel='noopener noreferrer'" : "") +
         " aria-label='" + ariaLbl + "'>" + linkText + "</a>"
       );
 
@@ -620,7 +620,7 @@ registerProjectTemplate({
         var mIcon  = esc(mItem.icon || "");
         var mTag   = esc(mItem.tagline || "");
         var mRate  = Core.formatAmount(mItem.monthly, data.currency);
-        var mHref  = esc(mItem.kofi || env.kofiProfile);
+        var mt     = Core.donateTarget(mItem);
 
         addLine("bl-hdr",
           "▸ KOSTEN: <span class='bl-title'>" + mTitle + "</span>" +
@@ -632,9 +632,9 @@ registerProjectTemplate({
         );
         addLine("bl-link-line",
           "  <a class='bl-link'" +
-          " href='" + mHref + "'" +
-          " target='_blank' rel='noopener noreferrer'" +
-          " aria-label='" + mTitle + ": Pat*in werden'>+ PAT*IN WERDEN</a>"
+          " href='" + esc(mt.href) + "'" +
+          (mt.external ? " target='_blank' rel='noopener noreferrer'" : "") +
+          " aria-label='" + mTitle + ": Unterstützer:in werden'>+ UNTERSTÜTZER:IN WERDEN</a>"
         );
         addLine("bl-blank", "");
       }
@@ -884,16 +884,13 @@ registerProjectTemplate({
       meta.appendChild(amountEl);
 
       // Donate link
-      var href = item.kofi || env.kofiProfile;
-      if (href) {
-        var btn = document.createElement("a");
-        btn.className = "pjg-donate-btn";
-        btn.href = href;
-        btn.target = "_blank";
-        btn.rel = "noopener noreferrer";
-        btn.textContent = view.reached ? "Danke ♥" : "+ Unterstützen";
-        meta.appendChild(btn);
-      }
+      var t = Core.donateTarget(item);
+      var btn = document.createElement("a");
+      btn.className = "pjg-donate-btn";
+      btn.href = t.href;
+      if (t.external) { btn.target = "_blank"; btn.rel = "noopener noreferrer"; }
+      btn.textContent = view.reached ? "Danke ♥" : "+ Unterstützen";
+      meta.appendChild(btn);
 
       wrap.appendChild(meta);
       row.appendChild(wrap);
@@ -904,7 +901,7 @@ registerProjectTemplate({
     // -- Recurring monthly costs: own readout strip below the dials --
     // No dial (recurring costs have no progress to sweep) and never summed into
     // a grand total — each cost is its own LCD-style readout with a "/ Monat"
-    // rate and a "Pat*in werden" link.
+    // rate and an "Unterstützer:in werden" link.
     var monatlich = data.monatlich || [];
     if (monatlich.length) {
       var costs = document.createElement("div");
@@ -952,16 +949,13 @@ registerProjectTemplate({
         cRate.textContent = Core.formatAmount(c.monthly, currency) + " / Monat";
         cMeta.appendChild(cRate);
 
-        var cHref = c.kofi || env.kofiProfile;
-        if (cHref) {
-          var cBtn = document.createElement("a");
-          cBtn.className = "pjg-donate-btn";
-          cBtn.href = cHref;
-          cBtn.target = "_blank";
-          cBtn.rel = "noopener noreferrer";
-          cBtn.textContent = "+ Pat*in werden";
-          cMeta.appendChild(cBtn);
-        }
+        var ct = Core.donateTarget(c);
+        var cBtn = document.createElement("a");
+        cBtn.className = "pjg-donate-btn";
+        cBtn.href = ct.href;
+        if (ct.external) { cBtn.target = "_blank"; cBtn.rel = "noopener noreferrer"; }
+        cBtn.textContent = "+ Unterstützer:in werden";
+        cMeta.appendChild(cBtn);
 
         cCard.appendChild(cMeta);
         costsRow.appendChild(cCard);
@@ -1176,11 +1170,11 @@ registerProjectTemplate({
       wrapper.appendChild(hud);
 
       // -- Donate button --
+      var t = Core.donateTarget(item);
       var btn = document.createElement("a");
       btn.className = "pj-wells-btn";
-      btn.href = item.kofi || env.kofiProfile;
-      btn.target = "_blank";
-      btn.rel = "noopener noreferrer";
+      btn.href = t.href;
+      if (t.external) { btn.target = "_blank"; btn.rel = "noopener noreferrer"; }
       btn.textContent = view.reached ? "+ DANKE" : "+ UNTERSTÜTZEN";
       wrapper.appendChild(btn);
 
@@ -1203,7 +1197,7 @@ registerProjectTemplate({
 
     // ── Recurring monthly costs: own strip below the wells ─────────────────
     // No silo (recurring costs have nothing to fill) and never summed — one
-    // compact row per cost with a "/ Mon" rate and a "Pat*in" link.
+    // compact row per cost with a "/ Mon" rate and an "Unterstützer:in" link.
     var monatlich = data.monatlich || [];
     if (monatlich.length) {
       var costs = document.createElement("div");
@@ -1233,12 +1227,12 @@ registerProjectTemplate({
         cRate.textContent = Core.formatAmount(c.monthly, data.currency) + " / Mon";
         crow.appendChild(cRate);
 
+        var ct = Core.donateTarget(c);
         var cBtn = document.createElement("a");
         cBtn.className = "pj-wells-cost-btn";
-        cBtn.href = c.kofi || env.kofiProfile;
-        cBtn.target = "_blank";
-        cBtn.rel = "noopener noreferrer";
-        cBtn.textContent = "+ Pat*in";
+        cBtn.href = ct.href;
+        if (ct.external) { cBtn.target = "_blank"; cBtn.rel = "noopener noreferrer"; }
+        cBtn.textContent = "+ Unterstützer:in";
         crow.appendChild(cBtn);
 
         costs.appendChild(crow);

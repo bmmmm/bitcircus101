@@ -108,11 +108,24 @@
     };
   }
 
+  // Resolve where a project's donate button points. A project that runs its
+  // OWN Ko-fi donation page (item.kofi) links straight there — external, opened
+  // in a new tab. Without one, the button stays on-site and jumps to the local
+  // payment methods (#dauerhaft) instead of bouncing the visitor to a bare,
+  // out-of-context Ko-fi profile. Returns { href, external } so every renderer
+  // shares one href policy and only picks its own arrow/target markup locally.
+  function donateTarget(item) {
+    var kofi = item && item.kofi;
+    if (kofi) return { href: kofi, external: true };
+    return { href: "#dauerhaft", external: false };
+  }
+
   return {
     BAR_WIDTH: BAR_WIDTH,
     rawPercent: rawPercent,
     asciiBar: asciiBar,
     formatAmount: formatAmount,
     computeProject: computeProject,
+    donateTarget: donateTarget,
   };
 });
