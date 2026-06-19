@@ -834,9 +834,7 @@
       utils.addEventListenerSafe(btn, "click", () => {
         const nowCalm = !isCalm();
         document.documentElement.dataset.theme = nowCalm ? "calm" : "";
-        try {
-          localStorage.setItem("theme", nowCalm ? "calm" : "loud");
-        } catch (e) {}
+        BC.storage.set(BC.storage.KEYS.THEME, nowCalm ? "calm" : "loud");
         btn.setAttribute("aria-pressed", String(nowCalm));
         // Re-apply JS-driven motion policy live (carousel auto-rotate).
         Carousel.applyMotionPreference();
