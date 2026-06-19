@@ -2796,7 +2796,7 @@ h3.sr-only {
 
 .projekt-panel__body { padding: var(--gap-md) var(--gap-lg) var(--gap-lg); }
 
-/* Title overrides the global h2 accent/border inside the panel */
+/* Title overrides the global heading accent/border inside the panel (h3) */
 .projekt-panel__title {
     border-left: none;
     padding-left: 0;
@@ -2933,33 +2933,25 @@ h3.sr-only {
 .projekte-fallback__err { color: #ff5f56; font-weight: bold; }
 .projekte-empty { color: var(--text-dim); }
 
-/* Recurring monthly costs — own always-visible block (no bar, no total) */
-.kosten-monatlich { margin-top: var(--gap-lg); }
+/* Recurring monthly costs — same card language as the one-time panels, so
+   einmalig + monatlich read as one board. The mount stays always-visible
+   (it survives the projects.js view switch); a card differs only by a subtle
+   accent rail, the ~/kosten/ chrome path and a "/ Monat" rate (no bar). */
+.kosten-monatlich {
+    margin-top: var(--gap-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg);
+}
 .kosten-monatlich[hidden] { display: none; }
-.kosten-monatlich__panel {
-    background: var(--bg-panel);
-    border: 1px solid var(--accent-dim);
-    border-left: 3px solid var(--accent);
-    padding: var(--gap-md) var(--gap-lg);
-}
-.kosten-monatlich__cmd {
-    color: var(--accent);
-    margin: 0 0 var(--gap-sm);
-    font-size: 0.9rem;
-    letter-spacing: 0.04em;
-}
-.kosten-monatlich__lead { color: var(--text-dim); margin: 0 0 var(--gap-md); font-size: 0.9rem; }
-.kosten-monatlich__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--gap-md); }
-.kosten-monatlich__item { padding-top: var(--gap-md); border-top: 1px solid var(--border); }
-.kosten-monatlich__item:first-child { padding-top: 0; border-top: 0; }
-.kosten-monatlich__title { margin: 0 0 var(--gap-xs); color: var(--text); font-weight: bold; }
-.kosten-monatlich__icon { color: var(--accent); }
-.kosten-monatlich__rate { color: var(--accent); font-weight: bold; white-space: nowrap; }
-.kosten-monatlich__tagline { color: var(--text-dim); margin: 0 0 var(--gap-xs); font-size: 0.9rem; }
-.kosten-monatlich__desc { color: var(--text-dim); margin: 0 0 var(--gap-sm); font-size: 0.85rem; }
+.projekt-panel--monatlich { border-left: 3px solid var(--accent-dim); }
+.projekt-panel__permonth { color: var(--text-dim); }
 
 /* tuwat — "anpacken" section (#tatkraft): Aufgaben / Vorhaben / Aktionen */
-#tatkraft { padding: 0; background: none; border-left: 0; }
+/* #tatkraft + #dauerhaft are nested sub-sections inside the donations section;
+   neutralize the global section box/rail so they align at the page baseline
+   (same treatment as #projekte). */
+#tatkraft, #dauerhaft { padding: 0; background: none; border-left: 0; }
 .tatkraft-intro { color: var(--text-dim); margin-bottom: var(--gap-lg); }
 .tuwat-board {
     display: grid;

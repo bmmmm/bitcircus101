@@ -88,12 +88,12 @@
 
     html += '<div class="projekt-panel__body">';
     html +=
-      '<h2 class="projekt-panel__title">' +
+      '<h3 class="projekt-panel__title">' +
       '<span class="projekt-panel__icon" aria-hidden="true">' +
       iconFor(g.icon) +
       "</span> " +
       esc(g.title) +
-      "</h2>";
+      "</h3>";
     if (g.tagline) {
       html += '<p class="projekt-panel__tagline">' + esc(g.tagline) + "</p>";
     }
@@ -153,45 +153,63 @@
   }
 
   // ── Markup: recurring monthly costs (monatlich) ───────────────────────────
-  // No bar and no total — recurring need is shown per item, "werde Pat*in".
+  // Same card language as the one-time panels (projekt-panel) so both kinds
+  // of cost read as one board; only the chrome path (~/kosten/ vs ~/projekte/),
+  // the "/ Monat" rate (no bar, no total) and the "Pat*in werden" link mark
+  // them recurring.
+
+  function monatlichCard(m, currency) {
+    var html =
+      '<article class="projekt-panel projekt-panel--monatlich" id="kosten-' +
+      esc(m.id) +
+      '">';
+
+    html +=
+      '<div class="projekt-panel__chrome" aria-hidden="true">' +
+      '<span class="projekt-panel__dot"></span>' +
+      '<span class="projekt-panel__path">~/kosten/' +
+      esc(m.id) +
+      "</span></div>";
+
+    html += '<div class="projekt-panel__body">';
+    html +=
+      '<h3 class="projekt-panel__title">' +
+      '<span class="projekt-panel__icon" aria-hidden="true">' +
+      iconFor(m.icon) +
+      "</span> " +
+      esc(m.title) +
+      "</h3>";
+    if (m.tagline) {
+      html += '<p class="projekt-panel__tagline">' + esc(m.tagline) + "</p>";
+    }
+    if (m.description) {
+      html += '<p class="projekt-panel__desc">' + esc(m.description) + "</p>";
+    }
+
+    html +=
+      '<p class="projekt-panel__amounts">' +
+      '<span class="projekt-panel__raised">' +
+      Core.formatAmount(m.monthly, currency) +
+      "</span>" +
+      ' <span class="projekt-panel__permonth">/ Monat</span></p>';
+
+    html += '<div class="projekt-panel__actions">';
+    html +=
+      '<a class="projekt-action projekt-action--donate" href="' +
+      esc(m.kofi || KOFI_PROFILE) +
+      '" target="_blank" rel="noopener noreferrer">&gt;&nbsp;Pat*in werden' +
+      '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
+    html += "</div>";
+
+    html += "</div></article>"; // body + article
+    return html;
+  }
 
   function monatlichMarkup(items, currency) {
-    var html = '<div class="kosten-monatlich__panel">';
-    html +=
-      '<p class="kosten-monatlich__cmd" aria-hidden="true">$ funding --monatlich</p>';
-    html +=
-      '<p class="kosten-monatlich__lead">Laufende Kosten — Monat für Monat. ' +
-      "Werde Pat*in und trag einen Teil davon.</p>";
-    html += '<ul class="kosten-monatlich__list">';
+    var html = "";
     for (var i = 0; i < items.length; i++) {
-      var m = items[i];
-      var icon = iconFor(m.icon);
-      html += '<li class="kosten-monatlich__item">';
-      html +=
-        '<p class="kosten-monatlich__title">' +
-        '<span class="kosten-monatlich__icon" aria-hidden="true">' +
-        icon +
-        "</span> " +
-        esc(m.title) +
-        ' <span class="kosten-monatlich__rate">' +
-        Core.formatAmount(m.monthly, currency) +
-        " / Monat</span></p>";
-      if (m.tagline) {
-        html +=
-          '<p class="kosten-monatlich__tagline">' + esc(m.tagline) + "</p>";
-      }
-      if (m.description) {
-        html +=
-          '<p class="kosten-monatlich__desc">' + esc(m.description) + "</p>";
-      }
-      html +=
-        '<a class="projekt-action projekt-action--donate" href="' +
-        esc(m.kofi || KOFI_PROFILE) +
-        '" target="_blank" rel="noopener noreferrer">&gt;&nbsp;Pat*in werden' +
-        '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
-      html += "</li>";
+      html += monatlichCard(items[i], currency);
     }
-    html += "</ul></div>";
     return html;
   }
 
