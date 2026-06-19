@@ -286,11 +286,19 @@ test.describe('Funding goals (fused into donations.html)', () => {
         const empty = await panels.first().locator('.projekt-bar__empty').textContent();
         expect(filled + empty).toMatch(/[█░]/);
 
-        // donate link is rel-hardened and opens Ko-fi in a new tab
+        // Donate link follows the shared href policy (FinanzCore.donateTarget):
+        // a project with its OWN Ko-fi page opens it rel-hardened in a new tab;
+        // without one (the seed case) it stays on-site and jumps to #dauerhaft —
+        // generic links never bounce to a bare Ko-fi profile out of context.
         const donate = panels.first().locator('.projekt-action--donate');
-        await expect(donate).toHaveAttribute('href', /ko-fi\.com/);
-        expect(await donate.getAttribute('rel')).toContain('noopener');
-        expect(await donate.getAttribute('target')).toBe('_blank');
+        const donateHref = await donate.getAttribute('href');
+        if (/ko-fi\.com/.test(donateHref)) {
+            expect(await donate.getAttribute('rel')).toContain('noopener');
+            expect(await donate.getAttribute('target')).toBe('_blank');
+        } else {
+            expect(donateHref).toMatch(/#dauerhaft$/);
+            expect(await donate.getAttribute('target')).toBeNull();
+        }
 
         // back link present — there is deliberately NO grand-total bar: one-time
         // and recurring costs are shown per item and never summed into one figure.

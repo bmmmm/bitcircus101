@@ -9,8 +9,7 @@
       "description": "Fachgerecht vom Elektriker angeschlossen — drückt die laufende Stromrechnung.",
       "icon": "☀",
       "target": 2000,
-      "raised": 145,
-      "kofi": "https://ko-fi.com/bmabma"
+      "raised": 145
     }
   ],
   "monatlich": [
@@ -20,8 +19,7 @@
       "tagline": "Glasfaser für den Space",
       "description": "Mehrkosten für den Glasfaser-Anschluss.",
       "icon": "⇅",
-      "monthly": 30,
-      "kofi": "https://ko-fi.com/bmabma"
+      "monthly": 30
     }
   ]
 }
