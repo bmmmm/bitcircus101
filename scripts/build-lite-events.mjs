@@ -12,6 +12,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const LITE = path.join(root, "lite", "index.html");
 const EVENTS_JSON = path.join(root, "events-data.json");
+const BITCIRCUS_CAL = path.join(root, "calendars", "bitcircus.json");
 
 const START = "<!-- lite-events:start -->";
 const END = "<!-- lite-events:end -->";
@@ -37,14 +38,34 @@ function formatDate(dateStr, timeStr) {
   return `${day} ${d}. ${month}${time}`;
 }
 
-function buildMarkup(events) {
+function normalizeUrl(u) {
+  if (!u) return null;
+  if (/^https?:\/\//i.test(u)) return u;
+  if (/^webcal:\/\//i.test(u)) return u;
+  if (/^[a-z0-9-]+\./i.test(u)) return "https://" + u;
+  return null;
+}
+
+function buildMarkup(events, icsUrl) {
   if (!events.length) {
     return `<p class="dim">Keine Termine eingetragen — <a href="../events.html">Veranstaltungen</a></p>`;
   }
   const items = events
-    .map((e) => `<li><span class="dim">${formatDate(e.date, e.time)}</span> — ${esc(e.title)}</li>`)
+    .map((e) => {
+      const url = normalizeUrl(e.eventUrl);
+      const label = url
+        ? `<a href="${esc(url)}" rel="noopener noreferrer">${esc(e.title)}</a>`
+        : esc(e.title);
+      return `<li><span class="dim">${formatDate(e.date, e.time)}</span> — ${label}</li>`;
+    })
     .join("\n");
-  return `<ul>\n${items}\n</ul>\n<p class="dim">→ <a href="../events.html">Alle Termine &amp; Kalender-Abo</a></p>`;
+
+  const webcal = icsUrl ? icsUrl.replace(/^https?:\/\//, "webcal://") : null;
+  const subLinks = icsUrl
+    ? `<a href="${esc(webcal)}" rel="noopener noreferrer">Kalender-Abo ↗</a> · <a href="${esc(icsUrl)}" rel="noopener noreferrer">ICS ↗</a> · `
+    : "";
+
+  return `<ul>\n${items}\n</ul>\n<p class="dim">→ ${subLinks}<a href="../feed.xml">RSS-Feed</a> · <a href="../events.html">Alle Termine</a></p>`;
 }
 
 function main() {
@@ -54,6 +75,12 @@ function main() {
     String(now.getMonth() + 1).padStart(2, "0"),
     String(now.getDate()).padStart(2, "0"),
   ].join("-");
+
+  let icsUrl = null;
+  if (fs.existsSync(BITCIRCUS_CAL)) {
+    const cal = JSON.parse(fs.readFileSync(BITCIRCUS_CAL, "utf8"));
+    icsUrl = cal.ics || null;
+  }
 
   let upcoming = [];
   if (fs.existsSync(EVENTS_JSON)) {
@@ -69,7 +96,7 @@ function main() {
       .slice(0, MAX_EVENTS);
   }
 
-  const markup = buildMarkup(upcoming);
+  const markup = buildMarkup(upcoming, icsUrl);
   let html = fs.readFileSync(LITE, "utf8");
 
   const si = html.indexOf(START);
