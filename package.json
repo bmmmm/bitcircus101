@@ -7,6 +7,7 @@
     "preinstall": "node -e \"const ua=process.env.npm_config_user_agent||'';if(!ua.startsWith('pnpm/')){console.error('\\n  bitcircus101 is pnpm-only (supply-chain policy). Use: pnpm install - npm/yarn are blocked.\\n');process.exit(1)}\"",
     "build:layout": "node scripts/inject-layout.mjs",
     "build:logos": "node scripts/build-logo-slider.mjs",
+    "build:lite-events": "node scripts/build-lite-events.mjs",
     "build": "pnpm run build:layout && pnpm run build:logos",
     "test": "node --test tests/sync-events.spec.mjs tests/finanz-core.spec.mjs && playwright test",
     "test:quick": "node --test tests/sync-events.spec.mjs tests/finanz-core.spec.mjs",

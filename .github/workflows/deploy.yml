@@ -127,10 +127,11 @@ jobs:
         with:
           node-version: "24"
 
-      - name: Apply layout partials and logo slider to HTML
+      - name: Apply layout partials, logo slider, and lite events to HTML
         run: |
           node scripts/inject-layout.mjs
           node scripts/build-logo-slider.mjs
+          node scripts/build-lite-events.mjs
 
       - name: Minify CSS and JS
         # Versions are pinned: npm releases are immutable, so a pinned version
