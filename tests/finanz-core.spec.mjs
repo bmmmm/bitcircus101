@@ -9,7 +9,7 @@ import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 import FinanzCore from "../finanz-core.js";
 
-const { rawPercent, asciiBar, formatAmount, computeGoal, aggregate, BAR_WIDTH } =
+const { rawPercent, asciiBar, formatAmount, computeProject, BAR_WIDTH } =
   FinanzCore;
 
 describe("rawPercent", () => {
@@ -75,66 +75,35 @@ describe("formatAmount", () => {
   });
 });
 
-describe("computeGoal", () => {
+describe("computeProject", () => {
   it("derives pct, reached, remaining and a bar", () => {
-    const g = computeGoal({ id: "x", title: "X", raised: 145, target: 800 });
-    assert.equal(g.pct, 18); // 145/800 = 18.1 -> 18
-    assert.equal(g.reached, false);
-    assert.equal(g.remaining, 655);
-    assert.equal(g.bar.width, BAR_WIDTH);
+    const p = computeProject({ id: "x", title: "X", raised: 145, target: 800 });
+    assert.equal(p.pct, 18); // 145/800 = 18.1 -> 18
+    assert.equal(p.reached, false);
+    assert.equal(p.remaining, 655);
+    assert.equal(p.bar.width, BAR_WIDTH);
   });
-  it("marks a goal reached at exactly the target", () => {
-    const g = computeGoal({ raised: 200, target: 200 });
-    assert.equal(g.reached, true);
-    assert.equal(g.pct, 100);
-    assert.equal(g.remaining, 0);
+  it("marks a project reached at exactly the target", () => {
+    const p = computeProject({ raised: 200, target: 200 });
+    assert.equal(p.reached, true);
+    assert.equal(p.pct, 100);
+    assert.equal(p.remaining, 0);
   });
   it("clamps the bar but keeps rawPct when over-funded", () => {
-    const g = computeGoal({ raised: 1000, target: 800 });
-    assert.equal(g.pct, 100);
-    assert.equal(g.rawPct, 125);
-    assert.equal(g.bar.filledCount, BAR_WIDTH);
+    const p = computeProject({ raised: 1000, target: 800 });
+    assert.equal(p.pct, 100);
+    assert.equal(p.rawPct, 125);
+    assert.equal(p.bar.filledCount, BAR_WIDTH);
   });
   it("never divides by zero on a missing target (e.g. a monthly item shape)", () => {
-    const g = computeGoal({ raised: 50, target: 0 });
-    assert.equal(g.pct, 0);
-    assert.equal(g.reached, false);
-    assert.equal(g.remaining, 0);
+    const p = computeProject({ raised: 50, target: 0 });
+    assert.equal(p.pct, 0);
+    assert.equal(p.reached, false);
+    assert.equal(p.remaining, 0);
   });
   it("floors a negative raised at 0", () => {
-    const g = computeGoal({ raised: -5, target: 100 });
-    assert.equal(g.raised, 0);
-    assert.equal(g.pct, 0);
-  });
-});
-
-describe("aggregate", () => {
-  it("sums raised/target across one-time items and counts reached", () => {
-    const a = aggregate([
-      { raised: 145, target: 800 },
-      { raised: 200, target: 200 },
-      { raised: 0, target: 100 },
-    ]);
-    assert.equal(a.count, 3);
-    assert.equal(a.reachedCount, 1);
-    assert.equal(a.totalRaised, 345);
-    assert.equal(a.totalTarget, 1100);
-    assert.equal(a.pct, 31); // 345/1100 = 31.4 -> 31
-  });
-  it("handles an empty list without dividing by zero", () => {
-    const a = aggregate([]);
-    assert.equal(a.count, 0);
-    assert.equal(a.pct, 0);
-    assert.equal(a.totalTarget, 0);
-    assert.equal(a.bar.filledCount, 0);
-  });
-  it("only totals what it is given — monthly costs stay out of the one-time total", () => {
-    // The renderer passes ONLY the einmalig list here; recurring monthly items
-    // (no target) are never included, so the total reflects one-time money only.
-    const einmalig = [{ raised: 145, target: 2000 }];
-    const a = aggregate(einmalig);
-    assert.equal(a.count, 1);
-    assert.equal(a.totalTarget, 2000);
-    assert.equal(a.totalRaised, 145);
+    const p = computeProject({ raised: -5, target: 100 });
+    assert.equal(p.raised, 0);
+    assert.equal(p.pct, 0);
   });
 });
