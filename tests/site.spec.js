@@ -593,7 +593,7 @@ test.describe('Calm theme toggle', () => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await context.clearCookies();
         await page.goto('/');
-        await page.evaluate(() => { try { localStorage.removeItem('theme'); } catch (e) {} });
+        await page.evaluate(() => { try { localStorage.removeItem('bc.theme'); } catch (e) {} });
         await page.reload();
 
         const toggle = page.locator('#theme-toggle');
@@ -610,7 +610,7 @@ test.describe('Calm theme toggle', () => {
         await toggle.click();
         await expect(toggle).toHaveAttribute('aria-pressed', 'true');
         expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('calm');
-        expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('calm');
+        expect(await page.evaluate(() => localStorage.getItem('bc.theme'))).toBe('calm');
         // …and the calm token block is actually in effect (teal accent)
         expect(await accent()).toBe('#5fb89a');
 
@@ -623,7 +623,7 @@ test.describe('Calm theme toggle', () => {
         // Toggle back to loud
         await page.locator('#theme-toggle').click();
         await expect(page.locator('#theme-toggle')).toHaveAttribute('aria-pressed', 'false');
-        expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('loud');
+        expect(await page.evaluate(() => localStorage.getItem('bc.theme'))).toBe('loud');
         expect(await page.evaluate(() => document.documentElement.dataset.theme || '')).toBe('');
         expect(await accent()).toBe('#00d97e');
 

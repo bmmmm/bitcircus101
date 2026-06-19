@@ -27,15 +27,14 @@
 
   var root = document.documentElement;
   var Core = window.FinanzCore;
-  var STORE_KEY = "bc-projects-tpl";
   var JSON_URL = "finanz.json";
 
   var reduce = false;
   try { reduce = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); } catch (e) {}
   function isCalm() { return root.getAttribute("data-theme") === "calm"; }
   function isStill() { return reduce || isCalm(); }
-  function lsGet() { try { return localStorage.getItem(STORE_KEY); } catch (e) { return null; } }
-  function lsSet(v) { try { localStorage.setItem(STORE_KEY, v); } catch (e) {} }
+  function lsGet() { return BC.storage.get(BC.storage.KEYS.PROJECTS_TPL); }
+  function lsSet(v) { BC.storage.set(BC.storage.KEYS.PROJECTS_TPL, v); }
 
   function esc(s) {
     return String(s == null ? "" : s)

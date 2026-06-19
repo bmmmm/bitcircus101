@@ -23,8 +23,8 @@
   var reduce = false;
   try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
-  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  var lsGet = BC.storage.get;
+  var lsSet = BC.storage.set;
 
   // Stage stillness follows the site: calm theme OR OS reduced-motion. The site
   // CSS already halts every transition under [data-theme="calm"]; the stage is
@@ -108,15 +108,15 @@
   }
 
   var speedMult = (function () {
-    var v = parseFloat(lsGet("bc-speed"));
+    var v = parseFloat(lsGet(BC.storage.KEYS.SPEED));
     return (isFinite(v) && v >= 0.5 && v <= 8) ? Math.round(v * 4) / 4 : 1;
   }());
 
-  var stageOff = lsGet("bc-stage-off") === "1";
+  var stageOff = lsGet(BC.storage.KEYS.STAGE_OFF) === "1";
 
   function applyStageOff(off) {
     stageOff = off;
-    lsSet("bc-stage-off", off ? "1" : "0");
+    lsSet(BC.storage.KEYS.STAGE_OFF, off ? "1" : "0");
 
     var sceneEl = document.getElementById("scene");
     var flashEl = document.getElementById("flash");
@@ -192,7 +192,7 @@
     if (id === activeId) return;
     if (!sceneById(id)) return;
     activeId = id;
-    if (persist !== false) lsSet("bc-scene", id);
+    if (persist !== false) lsSet(BC.storage.KEYS.SCENE, id);
     renderActive();
   }
 
@@ -280,7 +280,7 @@
 
   function setSpeed(v) {
     speedMult = v;
-    lsSet("bc-speed", String(v));
+    lsSet(BC.storage.KEYS.SPEED, String(v));
     var lbl = document.getElementById("speedVal");
     if (lbl) lbl.textContent = v + "×";
     renderActive();
@@ -1910,7 +1910,7 @@ registerScene({
   // saved pick, the Pride month (June) opens on the Pride-Sweep; other months
   // pick a random scene each visit. Boot passes persist=false so a random
   // default stays random — only a gallery click writes bc-scene.
-  var startId = lsGet("bc-scene");
+  var startId = lsGet(BC.storage.KEYS.SCENE);
   if (!sceneById(startId)) {
     startId = (new Date().getMonth() === 5 && sceneById("b1"))
       ? "b1"
