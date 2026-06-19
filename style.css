@@ -2701,11 +2701,9 @@ h3.sr-only {
 /* =============================================================================
    Funding / Kosten (support.html) — section neutralization + default "Liste" view
    ============================================================================= */
-/* The outer support wrapper and all sub-sections sit inside <main> which
-   already provides page-level spacing. Neutralize the global section box so
-   content aligns at the page baseline, consistent with index.html / events.html. */
-section[aria-labelledby="support-heading"],
-#projekte {
+/* Only the outer support wrapper gets neutralized — sub-sections (#projekte,
+   #tatkraft, #dauerhaft) are content cards and keep the global section box. */
+section[aria-labelledby="support-heading"] {
     padding: 0;
     background: none;
     border-left: 0;
@@ -2898,10 +2896,6 @@ section[aria-labelledby="support-heading"],
 .projekt-panel__permonth { color: var(--text-dim); }
 
 /* tuwat — "anpacken" section (#tatkraft): Aufgaben / Vorhaben / Aktionen */
-/* #tatkraft + #dauerhaft are nested sub-sections inside the support section;
-   neutralize the global section box/rail so they align at the page baseline
-   (same treatment as #projekte). */
-#tatkraft, #dauerhaft { padding: 0; background: none; border-left: 0; }
 .tatkraft-intro { color: var(--text-dim); margin-bottom: var(--gap-lg); }
 .tuwat-board {
     display: grid;
@@ -4416,8 +4410,9 @@ h3:focus-within .section-anchor { opacity: 1; }
     margin: 0;
 }
 
-/* raum-nutzen.html: neutralize global section box/rail */
-#raum-nutzen, #mitmachen, #anfahrt {
+/* raum-nutzen.html: only the h1 intro section gets neutralized;
+   #mitmachen and #anfahrt are content cards and keep the global section box. */
+#raum-nutzen {
     padding: 0;
     background: none;
     border-left: 0;
