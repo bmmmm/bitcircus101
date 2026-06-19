@@ -901,6 +901,76 @@ registerProjectTemplate({
 
     panel.appendChild(row);
 
+    // -- Recurring monthly costs: own readout strip below the dials --
+    // No dial (recurring costs have no progress to sweep) and never summed into
+    // a grand total — each cost is its own LCD-style readout with a "/ Monat"
+    // rate and a "Pat*in werden" link.
+    var monatlich = data.monatlich || [];
+    if (monatlich.length) {
+      var costs = document.createElement("div");
+      costs.className = "pjg-costs";
+      costs.setAttribute("role", "group");
+      costs.setAttribute("aria-label", "Laufende monatliche Kosten");
+
+      var costsLabel = document.createElement("div");
+      costsLabel.className = "pjg-costs-label";
+      costsLabel.setAttribute("aria-hidden", "true");
+      costsLabel.textContent = "▮ LAUFENDE KOSTEN · MONATLICH";
+      costs.appendChild(costsLabel);
+
+      var costsRow = document.createElement("div");
+      costsRow.className = "pjg-costs-row";
+
+      for (i = 0; i < monatlich.length; i++) {
+        var c = monatlich[i];
+        var cCard = document.createElement("div");
+        cCard.className = "pjg-cost";
+
+        var cIcon = document.createElement("span");
+        cIcon.className = "pjg-cost-icon";
+        cIcon.setAttribute("aria-hidden", "true");
+        cIcon.textContent = c.icon || "◉";
+        cCard.appendChild(cIcon);
+
+        var cMeta = document.createElement("div");
+        cMeta.className = "pjg-cost-meta";
+
+        var cTitle = document.createElement("div");
+        cTitle.className = "pjg-cost-title";
+        cTitle.textContent = c.title || "";
+        cMeta.appendChild(cTitle);
+
+        if (c.tagline) {
+          var cTag = document.createElement("div");
+          cTag.className = "pjg-cost-tagline";
+          cTag.textContent = c.tagline;
+          cMeta.appendChild(cTag);
+        }
+
+        var cRate = document.createElement("div");
+        cRate.className = "pjg-cost-rate";
+        cRate.textContent = Core.formatAmount(c.monthly, currency) + " / Monat";
+        cMeta.appendChild(cRate);
+
+        var cHref = c.kofi || env.kofiProfile;
+        if (cHref) {
+          var cBtn = document.createElement("a");
+          cBtn.className = "pjg-donate-btn";
+          cBtn.href = cHref;
+          cBtn.target = "_blank";
+          cBtn.rel = "noopener noreferrer";
+          cBtn.textContent = "+ Pat*in werden";
+          cMeta.appendChild(cBtn);
+        }
+
+        cCard.appendChild(cMeta);
+        costsRow.appendChild(cCard);
+      }
+
+      costs.appendChild(costsRow);
+      panel.appendChild(costs);
+    }
+
     // Updated timestamp
     if (data.updated) {
       var updated = document.createElement("div");
@@ -1130,6 +1200,51 @@ registerProjectTemplate({
     }
 
     host.appendChild(wellsGrid);
+
+    // ── Recurring monthly costs: own strip below the wells ─────────────────
+    // No silo (recurring costs have nothing to fill) and never summed — one
+    // compact row per cost with a "/ Mon" rate and a "Pat*in" link.
+    var monatlich = data.monatlich || [];
+    if (monatlich.length) {
+      var costs = document.createElement("div");
+      costs.className = "pj-wells-costs";
+      costs.setAttribute("role", "group");
+      costs.setAttribute("aria-label", "Laufende monatliche Kosten");
+
+      var costsHead = document.createElement("div");
+      costsHead.className = "pj-wells-costs-head";
+      costsHead.setAttribute("aria-hidden", "true");
+      costsHead.textContent = "// laufende kosten · pro monat";
+      costs.appendChild(costsHead);
+
+      var ci;
+      for (ci = 0; ci < monatlich.length; ci++) {
+        var c = monatlich[ci];
+        var crow = document.createElement("div");
+        crow.className = "pj-wells-cost";
+
+        var cName = document.createElement("span");
+        cName.className = "pj-wells-cost-name";
+        cName.textContent = (c.icon ? c.icon + " " : "") + (c.title || "");
+        crow.appendChild(cName);
+
+        var cRate = document.createElement("span");
+        cRate.className = "pj-wells-cost-rate";
+        cRate.textContent = Core.formatAmount(c.monthly, data.currency) + " / Mon";
+        crow.appendChild(cRate);
+
+        var cBtn = document.createElement("a");
+        cBtn.className = "pj-wells-cost-btn";
+        cBtn.href = c.kofi || env.kofiProfile;
+        cBtn.target = "_blank";
+        cBtn.rel = "noopener noreferrer";
+        cBtn.textContent = "+ Pat*in";
+        crow.appendChild(cBtn);
+
+        costs.appendChild(crow);
+      }
+      host.appendChild(costs);
+    }
 
     // ── Updated timestamp ─────────────────────────────────────────────────
     if (data.updated) {
