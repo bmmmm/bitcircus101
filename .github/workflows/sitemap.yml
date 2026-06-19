@@ -42,7 +42,7 @@ jobs:
           const fs = require('fs');
           let xml = fs.readFileSync('sitemap.xml', 'utf8');
           // Remove Google verification files, noindex pages, hidden playground
-          for (const p of ['google', 'dankedankedanke', '/ascii/', '/lite/', '/invite-info/', '/invite-talk/', '/join-info/', '/join-talk/']) {
+          for (const p of ['google', 'dankedankedanke', 'donations.html', '/ascii/', '/lite/', '/invite-info/', '/invite-talk/', '/join-info/', '/join-talk/']) {
             xml = xml.replace(new RegExp('<url>\\\\s*<loc>[^<]*' + p + '[^<]*</loc>[\\\\s\\\\S]*?</url>', 'g'), '');
           }
           fs.writeFileSync('sitemap.xml', xml.replace(/\\n{3,}/g, '\\n\\n'));
