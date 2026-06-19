@@ -9,8 +9,14 @@ import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 import FinanzCore from "../finanz-core.js";
 
-const { rawPercent, asciiBar, formatAmount, computeProject, BAR_WIDTH } =
-  FinanzCore;
+const {
+  rawPercent,
+  asciiBar,
+  formatAmount,
+  computeProject,
+  donateTarget,
+  BAR_WIDTH,
+} = FinanzCore;
 
 describe("rawPercent", () => {
   it("computes the ratio in percent", () => {
@@ -105,5 +111,22 @@ describe("computeProject", () => {
     const p = computeProject({ raised: -5, target: 100 });
     assert.equal(p.raised, 0);
     assert.equal(p.pct, 0);
+  });
+});
+
+describe("donateTarget", () => {
+  it("links to a project's own Ko-fi page externally when it has one", () => {
+    const t = donateTarget({ kofi: "https://ko-fi.com/s/abc123" });
+    assert.equal(t.href, "https://ko-fi.com/s/abc123");
+    assert.equal(t.external, true);
+  });
+  it("stays on-site (#dauerhaft) when the project has no own Ko-fi page", () => {
+    const t = donateTarget({ id: "solar", title: "Solar" });
+    assert.equal(t.href, "#dauerhaft");
+    assert.equal(t.external, false);
+  });
+  it("is internal for an empty or missing item", () => {
+    assert.equal(donateTarget({}).external, false);
+    assert.equal(donateTarget(null).href, "#dauerhaft");
   });
 });
