@@ -1106,34 +1106,45 @@ section:target > h2 {
     color: var(--bg);
 }
 
-/* Bank + online methods: same panel as PayPal/Ko-fi; width matches widened column */
-.donation-item--iban {
-    max-width: min(720px, 100%);
-    margin-left: auto;
-    margin-right: auto;
+/* Three equal donation ways (Überweisung / PayPal / Ko-fi) as one harmonious
+   grid: identical bordered cards, equal height, action pinned to the foot. */
+.dauerhaft-intro {
+    color: var(--text-dim);
+    margin-bottom: var(--gap-lg);
+}
+
+.donation-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-lg);
+    max-width: min(900px, 100%);
+    margin: var(--gap-lg) auto 0;
+}
+
+@media (min-width: 640px) {
+    .donation-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 .donation-item {
     padding: var(--gap-lg);
     border: 1px solid var(--border);
     background: var(--bg-panel);
-    margin-bottom: var(--gap-lg);
-    width: 100%;
-    max-width: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: stretch;
     text-align: left;
+    gap: var(--gap-sm);
 }
 
 /* Card titles sit inside a bordered panel already — drop the global heading
    accent rail so they read as a quiet label, not a second section heading
    stacked under the <h2> (avoids the "h3-in-h2" double bar). */
-.donation-item .donation-item__title,
-.donation-fallback__card h3 {
+.donation-item .donation-item__title {
     margin-top: 0;
-    margin-bottom: var(--gap-md);
+    margin-bottom: var(--gap-xs);
     border-left: 0;
     padding-left: 0;
 }
@@ -1144,41 +1155,17 @@ section:target > h2 {
     color: var(--text);
 }
 
-.donation-item .btn {
-    align-self: center;
+/* Action pinned to the card foot so all three buttons share one baseline. */
+.donation-item__action {
+    margin-top: auto;
+    align-self: stretch;
 }
 
-.donation-fallback {
-    margin: var(--gap-lg) 0;
-    padding: var(--gap-md) 0;
-    border-top: 1px solid var(--border);
-}
-
-.donation-fallback__lead {
-    margin: 0 0 var(--gap-md);
-    font-size: 0.88rem;
-    color: var(--text-dim);
+.dauerhaft-note {
     text-align: center;
-}
-
-.donation-fallback__options {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-md);
-    align-items: stretch;
-}
-
-@media (min-width: 640px) {
-    .donation-fallback__options {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .donation-fallback__card {
-        flex: 1 1 240px;
-        max-width: 320px;
-    }
+    margin-top: var(--gap-md);
+    font-size: 0.8rem;
+    color: var(--text-dim);
 }
 
 /* =============================================================================
@@ -2865,15 +2852,7 @@ h3.sr-only {
     50% { opacity: 1; }
 }
 
-/* Footnotes */
-.projekte-privacy {
-    color: var(--text-dim);
-    font-size: 0.8rem;
-    margin-top: var(--gap-lg);
-    border-top: 1px solid var(--border);
-    padding-top: var(--gap-md);
-}
-
+/* Footnote: last-updated timestamp */
 .projekte-updated {
     color: var(--text-dim);
     font-size: 0.75rem;
@@ -3848,6 +3827,71 @@ h3.sr-only {
   letter-spacing: 0.08em;
 }
 
+/* === Recurring monthly costs — readout strip below the dials === */
+/* No gauge (recurring costs have no progress to sweep) and never summed: each
+   cost is its own LCD-style readout with a per-month rate and a patron link. */
+.projects-alt .pj-gauges .pjg-costs {
+  margin-top: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+}
+.projects-alt .pj-gauges .pjg-costs-label {
+  text-align: center;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.projects-alt .pj-gauges .pjg-costs-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+.projects-alt .pj-gauges .pjg-cost {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  min-width: clamp(180px, 40%, 260px);
+  padding: 0.7rem 0.9rem;
+  background: color-mix(in srgb, var(--bg-panel) 70%, var(--bg) 30%);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.projects-alt .pj-gauges .pjg-cost-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--accent);
+}
+.projects-alt .pj-gauges .pjg-cost-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: left;
+}
+.projects-alt .pj-gauges .pjg-cost-title {
+  font-size: 0.7rem;
+  color: var(--text);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.projects-alt .pj-gauges .pjg-cost-tagline {
+  font-size: 0.58rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+.projects-alt .pj-gauges .pjg-cost-rate {
+  font-size: 0.72rem;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  margin-top: 0.1rem;
+}
+.projects-alt .pj-gauges .pjg-cost .pjg-donate-btn {
+  align-self: flex-start;
+  margin-top: 0.45rem;
+}
+
 /* === Error panel === */
 .projects-alt .pj-gauges .pjg-error {
   text-align: center;
@@ -4188,6 +4232,62 @@ h3.sr-only {
 
 .projects-alt .pj-wells .pj-wells-btn:hover,
 .projects-alt .pj-wells .pj-wells-btn:focus-visible {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-color: var(--accent);
+  outline: none;
+}
+
+/* ── Recurring monthly costs — strip below the wells ──────────────────────────── */
+/* No silo (recurring costs have nothing to fill) and never summed: one compact
+   row per cost with a per-month rate and a patron link. */
+.projects-alt .pj-wells .pj-wells-costs {
+  width: 100%;
+  max-width: 420px;
+  margin: 20px auto 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.projects-alt .pj-wells .pj-wells-costs-head {
+  color: var(--text-dim);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.projects-alt .pj-wells .pj-wells-cost {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-top: 1px dashed color-mix(in srgb, var(--border) 70%, transparent);
+}
+.projects-alt .pj-wells .pj-wells-cost:first-of-type {
+  border-top: 0;
+}
+.projects-alt .pj-wells .pj-wells-cost-name {
+  flex: 1 1 auto;
+  color: var(--text);
+}
+.projects-alt .pj-wells .pj-wells-cost-rate {
+  color: var(--accent);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.projects-alt .pj-wells .pj-wells-cost-btn {
+  flex: 0 0 auto;
+  padding: 4px 9px;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  color: var(--accent);
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.15s, border-color 0.15s;
+}
+.projects-alt .pj-wells .pj-wells-cost-btn:hover,
+.projects-alt .pj-wells .pj-wells-cost-btn:focus-visible {
   background: color-mix(in srgb, var(--accent) 10%, transparent);
   border-color: var(--accent);
   outline: none;
