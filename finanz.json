@@ -1,6 +1,6 @@
 {
   "currency": "EUR",
-  "updated": "2026-06-18",
+  "updated": "2026-06-19",
   "einmalig": [
     {
       "id": "solar-speicher",
@@ -9,7 +9,7 @@
       "description": "Fachgerecht vom Elektriker angeschlossen — drückt die laufende Stromrechnung.",
       "icon": "☀",
       "target": 2000,
-      "raised": 145
+      "raised": 250
     }
   ],
   "monatlich": [
