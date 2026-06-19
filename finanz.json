@@ -6,7 +6,7 @@
       "id": "solar-speicher",
       "title": "Solarzellen + Speicher",
       "tagline": "Solarstrom fürs ganze Jahr",
-      "description": "Solarzellen mit Speicher, fachgerecht vom Elektriker angeschlossen — drückt die laufende Stromrechnung des Space.",
+      "description": "Fachgerecht vom Elektriker angeschlossen — drückt die laufende Stromrechnung.",
       "icon": "☀",
       "target": 2000,
       "raised": 145,
@@ -18,7 +18,7 @@
       "id": "glasfaser",
       "title": "Schnelleres Internet",
       "tagline": "Glasfaser für den Space",
-      "description": "Mehrkosten für den Glasfaser-Anschluss — schnelleres, stabileres Netz für Workshops, Streams und Reparatur-Recherche.",
+      "description": "Mehrkosten für den Glasfaser-Anschluss.",
       "icon": "⇅",
       "monthly": 30,
       "kofi": "https://ko-fi.com/bmabma"
