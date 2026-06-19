@@ -116,11 +116,10 @@
                             </summary>
                             <div class="fold__body">
                                 <div class="gallery" id="gallery" role="group" aria-label="Animation für die Bühne wählen"></div>
-                                <div class="speed-ctrl" role="group" aria-label="Animationsgeschwindigkeit">
-                                    <span class="speed-ctrl__label">⏱ Tempo</span>
-                                    <button type="button" class="speed-btn" data-speed="0.5" aria-pressed="false">½×</button>
-                                    <button type="button" class="speed-btn" data-speed="1" aria-pressed="true">1×</button>
-                                    <button type="button" class="speed-btn" data-speed="2" aria-pressed="false">2×</button>
+                                <div class="speed-ctrl">
+                                    <label class="speed-ctrl__label" for="speedSlider">⏱ Tempo</label>
+                                    <input class="speed-slider" id="speedSlider" type="range" min="0.5" max="8" step="0.25" value="1" aria-label="Animationsgeschwindigkeit">
+                                    <span class="speed-val" id="speedVal" aria-live="polite">1×</span>
                                 </div>
                             </div>
                         </details>
