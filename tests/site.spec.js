@@ -14,7 +14,7 @@ test.describe('Home page', () => {
     test('shows support and contact CTAs', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('#support')).toBeVisible();
-        await expect(page.locator('#support a[href="donations.html"]')).toBeVisible();
+        await expect(page.locator('#support a[href="support.html"]')).toBeVisible();
         await expect(page.locator('#support a[href="raum-nutzen.html"]')).toBeVisible();
         await expect(page.locator('#contact a[href^="mailto:"]')).toBeVisible();
     });
@@ -82,7 +82,7 @@ test.describe('SEO meta tags', () => {
         expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
 
         // Donations
-        await page.goto('/donations.html');
+        await page.goto('/support.html');
         expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
 
         // Raum nutzen
@@ -121,7 +121,7 @@ test.describe('Navigation', () => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await page.goto('/');
         await expect(page.locator('nav a[href="events.html"]')).toBeVisible();
-        await expect(page.locator('nav a[href="donations.html"]')).toBeVisible();
+        await expect(page.locator('nav a[href="support.html"]')).toBeVisible();
         await expect(page.locator('nav a[href="raum-nutzen.html"]')).toBeVisible();
         // Utility cluster: the lite link sits beside RSS/calm
         await expect(page.locator('nav a[href="lite/"]')).toBeVisible();
@@ -237,17 +237,27 @@ test.describe('Events content', () => {
 
 // ─── Goals Page ──────────────────────────────────────────────────────────────
 
-test.describe('Funding goals (fused into donations.html)', () => {
-    test('goals.html is a noindex redirect to donations.html#projekte', async ({ request }) => {
+test.describe('Funding goals (fused into support.html)', () => {
+    test('goals.html is a noindex redirect to support.html#projekte', async ({ request }) => {
         const res = await request.get('/goals.html');
         expect(res.status()).toBe(200);
         const html = await res.text();
         expect(html).toMatch(/name=["']robots["'][^>]*noindex/i);
-        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*donations\.html#projekte/i);
+        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*support\.html#projekte/i);
     });
 
-    test('donations.html renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
-        await page.goto('/donations.html');
+    test('donations.html is a noindex redirect to the renamed support.html', async ({ request }) => {
+        // The page was renamed donations.html → support.html; the old URL stays
+        // as a noindex stub so existing backlinks / bookmarks keep resolving.
+        const res = await request.get('/donations.html');
+        expect(res.status()).toBe(200);
+        const html = await res.text();
+        expect(html).toMatch(/name=["']robots["'][^>]*noindex/i);
+        expect(html).toMatch(/http-equiv=["']refresh["'][^>]*support\.html/i);
+    });
+
+    test('support.html renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
+        await page.goto('/support.html');
         await expect(page).toHaveTitle(/Unterstütz/);
 
         // Wait for JS (finanz.js / projects.js) to render panels (or a fallback)
@@ -309,11 +319,11 @@ test.describe('Funding goals (fused into donations.html)', () => {
 
 // ─── Subpages ────────────────────────────────────────────────────────────────
 
-test.describe('Donations page', () => {
+test.describe('Support page', () => {
     test('online support options are directly visible — no consent gate, no embeds', async ({ page }) => {
-        await page.goto('/donations.html');
+        await page.goto('/support.html');
         await expect(page).toHaveTitle(/Unterstütz/);
-        await expect(page.locator('#donations-heading')).toContainText(
+        await expect(page.locator('#support-heading')).toContainText(
             /bitcircus101 unterstützen: Licht anlassen/,
         );
 
@@ -418,7 +428,7 @@ test.describe('No JavaScript errors', () => {
     const pages = [
         ['/', 'Home'],
         ['/events.html', 'Events'],
-        ['/donations.html', 'Donations'],
+        ['/support.html', 'Support'],
         ['/raum-nutzen.html', 'Raum nutzen'],
         ['/impressum-datenschutz.html', 'Impressum'],
         ['/dankedankedanke.html', 'Danke'],
@@ -483,7 +493,7 @@ test.describe('Lite version', () => {
 test.describe('Internal links', () => {
     test('all internal links and <link>/manifest resources resolve', async ({ page }) => {
         const pagesToCheck = [
-            '/', '/events.html', '/donations.html',
+            '/', '/events.html', '/support.html',
             '/raum-nutzen.html', '/impressum-datenschutz.html',
             '/dankedankedanke.html',
         ];

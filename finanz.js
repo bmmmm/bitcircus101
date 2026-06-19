@@ -1,5 +1,5 @@
 /**
- * finanz.js — bitcircus101 "Projekte & Kosten" renderer (donations.html#projekte).
+ * finanz.js — bitcircus101 "Projekte & Kosten" renderer (support.html#projekte).
  *
  * Loads finanz.json and renders terminal-style panels using the shared math in
  * finanz-core.js (window.FinanzCore). Two kinds of cost are kept apart on
