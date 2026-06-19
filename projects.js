@@ -214,13 +214,13 @@ registerProjectTemplate({
     var BAR_W   = 20;   // must match Core.BAR_WIDTH
     var COL_SEP = " ";  // single space between columns inside the box
 
-    // Compute per-goal views.
+    // Compute per-project views.
     var views = [];
-    var i, g, v;
+    var i, item, v;
     for (i = 0; i < data.einmalig.length; i++) {
-      g = data.einmalig[i];
-      v = Core.computeGoal(g, { currency: data.currency, barWidth: BAR_W });
-      views.push({ goal: g, view: v });
+      item = data.einmalig[i];
+      v = Core.computeProject(item, { currency: data.currency, barWidth: BAR_W });
+      views.push({ item: item, view: v });
     }
 
     // No grand total — costs are shown per project, never summed into a
@@ -232,7 +232,7 @@ registerProjectTemplate({
     var NAME_MIN = 16;
     var nameW = NAME_MIN;
     for (i = 0; i < views.length; i++) {
-      var nameCandidate = views[i].goal.icon + " " + views[i].goal.title;
+      var nameCandidate = views[i].item.icon + " " + views[i].item.title;
       if (nameCandidate.length > nameW) { nameW = nameCandidate.length; }
     }
     // Amount column: raised / target, e.g. "1.450 € / 3.000 €".
@@ -249,7 +249,7 @@ registerProjectTemplate({
     // PCT column: "100%" — always 4 chars.
     var PCT_W = 4;
 
-    // Status column: "✓ erreicht" or "unterstützen ↗" (for unreached goals).
+    // Status column: "✓ erreicht" or "unterstützen ↗" (for unreached projects).
     var STATUS_REACHED  = "✓ erreicht";       // ✓ erreicht
     var STATUS_DONATE   = "unterstützen ↗";   // unterstützen ↗
     // Width fits the longer of the two states so neither gets truncated by pad().
@@ -325,10 +325,10 @@ registerProjectTemplate({
 
     // ── One row per Projekt ─────────────────────────────────────────────────
     for (i = 0; i < views.length; i++) {
-      g    = views[i].goal;
+      item = views[i].item;
       v    = views[i].view;
-      var icon     = g.icon || "";
-      var nameStr  = pad(icon + (icon ? " " : "") + g.title, nameW);
+      var icon     = item.icon || "";
+      var nameStr  = pad(icon + (icon ? " " : "") + item.title, nameW);
       var barStr   = v.bar.filled + v.bar.empty;   // exactly BAR_W chars
       var pctStr   = rpad(v.pct + "%", PCT_W);
       var amtStr2  = pad(amtParts[i], amtW);
@@ -351,7 +351,7 @@ registerProjectTemplate({
     var wrap = document.createElement("div");
     wrap.className = "pj-ascii__wrap";
 
-    // Accessibility: sr-only progressbar elements for each goal + total.
+    // Accessibility: sr-only progressbar elements for each project.
     var a11yDiv = document.createElement("div");
     a11yDiv.className = "pj-ascii__a11y";
     for (i = 0; i < views.length; i++) {
@@ -372,19 +372,19 @@ registerProjectTemplate({
     pre.setAttribute("aria-hidden", "true");   // a11y info already in a11yDiv
     wrap.appendChild(pre);
 
-    // Donate links row — one per unreached goal + global fallback.
+    // Donate links row — one per unreached project + global fallback.
     var linksRow = document.createElement("div");
     linksRow.className = "pj-ascii__links";
     for (i = 0; i < views.length; i++) {
-      g = views[i].goal;
+      item = views[i].item;
       v = views[i].view;
       if (!v.reached) {
         var a = document.createElement("a");
-        a.href   = g.kofi || env.kofiProfile;
+        a.href   = item.kofi || env.kofiProfile;
         a.target = "_blank";
         a.rel    = "noopener noreferrer";
         a.className = "pj-ascii__link";
-        a.innerHTML = (g.icon ? esc(g.icon) + " " : "") + esc(g.title) + " &#x2197;";
+        a.innerHTML = (item.icon ? esc(item.icon) + " " : "") + esc(item.title) + " &#x2197;";
         linksRow.appendChild(a);
       }
     }
@@ -472,27 +472,27 @@ registerProjectTemplate({
     );
     addLine("bl-blank", "");
 
-    // one block per goal
+    // one block per project
     var i;
     for (i = 0; i < data.einmalig.length; i++) {
-      var g    = data.einmalig[i];
-      var view = Core.computeGoal(g, { currency: data.currency });
+      var item = data.einmalig[i];
+      var view = Core.computeProject(item, { currency: data.currency });
 
-      var iconGlyph = esc(g.icon ? g.icon : "");
-      var titleStr  = esc(g.title || "");
-      var tagStr    = esc(g.tagline || "");
+      var iconGlyph = esc(item.icon ? item.icon : "");
+      var titleStr  = esc(item.title || "");
+      var tagStr    = esc(item.tagline || "");
       var raisedFmt = Core.formatAmount(view.raised, view.currency);
       var targetFmt = Core.formatAmount(view.target, view.currency);
       var remainStr = view.reached
         ? "Projekt erreicht"
         : ("noch " + Core.formatAmount(view.remaining, view.currency));
-      var donateHref = esc(g.kofi || env.kofiProfile);
+      var donateHref = esc(item.kofi || env.kofiProfile);
       var statusTag  = view.reached ? "[OK ]" : ("[" + view.pct + "%]");
       var statusCls  = view.reached ? "bl-ok" : "bl-amb";
       var barFilled  = esc(view.bar.filled);
       var barEmpty   = esc(view.bar.empty);
 
-      // goal header line
+      // project header line
       addLine("bl-hdr",
         "▸ PROJEKT: <span class='bl-title'>" + titleStr + "</span>" +
         (iconGlyph ? " <span class='bl-icon' aria-hidden='true'>" + iconGlyph + "</span>" : "")
@@ -520,8 +520,8 @@ registerProjectTemplate({
       var linkText = view.reached ? "DANKE &lt;3" : "+ UNTERSTÜTZEN";
       var linkCls  = "bl-link" + (view.reached ? " bl-link-reached" : "");
       var ariaLbl  = view.reached
-        ? "Danke – " + esc(g.title || "") + " wurde erreicht"
-        : esc(g.title || "") + " via Ko-fi unterstuetzen";
+        ? "Danke – " + esc(item.title || "") + " wurde erreicht"
+        : esc(item.title || "") + " via Ko-fi unterstuetzen";
 
       addLine("bl-link-line",
         "  <a class='" + linkCls + "'" +
@@ -534,7 +534,7 @@ registerProjectTemplate({
       srBars.push(
         "<span role='progressbar'" +
         " aria-valuemin='0' aria-valuemax='100' aria-valuenow='" + view.pct + "'" +
-        " aria-label='" + esc(g.title || "") + ": " + view.pct + "% finanziert'></span>"
+        " aria-label='" + esc(item.title || "") + ": " + view.pct + "% finanziert'></span>"
       );
 
       addLine("bl-blank", "");
@@ -632,13 +632,13 @@ registerProjectTemplate({
     var Core = env.Core;
     var esc  = env.esc;
 
-    // Compute individual goal views (no aggregate — costs aren't summed)
-    var goals    = data.einmalig || [];
+    // Compute individual project views (costs aren't summed — no grand total)
+    var einmalig = data.einmalig || [];
     var currency = data.currency || "EUR";
     var views    = [];
     var i;
-    for (i = 0; i < goals.length; i++) {
-      views.push(Core.computeGoal(goals[i], { currency: currency }));
+    for (i = 0; i < einmalig.length; i++) {
+      views.push(Core.computeProject(einmalig[i], { currency: currency }));
     }
     // --- helpers ---
 
@@ -729,15 +729,15 @@ registerProjectTemplate({
     label.textContent = "◈ FUNDING STATUS PANEL ◈"; // ◈ … ◈
     panel.appendChild(label);
 
-    // -- Goal dials row (no master/aggregate dial — costs aren't summed) --
+    // -- Project dials row (no master dial — costs aren't summed) --
     var row = document.createElement("div");
     row.className = "pjg-dials-row";
 
     // Collect dials for the post-insert animation queue
     var animQueue = [];
 
-    for (i = 0; i < goals.length; i++) {
-      var g    = goals[i];
+    for (i = 0; i < einmalig.length; i++) {
+      var item = einmalig[i];
       var view = views[i];
 
       // Wrap: bezel + meta
@@ -746,12 +746,12 @@ registerProjectTemplate({
 
       var result = buildDial(
         view.title,
-        g.icon || "◉",
+        item.icon || "◉",
         view.pct,
         view.reached,
         false,
         // Animation @property slots are declared for master + 0..4 (gauges.css);
-        // a 6th+ goal still renders its correct final angle but won't animate the sweep.
+        // a 6th+ project still renders its correct final angle but won't animate the sweep.
         String(i)
       );
       wrap.appendChild(result.bezel);
@@ -763,11 +763,11 @@ registerProjectTemplate({
 
       var titleEl = document.createElement("div");
       titleEl.className = "pjg-dial-title";
-      titleEl.textContent = g.title || "";
+      titleEl.textContent = item.title || "";
 
       var taglineEl = document.createElement("div");
       taglineEl.className = "pjg-dial-tagline";
-      taglineEl.textContent = g.tagline || "";
+      taglineEl.textContent = item.tagline || "";
 
       var amountEl = document.createElement("div");
       amountEl.className = "pjg-dial-amount";
@@ -784,7 +784,7 @@ registerProjectTemplate({
       meta.appendChild(amountEl);
 
       // Donate link
-      var href = g.kofi || env.kofiProfile;
+      var href = item.kofi || env.kofiProfile;
       if (href) {
         var btn = document.createElement("a");
         btn.className = "pjg-donate-btn";
@@ -820,10 +820,10 @@ registerProjectTemplate({
         var raf2 = requestAnimationFrame(function () {
           var j;
           for (j = 0; j < animQueue.length; j++) {
-            var item = animQueue[j];
-            item.dial.style.setProperty(
-              item.angleVar,
-              item.finalDeg + "deg"
+            var entry = animQueue[j];
+            entry.dial.style.setProperty(
+              entry.angleVar,
+              entry.finalDeg + "deg"
             );
           }
         });
@@ -866,11 +866,11 @@ registerProjectTemplate({
       return Math.round(-10 + ratio * 30);
     }
 
-    // ── Build a single well element for one goal ──────────────────────────
-    function buildWell(g, view) {
+    // ── Build a single well element for one project ───────────────────────
+    function buildWell(item, view) {
       var wrapper = document.createElement("article");
       wrapper.className = "pj-wells-well" + (view.reached ? " pj-wells-complete" : "");
-      wrapper.setAttribute("data-id", g.id);
+      wrapper.setAttribute("data-id", item.id);
 
       // -- Header --
       var header = document.createElement("div");
@@ -879,18 +879,18 @@ registerProjectTemplate({
       var iconEl = document.createElement("span");
       iconEl.className = "pj-wells-icon";
       iconEl.setAttribute("aria-hidden", "true");
-      iconEl.textContent = g.icon || "◆"; // ◆ fallback
+      iconEl.textContent = item.icon || "◆"; // ◆ fallback
       header.appendChild(iconEl);
 
       var titleEl = document.createElement("div");
       titleEl.className = "pj-wells-title";
-      titleEl.innerHTML = esc(g.title);
+      titleEl.innerHTML = esc(item.title);
       header.appendChild(titleEl);
 
-      if (g.tagline) {
+      if (item.tagline) {
         var tagEl = document.createElement("div");
         tagEl.className = "pj-wells-tagline";
-        tagEl.innerHTML = esc(g.tagline);
+        tagEl.innerHTML = esc(item.tagline);
         header.appendChild(tagEl);
       }
 
@@ -962,7 +962,7 @@ registerProjectTemplate({
       pb.setAttribute("aria-valuemin", "0");
       pb.setAttribute("aria-valuemax", "100");
       pb.setAttribute("aria-valuenow", String(view.pct));
-      pb.setAttribute("aria-label", esc(g.title) + ": " + view.pct + "% finanziert");
+      pb.setAttribute("aria-label", esc(item.title) + ": " + view.pct + "% finanziert");
       pb.style.width = view.pct + "%";
       pbWrap.appendChild(pb);
       hud.appendChild(pbWrap);
@@ -1008,7 +1008,7 @@ registerProjectTemplate({
       // -- Donate button --
       var btn = document.createElement("a");
       btn.className = "pj-wells-btn";
-      btn.href = g.kofi || env.kofiProfile;
+      btn.href = item.kofi || env.kofiProfile;
       btn.target = "_blank";
       btn.rel = "noopener noreferrer";
       btn.textContent = view.reached ? "+ DANKE" : "+ UNTERSTÜTZEN";
@@ -1017,15 +1017,15 @@ registerProjectTemplate({
       return wrapper;
     }
 
-    // ── Wells grid (no aggregate bar — per-project only, costs aren't summed) ──
+    // ── Wells grid (per-project only — costs aren't summed, no grand total) ──
     var wellsGrid = document.createElement("div");
     wellsGrid.className = "pj-wells-grid-outer";
 
-    var i, g, view, well;
+    var i, item, view, well;
     for (i = 0; i < data.einmalig.length; i++) {
-      g = data.einmalig[i];
-      view = Core.computeGoal(g, { currency: data.currency });
-      well = buildWell(g, view);
+      item = data.einmalig[i];
+      view = Core.computeProject(item, { currency: data.currency });
+      well = buildWell(item, view);
       wellsGrid.appendChild(well);
     }
 

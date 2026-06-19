@@ -4,7 +4,7 @@
  * Loads finanz.json and renders terminal-style panels using the shared math in
  * finanz-core.js (window.FinanzCore). Two kinds of cost are kept apart on
  * purpose:
- *   • einmalig  — one-time goals with target/raised → animated ASCII bar per
+ *   • einmalig  — one-time projects with target/raised → animated ASCII bar per
  *                 project. No grand total is printed: the symbolic overall
  *                 progress lives in the footer "[ LIGHTS ON? ]" bar, never a
  *                 summed € figure (recurring + one-time money are never added).
@@ -66,70 +66,70 @@
 
   // ── Markup: one-time items (einmalig) ─────────────────────────────────────
 
-  function panelMarkup(g) {
-    var reachedCls = g.reached ? " projekt-panel--reached" : "";
+  function panelMarkup(p) {
+    var reachedCls = p.reached ? " projekt-panel--reached" : "";
     var html =
       '<article class="projekt-panel' +
       reachedCls +
-      '" id="goal-' +
-      esc(g.id) +
+      '" id="projekt-' +
+      esc(p.id) +
       '" data-raised="' +
-      g.raised +
+      p.raised +
       '" data-target="' +
-      g.target +
+      p.target +
       '">';
 
     html +=
       '<div class="projekt-panel__chrome" aria-hidden="true">' +
       '<span class="projekt-panel__dot"></span>' +
       '<span class="projekt-panel__path">~/projekte/' +
-      esc(g.id) +
+      esc(p.id) +
       "</span></div>";
 
     html += '<div class="projekt-panel__body">';
     html +=
       '<h3 class="projekt-panel__title">' +
       '<span class="projekt-panel__icon" aria-hidden="true">' +
-      iconFor(g.icon) +
+      iconFor(p.icon) +
       "</span> " +
-      esc(g.title) +
+      esc(p.title) +
       "</h3>";
-    if (g.tagline) {
-      html += '<p class="projekt-panel__tagline">' + esc(g.tagline) + "</p>";
+    if (p.tagline) {
+      html += '<p class="projekt-panel__tagline">' + esc(p.tagline) + "</p>";
     }
-    if (g.description) {
-      html += '<p class="projekt-panel__desc">' + esc(g.description) + "</p>";
+    if (p.description) {
+      html += '<p class="projekt-panel__desc">' + esc(p.description) + "</p>";
     }
 
     html +=
       '<div class="projekt-bar" role="progressbar" aria-valuemin="0"' +
       ' aria-valuemax="100" aria-valuenow="' +
-      g.pct +
+      p.pct +
       '" aria-label="' +
-      esc(g.title) +
+      esc(p.title) +
       ": " +
-      g.pct +
+      p.pct +
       '% finanziert">';
-    html += barMarkup(g.bar);
-    html += '<span class="projekt-bar__pct">' + g.pct + "%</span>";
+    html += barMarkup(p.bar);
+    html += '<span class="projekt-bar__pct">' + p.pct + "%</span>";
     html += "</div>";
 
     html += '<p class="projekt-panel__amounts">';
     html +=
       '<span class="projekt-panel__raised">' +
-      Core.formatAmount(g.raised, g.currency) +
+      Core.formatAmount(p.raised, p.currency) +
       "</span>";
     html += ' <span class="projekt-panel__slash">/</span> ';
     html +=
       '<span class="projekt-panel__targetv">' +
-      Core.formatAmount(g.target, g.currency) +
+      Core.formatAmount(p.target, p.currency) +
       "</span>";
-    if (g.reached) {
+    if (p.reached) {
       html += ' <span class="projekt-panel__reached">*** PROJEKT ERREICHT ***</span>';
     } else {
       html +=
         ' <span class="projekt-panel__remaining">· noch ' +
-        Core.formatAmount(g.remaining, g.currency) +
+        Core.formatAmount(p.remaining, p.currency) +
         "</span>";
     }
     html += "</p>";
@@ -137,13 +137,13 @@
     html += '<div class="projekt-panel__actions">';
     html +=
       '<a class="projekt-action projekt-action--donate" href="' +
-      esc(g.kofi || KOFI_PROFILE) +
+      esc(p.kofi || KOFI_PROFILE) +
       '" target="_blank" rel="noopener noreferrer">&gt;&nbsp;unterstützen' +
       '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
-    if (g.kofiShop) {
+    if (p.kofiShop) {
       html +=
         '<a class="projekt-action projekt-action--shop" href="' +
-        esc(g.kofiShop) +
+        esc(p.kofiShop) +
         '" target="_blank" rel="noopener noreferrer">[ Ko-fi-Shop ]</a>';
     }
     html += "</div>";
@@ -334,7 +334,7 @@
       var html = "";
       for (var i = 0; i < einmalig.length; i++) {
         var src = einmalig[i];
-        var view = Core.computeGoal(src, { currency: currency });
+        var view = Core.computeProject(src, { currency: currency });
         view.icon = src.icon;
         view.tagline = src.tagline;
         view.description = src.description;
