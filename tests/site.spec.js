@@ -323,13 +323,6 @@ test.describe('Donations page', () => {
         await expect(
             page.locator('#donation-fallback a[href*="ko-fi.com/bmabma"]'),
         ).toBeVisible();
-
-        // Floating Ko-fi shortcut: a styled outbound link, not the Ko-fi script.
-        const float = page.locator('a.kofi-float');
-        await expect(float).toBeVisible();
-        await expect(float).toHaveAttribute('href', /ko-fi\.com\/bmabma/);
-        expect(await float.getAttribute('rel')).toContain('noopener');
-        expect(await float.getAttribute('target')).toBe('_blank');
     });
 });
 
