@@ -258,7 +258,10 @@ test.describe('Funding goals (fused into donations.html)', () => {
             document.querySelector('.projekte-empty'),
             { timeout: 8000 });
 
-        const panels = page.locator('.projekt-panel');
+        // One-time funding panels live in #projekte-list; scope here so the bar
+        // assertions can't accidentally pick up a barless monatlich card (which
+        // also uses .projekt-panel) regardless of seed/DOM order.
+        const panels = page.locator('#projekte-list .projekt-panel');
         const count = await panels.count();
         if (count === 0) return; // no seed data in this environment
 
