@@ -109,7 +109,7 @@
 
   var speedMult = (function () {
     var v = parseFloat(lsGet("bc-speed"));
-    return (v === 0.5 || v === 1 || v === 2) ? v : 1;
+    return (isFinite(v) && v >= 0.5 && v <= 8) ? Math.round(v * 4) / 4 : 1;
   }());
 
   // ctx.reduce is refreshed to isStill() before every scene create() (below), so
@@ -251,22 +251,20 @@
   function setSpeed(v) {
     speedMult = v;
     lsSet("bc-speed", String(v));
-    var btns = document.querySelectorAll(".speed-btn"), i;
-    for (i = 0; i < btns.length; i++) {
-      btns[i].setAttribute("aria-pressed", String(parseFloat(btns[i].getAttribute("data-speed")) === v));
-    }
+    var lbl = document.getElementById("speedVal");
+    if (lbl) lbl.textContent = v + "×";
     renderActive();
   }
 
-  function initSpeedButtons() {
-    var btns = document.querySelectorAll(".speed-btn"), i;
-    for (i = 0; i < btns.length; i++) {
-      (function (btn) {
-        var v = parseFloat(btn.getAttribute("data-speed"));
-        btn.setAttribute("aria-pressed", String(v === speedMult));
-        btn.addEventListener("click", function () { setSpeed(v); });
-      })(btns[i]);
-    }
+  function initSpeedSlider() {
+    var slider = document.getElementById("speedSlider");
+    var lbl = document.getElementById("speedVal");
+    if (!slider) return;
+    slider.value = speedMult;
+    if (lbl) lbl.textContent = speedMult + "×";
+    slider.addEventListener("input", function () {
+      setSpeed(parseFloat(slider.value));
+    });
   }
 
   // ╔══════════════════════════════════════════════════════════════════════════╗
@@ -1871,7 +1869,7 @@ registerScene({
 
   // ── Boot ───────────────────────────────────────────────────────────────────
   renderGallery();
-  initSpeedButtons();
+  initSpeedSlider();
   // Scene on load: a saved pick (explicit gallery click) always wins. With no
   // saved pick, the Pride month (June) opens on the Pride-Sweep; other months
   // pick a random scene each visit. Boot passes persist=false so a random

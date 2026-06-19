@@ -3136,15 +3136,10 @@ h3.sr-only {
 .support-stage .idea pre { font-size: 8px; line-height: 1.1; min-height: 34px; color: var(--st-green); }
 
 /* Speed control row */
-.speed-ctrl { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.speed-ctrl { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
 .speed-ctrl__label { font-size: 9px; color: var(--st-mute); flex-shrink: 0; }
-.speed-btn {
-    font-family: var(--mono); font-size: 9px; color: var(--st-text);
-    background: var(--st-hl); border: 1px solid var(--st-dim); border-radius: 4px;
-    padding: 2px 7px; cursor: pointer; transition: border-color .2s, box-shadow .2s;
-}
-.speed-btn:hover { border-color: var(--st-green); }
-.speed-btn[aria-pressed="true"] { border-color: var(--st-green); box-shadow: var(--st-glow); color: var(--st-green); }
+.speed-val { font-family: var(--mono); font-size: 9px; color: var(--st-green); flex-shrink: 0; min-width: 2.5ch; }
+.speed-slider { flex: 1; height: 3px; cursor: pointer; accent-color: var(--st-green); }
 
 /* =============================================================================
    Projekte view switcher (support.html#projekte) — picker + template canvas
