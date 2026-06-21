@@ -10,6 +10,8 @@
     STAGE_OFF:    "bc.stage-off",
     SCENE:        "bc.scene",
     PROJECTS_TPL: "bc.projects-tpl",
+    // ascii/ is a standalone page that does not load storage.js; this entry only
+    // reserves the key in the central registry so the namespace stays documented.
     ASCII_DRAFT:  "bc.ascii-draft",
   };
 
