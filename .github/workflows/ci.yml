@@ -10,6 +10,9 @@ on:
       - ".gitignore"
       - "llms.txt"
 
+permissions:
+  contents: read
+
 jobs:
   quick-test:
     runs-on: ubuntu-latest
@@ -22,6 +25,10 @@ jobs:
 
       - name: Verify layout HTML matches partials and logo slider
         run: |
+          # build-lite-events.mjs is intentionally NOT part of this gate: it stamps
+          # today's date + live event data into lite/index.html, so that file can
+          # never be drift-free in a PR. It is a deploy-time artifact like
+          # sitemap.xml — regenerated in deploy.yml, never gated here.
           node scripts/inject-layout.mjs
           node scripts/build-logo-slider.mjs
           git diff --exit-code -- '*.html' || (
