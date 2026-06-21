@@ -1626,8 +1626,7 @@ a.event-card__location:hover {
     background: rgba(0, 217, 126, 0.04);
 }
 
-.events-privacy,
-.privacy-notice {
+.events-privacy {
     color: var(--text-dim);
     font-size: 0.82rem;
     opacity: 0.7;
@@ -2274,34 +2273,6 @@ a.event-card__location:hover {
 .dot:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent); }
 
 /* =============================================================================
-   Map Components
-   ============================================================================= */
-.map-container {
-    margin-top: var(--gap-lg);
-    text-align: center;
-}
-
-.map-container iframe {
-    border: 1px solid var(--border);
-}
-
-.map-button {
-    padding: var(--gap-sm) var(--gap-lg);
-    background: transparent;
-    color: var(--accent);
-    border: 1px solid var(--accent);
-    cursor: pointer;
-    font-family: var(--font);
-    font-size: var(--font-size);
-    transition: background var(--transition), color var(--transition);
-}
-
-.map-button:hover {
-    background: var(--accent);
-    color: var(--bg);
-}
-
-/* =============================================================================
    Scroll to Top + Matrix Trail
    ============================================================================= */
 .scroll-top {
@@ -2627,7 +2598,7 @@ h3.sr-only {
 
 /* Motion off. The freezes above only cover the decorative few; this mirrors the
    prefers-reduced-motion kill so *every* animation and transition stops in calm
-   — carousel fade, hover tints, the goal-reached pulse, all of it. Fewer
+   — carousel fade, hover tints, the projekt-reached pulse, all of it. Fewer
    repaints, lower CPU, genuinely still. 0.01ms (not 0s) keeps transitionend-
    based JS firing, same trick as the reduced-motion block above. */
 [data-theme="calm"] *,
@@ -3023,9 +2994,9 @@ section[aria-labelledby="support-heading"] {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
 }
 .stage-off-notice[hidden] { display: none; }
-.stage-off-notice__msg { margin: 0; font-family: var(--mono); font-size: 11px; color: var(--st-mute); }
+.stage-off-notice__msg { margin: 0; font-family: var(--font); font-size: 11px; color: var(--st-mute); }
 .stage-off-notice__btn {
-    font-family: var(--mono); font-size: 10px;
+    font-family: var(--font); font-size: 10px;
     color: var(--st-green); background: none;
     border: 1px solid var(--st-green); border-radius: 4px;
     padding: 4px 12px; cursor: pointer;
@@ -3044,6 +3015,7 @@ section[aria-labelledby="support-heading"] {
 }
 .support-stage .rain[hidden] { display: none; }
 .support-stage .scene { position: absolute; inset: 0; z-index: 1; pointer-events: none; display: flex; align-items: center; justify-content: center; }
+.support-stage .scene[hidden] { display: none; } /* display:flex above beats UA [hidden]{display:none}; power-off needs this */
 .support-stage .actor {
     position: absolute; left: 0; top: 0; margin: 0; z-index: 2;
     font-size: 14px; line-height: 1.25; white-space: pre; color: var(--st-green);
@@ -3165,7 +3137,7 @@ section[aria-labelledby="support-heading"] {
 /* Speed control row */
 .speed-ctrl { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
 .speed-ctrl__label { font-size: 9px; color: var(--st-mute); flex-shrink: 0; }
-.speed-val { font-family: var(--mono); font-size: 9px; color: var(--st-green); flex-shrink: 0; min-width: 2.5ch; }
+.speed-val { font-family: var(--font); font-size: 9px; color: var(--st-green); flex-shrink: 0; min-width: 2.5ch; }
 .speed-slider { flex: 1; height: 3px; cursor: pointer; accent-color: var(--st-green); }
 
 /* =============================================================================
