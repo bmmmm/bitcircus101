@@ -89,7 +89,7 @@ Cloudflare proxy in front of the site via a *Response Header Transform Rule*
 (Rules → Transform Rules → Modify Response Header), on all routes:
 
 ```
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://nc.6bm.de; frame-src https://ko-fi.com https://www.openstreetmap.org; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://nc.6bm.de; frame-src https://ko-fi.com https://www.openstreetmap.org; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 Strict-Transport-Security: max-age=31536000
 X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
@@ -99,9 +99,11 @@ Permissions-Policy: geolocation=(), camera=(), microphone=()
 
 - `script-src` keeps `'unsafe-inline'`: every page ships inline `<script>`
   blocks (theme no-flash, consent, date) and static hosting can't mint
-  per-request nonces. `style-src` is `'self'` (no `'unsafe-inline'`): the site
-  carries no inline `<style>` / `style=`, and JS-set styles via the CSSOM
-  (`el.style.x = …`) aren't governed by `style-src`, so it doesn't need it.
+  per-request nonces. `style-src` keeps `'unsafe-inline'` too: the zero-JS
+  `/lite/` view inlines its entire stylesheet by design (a pinned test
+  invariant — no external stylesheet), and the support-page ASCII scenes paint
+  glyphs via inline `style=`. Most JS-set styles use the CSSOM (`el.style.x =
+  …`), which `style-src` doesn't govern — but those two inline cases need it.
 - The hardening wins: `object-src 'none'`, `base-uri 'self'`, clickjacking
   defence via `frame-ancestors 'none'` + `X-Frame-Options: DENY` (the header for
   older browsers; no `<meta>` equivalent), the `frame-src` allowlist, and
