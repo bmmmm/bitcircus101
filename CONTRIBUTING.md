@@ -72,7 +72,7 @@ Nothing reaches production without passing all tests. But that's CI's job, not y
 - Improve accessibility (aria labels, alt texts)
 - Add or update content
 - CSS tweaks and improvements
-- Add a calendar source to `calendars.json`
+- Add a calendar source (JSON file in `calendars/`, listed in `config.json`)
 
 ## Guidelines
 
