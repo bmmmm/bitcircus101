@@ -434,6 +434,8 @@
         if (!anchor) return;
         e.preventDefault();
         const href = anchor.getAttribute("href");
+        // A bare "#" is not a valid selector — querySelector("#") throws a SyntaxError.
+        if (href.length < 2) return;
         const target = document.querySelector(href);
         if (target) {
           const isSkip = anchor.classList.contains("skip-link");
