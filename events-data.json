@@ -1,24 +1,24 @@
 {
-  "lastSync": "2026-06-23T17:52:29.012Z",
+  "lastSync": "2026-06-23T20:02:08.533Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-23T17:52:28.603Z",
+      "fetchedAt": "2026-06-23T20:02:07.976Z",
       "status": "ok",
-      "events": 19,
-      "added": 0,
+      "events": 20,
+      "added": 1,
       "removed": 0,
-      "total": 49,
+      "total": 50,
       "past": 3,
-      "upcoming": 46
+      "upcoming": 47
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-23T17:52:28.569Z",
+      "fetchedAt": "2026-06-23T20:02:08.090Z",
       "status": "ok",
-      "events": 21,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 48,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-23T17:52:28.998Z",
+      "fetchedAt": "2026-06-23T20:02:08.404Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -88,7 +88,8 @@
       "310FC895-5CDB-40AA-BD1A-26AB2C427432",
       "EEC2D2D1-3DC4-4237-8934-7CD8403B60A0",
       "B354382B-F062-4757-840F-16C0C77178D9",
-      "7856CDF7-054E-46BC-9EA9-AECA10B0FDF3"
+      "7856CDF7-054E-46BC-9EA9-AECA10B0FDF3",
+      "E704D718-5974-48A1-BD1E-32D6272B9572"
     ],
     "Datenburg e.V.": [
       "a027fbdd-6b08-4f8b-89c4-65fbcd7f2c66",
@@ -519,6 +520,23 @@
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "title": "Not your repo",
+      "subtitle": "",
+      "description": "Stelle ein repository deiner Wahl vor. 5-10 Minuten.",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-07-24",
+      "time": "19:30",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "E704D718-5974-48A1-BD1E-32D6272B9572",
+      "calendarUrl": "https://bitcircus101.de/events",
+      "eventUrl": "https://bitcircus101.de/events",
+      "firstSeen": "2026-06-23T20:02:08.404Z"
+    },
+    {
       "title": "Casual Linkup@bitcircus101 (4FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
@@ -804,23 +822,6 @@
       "uid": "3cb508ed-3976-494d-9918-a93d66dad84a",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-23T17:52:28.999Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-08-18",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
