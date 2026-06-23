@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-06-23T15:46:34.383Z",
+  "lastSync": "2026-06-23T17:52:29.012Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-23T15:46:33.813Z",
+      "fetchedAt": "2026-06-23T17:52:28.603Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 49,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-23T15:46:33.830Z",
+      "fetchedAt": "2026-06-23T17:52:28.569Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 48,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-23T15:46:34.242Z",
+      "fetchedAt": "2026-06-23T17:52:28.998Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -145,41 +145,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-06-23",
-      "time": "18:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-06-23",
-      "time": "19:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
     {
       "title": "Di.Day Orga Meetup",
       "subtitle": "",
@@ -823,6 +788,39 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-09T10:12:20.662Z"
+    },
+    {
+      "title": "FrOSCon",
+      "subtitle": "",
+      "description": "",
+      "location": "Hochschule Bonn Rhein Sieg",
+      "date": "2026-08-15",
+      "time": "",
+      "tags": [
+        "#froscon"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "3cb508ed-3976-494d-9918-a93d66dad84a",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-23T17:52:28.999Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-08-18",
+      "time": "18:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
