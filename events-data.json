@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-06-23T05:47:13.266Z",
+  "lastSync": "2026-06-23T09:36:04.829Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-06-23T05:47:12.724Z",
+      "fetchedAt": "2026-06-23T09:36:04.327Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,19 +16,19 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-06-23T05:47:12.648Z",
+      "fetchedAt": "2026-06-23T09:36:04.262Z",
       "status": "ok",
       "events": 20,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 47,
+      "total": 48,
       "past": 6,
-      "upcoming": 41
+      "upcoming": 42
     },
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-06-23T05:47:13.247Z",
+      "fetchedAt": "2026-06-23T09:36:04.815Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -102,6 +102,7 @@
       "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "8c6271c1-ea1d-413e-8f2f-7a911367ab33",
       "58773c77-368b-4c52-8d9b-3c812ca035f6",
+      "874ede73-4d61-4019-bf87-003d23451a76",
       "5c289c88-a38b-4427-9aa0-dd49aa088d39",
       "385579fd-dab7-42c0-826b-173d49f87b51",
       "1206d599-7531-45e8-9cdb-34098d7d6820",
@@ -178,6 +179,22 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Di.Day Orga Meetup",
+      "subtitle": "",
+      "description": "Besprechung und Planung über Zukünfigen Ablauf des Di.day in der Brotfabrik. Wichtige punkte: - zukünftiger Ablauf - Verantwortlichkeiten - Werbe möglichkeiten - weitere optimirungen",
+      "location": "",
+      "date": "2026-06-24",
+      "time": "20:30",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "874ede73-4d61-4019-bf87-003d23451a76",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-23T09:36:04.815Z"
     },
     {
       "title": "Spieleabend",
@@ -806,22 +823,6 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-09T10:12:20.662Z"
-    },
-    {
-      "title": "FrOSCon",
-      "subtitle": "",
-      "description": "",
-      "location": "Hochschule Bonn Rhein Sieg",
-      "date": "2026-08-15",
-      "time": "",
-      "tags": [
-        "#froscon"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3cb508ed-3976-494d-9918-a93d66dad84a",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-19T19:50:13.407Z"
     }
   ]
 }
