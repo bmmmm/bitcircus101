@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Fri, 26 Jun 2026 17:46:15 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 26 Jun 2026 19:44:50 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-06-26 20:00] Casual Linkup@bitcircus101 (4FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html#ev-2026-06-26-casual-linkup-bitcircus101-4fr</link>
-      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
-      <category>#meetup</category>
-      <pubDate>Thu, 23 Apr 2026 19:09:53 +0000</pubDate>
-      <guid isPermaLink="false">casual-linkup-4fr@bitcircus101.de-20260626T2000</guid>
-    </item>
     <item>
       <title>[2026-06-30 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html#ev-2026-06-30-look-at-my-toys</link>
@@ -137,6 +129,16 @@
       <description>Am 1. August 2026 feiern wir auf dem Münsterplatz in Bonn den CSD 2026 / Beethovens Bunte mit Euch.   Das offizielle Bühnenprogramm beginnt am Samstag um ca. 13 Uhr und endet ca. um 21 Uhr. Die Demo …</description>
       <pubDate>Fri, 29 May 2026 21:21:46 +0000</pubDate>
       <guid isPermaLink="false">7856CDF7-054E-46BC-9EA9-AECA10B0FDF3-20260801T1200</guid>
+    </item>
+    <item>
+      <title>[2026-08-04 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html#ev-2026-08-04-look-at-my-toys</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
+      <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260804T1900</guid>
     </item>
   </channel>
 </rss>
