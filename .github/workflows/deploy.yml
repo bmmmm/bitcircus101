@@ -31,7 +31,7 @@ jobs:
     # which caching can't save us from: this site deploys less often than the
     # 7-day cache-eviction window, so the browser cache is always cold). The tag
     # MUST match the pinned @playwright/test version in package.json.
-    container: mcr.microsoft.com/playwright:v1.58.2-jammy
+    container: mcr.microsoft.com/playwright:v1.61.1-jammy
     # Match the calendar's Europe/Berlin floating-local times when generating
     # events-data.json / feed.xml and running the (date-sensitive) unit tests.
     env:
