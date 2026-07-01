@@ -31,13 +31,13 @@ jobs:
     # which caching can't save us from: this site deploys less often than the
     # 7-day cache-eviction window, so the browser cache is always cold). The tag
     # MUST match the pinned @playwright/test version in package.json.
-    container: mcr.microsoft.com/playwright:v1.58.2-jammy
+    container: mcr.microsoft.com/playwright:v1.61.1-jammy
     # Match the calendar's Europe/Berlin floating-local times when generating
     # events-data.json / feed.xml and running the (date-sensitive) unit tests.
     env:
       TZ: Europe/Berlin
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # The container runs as root but the checkout is owned by the runner uid, so
       # git refuses the repo ("dubious ownership" → "not a git repository") and the
@@ -94,7 +94,7 @@ jobs:
     env:
       TZ: Europe/Berlin
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: live
           persist-credentials: true
