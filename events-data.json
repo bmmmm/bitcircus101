@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-07-02T16:06:03.189Z",
+  "lastSync": "2026-07-02T18:12:38.731Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-02T16:06:02.925Z",
+      "fetchedAt": "2026-07-02T18:12:38.457Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-02T16:06:02.855Z",
+      "fetchedAt": "2026-07-02T18:12:38.633Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-02T16:06:02.849Z",
+      "fetchedAt": "2026-07-02T18:12:38.554Z",
       "status": "ok",
       "events": 0,
       "added": 0,
