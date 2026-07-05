@@ -80,7 +80,7 @@ Nothing reaches production without passing all tests. But that's CI's job, not y
 - German UI text, English code/comments
 - No Google Fonts (privacy)
 - No inline styles — use `style.css`
-- Terminal aesthetic: dark bg, green accents, monospace
+- Plain-text aesthetic: monochrome ink-on-paper, monospace, no accent color (dark default, light via `◐` toggle)
 
 ## Security headers (Cloudflare)
 

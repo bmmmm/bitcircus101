@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, follow">
-<meta name="theme-color" content="#0d0d0d">
+<meta name="theme-color" content="#0a0a0a">
 <meta name="description" content="bitcircus101 — Hackspace in Bonn. Dorotheenstraße 101, freitags ab 20 Uhr. Alle Infos auf einer Seite: Ort, Fotos, Termine, Unterstützen, Projekte, Raum nutzen.">
 <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="../feed.xml">
 <link rel="canonical" href="https://bitcircus101.de/lite/">
@@ -18,7 +18,7 @@
 <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg">
 <meta name="twitter:image:alt" content="bitcircus101 – Offener Hackspace in Bonn">
 <title>bitcircus101 — lite</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230d0d0d'/%3E%3Ctext x='2' y='23' font-family='monospace' font-size='16' font-weight='bold' fill='%2300d97e'%3E101%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0a'/%3E%3Ctext x='2' y='23' font-family='monospace' font-size='16' font-weight='bold' fill='%23ffffff'%3E101%3C/text%3E%3C/svg%3E">
 <style>
 :root { color-scheme: dark }
 *, *::before, *::after { box-sizing: border-box }
@@ -26,49 +26,46 @@ body {
   margin: 0 auto;
   max-width: 42rem;
   padding: 2rem 1.25rem 4rem;
-  background: #0d0d0d;
-  color: #d4d4d4;
-  font: 1rem/1.7 ui-monospace, "Cascadia Code", "Fira Code", Menlo, Consolas, monospace;
+  background: #0a0a0a;
+  color: #d8d8d8;
+  font: 1rem/1.7 ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
 }
-a { color: #00d97e; text-underline-offset: .2em }
-a:hover, a:focus { color: #fff }
-a:focus-visible { outline: 2px solid #00d97e; outline-offset: 2px }
+a { color: #fff; text-underline-offset: .2em; text-decoration-color: #666 }
+a:hover, a:focus { background: #d8d8d8; color: #0a0a0a; text-decoration: none }
+a:focus-visible { outline: 2px solid #fff; outline-offset: 2px }
+::selection { background: #d8d8d8; color: #0a0a0a }
 h1 { margin: 0 0 .3rem; font-size: 1.5rem; color: #fff }
-h1 .prompt { color: #00d97e }
-.lede { margin: 0 0 1.4rem; color: #9a9a9a }
+h1 .prompt { color: #8f8f8f }
+.lede { margin: 0 0 1.4rem; color: #8f8f8f }
 h2 {
   margin: 2.4rem 0 .6rem;
   font-size: .72rem;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: #00d97e;
-  border-bottom: 1px solid #2a2a2a;
+  color: #fff;
+  border-bottom: 1px solid #333;
   padding-bottom: .3rem;
 }
 p { margin: 0 0 .9rem }
 ul { margin: 0 0 .9rem; padding-left: 1.1rem }
 li { margin: .25rem 0 }
 dl { margin: 0 0 .9rem }
-dt { color: #9a9a9a; margin-top: .6rem }
+dt { color: #8f8f8f; margin-top: .6rem }
 dt::before { content: "— " }
 dd { margin: 0 0 0 1rem }
-.dim { color: #9a9a9a }
-/* ASCII hero ("Buehne") — the homepage logo, scaled to the column width so the
-   fixed-width art always fits with no horizontal scroll. */
-.hero { overflow: hidden; container-type: inline-size; margin: 0 0 1.6rem }
+.dim { color: #8f8f8f }
+/* ASCII hero — the tent logo from the homepage, fixed 21ch wide */
+.hero { margin: 0 0 1.6rem }
 .hero pre {
   margin: 0;
   font-family: inherit;
-  /* cqw = % of the .hero width; coefficient calibrated so the art fills ~96 % of
-     the column and never scrolls. Capped at 0.5rem for the desktop size;
-     0.3rem fallback for browsers without container-query units. */
-  font-size: 0.3rem;
-  font-size: min(1.42cqw, 0.5rem);
-  line-height: 1.04;
-  color: #00d97e;
+  font-size: clamp(.75rem, 3.5vw, 1rem);
+  line-height: 1.05;
+  color: #d8d8d8;
   white-space: pre;
 }
-/* Room photos — minimal lazy thumbnails */
+.hero pre b { color: #fff }
+/* Room photos — minimal lazy thumbnails, monochrome at rest */
 .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 0 0 .9rem }
 .shots img {
   display: block;
@@ -76,28 +73,29 @@ dd { margin: 0 0 0 1rem }
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border: 1px solid #2a2a2a;
-  border-radius: 3px;
+  border: 1px solid #333;
+  filter: grayscale(1);
 }
+.shots img:hover { filter: none }
 @media (max-width: 30rem) { .shots { grid-template-columns: repeat(2, 1fr) } }
 /* Funding / Kosten — static snapshot bars */
 .projekt { margin: 0 0 1rem }
-.projekt__t { margin: 0 0 .15rem; color: #d4d4d4 }
+.projekt__t { margin: 0 0 .15rem; color: #d8d8d8 }
 .bar { margin: 0 0 .15rem; font-family: inherit; letter-spacing: .02em; word-break: break-all }
-.bar__f { color: #00d97e }
-.bar__e { color: #4a4a4a }
-.bar__pct { color: #9a9a9a }
-.projekt__done { color: #00d97e }
-.projekt__amt { margin: 0; color: #9a9a9a; font-size: .9rem }
+.bar__f { color: #fff }
+.bar__e { color: #666 }
+.bar__pct { color: #8f8f8f }
+.projekt__done { color: #fff }
+.projekt__amt { margin: 0; color: #8f8f8f; font-size: .9rem }
 footer {
   margin-top: 3rem;
   padding-top: 1rem;
-  border-top: 1px solid #2a2a2a;
-  color: #9a9a9a;
+  border-top: 1px solid #333;
+  color: #8f8f8f;
   font-size: .85rem;
 }
-footer a { color: #9a9a9a }
-footer a:hover, footer a:focus { color: #00d97e }
+footer a { color: #8f8f8f }
+footer a:hover, footer a:focus { background: #d8d8d8; color: #0a0a0a }
 </style>
 </head>
 <body>
@@ -105,73 +103,19 @@ footer a:hover, footer a:focus { color: #00d97e }
 <h1><span class="prompt" aria-hidden="true">&gt;_ </span>bitcircus101</h1>
 <p class="lede">Hackspace in Bonn · Dorotheenstraße 101 · freitags ab 20&nbsp;Uhr</p>
 
-<div class="hero" role="img" aria-label="bitcircus101 ASCII-Logo">
+<div class="hero" role="img" aria-label="bitcircus101 – Zirkuszelt-Logo in ASCII">
 <pre>
-*%%%%%%%%%%++%+*%++%%%%%%++%%+%+*%%%+%+%%++*%++%++%%+%+*+%++%%%+%++*+%+%++++%+*%%+%%+%+%+*+++%%%%+%%+%%%%%%%%%%*
-*%%%%%%%%%%++%+*%++%%%%%%++%%+%+*%%%+%+%%++*%++%++%%+%+*+%++%%%+%++*+%+%++++%+*%%+%%+%+%+*+++%%%%+%%+%%%%%%%%%%*
-******************************************************************************************************+*********
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@%%%%@%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@  -@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@           @%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@ -:      @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@  @@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@- % @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@% #%% @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@   +=   =@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@=     = ::: #       *@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@    *@@ @: = * @ @ *- @@:   :@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@  :=:@@* =* =@ %- @  @  @  @@#-=   @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  =* @@@  %@  @@  @  @@  @:  @= %@@* *  @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  @ -@@@  @@  :@:  @@  :@+  @@   @%  @@@ -: @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%@@# @ %@@  #@@   @@   @@=   @@.  -@@   @@*  @@:@- @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%@@@  % @-  %%    @@    @@#    :@@@   @@@    @*  @@ @  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%@@@ @=@@@ @@=  =:  *  +     :*  =      #  =  %%@ :%@% % @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%@@% @ @+ #@ =@@.  :@@%   @@@:   @@@=  =@@%   @@* *@  *@ * @@@%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%@@- @ @=  =@.:: @@@% %@@@@ #@@@@@@*  @@@#+ @@@: @ @@:  =@-@ @@%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%@@% @ @=  %@@ @ *@   +%@    @@    @%*   @%%   %@ %. @@= .+@:@ @@%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%@@ @ @=  #@@ @  @*   @%@   @@%  @ .@@    @%%   @@ % =@@+ .#@-@ @@%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%@@- *%@ .=@@ #  @@   @%@:   @@  @@  @@@   %@@=  .@* # %@@: .@:@  @%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%@@ %:@:.:@@ # :@@   @%@%   @@:  @@@  #@@   @@@:   @% + :@@ .:@ @ @@%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%@@ @%# =@* + @@*   @@@@   @@   @@@@@  :@@   %@@-   @@ =  @@: %+*= @%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%@@@@@@@@@@@@@@: @@@@% =  @=   =@%%   %@   @@@@@@@@@  #@%   %@@    %# #  @@=@ @ @@@@@@@@@@@@@@@@@%%%%%%%*
-*%%%%%%%%*                           *:    .+   %%        :%=   =-    -+             :                %%%%%%%%%*
-*%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%*
-*%%%%%%%@%  @@@@@+   @@@  @@@%@@@@@@:   @@@@@@@%@@@@@%@@@@@@@@%@@@@@@@/  =@      @@/  =@%%%@@@   @@@@@@@%%%%%%%+
-*%%%%%%%@@  @@@@@@@@@@@#  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/   @@  @@  -/   @@%@@@@@   @@@@@@@@%%%%%%*
-*%%%%%%%@@       @   @      @      @@  @@     @:     :@  @@  @@     -@@  @@  @@. +@@  @@%@/      @/     @@%%%%%*
-*%%%%%%%@@  @@=  @   @@@  @@@  @@   @  @@  @  @  @@@  @  @@  @  @@@  @@  @@  @@  =@@  @@%@  *@@  @  @@@  @%%%%%*
-*%%%%%%%@@  @@*  @   @@*  @@@  @@@@@@  @@  @@@@  @@@@@@  @@  @@   @@@@@  @@  @@  =@@  @@%@  :@#  @       @%%%%%*
-*%%%%%%%@@  @@*  @   @@+  @@@  @@@@@@  @@  @@@@  @@@@@@  @@  @@@@    @@  @@  @@  =@@  @@%@  :@#  @   %@@@@%%%%%*
-*%%%%%%%@@  @@%  @   @@:  @@@  @@   @  @@  @@@@  @@@  @  @@. @= *@@  @@  @@  @@  :@@  %@@@  *@@  @  @@@  @%%%%%*
-*%%%%%%%@%      -@   @@@    @:     @@  *@  %@@@;     %@*     :@     +@@  =@      @@@  =  @      @@     /@%%%%%%*
-*%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%*
-*%%%%%%%@*                         .::::.::... .                .:::..::::..:                         %@%%%%%%%+
-*%%%%%%%@@@@@@@@@@@%. *@:@ @#:@ @@    ........:: @-@*@:@ @-@=@@=              @@ @ @% @.@* -@@@@@@@@@@@%%%%%%%%*
-*%%%%%%%%%%%%%%%%%@@@@@ :-*@ @.#+ @@ ..-====---- @:@=@ @ @ @=@* :---====-::-@@ @-+% @:*  @@@@@%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%@@* =:@@ % @- @@*=*#%%%%*+ @=@%@:@ @*@=@=@*%%%%%%*=#@@ #= * @+=+ @@@%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%@@@: @+@* @ @  @@-.:==-.@%@=@#@=@ @+@*@*@=.---:.=@@ =* @@@@#@ =@@@%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%@@@   @@:=@ * :@@=+**@@ @ % @ @ @ % @@ @@*#**@@ :+ @ @-@   @@@%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  -@ @:@ @ =@@+@% @@ @ @ @ @ @ @ @ @@+@@  @ @.@ @.  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@   @ @+# @ %@  @ @ @ @ @ @ @ @@ @  @- @ @*@ @   @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@ * @.+@- @ @@@ @ @ @ @ @ @ @ @%@@ @ #@ -@ - @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@ .% @ @ =+ @ @ @ @ @ @ @ @ :@ @  @ @ @  @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@:  @ @-@ @. @ @ @ @ @ @ @@ =@ @-@ @  -@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@ - @ @@@ @ -@:@ @ @ @@  @ @@@ @ : @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@ - @ *@% @ *@ @ @@= @ @@*:@   @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@  --=*@* * @-@@ % @@*.==  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@*  @:+*@==#  %:*@%-=%  *@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@   @.+%@:*=:@*::#   @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  .@=-%@@*==#:  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@  === -.*=  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@  @*@*  @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@*    *@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%++%+*%++%%%%%%++%%+%+*%%%+%+%%++*%++%++%%+%+*+%++%%%+%++*+%+%++++%+*%%+%%+%+%+*+++%%%%+%%+%%%%%%%%%%*
-*%%%%%%%%%%++%+*%++%%%%%%++%%+%+*%%%+%+%%++*%++%++%%+%+*+%++%%%+%++*+%+%++++%+*%%+%%+%+%+*+++%%%%+%%+%%%%%%%%%%*
-</pre>
+           ⚑
+          ╱ ╲
+         ╱   ╲
+        ╱     ╲
+    ___╱       ╲___
+   ╱               ╲
+  ╱ │ │ │ │ │ │ │ │ ╲
+ ╱__│_│_│_│_│_│_│_│__╲
+ │       ╱───╲       │
+ ╰───────╯   ╰───────╯
+<b>b i t c i r c u s 101</b></pre>
 </div>
 
 <p>bitcircus101 will der Tech- und IT-Treffpunkt in Bonn sein — für Leute, die Dinge wirklich verstehen wollen. Open-Source Software, Datensouveränität, IT-Security, Reverse Engineering, alte Hardware, Löten, KI-Projekte und LLMs — alles hands-on, nichts Hochglanz.</p>

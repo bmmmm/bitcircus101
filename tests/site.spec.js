@@ -384,9 +384,9 @@ test.describe('Danke page', () => {
     });
 });
 
-// ─── Design – Terminal Theme ─────────────────────────────────────────────────
+// ─── Design – monochrome plain-text theme ────────────────────────────────────
 
-test.describe('Terminal theme', () => {
+test.describe('Monochrome theme', () => {
     test('dark background, monospace font, no inline styles', async ({ page }) => {
         await page.goto('/');
 
@@ -582,10 +582,10 @@ test.describe('Accessibility', () => {
     });
 });
 
-// ─── Calm Theme Toggle ───────────────────────────────────────────────────────
+// ─── Light Theme Toggle (◐ invert) ───────────────────────────────────────────
 
-test.describe('Calm theme toggle', () => {
-    test('toggles data-theme, persists across reload, applies calm tokens', async ({ page, context }) => {
+test.describe('Light theme toggle', () => {
+    test('toggles data-theme, persists across reload, inverts the page', async ({ page, context }) => {
         const errors = [];
         page.on('pageerror', (err) => errors.push(err.message));
 
@@ -600,32 +600,35 @@ test.describe('Calm theme toggle', () => {
         await expect(toggle).toBeVisible();
         await expect(toggle).toHaveAttribute('aria-pressed', 'false');
 
-        // Default (loud): green accent token
-        const accent = () => page.evaluate(() =>
-            getComputedStyle(document.documentElement).getPropertyValue('--accent').trim().toLowerCase()
-        );
-        expect(await accent()).toBe('#00d97e');
+        // Discriminating signal: the actual painted body background flips
+        // between dark (sum < 60) and light (sum > 600), not just a token name.
+        const bgSum = () => page.evaluate(() => {
+            const [r, g, b] = getComputedStyle(document.body)
+                .backgroundColor.match(/\d+/g).map(Number);
+            return r + g + b;
+        });
+        expect(await bgSum()).toBeLessThan(60);
 
-        // Switch to calm: attribute, localStorage, aria-pressed all flip…
+        // Switch to light: attribute, localStorage, aria-pressed all flip…
         await toggle.click();
         await expect(toggle).toHaveAttribute('aria-pressed', 'true');
-        expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('calm');
-        expect(await page.evaluate(() => localStorage.getItem('bc.theme'))).toBe('calm');
-        // …and the calm token block is actually in effect (teal accent)
-        expect(await accent()).toBe('#5fb89a');
+        expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('light');
+        expect(await page.evaluate(() => localStorage.getItem('bc.theme'))).toBe('light');
+        // …and the light token block is actually painted
+        expect(await bgSum()).toBeGreaterThan(600);
 
-        // Persists across reload without flashing back to loud (no-flash head script)
+        // Persists across reload without flashing back to dark (no-flash head script)
         await page.reload();
-        expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('calm');
+        expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe('light');
         await expect(page.locator('#theme-toggle')).toHaveAttribute('aria-pressed', 'true');
-        expect(await accent()).toBe('#5fb89a');
+        expect(await bgSum()).toBeGreaterThan(600);
 
-        // Toggle back to loud
+        // Toggle back to dark
         await page.locator('#theme-toggle').click();
         await expect(page.locator('#theme-toggle')).toHaveAttribute('aria-pressed', 'false');
-        expect(await page.evaluate(() => localStorage.getItem('bc.theme'))).toBe('loud');
+        expect(await page.evaluate(() => localStorage.getItem('bc.theme'))).toBe('dark');
         expect(await page.evaluate(() => document.documentElement.dataset.theme || '')).toBe('');
-        expect(await accent()).toBe('#00d97e');
+        expect(await bgSum()).toBeLessThan(60);
 
         expect(errors).toEqual([]);
     });
