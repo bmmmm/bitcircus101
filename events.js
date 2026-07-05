@@ -172,7 +172,7 @@
     filterBar.setAttribute("role", "group");
     filterBar.setAttribute("aria-label", "Termine nach Schlagwort filtern");
 
-    var html = '<span class="events-filter__label" aria-hidden="true">$ filter</span>';
+    var html = '<span class="events-filter__label" aria-hidden="true">filter:</span>';
     tags.forEach(function (t) {
       html += '<button type="button" class="events-filter__tag" data-tag="' +
         esc(t) + '" aria-pressed="false">' + esc(t) + "</button>";
@@ -420,8 +420,8 @@
     el.innerHTML =
       '<div class="events-fallback">' +
       '<p class="events-fallback__cmd">' +
-      "$ events --load " +
-      '<span class="events-fallback__err">ERR</span></p>' +
+      "termine laden: " +
+      '<span class="events-fallback__err">fehlgeschlagen</span></p>' +
       "<p>Termine direkt ansehen: " +
       '<a href="' + CALENDAR_URL + '" target="_blank" rel="noopener noreferrer">' +
       "Kalender \u00f6ffnen \u2197</a></p></div>";
@@ -539,8 +539,8 @@
 
     el.innerHTML =
       '<p class="events-loading">' +
-      '<span class="events-loading__cmd">$ events --load</span>' +
-      '<span class="events-cursor">\u258b</span></p>';
+      '<span class="events-loading__cmd">lade termine</span>' +
+      '<span class="events-cursor"> \u2026</span></p>';
 
     fetch(JSON_URL)
       .then(function (res) {
