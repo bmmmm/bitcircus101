@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-07-05T11:29:31.353Z",
+  "lastSync": "2026-07-05T12:50:18.486Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-05T11:29:31.145Z",
+      "fetchedAt": "2026-07-05T12:50:18.209Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 50,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-05T11:29:31.111Z",
+      "fetchedAt": "2026-07-05T12:50:18.051Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 48,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-05T11:29:31.167Z",
+      "fetchedAt": "2026-07-05T12:50:18.185Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -146,22 +146,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Digital Independence Day (DID)",
-      "subtitle": "",
-      "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
-      "location": "Bornheimer Straße 25, Bonn",
-      "date": "2026-07-05",
-      "time": "14:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-02T13:08:46.350Z"
-    },
     {
       "title": "Offene Datenburg",
       "subtitle": "",
@@ -827,6 +811,23 @@
       "uid": "19efb037-b521-4f7b-b508-bd63eb3b292b",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-08-28",
+      "time": "20:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-4fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-04-23T19:09:53.469Z"
     }
   ]
 }
