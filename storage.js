@@ -1,15 +1,12 @@
 // storage.js — central localStorage wrapper for bitcircus101.
 // Defines all known keys in one place and provides exception-safe get/set/remove.
-// Load this before main.js, stage.js, projects.js.
+// Load this before main.js.
 (function () {
   "use strict";
 
   var KEYS = {
+    // "light" switches to the inverted (light) scheme; anything else = dark.
     THEME:        "bc.theme",
-    SPEED:        "bc.speed",
-    STAGE_OFF:    "bc.stage-off",
-    SCENE:        "bc.scene",
-    PROJECTS_TPL: "bc.projects-tpl",
     // ascii/ is a standalone page that does not load storage.js; this entry only
     // reserves the key in the central registry so the namespace stays documented.
     ASCII_DRAFT:  "bc.ascii-draft",
