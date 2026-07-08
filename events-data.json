@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-07-08T17:58:56.801Z",
+  "lastSync": "2026-07-08T19:46:57.532Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-08T17:58:56.571Z",
+      "fetchedAt": "2026-07-08T19:46:57.472Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-08T17:58:56.544Z",
+      "fetchedAt": "2026-07-08T19:46:57.430Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-08T17:58:56.650Z",
+      "fetchedAt": "2026-07-08T19:46:57.511Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -352,7 +352,7 @@
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
-      "title": "Not your repo",
+      "title": "Not my repo",
       "subtitle": "",
       "description": "Stelle ein repository deiner Wahl vor. 5-10 Minuten.",
       "location": "Dorotheenstraße 101, 53111 Bonn",
