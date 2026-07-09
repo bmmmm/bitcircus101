@@ -27,6 +27,12 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      # generate-sitemap already honors <meta name="robots" content="noindex">
+      # and robots.txt Disallow entries, so pages like 404.html, dankedankedanke.html,
+      # /ascii/, /lite/, /invite-*/ and /join-*/ are excluded automatically.
+      # exclude-paths only needs the two pages that carry no noindex meta but
+      # still shouldn't be listed: the Google verification stub and donations.html
+      # (kept out of the sitemap for editorial reasons only).
       - name: Generate sitemap.xml
         uses: cicirello/generate-sitemap@6a56a20238e631d653600cf792c3596722b78259 # v1.10.4
         id: sitemap
@@ -35,18 +41,7 @@ jobs:
           path-to-root: .
           include-html: true
           sitemap-format: xml
-
-      - name: Remove excluded pages from sitemap
-        run: |
-          node -e "
-          const fs = require('fs');
-          let xml = fs.readFileSync('sitemap.xml', 'utf8');
-          // Remove Google verification files, noindex pages, hidden playground
-          for (const p of ['google', 'dankedankedanke', 'donations.html', '404', '/ascii/', '/lite/', '/invite-info/', '/invite-talk/', '/join-info/', '/join-talk/']) {
-            xml = xml.replace(new RegExp('<url>\\\\s*<loc>[^<]*' + p + '[^<]*</loc>[\\\\s\\\\S]*?</url>', 'g'), '');
-          }
-          fs.writeFileSync('sitemap.xml', xml.replace(/\\n{3,}/g, '\\n\\n'));
-          "
+          exclude-paths: /google18556084d38e4dd8.html /donations.html
 
       - name: Commit sitemap
         run: |
