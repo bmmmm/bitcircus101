@@ -1,9 +1,6 @@
 <header>
     <nav id="main-nav" aria-label="Hauptnavigation">
         <a class="nav__brand" href="index.html">
-            <span class="nav__prompt" aria-hidden="true"
-                >&gt;<span class="nav__cursor">_</span></span
-            >
             <span class="nav__name">bitcircus101</span>
         </a>
         <button
@@ -12,20 +9,19 @@
             aria-controls="main-nav"
             aria-expanded="false"
         >
-            ☰ Menü
+            ≡ menü
         </button>
         <ul class="nav__links">
-            <li><a href="index.html#about">Über uns</a></li>
-            <li><a href="events.html">Veranstaltungen</a></li>
-            <li><a href="raum-nutzen.html">Raum nutzen</a></li>
-            <li><a href="support.html" class="nav__cta">Unterstützen</a></li>
-            <li><a href="support.html#projekte">Projekte</a></li>
-            <li><a href="index.html#contact">Kontakt</a></li>
+            <li><a href="index.html#about">/wir</a></li>
+            <li><a href="events.html">/termine</a></li>
+            <li><a href="raum-nutzen.html">/raum</a></li>
+            <li><a href="support.html">/support</a></li>
+            <li><a href="index.html#contact">/kontakt</a></li>
         </ul>
         <div class="nav__utils">
+            <a href="feed.xml" class="nav__util" title="RSS-Feed der Termine" aria-label="RSS-Feed der Termine">rss</a>
             <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
-            <a href="feed.xml" class="nav__util nav__util--rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a>
-            <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button>
+            <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Helles Design umschalten" title="Invertieren (hell/dunkel)">◐</button>
         </div>
     </nav>
 </header>
