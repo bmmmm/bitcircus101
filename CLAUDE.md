@@ -157,7 +157,7 @@ Each source can also set `tags` (always-added hashtags), `cap` (per-source slot 
 
 ### Hidden pages (e.g. `/ascii/`)
 
-Use a subfolder like `ascii/index.html` when the page should **not** appear in the shared nav: keep it out of `includes/site-header.html` and **out of** `scripts/inject-layout.mjs` (partials assume root-relative links). Mark **`noindex`**, add **`Disallow`** in `robots.txt`, and extend the sitemap workflow’s exclude list if the generator would otherwise list the URL.
+Use a subfolder like `ascii/index.html` when the page should **not** appear in the shared nav: keep it out of `includes/site-header.html` and **out of** `scripts/inject-layout.mjs` (partials assume root-relative links). Mark **`noindex`**, add **`Disallow`** in `robots.txt` — the sitemap generator honors both automatically. Only pages that must stay out of the sitemap *without* a `noindex` meta need an entry in `exclude-paths` in `sitemap.yml` (currently the Google verification stub and `donations.html`).
 
 ### Reachable-but-unlisted pages (e.g. Signal redirect stubs)
 
