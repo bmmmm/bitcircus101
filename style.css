@@ -29,7 +29,11 @@
     --ink-dim:     #8a8a8a;  /* secondary text (>=4.5:1)    */
     --line:        #333333;  /* hairlines, panel borders    */
     --line-strong: #666666;  /* structural rules            */
-    --accent:      #3ecf5c;  /* terminal green — links, current nav, buttons, tent */
+    /* accent = hyperlinks, primary CTAs, and current-selection markers in
+       content navigation (current nav item, active event filter, project
+       funding progress/donate); form controls and UI toggles (theme
+       toggle, carousel dots, checkboxes, focus rings) stay reverse-video ink. */
+    --accent:      #3ecf5c;  /* terminal green */
     --accent-soft: color-mix(in srgb, var(--accent) 45%, transparent);
 
     /* system monospace only — no font downloads, ever */
@@ -57,7 +61,7 @@ html[data-theme="light"] {
     --ink-dim:     #5c5c5c;
     --line:        #c9c9c4;
     --line-strong: #8a8a85;
-    --accent:      #1a8f3c;  /* darker green keeps >=4.5:1 contrast on light paper */
+    --accent:      #15803d;  /* darker green — 4.59:1 contrast on light paper (WCAG AA) */
 }
 
 /* =============================================================================
@@ -447,39 +451,47 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     user-select: none;
 }
 
-/* homepage logo scales with the viewport so the tent never clips;
-   tight line-height keeps the diagonal strokes connected */
-.ascii-logo {
-    font-size: clamp(0.7rem, 2.6vw, 1.1rem);
-    line-height: 1.05;
-    text-align: center;
-}
-.ascii-logo b { color: var(--ink-max); font-weight: 700; }
-
-/* detailed circus-tent hero — 64-line / 112-col ASCII art. The viewport is a
-   size container so the art font-size scales via cqw/cqh to always fit whole,
-   independent of the glyph metrics. Green so the logo carries the accent. */
+/* detailed circus-tent hero — 64-line / 112-col ASCII art. On browsers that
+   support container queries the viewport is a size container so the art
+   font-size scales via cqw/cqh to always fit whole, independent of the
+   glyph metrics. Green so the logo carries the accent. Layout below is the
+   shared base (fallback path); the @supports block further down layers the
+   container-query behavior on top for browsers that can do it. */
 #home .ascii-art-viewport {
-    container-type: size;
-    height: clamp(240px, 44vw, 440px);
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
     margin: 1.25rem 0 0.5rem;
 }
 .ascii-hero {
     --hero-cols: 112;
     --hero-lines: 64;
     --hero-lh: 1.15;
-    flex: 0 0 auto;
     line-height: var(--hero-lh);
     text-align: left;
     color: var(--accent);
-    font-size: min(
-        calc(100cqw / var(--hero-cols)),
-        calc(100cqh / (var(--hero-lines) * var(--hero-lh) + 2))
-    );
+    /* fallback (no container-query support): fit --hero-cols to the
+       viewport width. Monospace char advance is ~0.6em, so font-size =
+       available-width / (cols * 0.6); capped so it never balloons wide. */
+    font-size: min(calc((100vw - 2 * var(--gutter)) / (var(--hero-cols) * 0.6)), 1.1rem);
+}
+
+/* container-query support: clip the viewport to a fixed height and let
+   font-size solve exactly for "cols wide AND lines tall", whichever is
+   tighter — pixel-identical to the pre-fallback behavior. */
+@supports (font-size: 1cqw) {
+    #home .ascii-art-viewport {
+        container-type: size;
+        height: clamp(240px, 44vw, 440px);
+        overflow: hidden;
+    }
+    .ascii-hero {
+        font-size: min(
+            calc(100cqw / var(--hero-cols)),
+            /* +2 lines of breathing room */
+            calc(100cqh / (var(--hero-lines) * var(--hero-lh) + 2))
+        );
+    }
 }
 
 .ascii-caption {
@@ -501,6 +513,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
    ============================================================================= */
 .hx404 {
     min-height: 100vh;
+    min-height: 100dvh; /* dynamic viewport: centers correctly under mobile toolbars */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -513,7 +526,6 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .hx404__skull {
     color: var(--accent);
     line-height: 1.05;
-    white-space: pre;
     margin: 0 0 1rem;
     font-size: clamp(0.6rem, 2.2vw, 0.95rem);
     user-select: none;
