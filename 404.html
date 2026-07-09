@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>404 — nice try 😈 · bitcircus101</title>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="theme-color" content="#0a0a0a" />
+        <!-- Served for unknown paths; assets are root-relative so they resolve
+             from any bogus depth (e.g. /events/WRONGURL). -->
+        <link rel="icon" type="image/svg+xml" href="/images/favicon.svg?v=6" />
+        <script>
+            // No-flash: apply the persisted light theme before the stylesheet paints.
+            try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="/style.css?v=7" />
+    </head>
+    <body>
+        <main class="hx404" role="main">
+            <pre class="hx404__skull" aria-hidden="true">
+        ______
+     .-"      "-.
+    /            \
+   |,  .-.  .-.  ,|
+   | )(_o/  \o_)( |
+   |/     /\     \|
+   (_     ^^     _)
+    \__|IIIIII|__/
+     | \IIIIII/ |
+      \        /
+       `------`</pre>
+
+            <p class="hx404__cmd">root@bitcircus101:~# access <span class="hx404__path">/?</span></p>
+            <p class="hx404__err">[!] 404 · SEGMENTATION FAULT · route not found</p>
+
+            <h1 class="hx404__title">ACCESS DENIED — nice try, script kiddy 😈</h1>
+            <p class="hx404__sub">don't even try, evil. hier gibt's kein 0day — nur Lötkolben, Mate und ein paar RFCs.</p>
+            <p class="hx404__log">&gt; incident logged to <span class="hx404__dim">/dev/null</span></p>
+
+            <p class="hx404__actions">
+                <a class="btn" href="/">&gt; zurück zur Basis</a>
+                <a class="btn" href="/events">&gt; echte Termine</a>
+            </p>
+        </main>
+
+        <script>
+            // Show the path the visitor actually tried — taunt material.
+            (function () {
+                var el = document.querySelector(".hx404__path");
+                if (el) el.textContent = (location.pathname || "/") + location.search;
+            })();
+        </script>
+    </body>
+</html>

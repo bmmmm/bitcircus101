@@ -428,6 +428,7 @@ test.describe('No JavaScript errors', () => {
         ['/ascii/', 'ASCII playground'],
         ['/chat/', 'Signal'],
         ['/lite/', 'Lite'],
+        ['/404.html', '404'],
     ];
 
     for (const [url, name] of pages) {
