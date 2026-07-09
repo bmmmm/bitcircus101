@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-07-09T17:00:48.479Z",
+  "lastSync": "2026-07-09T19:07:05.634Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-09T17:00:48.271Z",
+      "fetchedAt": "2026-07-09T19:07:05.527Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-09T17:00:48.229Z",
+      "fetchedAt": "2026-07-09T19:07:05.534Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-09T17:00:48.261Z",
+      "fetchedAt": "2026-07-09T19:07:05.565Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -146,24 +146,6 @@
     ]
   },
   "events": [
-    {
-      "title": "PPP (Putzen Plenum Pizza)",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-07-09",
-      "time": "19:30",
-      "endDate": "2026-07-09",
-      "endTime": "22:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Casual Linkup@bitcircus101 (2FR)",
       "subtitle": "",
@@ -908,6 +890,24 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Interner Burgabend",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-09-03",
+      "time": "18:00",
+      "endDate": "2026-09-03",
+      "endTime": "23:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-11T18:34:04.184Z"
     }
   ]
 }
