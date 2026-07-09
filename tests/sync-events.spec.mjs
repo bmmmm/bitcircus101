@@ -977,10 +977,24 @@ describe("generateICS", () => {
     assert.notEqual(uids[0], uids[1]);
   });
 
-  it("escapes commas and strips the # from categories", () => {
+  it("keeps CATEGORIES separators unescaped and strips the # from each tag", () => {
     const ics = generateICS([baseCard], NOW);
-    assert.match(ics, /CATEGORIES:games\\,community/);
+    // Separator commas stay raw (list of TEXT values); LOCATION is one TEXT value, so
+    // its comma IS escaped.
+    assert.match(ics, /CATEGORIES:games,community/);
     assert.match(ics, /LOCATION:Dorotheenstraße 101\\, 53113 Bonn/);
+  });
+
+  it("escapes special chars inside an individual category value", () => {
+    const ics = generateICS([{ ...baseCard, tags: ["#a;b", "#c,d"] }], NOW);
+    // "a;b" and "c,d" are single values → their ; and , are escaped, but the
+    // separator between the two values stays raw.
+    assert.match(ics, /CATEGORIES:a\\;b,c\\,d/);
+  });
+
+  it("emits URL as a raw URI (no TEXT escaping)", () => {
+    const ics = generateICS([{ ...baseCard, eventUrl: "https://x.de/e?a=1,b=2;c" }], NOW);
+    assert.match(ics, /URL:https:\/\/x\.de\/e\?a=1,b=2;c/);
   });
 
   it("escapes newlines and semicolons in text", () => {
