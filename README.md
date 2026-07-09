@@ -29,7 +29,7 @@ includes/
   site-footer.html          Shared <footer>; inlined into pages by build:layout
 scripts/inject-layout.mjs   Writes header/footer into the six layout HTML files
 
-style.css                   Global styles (terminal theme, dark bg, green accent)
+style.css                   Global styles (monochrome plain-text/man-page theme, dark default + light toggle)
 main.js                     Frontend: nav, carousel, map, events preview, footer
 
 events.js                   Frontend: fetches events-data.json, renders event cards, tag filtering
@@ -250,8 +250,9 @@ pnpm run test:ui           # Playwright UI mode
 | Raum nutzen | 1 | Title, CTA, structured data |
 | Impressum | 1 | Title + back link |
 | Danke page | 1 | Title, noindex, content, back link |
-| Terminal theme | 1 | Dark bg, monospace, no inline styles |
-| JS errors | 6 | All 6 pages free of console errors |
+| Monochrome theme | 1 | Dark bg, monospace, no inline styles |
+| Light theme toggle | 1 | data-theme flip, localStorage persistence, painted background inverts |
+| JS errors | 9 | All pages (incl. /ascii/, /chat/, /lite/) free of console errors |
 | Internal links | 1 | Crawls all pages, verifies every internal link resolves |
 | Accessibility | 1 | Aria-labels, alt texts, landmark roles |
 
