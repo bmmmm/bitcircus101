@@ -37,4 +37,4 @@ jobs:
           )
 
       - name: Run unit tests
-        run: node --test tests/sync-events.spec.mjs
+        run: node --test tests/*.spec.mjs
