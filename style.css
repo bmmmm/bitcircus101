@@ -511,6 +511,42 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 }
 
 /* =============================================================================
+   404 — script-kiddy taunt page (served for unknown paths)
+   ============================================================================= */
+.hx404 {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.6rem;
+    padding: var(--gutter);
+    max-width: none;
+}
+.hx404__skull {
+    color: var(--accent);
+    line-height: 1.05;
+    white-space: pre;
+    margin: 0 0 1rem;
+    font-size: clamp(0.6rem, 2.2vw, 0.95rem);
+    user-select: none;
+}
+.hx404__cmd { color: var(--ink-dim); margin: 0; }
+.hx404__path { color: var(--accent); word-break: break-all; }
+.hx404__err { color: var(--ink-dim); margin: 0.25rem 0 0.75rem; }
+.hx404__title {
+    color: var(--ink-max);
+    font-size: clamp(1.05rem, 3.5vw, 1.5rem);
+    letter-spacing: 0.03em;
+    margin: 0;
+}
+.hx404__sub { color: var(--ink); max-width: 56ch; margin: 0.5rem 0 0; }
+.hx404__log { color: var(--ink-dim); font-size: 0.85rem; margin: 0.75rem 0 0; }
+.hx404__dim { color: var(--line-strong); }
+.hx404__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; }
+
+/* =============================================================================
    Filmstrip / carousel — grayscale stills, color on demand
    ============================================================================= */
 .carousel-container {
