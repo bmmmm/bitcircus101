@@ -174,8 +174,11 @@ jobs:
 
       - name: Regenerate events data if missing
         run: |
-          if [ ! -f events-data.json ]; then
-            echo "events-data.json missing — regenerating"
+          # ical.ics is in the guard too so the first deploy after this feature lands
+          # generates the new feeds immediately instead of 404ing until the next
+          # sync-events cron run (~30 min).
+          if [ ! -f events-data.json ] || [ ! -f ical.ics ]; then
+            echo "events-data.json or ical.ics missing — regenerating"
             node scripts/sync-events.mjs
           fi
 

@@ -409,10 +409,13 @@ function generateICS(cards, nowISO) {
     lines.push(`SUMMARY:${icsEsc(c.title)}`);
     if (c.description) lines.push(`DESCRIPTION:${icsEsc(c.description)}`);
     if (c.location) lines.push(`LOCATION:${icsEsc(c.location)}`);
+    // URL is a URI value (RFC5545 §3.8.4.6), not TEXT — emit raw, no backslash escaping.
     const url = c.eventUrl || c.calendarUrl;
-    if (url) lines.push(`URL:${icsEsc(url)}`);
+    if (url) lines.push(`URL:${url}`);
+    // CATEGORIES is a comma-separated list of TEXT values — escape each value, keep the
+    // separators. Escaping the joined string would turn the separators into literal "\,".
     const cats = (c.tags || []).map((t) => t.replace(/^#/, "")).filter(Boolean);
-    if (cats.length) lines.push(`CATEGORIES:${icsEsc(cats.join(","))}`);
+    if (cats.length) lines.push(`CATEGORIES:${cats.map(icsEsc).join(",")}`);
     lines.push("END:VEVENT");
   }
 
