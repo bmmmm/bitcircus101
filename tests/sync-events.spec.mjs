@@ -9,9 +9,10 @@
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
 import {
-  parseDate, nthWeekday, expandRRule, clean, parseICS,
+  parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS,
   applyFilter, buildTags, toCards,
-  escXml, toRFC822, generateRSS,
+  escXml, toRFC822, generateRSS, generateICS,
+  eventSlot, eventGuid,
   aggregate, eventAnchor,
 } from "../scripts/sync-events.mjs";
 
@@ -834,5 +835,178 @@ describe("aggregate", () => {
     const a = result([card({ uid: "nowhas@x", date: "2026-05-01", title: "E" })], "A");
     const { events } = aggregate([a], prev, NOW);
     assert.equal(events[0].firstSeen, "2026-01-01T00:00:00.000Z");
+  });
+});
+
+// ── parseDuration ─────────────────────────────────────────────────────────────
+
+describe("parseDuration", () => {
+  it("parses hours and minutes", () => {
+    assert.equal(parseDuration("PT2H"), 2 * 3600 * 1000);
+    assert.equal(parseDuration("PT1H30M"), 90 * 60 * 1000);
+    assert.equal(parseDuration("PT45M"), 45 * 60 * 1000);
+  });
+  it("parses days and weeks", () => {
+    assert.equal(parseDuration("P1D"), 86400 * 1000);
+    assert.equal(parseDuration("P1W"), 604800 * 1000);
+    assert.equal(parseDuration("P1DT1H"), (86400 + 3600) * 1000);
+  });
+  it("honours a negative sign", () => {
+    assert.equal(parseDuration("-PT1H"), -3600 * 1000);
+  });
+  it("returns null for empty or componentless input", () => {
+    assert.equal(parseDuration(""), null);
+    assert.equal(parseDuration(null), null);
+    assert.equal(parseDuration("P"), null);
+    assert.equal(parseDuration("garbage"), null);
+  });
+});
+
+// ── parseICS end-time extraction ──────────────────────────────────────────────
+
+describe("parseICS — DTEND / DURATION", () => {
+  const wrap = (...body) =>
+    ["BEGIN:VCALENDAR", "BEGIN:VEVENT", ...body, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+
+  it("extracts DTEND as a Date", () => {
+    const e = parseICS(wrap("DTSTART:20260601T190000", "DTEND:20260601T210000", "SUMMARY:X"))[0];
+    assert.equal(e.dtend.getHours(), 21);
+    assert.equal(e.dtend - e.dtstart, 2 * 3600 * 1000);
+  });
+
+  it("derives dtend from DURATION when DTEND is absent", () => {
+    const e = parseICS(wrap("DTSTART:20260601T190000", "DURATION:PT90M", "SUMMARY:X"))[0];
+    assert.equal(e.dtend - e.dtstart, 90 * 60 * 1000);
+  });
+
+  it("leaves dtend null when neither DTEND nor DURATION is present", () => {
+    const e = parseICS(wrap("DTSTART:20260601T190000", "SUMMARY:X"))[0];
+    assert.equal(e.dtend, null);
+  });
+
+  it("gives each recurring instance a dtend offset by the same duration", () => {
+    const events = parseICS(wrap(
+      "DTSTART:20260105T190000", "DTEND:20260105T203000",
+      "RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=3", "SUMMARY:Weekly"
+    ));
+    assert.equal(events.length, 3);
+    for (const e of events) assert.equal(e.dtend - e.dtstart, 90 * 60 * 1000);
+  });
+
+  it("handles an all-day DTEND (exclusive next day)", () => {
+    const e = parseICS(wrap("DTSTART:20260601", "DTEND:20260602", "SUMMARY:AllDay"))[0];
+    assert.equal(e.allDay, true);
+    assert.equal(e.dtend - e.dtstart, 86400 * 1000);
+  });
+});
+
+// ── eventSlot / eventGuid (shared RSS + iCal keys) ────────────────────────────
+
+describe("eventSlot / eventGuid", () => {
+  it("builds a date+time slot", () => {
+    assert.equal(eventSlot({ date: "2026-07-10", time: "20:00" }), "20260710T2000");
+    assert.equal(eventSlot({ date: "2026-07-10", time: "" }), "20260710");
+  });
+  it("uses uid+slot when a uid is present, else a synthesized id", () => {
+    assert.equal(eventGuid({ uid: "u@x", date: "2026-07-10", time: "20:00" }), "u@x-20260710T2000");
+    assert.equal(
+      eventGuid({ uid: "", date: "2026-07-10", time: "20:00", type: "special" }),
+      "bitcircus101-20260710T2000-special"
+    );
+  });
+});
+
+// ── generateICS ───────────────────────────────────────────────────────────────
+
+describe("generateICS", () => {
+  const NOW = "2026-03-10T22:45:00.000Z";
+  const baseCard = {
+    title: "Crowd Gaming",
+    description: "Laser fun",
+    location: "Dorotheenstraße 101, 53113 Bonn",
+    date: "2026-03-21",
+    time: "20:00",
+    endDate: "2026-03-21",
+    endTime: "22:00",
+    tags: ["#games", "#community"],
+    type: "special",
+    uid: "evt@x",
+    eventUrl: "https://bitcircus101.de/events.html",
+    firstSeen: "2026-03-01T00:00:00.000Z",
+  };
+
+  it("wraps events in a VCALENDAR with a VTIMEZONE and CRLF line endings", () => {
+    const ics = generateICS([baseCard], NOW);
+    assert.match(ics, /^BEGIN:VCALENDAR\r\n/);
+    assert.match(ics, /END:VCALENDAR\r\n$/);
+    assert.match(ics, /BEGIN:VTIMEZONE\r\nTZID:Europe\/Berlin/);
+    assert.ok(ics.includes("\r\n"), "uses CRLF");
+  });
+
+  it("emits a timed event with TZID start and end", () => {
+    const ics = generateICS([baseCard], NOW);
+    assert.match(ics, /DTSTART;TZID=Europe\/Berlin:20260321T200000/);
+    assert.match(ics, /DTEND;TZID=Europe\/Berlin:20260321T220000/);
+  });
+
+  it("defaults DTEND to +2h when the card carries no end time", () => {
+    const ics = generateICS([{ ...baseCard, endDate: "", endTime: "" }], NOW);
+    assert.match(ics, /DTEND;TZID=Europe\/Berlin:20260321T220000/);
+  });
+
+  it("emits an all-day event as VALUE=DATE with an exclusive next-day DTEND", () => {
+    const allDay = { ...baseCard, time: "", endDate: "", endTime: "" };
+    const ics = generateICS([allDay], NOW);
+    assert.match(ics, /DTSTART;VALUE=DATE:20260321/);
+    assert.match(ics, /DTEND;VALUE=DATE:20260322/);
+  });
+
+  it("keeps an explicit multi-day all-day DTEND", () => {
+    const allDay = { ...baseCard, time: "", endDate: "2026-03-23", endTime: "" };
+    const ics = generateICS([allDay], NOW);
+    assert.match(ics, /DTEND;VALUE=DATE:20260323/);
+  });
+
+  it("gives recurring instances (shared uid) distinct UIDs", () => {
+    const ics = generateICS([
+      { ...baseCard, uid: "weekly@x", date: "2026-03-21", time: "20:00" },
+      { ...baseCard, uid: "weekly@x", date: "2026-03-28", time: "20:00" },
+    ], NOW);
+    const uids = [...ics.matchAll(/UID:(.+)/g)].map((m) => m[1].trim());
+    assert.equal(uids.length, 2);
+    assert.notEqual(uids[0], uids[1]);
+  });
+
+  it("escapes commas and strips the # from categories", () => {
+    const ics = generateICS([baseCard], NOW);
+    assert.match(ics, /CATEGORIES:games\\,community/);
+    assert.match(ics, /LOCATION:Dorotheenstraße 101\\, 53113 Bonn/);
+  });
+
+  it("escapes newlines and semicolons in text", () => {
+    const ics = generateICS([{ ...baseCard, description: "a;b\nc" }], NOW);
+    assert.match(ics, /DESCRIPTION:a\\;b\\nc/);
+  });
+
+  it("folds content lines longer than 75 octets", () => {
+    const long = { ...baseCard, description: "x".repeat(200) };
+    const ics = generateICS([long], NOW);
+    for (const line of ics.split("\r\n")) {
+      assert.ok(Buffer.byteLength(line, "utf8") <= 75, `line too long: ${line.length}`);
+    }
+  });
+
+  it("uses firstSeen for DTSTAMP as a UTC stamp", () => {
+    const ics = generateICS([baseCard], NOW);
+    assert.match(ics, /DTSTAMP:20260301T000000Z/);
+  });
+
+  it("omits DESCRIPTION/LOCATION/URL lines when the fields are empty", () => {
+    const bare = { title: "T", date: "2026-03-21", time: "20:00", tags: [], type: "special",
+      description: "", location: "", eventUrl: "", calendarUrl: "" };
+    const ics = generateICS([bare], NOW);
+    assert.ok(!ics.includes("DESCRIPTION:"));
+    assert.ok(!ics.includes("LOCATION:"));
+    assert.ok(!/\r\nURL:/.test(ics));
   });
 });
