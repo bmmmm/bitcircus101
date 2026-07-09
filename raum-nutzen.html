@@ -42,19 +42,19 @@
         <meta name="ICBM" content="50.74042, 7.08942" />
 
         <!-- Theme color -->
-        <meta name="theme-color" content="#0d0d0d" />
+        <meta name="theme-color" content="#0a0a0a" />
 
         <!-- Canonical URL -->
         <link rel="canonical" href="https://bitcircus101.de/raum-nutzen.html" />
 
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=25a35f72" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=25a35f72" />
-        <link rel="manifest" href="site.webmanifest?v=25a35f72" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=d10823a2" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=d10823a2" />
+        <link rel="manifest" href="site.webmanifest?v=d10823a2" />
         <script>
-            // No-flash: apply persisted calm theme before stylesheet paints.
-            try { if (localStorage.getItem("bc.theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+            // No-flash: apply the persisted light theme before the stylesheet paints.
+            try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=25a35f72" />
+        <link rel="stylesheet" href="style.css?v=d10823a2" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -84,9 +84,6 @@
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
                 <a class="nav__brand" href="index.html">
-                    <span class="nav__prompt" aria-hidden="true"
-                        >&gt;<span class="nav__cursor">_</span></span
-                    >
                     <span class="nav__name">bitcircus101</span>
                 </a>
                 <button
@@ -95,27 +92,27 @@
                     aria-controls="main-nav"
                     aria-expanded="false"
                 >
-                    ☰ Menü
+                    ≡ menü
                 </button>
                 <ul class="nav__links">
-                    <li><a href="index.html#about">Über uns</a></li>
-                    <li><a href="events.html">Veranstaltungen</a></li>
-                    <li><a href="raum-nutzen.html">Raum nutzen</a></li>
-                    <li><a href="support.html" class="nav__cta">Unterstützen</a></li>
-                    <li><a href="support.html#projekte">Projekte</a></li>
-                    <li><a href="index.html#contact">Kontakt</a></li>
+                    <li><a href="index.html#about">/wir</a></li>
+                    <li><a href="events.html">/termine</a></li>
+                    <li><a href="raum-nutzen.html">/raum</a></li>
+                    <li><a href="support.html">/support</a></li>
+                    <li><a href="index.html#contact">/kontakt</a></li>
                 </ul>
                 <div class="nav__utils">
+                    <a href="feed.xml" class="nav__util" title="RSS-Feed der Termine" aria-label="RSS-Feed der Termine">rss</a>
                     <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
-                    <a href="feed.xml" class="nav__util nav__util--rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a>
-                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Helles Design umschalten" title="Invertieren (hell/dunkel)">◐</button>
                 </div>
             </nav>
         </header>
         <main id="main-content">
             <div class="container">
                 <section id="raum-nutzen">
-                    <h1>Mitmachen &amp; Raum nutzen – bitcircus101, Bonn<a class="section-anchor" href="#raum-nutzen" aria-label="Link zu: Mitmachen und Raum nutzen">#</a></h1>
+                    <p class="doc-path"><a href="index.html">~</a> /raum</p>
+                    <h1>Mitmachen &amp; Raum nutzen<a class="section-anchor" href="#raum-nutzen" aria-label="Link zu: Mitmachen und Raum nutzen">#</a></h1>
                     <p>
                         bitcircus101 ist ein offener Hackspace in der Bonner Altstadt –
                         er lebt von Leuten, die vorbeikommen und mitmachen, nicht von
@@ -123,27 +120,36 @@
                     </p>
                 </section>
 
-                <section id="mitmachen">
-                    <h2>Teil von bitcircus101 werden<a class="section-anchor" href="#mitmachen" aria-label="Link zu: Teil von bitcircus101 werden">#</a></h2>
-                    <p class="prompt glow">$ <b>ls ~/wege-rein/</b></p>
+                <section id="mitmachen" class="panel">
+                    <h2>teil von bitcircus101 werden<a class="section-anchor" href="#mitmachen" aria-label="Link zu: Teil von bitcircus101 werden">#</a></h2>
                     <ul class="ways">
-                        <li><a class="way" href="events.html"><span class="ico" aria-hidden="true">📅</span><span class="key">vorbeikommen</span><span class="lbl">Offenen Termin besuchen</span></a></li>
-                        <li><a class="way" href="support.html#tatkraft"><span class="ico" aria-hidden="true">⚡</span><span class="key">tuwat!</span><span class="lbl">Vor Ort anpacken</span></a></li>
-                        <li><a class="way" href="join-info/" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">📡</span><span class="key">signal&nbsp;info</span><span class="lbl">Im Loop bleiben ↗</span></a></li>
+                        <li><a class="way" href="events.html"><span class="ico" aria-hidden="true">-&gt;</span><span class="key">vorbeikommen</span><span class="lbl">offenen Termin besuchen</span></a></li>
+                        <li><a class="way" href="support.html#tatkraft"><span class="ico" aria-hidden="true">-&gt;</span><span class="key">tuwat!</span><span class="lbl">vor Ort anpacken</span></a></li>
+                        <li><a class="way" href="join-info/" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">-&gt;</span><span class="key">signal info</span><span class="lbl">im Loop bleiben ↗</span></a></li>
                     </ul>
                 </section>
 
-                <section id="anfahrt">
-                    <h2>Adresse &amp; Anfahrt<a class="section-anchor" href="#anfahrt" aria-label="Link zu: Adresse und Anfahrt">#</a></h2>
+                <section id="anfahrt" class="panel">
+                    <h2>adresse &amp; anfahrt<a class="section-anchor" href="#anfahrt" aria-label="Link zu: Adresse und Anfahrt">#</a></h2>
                     <div class="location-card">
                         <h3 class="location-card__header">[ LOCATE ]</h3>
-                        <div class="location-card__body">
-                            <p class="location-card__name">bitcircus101</p>
-                            <p class="location-card__address">Dorotheenstraße 101<br>53113 Bonn</p>
-                            <p class="location-card__coords">50.74042° N · 7.08942° E</p>
+                        <div class="location-card__grid">
+                            <pre class="location-card__map-ascii ascii-fig" aria-hidden="true">
+        N                  ≈≈
+  ──────┬───────────╮      ≈≈
+        │ nordstadt │      ≈≈
+  <b>● dorotheenstr. 101</b>      ≈≈
+        │           ╰──────≈≈──→ beuel
+        │ ↓ 12 min         ≈≈
+        ▪ hbf              ≈≈ rhein</pre>
+                            <div class="location-card__body">
+                                <p class="location-card__name">bitcircus101</p>
+                                <p class="location-card__address">Dorotheenstraße 101<br>53113 Bonn</p>
+                                <p class="location-card__coords">50.74042° N · 7.08942° E · not to scale</p>
+                            </div>
                         </div>
                         <button id="show-map-btn" class="location-card__map-btn" aria-label="OpenStreetMap-Karte laden und anzeigen">
-                            <span aria-hidden="true">$</span> map --load<span class="location-card__cursor" aria-hidden="true">▋</span>
+                            [ karte laden ]
                         </button>
                         <div id="osm-map-container" class="hidden">
                             <iframe
@@ -163,10 +169,9 @@
 
                 <details class="sidenote">
                     <summary class="sidenote__summary">
-                        <span class="sidenote__caret" aria-hidden="true">▸</span>
+                        <span class="sidenote__caret" aria-hidden="true"></span>
                         <span class="sidenote__label">
-                            <span class="sidenote__cmd">$ cat ~/ort</span>
-                            <span class="sidenote__title">Der Ort</span>
+                            <span class="sidenote__title">der Ort — Workshop, Schulung, Meetup, Dreh</span>
                         </span>
                     </summary>
                     <div class="sidenote__body">
@@ -198,7 +203,7 @@
                 </details>
 
                 <div class="back-link">
-                    <a href="index.html" class="btn btn-shimmer">← Zurück zur Startseite</a>
+                    <a href="index.html" class="btn">← zurück zur startseite</a>
                 </div>
             </div>
         </main>
@@ -206,21 +211,26 @@
             <div class="footer__grid">
                 <div class="footer__col">
                     <span class="footer__brand">bitcircus101</span>
-                    <span class="footer__tagline">Hackspace · Bonn · Dorotheenstraße 101</span>
+                    <span class="footer__tagline">offener hackspace · dorotheenstraße 101 · 53113 bonn</span>
                 </div>
                 <div class="footer__col footer__col--links">
                     <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener noreferrer">github ↗</a>
+                    <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">ko-fi ↗</a>
+                    <a href="feed.xml">rss</a>
                     <a href="impressum-datenschutz.html">impressum</a>
                 </div>
             </div>
             <div class="footer__bar">
+                <span class="footer__mode" aria-hidden="true">-- OPEN --</span>
+                <span class="footer__sep">│</span>
+                <span>fr ab 20:00</span>
+                <span class="footer__sep">│</span>
                 <span class="footer__year"></span>
-                <span class="footer__sep">·</span>
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
 
-        <script defer src="storage.js?v=25a35f72"></script>
-        <script defer src="main.js?v=25a35f72"></script>
+        <script defer src="storage.js?v=d10823a2"></script>
+        <script defer src="main.js?v=d10823a2"></script>
     </body>
 </html>

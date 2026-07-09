@@ -103,9 +103,14 @@ jobs:
         run: |
           git fetch origin main
 
-          # Save live-only generated files before overlay
-          for f in events-data.json feed.xml funding.json sitemap.xml; do
-            [ -f "$f" ] && cp "$f" "/tmp/_live_$f"
+          # Save live-only generated files before overlay. install -D preserves the
+          # events/ subdir for the relative-URL feed copies (issue #1 / D2).
+          # Use if/then (not `[ -f ] && …`): under `bash -e` a for-loop takes the exit
+          # status of its last iteration, so a missing final file (events/ical.ics on the
+          # first deploy) would make the whole loop return 1 and abort the step.
+          FEEDS="events-data.json feed.xml ical.ics funding.json sitemap.xml events/feed.xml events/ical.ics"
+          for f in $FEEDS; do
+            if [ -f "$f" ]; then install -D "$f" "/tmp/_live/$f"; fi
           done
 
           # Overlay everything from main, then remove dev-only files
@@ -115,9 +120,9 @@ jobs:
           # Contributor docs + repo meta are not part of the served site
           rm -f CLAUDE.md CONTRIBUTING.md README.md .gitignore .claudeignore
 
-          # Restore live-only generated files
-          for f in events-data.json feed.xml funding.json sitemap.xml; do
-            [ -f "/tmp/_live_$f" ] && cp "/tmp/_live_$f" "$f"
+          # Restore live-only generated files (same if/then guard as the save loop).
+          for f in $FEEDS; do
+            if [ -f "/tmp/_live/$f" ]; then install -D "/tmp/_live/$f" "$f"; fi
           done
 
       - uses: pnpm/action-setup@v6
@@ -172,8 +177,11 @@ jobs:
 
       - name: Regenerate events data if missing
         run: |
-          if [ ! -f events-data.json ]; then
-            echo "events-data.json missing — regenerating"
+          # ical.ics is in the guard too so the first deploy after this feature lands
+          # generates the new feeds immediately instead of 404ing until the next
+          # sync-events cron run (~30 min).
+          if [ ! -f events-data.json ] || [ ! -f ical.ics ]; then
+            echo "events-data.json or ical.ics missing — regenerating"
             node scripts/sync-events.mjs
           fi
 

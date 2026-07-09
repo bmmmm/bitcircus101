@@ -142,8 +142,7 @@
       esc(dt.href) +
       '"' +
       (dt.external ? ' target="_blank" rel="noopener noreferrer"' : "") +
-      ">&gt;&nbsp;unterstützen" +
-      '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
+      ">&gt;&nbsp;unterstützen</a>";
     if (p.kofiShop) {
       html +=
         '<a class="projekt-action projekt-action--shop" href="' +
@@ -204,8 +203,7 @@
       esc(dt.href) +
       '"' +
       (dt.external ? ' target="_blank" rel="noopener noreferrer"' : "") +
-      ">&gt;&nbsp;Unterstützer:in werden" +
-      '<span class="projekt-cursor" aria-hidden="true">▏</span></a>';
+      ">&gt;&nbsp;Unterstützer:in werden</a>";
     html += "</div>";
 
     html += "</div></article>"; // body + article
@@ -290,16 +288,15 @@
   function loadingMarkup() {
     return (
       '<p class="projekte-loading"><span class="projekte-loading__cmd">' +
-      "$ funding --load</span>" +
-      '<span class="projekte-cursor" aria-hidden="true">▋</span></p>'
+      "lade projekte …</span></p>"
     );
   }
 
   function renderError(el) {
     el.innerHTML =
       '<div class="projekte-fallback">' +
-      '<p class="projekte-fallback__cmd">$ funding --load ' +
-      '<span class="projekte-fallback__err">ERR</span></p>' +
+      '<p class="projekte-fallback__cmd">projekte laden: ' +
+      '<span class="projekte-fallback__err">fehlgeschlagen</span></p>' +
       "<p>Du kannst uns trotzdem direkt unterstützen: " +
       '<a href="#dauerhaft">zu den Spendenwegen ↓</a></p></div>';
     el.removeAttribute("aria-busy");
