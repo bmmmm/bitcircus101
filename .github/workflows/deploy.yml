@@ -148,7 +148,11 @@ jobs:
         # Hashing + rewrite live in a unit-tested node script; it walks every
         # HTML file in the tree, so new page dirs are covered automatically
         # (the old inline loop needed a hand-maintained directory list).
-        run: echo "hash=$(node scripts/cache-bust.mjs)" >> "$GITHUB_OUTPUT"
+        # Assignment form on purpose: `echo "hash=$(cmd)"` would swallow a
+        # script crash under `bash -e` and deploy with an empty hash.
+        run: |
+          hash=$(node scripts/cache-bust.mjs)
+          echo "hash=$hash" >> "$GITHUB_OUTPUT"
 
       - name: Regenerate events data if missing
         run: |
