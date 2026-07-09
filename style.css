@@ -29,6 +29,8 @@
     --ink-dim:     #8a8a8a;  /* secondary text (>=4.5:1)    */
     --line:        #333333;  /* hairlines, panel borders    */
     --line-strong: #666666;  /* structural rules            */
+    --accent:      #3ecf5c;  /* terminal green — links, current nav, buttons, tent */
+    --accent-soft: color-mix(in srgb, var(--accent) 45%, transparent);
 
     /* system monospace only — no font downloads, ever */
     --font: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas,
@@ -55,6 +57,7 @@ html[data-theme="light"] {
     --ink-dim:     #5c5c5c;
     --line:        #c9c9c4;
     --line-strong: #8a8a85;
+    --accent:      #1a8f3c;  /* darker green keeps >=4.5:1 contrast on light paper */
 }
 
 /* =============================================================================
@@ -115,14 +118,14 @@ h3 {
 h3::before { content: "── "; color: var(--ink-dim); font-weight: 400; }
 
 a {
-    color: var(--ink-max);
+    color: var(--accent);
     text-decoration: underline;
-    text-decoration-color: var(--line-strong);
+    text-decoration-color: var(--accent-soft);
     text-underline-offset: 0.2em;
     transition: background var(--transition), color var(--transition);
 }
 a:hover {
-    background: var(--ink);
+    background: var(--accent);
     color: var(--paper);
     text-decoration: none;
 }
@@ -283,10 +286,10 @@ nav li a:hover { background: var(--ink); color: var(--paper); }
 
 /* current page: reverse video, steady */
 nav li a.nav__link--current {
-    background: var(--ink-max);
+    background: var(--accent);
     color: var(--paper);
 }
-nav li a.nav__link--current:hover { background: var(--ink-max); color: var(--paper); }
+nav li a.nav__link--current:hover { background: var(--accent); color: var(--paper); }
 
 /* utility cluster: rss · lite · invert toggle */
 .nav__utils {
@@ -370,14 +373,14 @@ nav li a.nav__link--current:hover { background: var(--ink-max); color: var(--pap
 
 /* primary action: pre-inverted */
 .btn-primary {
-    background: var(--ink-max);
+    background: var(--accent);
     color: var(--paper);
-    border-color: var(--ink-max);
+    border-color: var(--accent);
 }
 .btn-primary::before, .btn-primary::after { color: var(--paper); }
 .btn-primary:hover, .btn-primary:focus-visible {
     background: transparent;
-    color: var(--ink-max);
+    color: var(--accent);
 }
 .btn-primary:hover::before, .btn-primary:hover::after,
 .btn-primary:focus-visible::before, .btn-primary:focus-visible::after { color: var(--ink-dim); }
@@ -466,6 +469,32 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     text-align: center;
 }
 .ascii-logo b { color: var(--ink-max); font-weight: 700; }
+
+/* detailed circus-tent hero — 64-line / 112-col ASCII art. The viewport is a
+   size container so the art font-size scales via cqw/cqh to always fit whole,
+   independent of the glyph metrics. Green so the logo carries the accent. */
+#home .ascii-art-viewport {
+    container-type: size;
+    height: clamp(240px, 44vw, 440px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 1.25rem 0 0.5rem;
+}
+.ascii-hero {
+    --hero-cols: 112;
+    --hero-lines: 64;
+    --hero-lh: 1.15;
+    flex: 0 0 auto;
+    line-height: var(--hero-lh);
+    text-align: left;
+    color: var(--accent);
+    font-size: min(
+        calc(100cqw / var(--hero-cols)),
+        calc(100cqh / (var(--hero-lines) * var(--hero-lh) + 2))
+    );
+}
 
 .ascii-caption {
     text-align: center;
@@ -694,9 +723,9 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .events-filter__tag:hover,
 .events-filter__clear:hover { background: var(--ink); color: var(--paper); }
 .events-filter__tag.active {
-    background: var(--ink-max);
+    background: var(--accent);
     color: var(--paper);
-    border-color: var(--ink-max);
+    border-color: var(--accent);
 }
 
 /* month groups: ── 2026-07 ──────────── */
@@ -1058,7 +1087,7 @@ h3.location-card__header::before { content: none; }
     white-space: nowrap;
     overflow: hidden;
 }
-.projekt-bar__filled { color: var(--ink-max); }
+.projekt-bar__filled { color: var(--accent); }
 .projekt-bar__empty { color: var(--line-strong); }
 .projekt-bar__pct { color: var(--ink); margin-left: 1ch; }
 
@@ -1096,6 +1125,9 @@ h3.location-card__header::before { content: none; }
     cursor: pointer;
 }
 .projekt-action:hover { background: var(--ink); color: var(--paper); }
+/* the per-project donate CTA carries the accent; the shop action stays neutral */
+.projekt-action--donate { border-color: var(--accent); color: var(--accent); }
+.projekt-action--donate:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 
 .projekt-cursor { display: none; }
 
