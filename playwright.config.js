@@ -3,6 +3,10 @@ const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
     testDir: './tests',
+    // Only site.spec.js is a Playwright suite. The *.spec.mjs files are
+    // node:test units — without this scope Playwright imports them during
+    // collection, which executes them as a side effect.
+    testMatch: 'site.spec.js',
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
