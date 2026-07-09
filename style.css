@@ -407,18 +407,6 @@ input[type="checkbox"] { accent-color: var(--ink-max); }
 /* =============================================================================
    Man page block (homepage hero)
    ============================================================================= */
-.man-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 1ch;
-    color: var(--ink-dim);
-    font-size: 0.85rem;
-    letter-spacing: 0.04em;
-    margin-bottom: 1.75rem;
-    user-select: none;
-}
-.man-head span:nth-child(2) { text-align: center; }
-
 dl.man { margin: 0 0 1.5rem; }
 dl.man dt {
     color: var(--ink-max);
@@ -431,8 +419,6 @@ dl.man dd {
     margin: 0 0 0.25rem 4ch;
     color: var(--ink);
 }
-dl.man dd.man__opt { color: var(--ink-dim); }
-dl.man dd.man__opt b { color: var(--ink); font-weight: 700; }
 
 /* the h1 lives inside the NAME entry and reads as body text — man page style */
 h1.man__name {
@@ -1721,7 +1707,6 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 }
 
 @media (max-width: 700px) {
-    .man-head span:nth-child(2) { display: none; }
     dl.man dd { margin-left: 2ch; }
     .event-card { grid-template-columns: 5ch 1fr; gap: 0 1.5ch; }
     .way { grid-template-columns: 3ch 1fr; }
