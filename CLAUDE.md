@@ -92,9 +92,9 @@ container, which has them baked in).
 
 ## Code conventions
 
-- German UI text, English code comments
+- German UI text, English code comments — exception: terminal-/hacker-aesthetic pages (currently the 404 error page) may use English/terminal-slang copy on purpose; this stays narrow to that aesthetic, not a loophole for regular pages
 - No bundlers — edit HTML/CSS/JS directly (except `pnpm run build:layout` for `includes/*.html` and `pnpm run build:logos` when you touch `images/logo-slider/*`)
-- Plain-text aesthetic: monochrome (ink on paper), monospace font, no accent color — interaction is reverse video; dark is the default, `◐` toggles the light scheme
+- Plain-text aesthetic: monospace font, reverse-video interaction, dark is the default, `◐` toggles the light scheme. The `--accent` token (terminal green) is scoped to hyperlinks, primary CTAs, and current-selection markers in content navigation (current nav item, active event filter, project funding progress/donate); form controls and UI toggles (theme toggle, carousel dots, checkboxes, focus rings) stay reverse-video ink
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css` (applies to JS-built markup too: use the `hidden` attribute or a class, not `style="display:…"` in template strings)
 - **Commit messages:** use [conventional commits](https://www.conventionalcommits.org/) — `feat:`, `fix:`, `docs:`, `style:`, `chore:`, etc. Scopes in parentheses: `feat(events): add filter`. The release workflow parses these to auto-generate release notes.
@@ -157,7 +157,7 @@ Each source can also set `tags` (always-added hashtags), `cap` (per-source slot 
 
 ### Hidden pages (e.g. `/ascii/`)
 
-Use a subfolder like `ascii/index.html` when the page should **not** appear in the shared nav: keep it out of `includes/site-header.html` and **out of** `scripts/inject-layout.mjs` (partials assume root-relative links). Mark **`noindex`**, add **`Disallow`** in `robots.txt`, and extend the sitemap workflow’s exclude list if the generator would otherwise list the URL.
+Use a subfolder like `ascii/index.html` when the page should **not** appear in the shared nav: keep it out of `includes/site-header.html` and **out of** `scripts/inject-layout.mjs` (partials assume root-relative links). Mark **`noindex`**, add **`Disallow`** in `robots.txt` — the sitemap generator honors both automatically. Only pages that must stay out of the sitemap *without* a `noindex` meta need an entry in `exclude-paths` in `sitemap.yml` (currently the Google verification stub and `donations.html`).
 
 ### Reachable-but-unlisted pages (e.g. Signal redirect stubs)
 
