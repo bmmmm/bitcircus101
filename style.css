@@ -472,8 +472,9 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     color: var(--accent);
     /* fallback (no container-query support): fit --hero-cols to the
        viewport width. Monospace char advance is ~0.6em, so font-size =
-       available-width / (cols * 0.6); capped so it never balloons wide. */
-    font-size: min(calc((100vw - 2 * var(--gutter)) / (var(--hero-cols) * 0.6)), 1.1rem);
+       available-width / (cols * 0.6); capped at 0.8rem so the art stays
+       inside main's 94ch measure (112 * 0.6 * 12.8px ≈ 860px). */
+    font-size: min(calc((100vw - 2 * var(--gutter)) / (var(--hero-cols) * 0.6)), 0.8rem);
 }
 
 /* container-query support: clip the viewport to a fixed height and let
