@@ -67,8 +67,8 @@ jobs:
             exit 1
           )
 
-      - name: Run sync-events unit tests
-        run: node --test tests/sync-events.spec.mjs
+      - name: Run unit tests
+        run: node --test tests/*.spec.mjs
 
       - name: Generate events-data.json for E2E tests
         run: |
@@ -99,41 +99,27 @@ jobs:
           ref: live
           persist-credentials: true
 
-      - name: Sync all site files from main
-        run: |
-          git fetch origin main
-
-          # Save live-only generated files before overlay. install -D preserves the
-          # events/ subdir for the relative-URL feed copies (issue #1 / D2).
-          # Use if/then (not `[ -f ] && …`): under `bash -e` a for-loop takes the exit
-          # status of its last iteration, so a missing final file (events/ical.ics on the
-          # first deploy) would make the whole loop return 1 and abort the step.
-          FEEDS="events-data.json feed.xml ical.ics funding.json sitemap.xml events/feed.xml events/ical.ics"
-          for f in $FEEDS; do
-            if [ -f "$f" ]; then install -D "$f" "/tmp/_live/$f"; fi
-          done
-
-          # Overlay everything from main, then remove dev-only files
-          git checkout origin/main -- .
-          rm -rf tests/ node_modules/ .claude/
-          rm -f playwright.config.js package.json package-lock.json pnpm-lock.yaml pnpm-workspace.yaml
-          # Contributor docs + repo meta are not part of the served site
-          rm -f CLAUDE.md CONTRIBUTING.md README.md .gitignore .claudeignore
-
-          # Restore live-only generated files (same if/then guard as the save loop).
-          for f in $FEEDS; do
-            if [ -f "/tmp/_live/$f" ]; then install -D "/tmp/_live/$f" "$f"; fi
-          done
-
       - uses: pnpm/action-setup@v6
         with:
-          # package.json was removed from the live overlay above, so action-setup
-          # cannot read the version from packageManager — pin it explicitly here.
+          # The live checkout has no package.json (stripped by the overlay), so
+          # action-setup cannot read the version from packageManager — pin it here.
           version: 11.5.1
 
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
+
+      - name: Sync all site files from main
+        # Feed save/restore, overlay and dev-file removal live in a unit-tested
+        # node script (tests/deploy-scripts.spec.mjs) instead of inline bash —
+        # the bash version was only testable by a real deploy and twice hit the
+        # `bash -e` for-loop exit-status trap. The live checkout may not have
+        # the script yet (first run after introducing it), so pull scripts/
+        # from main before invoking it.
+        run: |
+          git fetch origin main
+          git checkout origin/main -- scripts/
+          node scripts/live-overlay.mjs origin/main
 
       - name: Apply layout partials, logo slider, and lite events to HTML
         run: |
@@ -158,22 +144,15 @@ jobs:
           echo "After:  style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
 
       - name: Cache-bust asset references
+        id: cachebust
+        # Hashing + rewrite live in a unit-tested node script; it walks every
+        # HTML file in the tree, so new page dirs are covered automatically
+        # (the old inline loop needed a hand-maintained directory list).
+        # Assignment form on purpose: `echo "hash=$(cmd)"` would swallow a
+        # script crash under `bash -e` and deploy with an empty hash.
         run: |
-          # Generate a short content hash from all cacheable assets (post-minification).
-          # Icons + manifest are included so swapping a PWA/favicon asset changes the
-          # hash and busts the ?v= on their <link> refs — CSS/JS alone wouldn't.
-          HASH=$(cat style.css main.js events.js ics-core.js \
-                     images/favicon.svg images/apple-touch-icon.png \
-                     images/icon-192.png images/icon-512.png images/icon-maskable-512.png \
-                     site.webmanifest 2>/dev/null | sha256sum | cut -c1-8)
-          echo "Asset hash: $HASH"
-          # Replace ?v=anything with ?v=<hash> in all HTML files
-          sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" *.html
-          for d in ascii chat invite-info invite-talk join-info join-talk; do
-            for f in "$d"/*.html; do
-              if [ -f "$f" ]; then sed -i "s/?v=[a-zA-Z0-9_-]*/?v=$HASH/g" "$f"; fi
-            done
-          done
+          hash=$(node scripts/cache-bust.mjs)
+          echo "hash=$hash" >> "$GITHUB_OUTPUT"
 
       - name: Regenerate events data if missing
         run: |
@@ -203,3 +182,10 @@ jobs:
           done
           echo "Push failed after 3 retries"
           exit 1
+
+      - name: Smoke-test live site
+        # Polls until the Pages build serves the new asset hash, then checks
+        # that the hashed stylesheet resolves and unknown paths return 404.
+        # Also passes when the push was skipped ("No changes to deploy"): the
+        # current hash is then already live and the health checks still run.
+        run: node scripts/smoke-live.mjs https://bitcircus101.de "${{ steps.cachebust.outputs.hash }}"
