@@ -31,10 +31,9 @@
     },
   };
 
-  // True when the user wants calm motion: explicit calm theme OR OS reduced-motion.
-  // Single source of truth for all JS-driven motion (carousel, matrix trail, scramble).
-  function prefersCalm() {
-    if (document.documentElement.dataset.theme === "calm") return true;
+  // Single source of truth for all JS-driven motion (carousel auto-rotate).
+  // The light/dark toggle is purely visual and does not affect motion.
+  function prefersReducedMotion() {
     return !!(
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -182,11 +181,11 @@
       this.applyMotionPreference();
     },
 
-    // Auto-rotate only when the user hasn't asked for calm/reduced motion.
-    // Safe on pages without a carousel and on live theme switches.
+    // Auto-rotate only when the user hasn't asked for reduced motion.
+    // Safe on pages without a carousel.
     applyMotionPreference() {
       if (!this.elements.carousel) return;
-      if (prefersCalm()) {
+      if (prefersReducedMotion()) {
         this.state.isAutoRotateEnabled = false;
         this.stopAutoRotate();
       } else {
@@ -363,7 +362,8 @@
       const { toggleButton, container } = this.elements;
       const playing = this.state.isAutoRotateEnabled;
       if (toggleButton) {
-        toggleButton.innerHTML = playing ? "⏸️" : "▶️";
+        // ︎ forces text presentation — keeps the glyphs monochrome.
+        toggleButton.innerHTML = playing ? "⏸︎" : "▶︎";
         const label = playing ? "Auto-Rotate pausieren" : "Auto-Rotate starten";
         toggleButton.setAttribute("aria-label", label);
         toggleButton.setAttribute("title", label);
@@ -406,9 +406,7 @@
 
       const isVisible = !container.classList.contains("hidden");
       container.classList.toggle("hidden");
-      button.innerHTML = isVisible
-        ? '<span aria-hidden="true">$</span> map --load<span class="location-card__cursor" aria-hidden="true">▋</span>'
-        : '<span aria-hidden="true">$</span> map --unload';
+      button.textContent = isVisible ? "[ karte laden ]" : "[ karte schließen ]";
 
       if (!isVisible) {
         setTimeout(() => {
@@ -623,7 +621,7 @@
       );
 
       el.innerHTML =
-        '<span class="footer__funding-bar">' +
+        '<span class="footer__funding-bar">lights: ' +
         bar +
         " " +
         p +
@@ -636,10 +634,8 @@
         " " +
         p +
         "% der monatlichen Kosten sind gerade gedeckt.</p>" +
-        '<p><span class="fs--green">\u2588</span> gr\u00fcn &mdash; voll gedeckt \u2013 danke! (\u226580%)</p>' +
-        '<p><span class="fs--amber">\u2588</span> amber &mdash; es werden mehr (33\u201380%)</p>' +
-        '<p><span class="fs--red">\u2588</span> rot &mdash; der Anfang ist gemacht (&lt;33%)</p>' +
-        '<a href="support.html#dauerhaft">$ unterst\u00fctzen \u2192</a>' +
+        "<p>\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588 100% = Space l\u00e4uft aus eigener Kraft.</p>" +
+        '<a href="support.html#dauerhaft">unterst\u00fctzen \u2192</a>' +
         "</div>";
 
       // Click to toggle info panel
@@ -657,27 +653,18 @@
   };
 
   // =============================================================================
-  // Scroll to Top + Matrix Trail
+  // Scroll to Top
   // =============================================================================
   const ScrollTop = {
-    chars: "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン",
-    canvas: null,
-    ctx: null,
-    animId: null,
-    btn: null,
-
     init() {
-      // Create button
       var btn = document.createElement("button");
       btn.className = "scroll-top";
       btn.setAttribute("aria-label", "Nach oben scrollen");
       btn.innerHTML = "▲";
       btn.type = "button";
       document.body.appendChild(btn);
-      this.btn = btn;
 
       // Show/hide on scroll
-      var self = this;
       var ticking = false;
       window.addEventListener("scroll", function () {
         if (!ticking) {
@@ -689,85 +676,9 @@
         }
       }, { passive: true });
 
-      // Click: matrix trail + scroll
       btn.addEventListener("click", function () {
-        self.fireMatrixTrail();
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
-    },
-
-    fireMatrixTrail() {
-      if (prefersCalm()) return; // calm/reduced-motion: skip the rain, scroll still runs
-      if (this.canvas) return; // already running
-
-      var canvas = document.createElement("canvas");
-      canvas.className = "matrix-trail";
-      document.body.appendChild(canvas);
-      this.canvas = canvas;
-
-      var ctx = canvas.getContext("2d");
-      this.ctx = ctx;
-
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      var fontSize = 14;
-      var colCount = Math.floor(canvas.width / fontSize);
-      var columns = [];
-      for (var i = 0; i < colCount; i++) {
-        columns[i] = Math.random() * canvas.height / fontSize;
-      }
-      var self = this;
-      var chars = this.chars;
-      var frames = 0;
-      var maxFrames = 45;
-
-      function draw() {
-        // Fade background
-        ctx.fillStyle = "rgba(13, 13, 13, 0.12)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.font = fontSize + "px monospace";
-
-        for (var i = 0; i < columns.length; i++) {
-          var ch = chars[Math.floor(Math.random() * chars.length)];
-          var x = i * fontSize;
-          var y = columns[i] * fontSize;
-
-          // Bright head, dimmer trail
-          var brightness = Math.random();
-          if (brightness > 0.9) {
-            ctx.fillStyle = "#fff";
-          } else if (brightness > 0.6) {
-            ctx.fillStyle = "#00d97e";
-          } else {
-            ctx.fillStyle = "rgba(0, 217, 126, 0.4)";
-          }
-
-          ctx.fillText(ch, x, y);
-
-          if (y > canvas.height && Math.random() > 0.97) {
-            columns[i] = 0;
-          }
-          columns[i]++;
-        }
-
-        frames++;
-        if (frames < maxFrames) {
-          self.animId = requestAnimationFrame(draw);
-        } else {
-          // Fade out (CSS transition on .matrix-trail handles the animation)
-          canvas.classList.add("matrix-trail--out");
-          setTimeout(function () {
-            canvas.remove();
-            self.canvas = null;
-            self.ctx = null;
-            self.animId = null;
-          }, 500);
-        }
-      }
-
-      this.animId = requestAnimationFrame(draw);
     },
   };
 
@@ -825,21 +736,19 @@
   };
 
   // =============================================================================
-  // Theme toggle (calm / loud)
+  // Theme toggle (dark / light) — reverse video for the whole page
   // =============================================================================
   const Theme = {
     init() {
       const btn = utils.getElementById("theme-toggle");
       if (!btn) return;
-      const isCalm = () => document.documentElement.dataset.theme === "calm";
-      btn.setAttribute("aria-pressed", String(isCalm()));
+      const isLight = () => document.documentElement.dataset.theme === "light";
+      btn.setAttribute("aria-pressed", String(isLight()));
       utils.addEventListenerSafe(btn, "click", () => {
-        const nowCalm = !isCalm();
-        document.documentElement.dataset.theme = nowCalm ? "calm" : "";
-        BC.storage.set(BC.storage.KEYS.THEME, nowCalm ? "calm" : "loud");
-        btn.setAttribute("aria-pressed", String(nowCalm));
-        // Re-apply JS-driven motion policy live (carousel auto-rotate).
-        Carousel.applyMotionPreference();
+        const nowLight = !isLight();
+        document.documentElement.dataset.theme = nowLight ? "light" : "";
+        BC.storage.set(BC.storage.KEYS.THEME, nowLight ? "light" : "dark");
+        btn.setAttribute("aria-pressed", String(nowLight));
       });
     },
   };

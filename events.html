@@ -27,7 +27,7 @@
         <meta name="twitter:description" content="Alle Termine im bitcircus101 Hackspace Bonn. linkup, Lightning Talks, offene Freitagabende." />
         <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
         <meta name="twitter:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
-        <meta name="theme-color" content="#0d0d0d" />
+        <meta name="theme-color" content="#0a0a0a" />
         <link rel="canonical" href="https://bitcircus101.de/events.html" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
         <link rel="alternate" type="text/calendar" title="bitcircus101 Termine (iCal)" href="ical.ics" />
@@ -35,19 +35,16 @@
         <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=6" />
         <link rel="manifest" href="site.webmanifest?v=6" />
         <script>
-            // No-flash: apply persisted calm theme before stylesheet paints.
-            try { if (localStorage.getItem("bc.theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+            // No-flash: apply the persisted light theme before the stylesheet paints.
+            try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=6" />
+        <link rel="stylesheet" href="style.css?v=7" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
                 <a class="nav__brand" href="index.html">
-                    <span class="nav__prompt" aria-hidden="true"
-                        >&gt;<span class="nav__cursor">_</span></span
-                    >
                     <span class="nav__name">bitcircus101</span>
                 </a>
                 <button
@@ -56,35 +53,34 @@
                     aria-controls="main-nav"
                     aria-expanded="false"
                 >
-                    ☰ Menü
+                    ≡ menü
                 </button>
                 <ul class="nav__links">
-                    <li><a href="index.html#about">Über uns</a></li>
-                    <li><a href="events.html">Veranstaltungen</a></li>
-                    <li><a href="raum-nutzen.html">Raum nutzen</a></li>
-                    <li><a href="support.html" class="nav__cta">Unterstützen</a></li>
-                    <li><a href="support.html#projekte">Projekte</a></li>
-                    <li><a href="index.html#contact">Kontakt</a></li>
+                    <li><a href="index.html#about">/wir</a></li>
+                    <li><a href="events.html">/termine</a></li>
+                    <li><a href="raum-nutzen.html">/raum</a></li>
+                    <li><a href="support.html">/support</a></li>
+                    <li><a href="index.html#contact">/kontakt</a></li>
                 </ul>
                 <div class="nav__utils">
+                    <a href="feed.xml" class="nav__util" title="RSS-Feed der Termine" aria-label="RSS-Feed der Termine">rss</a>
                     <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
-                    <a href="feed.xml" class="nav__util nav__util--rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a>
-                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Helles Design umschalten" title="Invertieren (hell/dunkel)">◐</button>
                 </div>
             </nav>
         </header>
         <main id="main-content">
         <div class="container">
             <section id="termine">
-                <h1>Was passiert im bitcircus101?<a class="section-anchor" href="#termine" aria-label="Link zu: Was passiert im bitcircus101?">#</a></h1>
-                <p class="prompt glow">$ <b>cat ~/termine</b></p>
+                <p class="doc-path"><a href="index.html">~</a> /termine</p>
+                <h1>Termine<a class="section-anchor" href="#termine" aria-label="Link zu: Termine">#</a></h1>
                 <p class="events-intro">
                     Alle Termine aus dem Hackspace und befreundeten Spaces in Bonn.
                 </p>
 
                 <div class="events-subscribe" id="kalender">
                     <div class="events-subscribe__row">
-                        <h2 class="events-subscribe__title">bitcircus101 Kalender<a class="section-anchor" href="#kalender" aria-label="Link zu: bitcircus101 Kalender">#</a></h2>
+                        <h2 class="events-subscribe__title">bitcircus101 kalender<a class="section-anchor" href="#kalender" aria-label="Link zu: bitcircus101 Kalender">#</a></h2>
                         <div class="events-subscribe__actions">
                             <a class="events-subscribe__btn"
                                 href="webcal://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
@@ -92,20 +88,20 @@
                             <a class="events-subscribe__btn"
                                 href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
                                 download="bitcircus101.ics"
-                            >&#8595; ICS</a>
-                            <a class="events-subscribe__btn events-subscribe__btn--rss"
+                            >&#8595; ics</a>
+                            <a class="events-subscribe__btn"
                                 href="feed.xml"
                                 title="RSS Feed"
                                 aria-label="RSS-Feed der Termine"
-                            >&#9673; RSS</a>
+                            >rss</a>
                             <button
                                 type="button"
-                                class="events-subscribe__btn events-subscribe__btn--info"
+                                class="events-subscribe__btn"
                                 id="linkup-info-btn"
                                 aria-controls="linkup-info-panel"
                                 aria-expanded="false"
                             >
-                                ? linkup@bitcircus101
+                                [?] linkup@bitcircus101
                             </button>
                         </div>
                     </div>
@@ -140,7 +136,7 @@
                 </section>
             </section>
             <div class="back-link">
-                <a href="index.html" class="btn btn-shimmer">← Zurück zur Startseite</a>
+                <a href="index.html" class="btn">← zurück zur startseite</a>
             </div>
         </div>
         </main>
@@ -148,30 +144,35 @@
             <div class="footer__grid">
                 <div class="footer__col">
                     <span class="footer__brand">bitcircus101</span>
-                    <span class="footer__tagline">Hackspace · Bonn · Dorotheenstraße 101</span>
+                    <span class="footer__tagline">offener hackspace · dorotheenstraße 101 · 53113 bonn</span>
                 </div>
                 <div class="footer__col footer__col--links">
                     <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener noreferrer">github ↗</a>
+                    <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">ko-fi ↗</a>
+                    <a href="feed.xml">rss</a>
                     <a href="impressum-datenschutz.html">impressum</a>
                 </div>
             </div>
             <div class="footer__bar">
+                <span class="footer__mode" aria-hidden="true">-- OPEN --</span>
+                <span class="footer__sep">│</span>
+                <span>fr ab 20:00</span>
+                <span class="footer__sep">│</span>
                 <span class="footer__year"></span>
-                <span class="footer__sep">·</span>
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
         <script defer src="storage.js?v=1"></script>
         <script defer src="ics-core.js?v=8"></script>
-        <script defer src="events.js?v=8"></script>
-        <script defer src="main.js?v=8"></script>
+        <script defer src="events.js?v=9"></script>
+        <script defer src="main.js?v=9"></script>
         <script>
             document.getElementById("linkup-info-btn").addEventListener("click", function() {
                 var panel = document.getElementById("linkup-info-panel");
                 var isHidden = panel.hidden;
                 panel.hidden = !isHidden;
                 this.setAttribute("aria-expanded", isHidden ? "true" : "false");
-                this.textContent = isHidden ? "× linkup@bitcircus101" : "? linkup@bitcircus101";
+                this.textContent = isHidden ? "[×] linkup@bitcircus101" : "[?] linkup@bitcircus101";
             });
         </script>
     </body>

@@ -94,7 +94,7 @@ container, which has them baked in).
 
 - German UI text, English code comments
 - No bundlers — edit HTML/CSS/JS directly (except `pnpm run build:layout` for `includes/*.html` and `pnpm run build:logos` when you touch `images/logo-slider/*`)
-- Terminal aesthetic: dark background, green accent, monospace font
+- Plain-text aesthetic: monochrome (ink on paper), monospace font, no accent color — interaction is reverse video; dark is the default, `◐` toggles the light scheme
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css` (applies to JS-built markup too: use the `hidden` attribute or a class, not `style="display:…"` in template strings)
 - **Commit messages:** use [conventional commits](https://www.conventionalcommits.org/) — `feat:`, `fix:`, `docs:`, `style:`, `chore:`, etc. Scopes in parentheses: `feat(events): add filter`. The release workflow parses these to auto-generate release notes.

@@ -50,7 +50,7 @@
         <meta name="ICBM" content="50.74042, 7.08942" />
 
         <!-- Theme color -->
-        <meta name="theme-color" content="#0d0d0d" />
+        <meta name="theme-color" content="#0a0a0a" />
 
         <!-- Canonical URL -->
         <link rel="canonical" href="https://bitcircus101.de/" />
@@ -60,10 +60,10 @@
         <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=6" />
         <link rel="manifest" href="site.webmanifest?v=6" />
         <script>
-            // No-flash: apply persisted calm theme before stylesheet paints.
-            try { if (localStorage.getItem("bc.theme") === "calm") document.documentElement.dataset.theme = "calm"; } catch (e) {}
+            // No-flash: apply the persisted light theme before the stylesheet paints.
+            try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=6" />
+        <link rel="stylesheet" href="style.css?v=7" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -102,9 +102,6 @@
         <header>
             <nav id="main-nav" aria-label="Hauptnavigation">
                 <a class="nav__brand" href="index.html">
-                    <span class="nav__prompt" aria-hidden="true"
-                        >&gt;<span class="nav__cursor">_</span></span
-                    >
                     <span class="nav__name">bitcircus101</span>
                 </a>
                 <button
@@ -113,122 +110,79 @@
                     aria-controls="main-nav"
                     aria-expanded="false"
                 >
-                    ☰ Menü
+                    ≡ menü
                 </button>
                 <ul class="nav__links">
-                    <li><a href="index.html#about">Über uns</a></li>
-                    <li><a href="events.html">Veranstaltungen</a></li>
-                    <li><a href="raum-nutzen.html">Raum nutzen</a></li>
-                    <li><a href="support.html" class="nav__cta">Unterstützen</a></li>
-                    <li><a href="support.html#projekte">Projekte</a></li>
-                    <li><a href="index.html#contact">Kontakt</a></li>
+                    <li><a href="index.html#about">/wir</a></li>
+                    <li><a href="events.html">/termine</a></li>
+                    <li><a href="raum-nutzen.html">/raum</a></li>
+                    <li><a href="support.html">/support</a></li>
+                    <li><a href="index.html#contact">/kontakt</a></li>
                 </ul>
                 <div class="nav__utils">
+                    <a href="feed.xml" class="nav__util" title="RSS-Feed der Termine" aria-label="RSS-Feed der Termine">rss</a>
                     <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
-                    <a href="feed.xml" class="nav__util nav__util--rss" title="RSS Feed" aria-label="RSS-Feed der Termine">&#9673; RSS</a>
-                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Ruhiges Design umschalten" title="Ruhiges Design (calm)">calm</button>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Helles Design umschalten" title="Invertieren (hell/dunkel)">◐</button>
                 </div>
             </nav>
         </header>
         <main id="main-content">
             <div class="container">
                 <section id="home">
-                    <h1>bitcircus101 – Hackspace Bonn<a class="section-anchor" href="#home" aria-label="Link zu: bitcircus101">#</a></h1>
-                    <div class="ascii-art-viewport" role="img" aria-label="bitcircus101 ASCII-Logo">
-                        <pre class="ascii-art">
-*%%%%%%%%%%++%+*%++%%%%%%++%%+%+*%%%+%+%%++*%++%++%%+%+*+%++%%%+%++*+%+%++++%+*%%+%%+%+%+*+++%%%%+%%+%%%%%%%%%%*
-*%%%%%%%%%%++%+*%++%%%%%%++%%+%+*%%%+%+%%++*%++%++%%+%+*+%++%%%+%++*+%+%++++%+*%%+%%+%+%+*+++%%%%+%%+%%%%%%%%%%*
-******************************************************************************************************+*********
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@%%%%@%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@  -@@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@           @%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@ -:      @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@  @@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@- % @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@% #%% @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@@   +=   =@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@@=     = ::: #       *@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@@    *@@ @: = * @ @ *- @@:   :@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@  :=:@@* =* =@ %- @  @  @  @@#-=   @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  =* @@@  %@  @@  @  @@  @:  @= %@@* *  @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  @ -@@@  @@  :@:  @@  :@+  @@   @%  @@@ -: @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%@@# @ %@@  #@@   @@   @@=   @@.  -@@   @@*  @@:@- @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%@@@  % @-  %%    @@    @@#    :@@@   @@@    @*  @@ @  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%@@@ @=@@@ @@=  =:  *  +     :*  =      #  =  %%@ :%@% % @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%@@% @ @+ #@ =@@.  :@@%   @@@:   @@@=  =@@%   @@* *@  *@ * @@@%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%@@- @ @=  =@.:: @@@% %@@@@ #@@@@@@*  @@@#+ @@@: @ @@:  =@-@ @@%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%@@% @ @=  %@@ @ *@   +%@    @@    @%*   @%%   %@ %. @@= .+@:@ @@%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%@@ @ @=  #@@ @  @*   @%@   @@%  @ .@@    @%%   @@ % =@@+ .#@-@ @@%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%@@- *%@ .=@@ #  @@   @%@:   @@  @@  @@@   %@@=  .@* # %@@: .@:@  @%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%@@ %:@:.:@@ # :@@   @%@%   @@:  @@@  #@@   @@@:   @% + :@@ .:@ @ @@%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%@@ @%# =@* + @@*   @@@@   @@   @@@@@  :@@   %@@-   @@ =  @@: %+*= @%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%@@@@@@@@@@@@@@: @@@@% =  @=   =@%%   %@   @@@@@@@@@  #@%   %@@    %# #  @@=@ @ @@@@@@@@@@@@@@@@@%%%%%%%*
-*%%%%%%%%*                           *:    .+   %%        :%=   =-    -+             :                %%%%%%%%%*
-*%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%*
-*%%%%%%%@%  @@@@@+   @@@  @@@%@@@@@@:   @@@@@@@%@@@@@%@@@@@@@@%@@@@@@@/  =@      @@/  =@%%%@@@   @@@@@@@%%%%%%%+
-*%%%%%%%@@  @@@@@@@@@@@#  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/   @@  @@  -/   @@%@@@@@   @@@@@@@@%%%%%%*
-*%%%%%%%@@       @   @      @      @@  @@     @:     :@  @@  @@     -@@  @@  @@. +@@  @@%@/      @/     @@%%%%%*
-*%%%%%%%@@  @@=  @   @@@  @@@  @@   @  @@  @  @  @@@  @  @@  @  @@@  @@  @@  @@  =@@  @@%@  *@@  @  @@@  @%%%%%*
-*%%%%%%%@@  @@*  @   @@*  @@@  @@@@@@  @@  @@@@  @@@@@@  @@  @@   @@@@@  @@  @@  =@@  @@%@  :@#  @       @%%%%%*
-*%%%%%%%@@  @@*  @   @@+  @@@  @@@@@@  @@  @@@@  @@@@@@  @@  @@@@    @@  @@  @@  =@@  @@%@  :@#  @   %@@@@%%%%%*
-*%%%%%%%@@  @@%  @   @@:  @@@  @@   @  @@  @@@@  @@@  @  @@. @= *@@  @@  @@  @@  :@@  %@@@  *@@  @  @@@  @%%%%%*
-*%%%%%%%@%      -@   @@@    @:     @@  *@  %@@@;     %@*     :@     +@@  =@      @@@  =  @      @@     /@%%%%%%*
-*%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%*
-*%%%%%%%@*                         .::::.::... .                .:::..::::..:                         %@%%%%%%%+
-*%%%%%%%@@@@@@@@@@@%. *@:@ @#:@ @@    ........:: @-@*@:@ @-@=@@=              @@ @ @% @.@* -@@@@@@@@@@@%%%%%%%%*
-*%%%%%%%%%%%%%%%%%@@@@@ :-*@ @.#+ @@ ..-====---- @:@=@ @ @ @=@* :---====-::-@@ @-+% @:*  @@@@@%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%@@* =:@@ % @- @@*=*#%%%%*+ @=@%@:@ @*@=@=@*%%%%%%*=#@@ #= * @+=+ @@@%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%@@@: @+@* @ @  @@-.:==-.@%@=@#@=@ @+@*@*@=.---:.=@@ =* @@@@#@ =@@@%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%@@@   @@:=@ * :@@=+**@@ @ % @ @ @ % @@ @@*#**@@ :+ @ @-@   @@@%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  -@ @:@ @ =@@+@% @@ @ @ @ @ @ @ @ @@+@@  @ @.@ @.  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@   @ @+# @ %@  @ @ @ @ @ @ @ @@ @  @- @ @*@ @   @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@ * @.+@- @ @@@ @ @ @ @ @ @ @ @%@@ @ #@ -@ - @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@ .% @ @ =+ @ @ @ @ @ @ @ @ :@ @  @ @ @  @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@:  @ @-@ @. @ @ @ @ @ @ @@ =@ @-@ @  -@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@ - @ @@@ @ -@:@ @ @ @@  @ @@@ @ : @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@ - @ *@% @ *@ @ @@= @ @@*:@   @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@  --=*@* * @-@@ % @@*.==  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@*  @:+*@==#  %:*@%-=%  *@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@   @.+%@:*=:@*::#   @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  .@=-%@@*==#:  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@  === -.*=  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@  @*@*  @@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@*    *@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@  @@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*
-*%%%%%%%%%%++%+*%++%%%%%%++%%+%+*%%%+%+%%++*%++%++%%+%+*+%++%%%+%++*+%+%++++%+*%%+%%+%+%+*+++%%%%+%%+%%%%%%%%%%*
-*%%%%%%%%%%++%+*%++%%%%%%++%%+%+*%%%+%+%%++*%++%++%%+%+*+%++%%%+%++*+%+%++++%+*%%+%%+%+%+*+++%%%%+%%+%%%%%%%%%%*
-                        </pre>
+                    <div class="man-head" aria-hidden="true">
+                        <span>BITCIRCUS101(7)</span>
+                        <span>Bonn Programmer's Manual</span>
+                        <span>BITCIRCUS101(7)</span>
                     </div>
-                    <p>
-                        Dorotheenstraße 101, Bonn. Freitags ab 20&nbsp;Uhr.
-                        Der Lötkolben ist warm, das WLAN schneller als deine Ausreden,
-                        und irgendjemand debuggt gerade etwas, das eigentlich
-                        schon längst hätte funktionieren sollen.
-                    </p>
-                    <p>
-                        Reinschauen kostet nichts außer Neugier.
-                        Kein Anmelden, kein Mitgliedsantrag, kein Elevator Pitch.
-                        Einfach Freitagabend vorbeikommen – den Rest regelt
-                        <code>localhost</code>.
-                    </p>
+
+                    <div class="ascii-art-viewport" role="img" aria-label="bitcircus101 – Zirkuszelt-Logo in ASCII">
+                        <pre class="ascii-art ascii-logo" aria-hidden="true">
+           ⚑
+          ╱ ╲
+         ╱   ╲
+        ╱     ╲
+    ___╱       ╲___
+   ╱               ╲
+  ╱ │ │ │ │ │ │ │ │ ╲
+ ╱__│_│_│_│_│_│_│_│__╲
+ │       ╱───╲       │
+ ╰───────╯   ╰───────╯
+<b>b i t c i r c u s 101</b></pre>
+                    </div>
+
+                    <dl class="man">
+                        <dt>NAME<a class="section-anchor" href="#home" aria-label="Link zu: Name">#</a></dt>
+                        <dd><h1 class="man__name"><b>bitcircus101</b> — offener Hackspace in Bonn</h1></dd>
+
+                        <dt>SYNOPSIS</dt>
+                        <dd><b>bitcircus101</b> [fr ab 20:00] [dorotheenstraße 101, 53113 bonn]</dd>
+                        <dd class="man__opt">keine anmeldung · kein mitgliedsantrag · kein elevator pitch</dd>
+
+                        <dt>DESCRIPTION</dt>
+                        <dd>
+                            Der Lötkolben ist warm, das WLAN schneller als deine Ausreden,
+                            und irgendjemand debuggt gerade etwas, das eigentlich schon
+                            längst hätte funktionieren sollen.
+                        </dd>
+                        <dd>
+                            Reinschauen kostet nichts außer Neugier. Einfach freitagabends
+                            vorbeikommen – den Rest regelt <code>localhost</code>.
+                        </dd>
+                    </dl>
                 </section>
 
-                <section id="about">
-                    <h2>Was hier passiert<a class="section-anchor" href="#about" aria-label="Link zu: Was hier passiert">#</a></h2>
+                <section id="about" class="panel">
+                    <h2>was hier passiert<a class="section-anchor" href="#about" aria-label="Link zu: was hier passiert">#</a></h2>
                     <p>
-                        Zwei Zimmer, reichlich Stauraum, 250 Mbit/s.
-                        Eine Community, die weiß was ein RFC ist –
+                        Zwei Zimmer, reichlich Stauraum, 250&nbsp;Mbit/s.
+                        Eine Community, die weiß, was ein RFC ist –
                         und trotzdem erklärt, wenn man fragt.
                     </p>
                     <p>
                         bitcircus101 will der Tech- und IT-Treffpunkt in Bonn sein –
-                        für Leute, die Dinge wirklich verstehen wollen.
-                        Open-Source Software, Datensouveränität, alte spannende Hardware
-                        und aktuelle KI-Themen: hier landet, was gerade wirklich passiert –
-                        nicht das, was in Hochglanz-Decks steht.
+                        für Leute, die Dinge wirklich verstehen wollen. Hier landet,
+                        was gerade wirklich passiert – nicht das, was in
+                        Hochglanz-Decks steht:
                     </p>
                     <ul>
                         <li>Open-Source Software, eigene Tools, Infrastruktur</li>
@@ -298,14 +252,14 @@
                             type="button"
                             aria-label="Vorheriges Bild"
                         >
-                            ❮
+                            &lt;
                         </button>
                         <button
                             class="carousel-button next"
                             type="button"
                             aria-label="Nächstes Bild"
                         >
-                            ❯
+                            &gt;
                         </button>
                         <button
                             class="carousel-toggle"
@@ -316,23 +270,25 @@
                             ⏸
                         </button>
                     </div>
+                    <p class="ascii-caption">fig. 1–3 — der raum · farbe auf hover</p>
                 </section>
 
-                <section id="next-events">
-                    <h2>Nächste Termine<a class="section-anchor" href="#next-events" aria-label="Link zu: Nächste Termine">#</a></h2>
+                <section id="next-events" class="panel">
+                    <h2>nächste termine<a class="section-anchor" href="#next-events" aria-label="Link zu: nächste termine">#</a></h2>
                     <div id="next-events-list" aria-live="polite" aria-busy="true">
                         <noscript><p><a href="events.html">Termine ansehen →</a></p></noscript>
                     </div>
                     <p class="events-more-link"><a href="events.html">alle Termine →</a></p>
                 </section>
 
-                <section id="support">
-                    <h2>Keep the lights on<a class="section-anchor" href="#support" aria-label="Link zu: Keep the lights on">#</a></h2>
+                <section id="support" class="panel">
+                    <h2>keep the lights on<a class="section-anchor" href="#support" aria-label="Link zu: keep the lights on">#</a></h2>
                     <p>
                         Miete, Strom, Internet – der Raum hat laufende Kosten.
                         bitcircus101 wird ausschließlich durch
-                        <strong>freiwillige Beiträge und Raumnutzung</strong> realisiert –
-                        bisher keine Fördermittel, kein Verein, kein Backup.
+                        <strong>freiwillige Beiträge und Raumnutzung</strong> getragen –
+                        keine Fördermittel, kein Verein, kein Backup.
+                        Der Balken unten in der Statusleiste zeigt den Live-Stand.
                     </p>
                     <p>
                         Du kannst bitcircus101 für Workshops, Meetups oder Projekte
@@ -341,49 +297,45 @@
                     </p>
                     <p class="text-center">
                         <a href="support.html" class="btn btn-primary btn-large">
-                            Unterstützen
+                            unterstützen
                         </a>
                         &nbsp;
-                        <a href="raum-nutzen.html" class="btn btn-large btn-shimmer">
-                            Raum nutzen
+                        <a href="raum-nutzen.html" class="btn btn-large">
+                            raum nutzen
                         </a>
                     </p>
                 </section>
 
-                <section id="contact">
-                    <h2>Kontakt<a class="section-anchor" href="#contact" aria-label="Link zu: Kontakt">#</a></h2>
+                <section id="contact" class="panel">
+                    <h2>kontakt<a class="section-anchor" href="#contact" aria-label="Link zu: kontakt">#</a></h2>
                     <div class="contact-info">
-                        <p>
-                            E‑Mail:
-                            <a href="mailto:info@bitcircus101.de"
-                                >info@bitcircus101.de</a
-                            >
-                        </p>
-                        <p>
-                            Instagram:
-                            <a
-                                href="https://instagram.com/bitcircus101"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                >@bitcircus101</a
-                            >
-                        </p>
-                        <div class="signal-decode-block">
-                            <a
-                                href="chat/index.html"
-                                class="btn signal-decode-btn"
-                                aria-label="Signal-Gruppen"
-                            ><span id="signal-decode-result" aria-hidden="true"></span></a>
-                        </div>
+                        <dl class="contact-list">
+                            <dt>mail</dt>
+                            <dd><a href="mailto:info@bitcircus101.de">info@bitcircus101.de</a></dd>
+                            <dt>instagram</dt>
+                            <dd><a href="https://instagram.com/bitcircus101" target="_blank" rel="noopener noreferrer">@bitcircus101 ↗</a></dd>
+                            <dt>signal</dt>
+                            <dd><a href="chat/index.html">gruppen ansehen →</a></dd>
+                        </dl>
                         <div class="location-card">
                             <h3 class="location-card__header">[ LOCATE ]</h3>
-                            <div class="location-card__body">
-                                <p class="location-card__name">bitcircus101</p>
-                                <p class="location-card__address">Dorotheenstraße 101<br>53113 Bonn</p>
-                                <p class="location-card__coords">50.74042° N · 7.08942° E</p>
+                            <div class="location-card__grid">
+                                <pre class="location-card__map-ascii ascii-fig" aria-hidden="true">
+        N                  ≈≈
+  ──────┬───────────╮      ≈≈
+        │ nordstadt │      ≈≈
+  <b>● dorotheenstr. 101</b>      ≈≈
+        │           ╰──────≈≈──→ beuel
+        │ ↓ 12 min         ≈≈
+        ▪ hbf              ≈≈ rhein</pre>
+                                <div class="location-card__body">
+                                    <p class="location-card__name">bitcircus101</p>
+                                    <p class="location-card__address">Dorotheenstraße 101<br>53113 Bonn</p>
+                                    <p class="location-card__coords">50.74042° N · 7.08942° E · not to scale</p>
+                                </div>
                             </div>
                             <button id="show-map-btn" class="location-card__map-btn" aria-label="OpenStreetMap-Karte laden und anzeigen">
-                                <span aria-hidden="true">$</span> map --load<span class="location-card__cursor" aria-hidden="true">▋</span>
+                                [ karte laden ]
                             </button>
                             <div id="osm-map-container" class="hidden">
                                 <iframe
@@ -462,60 +414,26 @@
             <div class="footer__grid">
                 <div class="footer__col">
                     <span class="footer__brand">bitcircus101</span>
-                    <span class="footer__tagline">Hackspace · Bonn · Dorotheenstraße 101</span>
+                    <span class="footer__tagline">offener hackspace · dorotheenstraße 101 · 53113 bonn</span>
                 </div>
                 <div class="footer__col footer__col--links">
                     <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener noreferrer">github ↗</a>
+                    <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">ko-fi ↗</a>
+                    <a href="feed.xml">rss</a>
                     <a href="impressum-datenschutz.html">impressum</a>
                 </div>
             </div>
             <div class="footer__bar">
+                <span class="footer__mode" aria-hidden="true">-- OPEN --</span>
+                <span class="footer__sep">│</span>
+                <span>fr ab 20:00</span>
+                <span class="footer__sep">│</span>
                 <span class="footer__year"></span>
-                <span class="footer__sep">·</span>
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
 
         <script defer src="storage.js?v=1"></script>
-        <script defer src="main.js?v=8"></script>
-        <script>
-        (function () {
-            var el = document.getElementById('signal-decode-result');
-            if (!el) return;
-            if (document.documentElement.dataset.theme === 'calm' ||
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                el.textContent = 'SIGNAL CHATS';
-                return;
-            }
-            var target = 'SIGNAL CHATS';
-            var pool = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ01';
-            var PAUSE_BEFORE = 18;
-            var FRAMES_PER   = 7;
-            var PAUSE_AFTER  = 45;
-            var total = PAUSE_BEFORE + target.length * FRAMES_PER + PAUSE_AFTER;
-            var step = 0;
-            function rand() { return pool[Math.floor(Math.random() * pool.length)]; }
-            function tick() {
-                if (step < PAUSE_BEFORE) {
-                    el.textContent = '';
-                } else if (step < PAUSE_BEFORE + target.length * FRAMES_PER) {
-                    var prog = Math.floor((step - PAUSE_BEFORE) / FRAMES_PER);
-                    var s = '';
-                    for (var i = 0; i < target.length; i++) {
-                        if (target[i] === ' ')    s += '\u00a0';
-                        else if (i < prog)         s += target[i];
-                        else if (i === prog)        s += rand();
-                        else                        s += '\u00a0';
-                    }
-                    el.textContent = s;
-                } else {
-                    el.textContent = target;
-                }
-                step = (step + 1) % total;
-                setTimeout(tick, step === 0 ? 1500 : 75);
-            }
-            tick();
-        })();
-        </script>
+        <script defer src="main.js?v=9"></script>
     </body>
 </html>
