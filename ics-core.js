@@ -133,6 +133,23 @@
     return out;
   }
 
+  /**
+   * Parse an RFC5545 DURATION ("PT2H", "P1DT1H30M", "P1W") into milliseconds.
+   * Returns null for an unparseable value. Weeks and days are counted as fixed
+   * 7-day / 24-hour spans (good enough for the short-lived events this site lists;
+   * no DST-aware day arithmetic).
+   */
+  function parseDuration(v) {
+    if (!v) return null;
+    var m = v.match(/^([+-])?P(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/);
+    // Reject a value with no time components at all (bare "P"/"PT") — those carry no duration.
+    if (!m || !m.slice(2).some(function (g) { return g != null; })) return null;
+    var sign = m[1] === "-" ? -1 : 1;
+    var secs = +(m[2] || 0) * 604800 + +(m[3] || 0) * 86400 +
+               +(m[4] || 0) * 3600 + +(m[5] || 0) * 60 + +(m[6] || 0);
+    return sign * secs * 1000;
+  }
+
   function clean(s) {
     // Unescape RFC5545 text escapes in a single pass. Crucially "\\" is consumed
     // atomically with its escaped char, so a literal backslash is never mistaken
@@ -169,6 +186,14 @@
         var dtstart = parseDate(ev.dtstart);
         if (!dtstart) { ev = null; continue; }
         var allDay = ev.dtstart.indexOf("T") === -1;
+        // Duration between start and end, reused for every RRULE instance. Prefer an
+        // explicit DTEND; fall back to DURATION; leave null when the source gives neither
+        // (consumers then apply their own default). All-day DTEND is the exclusive next
+        // day per RFC5545, so its span is a whole number of days.
+        var durationMs = null;
+        var dtend = ev.dtend ? parseDate(ev.dtend) : null;
+        if (dtend) durationMs = dtend - dtstart;
+        else if (ev.duration) durationMs = parseDuration(ev.duration);
         // Warn (once per source/zone) for foreign timezones — values stay floating local
         if (ev.tzid && ev.tzid !== "Europe/Berlin" && ev.dtstart.charAt(ev.dtstart.length - 1) !== "Z") {
           var wkey = sourceId + "|" + ev.tzid;
@@ -191,10 +216,12 @@
             var inst = {};
             for (var k in base) inst[k] = base[k];
             inst.dtstart = d;
+            inst.dtend = durationMs != null ? new Date(d.getTime() + durationMs) : null;
             events.push(inst);
           });
         } else {
           base.dtstart = dtstart;
+          base.dtend = durationMs != null ? new Date(dtstart.getTime() + durationMs) : null;
           events.push(base);
         }
         ev = null; continue;
@@ -206,6 +233,8 @@
       var key = rawKey.split(";")[0].toUpperCase();
       var val = line.slice(ci + 1);
       if (key === "DTSTART") { ev.dtstart = val; ev.tzid = parseTzid(rawKey); }
+      else if (key === "DTEND") ev.dtend = val;
+      else if (key === "DURATION") ev.duration = val;
       else if (key === "SUMMARY") ev.summary = val;
       else if (key === "DESCRIPTION") ev.description = val;
       else if (key === "LOCATION") ev.location = val;
@@ -242,6 +271,7 @@
 
   return {
     parseDate: parseDate,
+    parseDuration: parseDuration,
     nthWeekday: nthWeekday,
     expandRRule: expandRRule,
     clean: clean,

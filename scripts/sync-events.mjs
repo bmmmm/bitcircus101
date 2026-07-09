@@ -7,12 +7,12 @@
 
 const SITE_URL = "https://bitcircus101.de";
 
-import { readFileSync, writeFileSync, renameSync } from "node:fs";
+import { readFileSync, writeFileSync, renameSync, mkdirSync } from "node:fs";
 import ICSCore from "../ics-core.js";
 
 // ICS parsing primitives are shared with the browser fallback (events.js) via the
 // UMD module ics-core.js — single source of truth, no drift between the two parsers.
-const { parseDate, nthWeekday, expandRRule, clean, parseICS, eventAnchor } = ICSCore;
+const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, eventAnchor } = ICSCore;
 
 const CAL_DIR = "calendars";
 const CAL_CONFIG = `${CAL_DIR}/config.json`;
@@ -191,6 +191,9 @@ function toCards(icsEvents, cal) {
     .map((e) => {
       // ICS URL > config-level eventUrl > calendar-level url (external only)
       const eventLink = e.url || cal.eventUrl || (isExternal ? cal.url : null);
+      // Carry the parsed end through as local date/time strings so the iCal export can
+      // emit a real DTEND. Empty when the source ICS gave neither DTEND nor DURATION.
+      const end = e.dtend || null;
       return {
         title: e.summary,
         subtitle: "",
@@ -198,6 +201,8 @@ function toCards(icsEvents, cal) {
         location: cleanLocation(e.location),
         date: `${e.dtstart.getFullYear()}-${pad(e.dtstart.getMonth() + 1)}-${pad(e.dtstart.getDate())}`,
         time: e.allDay ? "" : `${pad(e.dtstart.getHours())}:${pad(e.dtstart.getMinutes())}`,
+        endDate: end ? `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}` : "",
+        endTime: end && !e.allDay ? `${pad(end.getHours())}:${pad(end.getMinutes())}` : "",
         tags: buildTags(e.summary, e.description, e.categories, cal.tags || []),
         type: guessType(e.summary),
         source: cal.name,
@@ -219,6 +224,20 @@ function toRFC822(isoOrDate) {
   return d.toUTCString().replace("GMT", "+0000");
 }
 
+/**
+ * Per-occurrence slot suffix (YYYYMMDD[THHMM]) and stable GUID/UID for a card.
+ * Recurring events share one UID across every instance, so the slot makes each
+ * occurrence unique — shared by the RSS <guid> and the iCal UID so both feeds
+ * key events identically (no drift between the two exports).
+ */
+function eventSlot(c) {
+  return c.date.replace(/-/g, "") + (c.time ? "T" + c.time.replace(":", "") : "");
+}
+function eventGuid(c) {
+  const slot = eventSlot(c);
+  return c.uid ? `${c.uid}-${slot}` : `bitcircus101-${slot}-${c.type}`;
+}
+
 function generateRSS(cards) {
   const now = new Date().toUTCString().replace("GMT", "+0000");
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -236,8 +255,7 @@ function generateRSS(cards) {
     // Recurring events share a single UID across every instance. Append the
     // occurrence's date+time slot so each item gets a unique GUID — otherwise feed
     // readers dedupe on GUID and collapse the whole series into one entry.
-    const slot = c.date.replace(/-/g, "") + (c.time ? "T" + c.time.replace(":", "") : "");
-    const guid = c.uid ? `${c.uid}-${slot}` : `bitcircus101-${slot}-${c.type}`;
+    const guid = eventGuid(c);
     const datePart = c.time ? `${c.date} ${c.time}` : c.date;
     const titleParts = [`[${datePart}] ${c.title}`];
     if (c.location) titleParts.push(`@ ${c.location}`);
@@ -265,6 +283,141 @@ function generateRSS(cards) {
 </rss>
 `;
   return xml;
+}
+
+// ── Generate iCal (.ics) feed ─────────────────────────────────────────────────
+
+// Static Europe/Berlin definition (CET/CEST, last-Sunday DST switch). Emitting
+// TZID=Europe/Berlin + this VTIMEZONE means the wall-clock strings from the cards
+// go out verbatim, unambiguous for any consumer and independent of the runner TZ.
+const VTIMEZONE_BERLIN = [
+  "BEGIN:VTIMEZONE",
+  "TZID:Europe/Berlin",
+  "BEGIN:DAYLIGHT",
+  "TZOFFSETFROM:+0100",
+  "TZOFFSETTO:+0200",
+  "TZNAME:CEST",
+  "DTSTART:19700329T020000",
+  "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU",
+  "END:DAYLIGHT",
+  "BEGIN:STANDARD",
+  "TZOFFSETFROM:+0200",
+  "TZOFFSETTO:+0100",
+  "TZNAME:CET",
+  "DTSTART:19701025T030000",
+  "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU",
+  "END:STANDARD",
+  "END:VTIMEZONE",
+];
+
+/** Escape an RFC5545 TEXT value: backslash, semicolon, comma, and newlines. */
+function icsEsc(s) {
+  return String(s ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,")
+    .replace(/\r?\n/g, "\\n");
+}
+
+/** Fold a content line to ≤75 octets per RFC5545 (continuation lines start with a space). */
+function icsFold(line) {
+  if (Buffer.byteLength(line, "utf8") <= 75) return line;
+  const out = [];
+  let cur = "";
+  for (const ch of line) {
+    // +1 keeps room for the leading space a continuation line adds (except the first).
+    if (Buffer.byteLength(cur + ch, "utf8") > (out.length ? 74 : 75)) {
+      out.push(cur);
+      cur = ch;
+    } else {
+      cur += ch;
+    }
+  }
+  if (cur) out.push(cur);
+  return out.join("\r\n ");
+}
+
+/** YYYYMMDD (all-day) or YYYYMMDDTHHMMSS (timed) from a card's local date/time strings. */
+function icsLocal(dateStr, timeStr) {
+  const d = dateStr.replace(/-/g, "");
+  return timeStr ? `${d}T${timeStr.replace(":", "")}00` : d;
+}
+
+/** UTC compact stamp (YYYYMMDDTHHMMSSZ) from an ISO string — TZ-independent. */
+function icsStampUTC(iso) {
+  return new Date(iso).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+}
+
+/** Add hours to a local date/time, rolling the date over. Returns {date, time}. */
+function addHoursLocal(dateStr, timeStr, hours) {
+  const [y, mo, da] = dateStr.split("-").map(Number);
+  const [h, mi] = timeStr.split(":").map(Number);
+  const d = new Date(y, mo - 1, da, h + hours, mi);
+  return {
+    date: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`,
+    time: `${pad(d.getHours())}:${pad(d.getMinutes())}`,
+  };
+}
+
+const ICS_DEFAULT_DURATION_H = 2;
+
+/**
+ * Serialize cards into a valid VCALENDAR. Each card becomes one VEVENT with a real
+ * DTSTART/DTEND so any standard aggregator (scalendarii included) reads start/end
+ * natively — no title-regex, no page-scrape. Times go out as TZID=Europe/Berlin
+ * (with the VTIMEZONE above); all-day events use VALUE=DATE with the exclusive
+ * next-day DTEND that RFC5545 mandates. DTEND falls back to +2h (timed) / +1 day
+ * (all-day) only when the source ICS carried neither DTEND nor DURATION.
+ */
+function generateICS(cards, nowISO) {
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//bitcircus101//events//DE",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "X-WR-CALNAME:bitcircus101 – Termine",
+    "X-WR-TIMEZONE:Europe/Berlin",
+    ...VTIMEZONE_BERLIN,
+  ];
+
+  for (const c of cards) {
+    const allDay = !c.time;
+    lines.push("BEGIN:VEVENT");
+    lines.push(`UID:${eventGuid(c)}@bitcircus101.de`);
+    lines.push(`DTSTAMP:${icsStampUTC(c.firstSeen || nowISO)}`);
+
+    if (allDay) {
+      lines.push(`DTSTART;VALUE=DATE:${icsLocal(c.date, "")}`);
+      // Exclusive end date: the source's DTEND date if present, else the next day.
+      let endDate = c.endDate;
+      if (!endDate) {
+        const [y, mo, da] = c.date.split("-").map(Number);
+        const nd = new Date(y, mo - 1, da + 1);
+        endDate = `${nd.getFullYear()}-${pad(nd.getMonth() + 1)}-${pad(nd.getDate())}`;
+      }
+      lines.push(`DTEND;VALUE=DATE:${icsLocal(endDate, "")}`);
+    } else {
+      lines.push(`DTSTART;TZID=Europe/Berlin:${icsLocal(c.date, c.time)}`);
+      let endDate = c.endDate, endTime = c.endTime;
+      if (!endTime) {
+        ({ date: endDate, time: endTime } = addHoursLocal(c.date, c.time, ICS_DEFAULT_DURATION_H));
+      }
+      lines.push(`DTEND;TZID=Europe/Berlin:${icsLocal(endDate, endTime)}`);
+    }
+
+    lines.push(`SUMMARY:${icsEsc(c.title)}`);
+    if (c.description) lines.push(`DESCRIPTION:${icsEsc(c.description)}`);
+    if (c.location) lines.push(`LOCATION:${icsEsc(c.location)}`);
+    const url = c.eventUrl || c.calendarUrl;
+    if (url) lines.push(`URL:${icsEsc(url)}`);
+    const cats = (c.tags || []).map((t) => t.replace(/^#/, "")).filter(Boolean);
+    if (cats.length) lines.push(`CATEGORIES:${icsEsc(cats.join(","))}`);
+    lines.push("END:VEVENT");
+  }
+
+  lines.push("END:VCALENDAR");
+  return lines.map(icsFold).join("\r\n") + "\r\n";
 }
 
 // ── Main ────────────────────────────────────────────────────────────────────
@@ -483,17 +636,32 @@ async function main() {
   const { events, sources, icsKeys } = aggregate(results, prev, new Date().toISOString());
   console.log(`Total: ${events.length} event cards from ${calendars.length} calendars`);
 
-  const output = { lastSync: new Date().toISOString(), sources, icsKeys, events };
+  const nowISO = new Date().toISOString();
+  const output = { lastSync: nowISO, sources, icsKeys, events };
   writeFileAtomic("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
-  // RSS only from calendars flagged rss:true (the primary feed).
+  // RSS + iCal only from calendars flagged rss:true (the primary feed).
   const primaryCards = events.filter((c) =>
     calendars.find((cal) => cal.name === c.source && cal.rss)
   );
+
   const rss = generateRSS(primaryCards);
-  writeFileAtomic("feed.xml", rss);
-  console.log("Written feed.xml");
+  const ics = generateICS(primaryCards, nowISO);
+
+  // Root feeds plus copies under events/ so a relative <link> resolved from the
+  // /events page (…/events/feed.xml, …/events/ical.ics) lands on the real feed
+  // instead of the events.html clean-URL fallback. See issue #1 / D2.
+  mkdirSync("events", { recursive: true });
+  for (const [file, data] of [
+    ["feed.xml", rss],
+    ["ical.ics", ics],
+    ["events/feed.xml", rss],
+    ["events/ical.ics", ics],
+  ]) {
+    writeFileAtomic(file, data);
+    console.log(`Written ${file}`);
+  }
 }
 
 // Run main() only when executed directly (not when imported by tests)
@@ -506,9 +674,10 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
 export {
   loadCalendars,
-  parseDate, nthWeekday, expandRRule, clean, parseICS,
+  parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS,
   isInternal, applyFilter, guessType, extractHashtags, keywordTags,
   buildTags, cleanLocation, truncateDesc, toCards,
-  escXml, toRFC822, generateRSS,
+  escXml, toRFC822, generateRSS, generateICS,
+  eventSlot, eventGuid,
   aggregate, eventAnchor,
 };
