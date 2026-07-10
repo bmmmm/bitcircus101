@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Fri, 10 Jul 2026 17:46:07 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 10 Jul 2026 19:24:56 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-07-10 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events.html#ev-2026-07-10-casual-linkup-bitcircus101-2fr</link>
-      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
-      <category>#meetup</category>
-      <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
-      <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20260710T2000</guid>
-    </item>
     <item>
       <title>[2026-07-13 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/events.html#ev-2026-07-13-treffen-bonner-fsfe-community</link>
@@ -137,6 +129,14 @@
       <category>#spieletreff</category>
       <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
       <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260811T1900</guid>
+    </item>
+    <item>
+      <title>[2026-08-14 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html#ev-2026-08-14-casual-linkup-bitcircus101-2fr</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <category>#meetup</category>
+      <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20260814T2000</guid>
     </item>
   </channel>
 </rss>

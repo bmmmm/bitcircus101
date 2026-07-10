@@ -23,19 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:casual-linkup-2fr@bitcircus101.de-20260710T2000@bitcircus101.de
-DTSTAMP:20260509T101220Z
-DTSTART;TZID=Europe/Berlin:20260710T200000
-DTEND;TZID=Europe/Berlin:20260710T230000
-SUMMARY:Casual Linkup@bitcircus101 (2FR)
-DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
- nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
- . https://bitcircus101.de
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://bitcircus101.de
-CATEGORIES:meetup
-END:VEVENT
-BEGIN:VEVENT
 UID:401025E2-82B0-4010-876A-22DFA0C51B32-20260713T1900@bitcircus101.de
 DTSTAMP:20260511T194503Z
 DTSTART;TZID=Europe/Berlin:20260713T190000
@@ -287,5 +274,18 @@ DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:casual-linkup-1fr@bitcircus101.de-20260904T2000@bitcircus101.de
+DTSTAMP:20260502T105121Z
+DTSTART;TZID=Europe/Berlin:20260904T200000
+DTEND;TZID=Europe/Berlin:20260904T230000
+SUMMARY:Casual Linkup@bitcircus101 (1FR)
+DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
+ nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
+ . https://bitcircus101.de
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup
 END:VEVENT
 END:VCALENDAR

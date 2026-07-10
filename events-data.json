@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-07-10T17:46:07.432Z",
+  "lastSync": "2026-07-10T19:24:56.404Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-10T17:46:07.173Z",
+      "fetchedAt": "2026-07-10T19:24:56.220Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-10T17:46:07.242Z",
+      "fetchedAt": "2026-07-10T19:24:56.223Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-10T17:46:07.215Z",
+      "fetchedAt": "2026-07-10T19:24:56.385Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -146,25 +146,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Casual Linkup@bitcircus101 (2FR)",
-      "subtitle": "",
-      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-07-10",
-      "time": "20:00",
-      "endDate": "2026-07-10",
-      "endTime": "23:00",
-      "tags": [
-        "#meetup"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
-      "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-05-09T10:12:20.662Z"
-    },
     {
       "title": "Treffen: Bonner FSFE Community",
       "subtitle": "",
@@ -908,6 +889,25 @@
       "uid": "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-11T18:34:04.184Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-09-04",
+      "time": "20:00",
+      "endDate": "2026-09-04",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-1fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-05-02T10:51:21.504Z"
     }
   ]
 }
