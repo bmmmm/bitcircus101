@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-07-13T02:38:50.260Z",
+  "lastSync": "2026-07-13T06:16:10.554Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-13T02:38:50.130Z",
+      "fetchedAt": "2026-07-13T06:16:10.358Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-13T02:38:50.200Z",
+      "fetchedAt": "2026-07-13T06:16:10.360Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-13T02:38:50.242Z",
+      "fetchedAt": "2026-07-13T06:16:10.427Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -266,14 +266,15 @@
     {
       "title": "Bonn Pride 🌈",
       "subtitle": "",
-      "description": "",
-      "location": "",
+      "description": "Wir erreichen einander über Matrix: https://matrix.to/#/!rGG7SnGWAWLm4dU6FJLaOcRbfUu2WSY6rl2NL_uiZIw?via=datenburg.org&via=alge.xyz  Thorsten aka bitnapper ist über Signal erreichbar: …",
+      "location": "Der Demo-Zug startet am Hofgarten in Bonn. Wir treffen uns an folgendem Standort: https://www.openstreetmap.org/?mlat=50.732557&mlon=7.103334#map=19/50.732557/7.103334",
       "date": "2026-07-18",
       "time": "11:00",
       "endDate": "2026-07-18",
       "endTime": "18:00",
       "tags": [
-        "#community"
+        "#eu",
+        "#datenburg"
       ],
       "type": "special",
       "source": "Datenburg e.V.",
