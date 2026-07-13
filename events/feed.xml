@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events.html</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Mon, 13 Jul 2026 15:25:57 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 13 Jul 2026 17:29:33 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-07-13 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/events.html#ev-2026-07-13-treffen-bonner-fsfe-community</link>
-      <description>Treffen: Bonner FSFE Community · 2026-07-13</description>
-      <category>#foss</category>
-      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
-      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20260713T1900</guid>
-    </item>
     <item>
       <title>[2026-07-14 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events.html#ev-2026-07-14-look-at-my-toys</link>
@@ -137,6 +129,16 @@
       <category>#meetup</category>
       <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20260814T2000</guid>
+    </item>
+    <item>
+      <title>[2026-08-18 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events.html#ev-2026-08-18-look-at-my-toys</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
+      <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260818T1900</guid>
     </item>
   </channel>
 </rss>
