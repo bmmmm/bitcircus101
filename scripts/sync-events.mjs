@@ -423,6 +423,96 @@ function generateICS(cards, nowISO) {
   return lines.map(icsFold).join("\r\n") + "\r\n";
 }
 
+// ── Generate schema.org JSON-LD (embedded in events.html) ──────────────────
+//
+// The RSS feed's item links point at events.html#ev-…, and calendar
+// aggregators following the feed (e.g. scalendarii's RSS path) fetch each
+// item page and read its schema.org JSON-LD — without this block the feed
+// resolves to zero events. Each node's `url` is byte-identical to the RSS
+// item <link> so both surfaces key the same occurrence.
+
+const JSONLD_START = "<!-- jsonld-events:start -->";
+const JSONLD_END = "<!-- jsonld-events:end -->";
+
+/** Last Sunday of a month as day-of-month — same DST model as VTIMEZONE_BERLIN. */
+function lastSundayOfMonth(year, monthIndex) {
+  const last = new Date(year, monthIndex + 1, 0);
+  return last.getDate() - last.getDay();
+}
+
+/**
+ * Europe/Berlin UTC offset for a local calendar date: CEST (+02:00) between
+ * the last Sunday of March and the last Sunday of October, CET (+01:00)
+ * otherwise. Edge hours around the 02:00/03:00 switch don't matter at event
+ * granularity. Deterministic and runner-TZ-independent, like the VTIMEZONE.
+ */
+function berlinUtcOffset(dateStr) {
+  const [y, m, day] = dateStr.split("-").map(Number);
+  const inDst =
+    (m > 3 || (m === 3 && day >= lastSundayOfMonth(y, 2))) &&
+    (m < 10 || (m === 10 && day < lastSundayOfMonth(y, 9)));
+  return inDst ? "+02:00" : "+01:00";
+}
+
+/** Shift a YYYY-MM-DD date string by whole days (local-date arithmetic). */
+function shiftDate(dateStr, days) {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  const shifted = new Date(y, m - 1, d + days);
+  const pad2 = (n) => String(n).padStart(2, "0");
+  return `${shifted.getFullYear()}-${pad2(shifted.getMonth() + 1)}-${pad2(shifted.getDate())}`;
+}
+
+/** One card as a schema.org Event node. */
+function toJsonLdEvent(c) {
+  const node = { "@type": "Event", name: c.subtitle ? `${c.title} – ${c.subtitle}` : c.title };
+
+  if (c.time) {
+    node.startDate = `${c.date}T${c.time}:00${berlinUtcOffset(c.date)}`;
+    if (c.endDate && c.endTime) {
+      node.endDate = `${c.endDate}T${c.endTime}:00${berlinUtcOffset(c.endDate)}`;
+    }
+  } else {
+    // All-day: date-only values. The card's endDate carries the ICS DTEND,
+    // an EXCLUSIVE next-day boundary — schema.org's endDate is the INCLUSIVE
+    // last day, so shift back one day (and drop it for single-day events).
+    node.startDate = c.date;
+    if (c.endDate) {
+      const inclusiveEnd = shiftDate(c.endDate, -1);
+      if (inclusiveEnd !== c.date) node.endDate = inclusiveEnd;
+    }
+  }
+
+  if (c.description) node.description = c.description;
+  if (c.location) node.location = { "@type": "Place", name: c.location };
+  node.url = `${SITE_URL}/events.html#${eventAnchor(c)}`;
+  const keywords = (c.tags || []).map((t) => t.replace(/^#/, "")).filter(Boolean);
+  if (keywords.length) node.keywords = keywords;
+  return node;
+}
+
+/** The full <script type="application/ld+json"> block for a card list. */
+function generateJsonLd(cards) {
+  const doc = { "@context": "https://schema.org", "@graph": cards.map(toJsonLdEvent) };
+  // "<" must never appear raw inside a <script> element — a "</script" in an
+  // upstream title/description would terminate the block mid-JSON.
+  const json = JSON.stringify(doc, null, 1).replace(/</g, "\\u003c");
+  return `<script type="application/ld+json">\n${json}\n</script>`;
+}
+
+/**
+ * Replace the marker-delimited JSON-LD block in a page. Returns null when the
+ * markers are missing/malformed so the caller can warn instead of corrupting
+ * the page. Idempotent: markers stay in place for the next sync.
+ */
+function injectJsonLd(html, scriptBlock) {
+  const start = html.indexOf(JSONLD_START);
+  const end = html.indexOf(JSONLD_END);
+  if (start === -1 || end === -1 || end < start) return null;
+  return (
+    html.slice(0, start + JSONLD_START.length) + "\n" + scriptBlock + "\n" + html.slice(end)
+  );
+}
+
 // ── Main ────────────────────────────────────────────────────────────────────
 
 /** Atomic write: write to a temp file then rename over the target (atomic on POSIX),
@@ -665,6 +755,22 @@ async function main() {
     writeFileAtomic(file, data);
     console.log(`Written ${file}`);
   }
+
+  // Embed the same primary cards as schema.org JSON-LD in events.html — the
+  // page every RSS item link resolves to. Guarded like the feed loops: a
+  // missing page or missing markers must not abort the sync.
+  try {
+    const page = readFileSync("events.html", "utf8");
+    const injected = injectJsonLd(page, generateJsonLd(primaryCards));
+    if (injected === null) {
+      console.warn("events.html: jsonld-events markers not found — JSON-LD skipped");
+    } else if (injected !== page) {
+      writeFileAtomic("events.html", injected);
+      console.log("Written events.html (JSON-LD block)");
+    }
+  } catch (err) {
+    console.warn(`events.html JSON-LD skipped: ${err.message}`);
+  }
 }
 
 // Run main() only when executed directly (not when imported by tests)
@@ -682,5 +788,6 @@ export {
   buildTags, cleanLocation, truncateDesc, toCards,
   escXml, toRFC822, generateRSS, generateICS,
   eventSlot, eventGuid,
+  berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
   aggregate, eventAnchor,
 };

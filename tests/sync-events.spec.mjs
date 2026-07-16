@@ -13,6 +13,7 @@ import {
   applyFilter, buildTags, toCards,
   escXml, toRFC822, generateRSS, generateICS,
   eventSlot, eventGuid,
+  berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
   aggregate, eventAnchor,
 } from "../scripts/sync-events.mjs";
 
@@ -1022,5 +1023,112 @@ describe("generateICS", () => {
     assert.ok(!ics.includes("DESCRIPTION:"));
     assert.ok(!ics.includes("LOCATION:"));
     assert.ok(!/\r\nURL:/.test(ics));
+  });
+});
+
+// ── JSON-LD (events.html) ─────────────────────────────────────────────────
+
+describe("berlinUtcOffset", () => {
+  it("returns CEST in summer and CET in winter", () => {
+    assert.equal(berlinUtcOffset("2026-07-17"), "+02:00");
+    assert.equal(berlinUtcOffset("2026-01-15"), "+01:00");
+  });
+
+  it("switches on the last Sundays of March and October (2026: Mar 29 / Oct 25)", () => {
+    assert.equal(berlinUtcOffset("2026-03-28"), "+01:00");
+    assert.equal(berlinUtcOffset("2026-03-29"), "+02:00");
+    assert.equal(berlinUtcOffset("2026-10-24"), "+02:00");
+    assert.equal(berlinUtcOffset("2026-10-25"), "+01:00");
+  });
+});
+
+describe("toJsonLdEvent", () => {
+  const timed = { title: "linkup", subtitle: "", description: "Kurzvortraege", location: "bitcircus101, Bonn",
+    date: "2026-07-17", time: "20:00", endDate: "2026-07-17", endTime: "23:00",
+    tags: ["#linkup", "#community"], type: "special", calendarUrl: "https://example.org" };
+
+  it("emits offset-qualified timestamps for timed events", () => {
+    const node = toJsonLdEvent(timed);
+    assert.equal(node["@type"], "Event");
+    assert.equal(node.startDate, "2026-07-17T20:00:00+02:00");
+    assert.equal(node.endDate, "2026-07-17T23:00:00+02:00");
+  });
+
+  it("keys the node url to the RSS item anchor, byte-identical", () => {
+    const node = toJsonLdEvent(timed);
+    assert.equal(node.url, `https://bitcircus101.de/events.html#${eventAnchor(timed)}`);
+  });
+
+  it("emits location as a Place and strips the # off keywords", () => {
+    const node = toJsonLdEvent(timed);
+    assert.deepEqual(node.location, { "@type": "Place", name: "bitcircus101, Bonn" });
+    assert.deepEqual(node.keywords, ["linkup", "community"]);
+  });
+
+  it("converts the card's exclusive all-day end to schema.org's inclusive endDate", () => {
+    const twoDay = { ...timed, time: "", endTime: "", date: "2026-08-01", endDate: "2026-08-03" };
+    const node = toJsonLdEvent(twoDay);
+    assert.equal(node.startDate, "2026-08-01"); // date-only, no offset
+    assert.equal(node.endDate, "2026-08-02"); // exclusive Aug 3 → inclusive Aug 2
+  });
+
+  it("drops endDate entirely for a single-day all-day event", () => {
+    const oneDay = { ...timed, time: "", endTime: "", date: "2026-08-01", endDate: "2026-08-02" };
+    const node = toJsonLdEvent(oneDay);
+    assert.equal(node.startDate, "2026-08-01");
+    assert.equal("endDate" in node, false);
+  });
+
+  it("omits empty optional fields instead of emitting blanks", () => {
+    const bare = { title: "T", subtitle: "", description: "", location: "",
+      date: "2026-03-21", time: "20:00", endDate: "", endTime: "", tags: [], type: "special" };
+    const node = toJsonLdEvent(bare);
+    assert.equal("description" in node, false);
+    assert.equal("location" in node, false);
+    assert.equal("keywords" in node, false);
+    assert.equal("endDate" in node, false);
+  });
+});
+
+describe("generateJsonLd", () => {
+  it("wraps the events in a parseable @graph document", () => {
+    const cards = [
+      { title: "A", subtitle: "", description: "", location: "", date: "2026-07-17",
+        time: "20:00", endDate: "", endTime: "", tags: [], type: "special" },
+      { title: "B", subtitle: "", description: "", location: "", date: "2026-07-18",
+        time: "", endDate: "", endTime: "", tags: [], type: "special" },
+    ];
+    const block = generateJsonLd(cards);
+    const m = /<script type="application\/ld\+json">\n([\s\S]*)\n<\/script>/.exec(block);
+    assert.ok(m, "script wrapper present");
+    const doc = JSON.parse(m[1]);
+    assert.equal(doc["@context"], "https://schema.org");
+    assert.equal(doc["@graph"].length, 2);
+    assert.equal(doc["@graph"][0]["@type"], "Event");
+  });
+
+  it("escapes < so upstream text can never terminate the script block", () => {
+    const evil = { title: 'Bad </script><script>alert(1)</script>', subtitle: "", description: "",
+      location: "", date: "2026-07-17", time: "20:00", endDate: "", endTime: "", tags: [], type: "special" };
+    const block = generateJsonLd([evil]);
+    // Exactly one </script> in the whole block: the wrapper's own closer.
+    assert.equal(block.match(/<\/script/g).length, 1);
+    const m = /<script type="application\/ld\+json">\n([\s\S]*)\n<\/script>/.exec(block);
+    assert.equal(JSON.parse(m[1])["@graph"][0].name, 'Bad </script><script>alert(1)</script>');
+  });
+});
+
+describe("injectJsonLd", () => {
+  const page = "<head>\n<!-- jsonld-events:start -->\nold\n<!-- jsonld-events:end -->\n</head>";
+
+  it("replaces the marker-delimited block and stays idempotent", () => {
+    const once = injectJsonLd(page, "NEW");
+    assert.ok(once.includes("<!-- jsonld-events:start -->\nNEW\n<!-- jsonld-events:end -->"));
+    assert.ok(!once.includes("old"));
+    assert.equal(injectJsonLd(once, "NEW"), once);
+  });
+
+  it("returns null when the markers are missing, so the caller can warn", () => {
+    assert.equal(injectJsonLd("<head></head>", "NEW"), null);
   });
 });
