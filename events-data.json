@@ -1,22 +1,22 @@
 {
-  "lastSync": "2026-07-17T17:36:59.905Z",
+  "lastSync": "2026-07-17T22:43:36.726Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-17T17:36:59.734Z",
+      "fetchedAt": "2026-07-17T22:43:36.563Z",
       "status": "ok",
       "events": 20,
-      "added": 0,
+      "added": 2,
       "removed": 0,
-      "total": 50,
+      "total": 52,
       "past": 3,
-      "upcoming": 47
+      "upcoming": 49
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-17T17:36:59.886Z",
+      "fetchedAt": "2026-07-17T22:43:36.567Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-17T17:36:59.616Z",
+      "fetchedAt": "2026-07-17T22:43:36.637Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -89,7 +89,9 @@
       "EEC2D2D1-3DC4-4237-8934-7CD8403B60A0",
       "B354382B-F062-4757-840F-16C0C77178D9",
       "7856CDF7-054E-46BC-9EA9-AECA10B0FDF3",
-      "E704D718-5974-48A1-BD1E-32D6272B9572"
+      "E704D718-5974-48A1-BD1E-32D6272B9572",
+      "44C992F9-EF68-4692-888D-882EF6F3B4BD",
+      "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA"
     ],
     "Datenburg e.V.": [
       "a027fbdd-6b08-4f8b-89c4-65fbcd7f2c66",
@@ -146,27 +148,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Linkup@bitcircus101",
-      "subtitle": "",
-      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-07-17",
-      "time": "20:00",
-      "endDate": "2026-07-17",
-      "endTime": "22:30",
-      "tags": [
-        "#meetup",
-        "#lightning-talks",
-        "#talk"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
-      "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-05-15T21:15:10.361Z"
-    },
     {
       "title": "Pride Bonn",
       "subtitle": "",
@@ -907,6 +888,25 @@
       "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-09-11",
+      "time": "20:00",
+      "endDate": "2026-09-11",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-05-09T10:12:20.662Z"
     }
   ]
 }
