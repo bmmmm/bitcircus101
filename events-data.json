@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-07-18T08:18:18.909Z",
+  "lastSync": "2026-07-18T09:55:42.135Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-18T08:18:18.665Z",
+      "fetchedAt": "2026-07-18T09:55:41.971Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-18T08:18:18.639Z",
+      "fetchedAt": "2026-07-18T09:55:42.115Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-18T08:18:18.668Z",
+      "fetchedAt": "2026-07-18T09:55:42.083Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -148,44 +148,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Pride Bonn",
-      "subtitle": "",
-      "description": "Es gibt wieder eine queere Pride Demonstration in Bonn. Sie ist am 18. Juli 2026. Wir starten an der Rheinlust. Das ist in Beuel am Rhein. Die Demonstration endet am Münsterplatz. Da gibt es noch …",
-      "location": "TBA",
-      "date": "2026-07-18",
-      "time": "11:00",
-      "endDate": "2026-07-18",
-      "endTime": "15:00",
-      "tags": [
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "B354382B-F062-4757-840F-16C0C77178D9",
-      "calendarUrl": "https://pridebonn.org/einfache-sprache/",
-      "eventUrl": "https://pridebonn.org/einfache-sprache/",
-      "firstSeen": "2026-05-22T19:12:16.999Z"
-    },
-    {
-      "title": "Bonn Pride 🌈",
-      "subtitle": "",
-      "description": "Wir erreichen einander über Matrix: https://matrix.to/#/!rGG7SnGWAWLm4dU6FJLaOcRbfUu2WSY6rl2NL_uiZIw?via=datenburg.org&via=alge.xyz  Thorsten aka bitnapper ist über Signal erreichbar: …",
-      "location": "Der Demo-Zug startet am Hofgarten in Bonn. Wir treffen uns an folgendem Standort: https://www.openstreetmap.org/?mlat=50.732557&mlon=7.103334#map=19/50.732557/7.103334",
-      "date": "2026-07-18",
-      "time": "11:00",
-      "endDate": "2026-07-18",
-      "endTime": "18:00",
-      "tags": [
-        "#eu",
-        "#datenburg"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "21889663-ee19-434a-919e-1f3edc57d309",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-05-28T20:42:40.578Z"
-    },
     {
       "title": "Offene Datenburg",
       "subtitle": "",
@@ -907,6 +869,44 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-09T10:12:20.662Z"
+    },
+    {
+      "title": "Treffen: Bonner FSFE Community",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-09-14",
+      "time": "19:00",
+      "endDate": "2026-09-14",
+      "endTime": "22:00",
+      "tags": [
+        "#foss"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
+      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "firstSeen": "2026-05-11T19:45:03.502Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-09-15",
+      "time": "18:00",
+      "endDate": "2026-09-15",
+      "endTime": "22:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }

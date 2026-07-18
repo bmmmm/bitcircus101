@@ -23,19 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:B354382B-F062-4757-840F-16C0C77178D9-20260718T1100@bitcircus101.de
-DTSTAMP:20260522T191216Z
-DTSTART;TZID=Europe/Berlin:20260718T110000
-DTEND;TZID=Europe/Berlin:20260718T150000
-SUMMARY:Pride Bonn
-DESCRIPTION:Es gibt wieder eine queere Pride Demonstration in Bonn. Sie ist
-  am 18. Juli 2026. Wir starten an der Rheinlust. Das ist in Beuel am Rhein
- . Die Demonstration endet am Münsterplatz. Da gibt es noch …
-LOCATION:TBA
-URL:https://pridebonn.org/einfache-sprache/
-CATEGORIES:offener-abend
-END:VEVENT
-BEGIN:VEVENT
 UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260721T1900@bitcircus101.de
 DTSTAMP:20260519T185916Z
 DTSTART;TZID=Europe/Berlin:20260721T190000
@@ -277,5 +264,15 @@ DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://bitcircus101.de
 CATEGORIES:meetup
+END:VEVENT
+BEGIN:VEVENT
+UID:401025E2-82B0-4010-876A-22DFA0C51B32-20260914T1900@bitcircus101.de
+DTSTAMP:20260511T194503Z
+DTSTART;TZID=Europe/Berlin:20260914T190000
+DTEND;TZID=Europe/Berlin:20260914T220000
+SUMMARY:Treffen: Bonner FSFE Community
+LOCATION:Dorotheenstraße 101 Bonn
+URL:https://wiki.fsfe.org/LocalGroups/Bonn
+CATEGORIES:foss
 END:VEVENT
 END:VCALENDAR
