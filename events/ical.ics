@@ -275,4 +275,17 @@ LOCATION:Dorotheenstraße 101 Bonn
 URL:https://wiki.fsfe.org/LocalGroups/Bonn
 CATEGORIES:foss
 END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260915T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20260915T190000
+DTEND;TZID=Europe/Berlin:20260915T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
+END:VEVENT
 END:VCALENDAR
