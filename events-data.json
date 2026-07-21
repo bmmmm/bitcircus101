@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-07-21T16:54:11.341Z",
+  "lastSync": "2026-07-21T18:15:07.551Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-21T16:54:11.145Z",
+      "fetchedAt": "2026-07-21T18:15:07.286Z",
       "status": "ok",
-      "events": 21,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 52,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-21T16:54:11.150Z",
+      "fetchedAt": "2026-07-21T18:15:07.528Z",
       "status": "ok",
-      "events": 19,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 48,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-21T16:54:11.159Z",
+      "fetchedAt": "2026-07-21T18:15:07.532Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -148,26 +148,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-07-21",
-      "time": "19:00",
-      "endDate": "2026-07-21",
-      "endTime": "22:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
     {
       "title": "Spieleabend",
       "subtitle": "",
@@ -908,6 +888,25 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Raspberry Pi Workshop",
+      "subtitle": "",
+      "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
+      "location": "",
+      "date": "2026-09-17",
+      "time": "19:00",
+      "endDate": "2026-09-17",
+      "endTime": "22:00",
+      "tags": [
+        "#workshop",
+        "#datenburg"
+      ],
+      "type": "workshop",
+      "source": "Datenburg e.V.",
+      "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
