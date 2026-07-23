@@ -275,4 +275,17 @@ LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
 END:VEVENT
+BEGIN:VEVENT
+UID:19471ECE-D83E-4AA6-B70D-545B3F281B66-20260918T2000@bitcircus101.de
+DTSTAMP:20260515T211510Z
+DTSTART;TZID=Europe/Berlin:20260918T200000
+DTEND;TZID=Europe/Berlin:20260918T223000
+SUMMARY:Linkup@bitcircus101
+DESCRIPTION:Linkup@bitcircus101 is our signature monthly meetup for anyone 
+ in Bonn’s tech scene to come together\, share ideas and unwind. Every th
+ ird Friday of the month starting at 8 PM\, we kick things off with …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup,lightning-talks,talk
+END:VEVENT
 END:VCALENDAR
