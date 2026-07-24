@@ -23,30 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:E704D718-5974-48A1-BD1E-32D6272B9572-20260724T1930@bitcircus101.de
-DTSTAMP:20260623T200208Z
-DTSTART;TZID=Europe/Berlin:20260724T193000
-DTEND;TZID=Europe/Berlin:20260724T203000
-SUMMARY:Not my repo
-DESCRIPTION:Stelle ein repository deiner Wahl vor. 5-10 Minuten.
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://bitcircus101.de/events
-CATEGORIES:community
-END:VEVENT
-BEGIN:VEVENT
-UID:casual-linkup-4fr@bitcircus101.de-20260724T2000@bitcircus101.de
-DTSTAMP:20260423T190953Z
-DTSTART;TZID=Europe/Berlin:20260724T200000
-DTEND;TZID=Europe/Berlin:20260724T230000
-SUMMARY:Casual Linkup@bitcircus101 (4FR)
-DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
- nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
- . https://bitcircus101.de
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://bitcircus101.de
-CATEGORIES:meetup
-END:VEVENT
-BEGIN:VEVENT
 UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260728T1900@bitcircus101.de
 DTSTAMP:20260519T185916Z
 DTSTART;TZID=Europe/Berlin:20260728T190000
@@ -287,5 +263,25 @@ DESCRIPTION:Linkup@bitcircus101 is our signature monthly meetup for anyone
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://bitcircus101.de
 CATEGORIES:meetup,lightning-talks,talk
+END:VEVENT
+BEGIN:VEVENT
+UID:6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260919T1400@bitcircus101.de
+DTSTAMP:20260724T181621Z
+DTSTART;TZID=Europe/Berlin:20260919T140000
+DTEND;TZID=Europe/Berlin:20260919T190000
+SUMMARY:32. Offene Ateliers
+LOCATION:Dorotheenstraße 101 Bonn
+URL:https://offene-ateliers-bonn.de/
+CATEGORIES:offener-abend
+END:VEVENT
+BEGIN:VEVENT
+UID:6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260920T1400@bitcircus101.de
+DTSTAMP:20260724T181621Z
+DTSTART;TZID=Europe/Berlin:20260920T140000
+DTEND;TZID=Europe/Berlin:20260920T190000
+SUMMARY:32. Offene Ateliers
+LOCATION:Dorotheenstraße 101 Bonn
+URL:https://offene-ateliers-bonn.de/
+CATEGORIES:offener-abend
 END:VEVENT
 END:VCALENDAR

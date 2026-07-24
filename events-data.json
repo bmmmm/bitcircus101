@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-07-24T16:41:54.628Z",
+  "lastSync": "2026-07-24T18:16:21.488Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-24T16:41:54.442Z",
+      "fetchedAt": "2026-07-24T18:16:21.385Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-24T16:41:54.609Z",
+      "fetchedAt": "2026-07-24T18:16:21.402Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-24T16:41:54.532Z",
+      "fetchedAt": "2026-07-24T18:16:21.454Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -148,44 +148,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Not my repo",
-      "subtitle": "",
-      "description": "Stelle ein repository deiner Wahl vor. 5-10 Minuten.",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-07-24",
-      "time": "19:30",
-      "endDate": "2026-07-24",
-      "endTime": "20:30",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "E704D718-5974-48A1-BD1E-32D6272B9572",
-      "calendarUrl": "https://bitcircus101.de/events",
-      "eventUrl": "https://bitcircus101.de/events",
-      "firstSeen": "2026-06-23T20:02:08.404Z"
-    },
-    {
-      "title": "Casual Linkup@bitcircus101 (4FR)",
-      "subtitle": "",
-      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-07-24",
-      "time": "20:00",
-      "endDate": "2026-07-24",
-      "endTime": "23:00",
-      "tags": [
-        "#meetup"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
-      "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-04-23T19:09:53.469Z"
-    },
     {
       "title": "Offene Datenburg",
       "subtitle": "",
@@ -910,6 +872,44 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-15T21:15:10.361Z"
+    },
+    {
+      "title": "32. Offene Ateliers",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-09-19",
+      "time": "14:00",
+      "endDate": "2026-09-19",
+      "endTime": "19:00",
+      "tags": [
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
+      "calendarUrl": "https://offene-ateliers-bonn.de/",
+      "eventUrl": "https://offene-ateliers-bonn.de/",
+      "firstSeen": "2026-07-24T18:16:21.482Z"
+    },
+    {
+      "title": "32. Offene Ateliers",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-09-20",
+      "time": "14:00",
+      "endDate": "2026-09-20",
+      "endTime": "19:00",
+      "tags": [
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
+      "calendarUrl": "https://offene-ateliers-bonn.de/",
+      "eventUrl": "https://offene-ateliers-bonn.de/",
+      "firstSeen": "2026-07-24T18:16:21.482Z"
     }
   ]
 }
