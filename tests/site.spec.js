@@ -245,8 +245,10 @@ test.describe('Funding goals (fused into support.html)', () => {
         const res = await request.get('/donations.html');
         expect(res.status()).toBe(200);
         const html = await res.text();
+        // The refresh target stays relative (works on a plain local file server
+        // too); the canonical must name the clean URL the site actually serves.
         expect(html).toMatch(/http-equiv=["']refresh["'][^>]*support\.html/i);
-        expect(html).toMatch(/rel=["']canonical["'][^>]*support\.html/i);
+        expect(html).toMatch(/rel=["']canonical["'][^>]*bitcircus101\.de\/support["']/i);
     });
 
     test('support.html renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
