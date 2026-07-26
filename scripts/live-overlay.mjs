@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 /**
  * Deploy step: overlay a git ref (normally origin/main) onto the live checkout
- * while preserving live-only generated files, then strip dev-only files.
+ * while preserving live-only generated files, strip dev-only files, then
+ * prune anything left over from a previous deploy that is no longer tracked
+ * on <ref> (e.g. a page deleted from main) so live doesn't accumulate dead
+ * files forever.
  *
  * Extracted from .github/workflows/deploy.yml so the logic is runnable and
  * testable locally (tests/deploy-scripts.spec.mjs) — the inline-bash version
@@ -63,9 +66,11 @@ for (const f of FEEDS) {
 }
 console.error(`live-overlay: saved ${saved.length}/${FEEDS.length} live-only files`);
 
-// Overlay: adds/overwrites everything tracked on <ref>; deliberately does not
-// delete files that exist only on live (that is what keeps CI-generated
-// artifacts alive) — hence the explicit dev-file removal below.
+// Overlay: adds/overwrites everything tracked on <ref>. `git checkout <ref>
+// -- .` never deletes paths that are absent from <ref> on its own, which is
+// exactly what keeps CI-generated artifacts alive across deploys — but it
+// also means a page removed from main used to stay live forever. The prune
+// step below (after dev-file removal + feed restore) closes that gap.
 execFileSync("git", ["checkout", ref, "--", "."], { stdio: "inherit" });
 
 for (const d of REMOVE_DIRS) fs.rmSync(d, { recursive: true, force: true });
@@ -77,3 +82,32 @@ for (const f of saved) {
 }
 fs.rmSync(stash, { recursive: true, force: true });
 console.error(`live-overlay: overlaid ${ref}, restored ${saved.length} files`);
+
+// Prune stale live-only files: anything still tracked from a previous deploy
+// that is neither on <ref> anymore nor a CI-owned feed. This is what let
+// e.g. goals.html (deleted from main) keep serving on live indefinitely.
+const refFiles = new Set(
+    execFileSync("git", ["ls-tree", "-r", "--name-only", ref], { encoding: "utf8" })
+        .split("\n")
+        .filter(Boolean),
+);
+const feedSet = new Set(FEEDS);
+const liveFiles = execFileSync("git", ["ls-files"], { encoding: "utf8" })
+    .split("\n")
+    .filter(Boolean);
+
+let pruned = 0;
+for (const f of liveFiles) {
+    if (refFiles.has(f) || feedSet.has(f)) continue;
+    fs.rmSync(f, { force: true });
+    pruned++;
+
+    // Walk up and remove now-empty parent directories.
+    let dir = path.dirname(f);
+    while (dir && dir !== ".") {
+        if (!fs.existsSync(dir) || fs.readdirSync(dir).length > 0) break;
+        fs.rmdirSync(dir);
+        dir = path.dirname(dir);
+    }
+}
+console.error(`live-overlay: pruned ${pruned} stale live-only file(s)`);

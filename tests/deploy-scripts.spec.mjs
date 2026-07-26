@@ -82,6 +82,28 @@ describe("live-overlay.mjs", () => {
         const res = spawnSync("node", [path.join(SCRIPTS, "live-overlay.mjs")], { cwd: dir });
         assert.equal(res.status, 1);
     });
+
+    it("prunes stale live-only files while preserving ref-tracked files and CI feeds", () => {
+        const dir = fixture();
+        // Track a "previous deploy" commit on live: a page that has since been
+        // removed from main (the goals.html scenario found in production) plus
+        // the CI-owned feeds fixture() already wrote to the working tree.
+        write(dir, "old-page.html", "stale content");
+        write(dir, "old-assets/legacy.js", "stale asset");
+        git(dir, "add", "-A");
+        git(dir, "commit", "-qm", "previous deploy state");
+
+        execFileSync("node", [path.join(SCRIPTS, "live-overlay.mjs"), "main"], { cwd: dir });
+
+        // stale page (absent from ref) is pruned, and its now-empty dir with it
+        assert.equal(fs.existsSync(path.join(dir, "old-page.html")), false);
+        assert.equal(fs.existsSync(path.join(dir, "old-assets")), false);
+        // file present on the ref survives
+        assert.equal(fs.readFileSync(path.join(dir, "index.html"), "utf8"), "main-content");
+        // FEEDS entries (tracked on live only, absent from ref) survive pruning
+        assert.equal(fs.readFileSync(path.join(dir, "events-data.json"), "utf8"), "generated-events");
+        assert.equal(fs.readFileSync(path.join(dir, "events/feed.xml"), "utf8"), "generated-feed-copy");
+    });
 });
 
 describe("cache-bust.mjs", () => {
