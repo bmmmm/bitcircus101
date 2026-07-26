@@ -158,7 +158,7 @@ Each source can also set `tags` (always-added hashtags), `cap` (per-source slot 
 
 ### Hidden and unlisted pages
 
-The sitemap generator honors three exclusion mechanisms automatically: `noindex` meta, `robots.txt` `Disallow`, and `exclude-paths` in `sitemap.yml` (only for pages *without* `noindex` — currently the Google verification stub and `donations.html`).
+The sitemap generator honors three exclusion mechanisms automatically: `noindex` meta, `robots.txt` `Disallow`, and the `exclude-paths` option of the sitemap-generation step in `deploy.yml` (only for pages *without* `noindex` — currently the Google verification stub and `donations.html`).
 
 - **Hidden pages** (e.g. `/ascii/`): use a subfolder like `ascii/index.html`, keep it out of `includes/site-header.html` **and** `scripts/inject-layout.mjs` (partials assume root-relative links); mark `noindex` and `Disallow` it in `robots.txt`.
 - **Reachable-but-unlisted pages** (`invite-*/`, `join-*/` Signal redirect stubs): `noindex` only, intentionally **not** `Disallow`ed — they're shareable links; don't re-add a robots block "for consistency".
