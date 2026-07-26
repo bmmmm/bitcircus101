@@ -2,7 +2,8 @@
 /**
  * Post-deploy smoke test: poll the live site until the freshly deployed asset
  * hash shows up (GitHub Pages builds asynchronously after the push), then
- * verify the hashed stylesheet resolves and unknown paths return a real 404.
+ * verify the hashed stylesheet resolves, unknown paths return a real 404, and
+ * every page the sitemap advertises answers 200 without a redirect.
  *
  * Usage: node scripts/smoke-live.mjs <base-url> [expected-hash]
  *   e.g. node scripts/smoke-live.mjs https://bitcircus101.de abc12345
@@ -25,6 +26,16 @@ const INTERVAL = Number(process.env.SMOKE_INTERVAL_MS || 15000);
 const FETCH_TIMEOUT = Math.min(10000, TIMEOUT);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const get = (url) => fetch(url, { redirect: "follow", signal: AbortSignal.timeout(FETCH_TIMEOUT) });
+// Deliberately does NOT follow redirects: a sitemap entry that 3xx's has to be
+// visible as a failure, and following it would report the destination's 200.
+const getRaw = (url) => fetch(url, { redirect: "manual", signal: AbortSignal.timeout(FETCH_TIMEOUT) });
+// Upper bound on page fetches so a runaway sitemap cannot stall the deploy.
+const MAX_PAGE_CHECKS = 25;
+
+function fail(msg) {
+    console.error(`smoke: FAILED — ${msg}`);
+    process.exit(1);
+}
 
 const deadline = Date.now() + TIMEOUT;
 let html = "";
@@ -71,4 +82,50 @@ try {
     console.error(`smoke: FAILED — asset/404 check errored: ${e.message}`);
     process.exit(1);
 }
-console.error("smoke: 404 handling OK — live site healthy");
+console.error("smoke: 404 handling OK");
+
+// ── Sitemap-driven page check ───────────────────────────────────────────────
+// The sitemap is the site's own claim about which URLs exist, so it is the one
+// list worth walking. This catches the two regressions the hash/404 checks
+// above cannot see: a page that silently stopped being served, and an entry
+// pointing at a redirect — which burns crawl budget and leaves the target's
+// canonical ambiguous. Driving it off the sitemap instead of a hardcoded list
+// means a new page is covered the moment it is published.
+try {
+    const res = await get(`${base}/sitemap.xml`);
+    if (!res.ok) fail(`${base}/sitemap.xml returned ${res.status}`);
+
+    const locs = [...(await res.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+    if (locs.length === 0) fail("sitemap.xml lists no URLs");
+
+    const foreign = locs.filter((u) => !u.startsWith(`${base}/`));
+    if (foreign.length) fail(`sitemap lists URLs outside ${base}: ${foreign.join(", ")}`);
+
+    // Redirect-only and build-only paths must never be advertised: the site is
+    // served with clean URLs, and includes/ holds layout partials, not pages.
+    const bogus = locs.filter((u) => u.endsWith(".html") || u.includes("/includes/"));
+    if (bogus.length) fail(`sitemap lists non-canonical or build-only paths: ${bogus.join(", ")}`);
+
+    const checked = locs.slice(0, MAX_PAGE_CHECKS);
+    if (checked.length < locs.length) {
+        console.error(`smoke: sitemap has ${locs.length} entries, checking the first ${checked.length}`);
+    }
+
+    const bad = (
+        await Promise.all(
+            checked.map(async (u) => {
+                try {
+                    const r = await getRaw(u);
+                    return r.status === 200 ? null : `${u} → ${r.status}`;
+                } catch (e) {
+                    return `${u} → ${e.message}`;
+                }
+            }),
+        )
+    ).filter(Boolean);
+    if (bad.length) fail(`sitemap URLs are not served directly:\n  ${bad.join("\n  ")}`);
+
+    console.error(`smoke: ${checked.length} sitemap URLs OK — live site healthy`);
+} catch (e) {
+    fail(`sitemap check errored: ${e.message}`);
+}
