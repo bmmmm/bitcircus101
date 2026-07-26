@@ -38,7 +38,7 @@ PR to main  →  Unit tests + layout sync check (fast, no Playwright)
 Push to main  →  Full suite (unit + E2E × 2 browsers)  →  Deploy to live
 ```
 
-Tests gate deployment, not contribution: the heavy Playwright suite only runs after merge to `main`, before anything reaches production.
+Tests gate deployment, not contribution: a PR with failing units or layout drift gets flagged, but the heavy Playwright suite only runs after merge to `main`.
 
 ### For AI agents — tests
 
@@ -94,7 +94,7 @@ container, which has them baked in).
 - Plain-text aesthetic: monospace font, reverse-video interaction, dark is the default, `◐` toggles the light scheme. The `--accent` token (terminal green) covers hyperlinks, primary CTAs and current-selection markers; controls and toggles stay reverse-video ink — full scope rule at the token definition in `style.css`
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css` (applies to JS-built markup too: use the `hidden` attribute or a class, not `style="display:…"` in template strings)
-- **Clean URLs are canonical, in-page links keep `.html`.** Production 308-redirects `/events.html` → `/events`, so everything a crawler consumes names the extension-less form: `canonical`, `og:url`, JSON-LD `url`, the RSS links (`EVENTS_URL` in `sync-events.mjs`), `llms.txt`, sitemap (`drop-html-extension: true`). In-page `href`s keep `.html` — `python3 -m http.server` and Playwright serve files, not clean URLs, so a clean-URL `href` 404s locally. `index.html` pages are unaffected (`/`, `/chat/`).
+- **Clean URLs are canonical, in-page links keep `.html`.** Production 308-redirects `/events.html` → `/events`, so everything a crawler or aggregator consumes names the extension-less form: `canonical`, `og:url`, JSON-LD `url`, the RSS links (`EVENTS_URL` in `sync-events.mjs`), `llms.txt`, sitemap (`drop-html-extension: true`). In-page `href`s keep `.html` — `python3 -m http.server` and Playwright serve files, not clean URLs, so a clean-URL `href` 404s locally. `index.html` pages are unaffected (`/`, `/chat/`).
 - **Commit messages:** use [conventional commits](https://www.conventionalcommits.org/) — `feat:`, `fix:`, `docs:`, `style:`, `chore:`, etc. Scopes in parentheses: `feat(events): add filter`. The release workflow parses these to auto-generate release notes.
 
 ## Releases
