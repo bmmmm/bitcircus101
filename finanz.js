@@ -49,8 +49,7 @@
 
   function iconFor(key) {
     // key may be a named glyph ("solar") or already a literal symbol ("☀").
-    // Fall back to the key itself so finanz.json can carry symbols directly —
-    // projects.js renders the icon verbatim, this keeps both views in sync.
+    // Fall back to the key itself so finanz.json can carry symbols directly.
     return ICONS[key] || key || "❖"; // ❖ default
   }
 
@@ -347,10 +346,9 @@
       setupAnimations(list, currency);
     }
 
-    // ── Recurring monthly costs → rendered here, shown in the "Liste" view ──
-    // Visibility is owned by the view switch (projects.js): it hides this mount
-    // for the alternate templates, which fold the monthly costs in themselves.
-    // So only fill it here; never force it visible (that would fight the switch).
+    // ── Recurring monthly costs ──
+    // The mount is visible by default; only hide it when there is nothing to
+    // show, so an empty board does not leave a stray heading behind.
     if (monatlichEl) {
       if (monatlich.length) {
         monatlichEl.innerHTML = monatlichMarkup(monatlich, currency);
