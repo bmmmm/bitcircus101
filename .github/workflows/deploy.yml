@@ -127,6 +127,16 @@ jobs:
           node scripts/build-logo-slider.mjs
           node scripts/build-lite-events.mjs
 
+      - name: Remove build-only includes/ partials
+        # includes/site-header.html, site-footer.html and site-skip.html are
+        # build inputs, not pages — inject-layout.mjs above already inlined
+        # their content into every real page. Left on live they carry no
+        # noindex meta, so the sitemap generator listed all three as if they
+        # were pages. Must run after inject-layout.mjs (not folded into
+        # live-overlay.mjs's REMOVE_DIRS, which runs in the earlier
+        # "Sync all site files from main" step, before injection happens).
+        run: rm -rf includes
+
       - name: Minify CSS and JS
         # Versions are pinned: npm releases are immutable, so a pinned version
         # can never be swapped for a freshly-compromised "latest" between deploys
@@ -163,6 +173,33 @@ jobs:
             echo "events-data.json or ical.ics missing — regenerating"
             node scripts/sync-events.mjs
           fi
+
+      - name: Generate sitemap.xml
+        # Used to live in its own workflow (sitemap.yml) triggered on `push:
+        # branches: [live]` — but the push below uses the default
+        # GITHUB_TOKEN, and GitHub deliberately does not fire follow-on
+        # workflow runs for pushes made with that token (loop prevention), so
+        # sitemap.xml silently stopped updating after its first run. Folding
+        # generation in here means it always lands in the same deploy commit.
+        # Same action, same pin, same options as the old workflow — only the
+        # trigger changes. Must run after the includes/ removal above and
+        # after inject-layout/build-lite-events so noindex-carrying and
+        # build-only paths are excluded/absent exactly as before.
+        uses: cicirello/generate-sitemap@6a56a20238e631d653600cf792c3596722b78259 # v1.10.4
+        with:
+          base-url-path: https://bitcircus101.de
+          path-to-root: .
+          include-html: true
+          sitemap-format: xml
+          # The site is served with clean URLs: /events.html 308-redirects to
+          # /events. A sitemap listing the .html form would point every entry at
+          # a redirect, so drop the extension to match what is actually served —
+          # and what each page's own canonical/og:url now declares. index.html
+          # is unaffected (the generator maps it to / and /chat/ either way).
+          # exclude-paths still matches file paths, not URLs, so both entries
+          # below keep working with the extension.
+          drop-html-extension: true
+          exclude-paths: /google18556084d38e4dd8.html /donations.html
 
       - name: Commit and push if changed
         run: |

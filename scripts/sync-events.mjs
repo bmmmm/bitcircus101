@@ -6,6 +6,12 @@
  */
 
 const SITE_URL = "https://bitcircus101.de";
+// Canonical address of the events page. The site is served with clean URLs
+// (/events.html 308-redirects to /events), so every outward-facing link — RSS
+// <link>, JSON-LD url, sitemap entry, the page's own canonical — has to use the
+// extension-less form. One constant keeps the RSS item link and the JSON-LD url
+// byte-identical, which aggregators rely on to key the same occurrence.
+const EVENTS_URL = `${SITE_URL}/events`;
 
 import { readFileSync, writeFileSync, renameSync, mkdirSync } from "node:fs";
 import ICSCore from "../ics-core.js";
@@ -244,7 +250,7 @@ function generateRSS(cards) {
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>bitcircus101 – Termine</title>
-    <link>${SITE_URL}/events.html</link>
+    <link>${EVENTS_URL}</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
     <lastBuildDate>${now}</lastBuildDate>
@@ -266,7 +272,7 @@ function generateRSS(cards) {
     xml += `
     <item>
       <title>${escXml(fullTitle)}</title>
-      <link>${SITE_URL}/events.html#${eventAnchor(c)}</link>
+      <link>${EVENTS_URL}#${eventAnchor(c)}</link>
       <description>${escXml(c.description || c.title + " · " + c.date)}</description>`;
     for (const tag of tags) {
       xml += `
@@ -425,7 +431,7 @@ function generateICS(cards, nowISO) {
 
 // ── Generate schema.org JSON-LD (embedded in events.html) ──────────────────
 //
-// The RSS feed's item links point at events.html#ev-…, and calendar
+// The RSS feed's item links point at /events#ev-…, and calendar
 // aggregators following the feed (e.g. scalendarii's RSS path) fetch each
 // item page and read its schema.org JSON-LD — without this block the feed
 // resolves to zero events. Each node's `url` is byte-identical to the RSS
@@ -484,7 +490,7 @@ function toJsonLdEvent(c) {
 
   if (c.description) node.description = c.description;
   if (c.location) node.location = { "@type": "Place", name: c.location };
-  node.url = `${SITE_URL}/events.html#${eventAnchor(c)}`;
+  node.url = `${EVENTS_URL}#${eventAnchor(c)}`;
   const keywords = (c.tags || []).map((t) => t.replace(/^#/, "")).filter(Boolean);
   if (keywords.length) node.keywords = keywords;
   return node;

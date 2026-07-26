@@ -680,7 +680,7 @@ describe("generateRSS", () => {
   it("deep-links the item to the event anchor", () => {
     const xml = generateRSS([baseCard]);
     assert.ok(
-      xml.includes("<link>https://bitcircus101.de/events.html#" + eventAnchor(baseCard) + "</link>")
+      xml.includes("<link>https://bitcircus101.de/events#" + eventAnchor(baseCard) + "</link>")
     );
   });
 
@@ -1056,7 +1056,7 @@ describe("toJsonLdEvent", () => {
 
   it("keys the node url to the RSS item anchor, byte-identical", () => {
     const node = toJsonLdEvent(timed);
-    assert.equal(node.url, `https://bitcircus101.de/events.html#${eventAnchor(timed)}`);
+    assert.equal(node.url, `https://bitcircus101.de/events#${eventAnchor(timed)}`);
   });
 
   it("emits location as a Place and strips the # off keywords", () => {
