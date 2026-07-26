@@ -5,7 +5,7 @@ Project conventions for contributors and Claude Code.
 ## What this is
 
 Static website for [bitcircus101](https://bitcircus101.de), a hackspace in Bonn.
-Pure HTML/CSS/JS — **no bundler, no framework.** Shared site chrome (nav + footer) uses `includes/*.html` plus a one-shot **`pnpm run build:layout`** (see [Shared layout](#shared-layout)); everything else is edited directly.
+Pure HTML/CSS/JS — **no bundler, no framework.** Everything is edited directly; the only build steps are **`pnpm run build:layout`** for the shared chrome in `includes/*.html` (see [Shared layout](#shared-layout)) and **`pnpm run build:logos`** for `images/logo-slider/*`.
 
 ## Branches
 
@@ -19,7 +19,7 @@ Pure HTML/CSS/JS — **no bundler, no framework.** Shared site chrome (nav + foo
 
 ### For AI agents — branches
 
-Always create a **`feat/<kebab-description>`** or **`fix/<kebab-description>`** branch from current `main` for edits, commit there, and have the user push / open a PR. Do **not** commit on `main` unless the user explicitly asks for an exception.
+Always branch (**`feat/<kebab>`** or **`fix/<kebab>`**) from current `main`, commit there, open a PR. Never commit on `main` without an explicit exception — and that holds regardless of size: a one-line docs fix is not too small for a PR.
 
 ## Testing strategy
 
@@ -27,8 +27,7 @@ Always create a **`feat/<kebab-description>`** or **`fix/<kebab-description>`** 
 
 | Command | What | When to use |
 |---------|------|-------------|
-| `pnpm run test:quick` | Unit tests only (~3s, no browser) | Before submitting a PR |
-| `pnpm run test:unit` | Same as test:quick | Alias |
+| `pnpm run test:quick` | Unit tests only (~3s, no browser); `test:unit` is an alias | Before submitting a PR |
 | `pnpm run test:e2e` | Playwright across 2 browsers (~20 tests × 2) | Only if you changed JS logic |
 | `pnpm test` | Full suite (unit + E2E) | CI runs this, you usually don't need to |
 
@@ -39,8 +38,7 @@ PR to main  →  Unit tests + layout sync check (fast, no Playwright)
 Push to main  →  Full suite (unit + E2E × 2 browsers)  →  Deploy to live
 ```
 
-Tests gate deployment, not contribution. A PR with failing unit tests or layout drift gets flagged.
-The heavy Playwright suite runs after merge to `main` — before anything reaches production.
+Tests gate deployment, not contribution: the heavy Playwright suite only runs after merge to `main`, before anything reaches production.
 
 ### For AI agents — tests
 
@@ -93,11 +91,10 @@ container, which has them baked in).
 ## Code conventions
 
 - German UI text, English code comments — exception: terminal-/hacker-aesthetic pages (currently only the 404 page) may use English/terminal-slang copy
-- No bundlers — edit HTML/CSS/JS directly (except `pnpm run build:layout` for `includes/*.html` and `pnpm run build:logos` when you touch `images/logo-slider/*`)
 - Plain-text aesthetic: monospace font, reverse-video interaction, dark is the default, `◐` toggles the light scheme. The `--accent` token (terminal green) covers hyperlinks, primary CTAs and current-selection markers; controls and toggles stay reverse-video ink — full scope rule at the token definition in `style.css`
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css` (applies to JS-built markup too: use the `hidden` attribute or a class, not `style="display:…"` in template strings)
-- **Clean URLs are canonical, relative links keep `.html`.** Production 308-redirects `/events.html` → `/events`, so everything a crawler or aggregator consumes must name the extension-less form: `<link rel="canonical">`, `og:url`, JSON-LD `url`, the RSS `<link>`s (`EVENTS_URL` in `scripts/sync-events.mjs`), `llms.txt`, and the sitemap (`drop-html-extension: true`). In-page `href`s stay relative *with* `.html` — `python3 -m http.server` and the Playwright suite serve files, not clean URLs, so a clean-URL `href` would 404 locally. `index.html` pages are unaffected (`/`, `/chat/`).
+- **Clean URLs are canonical, in-page links keep `.html`.** Production 308-redirects `/events.html` → `/events`, so everything a crawler consumes names the extension-less form: `canonical`, `og:url`, JSON-LD `url`, the RSS links (`EVENTS_URL` in `sync-events.mjs`), `llms.txt`, sitemap (`drop-html-extension: true`). In-page `href`s keep `.html` — `python3 -m http.server` and Playwright serve files, not clean URLs, so a clean-URL `href` 404s locally. `index.html` pages are unaffected (`/`, `/chat/`).
 - **Commit messages:** use [conventional commits](https://www.conventionalcommits.org/) — `feat:`, `fix:`, `docs:`, `style:`, `chore:`, etc. Scopes in parentheses: `feat(events): add filter`. The release workflow parses these to auto-generate release notes.
 
 ## Releases
@@ -122,7 +119,7 @@ CI generates these — never hand-edit them. The calendar-sync outputs live **on
 - `events.js` — events page renderer (loads `events-data.json`, falls back to a live ICS fetch)
 - `ics-core.js` — **single shared ICS parser** (UMD, written in ES5 so the browser loads it raw). Used by both `events.js` (browser fallback) and `scripts/sync-events.mjs` (CI sync) — edit once, both consumers update; no parser drift.
 - `scripts/sync-events.mjs` — CI calendar sync: fetches sources → writes `events-data.json`, `feed.xml` (RSS) and `ical.ics` (iCal, with real DTSTART/DTEND) plus the `events/` copies of both feeds. Times are floating-local; CI pins `TZ=Europe/Berlin`, and the iCal export tags them `TZID=Europe/Berlin` with a bundled VTIMEZONE.
-- `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay main→live preserving CI feeds and pruning files no longer on `main`, `?v=` cache-busting, post-deploy health check); runs and tests locally via `tests/deploy-scripts.spec.mjs`. The smoke check walks every URL in the deployed `sitemap.xml` and fails on anything that is not a direct 200 — so a page that stops being served, or a sitemap entry that redirects, breaks the deploy instead of going unnoticed. Run it against production any time: `node scripts/smoke-live.mjs https://bitcircus101.de`.
+- `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay main→live preserving CI feeds and pruning files no longer on `main`; `?v=` cache-busting; post-deploy health check), tested via `tests/deploy-scripts.spec.mjs`. The smoke check walks every URL in the deployed `sitemap.xml` and fails on anything that is not a direct 200, so a dead page or a redirecting entry breaks the deploy instead of going unnoticed. Standalone: `node scripts/smoke-live.mjs https://bitcircus101.de`.
 - `llms.txt` — LLM-friendly site summary ([llms.txt standard](https://llmstxt.org/))
 - `changelog.md` — release history (auto-updated by release workflow)
 - `robots.txt` — crawler rules; explicitly allows AI bots, blocks `/ascii/`
