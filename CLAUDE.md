@@ -97,6 +97,7 @@ container, which has them baked in).
 - Plain-text aesthetic: monospace font, reverse-video interaction, dark is the default, `◐` toggles the light scheme. The `--accent` token (terminal green) covers hyperlinks, primary CTAs and current-selection markers; controls and toggles stay reverse-video ink — full scope rule at the token definition in `style.css`
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css` (applies to JS-built markup too: use the `hidden` attribute or a class, not `style="display:…"` in template strings)
+- **Clean URLs are canonical, relative links keep `.html`.** Production 308-redirects `/events.html` → `/events`, so everything a crawler or aggregator consumes must name the extension-less form: `<link rel="canonical">`, `og:url`, JSON-LD `url`, the RSS `<link>`s (`EVENTS_URL` in `scripts/sync-events.mjs`), `llms.txt`, and the sitemap (`drop-html-extension: true`). In-page `href`s stay relative *with* `.html` — `python3 -m http.server` and the Playwright suite serve files, not clean URLs, so a clean-URL `href` would 404 locally. `index.html` pages are unaffected (`/`, `/chat/`).
 - **Commit messages:** use [conventional commits](https://www.conventionalcommits.org/) — `feat:`, `fix:`, `docs:`, `style:`, `chore:`, etc. Scopes in parentheses: `feat(events): add filter`. The release workflow parses these to auto-generate release notes.
 
 ## Releases

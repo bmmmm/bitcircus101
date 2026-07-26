@@ -191,6 +191,14 @@ jobs:
           path-to-root: .
           include-html: true
           sitemap-format: xml
+          # The site is served with clean URLs: /events.html 308-redirects to
+          # /events. A sitemap listing the .html form would point every entry at
+          # a redirect, so drop the extension to match what is actually served —
+          # and what each page's own canonical/og:url now declares. index.html
+          # is unaffected (the generator maps it to / and /chat/ either way).
+          # exclude-paths still matches file paths, not URLs, so both entries
+          # below keep working with the extension.
+          drop-html-extension: true
           exclude-paths: /google18556084d38e4dd8.html /donations.html
 
       - name: Commit and push if changed
