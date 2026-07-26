@@ -1,0 +1,191 @@
+name: Test & Deploy to live
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [main]
+    # Doc/meta-only pushes can't change the served site, so skip the full
+    # E2E + deploy run for them (a mixed push touching any other file still
+    # deploys — paths-ignore only skips when EVERY changed path matches).
+    # NOTE: deliberately unlike ci.yml's list — llms.txt is omitted here
+    # because it IS live content and must still trigger a deploy when it
+    # changes; it only sits in ci.yml because it needs no tests.
+    paths-ignore:
+      - "*.md"
+      - "LICENSE"
+      - ".claudeignore"
+      - ".gitignore"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # Browsers + OS deps are baked into the image, so there is no fragile
+    # `playwright install --with-deps` download step (which hung repeatedly and
+    # which caching can't save us from: this site deploys less often than the
+    # 7-day cache-eviction window, so the browser cache is always cold). The tag
+    # MUST match the pinned @playwright/test version in package.json.
+    container: mcr.microsoft.com/playwright:v1.61.1-jammy
+    # Match the calendar's Europe/Berlin floating-local times when generating
+    # events-data.json / feed.xml and running the (date-sensitive) unit tests.
+    env:
+      TZ: Europe/Berlin
+    steps:
+      - uses: actions/checkout@v7
+
+      # The container runs as root but the checkout is owned by the runner uid, so
+      # git refuses the repo ("dubious ownership" → "not a git repository") and the
+      # `git diff` drift check below fails. Mark the workspace trusted first.
+      - name: Trust workspace for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify HTML matches layout partials and logo slider
+        run: |
+          # build-lite-events.mjs is intentionally NOT part of this gate: it stamps
+          # today's date + live event data into lite/index.html (a deploy-time
+          # artifact like sitemap.xml), so it can never be drift-free here.
+          node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
+          git diff --exit-code -- '*.html' || (
+            echo "::error::HTML drift: run pnpm run build:layout and pnpm run build:logos, then commit."
+            exit 1
+          )
+
+      - name: Run unit tests
+        run: node --test tests/*.spec.mjs
+
+      - name: Generate events-data.json for E2E tests
+        run: |
+          node scripts/sync-events.mjs || {
+            echo "::warning::Calendar fetch failed — using minimal test fixture"
+            echo '{"lastSync":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","sources":[],"events":[]}' > events-data.json
+          }
+
+      - name: Run Playwright tests
+        run: pnpm exec playwright test
+
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    # Same TZ pin as the test job for the events-data.json regeneration fallback.
+    env:
+      TZ: Europe/Berlin
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: live
+          persist-credentials: true
+
+      - uses: pnpm/action-setup@v6
+        with:
+          # The live checkout has no package.json (stripped by the overlay), so
+          # action-setup cannot read the version from packageManager — pin it here.
+          version: 11.5.1
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Sync all site files from main
+        # Feed save/restore, overlay and dev-file removal live in a unit-tested
+        # node script (tests/deploy-scripts.spec.mjs) instead of inline bash —
+        # the bash version was only testable by a real deploy and twice hit the
+        # `bash -e` for-loop exit-status trap. The live checkout may not have
+        # the script yet (first run after introducing it), so pull scripts/
+        # from main before invoking it.
+        run: |
+          git fetch origin main
+          git checkout origin/main -- scripts/
+          node scripts/live-overlay.mjs origin/main
+
+      - name: Apply layout partials, logo slider, and lite events to HTML
+        run: |
+          node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
+          node scripts/build-lite-events.mjs
+
+      - name: Minify CSS and JS
+        # Versions are pinned: npm releases are immutable, so a pinned version
+        # can never be swapped for a freshly-compromised "latest" between deploys
+        # — that swap is the main supply-chain risk of a bare `pnpm dlx <tool>`.
+        # A full lockfile approach (csso/terser as devDeps + pnpm exec) was
+        # considered but rejected: it needs package.json kept past the live
+        # overlay cleanup, and this deploy job can't be exercised locally, so the
+        # only smoke test would be a real production push. Bump these manually.
+        run: |
+          echo "Before: style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
+          pnpm dlx csso-cli@4.0.2 style.css -o style.css
+          pnpm dlx terser@5.48.0 main.js -o main.js --compress --mangle
+          pnpm dlx terser@5.48.0 events.js -o events.js --compress --mangle
+          pnpm dlx terser@5.48.0 ics-core.js -o ics-core.js --compress --mangle
+          echo "After:  style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B"
+
+      - name: Cache-bust asset references
+        id: cachebust
+        # Hashing + rewrite live in a unit-tested node script; it walks every
+        # HTML file in the tree, so new page dirs are covered automatically
+        # (the old inline loop needed a hand-maintained directory list).
+        # Assignment form on purpose: `echo "hash=$(cmd)"` would swallow a
+        # script crash under `bash -e` and deploy with an empty hash.
+        run: |
+          hash=$(node scripts/cache-bust.mjs)
+          echo "hash=$hash" >> "$GITHUB_OUTPUT"
+
+      - name: Regenerate events data if missing
+        run: |
+          # ical.ics is in the guard too so the first deploy after this feature lands
+          # generates the new feeds immediately instead of 404ing until the next
+          # sync-events cron run (~30 min).
+          if [ ! -f events-data.json ] || [ ! -f ical.ics ]; then
+            echo "events-data.json or ical.ics missing — regenerating"
+            node scripts/sync-events.mjs
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy"
+            exit 0
+          fi
+          COMMIT_MSG=$(git log origin/main -1 --pretty=format:"%s")
+          git commit -m "Deploy: ${COMMIT_MSG}"
+          for i in 1 2 3; do
+            git pull --rebase origin live && git push origin HEAD:live && exit 0
+            echo "Retry $i..."
+            sleep 5
+          done
+          echo "Push failed after 3 retries"
+          exit 1
+
+      - name: Smoke-test live site
+        # Polls until the Pages build serves the new asset hash, then checks
+        # that the hashed stylesheet resolves and unknown paths return 404.
+        # Also passes when the push was skipped ("No changes to deploy"): the
+        # current hash is then already live and the health checks still run.
+        run: node scripts/smoke-live.mjs https://bitcircus101.de "${{ steps.cachebust.outputs.hash }}"

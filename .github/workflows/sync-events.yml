@@ -1,0 +1,63 @@
+name: Sync calendar events
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # every 30 minutes
+  workflow_dispatch:
+
+concurrency:
+  group: sync-events
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # ICS values from Nextcloud are floating-local Europe/Berlin; pin the runner TZ
+    # so date/time formatting (and UTC→local conversion) matches the calendar, not UTC.
+    env:
+      TZ: Europe/Berlin
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: live
+          persist-credentials: true
+
+      - name: Use scripts and config from main
+        run: |
+          git fetch origin main
+          git checkout origin/main -- scripts/ calendars/ ics-core.js
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+
+      - name: Fetch ICS and generate events JSON + RSS
+        run: node scripts/sync-events.mjs
+
+      - name: Rebuild lite page event list
+        run: node scripts/build-lite-events.mjs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # -f: the feeds are .gitignored on main (rebuilt here); force-add so the
+          # first run can track them on live. ical.ics + events/ copies are new (issue #1).
+          # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5).
+          git add -f events-data.json feed.xml ical.ics events/feed.xml events/ical.ics lite/index.html events.html
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "Sync events from Nextcloud calendar"
+          # Retry loop: pull --rebase + push (handles concurrent pushes)
+          for i in 1 2 3; do
+            git pull --rebase origin live && git push origin HEAD:live && exit 0
+            echo "Retry $i..."
+            sleep 5
+          done
+          echo "Push failed after 3 retries"
+          exit 1
