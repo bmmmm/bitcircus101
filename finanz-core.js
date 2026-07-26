@@ -1,7 +1,6 @@
 /**
  * finanz-core.js — shared cost/funding math for the "Projekte & Kosten" board
- * (support.html#projekte), used by BOTH the browser renderer (finanz.js) and
- * the alternate view templates (projects.js).
+ * (support.html#projekte), used by the browser renderer (finanz.js).
  *
  * Scope: this module only does the math for ONE-TIME items (`einmalig`) — those
  * have a `target`/`raised` and therefore a progress bar. Recurring monthly costs
