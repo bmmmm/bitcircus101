@@ -147,7 +147,13 @@ describe("cache-bust.mjs", () => {
 describe("smoke-live.mjs", () => {
     let server;
     let base;
+    // Which <loc> entries the fixture sitemap advertises; set per test.
+    let locs = [];
     const HASH = "abc12345";
+    const sitemap = () =>
+        `<?xml version="1.0" encoding="UTF-8"?><urlset>${locs
+            .map((l) => `<url><loc>${l}</loc></url>`)
+            .join("")}</urlset>`;
 
     before(async () => {
         server = http.createServer((req, res) => {
@@ -157,6 +163,16 @@ describe("smoke-live.mjs", () => {
             } else if (req.url.startsWith("/style.css")) {
                 res.writeHead(200, { "content-type": "text/css" });
                 res.end("body{}");
+            } else if (req.url === "/sitemap.xml") {
+                res.writeHead(200, { "content-type": "application/xml" });
+                res.end(sitemap());
+            } else if (req.url === "/events") {
+                res.writeHead(200, { "content-type": "text/html" });
+                res.end("<h1>events</h1>");
+            } else if (req.url === "/moved") {
+                // Stands in for the clean-URL redirect production serves.
+                res.writeHead(308, { location: "/events" });
+                res.end();
             } else {
                 res.writeHead(404);
                 res.end("nope");
@@ -164,6 +180,7 @@ describe("smoke-live.mjs", () => {
         });
         await new Promise((r) => server.listen(0, "127.0.0.1", r));
         base = `http://127.0.0.1:${server.address().port}`;
+        locs = [`${base}/`, `${base}/events`];
     });
     after(() => server.close());
 
@@ -172,15 +189,44 @@ describe("smoke-live.mjs", () => {
     // so a sync spawn would block the event loop and deadlock the child's
     // HTTP requests against the very server they target.
     const run = promisify(execFile);
+    const smoke = (hash = HASH) => run("node", [path.join(SCRIPTS, "smoke-live.mjs"), base, hash], { env });
 
-    it("passes when hash is live, stylesheet resolves and 404s work", async () => {
-        await run("node", [path.join(SCRIPTS, "smoke-live.mjs"), base, HASH], { env });
+    it("passes when hash is live, stylesheet resolves, 404s work and every sitemap URL serves 200", async () => {
+        locs = [`${base}/`, `${base}/events`];
+        const { stderr } = await smoke();
+        assert.match(stderr, /2 sitemap URLs OK/);
     });
 
     it("fails when the expected hash never appears", async () => {
         await assert.rejects(
-            run("node", [path.join(SCRIPTS, "smoke-live.mjs"), base, "ffffffff"], { env }),
+            () => smoke("ffffffff"),
             (e) => e.code === 1 && e.stderr.includes("did not appear"),
         );
+    });
+
+    it("fails when a sitemap URL redirects instead of serving 200 directly", async () => {
+        locs = [`${base}/`, `${base}/moved`];
+        await assert.rejects(
+            () => smoke(),
+            (e) => e.code === 1 && e.stderr.includes("not served directly") && e.stderr.includes("→ 308"),
+        );
+    });
+
+    it("fails when a sitemap URL is dead", async () => {
+        locs = [`${base}/`, `${base}/gone`];
+        await assert.rejects(
+            () => smoke(),
+            (e) => e.code === 1 && e.stderr.includes("not served directly") && e.stderr.includes("→ 404"),
+        );
+    });
+
+    it("rejects non-canonical and build-only sitemap entries", async () => {
+        for (const bad of [`${base}/events.html`, `${base}/includes/site-header.html`]) {
+            locs = [`${base}/`, bad];
+            await assert.rejects(
+                () => smoke(),
+                (e) => e.code === 1 && e.stderr.includes("non-canonical or build-only"),
+            );
+        }
     });
 });
