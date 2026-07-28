@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-07-28T14:02:51.514Z",
+  "lastSync": "2026-07-28T16:17:37.168Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-07-28T14:02:51.489Z",
+      "fetchedAt": "2026-07-28T16:17:36.793Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-07-28T14:02:51.134Z",
+      "fetchedAt": "2026-07-28T16:17:36.921Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-07-28T14:02:51.335Z",
+      "fetchedAt": "2026-07-28T16:17:37.148Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -148,25 +148,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-07-28",
-      "time": "18:00",
-      "endDate": "2026-07-28",
-      "endTime": "22:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -910,6 +891,25 @@
       "calendarUrl": "https://offene-ateliers-bonn.de/",
       "eventUrl": "https://offene-ateliers-bonn.de/",
       "firstSeen": "2026-07-24T18:16:21.482Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-09-22",
+      "time": "18:00",
+      "endDate": "2026-09-22",
+      "endTime": "22:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
