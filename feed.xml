@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Fri, 31 Jul 2026 17:03:46 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 31 Jul 2026 18:52:26 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-07-31 20:00] Casual Linkup@bitcircus101 (5FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-07-31-casual-linkup-bitcircus101-5fr</link>
-      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de</description>
-      <category>#meetup</category>
-      <pubDate>Thu, 28 May 2026 20:42:40 +0000</pubDate>
-      <guid isPermaLink="false">A181B019-30E9-40E0-8250-45DC8DF5B788-20260731T2000</guid>
-    </item>
     <item>
       <title>[2026-08-01 12:00] 1 August  2026 CSD Beethovens Bunte @ Münsterplatz Bonn, Münsterplatz, Bonn, NRW, 53111</title>
       <link>https://bitcircus101.de/events#ev-2026-08-01-1-august-2026-csd-beethovens-bunte</link>
@@ -140,6 +132,14 @@
       <category>#meetup</category>
       <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20260911T2000</guid>
+    </item>
+    <item>
+      <title>[2026-09-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-14-treffen-bonner-fsfe-community</link>
+      <description>Treffen: Bonner FSFE Community · 2026-09-14</description>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20260914T1900</guid>
     </item>
   </channel>
 </rss>
