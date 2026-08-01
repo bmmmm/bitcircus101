@@ -30,7 +30,7 @@ jobs:
           git fetch origin main
           git checkout origin/main -- scripts/ calendars/ ics-core.js
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: "24"
 
