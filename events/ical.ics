@@ -23,20 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:7856CDF7-054E-46BC-9EA9-AECA10B0FDF3-20260801T1200@bitcircus101.de
-DTSTAMP:20260529T212146Z
-DTSTART;TZID=Europe/Berlin:20260801T120000
-DTEND;TZID=Europe/Berlin:20260801T210000
-SUMMARY:1 August  2026 CSD Beethovens Bunte
-DESCRIPTION:Am 1. August 2026 feiern wir auf dem Münsterplatz in Bonn den 
- CSD 2026 / Beethovens Bunte mit Euch.   Das offizielle Bühnenprogramm be
- ginnt am Samstag um ca. 13 Uhr und endet ca. um 21 Uhr. Die Demo …
-LOCATION:Münsterplatz Bonn\, Münsterplatz\, Bonn\, NRW\, 53111
-URL:https://www.rheinqueer-bonn.de/event/1-august-2026-csd-beethovens-bunte
- /
-CATEGORIES:community
-END:VEVENT
-BEGIN:VEVENT
 UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260804T1900@bitcircus101.de
 DTSTAMP:20260519T185916Z
 DTSTART;TZID=Europe/Berlin:20260804T190000
@@ -270,5 +256,18 @@ DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:casual-linkup-4fr@bitcircus101.de-20260925T2000@bitcircus101.de
+DTSTAMP:20260423T190953Z
+DTSTART;TZID=Europe/Berlin:20260925T200000
+DTEND;TZID=Europe/Berlin:20260925T230000
+SUMMARY:Casual Linkup@bitcircus101 (4FR)
+DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
+ nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
+ . https://bitcircus101.de
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup
 END:VEVENT
 END:VCALENDAR
