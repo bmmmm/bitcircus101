@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-01T10:57:23.055Z",
+  "lastSync": "2026-08-01T12:03:57.687Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-01T10:57:22.514Z",
+      "fetchedAt": "2026-08-01T12:03:57.530Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-01T10:57:22.755Z",
+      "fetchedAt": "2026-08-01T12:03:57.678Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-01T10:57:23.048Z",
+      "fetchedAt": "2026-08-01T12:03:57.671Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -148,24 +148,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Beethovens Bunte 🌈",
-      "subtitle": "",
-      "description": "",
-      "location": "Münsterplatz",
-      "date": "2026-08-01",
-      "time": "13:00",
-      "endDate": "2026-08-01",
-      "endTime": "21:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "7ea4047f-0452-4d91-beae-1b23b7a9735c",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-02T18:13:18.990Z"
-    },
     {
       "title": "Digital Independence Day (DID)",
       "subtitle": "",
@@ -909,6 +891,25 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-04-23T19:09:53.469Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-09-29",
+      "time": "18:00",
+      "endDate": "2026-09-29",
+      "endTime": "22:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
