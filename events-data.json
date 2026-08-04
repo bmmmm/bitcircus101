@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-04T14:06:20.502Z",
+  "lastSync": "2026-08-04T16:26:18.920Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-04T14:06:20.038Z",
+      "fetchedAt": "2026-08-04T16:26:18.573Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-04T14:06:20.472Z",
+      "fetchedAt": "2026-08-04T16:26:18.808Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-04T14:06:20.318Z",
+      "fetchedAt": "2026-08-04T16:26:18.904Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -148,25 +148,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-08-04",
-      "time": "18:00",
-      "endDate": "2026-08-04",
-      "endTime": "22:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -912,6 +893,24 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Spermüll Rausstellen",
+      "subtitle": "",
+      "description": "Sperrmüll Rausstellen Abholung am 30.09 Hilfe wird gebaucht",
+      "location": "",
+      "date": "2026-09-29",
+      "time": "19:00",
+      "endDate": "2026-09-29",
+      "endTime": "20:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "2a828714-52b9-4074-a76e-56790ff4720b",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-08-04T16:26:18.904Z"
     }
   ]
 }
