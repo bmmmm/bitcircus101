@@ -15,6 +15,11 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    # A healthy run takes 15-25s. This caps a hanging step — an ICS source that
+    # accepts the connection and then stalls, or the push retry loop — so the job
+    # fails with a log instead of burning the runner. Note it counts from job
+    # start, not from queueing: a run that never gets a runner is not covered.
+    timeout-minutes: 10
     # ICS values from Nextcloud are floating-local Europe/Berlin; pin the runner TZ
     # so date/time formatting (and UTC→local conversion) matches the calendar, not UTC.
     env:
