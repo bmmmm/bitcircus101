@@ -270,4 +270,17 @@ LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
 END:VEVENT
+BEGIN:VEVENT
+UID:casual-linkup-1fr@bitcircus101.de-20261002T2000@bitcircus101.de
+DTSTAMP:20260502T105121Z
+DTSTART;TZID=Europe/Berlin:20261002T200000
+DTEND;TZID=Europe/Berlin:20261002T230000
+SUMMARY:Casual Linkup@bitcircus101 (1FR)
+DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
+ nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
+ . https://bitcircus101.de
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup
+END:VEVENT
 END:VCALENDAR
