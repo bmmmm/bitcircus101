@@ -1,24 +1,24 @@
 {
-  "lastSync": "2026-08-10T05:54:12.875Z",
+  "lastSync": "2026-08-10T07:37:18.184Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-10T05:54:12.594Z",
+      "fetchedAt": "2026-08-10T07:37:17.878Z",
       "status": "ok",
-      "events": 19,
-      "added": 0,
+      "events": 20,
+      "added": 1,
       "removed": 0,
-      "total": 52,
+      "total": 53,
       "past": 3,
-      "upcoming": 49
+      "upcoming": 50
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-10T05:54:12.747Z",
+      "fetchedAt": "2026-08-10T07:37:18.159Z",
       "status": "ok",
-      "events": 21,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 48,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-10T05:54:12.862Z",
+      "fetchedAt": "2026-08-10T07:37:18.178Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -91,7 +91,8 @@
       "7856CDF7-054E-46BC-9EA9-AECA10B0FDF3",
       "E704D718-5974-48A1-BD1E-32D6272B9572",
       "44C992F9-EF68-4692-888D-882EF6F3B4BD",
-      "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA"
+      "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
+      "46D03F17-581F-4E98-9499-E3E9A8319A83"
     ],
     "Datenburg e.V.": [
       "a027fbdd-6b08-4f8b-89c4-65fbcd7f2c66",
@@ -186,6 +187,25 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "FAU BIT zu Gast in Bonn",
+      "subtitle": "",
+      "description": "Jeden Monat trifft sich die FAU Bonn in der Alten VHS in Bonn zum „Offenen Arbeitsaustausch“. Die FAU BIT wird diesmal ganz kurzfristig dabei sein, um Interessierten Fragen zu unserer …",
+      "location": "Alte VHS Engeltalstraße 4, 53111 Bonn",
+      "date": "2026-08-13",
+      "time": "19:00",
+      "endDate": "2026-08-13",
+      "endTime": "20:15",
+      "tags": [
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "46D03F17-581F-4E98-9499-E3E9A8319A83",
+      "calendarUrl": "https://bit.fau.org/events/fau-bit-zu-gast-in-bonn/",
+      "eventUrl": "https://bit.fau.org/events/fau-bit-zu-gast-in-bonn/",
+      "firstSeen": "2026-08-10T07:37:18.178Z"
     },
     {
       "title": "PPP (Putzen Plenum Pizza)",
@@ -890,25 +910,6 @@
       "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-05-02T13:08:46.350Z"
-    },
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-10-06",
-      "time": "18:00",
-      "endDate": "2026-10-06",
-      "endTime": "22:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
