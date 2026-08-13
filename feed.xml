@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Thu, 13 Aug 2026 16:00:02 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 13 Aug 2026 17:04:39 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-08-13 19:00] FAU BIT zu Gast in Bonn @ Alte VHS Engeltalstraße 4, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-08-13-fau-bit-zu-gast-in-bonn</link>
-      <description>Jeden Monat trifft sich die FAU Bonn in der Alten VHS in Bonn zum „Offenen Arbeitsaustausch“. Die FAU BIT wird diesmal ganz kurzfristig dabei sein, um Interessierten Fragen zu unserer …</description>
-      <category>#offener-abend</category>
-      <pubDate>Mon, 10 Aug 2026 07:37:18 +0000</pubDate>
-      <guid isPermaLink="false">46D03F17-581F-4E98-9499-E3E9A8319A83-20260813T1900</guid>
-    </item>
     <item>
       <title>[2026-08-14 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events#ev-2026-08-14-casual-linkup-bitcircus101-2fr</link>
@@ -141,6 +133,16 @@
       <category>#offener-abend</category>
       <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
       <guid isPermaLink="false">6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260920T1400</guid>
+    </item>
+    <item>
+      <title>[2026-09-22 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-22-look-at-my-toys</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
+      <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260922T1900</guid>
     </item>
   </channel>
 </rss>

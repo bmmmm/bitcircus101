@@ -23,19 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:46D03F17-581F-4E98-9499-E3E9A8319A83-20260813T1900@bitcircus101.de
-DTSTAMP:20260810T073718Z
-DTSTART;TZID=Europe/Berlin:20260813T190000
-DTEND;TZID=Europe/Berlin:20260813T201500
-SUMMARY:FAU BIT zu Gast in Bonn
-DESCRIPTION:Jeden Monat trifft sich die FAU Bonn in der Alten VHS in Bonn z
- um „Offenen Arbeitsaustausch“. Die FAU BIT wird diesmal ganz kurzfrist
- ig dabei sein\, um Interessierten Fragen zu unserer …
-LOCATION:Alte VHS Engeltalstraße 4\, 53111 Bonn
-URL:https://bit.fau.org/events/fau-bit-zu-gast-in-bonn/
-CATEGORIES:offener-abend
-END:VEVENT
-BEGIN:VEVENT
 UID:casual-linkup-2fr@bitcircus101.de-20260814T2000@bitcircus101.de
 DTSTAMP:20260509T101220Z
 DTSTART;TZID=Europe/Berlin:20260814T200000

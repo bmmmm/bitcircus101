@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-08-13T16:00:02.945Z",
+  "lastSync": "2026-08-13T17:04:39.215Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-13T16:00:02.682Z",
+      "fetchedAt": "2026-08-13T17:04:38.928Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 53,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-13T16:00:02.936Z",
+      "fetchedAt": "2026-08-13T17:04:38.901Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 48,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-13T16:00:02.641Z",
+      "fetchedAt": "2026-08-13T17:04:39.103Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -149,25 +149,6 @@
     ]
   },
   "events": [
-    {
-      "title": "FAU BIT zu Gast in Bonn",
-      "subtitle": "",
-      "description": "Jeden Monat trifft sich die FAU Bonn in der Alten VHS in Bonn zum „Offenen Arbeitsaustausch“. Die FAU BIT wird diesmal ganz kurzfristig dabei sein, um Interessierten Fragen zu unserer …",
-      "location": "Alte VHS Engeltalstraße 4, 53111 Bonn",
-      "date": "2026-08-13",
-      "time": "19:00",
-      "endDate": "2026-08-13",
-      "endTime": "20:15",
-      "tags": [
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "46D03F17-581F-4E98-9499-E3E9A8319A83",
-      "calendarUrl": "https://bit.fau.org/events/fau-bit-zu-gast-in-bonn/",
-      "eventUrl": "https://bit.fau.org/events/fau-bit-zu-gast-in-bonn/",
-      "firstSeen": "2026-08-10T07:37:18.178Z"
-    },
     {
       "title": "PPP (Putzen Plenum Pizza)",
       "subtitle": "",
@@ -910,6 +891,24 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "PPP (Putzen Plenum Pizza)",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-10-08",
+      "time": "19:30",
+      "endDate": "2026-10-08",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
