@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-13T18:25:49.275Z",
+  "lastSync": "2026-08-13T19:34:06.219Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-13T18:25:48.986Z",
+      "fetchedAt": "2026-08-13T19:34:05.938Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -16,19 +16,19 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-13T18:25:49.007Z",
+      "fetchedAt": "2026-08-13T19:34:06.195Z",
       "status": "ok",
       "events": 21,
-      "added": 1,
+      "added": 2,
       "removed": 0,
-      "total": 49,
+      "total": 51,
       "past": 6,
-      "upcoming": 43
+      "upcoming": 45
     },
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-13T18:25:49.154Z",
+      "fetchedAt": "2026-08-13T19:34:06.150Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -99,6 +99,7 @@
       "ffc8a6f4-9889-4add-85b4-d161db2091fd",
       "5197a815-e709-4fc2-a570-7b3d8d035e65",
       "996c6e4a-6bce-4d6d-8d0f-5c4ea743a6ec",
+      "46ebe431-dcf5-44c9-85e3-dbd4d6c43210",
       "54ee729f-ef74-4715-97c8-79b914921add",
       "5cb1b061-902d-47f8-b914-738088844d2c",
       "437b745c-e0aa-4b58-ac93-0d9d4cdec857",
@@ -143,7 +144,8 @@
       "30648a7a-fe00-4aaa-b2fe-63d167941ce5",
       "489ee138-a1e2-484e-8af7-07326db13fb7",
       "616b35a9-4e04-4be3-aa63-199b3bf93e8a",
-      "57633315-cc75-4e91-b65a-ae41aad699c4"
+      "57633315-cc75-4e91-b65a-ae41aad699c4",
+      "d3a70a41-a602-4960-b0f8-7f19f966d890"
     ],
     "Kult 41": [
       "2504@kult41.de"
@@ -225,6 +227,24 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Diday planungstreffen",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-08-19",
+      "time": "19:30",
+      "endDate": "2026-08-19",
+      "endTime": "20:30",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "46ebe431-dcf5-44c9-85e3-dbd4d6c43210",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-08-13T19:34:06.201Z"
     },
     {
       "title": "Raspberry Pi Workshop",
@@ -892,24 +912,6 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "title": "PPP (Putzen Plenum Pizza)",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-10-08",
-      "time": "19:30",
-      "endDate": "2026-10-08",
-      "endTime": "22:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
