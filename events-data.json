@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-13T17:04:39.215Z",
+  "lastSync": "2026-08-13T18:25:49.275Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-13T17:04:38.928Z",
+      "fetchedAt": "2026-08-13T18:25:48.986Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -16,19 +16,19 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-13T17:04:38.901Z",
+      "fetchedAt": "2026-08-13T18:25:49.007Z",
       "status": "ok",
       "events": 21,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 48,
+      "total": 49,
       "past": 6,
-      "upcoming": 42
+      "upcoming": 43
     },
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-13T17:04:39.103Z",
+      "fetchedAt": "2026-08-13T18:25:49.154Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -129,6 +129,7 @@
       "2a828714-52b9-4074-a76e-56790ff4720b",
       "3b5920c5-f75a-4d45-98ef-3753bb50f0a1",
       "5a70c528-c571-44d8-ae9d-e94f05c5ad4e",
+      "4f3eb937-ebc8-4dda-bec7-9f3547ca6240",
       "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
       "05458f62-8dee-4e3b-a085-ef0639af63ff",
       "dccb0e70-ca58-42f6-892d-55909fd35805",
@@ -149,24 +150,6 @@
     ]
   },
   "events": [
-    {
-      "title": "PPP (Putzen Plenum Pizza)",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-08-13",
-      "time": "19:30",
-      "endDate": "2026-08-13",
-      "endTime": "22:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Casual Linkup@bitcircus101 (2FR)",
       "subtitle": "",
@@ -491,6 +474,24 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Le Sabot Computerspiel-Abend",
+      "subtitle": "",
+      "description": "",
+      "location": "Breite Str. 76",
+      "date": "2026-09-09",
+      "time": "19:30",
+      "endDate": "2026-09-09",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "4f3eb937-ebc8-4dda-bec7-9f3547ca6240",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-08-13T18:25:49.154Z"
     },
     {
       "title": "PPP (Putzen Plenum Pizza)",
