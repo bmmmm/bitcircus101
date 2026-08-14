@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-08-14T17:50:41.676Z",
+  "lastSync": "2026-08-14T18:50:58.607Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-14T17:50:41.351Z",
+      "fetchedAt": "2026-08-14T18:50:58.335Z",
       "status": "ok",
-      "events": 19,
+      "events": 18,
       "added": 0,
       "removed": 0,
       "total": 53,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-14T17:50:41.659Z",
+      "fetchedAt": "2026-08-14T18:50:58.588Z",
       "status": "ok",
-      "events": 21,
+      "events": 22,
       "added": 0,
       "removed": 0,
       "total": 51,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-14T17:50:41.545Z",
+      "fetchedAt": "2026-08-14T18:50:58.569Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -152,25 +152,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Casual Linkup@bitcircus101 (2FR)",
-      "subtitle": "",
-      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-08-14",
-      "time": "20:00",
-      "endDate": "2026-08-14",
-      "endTime": "23:00",
-      "tags": [
-        "#meetup"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
-      "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-05-09T10:12:20.662Z"
-    },
     {
       "title": "FrOSCon",
       "subtitle": "",
@@ -912,6 +893,24 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "PPP (Putzen Plenum Pizza)",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-10-08",
+      "time": "19:30",
+      "endDate": "2026-10-08",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
