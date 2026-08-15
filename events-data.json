@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-08-15T21:44:34.379Z",
+  "lastSync": "2026-08-15T22:18:22.721Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-15T21:44:34.090Z",
+      "fetchedAt": "2026-08-15T22:18:22.435Z",
       "status": "ok",
-      "events": 18,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 53,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-15T21:44:34.369Z",
+      "fetchedAt": "2026-08-15T22:18:22.603Z",
       "status": "ok",
-      "events": 22,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 51,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-15T21:44:34.252Z",
+      "fetchedAt": "2026-08-15T22:18:22.533Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -152,24 +152,6 @@
     ]
   },
   "events": [
-    {
-      "title": "FrOSCon",
-      "subtitle": "",
-      "description": "",
-      "location": "Hochschule Bonn Rhein Sieg",
-      "date": "2026-08-15",
-      "time": "",
-      "endDate": "2026-08-17",
-      "endTime": "",
-      "tags": [
-        "#froscon"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "3cb508ed-3976-494d-9918-a93d66dad84a",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-23T17:52:28.999Z"
-    },
     {
       "title": "Offene Datenburg",
       "subtitle": "",
@@ -911,6 +893,25 @@
       "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-10-09",
+      "time": "20:00",
+      "endDate": "2026-10-09",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-05-09T10:12:20.662Z"
     }
   ]
 }
