@@ -23,19 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260818T1900@bitcircus101.de
-DTSTAMP:20260519T185916Z
-DTSTART;TZID=Europe/Berlin:20260818T190000
-DTEND;TZID=Europe/Berlin:20260818T220000
-SUMMARY:Look at my toys!
-DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
- tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
- u're welcome to hang out and continue playing and chatting as …
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
-CATEGORIES:relax,social,spieletreff
-END:VEVENT
-BEGIN:VEVENT
 UID:19471ECE-D83E-4AA6-B70D-545B3F281B66-20260821T2000@bitcircus101.de
 DTSTAMP:20260515T211510Z
 DTSTART;TZID=Europe/Berlin:20260821T200000
@@ -259,5 +246,15 @@ DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://bitcircus101.de
 CATEGORIES:meetup
+END:VEVENT
+BEGIN:VEVENT
+UID:401025E2-82B0-4010-876A-22DFA0C51B32-20261012T1900@bitcircus101.de
+DTSTAMP:20260511T194503Z
+DTSTART;TZID=Europe/Berlin:20261012T190000
+DTEND;TZID=Europe/Berlin:20261012T220000
+SUMMARY:Treffen: Bonner FSFE Community
+LOCATION:Dorotheenstraße 101 Bonn
+URL:https://wiki.fsfe.org/LocalGroups/Bonn
+CATEGORIES:foss
 END:VEVENT
 END:VCALENDAR
