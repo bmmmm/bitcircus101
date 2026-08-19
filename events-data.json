@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-19T17:24:26.456Z",
+  "lastSync": "2026-08-19T17:49:40.429Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-19T17:24:26.236Z",
+      "fetchedAt": "2026-08-19T17:49:40.136Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-19T17:24:26.416Z",
+      "fetchedAt": "2026-08-19T17:49:40.420Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-19T17:24:26.441Z",
+      "fetchedAt": "2026-08-19T17:49:40.364Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -152,24 +152,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Diday planungstreffen",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-08-19",
-      "time": "19:30",
-      "endDate": "2026-08-19",
-      "endTime": "20:30",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "46ebe431-dcf5-44c9-85e3-dbd4d6c43210",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-08-13T19:34:06.201Z"
-    },
     {
       "title": "Raspberry Pi Workshop",
       "subtitle": "",
@@ -911,6 +893,25 @@
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-05-11T19:45:03.502Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-10-13",
+      "time": "18:00",
+      "endDate": "2026-10-13",
+      "endTime": "22:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
