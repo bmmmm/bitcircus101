@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-20T17:26:29.642Z",
+  "lastSync": "2026-08-20T17:56:13.934Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-20T17:26:29.240Z",
+      "fetchedAt": "2026-08-20T17:56:13.627Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-20T17:26:29.135Z",
+      "fetchedAt": "2026-08-20T17:56:13.831Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -28,12 +28,14 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-20T16:32:25.533Z",
-      "status": "stale",
-      "error": "fetch failed",
+      "fetchedAt": "2026-08-20T17:56:13.910Z",
+      "status": "ok",
       "events": 0,
-      "added": 0,
-      "removed": 0
+      "added": 1,
+      "removed": 0,
+      "total": 1,
+      "past": 0,
+      "upcoming": 1
     }
   ],
   "icsKeys": {
@@ -144,6 +146,9 @@
       "616b35a9-4e04-4be3-aa63-199b3bf93e8a",
       "57633315-cc75-4e91-b65a-ae41aad699c4",
       "d3a70a41-a602-4960-b0f8-7f19f966d890"
+    ],
+    "Kult 41": [
+      "2504@kult41.de"
     ]
   },
   "events": [
