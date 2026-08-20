@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-08-20T16:32:25.702Z",
+  "lastSync": "2026-08-20T17:26:29.642Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-20T16:32:25.414Z",
+      "fetchedAt": "2026-08-20T17:26:29.240Z",
       "status": "ok",
-      "events": 19,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 53,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-20T16:32:25.361Z",
+      "fetchedAt": "2026-08-20T17:26:29.135Z",
       "status": "ok",
-      "events": 21,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 51,
@@ -29,13 +29,11 @@
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
       "fetchedAt": "2026-08-20T16:32:25.533Z",
-      "status": "ok",
+      "status": "stale",
+      "error": "fetch failed",
       "events": 0,
       "added": 0,
-      "removed": 0,
-      "total": 1,
-      "past": 0,
-      "upcoming": 1
+      "removed": 0
     }
   ],
   "icsKeys": {
@@ -146,31 +144,9 @@
       "616b35a9-4e04-4be3-aa63-199b3bf93e8a",
       "57633315-cc75-4e91-b65a-ae41aad699c4",
       "d3a70a41-a602-4960-b0f8-7f19f966d890"
-    ],
-    "Kult 41": [
-      "2504@kult41.de"
     ]
   },
   "events": [
-    {
-      "title": "Raspberry Pi Workshop",
-      "subtitle": "",
-      "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
-      "location": "",
-      "date": "2026-08-20",
-      "time": "19:00",
-      "endDate": "2026-08-20",
-      "endTime": "22:00",
-      "tags": [
-        "#workshop",
-        "#datenburg"
-      ],
-      "type": "workshop",
-      "source": "Datenburg e.V.",
-      "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Linkup@bitcircus101",
       "subtitle": "",
@@ -912,6 +888,26 @@
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-10-13",
+      "time": "19:00",
+      "endDate": "2026-10-13",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     }
   ]
 }
