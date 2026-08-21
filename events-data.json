@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-08-21T17:56:10.140Z",
+  "lastSync": "2026-08-21T18:36:55.314Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-21T17:56:09.929Z",
+      "fetchedAt": "2026-08-21T18:36:55.088Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 53,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-21T17:56:09.917Z",
+      "fetchedAt": "2026-08-21T18:36:55.299Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 51,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-21T17:56:10.038Z",
+      "fetchedAt": "2026-08-21T18:36:55.070Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -152,27 +152,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Linkup@bitcircus101",
-      "subtitle": "",
-      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-08-21",
-      "time": "20:00",
-      "endDate": "2026-08-21",
-      "endTime": "22:30",
-      "tags": [
-        "#meetup",
-        "#lightning-talks",
-        "#talk"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
-      "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-05-15T21:15:10.361Z"
-    },
     {
       "title": "Offene Datenburg",
       "subtitle": "",
@@ -913,6 +892,24 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "title": "Le Sabot Computerspiel-Abend",
+      "subtitle": "",
+      "description": "",
+      "location": "Breite Str. 76",
+      "date": "2026-10-14",
+      "time": "19:30",
+      "endDate": "2026-10-14",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "4f3eb937-ebc8-4dda-bec7-9f3547ca6240",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-08-13T18:25:49.154Z"
     }
   ]
 }
