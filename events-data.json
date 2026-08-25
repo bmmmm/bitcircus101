@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-25T15:39:41.312Z",
+  "lastSync": "2026-08-25T16:34:36.090Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-25T15:39:39.172Z",
+      "fetchedAt": "2026-08-25T16:34:35.822Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-25T15:39:41.292Z",
+      "fetchedAt": "2026-08-25T16:34:35.887Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-25T15:39:39.288Z",
+      "fetchedAt": "2026-08-25T16:34:35.936Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -153,25 +153,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-08-25",
-      "time": "18:00",
-      "endDate": "2026-08-25",
-      "endTime": "22:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -911,6 +892,25 @@
       "uid": "4f3eb937-ebc8-4dda-bec7-9f3547ca6240",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-08-13T18:25:49.154Z"
+    },
+    {
+      "title": "Raspberry Pi Workshop",
+      "subtitle": "",
+      "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
+      "location": "",
+      "date": "2026-10-15",
+      "time": "19:00",
+      "endDate": "2026-10-15",
+      "endTime": "22:00",
+      "tags": [
+        "#workshop",
+        "#datenburg"
+      ],
+      "type": "workshop",
+      "source": "Datenburg e.V.",
+      "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
