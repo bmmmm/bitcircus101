@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-25T16:34:36.090Z",
+  "lastSync": "2026-08-25T17:29:18.105Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-25T16:34:35.822Z",
+      "fetchedAt": "2026-08-25T17:29:17.854Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-25T16:34:35.887Z",
+      "fetchedAt": "2026-08-25T17:29:17.959Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-25T16:34:35.936Z",
+      "fetchedAt": "2026-08-25T17:29:17.914Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -153,26 +153,6 @@
     ]
   },
   "events": [
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-08-25",
-      "time": "19:00",
-      "endDate": "2026-08-25",
-      "endTime": "22:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
     {
       "title": "Spieleabend",
       "subtitle": "",
@@ -911,6 +891,27 @@
       "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "title": "Linkup@bitcircus101",
+      "subtitle": "",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-10-16",
+      "time": "20:00",
+      "endDate": "2026-10-16",
+      "endTime": "22:30",
+      "tags": [
+        "#meetup",
+        "#lightning-talks",
+        "#talk"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
+      "calendarUrl": "https://bitcircus101.de",
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-05-15T21:15:10.361Z"
     }
   ]
 }
