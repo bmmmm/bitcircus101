@@ -75,6 +75,17 @@ URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
 END:VEVENT
 BEGIN:VEVENT
+UID:7F2C9A14-3B6D-4E58-9C1A-0D9E2F6A8B30-20260909T1000@bitcircus101.de
+DTSTAMP:20260827T002722Z
+DTSTART;TZID=Europe/Berlin:20260909T100000
+DTEND;TZID=Europe/Berlin:20260909T120000
+SUMMARY:Apple Event
+DESCRIPTION:Einladung zum Apple Special Event. Online auf apple.com.
+LOCATION:https://www.apple.com/de/apple-events/
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:community
+END:VEVENT
+BEGIN:VEVENT
 UID:casual-linkup-2fr@bitcircus101.de-20260911T2000@bitcircus101.de
 DTSTAMP:20260509T101220Z
 DTSTART;TZID=Europe/Berlin:20260911T200000
@@ -243,18 +254,5 @@ DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
-END:VEVENT
-BEGIN:VEVENT
-UID:19471ECE-D83E-4AA6-B70D-545B3F281B66-20261016T2000@bitcircus101.de
-DTSTAMP:20260515T211510Z
-DTSTART;TZID=Europe/Berlin:20261016T200000
-DTEND;TZID=Europe/Berlin:20261016T223000
-SUMMARY:Linkup@bitcircus101
-DESCRIPTION:Linkup@bitcircus101 is our signature monthly meetup for anyone 
- in Bonn’s tech scene to come together\, share ideas and unwind. Every th
- ird Friday of the month starting at 8 PM\, we kick things off with …
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://bitcircus101.de
-CATEGORIES:meetup,lightning-talks,talk
 END:VEVENT
 END:VCALENDAR
