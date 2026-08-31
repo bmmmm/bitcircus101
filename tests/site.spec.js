@@ -149,9 +149,11 @@ test.describe('Navigation', () => {
         // drops to its own always-visible row in the condensed layout.
         await page.goto('/');
         const lite = page.locator('nav a[href="lite/"]');
-        for (const width of [1280, 900, 400]) {
+        const kiosk = page.locator('nav a[href="kiosk/"]');
+        for (const width of [1280, 1100, 900, 700, 400]) {
             await page.setViewportSize({ width, height: 800 });
             await expect(lite).toBeVisible();
+            await expect(kiosk).toBeVisible();
         }
         // Condensed layout: the cluster shows without opening the menu, while
         // the content links stay collapsed behind the toggle.
