@@ -25,6 +25,19 @@ so ziemlich alles andere exportieren). Alle 30 Minuten läuft ein Job, der:
 Das Ergebnis landet auf dem `live`-Branch — nie im Quellcode. Wer einen Kalender
 ändert, ändert damit direkt die Website; niemand muss etwas nachpflegen.
 
+### Gefilterte Feeds („der Filter, den du siehst, ist der Feed, den du bekommst")
+
+Zusätzlich zu den Haupt-Feeds schreibt der Job unter `/feeds/` für **jedes
+Schlagwort** und **jede Quelle** ein eigenes abonnierbares ICS+RSS-Paar
+(`/feeds/tag/<slug>.ics`, `/feeds/source/<id>.ics`, dazu `/feeds/all.*` mit
+allem). Die `id` aus deiner Quelldatei ist dabei der Dateiname deines Feeds.
+Alle Feeds speisen sich aus demselben Fenster von maximal 40 kommenden
+Terminen, das auch die Events-Seite zeigt — ein Tag-Feed kann nie mehr
+enthalten als die Seite. Verschwindet ein Schlagwort, bleibt sein Feed noch
+90 Tage als leerer (gültiger) Kalender stehen, damit Abonnenten keinen
+Fehler sehen; danach wird die Datei entfernt. Welche Feeds es gerade gibt,
+steht maschinenlesbar im `feeds`-Block von `events-data.json`.
+
 ### Was das für dich heißt, wenn du uns deinen Kalender gibst
 
 - **Du behältst die Kontrolle.** Wir kopieren nichts ab, wir lesen deinen Link.
