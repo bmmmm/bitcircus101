@@ -368,51 +368,14 @@
     }
   }
 
-  // ── ICS Parser (fallback) ─────────────────────────────────────────────────
-  // The parser itself lives in ics-core.js (window.ICSCore), shared with the Node
-  // sync script. This block only maps parsed events onto card objects.
+  // ── ICS fallback ──────────────────────────────────────────────────────────
+  // The parser lives in ics-core.js (window.ICSCore) and the card shaping in
+  // events-core.js (window.EventsCore), both shared with the Node sync script —
+  // the fallback renders the same cards (tags, type, truncation) as the JSON path.
 
-  // Mirror of guessType() in sync-events.mjs so the ICS fallback applies the same
-  // card styling as the generated JSON (the type drives the event-card--* border).
-  function guessType(summary) {
-    var s = (summary || "").toLowerCase();
-    if (s.indexOf("linkup") > -1) return "linkup";
-    if (s.indexOf("workshop") > -1 || s.indexOf("löten") > -1 ||
-        s.indexOf("hands-on") > -1) return "workshop";
-    return "special";
-  }
-
-  function icsToCards(icsEvents) {
-    var now = new Date();
-    var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    return icsEvents
-      .filter(function (e) {
-        // All-day events (no time) stay until the day is over; timed events must be future.
-        return e.allDay ? e.dtstart >= startOfToday : e.dtstart > now;
-      })
-      .sort(function (a, b) { return a.dtstart - b.dtstart; })
-      .slice(0, 30)
-      .map(function (e) {
-        // Local date components (not toISOString, which is UTC and would shift an
-        // all-day event's date by a day in non-UTC browsers).
-        var date = e.dtstart.getFullYear() + "-" +
-          pad(e.dtstart.getMonth() + 1) + "-" + pad(e.dtstart.getDate());
-        return {
-          title: e.summary,
-          subtitle: "",
-          description: e.description,
-          // The parser extracts location; map it through so the live-ICS fallback
-          // shows the place/map pill like the JSON path does (escaped at render time).
-          location: e.location || "",
-          date: date,
-          time: e.allDay
-            ? ""
-            : pad(e.dtstart.getHours()) + ":" + pad(e.dtstart.getMinutes()),
-          tags: [],
-          type: guessType(e.summary),
-        };
-      });
-  }
+  // Source descriptor for the fallback: only the primary Nextcloud calendar is
+  // reachable from the browser, so cards carry the same source name the sync uses.
+  var FALLBACK_CAL = { id: "bitcircus", name: "bitcircus101", url: CALENDAR_URL, cap: 30 };
 
   // ── Error / Loading ─────────────────────────────────────────────────────
 
@@ -537,6 +500,13 @@
     var el = document.getElementById("events-list");
     if (!el) return;
 
+    // A missing shared module (404, stale cache skew) would otherwise surface as
+    // a ReferenceError inside the fetch chain — fail visibly instead.
+    if (typeof ICSCore === "undefined" || typeof EventsCore === "undefined") {
+      renderError(el);
+      return;
+    }
+
     el.innerHTML =
       '<p class="events-loading">' +
       '<span class="events-loading__cmd">lade termine</span>' +
@@ -562,7 +532,7 @@
             return res.text();
           })
           .then(function (text) {
-            renderCards(icsToCards(ICSCore.parseICS(text)), el);
+            renderCards(EventsCore.toCards(ICSCore.parseICS(text, "fallback"), FALLBACK_CAL), el);
           })
           .catch(function () {
             renderError(el);

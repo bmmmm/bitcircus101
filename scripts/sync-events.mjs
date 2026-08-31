@@ -15,10 +15,15 @@ const EVENTS_URL = `${SITE_URL}/events`;
 
 import { readFileSync, writeFileSync, renameSync, mkdirSync } from "node:fs";
 import ICSCore from "../ics-core.js";
+import EventsCore from "../events-core.js";
 
 // ICS parsing primitives are shared with the browser fallback (events.js) via the
 // UMD module ics-core.js — single source of truth, no drift between the two parsers.
 const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, eventAnchor } = ICSCore;
+// Card shaping (tags, type, toCards) is shared the same way via events-core.js, so
+// the browser's live-ICS fallback renders the same cards as the generated JSON.
+// Re-exported below so tests and check-calendars.mjs keep importing from here.
+const { isInternal, guessType, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, toCards } = EventsCore;
 
 const CAL_DIR = "calendars";
 const CAL_CONFIG_FILE = "config.json";
@@ -58,12 +63,6 @@ function loadCalendars(dir = CAL_DIR) {
 
 function pad(n) { return String(n).padStart(2, "0"); }
 
-/** Skip internal/blocker events */
-function isInternal(summary) {
-  const s = summary.toLowerCase();
-  return s.includes("blocker") || s.includes("interne veranstaltung");
-}
-
 /**
  * Filter ICS events by calendar config. Used by ics-filtered sources.
  *
@@ -92,135 +91,8 @@ function applyFilter(icsEvents, filter) {
   });
 }
 
-function guessType(summary) {
-  const s = summary.toLowerCase();
-  if (s.includes("linkup")) return "linkup";
-  if (s.includes("workshop") || s.includes("löten") || s.includes("hands-on")) return "workshop";
-  return "special";
-}
-
-/**
- * Tag resolution — 3 sources, in priority:
- *
- * 1. Explicit #hashtags in the event description  (you control these in Nextcloud)
- * 2. ICS CATEGORIES field                         (Nextcloud calendar categories)
- * 3. Keyword auto-detection from title/description (fallback)
- *
- * → Write "#workshop #hardware" anywhere in the Nextcloud event description
- *   and those tags appear on the website. No code changes needed.
- */
-function extractHashtags(text) {
-  const matches = text.match(/#[a-zA-Z0-9äöüß_-]+/g);
-  return matches ? matches.map((t) => t.toLowerCase()) : [];
-}
-
-function keywordTags(text) {
-  const tags = [];
-  // Event format
-  if (text.includes("linkup") || text.includes("casual")) tags.push("#meetup");
-  if (text.includes("lightning")) tags.push("#lightning-talks");
-  if (text.includes("workshop")) tags.push("#workshop");
-  if (text.includes("vortrag") || text.includes("talk")) tags.push("#talk");
-  // Topics
-  if (text.includes("hardware") || text.includes("löten") || text.includes("soldering")) tags.push("#hardware");
-  if (text.includes("ctf") || text.includes("capture the flag")) tags.push("#ctf");
-  if (/\bsecurity\b/.test(text) || /\bpentest\b/.test(text)) tags.push("#security");
-  if (/\bllm\b/.test(text) || /\b(ai|künstliche intelligenz)\b/.test(text)) tags.push("#ai");
-  if (text.includes("retro") || /\bgaming\b/.test(text) || text.includes("spieleabend")) tags.push("#gaming");
-  if (text.includes("fsfe") || text.includes("open source") || text.includes("free software")) tags.push("#foss");
-  if (/\bchaos\b/.test(text) || /\bccc\b/.test(text) || text.includes("easterhegg") || text.includes("congress")) tags.push("#chaos");
-  if (/\bfroscon\b/i.test(text) || text.includes("free and open source")) tags.push("#froscon");
-  if (text.includes("nixos") || text.includes("linux") || text.includes("kernel")) tags.push("#linux");
-  if (text.includes("3d") || text.includes("druck") || text.includes("print")) tags.push("#3d");
-  // Community / venue
-  if (text.includes("datenburg")) tags.push("#datenburg");
-  if (text.includes("offen") || text.includes("tag des offenen")) tags.push("#offener-abend");
-  if (text.includes("spielen") || text.includes("puzzeln") || text.includes("toys")) tags.push("#spieletreff");
-  return tags;
-}
-
-function buildTags(summary, description, categories, calTags = []) {
-  // 1. Explicit hashtags from description
-  const explicit = extractHashtags(description);
-
-  // 2. ICS CATEGORIES
-  const catTags = categories
-    ? categories.split(",").map((c) => "#" + c.trim().toLowerCase().replace(/\s+/g, "-"))
-    : [];
-
-  // 3. Keyword fallback
-  const text = (summary + " " + description).toLowerCase();
-  const auto = keywordTags(text);
-
-  // Merge, deduplicate, keep order. cal.tags first so source-pinned tags always survive.
-  const seen = new Set();
-  const merged = [];
-  const normalize = (t) => t.toLowerCase();
-  for (const t of [...calTags, ...explicit, ...catTags, ...auto]) {
-    const n = normalize(t);
-    if (!seen.has(n)) { seen.add(n); merged.push(t); }
-  }
-  return merged.length ? merged : ["#community"];
-}
-
-/** Clean up ICS location — normalize whitespace, strip redundant parts */
-function cleanLocation(loc) {
-  if (!loc) return "";
-  // Replace \n with ", ", collapse whitespace
-  let s = loc.replace(/\\n/gi, ", ").replace(/\s+/g, " ").trim();
-  // Remove trailing ", Germany" / ", Deutschland"
-  s = s.replace(/,\s*(Germany|Deutschland)\s*$/i, "");
-  // Remove leading "bitcircus101" if followed by address
-  s = s.replace(/^bitcircus101[,\s]*/i, "");
-  return s.trim();
-}
-
-/** Truncate description to ~200 chars at word boundary */
-function truncateDesc(s, max = 200) {
-  if (!s || s.length <= max) return s;
-  const cut = s.slice(0, max);
-  const last = cut.lastIndexOf(" ");
-  return (last > 0 ? cut.slice(0, last) : cut) + " …";
-}
-
-function toCards(icsEvents, cal) {
-  const now = new Date();
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const cap = Number.isFinite(cal.cap) ? cal.cap : 30;
-  // External calendars (ics-single, ics-filtered) link directly to event/program pages;
-  // built-in Nextcloud sources use the timeGridDay day view, so we keep eventUrl unset.
-  const isExternal = cal.type === "ics-filtered" || cal.type === "ics-single";
-  return icsEvents
-    // All-day events carry no time (midnight). Comparing them against `now` would
-    // drop an all-day event happening *today* at any moment past 00:00, so gate them
-    // on the start of today instead; timed events keep the strict "future" check.
-    .filter((e) => (e.allDay ? e.dtstart >= startOfToday : e.dtstart > now) && !isInternal(e.summary))
-    .sort((a, b) => a.dtstart - b.dtstart)
-    .slice(0, cap)
-    .map((e) => {
-      // ICS URL > config-level eventUrl > calendar-level url (external only)
-      const eventLink = e.url || cal.eventUrl || (isExternal ? cal.url : null);
-      // Carry the parsed end through as local date/time strings so the iCal export can
-      // emit a real DTEND. Empty when the source ICS gave neither DTEND nor DURATION.
-      const end = e.dtend || null;
-      return {
-        title: e.summary,
-        subtitle: "",
-        description: truncateDesc(e.description),
-        location: cleanLocation(e.location),
-        date: `${e.dtstart.getFullYear()}-${pad(e.dtstart.getMonth() + 1)}-${pad(e.dtstart.getDate())}`,
-        time: e.allDay ? "" : `${pad(e.dtstart.getHours())}:${pad(e.dtstart.getMinutes())}`,
-        endDate: end ? `${end.getFullYear()}-${pad(end.getMonth() + 1)}-${pad(end.getDate())}` : "",
-        endTime: end && !e.allDay ? `${pad(end.getHours())}:${pad(end.getMinutes())}` : "",
-        tags: buildTags(e.summary, e.description, e.categories, cal.tags || []),
-        type: guessType(e.summary),
-        source: cal.name,
-        uid: e.uid || "",
-        calendarUrl: eventLink || cal.url,
-        ...(eventLink ? { eventUrl: eventLink } : {}),
-      };
-    });
-}
+// Card shaping — guessType, buildTags, cleanLocation, toCards & co — lives in
+// events-core.js (shared with the browser fallback). Imported at the top.
 
 // ── Generate RSS feed ───────────────────────────────────────────────────────
 

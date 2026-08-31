@@ -33,7 +33,7 @@ jobs:
       - name: Use scripts and config from main
         run: |
           git fetch origin main
-          git checkout origin/main -- scripts/ calendars/ ics-core.js
+          git checkout origin/main -- scripts/ calendars/ ics-core.js events-core.js
 
       - uses: actions/setup-node@v7
         with:
