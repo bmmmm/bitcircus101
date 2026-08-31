@@ -161,6 +161,9 @@ describe("smoke-live.mjs", () => {
     let locs = [];
     // Simulates a deploy that lost the feeds/ tree; reset by the test that sets it.
     let feedDown = false;
+    // Simulates the Pages build still running: that many feed requests 404
+    // before the file appears (the race that broke run 33409874725).
+    let feedDelay = 0;
     const HASH = "abc12345";
     const sitemap = () =>
         `<?xml version="1.0" encoding="UTF-8"?><urlset>${locs
@@ -182,6 +185,12 @@ describe("smoke-live.mjs", () => {
                 res.writeHead(200, { "content-type": "text/html" });
                 res.end("<h1>events</h1>");
             } else if (req.url === "/feeds/all.ics" && !feedDown) {
+                if (feedDelay > 0) {
+                    feedDelay--;
+                    res.writeHead(404);
+                    res.end("building");
+                    return;
+                }
                 res.writeHead(200, { "content-type": "text/calendar" });
                 res.end("BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n");
             } else if (req.url === "/moved") {
@@ -210,6 +219,17 @@ describe("smoke-live.mjs", () => {
         locs = [`${base}/`, `${base}/events`];
         const { stderr } = await smoke();
         assert.match(stderr, /2 sitemap URLs OK/);
+    });
+
+    it("keeps polling the feed anchor until the pages build catches up", async () => {
+        feedDelay = 2;
+        try {
+            const { stderr } = await smoke();
+            assert.match(stderr, /retrying/);
+            assert.match(stderr, /filtered-feed anchor OK/);
+        } finally {
+            feedDelay = 0;
+        }
     });
 
     it("fails when the filtered-feed anchor is missing", async () => {
