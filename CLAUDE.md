@@ -36,11 +36,13 @@ Always branch (**`feat/<kebab>`** or **`fix/<kebab>`**) from current `main`, com
 ### How CI works
 
 ```
-PR to main  →  Unit tests + layout sync check (fast, no Playwright)
-Push to main  →  Full suite (unit + E2E × 2 browsers)  →  Deploy to live
+PR to main (Forgejo)  →  Unit tests + layout sync check (fast, no Playwright)
+Push to main (GitHub) →  Full suite (unit + E2E × 2 browsers)  →  Deploy to live
 ```
 
 Tests gate deployment, not contribution: a PR with failing units or layout drift gets flagged, but the heavy Playwright suite only runs after merge to `main`.
+
+The PR gate lives in `.forgejo/workflows/ci.yml` because PRs live on Forgejo. Once `.forgejo/workflows/` exists, Forgejo ignores `.github/workflows/` entirely — those (deploy, calendar sync, release, funding, and the GitHub twin of the PR gate for Dependabot PRs) run only on the GitHub mirror. Keep the two `ci.yml` files in lockstep when changing the gate.
 
 ### For AI agents — tests
 

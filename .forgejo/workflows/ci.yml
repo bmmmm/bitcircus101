@@ -1,0 +1,55 @@
+name: PR checks
+
+# Forgejo-side PR gate — the twin of .github/workflows/ci.yml.
+#
+# Why this directory exists at all: once .forgejo/workflows/ is present,
+# Forgejo ignores .github/workflows/ ENTIRELY (per-directory fallback, see
+# https://codeberg.org/forgejo/forgejo/issues/9203). That is exactly what we
+# want: the .github workflows (deploy, calendar sync, release, funding) are
+# GitHub-mirror-only — on Forgejo they used to pile up as waiting/failed runs
+# because the self-hosted runner deliberately offers no ubuntu-latest label.
+# PRs live on Forgejo, so this is the only place a PR gate can actually fire.
+#
+# Keep the checks in lockstep with .github/workflows/ci.yml — a gate that
+# disagrees with its twin is not the same gate, it just fails at a different
+# time. Node version pinned to the same major as the GitHub gate.
+
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "*.md"
+      - "LICENSE"
+      - ".claudeignore"
+      - ".gitignore"
+      - "llms.txt"
+
+jobs:
+  quick-test:
+    runs-on: docker
+    container:
+      image: data.forgejo.org/oci/node:24-bookworm
+    steps:
+      - uses: https://data.forgejo.org/actions/checkout@v4
+
+      - name: Verify layout HTML matches partials and logo slider
+        run: |
+          # build-lite-events.mjs is intentionally NOT part of this gate: it stamps
+          # today's date + live event data into lite/index.html, so that file can
+          # never be drift-free in a PR. It is a deploy-time artifact like
+          # sitemap.xml — regenerated in deploy.yml, never gated here.
+          node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
+          git diff --exit-code -- '*.html' || (
+            echo "::error::HTML drift: run pnpm run build:layout and pnpm run build:logos, then commit the updated HTML files."
+            exit 1
+          )
+
+      - name: Validate calendar sources
+        # Offline only — no network in the PR gate. Catches the silent failures of
+        # the two-step "add a calendar" flow: a source file that nobody listed in
+        # calendars/config.json, a misspelled key, a duplicate id/name.
+        run: node scripts/check-calendars.mjs
+
+      - name: Run unit tests
+        run: node --test tests/*.spec.mjs
