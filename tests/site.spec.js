@@ -1,5 +1,6 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const { buildEventsData, useEventsFixture } = require('./fixtures/events-data');
 
 // ─── Home Page ───────────────────────────────────────────────────────────────
 
@@ -185,15 +186,19 @@ test.describe('Events page', () => {
 });
 
 // ─── Events Content & Functionality ──────────────────────────────────────────
-// These tests require events-data.json with real calendar data.
-// In CI, the sync script may fail (network), producing an empty fixture.
-// Tests that need real events check for their presence first.
+// These tests serve a deterministic events-data.json (tests/fixtures) instead
+// of whatever the live calendar returned. Before, a missing or empty file —
+// every local checkout, and CI whenever the sync fetch failed — made them
+// return early and pass without asserting anything.
 
 test.describe('Events content', () => {
+    test.beforeEach(async ({ page }) => {
+        await useEventsFixture(page);
+    });
+
     test('tags, filtering and month grouping work when events are loaded', async ({ page }) => {
         await page.goto('/events.html');
-        const card = page.locator('.event-card').first();
-        if (!await card.isVisible({ timeout: 5000 }).catch(() => false)) return;
+        await expect(page.locator('.event-card').first()).toBeVisible();
 
         // Tags present
         expect(await page.locator('.event-tag').count()).toBeGreaterThan(0);
@@ -230,8 +235,7 @@ test.describe('Events content', () => {
 
     test('URL state and search round-trip, and survive the bitcircus toggle', async ({ page }) => {
         await page.goto('/events.html');
-        const card = page.locator('.event-card').first();
-        if (!await card.isVisible({ timeout: 5000 }).catch(() => false)) return;
+        await expect(page.locator('.event-card').first()).toBeVisible();
 
         // Chip click lands in the URL
         const countBefore = await page.locator('.event-card').count();
@@ -276,69 +280,42 @@ test.describe('Events content', () => {
         await expect(page).toHaveURL(/[?&]nur=bc/);
     });
 
-    test('subscribe buttons follow a single-tag filter only when the manifest lists it', async ({ page }) => {
+    test('subscribe buttons follow the filter, and say so when no feed matches', async ({ page }) => {
         await page.goto('/events.html');
-        const card = page.locator('.event-card').first();
-        if (!await card.isVisible({ timeout: 5000 }).catch(() => false)) return;
+        await expect(page.locator('.event-card').first()).toBeVisible();
 
-        const manifest = await page.evaluate(() =>
-            fetch('events-data.json')
-                .then((r) => (r.ok ? r.json() : null))
-                .then((d) => (d && d.feeds) || null)
-                .catch(() => null)
-        );
         const note = page.locator('#events-feed-scope');
+        const split = page.locator('#events-feed-split');
         const rssBtn = page.locator('[data-feed="rss"]');
         const rssDefault = await rssBtn.getAttribute('href');
 
-        if (!manifest) {
-            // Degradation path (old JSON / fixture): filters never touch the box
-            await page.locator('.events-filter__tag').first().click();
-            await expect(note).toBeHidden();
-            expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
-            return;
-        }
-
-        // Pick a chip whose tag the manifest actually lists
-        const chips = page.locator('.events-filter__tag');
-        let chip = null;
-        for (let i = 0; i < await chips.count(); i++) {
-            const t = (await chips.nth(i).getAttribute('data-tag')).toLowerCase();
-            if (manifest.tags && manifest.tags[t]) { chip = chips.nth(i); break; }
-        }
-        if (!chip) return; // window without listed tags — nothing to assert
-
-        await chip.click();
+        // One listed tag → the buttons point at exactly that tag's feed
+        await page.locator('.events-filter__tag[data-tag="#hardware"]').click();
         await expect(note).toBeVisible();
-        const scopedHref = await rssBtn.getAttribute('href');
-        expect(scopedHref).toContain('/feeds/tag/');
+        expect(await rssBtn.getAttribute('href')).toBe('/feeds/tag/hardware.xml');
+        await expect(split).toBeHidden();
 
-        // A second active tag is no single scope — defaults return, and the box
-        // says why instead of quietly handing out the unfiltered feed
-        const second = page.locator('.events-filter__tag:not(.active)').first();
-        if (await second.count()) {
-            const secondTag = (await second.getAttribute('data-tag')).toLowerCase();
-            await second.click();
-            await expect(note).toBeHidden();
-            expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
+        // Two tags are no single scope: defaults return and the box names the
+        // per-tag feeds instead of quietly handing out the unfiltered one
+        await page.locator('.events-filter__tag[data-tag="#linux"]').click();
+        await expect(note).toBeHidden();
+        expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
+        await expect(split).toBeVisible();
+        const links = split.locator('.events-subscribe__scope-links a');
+        await expect(links).toHaveCount(2);
+        await expect(links.first()).toHaveAttribute('href', '/feeds/tag/hardware.xml');
 
-            const split = page.locator('#events-feed-split');
-            if (manifest.tags && manifest.tags[secondTag]) {
-                // Both tags are listed → one per-tag link each, no combined feed
-                await expect(split).toBeVisible();
-                const links = split.locator('.events-subscribe__scope-links a');
-                await expect(links).toHaveCount(2);
-                expect(await links.first().getAttribute('href')).toContain('/feeds/tag/');
-            } else {
-                await expect(split).toBeHidden();
-            }
-        }
+        // The source toggle alone resolves to that source's feed
+        await page.locator('.events-filter__clear').click();
+        await page.locator('#events-only-bitcircus').check();
+        await expect(note).toBeVisible();
+        expect(await rssBtn.getAttribute('href')).toBe('/feeds/source/bitcircus.xml');
+        await expect(split).toBeHidden();
     });
 
     test('sync status labels are shown when data is available', async ({ page }) => {
         await page.goto('/events.html');
-        const card = page.locator('.event-card').first();
-        if (!await card.isVisible({ timeout: 5000 }).catch(() => false)) return;
+        await expect(page.locator('.event-card').first()).toBeVisible();
 
         const syncEl = page.locator('#events-last-sync');
         await expect(syncEl).toBeVisible({ timeout: 5000 });
