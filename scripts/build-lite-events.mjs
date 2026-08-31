@@ -3,6 +3,11 @@
  * Inject upcoming bitcircus101 events into lite/index.html between
  * <!-- lite-events:start --> and <!-- lite-events:end --> markers.
  * Run after syncing events-data.json: pnpm run build:lite-events
+ *
+ * Scope: events only. The "Projekte & Kosten" block and the "Stand" date next
+ * to it belong to build-lite-finanz.mjs — this script used to stamp that date
+ * with new Date(), which dated hand-frozen funding figures to the day of the
+ * deploy. The date now comes from finanz.json's own `updated` field.
  */
 import fs from "fs";
 import path from "path";
@@ -16,8 +21,6 @@ const BITCIRCUS_CAL = path.join(root, "calendars", "bitcircus.json");
 
 const START = "<!-- lite-events:start -->";
 const END = "<!-- lite-events:end -->";
-const STAND_START = "<!-- lite-stand-date -->";
-const STAND_END = "<!-- /lite-stand-date -->";
 const MAX_EVENTS = 8;
 
 const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
@@ -132,17 +135,6 @@ function main() {
   }
 
   html = html.slice(0, si + START.length) + "\n" + markup + "\n" + html.slice(ei);
-
-  const todayDisplay = [
-    String(now.getDate()).padStart(2, "0"),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    now.getFullYear(),
-  ].join(".");
-  const sdi = html.indexOf(STAND_START);
-  const edi = html.indexOf(STAND_END);
-  if (sdi !== -1 && edi !== -1) {
-    html = html.slice(0, sdi + STAND_START.length) + todayDisplay + html.slice(edi);
-  }
 
   fs.writeFileSync(LITE, html, "utf8");
   console.log(`lite-events: injected ${upcoming.length} event(s) into lite/index.html`);
