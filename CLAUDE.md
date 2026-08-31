@@ -124,6 +124,7 @@ Detail lives in each file's own header comment — these are pointers:
 - `scripts/sync-events.mjs` — CI calendar sync: writes `events-data.json`, both primary feeds + `events/` copies, and the `feeds/` tree. Times are floating-local (CI pins `TZ=Europe/Berlin`; the iCal export carries a bundled VTIMEZONE)
 - `finanz-core.js` — **shared funding math** (UMD/ES5): one file for the browser renderer (`finanz.js`) and the maintainer CLI, plus the field predicates (`isCalendarDate`, `isCleanHttpsUrl`) the CLI validator calls
 - `scripts/finanz.mjs` + `scripts/finanz-data.mjs` — the funding board's CLI and its pure data layer; see [Editing the funding board](#editing-the-funding-board)
+- `scripts/build-lite-finanz.mjs` — writes the lite page's funding block **and** its "Stand" date from `finanz.json` (deterministic → gated). Its sibling `build-lite-events.mjs` writes only the event list and is deploy-only (live data → never drift-free)
 - `scripts/check-calendars.mjs` — manifest validator (offline, exits non-zero) + read-only `--probe` card preview; tested by `tests/calendars.spec.mjs`
 - `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay preserving CI feeds + pruning, `?v=` busting, post-deploy health check incl. a full sitemap walk — any non-200 breaks the deploy), tested via `tests/deploy-scripts.spec.mjs`
 - `llms.txt` — LLM-friendly site summary ([llms.txt standard](https://llmstxt.org/))
@@ -154,6 +155,8 @@ pnpm run finanz:validate            # validate against finanz.schema.json
 ```
 
 Every write validates **first** and refuses with an error naming the bad field, so an invalid `finanz.json` never reaches disk. Both files stay tracked on `main` — commit them like any other change. `pnpm run finanz:validate` is also a PR gate in both `ci.yml`, which catches the one path the CLI cannot: hand-editing the JSON.
+
+**After changing `finanz.json`, run `pnpm run build:lite-finanz`** and commit `lite/index.html` alongside it. The lite page's "Projekte & Kosten" block and its "Stand" date are generated from `finanz.json` — the same drift gate that covers the layout partials covers this, so a forgotten rebuild fails the PR. (`pnpm run build` runs it together with the other deterministic generators.)
 
 `finanz.schema.json` is the structural contract; `scripts/finanz-data.mjs` mirrors it in a hand-rolled validator (no ajv, no new dependency) and `tests/finanz-data.spec.mjs` asserts the two stay in lockstep.
 

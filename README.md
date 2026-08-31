@@ -44,6 +44,7 @@ scripts/
   sync-events.mjs           Fetches ICS from Nextcloud, generates events-data.json + feed.xml
   finanz.mjs                Maintainer CLI for finanz.json / funding.json
   finanz-data.mjs           Pure data layer behind that CLI (mutate + validate)
+  build-lite-finanz.mjs     Writes the lite page's funding block + Stand date from finanz.json
 
 tests/
   site.spec.js              Playwright end-to-end tests (~20 tests × 2 browsers)
