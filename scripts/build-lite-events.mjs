@@ -26,7 +26,7 @@ const MAX_EVENTS = 8;
 const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
 const MONTHS = ["JAN", "FEB", "MÄR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ"];
 
-function esc(s) {
+export function esc(s) {
   return String(s)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -34,7 +34,7 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
-function formatDate(dateStr, timeStr) {
+export function formatDate(dateStr, timeStr) {
   const [y, m, d] = dateStr.split("-").map(Number);
   const dt = new Date(y, m - 1, d);
   const day = DAYS[dt.getDay()];
@@ -43,11 +43,11 @@ function formatDate(dateStr, timeStr) {
   return `${day} ${d}. ${month}${time}`;
 }
 
-function toDatetime(dateStr, timeStr) {
+export function toDatetime(dateStr, timeStr) {
   return timeStr ? `${dateStr}T${timeStr}` : dateStr;
 }
 
-function normalizeUrl(u) {
+export function normalizeUrl(u) {
   if (!u) return null;
   if (/^https?:\/\//i.test(u)) return u;
   if (/^webcal:\/\//i.test(u)) return u;
@@ -55,7 +55,7 @@ function normalizeUrl(u) {
   return null;
 }
 
-function buildMarkup(events, icsUrl, rssPath) {
+export function buildMarkup(events, icsUrl, rssPath) {
   if (!events.length) {
     return `<p class="dim">Keine Termine eingetragen — <a href="../events.html">Veranstaltungen</a></p>`;
   }
@@ -78,6 +78,38 @@ function buildMarkup(events, icsUrl, rssPath) {
     : "";
 
   return `<ul>\n${items}\n</ul>\n<p class="dim">→ ${subLinks}<a href="${esc(rssPath)}">RSS-Feed</a> · <a href="../events.html">Alle Termine</a></p>`;
+}
+
+/**
+ * Which RSS feed the lite page should advertise. The manifest is keyed by
+ * calendar id, so the source is resolved by its card-facing `name`, exactly as
+ * the events page does (events.js feedScope). Falls back to `fallback` when the
+ * manifest has no bitcircus feed — see the comment at the call site for why the
+ * per-source feed is preferred over the primary one.
+ */
+export function resolveRssPath(data, fallback = "../feed.xml") {
+  const sources = (data && data.feeds && data.feeds.sources) || {};
+  for (const id of Object.keys(sources)) {
+    if (sources[id].name === "bitcircus101" && sources[id].rss) return sources[id].rss;
+  }
+  return fallback;
+}
+
+/**
+ * The bitcircus101 events from `todayStr` onwards, chronological, capped at
+ * MAX_EVENTS. Pure: the caller passes today in, so the selection is testable
+ * without mocking the clock.
+ */
+export function selectUpcoming(data, todayStr) {
+  const all = (data && data.events) || [];
+  return all
+    .filter((e) => e.source === "bitcircus101" && e.date >= todayStr)
+    .sort((a, b) => {
+      const ka = a.date + (a.time || "");
+      const kb = b.date + (b.time || "");
+      return ka < kb ? -1 : ka > kb ? 1 : 0;
+    })
+    .slice(0, MAX_EVENTS);
 }
 
 function main() {
@@ -104,25 +136,8 @@ function main() {
   let upcoming = [];
   if (fs.existsSync(EVENTS_JSON)) {
     const data = JSON.parse(fs.readFileSync(EVENTS_JSON, "utf8"));
-    const all = data.events || [];
-
-    // Resolve the source by its card-facing name, exactly as the events page
-    // does (events.js feedScope) — the manifest is keyed by calendar id.
-    const sources = (data.feeds && data.feeds.sources) || {};
-    for (const id of Object.keys(sources)) {
-      if (sources[id].name === "bitcircus101" && sources[id].rss) {
-        rssPath = sources[id].rss;
-        break;
-      }
-    }
-    upcoming = all
-      .filter((e) => e.source === "bitcircus101" && e.date >= todayStr)
-      .sort((a, b) => {
-        const ka = a.date + (a.time || "");
-        const kb = b.date + (b.time || "");
-        return ka < kb ? -1 : ka > kb ? 1 : 0;
-      })
-      .slice(0, MAX_EVENTS);
+    rssPath = resolveRssPath(data, rssPath);
+    upcoming = selectUpcoming(data, todayStr);
   }
 
   const markup = buildMarkup(upcoming, icsUrl, rssPath);
@@ -140,4 +155,7 @@ function main() {
   console.log(`lite-events: injected ${upcoming.length} event(s) into lite/index.html`);
 }
 
-main();
+// Only run when invoked directly — importing this from a test must not write.
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  main();
+}
