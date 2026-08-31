@@ -86,19 +86,32 @@ console.error("smoke: 404 handling OK");
 
 // The filtered-feed tree never appears in the sitemap (feeds are not pages), so
 // the sitemap walk below cannot see it. One explicit probe of its anchor file
-// catches the whole class of "deploy pruned feeds/" regressions. The deploy's
-// regenerate guard creates feeds/all.ics when missing, so a 404 here is real.
-try {
-    const feedUrl = `${base}/feeds/all.ics`;
-    const feed = await get(feedUrl);
-    const feedBody = feed.ok ? await feed.text() : "";
-    if (!feed.ok || !feedBody.startsWith("BEGIN:VCALENDAR")) {
-        fail(`${feedUrl} returned ${feed.status}${feed.ok ? " without a VCALENDAR body" : ""}`);
+// catches the whole class of "deploy pruned feeds/" regressions.
+//
+// Polled against the SAME overall deadline as the hash check, because the hash
+// is no freshness signal when a deploy changes no hashed asset: the poll above
+// then matches the PREVIOUS Pages build instantly, while the build carrying the
+// new commit is still running (~1 min) — seen live on the deploy that
+// introduced feeds/ (run 33409874725: push at :19.45, probe 404 at :20.11,
+// Pages build finished 46s later with the file present).
+const feedUrl = `${base}/feeds/all.ics`;
+for (;;) {
+    try {
+        const feed = await get(feedUrl);
+        const feedBody = feed.ok ? await feed.text() : "";
+        if (feed.ok && feedBody.startsWith("BEGIN:VCALENDAR")) break;
+        console.error(
+            `smoke: ${feedUrl} returned ${feed.status}${feed.ok ? " without a VCALENDAR body" : ""} — retrying`,
+        );
+    } catch (e) {
+        console.error(`smoke: feed fetch failed: ${e.message}`);
     }
-    console.error("smoke: filtered-feed anchor OK");
-} catch (e) {
-    fail(`feed check errored: ${e.message}`);
+    if (Date.now() > deadline) {
+        fail(`${feedUrl} did not serve a VCALENDAR within ${TIMEOUT}ms`);
+    }
+    await sleep(INTERVAL);
 }
+console.error("smoke: filtered-feed anchor OK");
 
 // ── Sitemap-driven page check ───────────────────────────────────────────────
 // The sitemap is the site's own claim about which URLs exist, so it is the one
