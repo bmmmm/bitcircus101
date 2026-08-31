@@ -63,7 +63,7 @@
     var exSet = {};
     exdates.forEach(function (d) { exSet[d.toDateString()] = true; });
     var out = [];
-    var interval = p.INTERVAL ? +p.INTERVAL : 1; // shared by the WEEKLY + DAILY branches
+    var interval = p.INTERVAL ? +p.INTERVAL : 1; // shared by the WEEKLY, MONTHLY-by-monthday + DAILY branches
 
     if (p.FREQ === "WEEKLY") {
       // BYDAY may list several weekdays ("MO,WE,FR") — expand every one, not just
@@ -129,6 +129,59 @@
           mo.setMonth(mo.getMonth() + 1);
         }
       }
+    } else if (p.FREQ === "MONTHLY") {
+      // MONTHLY without BYDAY recurs by day-of-month: the BYMONTHDAY list when
+      // given (negative values count from the month's end per RFC5545 §3.3.10 —
+      // -1 is the last day), else DTSTART's day. A month lacking the day
+      // (BYMONTHDAY=31 in February) is skipped, not clamped, and the skipped
+      // slot does not count toward COUNT — RFC5545 ignores invalid dates.
+      // Before this branch existed such series fell through to the warn below
+      // and silently vanished from the site ("jeden 15." never rendered).
+      var mdays = [];
+      if (p.BYMONTHDAY) {
+        p.BYMONTHDAY.split(",").forEach(function (tok) {
+          var v = parseInt(tok, 10);
+          if (v >= -31 && v <= 31 && v !== 0 && mdays.indexOf(v) === -1) mdays.push(v);
+        });
+      }
+      if (!mdays.length) mdays.push(dtstart.getDate());
+      var moM = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
+      var monthsFrom = 0; // INTERVAL counts months from dtstart's month
+      var genMd = 0;
+      while (moM <= limit && genMd < max) {
+        if (monthsFrom % interval === 0) {
+          var dim = new Date(moM.getFullYear(), moM.getMonth() + 1, 0).getDate();
+          // Resolve the monthdays for THIS month (negatives depend on its
+          // length), dedupe (-1 and 31 collide in a 31-day month), keep
+          // chronological order within the month.
+          var resolved = [];
+          for (var mi = 0; mi < mdays.length; mi++) {
+            var day = mdays[mi] > 0 ? mdays[mi] : dim + mdays[mi] + 1;
+            if (day >= 1 && day <= dim && resolved.indexOf(day) === -1) resolved.push(day);
+          }
+          resolved.sort(function (a, b) { return a - b; });
+          // BYSETPOS picks one instance out of the month's set (RFC5545): the
+          // real calendar carries "BYSETPOS=-1;BYMONTHDAY=28,29,30" = the last
+          // existing of those days — month-end via Apple-style rules.
+          if (p.BYSETPOS) {
+            var pos = +p.BYSETPOS;
+            var pick = pos > 0 ? resolved[pos - 1] : resolved[resolved.length + pos];
+            resolved = pick != null ? [pick] : [];
+          }
+          for (var ri = 0; ri < resolved.length && genMd < max; ri++) {
+            var dmd = new Date(
+              moM.getFullYear(), moM.getMonth(), resolved[ri],
+              dtstart.getHours(), dtstart.getMinutes(), 0, 0
+            );
+            if (dmd >= dtstart && dmd <= limit) {
+              genMd++; // counts toward COUNT regardless of EXDATE (RFC5545)
+              if (!exSet[dmd.toDateString()]) out.push(new Date(dmd));
+            }
+          }
+        }
+        moM.setMonth(moM.getMonth() + 1);
+        monthsFrom++;
+      }
     } else if (p.FREQ === "DAILY") {
       var cd = new Date(dtstart);
       var genD = 0;
@@ -146,8 +199,8 @@
         cy.setFullYear(cy.getFullYear() + 1);
       }
     } else {
-      // MONTHLY-by-monthday, hourly, etc. are not expanded — surface it instead of
-      // silently dropping the event so a missing series is debuggable from CI logs.
+      // Hourly, minutely, etc. are not expanded — surface it instead of silently
+      // dropping the event so a missing series is debuggable from CI logs.
       console.warn("[rrule] unsupported FREQ=" + (p.FREQ || "?") + " — event not expanded");
     }
     return out;
