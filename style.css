@@ -1719,6 +1719,88 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 .ascii-playground__labeltext { color: var(--ink); }
 
 /* =============================================================================
+   Kiosk (/kiosk/) — wall display, no chrome. Type scales with the screen;
+   today's rows are reverse-video (a state marker, so ink/paper — the running-
+   now dot is the one accent use, a current-state marker per the token rule).
+   ============================================================================= */
+.kiosk-body { margin: 0; }
+
+.kiosk {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 2vh 2vw;
+    font-size: clamp(1rem, 1.6vw, 2.2rem);
+}
+
+.kiosk__top {
+    display: flex;
+    align-items: baseline;
+    gap: 1ch;
+    border-bottom: 1px solid var(--line-strong);
+    padding-bottom: 0.3em;
+    margin-bottom: 0.6em;
+}
+.kiosk__brand { font-weight: 700; color: var(--ink-max); }
+.kiosk__path { color: var(--ink-dim); }
+.kiosk__clock {
+    margin-left: auto;
+    font-size: 1.6em;
+    color: var(--ink-max);
+    white-space: nowrap;
+}
+
+.kiosk__list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.4em;
+    /* it IS a <main> — undo the global centered reading measure, the wall
+       display uses the full width like its header and status bar */
+    max-width: none;
+    margin: 0;
+    padding: 0;
+}
+
+.kiosk-row {
+    display: grid;
+    grid-template-columns: 9ch 10ch 1fr auto;
+    gap: 0 2ch;
+    align-items: baseline;
+    border-bottom: 1px solid var(--line);
+    padding: 0.4em 0.5ch;
+}
+.kiosk-row__when { color: var(--ink-dim); white-space: nowrap; }
+.kiosk-row__time { color: var(--ink); white-space: nowrap; }
+.kiosk-row__title {
+    color: var(--ink-max);
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.kiosk-row__side { color: var(--ink-dim); font-size: 0.7em; white-space: nowrap; }
+
+.kiosk-row--today { background: var(--ink); }
+.kiosk-row--today .kiosk-row__when,
+.kiosk-row--today .kiosk-row__time,
+.kiosk-row--today .kiosk-row__title,
+.kiosk-row--today .kiosk-row__side { color: var(--paper); }
+
+.kiosk-row--now .kiosk-row__when::before { content: "● "; color: var(--accent); }
+
+.kiosk-empty,
+.kiosk-offline { color: var(--ink-dim); }
+
+.kiosk__bar {
+    border-top: 1px solid var(--line);
+    padding-top: 0.3em;
+    color: var(--ink-dim);
+    font-size: 0.7em;
+}
+
+/* =============================================================================
    Utilities
    ============================================================================= */
 .text-center { text-align: center; }
@@ -1784,6 +1866,9 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     .location-card__grid { grid-template-columns: 1fr; }
     .location-card__map-ascii { border-right: none; border-bottom: 1px solid var(--line); }
     .footer__status { margin-left: 0; width: 100%; }
+    /* phones are not the kiosk target, but it must not fall apart there */
+    .kiosk-row { grid-template-columns: 8ch 1fr; }
+    .kiosk-row__side { display: none; }
 }
 
 /* =============================================================================
