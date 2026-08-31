@@ -57,11 +57,13 @@ jobs:
 
       - name: Verify HTML matches layout partials and logo slider
         run: |
-          # build-lite-events.mjs is intentionally NOT part of this gate: it stamps
-          # today's date + live event data into lite/index.html (a deploy-time
-          # artifact like sitemap.xml), so it can never be drift-free here.
+          # build-lite-events.mjs is intentionally NOT part of this gate: it writes
+          # live event data into lite/index.html (a deploy-time artifact like
+          # sitemap.xml), so it can never be drift-free here. build-lite-finanz.mjs
+          # IS gated — deterministic output from the tracked finanz.json.
           node scripts/inject-layout.mjs
           node scripts/build-logo-slider.mjs
+          node scripts/build-lite-finanz.mjs
           git diff --exit-code -- '*.html' || (
             echo "::error::HTML drift: run pnpm run build:layout and pnpm run build:logos, then commit."
             exit 1
@@ -126,11 +128,12 @@ jobs:
           git checkout origin/main -- scripts/
           node scripts/live-overlay.mjs origin/main
 
-      - name: Apply layout partials, logo slider, and lite events to HTML
+      - name: Apply layout partials, logo slider, and lite blocks to HTML
         run: |
           node scripts/inject-layout.mjs
           node scripts/build-logo-slider.mjs
           node scripts/build-lite-events.mjs
+          node scripts/build-lite-finanz.mjs
 
       - name: Remove build-only includes/ partials
         # includes/site-header.html, site-footer.html and site-skip.html are
