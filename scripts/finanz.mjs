@@ -21,9 +21,11 @@
  *
  * UI text is German; code comments are English (project convention).
  */
+import path from "node:path";
 import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import {
   read,
   write,
@@ -106,6 +108,59 @@ function printBoard(data) {
   console.log("");
 }
 
+// ── Machine-readable board (--json) ──────────────────────────────────────────
+
+/** Copy the optional string fields that are actually set, dropping the rest. */
+function pickOptional(item, keys) {
+  const out = {};
+  for (const k of keys) if (item[k]) out[k] = item[k];
+  return out;
+}
+
+/**
+ * The board as data — everything printBoard shows except the ASCII bar, which
+ * is presentation, not data. Every derived number (pct, remaining, reached)
+ * comes from Core.computeProject, the same function support.html renders
+ * through, so `list --json` can never drift from the public page.
+ *
+ * Optional item fields are omitted when unset, mirroring finanz.json itself.
+ * `pulse` is always present with a stable shape so a consumer can read
+ * .pulse.levels without a guard, even on a file that has no pulse key yet.
+ *
+ * Pure: no I/O, no clock — the caller passes both files in, which is what makes
+ * it unit-testable without spawning the CLI.
+ */
+export function boardJson(data, funding) {
+  data = data || {};
+  const currency = data.currency || "EUR";
+  const pulse = data.pulse || {};
+  return {
+    currency,
+    updated: data.updated || null,
+    percent: funding && funding.percent != null ? funding.percent : null,
+    einmalig: (data.einmalig || []).map((p) => {
+      const view = Core.computeProject(p, { currency });
+      return {
+        id: view.id,
+        title: view.title,
+        ...pickOptional(p, ["tagline", "icon"]),
+        target: view.target,
+        raised: view.raised,
+        remaining: view.remaining,
+        pct: view.pct,
+        reached: view.reached,
+      };
+    }),
+    monatlich: (data.monatlich || []).map((m) => ({
+      id: m.id,
+      title: m.title,
+      ...pickOptional(m, ["tagline", "icon"]),
+      monthly: m.monthly,
+    })),
+    pulse: { updated: pulse.updated || null, levels: pulse.levels || [] },
+  };
+}
+
 // ── Shared write helper ──────────────────────────────────────────────────────
 
 /**
@@ -165,14 +220,17 @@ Aufruf:
 
 Befehle:
   --help, -h, help           diese Hilfe (Exit 0)
-  list                       Board anzeigen
-  validate                   finanz.json gegen das Schema prüfen
+  list [--json]              Board anzeigen (--json: nur JSON auf stdout)
+  validate [--json]          finanz.json prüfen (--json: {ok, errors})
   raise <id> <betrag>        Betrag zu "raised" eines Projekts addieren (auch negativ)
   finish <id>                Projekt auf erreicht setzen (raised = target)
   add                        neues einmaliges Projekt anlegen (interaktiv)
   monthly                    monatliche Kosten verwalten (interaktiv)
   pulse <level>              Puls-Level 0..7 anhängen (wertfrei, keine Euro-Angabe)
   percent <n>                Gesamt-% (funding.json) setzen, 0..100
+
+"add" und "monthly" sowie das Menü sind interaktiv: ohne TTY brechen sie mit
+Exit 1 ab, statt still nichts zu tun.
 
 Hinweis: Jeder Schreibvorgang validiert zuerst und bricht mit konkreter
 Fehlermeldung ab, wenn das Ergebnis ungültig wäre. Daten ohne Personenbezug —
@@ -185,16 +243,30 @@ function fail(message) {
   process.exit(1);
 }
 
-async function runSubcommand(cmd, args) {
+async function runSubcommand(cmd, rawArgs) {
   const date = today();
+  // --json is stripped before positional parsing so it can never be mistaken
+  // for an id or an amount, whichever subcommand it is passed to.
+  const wantsJson = rawArgs.includes("--json");
+  const args = rawArgs.filter((a) => a !== "--json");
 
   if (cmd === "list") {
+    if (wantsJson) {
+      console.log(JSON.stringify(boardJson(read(), readFunding()), null, 2));
+      return;
+    }
     printBoard(read());
     return;
   }
 
   if (cmd === "validate") {
     const { ok, errors } = validate(read());
+    if (wantsJson) {
+      // Same exit codes as the prose path; stdout stays parseable either way.
+      console.log(JSON.stringify({ ok, errors }, null, 2));
+      if (!ok) process.exitCode = 1;
+      return;
+    }
     if (ok) {
       console.log("✓ finanz.json ist gültig.");
       return;
@@ -576,7 +648,14 @@ async function main() {
   await runSubcommand(cmd, args);
 }
 
-main().catch((e) => {
-  console.error("✗ " + (e && e.message ? e.message : e));
-  process.exit(1);
-});
+// Only run when invoked directly — importing this from a test must not start
+// the CLI (and must not open a prompt or touch finanz.json).
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
+  main().catch((e) => {
+    console.error("✗ " + (e && e.message ? e.message : e));
+    process.exit(1);
+  });
+}
