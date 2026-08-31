@@ -16,6 +16,13 @@ const {
   computeProject,
   donateTarget,
   BAR_WIDTH,
+  PULSE_MAX,
+  pulseLevel,
+  pulseGlyph,
+  pulseSparkline,
+  pushPulse,
+  isCalendarDate,
+  isCleanHttpsUrl,
 } = FinanzCore;
 
 describe("rawPercent", () => {
@@ -128,5 +135,100 @@ describe("donateTarget", () => {
   it("is internal for an empty or missing item", () => {
     assert.equal(donateTarget({}).external, false);
     assert.equal(donateTarget(null).href, "#dauerhaft");
+  });
+});
+
+describe("pulseLevel", () => {
+  it("buckets a value into 0..PULSE_MAX against a scale", () => {
+    assert.equal(pulseLevel(0, 100), 0);
+    assert.equal(pulseLevel(100, 100), PULSE_MAX);
+    assert.equal(pulseLevel(50, 100), Math.round(0.5 * PULSE_MAX)); // 4
+  });
+  it("returns 0 for a zero or negative scale (no divide-by-zero)", () => {
+    assert.equal(pulseLevel(50, 0), 0);
+    assert.equal(pulseLevel(50, -10), 0);
+  });
+  it("clamps over-scale and negative values into range", () => {
+    assert.equal(pulseLevel(999, 100), PULSE_MAX);
+    assert.equal(pulseLevel(-5, 100), 0);
+  });
+});
+
+describe("pulseGlyph", () => {
+  it("maps a level to its block glyph", () => {
+    assert.equal(pulseGlyph(0), "▁");
+    assert.equal(pulseGlyph(PULSE_MAX), "█");
+  });
+  it("clamps out-of-range levels", () => {
+    assert.equal(pulseGlyph(99), "█");
+    assert.equal(pulseGlyph(-3), "▁");
+  });
+  it("falls back to the baseline glyph for a non-number", () => {
+    assert.equal(pulseGlyph("x"), "▁");
+  });
+});
+
+describe("pulseSparkline", () => {
+  it("renders each level as a glyph", () => {
+    assert.equal(pulseSparkline([0, PULSE_MAX, 0]), "▁█▁");
+  });
+  it("returns an empty string for a non-array", () => {
+    assert.equal(pulseSparkline(null), "");
+    assert.equal(pulseSparkline(undefined), "");
+  });
+  it("never leaks an exact euro amount — output is glyphs only", () => {
+    const out = pulseSparkline([1, 2, 3, 4]);
+    assert.match(out, /^[▁▂▃▄▅▆▇█]+$/u);
+  });
+});
+
+describe("pushPulse", () => {
+  it("appends a clamped level without mutating the input", () => {
+    const src = [1, 2, 3];
+    const next = pushPulse(src, 9);
+    assert.deepEqual(src, [1, 2, 3]); // unchanged
+    assert.deepEqual(next, [1, 2, 3, PULSE_MAX]); // 9 clamped to max
+  });
+  it("caps the track to the most recent maxLen entries", () => {
+    const next = pushPulse([1, 2, 3, 4], 5, 3);
+    assert.deepEqual(next, [3, 4, 5]);
+  });
+  it("treats a non-array as an empty track", () => {
+    assert.deepEqual(pushPulse(null, 2), [2]);
+  });
+  it("defaults to a 24-entry cap", () => {
+    let track = [];
+    for (let i = 0; i < 30; i++) track = pushPulse(track, i % 8);
+    assert.equal(track.length, 24);
+  });
+});
+
+// Shared field predicates — one source, so the CLI validator
+// (scripts/finanz-data.mjs) and any future browser-side check cannot drift.
+describe("isCalendarDate", () => {
+  it("accepts real dates including a leap day", () => {
+    assert.equal(isCalendarDate("2026-06-22"), true);
+    assert.equal(isCalendarDate("2024-02-29"), true);
+  });
+  it("rejects impossible or malformed dates", () => {
+    assert.equal(isCalendarDate("2026-13-99"), false);
+    assert.equal(isCalendarDate("2026-02-30"), false);
+    assert.equal(isCalendarDate("2023-02-29"), false); // 2023 is not a leap year
+    assert.equal(isCalendarDate("22.06.2026"), false);
+    assert.equal(isCalendarDate(""), false);
+    assert.equal(isCalendarDate(null), false);
+  });
+});
+
+describe("isCleanHttpsUrl", () => {
+  it("accepts a normal https URL", () => {
+    assert.equal(isCleanHttpsUrl("https://ko-fi.com/bitcircus"), true);
+  });
+  it("rejects a bare scheme, whitespace, non-https and non-strings", () => {
+    assert.equal(isCleanHttpsUrl("https://"), false);
+    assert.equal(isCleanHttpsUrl("https://a b c"), false);
+    assert.equal(isCleanHttpsUrl("http://ko-fi.com"), false);
+    assert.equal(isCleanHttpsUrl(""), false);
+    assert.equal(isCleanHttpsUrl(null), false);
   });
 });
