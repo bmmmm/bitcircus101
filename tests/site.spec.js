@@ -524,6 +524,7 @@ test.describe('No JavaScript errors', () => {
         ['/ascii/', 'ASCII playground'],
         ['/chat/', 'Signal'],
         ['/lite/', 'Lite'],
+        ['/kiosk/', 'Kiosk'],
         ['/404.html', '404'],
     ];
 
@@ -557,6 +558,33 @@ test.describe('Signal redirect stubs', () => {
             expect(html).toMatch(/window\.location\.replace\(['"]https:\/\/signal\.group\//);
         });
     }
+});
+
+// ─── Kiosk view ──────────────────────────────────────────────────────────────
+
+test.describe('Kiosk view', () => {
+    test('renders chrome-less, noindex, with a clock and an honest data state', async ({ page }) => {
+        await page.goto('/kiosk/');
+
+        // Unlisted wall display: noindex, and none of the site chrome
+        const robots = await page.locator('meta[name="robots"]').getAttribute('content');
+        expect(robots).toContain('noindex');
+        expect(await page.locator('nav, .footer__grid').count()).toBe(0);
+
+        // Clock ticks from the real time
+        await expect(page.locator('#kiosk-clock')).toHaveText(/^\d{2}:\d{2}/);
+
+        // Data-tolerant like the events tests: events-data.json is gitignored,
+        // so locally/CI either rows render or the honest empty/offline state
+        await page.waitForFunction(() => {
+            return document.querySelector('.kiosk-row') ||
+                   document.querySelector('.kiosk-empty') ||
+                   document.querySelector('.kiosk-offline');
+        }, { timeout: 8000 });
+
+        // Status line names the data stand or the source
+        await expect(page.locator('#kiosk-status')).toHaveText(/stand:|quelle:/);
+    });
 });
 
 // ─── Lite version ────────────────────────────────────────────────────────────

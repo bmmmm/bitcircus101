@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>termine — bitcircus101</title>
+        <!-- Wall-display view for the space: reachable but unlisted (like the
+             invite-* stubs) — noindex only, deliberately no robots Disallow. -->
+        <meta name="robots" content="noindex, follow" />
+        <meta
+            name="description"
+            content="Kiosk-Ansicht der bitcircus101-Termine für den Bildschirm im Space."
+        />
+        <meta name="theme-color" content="#0a0a0a" />
+        <script>
+            try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="../style.css?v=7" />
+        <script defer src="../kiosk.js?v=1"></script>
+    </head>
+    <body class="kiosk-body">
+        <div class="kiosk">
+            <header class="kiosk__top">
+                <span class="kiosk__brand">bitcircus101</span>
+                <span class="kiosk__path">/termine</span>
+                <time class="kiosk__clock" id="kiosk-clock" aria-live="off"></time>
+            </header>
+            <main class="kiosk__list" id="kiosk-list" aria-busy="true">
+                <noscript>
+                    <p>JavaScript nötig — Termine unter bitcircus101.de/termine</p>
+                </noscript>
+            </main>
+            <footer class="kiosk__bar" id="kiosk-status"></footer>
+        </div>
+    </body>
+</html>
