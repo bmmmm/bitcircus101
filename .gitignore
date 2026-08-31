@@ -67,6 +67,7 @@ events-data.json
 feed.xml
 ical.ics
 events/
+feeds/
 
 # Playwright MCP
 .playwright-mcp/

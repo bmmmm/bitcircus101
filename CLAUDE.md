@@ -112,6 +112,7 @@ CI generates these — never hand-edit them. The calendar-sync outputs live **on
 
 - `events-data.json`, `feed.xml` (RSS), `ical.ics` (iCal with real DTSTART/DTEND — the aggregator-facing feed) — written by the calendar sync
 - `events/feed.xml`, `events/ical.ics` — byte-identical copies of both feeds, so a relative `<link>` resolved from the `/events` clean URL lands on the real feed
+- `feeds/` — filtered ICS/RSS feeds, one pair per tag (`feeds/tag/<slug>.*`) and per source (`feeds/source/<id>.*`) plus `feeds/all.*`, derived from the same ≤40-event window the events page shows. `events-data.json` carries a `feeds` manifest mapping tags/sources to these paths — the frontend reads paths from there, never derives slugs
 - `sitemap.xml` — generated on every deploy (seed on `main`)
 - `funding.json` — updated via manual workflow (seed on `main`)
 
