@@ -20,6 +20,9 @@ import path from "node:path";
 
 // Order matters for hash stability; missing files are skipped like the old
 // `cat … 2>/dev/null` did, so the hash is unchanged for identical content.
+// Do NOT add the generated feeds (feed.xml, ical.ics, feeds/**): they change on
+// every calendar sync, and hashing them would invalidate the browser cache for
+// CSS/JS every 30 minutes. Calendar clients fetch feeds at stable URLs, no ?v=.
 const ASSETS = [
     "style.css",
     "main.js",

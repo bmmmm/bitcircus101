@@ -8,10 +8,14 @@
 
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
+import { mkdtempSync, writeFileSync, readFileSync, existsSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import {
   parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS,
   applyFilter, buildTags, toCards,
   escXml, toRFC822, generateRSS, generateICS,
+  slugifyTag, buildFeedPlan, syncFeedsDir, MAX_TAG_FEEDS, FEED_RETENTION_DAYS,
   eventSlot, eventGuid,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
   aggregate, eventAnchor,
@@ -1778,5 +1782,263 @@ describe("card pipeline — golden output", () => {
     const c = toCards(parsed(), CAL_BUILTIN, NOW)[0];
     assert.equal(eventGuid(c), "evt-1@example.com-20990320T2000");
     assert.equal(eventAnchor(c), "ev-2099-03-20-crowd-gaming");
+  });
+});
+
+// ── Filtered feeds ──────────────────────────────────────────────────────────
+
+describe("slugifyTag", () => {
+  it("passes an already-clean tag through", () => {
+    assert.equal(slugifyTag("#offener-abend"), "offener-abend");
+  });
+
+  it("transliterates umlauts and ß, collapses punctuation runs", () => {
+    assert.equal(slugifyTag("#Löten & 3D"), "loeten-3d");
+    assert.equal(slugifyTag("#Straße"), "strasse");
+  });
+
+  it("strips accents via NFD", () => {
+    assert.equal(slugifyTag("#Café"), "cafe");
+  });
+
+  it("truncates to 40 chars without a trailing dash", () => {
+    const slug = slugifyTag("#" + "abcde-".repeat(10));
+    assert.equal(slug.length <= 40, true);
+    assert.equal(slug.endsWith("-"), false);
+  });
+
+  it("falls back to 'tag' when nothing survives", () => {
+    assert.equal(slugifyTag("#"), "tag");
+    assert.equal(slugifyTag("###"), "tag");
+  });
+
+  it("is idempotent on its own output", () => {
+    const once = slugifyTag("#Löten & 3D");
+    assert.equal(slugifyTag(once), once);
+  });
+});
+
+// Shared fixtures for the feed-plan tests. buildFeedPlan never mutates cards,
+// so sharing the builders is safe.
+const FEED_NOW = "2026-01-15T11:00:00.000Z";
+const FEED_CALS = [
+  { id: "bitcircus", name: "bitcircus101" },
+  { id: "datenburg", name: "Datenburg e.V." },
+];
+const feedCard = (over = {}) => ({
+  title: "Ev",
+  subtitle: "",
+  description: "",
+  location: "",
+  date: "2099-01-10",
+  time: "19:00",
+  endDate: "",
+  endTime: "",
+  tags: ["#community"],
+  type: "special",
+  source: "bitcircus101",
+  uid: "u1",
+  calendarUrl: "https://example.org",
+  firstSeen: "2026-01-01T00:00:00.000Z",
+  ...over,
+});
+
+describe("buildFeedPlan", () => {
+  it("plans all/tag/source pairs with root-absolute manifest paths and counts", () => {
+    const cards = [
+      feedCard({ uid: "a", tags: ["#linkup"] }),
+      feedCard({ uid: "b", date: "2099-01-11", tags: ["#linkup", "#workshop"] }),
+    ];
+    const { manifest, files } = buildFeedPlan(cards, FEED_CALS, null, FEED_NOW);
+
+    assert.deepEqual(manifest.primary, {
+      ics: "/ical.ics", rss: "/feed.xml", title: "bitcircus101 – Termine",
+    });
+    assert.equal(manifest.all.ics, "/feeds/all.ics");
+    assert.equal(manifest.all.count, 2);
+    assert.deepEqual(Object.keys(manifest.tags), ["#linkup", "#workshop"]);
+    assert.equal(manifest.tags["#linkup"].ics, "/feeds/tag/linkup.ics");
+    assert.equal(manifest.tags["#linkup"].rss, "/feeds/tag/linkup.xml");
+    assert.equal(manifest.tags["#linkup"].count, 2);
+    assert.equal(manifest.tags["#workshop"].count, 1);
+    assert.equal(manifest.sources.bitcircus.name, "bitcircus101");
+    assert.equal(manifest.sources.bitcircus.count, 2);
+    assert.equal(manifest.sources.datenburg.count, 0);
+    assert.deepEqual(manifest.retired, {});
+
+    const paths = files.map((f) => f.path);
+    for (const p of [
+      "feeds/all.ics", "feeds/all.xml",
+      "feeds/tag/linkup.ics", "feeds/tag/linkup.xml",
+      "feeds/tag/workshop.ics", "feeds/tag/workshop.xml",
+      "feeds/source/bitcircus.ics", "feeds/source/datenburg.xml",
+    ]) {
+      assert.equal(paths.includes(p), true, `missing ${p}`);
+    }
+  });
+
+  it("collapses tag-case variants onto one lowercased manifest key", () => {
+    const cards = [
+      feedCard({ uid: "a", tags: ["#KULT41"] }),
+      feedCard({ uid: "b", date: "2099-01-11", tags: ["#kult41"] }),
+    ];
+    const { manifest } = buildFeedPlan(cards, FEED_CALS, null, FEED_NOW);
+    assert.deepEqual(Object.keys(manifest.tags).filter((t) => t.includes("kult")), ["#kult41"]);
+    assert.equal(manifest.tags["#kult41"].count, 2);
+  });
+
+  it("puts exactly the matching cards into a tag feed and a source feed", () => {
+    const cards = [
+      feedCard({ uid: "a", title: "Linkup Abend", tags: ["#linkup"] }),
+      feedCard({ uid: "b", title: "Fremdes Event", source: "Datenburg e.V.", tags: ["#datenburg"] }),
+    ];
+    const { files } = buildFeedPlan(cards, FEED_CALS, null, FEED_NOW);
+    const data = (p) => files.find((f) => f.path === p).data;
+
+    assert.equal(data("feeds/tag/linkup.ics").includes("SUMMARY:Linkup Abend"), true);
+    assert.equal(data("feeds/tag/linkup.ics").includes("Fremdes Event"), false);
+    assert.equal(data("feeds/source/datenburg.ics").includes("SUMMARY:Fremdes Event"), true);
+    assert.equal(data("feeds/source/datenburg.ics").includes("Linkup Abend"), false);
+    // a configured source with zero cards still gets a valid empty calendar
+    const bitOnly = buildFeedPlan([cards[1]], FEED_CALS, null, FEED_NOW);
+    const empty = bitOnly.files.find((f) => f.path === "feeds/source/bitcircus.ics").data;
+    assert.equal(empty.startsWith("BEGIN:VCALENDAR"), true);
+    assert.equal(empty.includes("BEGIN:VEVENT"), false);
+  });
+
+  it("caps tag feeds at MAX_TAG_FEEDS deterministically (count desc, key asc)", () => {
+    const cards = [];
+    for (let i = 1; i <= 70; i++) {
+      const n = String(i).padStart(2, "0");
+      cards.push(feedCard({ uid: `u${n}`, tags: [`#t${n}`] }));
+    }
+    const a = buildFeedPlan(cards, FEED_CALS, null, FEED_NOW);
+    const b = buildFeedPlan(cards, FEED_CALS, null, FEED_NOW);
+    assert.equal(Object.keys(a.manifest.tags).length, MAX_TAG_FEEDS);
+    assert.deepEqual(Object.keys(a.manifest.tags), Object.keys(b.manifest.tags));
+    // equal counts → key asc decides: #t01..#t60 stay, #t61+ are dropped
+    assert.equal("#t01" in a.manifest.tags, true);
+    assert.equal("#t61" in a.manifest.tags, false);
+  });
+
+  it("skips the loser of a slug collision entirely", () => {
+    const cards = [
+      feedCard({ uid: "a", tags: ["#a-b"] }),
+      feedCard({ uid: "b", date: "2099-01-11", tags: ["#a b"] }),
+    ];
+    const { manifest, files } = buildFeedPlan(cards, FEED_CALS, null, FEED_NOW);
+    const tagKeys = Object.keys(manifest.tags);
+    assert.equal(tagKeys.length, 1);
+    assert.equal(files.filter((f) => f.path === "feeds/tag/a-b.ics").length, 1);
+  });
+
+  it("retires a vanished tag: empty valid feed, ledger entry, no tags entry", () => {
+    const prev = { tags: { "#froscon": { ics: "/feeds/tag/froscon.ics" } }, retired: {} };
+    const { manifest, files } = buildFeedPlan([feedCard()], FEED_CALS, prev, FEED_NOW);
+    assert.equal(manifest.retired["#froscon"], FEED_NOW);
+    assert.equal("#froscon" in manifest.tags, false);
+    const ics = files.find((f) => f.path === "feeds/tag/froscon.ics").data;
+    assert.equal(ics.startsWith("BEGIN:VCALENDAR"), true);
+    assert.equal(ics.includes("BEGIN:VEVENT"), false);
+  });
+
+  it("keeps the original retirement timestamp across runs", () => {
+    const prev = { tags: {}, retired: { "#froscon": "2026-01-01T00:00:00.000Z" } };
+    const { manifest } = buildFeedPlan([feedCard()], FEED_CALS, prev, FEED_NOW);
+    assert.equal(manifest.retired["#froscon"], "2026-01-01T00:00:00.000Z");
+  });
+
+  it("garbage-collects a retired tag past FEED_RETENTION_DAYS", () => {
+    const old = new Date(
+      new Date(FEED_NOW) - (FEED_RETENTION_DAYS + 1) * 86400000
+    ).toISOString();
+    const prev = { tags: {}, retired: { "#froscon": old } };
+    const { manifest, files } = buildFeedPlan([feedCard()], FEED_CALS, prev, FEED_NOW);
+    assert.equal("#froscon" in manifest.retired, false);
+    assert.equal(files.some((f) => f.path.includes("froscon")), false);
+  });
+
+  it("produces byte-identical files for the same cards at two different times (churn guard)", () => {
+    const cards = [feedCard(), feedCard({ uid: "u2", date: "2099-01-11", tags: ["#linkup"] })];
+    const prev = { tags: {}, retired: { "#froscon": "2026-01-01T00:00:00.000Z" } };
+    const a = buildFeedPlan(cards, FEED_CALS, prev, "2026-01-15T11:00:00.000Z");
+    const b = buildFeedPlan(cards, FEED_CALS, prev, "2026-01-15T11:30:00.000Z");
+    assert.equal(JSON.stringify(a.files), JSON.stringify(b.files));
+  });
+
+  it("keys a card by the same GUID in the primary and in a tag feed", () => {
+    const cards = [feedCard({ tags: ["#linkup"] })];
+    const { files } = buildFeedPlan(cards, FEED_CALS, null, FEED_NOW);
+    const guid = `<guid isPermaLink="false">${eventGuid(cards[0])}</guid>`;
+    assert.equal(generateRSS(cards).includes(guid), true);
+    assert.equal(files.find((f) => f.path === "feeds/tag/linkup.xml").data.includes(guid), true);
+  });
+});
+
+describe("generateRSS / generateICS — feed opts", () => {
+  const cards = [feedCard(), feedCard({ uid: "u2", date: "2099-01-11" })];
+
+  it("applies title, description, selfPath and limit", () => {
+    const xml = generateRSS(cards, {
+      title: "T & T", description: "D", selfPath: "/feeds/tag/x.xml", limit: 1,
+    });
+    assert.equal(xml.includes("<title>T &amp; T</title>"), true);
+    assert.equal(xml.includes("<description>D</description>"), true);
+    assert.equal(xml.includes('href="https://bitcircus101.de/feeds/tag/x.xml"'), true);
+    assert.equal([...xml.matchAll(/<item>/g)].length, 1);
+  });
+
+  it("omits lastBuildDate entirely when null, keeps it by default", () => {
+    assert.equal(generateRSS(cards, { lastBuildDate: null }).includes("<lastBuildDate"), false);
+    assert.equal(generateRSS(cards).includes("<lastBuildDate>"), true);
+  });
+
+  it("sets X-WR-CALNAME from opts and keeps the default otherwise", () => {
+    assert.equal(
+      generateICS(cards, FEED_NOW, { calName: "bitcircus101 – Termine: #x" })
+        .includes("X-WR-CALNAME:bitcircus101 – Termine: #x"),
+      true
+    );
+    assert.equal(
+      generateICS(cards, FEED_NOW).includes("X-WR-CALNAME:bitcircus101 – Termine"),
+      true
+    );
+  });
+});
+
+describe("syncFeedsDir", () => {
+  it("writes changed files only, deletes vanished ones, prunes emptied dirs and strays", () => {
+    const base = mkdtempSync(join(tmpdir(), "bc101-feeds-"));
+    const dir = join(base, "feeds");
+    const files = [
+      { path: `${dir}/all.ics`, data: "A" },
+      { path: `${dir}/tag/linkup.ics`, data: "B" },
+    ];
+
+    let r = syncFeedsDir(dir, files);
+    assert.deepEqual(r, { written: 2, removed: 0 });
+    assert.equal(readFileSync(`${dir}/tag/linkup.ics`, "utf8"), "B");
+
+    // unchanged plan → nothing written (the churn guard's I/O half)
+    r = syncFeedsDir(dir, files);
+    assert.deepEqual(r, { written: 0, removed: 0 });
+
+    // a stray hand-dropped file is removed
+    writeFileSync(`${dir}/tag/stray.txt`, "x");
+    r = syncFeedsDir(dir, files);
+    assert.equal(r.removed, 1);
+    assert.equal(existsSync(`${dir}/tag/stray.txt`), false);
+
+    // dropping a file removes it and its now-empty directory
+    r = syncFeedsDir(dir, [files[0]]);
+    assert.equal(r.removed, 1);
+    assert.equal(existsSync(`${dir}/tag`), false);
+    assert.equal(readFileSync(`${dir}/all.ics`, "utf8"), "A");
+  });
+
+  it("tolerates a missing target directory", () => {
+    const base = mkdtempSync(join(tmpdir(), "bc101-feeds-"));
+    const r = syncFeedsDir(join(base, "feeds"), []);
+    assert.deepEqual(r, { written: 0, removed: 0 });
   });
 });

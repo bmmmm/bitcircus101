@@ -52,7 +52,9 @@ jobs:
           # -f: the feeds are .gitignored on main (rebuilt here); force-add so the
           # first run can track them on live. ical.ics + events/ copies are new (issue #1).
           # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5).
-          git add -f events-data.json feed.xml ical.ics events/feed.xml events/ical.ics lite/index.html events.html
+          # -A on the feeds/ pathspec stages DELETIONS too — a retired tag feed
+          # that syncFeedsDir removed must stop being tracked on live.
+          git add -f -A events-data.json feed.xml ical.ics events/feed.xml events/ical.ics feeds lite/index.html events.html
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0

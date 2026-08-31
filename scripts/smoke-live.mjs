@@ -84,6 +84,22 @@ try {
 }
 console.error("smoke: 404 handling OK");
 
+// The filtered-feed tree never appears in the sitemap (feeds are not pages), so
+// the sitemap walk below cannot see it. One explicit probe of its anchor file
+// catches the whole class of "deploy pruned feeds/" regressions. The deploy's
+// regenerate guard creates feeds/all.ics when missing, so a 404 here is real.
+try {
+    const feedUrl = `${base}/feeds/all.ics`;
+    const feed = await get(feedUrl);
+    const feedBody = feed.ok ? await feed.text() : "";
+    if (!feed.ok || !feedBody.startsWith("BEGIN:VCALENDAR")) {
+        fail(`${feedUrl} returned ${feed.status}${feed.ok ? " without a VCALENDAR body" : ""}`);
+    }
+    console.error("smoke: filtered-feed anchor OK");
+} catch (e) {
+    fail(`feed check errored: ${e.message}`);
+}
+
 // ── Sitemap-driven page check ───────────────────────────────────────────────
 // The sitemap is the site's own claim about which URLs exist, so it is the one
 // list worth walking. This catches the two regressions the hash/404 checks
