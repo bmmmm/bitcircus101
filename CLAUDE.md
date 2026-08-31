@@ -5,7 +5,7 @@ Project conventions for contributors and Claude Code.
 ## What this is
 
 Static website for [bitcircus101](https://bitcircus101.de), a hackspace in Bonn.
-Pure HTML/CSS/JS — **no bundler, no framework.** Everything is edited directly; the only build steps are **`pnpm run build:layout`** for the shared chrome in `includes/*.html` (see [Shared layout](#shared-layout)) and **`pnpm run build:logos`** for `images/logo-slider/*`.
+Pure HTML/CSS/JS — **no bundler, no framework.** Everything is edited directly; the only build steps are **`pnpm run build:layout`** (shared chrome, see [Shared layout](#shared-layout)) and **`pnpm run build:logos`** (logo strip).
 
 ## Branches
 
@@ -15,13 +15,11 @@ Pure HTML/CSS/JS — **no bundler, no framework.** Everything is edited directly
 | `main` | Integration branch. **Do not push local commits directly** — merge via PR only. |
 | `live` | Production. Deployed via GitHub Pages. Only CI commits here |
 
-**Workflow:** `git checkout -b feat/my-change` → commit → push → PR to `main` → merge → delete `feat/my-change`.
-
 ### For AI agents — branches
 
-Always branch (**`feat/<kebab>`** or **`fix/<kebab>`**) from current `main`, commit there, open a PR. Never commit on `main` without an explicit exception — and that holds regardless of size: a one-line docs fix is not too small for a PR.
+Always branch (**`feat/<kebab>`** or **`fix/<kebab>`**) from current `main`, commit there, open a PR. Never commit on `main` without an explicit exception — a one-line docs fix is not too small for a PR.
 
-**Merge the PR locally, not via `tea pr merge` or the Forgejo web UI** — a server-side merge signs the commit with the Forge identity, which the pre-push leak gate blocks, so the push would need `--no-verify`. `git merge --no-ff <branch> -m "Merge pull request #N: <title>"`, then push to **both** remotes (`origin` = Forgejo, `github` = the mirror; without the second push no deploy runs). Full rationale: `~/ops/reference/git-workflow.md`.
+**Merge the PR locally** — `git merge --no-ff <branch> -m "Merge pull request #N: <title>"`, then push to **both** remotes (`origin` = Forgejo, `github` = the mirror; without the second push no deploy runs). A web-UI/`tea pr merge` stamps a Forge identity the pre-push leak gate blocks; rationale in `~/ops/reference/git-workflow.md`.
 
 ## Testing strategy
 
@@ -40,15 +38,15 @@ PR to main (Forgejo)  →  Unit tests + layout sync check (fast, no Playwright)
 Push to main (GitHub) →  Full suite (unit + E2E × 2 browsers)  →  Deploy to live
 ```
 
-Tests gate deployment, not contribution: a PR with failing units or layout drift gets flagged, but the heavy Playwright suite only runs after merge to `main`.
+Tests gate deployment, not contribution: the heavy Playwright suite only runs after merge to `main`.
 
-The PR gate lives in `.forgejo/workflows/ci.yml` because PRs live on Forgejo. Once `.forgejo/workflows/` exists, Forgejo ignores `.github/workflows/` entirely — those (deploy, calendar sync, release, funding, and the GitHub twin of the PR gate for Dependabot PRs) run only on the GitHub mirror. Keep the two `ci.yml` files in lockstep when changing the gate.
+The PR gate lives in `.forgejo/workflows/ci.yml` (PRs live on Forgejo; once that dir exists, Forgejo ignores `.github/workflows/` entirely — those run only on the GitHub mirror). Keep the two `ci.yml` twins in lockstep when changing the gate.
 
 ### For AI agents — tests
 
 When adding or modifying tests:
-- **Consolidate, don't multiply.** One test per logical area, not one per assertion.
-  Each `page.goto()` is expensive — batch related checks into a single test.
+- **Consolidate, don't multiply.** One test per logical area; each `page.goto()`
+  is expensive — batch related checks into one test.
 - **Don't test static content.** If it can only break by deleting HTML, it's not worth a test.
 - **Do test interactions.** Carousel, filter, mobile menu, consent banner — things with JS logic.
 - **Do test invariants.** No JS errors, no broken links, no Google Fonts, noindex on danke page.
@@ -60,16 +58,14 @@ When adding or modifying tests:
 python3 -m http.server 8080
 ```
 
-Open `http://localhost:8080` in your browser. For visual inspection use Chrome directly — no Playwright needed locally.
+Then open `http://localhost:8080` — inspect directly in Chrome, no Playwright locally.
 
 ## Package manager — pnpm only
 
-This repo is **pnpm-only** (supply-chain policy). npm and yarn are blocked by a
-`preinstall` guard. Install deps with **`pnpm install`**; `package-lock.json` /
-`yarn.lock` are git-ignored. `pnpm-workspace.yaml` enforces a 3-day release cooldown
-(`minimumReleaseAge`) and blocks dependency build scripts (`onlyBuiltDependencies: []`).
-Local E2E needs browsers once: `pnpm exec playwright install` (CI uses the Playwright
-container, which has them baked in).
+**pnpm-only** (supply-chain policy): npm/yarn are blocked by a `preinstall` guard,
+their lockfiles git-ignored. `pnpm-workspace.yaml` enforces a 3-day release cooldown
+and blocks dependency build scripts. Local E2E needs browsers once:
+`pnpm exec playwright install` (baked into the CI container).
 
 ## Shared layout
 
@@ -80,7 +76,7 @@ container, which has them baked in).
 | `scripts/inject-layout.mjs` | Inlines those into the six layout HTML files |
 | `pnpm run build:layout` | Run after editing the partials |
 
-**Workflow:** Edit the partials → `pnpm run build:layout` → commit partials **and** changed `*.html`. CI runs `inject-layout.mjs` and fails if there is any `git diff` on HTML (drift). Deploy also runs inject before cache-busting so `live` stays aligned.
+**Workflow:** Edit the partials → `pnpm run build:layout` → commit partials **and** changed `*.html`. CI fails on any HTML drift; deploy re-runs inject before cache-busting.
 
 ## Homepage logo strip (Freund*innen)
 
@@ -90,12 +86,12 @@ container, which has them baked in).
 | `scripts/build-logo-slider.mjs` | Writes the marked block in `index.html` from that folder |
 | `pnpm run build:logos` | Run after adding or removing files under `images/logo-slider/` |
 
-**Workflow:** Add or delete logo files → `pnpm run build:logos` → commit `index.html` **and** the image files. CI runs `inject-layout.mjs` then `build-logo-slider.mjs` and fails on HTML drift (same check as layout). Deploy runs both before minification/cache-busting.
+**Workflow:** Add or delete logo files → `pnpm run build:logos` → commit `index.html` **and** the image files. Same CI drift check and deploy re-run as the layout above.
 
 ## Code conventions
 
 - German UI text, English code comments — exception: terminal-/hacker-aesthetic pages (currently only the 404 page) may use English/terminal-slang copy
-- Plain-text aesthetic: monospace font, reverse-video interaction, dark is the default, `◐` toggles the light scheme. The `--accent` token (terminal green) covers hyperlinks, primary CTAs and current-selection markers; controls and toggles stay reverse-video ink — full scope rule at the token definition in `style.css`
+- Plain-text aesthetic: monospace, reverse-video interaction, dark default, `◐` toggles light. `--accent` (terminal green) covers hyperlinks, primary CTAs and current-selection markers; controls/toggles stay reverse-video ink — full scope rule at the token definition in `style.css`
 - No Google Fonts or external font loading (privacy)
 - No inline styles — everything in `style.css` (applies to JS-built markup too: use the `hidden` attribute or a class, not `style="display:…"` in template strings)
 - **Clean URLs are canonical, in-page links keep `.html`.** Production 308-redirects `/events.html` → `/events`, so everything a crawler or aggregator consumes names the extension-less form: `canonical`, `og:url`, JSON-LD `url`, the RSS links (`EVENTS_URL` in `sync-events.mjs`), `llms.txt`, sitemap (`drop-html-extension: true`). In-page `href`s keep `.html` — `python3 -m http.server` and Playwright serve files, not clean URLs, so a clean-URL `href` 404s locally. `index.html` pages are unaffected (`/`, `/chat/`).
@@ -103,31 +99,32 @@ container, which has them baked in).
 
 ## Releases
 
-- **Versioning:** CalVer — `v2026.03.28` (date-based, `.N` suffix for same-day)
-- **Trigger:** Manual via `release.yml` workflow dispatch (Actions → Create release → Run workflow)
-- **What happens:** Commits since last tag are grouped by type, a GitHub Release is created, and `changelog.md` is updated automatically
-- Releases are decoupled from deploys — deploys happen on every merge to `main`, releases when you decide
+- **Versioning:** CalVer — `v2026.03.28` (`.N` suffix for same-day)
+- **Trigger:** manual `release.yml` workflow dispatch; commits since the last tag are grouped by type into a GitHub Release, `changelog.md` updates automatically
+- Decoupled from deploys — deploys happen on every merge to `main`, releases when you decide
 
 ## Files you should NOT edit
 
-CI generates these — never hand-edit them. The calendar-sync outputs live **only on `live`**; `main` carries no copy at all. Only the last two keep a seed on `main` that CI overwrites on `live`.
+CI generates these — never hand-edit. Calendar-sync outputs live **only on `live`**; only the last two keep a seed on `main`.
 
-- `events-data.json`, `feed.xml` (RSS), `ical.ics` (iCal with real DTSTART/DTEND — the aggregator-facing feed) — written by the calendar sync
-- `events/feed.xml`, `events/ical.ics` — byte-identical copies of both feeds, so a relative `<link>` resolved from the `/events` clean URL lands on the real feed
-- `feeds/` — filtered ICS/RSS feeds, one pair per tag (`feeds/tag/<slug>.*`) and per source (`feeds/source/<id>.*`) plus `feeds/all.*`, derived from the same ≤40-event window the events page shows. `events-data.json` carries a `feeds` manifest mapping tags/sources to these paths — the frontend reads paths from there, never derives slugs
+- `events-data.json`, `feed.xml` (RSS), `ical.ics` (aggregator-facing iCal, real DTSTART/DTEND) — written by the calendar sync
+- `events/feed.xml`, `events/ical.ics` — copies so a relative `<link>` resolved from the `/events` clean URL still hits the real feed
+- `feeds/` — filtered ICS/RSS per tag (`feeds/tag/<slug>.*`), per source (`feeds/source/<id>.*`) and `feeds/all.*`, same ≤40-event window as the page; the `feeds` manifest in `events-data.json` maps them (the frontend never derives slugs)
 - `sitemap.xml` — generated on every deploy (seed on `main`)
 - `funding.json` — updated via manual workflow (seed on `main`)
 
 ## Other notable files
 
-- `main.js` — Modular Navigation, Carousel & Map functionality (shared across pages, not page-specific)
-- `events.js` — events page renderer (loads `events-data.json`, falls back to a live ICS fetch; the fallback shapes cards via `events-core.js`, so it gets the same tags/types as the JSON path)
-- `ics-core.js` — **single shared ICS parser** (UMD, written in ES5 so the browser loads it raw). Used by both `events.js` (browser fallback) and `scripts/sync-events.mjs` (CI sync) — edit once, both consumers update; no parser drift.
-- `events-core.js` — **single shared card builder** (UMD, ES5 like `ics-core.js`): tags, event type and the card object (`toCards`). Same both-consumers contract as the parser; the card key order is pinned by a golden test in `tests/sync-events.spec.mjs`.
-- `kiosk/index.html` + `kiosk.js` — wall-display view for the space (`/kiosk/`, reachable-but-unlisted, noindex): big-type upcoming events from `events-data.json` only (no ICS fallback — offline it holds the last good data and says so), auto-refresh, chrome-less, so NOT registered in `inject-layout.mjs`.
-- `scripts/sync-events.mjs` — CI calendar sync: fetches sources → writes `events-data.json`, `feed.xml` (RSS) and `ical.ics` (iCal, with real DTSTART/DTEND) plus the `events/` copies of both feeds. Times are floating-local; CI pins `TZ=Europe/Berlin`, and the iCal export tags them `TZID=Europe/Berlin` with a bundled VTIMEZONE.
-- `scripts/check-calendars.mjs` — calendar-manifest guard rails. Offline (default): validates `calendars/` and exits non-zero on error. `--probe <url>`: fetches one ICS and previews the cards it would produce; `--probe` alone health-checks every configured source. Writes nothing in either mode. Tested by `tests/calendars.spec.mjs`.
-- `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay main→live preserving CI feeds and pruning files no longer on `main`; `?v=` cache-busting; post-deploy health check), tested via `tests/deploy-scripts.spec.mjs`. The smoke check walks every URL in the deployed `sitemap.xml` and fails on anything that is not a direct 200, so a dead page or a redirecting entry breaks the deploy instead of going unnoticed. Standalone: `node scripts/smoke-live.mjs https://bitcircus101.de`.
+Detail lives in each file's own header comment — these are pointers:
+
+- `main.js` — shared page JS: nav, carousel, map, homepage events preview
+- `events.js` — events page renderer: `events-data.json` first, live-ICS fallback via the two shared modules below
+- `ics-core.js` — **shared ICS parser** (UMD/ES5): one file for browser fallback and CI sync, no parser drift
+- `events-core.js` — **shared card builder** (UMD/ES5): tags, event type, card shape; key order pinned by a golden test in `tests/sync-events.spec.mjs`
+- `kiosk/index.html` + `kiosk.js` — chrome-less wall display (`/kiosk/`, noindex, unlisted, JSON-only; NOT in `inject-layout.mjs`)
+- `scripts/sync-events.mjs` — CI calendar sync: writes `events-data.json`, both primary feeds + `events/` copies, and the `feeds/` tree. Times are floating-local (CI pins `TZ=Europe/Berlin`; the iCal export carries a bundled VTIMEZONE)
+- `scripts/check-calendars.mjs` — manifest validator (offline, exits non-zero) + read-only `--probe` card preview; tested by `tests/calendars.spec.mjs`
+- `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay preserving CI feeds + pruning, `?v=` busting, post-deploy health check incl. a full sitemap walk — any non-200 breaks the deploy), tested via `tests/deploy-scripts.spec.mjs`
 - `llms.txt` — LLM-friendly site summary ([llms.txt standard](https://llmstxt.org/))
 - `changelog.md` — release history (auto-updated by release workflow)
 - `robots.txt` — crawler rules; explicitly allows AI bots, blocks `/ascii/`
@@ -135,42 +132,22 @@ CI generates these — never hand-edit them. The calendar-sync outputs live **on
 
 ## Adding a calendar source
 
-Full contributor/outsider guide: **`calendars/README.md`** — this section is the short form.
+Full guide — fields, source `type`s, filter rules: **`calendars/README.md`**. Short form: one JSON file per source, listed in `calendars/config.json` (order = dedupe priority; removing the line disables the source).
 
-Every source lives in its own JSON file under `calendars/`. Manifest `calendars/config.json` lists which sources to process and in what order. Removing = remove the line (or delete the file).
-
-**Workflow:** `node scripts/check-calendars.mjs --probe "<ics-url>"` (fetches the link, renders it through the real `toCards()` so the preview matches the sync exactly, prints a paste-ready snippet — writes nothing) → create the JSON file → list it in `config.json` → **`pnpm run check:calendars`**.
+**Workflow:** `node scripts/check-calendars.mjs --probe "<ics-url>"` (read-only preview through the real pipeline, prints a paste-ready snippet) → create the JSON file → list it in `config.json` → **`pnpm run check:calendars`** (also a PR gate: catches typo'd keys, duplicate ids, and non-unique `name` — the key for `icsKeys`, RSS filter and stale-cache; an unlisted file is only a warning, parking is intentional).
 
 Never run `sync-events.mjs` to try a link out: it overwrites the feeds **and rewrites the JSON-LD block in the tracked `events.html`**. `--probe` is the read-only path.
-
-```
-calendars/
-  config.json                       ← manifest, lists active sources
-  bitcircus.json                    ← stable primary feed
-  datenburg.json
-  external/
-    kult41-theater-tumult-…json     ← curated external entries
-```
-
-Source `type`s:
-- (default) `ics-full` — pull the whole calendar
-- `ics-single` — single curated event ICS URL (e.g. `https://kult41.de/events/foo/ical/`)
-- `ics-filtered` — full calendar with `filter.categoryAllow` / `categoryDeny` / `titleAllow` / `titleDeny` lists
-
-Each source can also set `tags` (always-added hashtags), `cap` (per-source slot override), `eventUrl` (fallback link when ICS lacks `URL`). Sources without `id`/`ics` are skipped with a warning.
-
-`pnpm run check:calendars` (also a PR gate in `ci.yml`, and asserted by `tests/calendars.spec.mjs`) turns the flow's silent failures into build failures: unknown keys — `id`/`name`/`ics` are required, and `name` must be **unique** because it keys `icsKeys`, the RSS source filter and the stale-cache lookup — bad types, misspelled `filter` keys, duplicate ids. A source file that exists but is not listed in `config.json` is a *warning*, not an error: parking a source that way is intentional.
 
 ## Adding a new page
 
 1. Create the HTML file
-2. Add the nav link in `includes/site-header.html`, run `pnpm run build:layout`, and commit the updated partial + HTML files (or register the page in `scripts/inject-layout.mjs` if it should share the same chrome)
+2. Nav link into `includes/site-header.html` → `pnpm run build:layout` → commit partial + HTML (register the page in `scripts/inject-layout.mjs` if it shares the chrome)
 3. Add the page to the `pages` array in `tests/site.spec.js` (no-JS-errors test)
 4. Sitemap is auto-generated on deploy
 
 ### Hidden and unlisted pages
 
-The sitemap generator honors three exclusion mechanisms automatically: `noindex` meta, `robots.txt` `Disallow`, and the `exclude-paths` option of the sitemap-generation step in `deploy.yml` (only for pages *without* `noindex` — currently the Google verification stub and `donations.html`).
+The sitemap generator honors `noindex` meta, `robots.txt` `Disallow`, and `deploy.yml`'s `exclude-paths` (for no-`noindex` pages: the Google stub and `donations.html`).
 
 - **Hidden pages** (e.g. `/ascii/`): use a subfolder like `ascii/index.html`, keep it out of `includes/site-header.html` **and** `scripts/inject-layout.mjs` (partials assume root-relative links); mark `noindex` and `Disallow` it in `robots.txt`.
 - **Reachable-but-unlisted pages** (`invite-*/`, `join-*/` Signal redirect stubs, `kiosk/` wall display): `noindex` only, intentionally **not** `Disallow`ed — they're shareable links; don't re-add a robots block "for consistency".
