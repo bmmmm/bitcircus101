@@ -52,7 +52,7 @@ function normalizeUrl(u) {
   return null;
 }
 
-function buildMarkup(events, icsUrl) {
+function buildMarkup(events, icsUrl, rssPath) {
   if (!events.length) {
     return `<p class="dim">Keine Termine eingetragen — <a href="../events.html">Veranstaltungen</a></p>`;
   }
@@ -66,12 +66,15 @@ function buildMarkup(events, icsUrl) {
     })
     .join("\n");
 
+  // The subscribe links stay on the Nextcloud calendar: that is the real,
+  // always-current subscription, while the generated feeds are a snapshot of
+  // the sync window.
   const webcal = icsUrl ? icsUrl.replace(/^https?:\/\//, "webcal://") : null;
   const subLinks = icsUrl
     ? `<a href="${esc(webcal)}" rel="noopener noreferrer">Kalender-Abo ↗</a> · <a href="${esc(icsUrl)}" rel="noopener noreferrer">ICS ↗</a> · `
     : "";
 
-  return `<ul>\n${items}\n</ul>\n<p class="dim">→ ${subLinks}<a href="../feed.xml">RSS-Feed</a> · <a href="../events.html">Alle Termine</a></p>`;
+  return `<ul>\n${items}\n</ul>\n<p class="dim">→ ${subLinks}<a href="${esc(rssPath)}">RSS-Feed</a> · <a href="../events.html">Alle Termine</a></p>`;
 }
 
 function main() {
@@ -88,10 +91,27 @@ function main() {
     icsUrl = cal.ics || null;
   }
 
+  // Default to the primary feed; it is bitcircus-only today (the sole source
+  // with rss:true) but that is a config flag, not a guarantee — flip rss:true
+  // on a second source and this page would advertise a feed listing events it
+  // does not show. The per-source feed is bitcircus by construction, so prefer
+  // it whenever the manifest lists it.
+  let rssPath = "../feed.xml";
+
   let upcoming = [];
   if (fs.existsSync(EVENTS_JSON)) {
     const data = JSON.parse(fs.readFileSync(EVENTS_JSON, "utf8"));
     const all = data.events || [];
+
+    // Resolve the source by its card-facing name, exactly as the events page
+    // does (events.js feedScope) — the manifest is keyed by calendar id.
+    const sources = (data.feeds && data.feeds.sources) || {};
+    for (const id of Object.keys(sources)) {
+      if (sources[id].name === "bitcircus101" && sources[id].rss) {
+        rssPath = sources[id].rss;
+        break;
+      }
+    }
     upcoming = all
       .filter((e) => e.source === "bitcircus101" && e.date >= todayStr)
       .sort((a, b) => {
@@ -102,7 +122,7 @@ function main() {
       .slice(0, MAX_EVENTS);
   }
 
-  const markup = buildMarkup(upcoming, icsUrl);
+  const markup = buildMarkup(upcoming, icsUrl, rssPath);
   let html = fs.readFileSync(LITE, "utf8");
 
   const si = html.indexOf(START);
