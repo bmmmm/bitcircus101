@@ -790,25 +790,6 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .events-search__clear:hover { background: var(--ink); color: var(--paper); }
 .events-search__count { color: var(--ink-dim); font-size: 0.8rem; }
 
-/* list/tiles view toggle — a UI control, so the pressed state is reverse-video
-   ink, not accent (the token scope rule: controls and toggles stay ink) */
-.events-view__label { color: var(--ink-dim); font-size: 0.9rem; }
-.events-view__btn {
-    background: none;
-    border: 1px solid var(--line);
-    color: var(--ink-dim);
-    padding: 0.2em 1ch;
-    font-family: var(--font);
-    font-size: 0.8rem;
-    cursor: pointer;
-}
-.events-view__btn:hover { background: var(--ink); color: var(--paper); }
-.events-view__btn[aria-pressed="true"] {
-    background: var(--ink);
-    color: var(--paper);
-    border-color: var(--ink);
-}
-
 .events-filter {
     display: flex;
     align-items: center;
@@ -888,39 +869,6 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     text-decoration: underline;
     text-decoration-color: var(--line-strong);
     text-underline-offset: 0.25em;
-}
-
-/* tiles view — the same cards flow into a responsive grid per month; the
-   type markers carry over (the left rule becomes the tile's left edge) */
-.events-list--tiles .events-month__body {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(30ch, 1fr));
-    gap: 0.75rem;
-    padding-top: 0.5rem;
-}
-.events-list--tiles .event-card {
-    grid-template-columns: 1fr;
-    border: 1px solid var(--line);
-    border-left-width: 2px;
-    padding: 0.75rem 1.25ch;
-}
-/* the border shorthand above resets the left edge — restore the type marker
-   (higher specificity than the single-class rules) */
-.events-list--tiles .event-card--linkup   { border-left-color: var(--line-strong); }
-.events-list--tiles .event-card--workshop { border-left-style: dashed; }
-.events-list--tiles .event-card--special  { border-left-style: dotted; }
-.events-list--tiles .event-card__date {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 1ch;
-    margin-bottom: 0.3rem;
-}
-/* stacked header in tiles: the source badge under the title instead of
-   squeezing it into multi-line wraps beside it */
-.events-list--tiles .event-card__header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.15rem;
 }
 
 .event-card__date {
@@ -1937,7 +1885,6 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     /* phones are not the kiosk target, but it must not fall apart there */
     .kiosk-row { grid-template-columns: 8ch 1fr; }
     .kiosk-row__side { display: none; }
-    .events-list--tiles .events-month__body { grid-template-columns: 1fr; }
 }
 
 /* =============================================================================
