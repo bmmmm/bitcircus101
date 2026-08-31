@@ -54,5 +54,12 @@ jobs:
         # calendars/config.json, a misspelled key, a duplicate id/name.
         run: node scripts/check-calendars.mjs
 
+      - name: Validate funding data
+        # finanz.json is hand-edited through scripts/finanz.mjs, which validates
+        # before every write — this gate catches the one path that bypasses it:
+        # someone editing the JSON directly. Same shape as the calendar check
+        # above: offline, no network, actionable errors naming the bad field.
+        run: node scripts/finanz.mjs validate
+
       - name: Run unit tests
         run: node --test tests/*.spec.mjs
