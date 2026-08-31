@@ -326,6 +326,13 @@ nav li a.nav__link--current:hover { background: var(--accent); color: var(--pape
     border-color: var(--ink);
 }
 
+/* the lite link is a hyperlink, not a control (see --accent scope above) —
+   it carries the accent so the ultra-light version doesn't get overlooked */
+.nav__util--lite {
+    color: var(--accent);
+    border-color: var(--accent-soft);
+}
+
 .theme-toggle[aria-pressed="true"] {
     background: var(--ink-max);
     color: var(--paper);
@@ -402,8 +409,9 @@ input, textarea, select {
     border: 1px solid var(--line);
     color: var(--ink);
 }
+/* no outline:none here — the global :focus-visible ring must stay visible
+   for keyboard users; the border change alone is too subtle */
 input:focus, textarea:focus, select:focus {
-    outline: none;
     border-color: var(--ink-max);
 }
 input[type="checkbox"] { accent-color: var(--ink-max); }

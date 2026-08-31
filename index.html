@@ -121,7 +121,7 @@
                 </ul>
                 <div class="nav__utils">
                     <a href="feed.xml" class="nav__util" title="RSS-Feed der Termine" aria-label="RSS-Feed der Termine">rss</a>
-                    <a href="lite/" class="nav__util" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="lite/" class="nav__util nav__util--lite" title="Ultraleichte Textversion ohne Skripte">lite</a>
                     <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Helles Design umschalten" title="Invertieren (hell/dunkel)">◐</button>
                 </div>
             </nav>
@@ -213,6 +213,12 @@
                         <dd>
                             Reinschauen kostet nichts außer Neugier. Einfach freitagabends
                             vorbeikommen – den Rest regelt <code>localhost</code>.
+                        </dd>
+
+                        <dt>SEE ALSO</dt>
+                        <dd>
+                            <a href="lite/">lite</a> – die ganze Seite als ultraleichte
+                            Textversion: kein JavaScript, kein Tracking, lädt überall.
                         </dd>
                     </dl>
                 </section>
@@ -322,7 +328,7 @@
                 <section id="next-events" class="panel">
                     <h2>nächste termine<a class="section-anchor" href="#next-events" aria-label="Link zu: nächste termine">#</a></h2>
                     <div id="next-events-list" aria-live="polite" aria-busy="true">
-                        <noscript><p><a href="events.html">Termine ansehen →</a></p></noscript>
+                        <noscript><p><a href="lite/">Termine ansehen – Lite-Version, ohne JavaScript →</a></p></noscript>
                     </div>
                     <p class="events-more-link"><a href="events.html">alle Termine →</a></p>
                 </section>
@@ -472,6 +478,7 @@
                     <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener noreferrer">github ↗</a>
                     <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">ko-fi ↗</a>
                     <a href="feed.xml">rss</a>
+                    <a href="lite/" title="Ultraleichte Textversion ohne Skripte">lite</a>
                     <a href="impressum-datenschutz.html">impressum</a>
                 </div>
             </div>
