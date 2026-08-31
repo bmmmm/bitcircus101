@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bitcircus101.de/finanz.schema.json",
+  "title": "bitcircus101 finanz.json",
+  "description": "Aggregate cost/funding board for support.html#projekte. Holds ONLY rounded totals and a value-free pulse track — no donor identities, no per-donation records, no personal data.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["currency", "updated", "einmalig", "monatlich"],
+  "properties": {
+    "currency": {
+      "description": "ISO-ish currency code; only EUR/USD/GBP carry a symbol, others fall back to EUR.",
+      "type": "string",
+      "enum": ["EUR", "USD", "GBP"]
+    },
+    "updated": {
+      "description": "Last edit date of the board (YYYY-MM-DD).",
+      "type": "string",
+      "format": "date",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "pulse": {
+      "description": "Cryptic funding heartbeat: a coarse, value-free momentum track. Each level is a 0..7 bucket (8 discrete heights), NEVER a euro amount — nothing here is 1:1 readable.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["levels"],
+      "properties": {
+        "updated": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "levels": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7
+          }
+        }
+      }
+    },
+    "einmalig": {
+      "description": "One-time projects with a target/raised → ASCII progress bar.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/einmaligItem" }
+    },
+    "monatlich": {
+      "description": "Recurring monthly costs → no bar, no total.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/monatlichItem" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "description": "Slug used in DOM ids and URLs — lowercase, digits, dashes.",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "minLength": 1,
+      "maxLength": 48
+    },
+    "httpsUrl": {
+      "description": "Optional external link (https only), shown as a neutral host-labelled button — never platform-branded.",
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "einmaligItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "target", "raised"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "tagline": { "type": "string", "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 400 },
+        "icon": { "type": "string", "maxLength": 8 },
+        "target": { "type": "integer", "exclusiveMinimum": 0 },
+        "raised": { "type": "integer", "minimum": 0 },
+        "url1": { "$ref": "#/$defs/httpsUrl" },
+        "url2": { "$ref": "#/$defs/httpsUrl" }
+      }
+    },
+    "monatlichItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "monthly"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "tagline": { "type": "string", "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 400 },
+        "icon": { "type": "string", "maxLength": 8 },
+        "monthly": { "type": "integer", "exclusiveMinimum": 0 },
+        "url1": { "$ref": "#/$defs/httpsUrl" },
+        "url2": { "$ref": "#/$defs/httpsUrl" }
+      }
+    }
+  }
+}

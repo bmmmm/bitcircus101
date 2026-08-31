@@ -1,6 +1,8 @@
 /**
  * finanz-core.js — shared cost/funding math for the "Projekte & Kosten" board
- * (support.html#projekte), used by the browser renderer (finanz.js).
+ * (support.html#projekte), used by the browser renderer (finanz.js) and by the
+ * maintainer CLI (scripts/finanz.mjs + scripts/finanz-data.mjs), which pulls it
+ * in through createRequire so both sides share one implementation.
  *
  * Scope: this module only does the math for ONE-TIME items (`einmalig`) — those
  * have a `target`/`raised` and therefore a progress bar. Recurring monthly costs
@@ -119,6 +121,90 @@
     return { href: "#dauerhaft", external: false };
   }
 
+  // ── Pulse: a cryptic, value-free funding "heartbeat" ─────────────────────
+  // A deliberately COARSE momentum track. Each entry is an integer level
+  // 0..PULSE_MAX (8 discrete heights) — NEVER a euro amount — so the public
+  // file reveals only rhythm, not figures: nothing is 1:1 readable and there is
+  // no personal data to leak. The editing tools bucket a real delta into a level
+  // LOCALLY via pulseLevel(); only the resulting level is ever written out.
+  var PULSE_MAX = 7; // highest level index → 8 discrete heights (0..7)
+  var PULSE_GLYPHS = "▁▂▃▄▅▆▇█"; // charAt(level) === glyph
+
+  // Bucket a raw value into a coarse 0..PULSE_MAX level against a scale (the
+  // value that should read as "full"). A zero/negative scale yields 0 so a
+  // missing scale never divides by zero; negative values floor at 0.
+  function pulseLevel(value, scale) {
+    var v = Math.max(0, num(value));
+    var s = num(scale);
+    if (s <= 0) return 0;
+    return clamp(Math.round((v / s) * PULSE_MAX), 0, PULSE_MAX);
+  }
+
+  // One glyph for a level (clamped, rounded). Non-numbers fall back to the
+  // baseline glyph so malformed data degrades quietly instead of throwing.
+  function pulseGlyph(level) {
+    return PULSE_GLYPHS.charAt(clamp(Math.round(num(level)), 0, PULSE_MAX));
+  }
+
+  // Render a levels array into a sparkline string (each level → its glyph). A
+  // non-array yields ""; out-of-range levels are clamped to a flat line.
+  function pulseSparkline(levels) {
+    if (!levels || typeof levels.length !== "number") return "";
+    var out = "";
+    for (var i = 0; i < levels.length; i++) out += pulseGlyph(levels[i]);
+    return out;
+  }
+
+  // Append a level and cap the track to its most recent maxLen entries
+  // (default 24). Returns a NEW array — never mutates the input — and clamps
+  // every stored level into range so the persisted track is always valid.
+  function pushPulse(levels, level, maxLen) {
+    var max = maxLen > 0 ? Math.floor(maxLen) : 24;
+    var src = levels && typeof levels.length === "number" ? levels : [];
+    var next = [];
+    for (var i = 0; i < src.length; i++) {
+      next.push(clamp(Math.round(num(src[i])), 0, PULSE_MAX));
+    }
+    next.push(clamp(Math.round(num(level)), 0, PULSE_MAX));
+    if (next.length > max) next = next.slice(next.length - max);
+    return next;
+  }
+
+  // ── Shared field predicates ──────────────────────────────────────────────
+  // finanz.schema.json declares format:"date" / format:"uri", but a JSON-Schema
+  // pattern can't express calendar validity or "no whitespace / has a host".
+  // These live here — not in the CLI validator — so the browser side can call
+  // the same rule the moment it needs to, with no second implementation to
+  // drift from this one.
+
+  // Calendar-validate a YYYY-MM-DD string: well-formed AND a date that actually
+  // exists (so "2026-13-99" / "2026-02-30" are rejected). Date.UTC is a pure,
+  // clock-free construction — deterministic, no wall-clock read.
+  function isCalendarDate(s) {
+    if (typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
+    var y = +s.slice(0, 4),
+      m = +s.slice(5, 7),
+      d = +s.slice(8, 10);
+    var dt = new Date(Date.UTC(y, m - 1, d));
+    return (
+      dt.getUTCFullYear() === y &&
+      dt.getUTCMonth() === m - 1 &&
+      dt.getUTCDate() === d
+    );
+  }
+
+  // A usable https link: "https://" prefix, an actual host after it, and no
+  // embedded whitespace — the part of format:"uri" the ^https:// pattern can't
+  // catch (a bare "https://" or "https://a b c" both satisfy the pattern).
+  function isCleanHttpsUrl(s) {
+    return (
+      typeof s === "string" &&
+      s.indexOf("https://") === 0 &&
+      s.length > "https://".length &&
+      !/\s/.test(s)
+    );
+  }
+
   return {
     BAR_WIDTH: BAR_WIDTH,
     rawPercent: rawPercent,
@@ -126,5 +212,13 @@
     formatAmount: formatAmount,
     computeProject: computeProject,
     donateTarget: donateTarget,
+    PULSE_MAX: PULSE_MAX,
+    PULSE_GLYPHS: PULSE_GLYPHS,
+    pulseLevel: pulseLevel,
+    pulseGlyph: pulseGlyph,
+    pulseSparkline: pulseSparkline,
+    pushPulse: pushPulse,
+    isCalendarDate: isCalendarDate,
+    isCleanHttpsUrl: isCleanHttpsUrl,
   };
 });
