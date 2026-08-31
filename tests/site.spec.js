@@ -217,6 +217,15 @@ test.describe('Events content', () => {
         // Reset
         await page.locator('.events-filter__clear').click();
         expect(await page.locator('.event-card').count()).toBe(countBefore);
+
+        // Type markers: classes are emitted AND the CSS is wired (guards the
+        // dead-class regression — the classes existed unstyled for months)
+        expect(
+            await page.locator('.event-card--linkup, .event-card--workshop, .event-card--special').count()
+        ).toBeGreaterThan(0);
+        const borderStyle = await page.locator('.event-card').first()
+            .evaluate((el) => getComputedStyle(el).borderLeftStyle);
+        expect(borderStyle).not.toBe('none');
     });
 
     test('URL state and search round-trip, and survive the bitcircus toggle', async ({ page }) => {
