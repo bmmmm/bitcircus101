@@ -43,13 +43,14 @@ funding.json                Footer funding percentage (edited via pnpm run finan
 
 scripts/
   sync-events.mjs           Fetches ICS from Nextcloud, generates events-data.json + feed.xml
-  finanz.mjs                Maintainer CLI for finanz.json / funding.json
+  finanz.mjs                Maintainer CLI for finanz.json / funding.json (--json, --help)
   finanz-data.mjs           Pure data layer behind that CLI (mutate + validate)
   build-lite-finanz.mjs     Writes the lite page's funding block + Stand date from finanz.json
 
 tests/
   site.spec.js              Playwright end-to-end tests (~20 tests × 2 browsers)
   sync-events.spec.mjs      Unit tests for ICS parser and RRULE expansion (22 tests)
+  finanz-cli.spec.mjs       Exit codes + --json contract of the funding CLI
 playwright.config.js        Playwright config (Chromium, Mobile Chrome)
 
 .github/workflows/
@@ -77,11 +78,16 @@ These files are created/updated by CI actions on the `live` branch. Seed values 
 `main` and edited through the maintainer CLI:
 
 ```sh
-pnpm run finanz            # interactive menu
-pnpm run finanz list       # print the board
-pnpm run finanz percent 25 # set the footer percentage
-pnpm run finanz:validate   # validate against finanz.schema.json (also a PR gate)
+pnpm run finanz                  # interactive menu
+pnpm run finanz --help           # usage on stdout, exit 0
+pnpm run finanz list [--json]    # print the board (--json: machine-readable, JSON only)
+pnpm run finanz validate --json  # { ok, errors } instead of prose
+pnpm run finanz percent 25       # set the footer percentage
+pnpm run finanz:validate         # validate against finanz.schema.json (a CI and deploy gate)
 ```
+
+`add` and `monthly` (and the bare menu) are interactive and exit 1 without a
+TTY rather than silently doing nothing.
 
 Every write validates first and refuses with an error naming the bad field. The
 board holds only rounded aggregate totals plus a value-free 0..7 "pulse" track —
