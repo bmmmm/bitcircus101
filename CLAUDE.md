@@ -146,7 +146,9 @@ Never run `sync-events.mjs` to try a link out: it overwrites the feeds **and rew
 
 ```sh
 pnpm run finanz                     # interactive menu (prints the board first)
-pnpm run finanz list                # print the board
+pnpm run finanz --help              # usage on stdout, exit 0
+pnpm run finanz list [--json]       # print the board (--json: JSON only, nothing else)
+pnpm run finanz validate [--json]   # --json emits { ok, errors }
 pnpm run finanz raise <id> <amount> # add to a project's "raised" (negative allowed)
 pnpm run finanz finish <id>         # raised = target
 pnpm run finanz pulse <0..7>        # append a value-free heartbeat level
@@ -154,7 +156,15 @@ pnpm run finanz percent <0..100>    # set the footer percentage in funding.json
 pnpm run finanz:validate            # validate against finanz.schema.json
 ```
 
-Every write validates **first** and refuses with an error naming the bad field, so an invalid `finanz.json` never reaches disk. Both files stay tracked on `main` — commit them like any other change. `pnpm run finanz:validate` is also a PR gate in both `ci.yml`, which catches the one path the CLI cannot: hand-editing the JSON.
+**Scriptable and agent-safe.** `--json` derives every number through
+`finanz-core.js`, so `list --json` cannot drift from what `support.html`
+renders. `add`, `monthly` and the bare menu are **interactive**: without a TTY
+they exit 1 on stderr instead of printing a prompt, writing nothing and
+returning 0 — there is no non-interactive path for adding an item, so a script
+edits `finanz.json` and runs `finanz:validate`. `tests/finanz-cli.spec.mjs`
+pins those exit codes.
+
+Every write validates **first** and refuses with an error naming the bad field, so an invalid `finanz.json` never reaches disk. Both files stay tracked on `main` — commit them like any other change. `pnpm run finanz:validate` is also a gate in both `ci.yml` **and** in `deploy.yml`, which catches the one path the CLI cannot: hand-editing the JSON. It runs on the deploy path too because the PR gate never sees a commit pushed straight to `main`.
 
 **After changing `finanz.json`, run `pnpm run build:lite-finanz`** and commit `lite/index.html` alongside it. The lite page's "Projekte & Kosten" block and its "Stand" date are generated from `finanz.json` — the same drift gate that covers the layout partials covers this, so a forgotten rebuild fails the PR. (`pnpm run build` runs it together with the other deterministic generators.)
 
