@@ -240,6 +240,106 @@ describe("expandRRule — WEEKLY", () => {
   });
 });
 
+describe("expandRRule — MONTHLY by monthday", () => {
+  it("expands BYMONTHDAY=15 (every 15th) with DTSTART's time", () => {
+    const dtstart = new Date(2026, 0, 15, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=MONTHLY;BYMONTHDAY=15;COUNT=3", []);
+    assert.equal(dates.length, 3);
+    assert.deepEqual(dates.map((d) => [d.getMonth(), d.getDate(), d.getHours()]), [
+      [0, 15, 19], [1, 15, 19], [2, 15, 19],
+    ]);
+  });
+
+  it("falls back to DTSTART's day when BYMONTHDAY is absent", () => {
+    const dtstart = new Date(2026, 0, 7, 18, 30);
+    const dates = expandRRule(dtstart, "FREQ=MONTHLY;COUNT=3", []);
+    assert.equal(dates.length, 3);
+    assert.ok(dates.every((d) => d.getDate() === 7 && d.getMinutes() === 30));
+  });
+
+  it("honours INTERVAL=2 (every other month)", () => {
+    const dtstart = new Date(2026, 0, 15, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=MONTHLY;BYMONTHDAY=15;INTERVAL=2;COUNT=3", []);
+    assert.deepEqual(dates.map((d) => d.getMonth()), [0, 2, 4]);
+  });
+
+  it("resolves BYMONTHDAY=-1 to the last day of each month", () => {
+    const dtstart = new Date(2026, 0, 31, 12, 0);
+    const dates = expandRRule(dtstart, "FREQ=MONTHLY;BYMONTHDAY=-1;COUNT=3", []);
+    assert.deepEqual(dates.map((d) => [d.getMonth(), d.getDate()]), [
+      [0, 31], [1, 28], [2, 31],
+    ]);
+  });
+
+  it("skips months lacking the day instead of clamping, without burning COUNT", () => {
+    const dtstart = new Date(2026, 0, 31, 12, 0);
+    const dates = expandRRule(dtstart, "FREQ=MONTHLY;BYMONTHDAY=31;COUNT=3", []);
+    // Jan, Mar, May — Feb and Apr have no 31st and do not count as occurrences
+    assert.deepEqual(dates.map((d) => [d.getMonth(), d.getDate()]), [
+      [0, 31], [2, 31], [4, 31],
+    ]);
+  });
+
+  it("expands a BYMONTHDAY list chronologically and dedupes colliding values", () => {
+    const dtstart = new Date(2026, 0, 1, 10, 0);
+    const list = expandRRule(dtstart, "FREQ=MONTHLY;BYMONTHDAY=1,15;COUNT=4", []);
+    assert.deepEqual(list.map((d) => [d.getMonth(), d.getDate()]), [
+      [0, 1], [0, 15], [1, 1], [1, 15],
+    ]);
+    // -1 and 31 name the same day in a 31-day month — one occurrence, not two
+    const collide = expandRRule(
+      new Date(2026, 0, 31, 10, 0), "FREQ=MONTHLY;BYMONTHDAY=-1,31;COUNT=2", []
+    );
+    assert.deepEqual(collide.map((d) => [d.getMonth(), d.getDate()]), [
+      [0, 31], [1, 28],
+    ]);
+  });
+
+  it("counts EXDATE-excluded slots toward COUNT (RFC5545)", () => {
+    const dtstart = new Date(2026, 0, 15, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=MONTHLY;BYMONTHDAY=15;COUNT=3", [
+      new Date(2026, 1, 15, 19, 0),
+    ]);
+    // Feb 15 is excluded but still consumes one of the three counted slots
+    assert.deepEqual(dates.map((d) => d.getMonth()), [0, 2]);
+  });
+
+  it("applies BYSETPOS over the BYMONTHDAY set (the real calendar's month-end rule)", () => {
+    // "BYSETPOS=-1;BYMONTHDAY=28,29,30" = the last existing of those days —
+    // the exact rule the live bitcircus calendar carries ("Treffen: Bolle Team")
+    const dtstart = new Date(2026, 0, 30, 20, 0);
+    const last = expandRRule(
+      dtstart, "FREQ=MONTHLY;BYSETPOS=-1;BYMONTHDAY=28,29,30;COUNT=3", []
+    );
+    // Jan → 30, Feb 2026 → 28 (no 29th/30th), Mar → 30
+    assert.deepEqual(last.map((d) => [d.getMonth(), d.getDate()]), [
+      [0, 30], [1, 28], [2, 30],
+    ]);
+    // positive BYSETPOS picks from the front: first of the existing days
+    const first = expandRRule(
+      new Date(2026, 0, 28, 20, 0), "FREQ=MONTHLY;BYSETPOS=1;BYMONTHDAY=28,29,30;COUNT=2", []
+    );
+    assert.deepEqual(first.map((d) => [d.getMonth(), d.getDate()]), [
+      [0, 28], [1, 28],
+    ]);
+  });
+
+  it("no longer warns for MONTHLY without BYDAY", () => {
+    const origWarn = console.warn;
+    const warnings = [];
+    console.warn = (m) => warnings.push(m);
+    try {
+      const dates = expandRRule(
+        new Date(2026, 0, 15, 19, 0), "FREQ=MONTHLY;BYMONTHDAY=15;COUNT=2", []
+      );
+      assert.equal(dates.length, 2);
+    } finally {
+      console.warn = origWarn;
+    }
+    assert.deepEqual(warnings, []);
+  });
+});
+
 describe("expandRRule — DAILY / YEARLY / unsupported", () => {
   it("expands daily recurrence one day apart", () => {
     const dtstart = new Date(2026, 2, 2, 19, 0);
