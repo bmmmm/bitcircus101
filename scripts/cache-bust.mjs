@@ -29,6 +29,7 @@ const ASSETS = [
     "events.js",
     "ics-core.js",
     "events-core.js",
+    "kiosk.js",
     "images/favicon.svg",
     "images/apple-touch-icon.png",
     "images/icon-192.png",
