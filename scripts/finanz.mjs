@@ -108,6 +108,39 @@ function printBoard(data) {
 
 // ── Shared write helper ──────────────────────────────────────────────────────
 
+/**
+ * Print what to do with the file that was just written. finanz.json feeds a
+ * generated block in lite/index.html, so committing it WITHOUT rebuilding is
+ * exactly the HTML drift the CI gate rejects — the hint has to name the rebuild
+ * or it walks the caller into a red PR. funding.json feeds no generator and
+ * therefore gets no rebuild line.
+ */
+function printCommitHint(file) {
+  if (file === "finanz.json") {
+    console.log("  Danach: pnpm run build:lite-finanz");
+    console.log(
+      "  Dann committen: git add finanz.json lite/index.html && git commit"
+    );
+    return;
+  }
+  console.log(`  Bitte committen: git add ${file} && git commit`);
+}
+
+/**
+ * Refuse to open a prompt without a TTY. Headless — a script, an agent, CI —
+ * readline gets EOF on the first question, so these commands used to print one
+ * line, write nothing and still exit 0: a silent no-op that reads as success.
+ * Fail loudly on stderr instead, and name the way out rather than just the
+ * problem. Sets process.exitCode (not process.exit) so callers can unwind.
+ */
+function requireTTY(what, wayOut) {
+  if (process.stdin.isTTY) return true;
+  console.error(`✗ "${what}" ist interaktiv und braucht ein Terminal — stdin ist kein TTY.`);
+  console.error("  " + wayOut);
+  process.exitCode = 1;
+  return false;
+}
+
 /** Validate, write, and print the success + commit reminder. Returns true. */
 function commitWrite(next) {
   const { ok, errors } = validate(next);
@@ -118,7 +151,7 @@ function commitWrite(next) {
   }
   write(next);
   console.log(`✓ finanz.json aktualisiert (updated: ${next.updated})`);
-  console.log("  Bitte committen: git add finanz.json && git commit");
+  printCommitHint("finanz.json");
   return true;
 }
 
@@ -131,6 +164,7 @@ Aufruf:
   node scripts/finanz.mjs <Befehl> [args]  direkter Befehl
 
 Befehle:
+  --help, -h, help           diese Hilfe (Exit 0)
   list                       Board anzeigen
   validate                   finanz.json gegen das Schema prüfen
   raise <id> <betrag>        Betrag zu "raised" eines Projekts addieren (auch negativ)
@@ -232,7 +266,7 @@ async function runSubcommand(cmd, args) {
     }
     const written = setPercent(n);
     console.log(`✓ funding.json aktualisiert (percent: ${written})`);
-    console.log("  Bitte committen: git add funding.json && git commit");
+    printCommitHint("funding.json");
     return;
   }
 
@@ -299,6 +333,17 @@ function withOptional(base, fields) {
 
 async function interactiveAddEinmalig(date, rl = null) {
   const own = !rl;
+  // Only guard when we open our own readline — called from the menu one is
+  // already running and the menu checked for a TTY before it got here.
+  if (
+    own &&
+    !requireTTY(
+      "add",
+      'Einen nicht-interaktiven Weg zum Anlegen gibt es nicht: finanz.json direkt editieren, dann "pnpm run finanz:validate".'
+    )
+  ) {
+    return;
+  }
   if (own) rl = readline.createInterface({ input, output });
   try {
     console.log("\n  Neues einmaliges Projekt (DSGVO: keine Namen, nur Eckdaten):");
@@ -336,6 +381,15 @@ async function interactiveAddEinmalig(date, rl = null) {
 
 async function interactiveMonthly(date, rl = null) {
   const own = !rl;
+  if (
+    own &&
+    !requireTTY(
+      "monthly",
+      'Einen nicht-interaktiven Weg gibt es nicht: finanz.json direkt editieren, dann "pnpm run finanz:validate".'
+    )
+  ) {
+    return;
+  }
   if (own) rl = readline.createInterface({ input, output });
   try {
     console.log("\n  Monatliche Kosten — (1) hinzufügen  (2) entfernen");
@@ -402,6 +456,14 @@ async function interactiveMonthly(date, rl = null) {
 // ── Interactive top-level menu ───────────────────────────────────────────────
 
 async function interactiveMenu() {
+  if (
+    !requireTTY(
+      "Das Menü",
+      'Nicht-interaktiv gibt es die Unterbefehle — "node scripts/finanz.mjs --help" zeigt sie.'
+    )
+  ) {
+    return;
+  }
   const date = today();
   const rl = readline.createInterface({ input, output });
   try {
@@ -476,7 +538,7 @@ async function interactiveMenu() {
       if (await confirm(rl, `  funding.json auf ${Math.round(n)}% setzen?`)) {
         const written = setPercent(n);
         console.log(`✓ funding.json aktualisiert (percent: ${written})`);
-        console.log("  Bitte committen: git add funding.json && git commit");
+        printCommitHint("funding.json");
       } else {
         console.log("  Abgebrochen — nichts geschrieben.");
       }
@@ -504,6 +566,11 @@ async function main() {
   const [, , cmd, ...args] = process.argv;
   if (!cmd) {
     await interactiveMenu();
+    return;
+  }
+  // Help is not an error: stdout + exit 0, never the fail() path.
+  if (cmd === "--help" || cmd === "-h" || cmd === "help") {
+    console.log(USAGE);
     return;
   }
   await runSubcommand(cmd, args);
