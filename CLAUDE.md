@@ -21,6 +21,8 @@ Pure HTML/CSS/JS — **no bundler, no framework.** Everything is edited directly
 
 Always branch (**`feat/<kebab>`** or **`fix/<kebab>`**) from current `main`, commit there, open a PR. Never commit on `main` without an explicit exception — and that holds regardless of size: a one-line docs fix is not too small for a PR.
 
+**Merge the PR locally, not via `tea pr merge` or the Forgejo web UI** — a server-side merge signs the commit with the Forge identity, which the pre-push leak gate blocks, so the push would need `--no-verify`. `git merge --no-ff <branch> -m "Merge pull request #N: <title>"`, then push to **both** remotes (`origin` = Forgejo, `github` = the mirror; without the second push no deploy runs). Full rationale: `~/ops/reference/git-workflow.md`.
+
 ## Testing strategy
 
 **Contributors don't need to run the full test suite locally.**
