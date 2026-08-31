@@ -444,6 +444,13 @@
                     <p class="events-subscribe__scope" id="events-feed-scope" hidden>
                         feed folgt filter: <strong class="events-subscribe__scope-tag"></strong>
                     </p>
+                    <!-- Filled by events.js when several tags are active: a static
+                         site cannot serve a combined feed, so name the per-tag ones
+                         instead of silently handing out the unfiltered feed. -->
+                    <p class="events-subscribe__scope" id="events-feed-split" hidden>
+                        kein kombinierter feed — einzeln abonnieren:
+                        <span class="events-subscribe__scope-links"></span>
+                    </p>
                     <div class="events-info-panel" id="linkup-info-panel" hidden>
                         <p>
                             Jeden <strong>dritten Freitag</strong> gibt's linkup –

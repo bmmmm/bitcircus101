@@ -313,12 +313,25 @@ test.describe('Events content', () => {
         const scopedHref = await rssBtn.getAttribute('href');
         expect(scopedHref).toContain('/feeds/tag/');
 
-        // A second active tag is no single scope — defaults return
+        // A second active tag is no single scope — defaults return, and the box
+        // says why instead of quietly handing out the unfiltered feed
         const second = page.locator('.events-filter__tag:not(.active)').first();
         if (await second.count()) {
+            const secondTag = (await second.getAttribute('data-tag')).toLowerCase();
             await second.click();
             await expect(note).toBeHidden();
             expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
+
+            const split = page.locator('#events-feed-split');
+            if (manifest.tags && manifest.tags[secondTag]) {
+                // Both tags are listed → one per-tag link each, no combined feed
+                await expect(split).toBeVisible();
+                const links = split.locator('.events-subscribe__scope-links a');
+                await expect(links).toHaveCount(2);
+                expect(await links.first().getAttribute('href')).toContain('/feeds/tag/');
+            } else {
+                await expect(split).toBeHidden();
+            }
         }
     });
 

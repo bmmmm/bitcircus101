@@ -584,6 +584,44 @@
     return null;
   }
 
+  // Several tags at once have no feed of their own — a static site cannot
+  // combine them on demand, and pre-building every combination is not a thing.
+  // Rather than let the buttons quietly hand out the unfiltered feed, list the
+  // per-tag feeds the manifest does have. Only for a pure multi-tag filter:
+  // with the source toggle or a search on top, a tag feed would be wider than
+  // what the page shows, and advertising it would be a lie.
+  function splitScopes() {
+    if (!feeds || state.q || state.onlyBitcircus) return null;
+    if (state.tags.length < 2) return null;
+    var out = [];
+    for (var i = 0; i < state.tags.length; i++) {
+      var key = state.tags[i].toLowerCase();
+      var entry = feeds.tags && feeds.tags[key];
+      if (entry && entry.rss) out.push({ tag: key, rss: entry.rss });
+    }
+    return out.length ? out : null;
+  }
+
+  function updateFeedSplit() {
+    var box = document.getElementById("events-feed-split");
+    if (!box) return;
+    var list = box.querySelector(".events-subscribe__scope-links");
+    var scopes = splitScopes();
+    if (!scopes) {
+      box.hidden = true;
+      return;
+    }
+    while (list.firstChild) list.removeChild(list.firstChild);
+    for (var i = 0; i < scopes.length; i++) {
+      if (i) list.appendChild(document.createTextNode(" · "));
+      var a = document.createElement("a");
+      a.setAttribute("href", new URL(scopes[i].rss, window.location.href).pathname);
+      a.textContent = scopes[i].tag;
+      list.appendChild(a);
+    }
+    box.hidden = false;
+  }
+
   function updateFeedScope() {
     var btns = document.querySelectorAll("[data-feed]");
     if (!btns.length) return;
@@ -621,6 +659,8 @@
         note.hidden = true;
       }
     }
+
+    updateFeedSplit();
   }
 
   // ── Error / Loading ─────────────────────────────────────────────────────
