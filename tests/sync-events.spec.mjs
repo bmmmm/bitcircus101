@@ -60,6 +60,39 @@ describe("nthWeekday", () => {
     const d = nthWeekday(2026, 1, 1, 5);
     assert.equal(d, null);
   });
+
+  // Negative ordinals count back from the end of the month (RFC5545 BYDAY).
+  // Before this was supported, "-1WE" produced no dates at all.
+  it("finds the last weekday of a month for nth = -1", () => {
+    // Cross-checked against an independent walk back from the month's last day.
+    const lastOf = (year, month, wd) => {
+      const d = new Date(year, month + 1, 0);
+      while (d.getDay() !== wd) d.setDate(d.getDate() - 1);
+      return d;
+    };
+    for (const [year, month, wd] of [[2026, 8, 3], [2026, 9, 3], [2026, 1, 6], [2026, 4, 5]]) {
+      assert.equal(
+        nthWeekday(year, month, wd, -1).getTime(),
+        lastOf(year, month, wd).getTime(),
+        `last weekday ${wd} of ${year}-${month + 1}`
+      );
+    }
+  });
+
+  it("finds the second-to-last weekday for nth = -2", () => {
+    const d = nthWeekday(2026, 8, 3, -2); // September 2026, Wednesday
+    assert.equal(d.getDate(), 23);
+    assert.equal(d.getDay(), 3);
+  });
+
+  it("handles a month whose last day IS the target weekday", () => {
+    const d = nthWeekday(2026, 1, 6, -1); // Feb 2026 ends on Saturday the 28th
+    assert.equal(d.getDate(), 28);
+  });
+
+  it("returns null if a negative nth underflows the month", () => {
+    assert.equal(nthWeekday(2026, 1, 3, -5), null);
+  });
 });
 
 describe("expandRRule — MONTHLY with BYSETPOS", () => {
@@ -101,6 +134,51 @@ describe("expandRRule — MONTHLY with BYSETPOS", () => {
     const dates = expandRRule(dtstart, rule, exdates);
     const febDates = dates.filter((d) => d.getMonth() === 1);
     assert.equal(febDates.length, 0);
+  });
+
+  // Regression: "FREQ=MONTHLY;BYDAY=-1WE" expanded to ZERO dates without a warning,
+  // because the ordinal regex did not allow a minus sign. A real recurring event
+  // ("Eröffnung: Doro101 Ateliers", last Wednesday monthly) was missing from the
+  // site entirely.
+  it("expands BYDAY=-1WE (last Wednesday of the month)", () => {
+    const dtstart = new Date(2025, 8, 24, 20, 0);
+    const dates = expandRRule(dtstart, "FREQ=MONTHLY;BYDAY=-1WE", []);
+    assert(dates.length > 0, "negative ordinal must expand");
+    for (const d of dates) {
+      assert.equal(d.getDay(), 3, "every date is a Wednesday");
+      assert.equal(d.getHours(), 20, "keeps the DTSTART time of day");
+      // Last of the month ⇒ no further Wednesday fits before the month ends.
+      const next = new Date(d);
+      next.setDate(next.getDate() + 7);
+      assert.notEqual(next.getMonth(), d.getMonth(), `${d.toDateString()} is not the last Wednesday`);
+    }
+  });
+
+  it("expands BYDAY=FR;BYSETPOS=-1 (last Friday) the same way", () => {
+    const dtstart = new Date(2026, 0, 30, 19, 0);
+    const dates = expandRRule(dtstart, "FREQ=MONTHLY;BYDAY=FR;BYSETPOS=-1", []);
+    assert(dates.length > 0);
+    for (const d of dates) {
+      assert.equal(d.getDay(), 5);
+      const next = new Date(d);
+      next.setDate(next.getDate() + 7);
+      assert.notEqual(next.getMonth(), d.getMonth());
+    }
+  });
+
+  it("warns instead of silently dropping an unsupported BYDAY list", () => {
+    const warnings = [];
+    const orig = console.warn;
+    console.warn = (msg) => warnings.push(String(msg));
+    try {
+      expandRRule(new Date(2026, 0, 5, 19, 0), "FREQ=MONTHLY;BYDAY=MO,WE", []);
+    } finally {
+      console.warn = orig;
+    }
+    assert(
+      warnings.some((w) => w.includes("unsupported MONTHLY BYDAY")),
+      `expected a warning, got: ${JSON.stringify(warnings)}`
+    );
   });
 });
 
