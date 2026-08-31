@@ -54,6 +54,10 @@ describe("live-overlay.mjs", () => {
         write(dir, "sitemap.xml", "generated-sitemap");
         write(dir, "events-data.json", "generated-events");
         write(dir, "events/feed.xml", "generated-feed-copy");
+        // the filtered-feed TREE (variable file set → FEED_DIRS, not FEEDS)
+        write(dir, "feeds/all.ics", "generated-all-feed");
+        write(dir, "feeds/tag/linkup.ics", "generated-tag-feed");
+        write(dir, "feeds/source/bitcircus.xml", "generated-source-feed");
         // deliberately NO ical.ics / feed.xml / events/ical.ics → the
         // missing-file case that aborted the old bash loop (d558e5a)
         return dir;
@@ -73,6 +77,7 @@ describe("live-overlay.mjs", () => {
         assert.equal(fs.readFileSync(path.join(dir, "sitemap.xml"), "utf8"), "generated-sitemap");
         assert.equal(fs.readFileSync(path.join(dir, "events-data.json"), "utf8"), "generated-events");
         assert.equal(fs.readFileSync(path.join(dir, "events/feed.xml"), "utf8"), "generated-feed-copy");
+        assert.equal(fs.readFileSync(path.join(dir, "feeds/tag/linkup.ics"), "utf8"), "generated-tag-feed");
         // tracked seed with no live counterpart still arrives from main
         assert.equal(fs.readFileSync(path.join(dir, "funding.json"), "utf8"), "seed-funding");
     });
@@ -103,6 +108,11 @@ describe("live-overlay.mjs", () => {
         // FEEDS entries (tracked on live only, absent from ref) survive pruning
         assert.equal(fs.readFileSync(path.join(dir, "events-data.json"), "utf8"), "generated-events");
         assert.equal(fs.readFileSync(path.join(dir, "events/feed.xml"), "utf8"), "generated-feed-copy");
+        // the FEED_DIRS tree survives pruning too — the exemption is scoped to
+        // the feeds/ prefix (old-page/old-assets above prove pruning still runs)
+        assert.equal(fs.readFileSync(path.join(dir, "feeds/all.ics"), "utf8"), "generated-all-feed");
+        assert.equal(fs.readFileSync(path.join(dir, "feeds/tag/linkup.ics"), "utf8"), "generated-tag-feed");
+        assert.equal(fs.readFileSync(path.join(dir, "feeds/source/bitcircus.xml"), "utf8"), "generated-source-feed");
     });
 });
 
@@ -149,6 +159,8 @@ describe("smoke-live.mjs", () => {
     let base;
     // Which <loc> entries the fixture sitemap advertises; set per test.
     let locs = [];
+    // Simulates a deploy that lost the feeds/ tree; reset by the test that sets it.
+    let feedDown = false;
     const HASH = "abc12345";
     const sitemap = () =>
         `<?xml version="1.0" encoding="UTF-8"?><urlset>${locs
@@ -169,6 +181,9 @@ describe("smoke-live.mjs", () => {
             } else if (req.url === "/events") {
                 res.writeHead(200, { "content-type": "text/html" });
                 res.end("<h1>events</h1>");
+            } else if (req.url === "/feeds/all.ics" && !feedDown) {
+                res.writeHead(200, { "content-type": "text/calendar" });
+                res.end("BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n");
             } else if (req.url === "/moved") {
                 // Stands in for the clean-URL redirect production serves.
                 res.writeHead(308, { location: "/events" });
@@ -195,6 +210,18 @@ describe("smoke-live.mjs", () => {
         locs = [`${base}/`, `${base}/events`];
         const { stderr } = await smoke();
         assert.match(stderr, /2 sitemap URLs OK/);
+    });
+
+    it("fails when the filtered-feed anchor is missing", async () => {
+        feedDown = true;
+        try {
+            await assert.rejects(
+                () => smoke(),
+                (e) => e.code === 1 && e.stderr.includes("/feeds/all.ics"),
+            );
+        } finally {
+            feedDown = false;
+        }
     });
 
     it("fails when the expected hash never appears", async () => {
