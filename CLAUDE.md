@@ -105,13 +105,12 @@ and blocks dependency build scripts. Local E2E needs browsers once:
 
 ## Files you should NOT edit
 
-CI generates these — never hand-edit. Calendar-sync outputs live **only on `live`**; only the last two keep a seed on `main`.
+CI generates these — never hand-edit. Calendar-sync outputs live **only on `live`**; only `sitemap.xml` keeps a seed on `main`.
 
 - `events-data.json`, `feed.xml` (RSS), `ical.ics` (aggregator-facing iCal, real DTSTART/DTEND) — written by the calendar sync
 - `events/feed.xml`, `events/ical.ics` — copies so a relative `<link>` resolved from the `/events` clean URL still hits the real feed
 - `feeds/` — filtered ICS/RSS per tag (`feeds/tag/<slug>.*`), per source (`feeds/source/<id>.*`) and `feeds/all.*`, same ≤40-event window as the page; the `feeds` manifest in `events-data.json` maps them (the frontend never derives slugs)
 - `sitemap.xml` — generated on every deploy (seed on `main`)
-- `funding.json` — updated via manual workflow (seed on `main`)
 
 ## Other notable files
 
@@ -123,6 +122,8 @@ Detail lives in each file's own header comment — these are pointers:
 - `events-core.js` — **shared card builder** (UMD/ES5): tags, event type, card shape; key order pinned by a golden test in `tests/sync-events.spec.mjs`
 - `kiosk/index.html` + `kiosk.js` — chrome-less wall display (`/kiosk/`, noindex, unlisted, JSON-only; NOT in `inject-layout.mjs`)
 - `scripts/sync-events.mjs` — CI calendar sync: writes `events-data.json`, both primary feeds + `events/` copies, and the `feeds/` tree. Times are floating-local (CI pins `TZ=Europe/Berlin`; the iCal export carries a bundled VTIMEZONE)
+- `finanz-core.js` — **shared funding math** (UMD/ES5): one file for the browser renderer (`finanz.js`) and the maintainer CLI, plus the field predicates (`isCalendarDate`, `isCleanHttpsUrl`) the CLI validator calls
+- `scripts/finanz.mjs` + `scripts/finanz-data.mjs` — the funding board's CLI and its pure data layer; see [Editing the funding board](#editing-the-funding-board)
 - `scripts/check-calendars.mjs` — manifest validator (offline, exits non-zero) + read-only `--probe` card preview; tested by `tests/calendars.spec.mjs`
 - `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay preserving CI feeds + pruning, `?v=` busting, post-deploy health check incl. a full sitemap walk — any non-200 breaks the deploy), tested via `tests/deploy-scripts.spec.mjs`
 - `llms.txt` — LLM-friendly site summary ([llms.txt standard](https://llmstxt.org/))
@@ -137,6 +138,28 @@ Full guide — fields, source `type`s, filter rules: **`calendars/README.md`**. 
 **Workflow:** `node scripts/check-calendars.mjs --probe "<ics-url>"` (read-only preview through the real pipeline, prints a paste-ready snippet) → create the JSON file → list it in `config.json` → **`pnpm run check:calendars`** (also a PR gate: catches typo'd keys, duplicate ids, and non-unique `name` — the key for `icsKeys`, RSS filter and stale-cache; an unlisted file is only a warning, parking is intentional).
 
 Never run `sync-events.mjs` to try a link out: it overwrites the feeds **and rewrites the JSON-LD block in the tracked `events.html`**. `--probe` is the read-only path.
+
+## Editing the funding board
+
+`finanz.json` feeds the cost/funding board on `support.html#projekte`, `funding.json` the footer's "LIGHTS ON?" percentage. **Both are edited through one CLI** — never by hand, and no longer by a workflow.
+
+```sh
+pnpm run finanz                     # interactive menu (prints the board first)
+pnpm run finanz list                # print the board
+pnpm run finanz raise <id> <amount> # add to a project's "raised" (negative allowed)
+pnpm run finanz finish <id>         # raised = target
+pnpm run finanz pulse <0..7>        # append a value-free heartbeat level
+pnpm run finanz percent <0..100>    # set the footer percentage in funding.json
+pnpm run finanz:validate            # validate against finanz.schema.json
+```
+
+Every write validates **first** and refuses with an error naming the bad field, so an invalid `finanz.json` never reaches disk. Both files stay tracked on `main` — commit them like any other change. `pnpm run finanz:validate` is also a PR gate in both `ci.yml`, which catches the one path the CLI cannot: hand-editing the JSON.
+
+`finanz.schema.json` is the structural contract; `scripts/finanz-data.mjs` mirrors it in a hand-rolled validator (no ajv, no new dependency) and `tests/finanz-data.spec.mjs` asserts the two stay in lockstep.
+
+**Privacy by construction:** only rounded aggregate totals plus a `pulse` track of integer 0..7 levels — never euro amounts, donor names, or per-donation records.
+
+**Not yet rendered:** the schema accepts optional `url1`/`url2` per item and the CLI offers them, but `finanz.js` does not display them yet — staged separately (issue #28).
 
 ## Adding a new page
 
