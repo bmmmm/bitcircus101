@@ -219,6 +219,100 @@ test.describe('Events content', () => {
         expect(await page.locator('.event-card').count()).toBe(countBefore);
     });
 
+    test('URL state and search round-trip, and survive the bitcircus toggle', async ({ page }) => {
+        await page.goto('/events.html');
+        const card = page.locator('.event-card').first();
+        if (!await card.isVisible({ timeout: 5000 }).catch(() => false)) return;
+
+        // Chip click lands in the URL
+        const countBefore = await page.locator('.event-card').count();
+        const firstTag = page.locator('.events-filter__tag').first();
+        const tagName = await firstTag.getAttribute('data-tag');
+        await firstTag.click();
+        await expect(page).toHaveURL(/[?&]tags=/);
+        const filteredCount = await page.locator('.event-card').count();
+
+        // Reloading the shared URL restores chip state and result set
+        await page.goto(page.url());
+        const restoredTag = page.locator(`.events-filter__tag[data-tag="${tagName}"]`);
+        await expect(restoredTag).toHaveClass(/active/);
+        await expect(restoredTag).toHaveAttribute('aria-pressed', 'true');
+        expect(await page.locator('.event-card').count()).toBe(filteredCount);
+
+        // Search narrows further and lands in the URL (debounced)
+        const title = await page.locator('.event-card__title').first().textContent();
+        const token = title.split(/\s+/).sort((a, b) => b.length - a.length)[0];
+        await page.locator('#events-search').fill(token);
+        await expect(page).toHaveURL(/[?&]q=/);
+        expect(await page.locator('.event-card').count()).toBeGreaterThan(0);
+
+        // Nonsense query shows the search empty state
+        await page.locator('#events-search').fill('zzzqqqxyz');
+        await expect(page.locator('.events-empty')).toBeVisible();
+
+        // Reset clears tags + search and the URL query
+        await page.locator('.events-filter__clear').click();
+        await expect(page).toHaveURL(/\/events\.html(#.*)?$/);
+        expect(await page.locator('.event-card').count()).toBe(countBefore);
+
+        // Regression: the source toggle must not wipe an active tag filter
+        // (removeFilterBar used to clear the filters as a side effect)
+        await page.locator(`.events-filter__tag[data-tag="${tagName}"]`).click();
+        await page.locator('#events-only-bitcircus').check();
+        const survivor = page.locator(`.events-filter__tag[data-tag="${tagName}"]`);
+        if (await survivor.count()) {
+            await expect(survivor).toHaveClass(/active/);
+        }
+        await expect(page).toHaveURL(/[?&]tags=/);
+        await expect(page).toHaveURL(/[?&]nur=bc/);
+    });
+
+    test('subscribe buttons follow a single-tag filter only when the manifest lists it', async ({ page }) => {
+        await page.goto('/events.html');
+        const card = page.locator('.event-card').first();
+        if (!await card.isVisible({ timeout: 5000 }).catch(() => false)) return;
+
+        const manifest = await page.evaluate(() =>
+            fetch('events-data.json')
+                .then((r) => (r.ok ? r.json() : null))
+                .then((d) => (d && d.feeds) || null)
+                .catch(() => null)
+        );
+        const note = page.locator('#events-feed-scope');
+        const rssBtn = page.locator('[data-feed="rss"]');
+        const rssDefault = await rssBtn.getAttribute('href');
+
+        if (!manifest) {
+            // Degradation path (old JSON / fixture): filters never touch the box
+            await page.locator('.events-filter__tag').first().click();
+            await expect(note).toBeHidden();
+            expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
+            return;
+        }
+
+        // Pick a chip whose tag the manifest actually lists
+        const chips = page.locator('.events-filter__tag');
+        let chip = null;
+        for (let i = 0; i < await chips.count(); i++) {
+            const t = (await chips.nth(i).getAttribute('data-tag')).toLowerCase();
+            if (manifest.tags && manifest.tags[t]) { chip = chips.nth(i); break; }
+        }
+        if (!chip) return; // window without listed tags — nothing to assert
+
+        await chip.click();
+        await expect(note).toBeVisible();
+        const scopedHref = await rssBtn.getAttribute('href');
+        expect(scopedHref).toContain('/feeds/tag/');
+
+        // A second active tag is no single scope — defaults return
+        const second = page.locator('.events-filter__tag:not(.active)').first();
+        if (await second.count()) {
+            await second.click();
+            await expect(note).toBeHidden();
+            expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
+        }
+    });
+
     test('sync status labels are shown when data is available', async ({ page }) => {
         await page.goto('/events.html');
         const card = page.locator('.event-card').first();

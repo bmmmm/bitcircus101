@@ -21,14 +21,16 @@
   ];
   var DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
 
-  // State
-  var activeFilters = [];
-  var allUpcoming = [];
+  // State — shareable via the URL query (?tags=…&nur=bc&q=…). The hash stays
+  // reserved for event anchors (#ev-…), so permalinks and filters compose.
+  var PARAM = { TAGS: "tags", ONLY: "nur", Q: "q" };
+  var state = { tags: [], onlyBitcircus: false, q: "" };
   var allFutureSorted = [];
-  var onlyBitcircus = false;
+  var feeds = null; // feeds manifest from events-data.json; null on old JSON / ICS fallback
   var eventsContainer = null;
   var filterBar = null;
   var eventsToolbar = null;
+  var feedDefaults = null; // snapshot of the subscribe buttons' shipped hrefs
 
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
 
@@ -58,19 +60,144 @@
     return !e.source || e.source === "bitcircus101";
   }
 
-  function rebuildDisplayedUpcoming() {
-    var pool = onlyBitcircus
-      ? allFutureSorted.filter(isBitcircusEvent)
-      : allFutureSorted;
-    allUpcoming = pool.slice(0, 30);
+  // ── URL state ─────────────────────────────────────────────────────────────
+
+  function parseState() {
+    var params = new URLSearchParams(window.location.search);
+    var raw = (params.get(PARAM.TAGS) || "").split(",");
+    state.tags = [];
+    for (var i = 0; i < raw.length; i++) {
+      var t = raw[i].trim();
+      if (!t) continue;
+      if (t.charAt(0) !== "#") t = "#" + t;
+      if (state.tags.indexOf(t) === -1) state.tags.push(t);
+    }
+    state.onlyBitcircus = params.get(PARAM.ONLY) === "bc";
+    state.q = (params.get(PARAM.Q) || "").trim();
   }
 
+  // Fixed key order so identical views always serialize to one URL string.
+  function serializeState() {
+    var parts = [];
+    if (state.tags.length) {
+      parts.push(PARAM.TAGS + "=" + state.tags.map(function (t) {
+        return encodeURIComponent(t.replace(/^#/, ""));
+      }).join(","));
+    }
+    if (state.onlyBitcircus) parts.push(PARAM.ONLY + "=bc");
+    if (state.q) parts.push(PARAM.Q + "=" + encodeURIComponent(state.q));
+    return parts.length ? "?" + parts.join("&") : "";
+  }
+
+  var lastUrl = null;
+  function syncUrl() {
+    var url = window.location.pathname + serializeState() + window.location.hash;
+    if (url === lastUrl) return; // Safari throttles replaceState (~100 calls/30s)
+    lastUrl = url;
+    window.history.replaceState(null, "", url);
+  }
+
+  // ── Search & filtering ───────────────────────────────────────────────────
+
+  // Folded on BOTH sides so "lötkolben" and "loetkolben" hit the same events.
+  function foldText(s) {
+    return (s || "").toLowerCase()
+      .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+      .replace(/\s+/g, " ");
+  }
+
+  function haystack(e) {
+    if (!e.__hay) {
+      e.__hay = foldText(
+        e.title + " " + (e.subtitle || "") + " " + (e.description || "") + " " +
+        (e.location || "") + " " + (e.tags || []).join(" ")
+      );
+    }
+    return e.__hay;
+  }
+
+  function searchTokens() {
+    return state.q ? foldText(state.q).split(" ").filter(Boolean) : [];
+  }
+
+  function matchesTags(e) {
+    if (!state.tags.length) return true;
+    return state.tags.some(function (f) { return (e.tags || []).indexOf(f) > -1; });
+  }
+
+  function matchesSearch(e, tokens) {
+    for (var i = 0; i < tokens.length; i++) {
+      if (haystack(e).indexOf(tokens[i]) === -1) return false;
+    }
+    return true;
+  }
+
+  // Source toggle applied, no cap — the chip source and the count denominator.
+  function pool() {
+    return state.onlyBitcircus
+      ? allFutureSorted.filter(isBitcircusEvent)
+      : allFutureSorted;
+  }
+
+  // Filter BEFORE the 30-cap so tags/search can reach events 31–40 of the
+  // loaded window (the old order capped first and made them unreachable).
+  function visibleEvents() {
+    var tokens = searchTokens();
+    return pool().filter(function (e) {
+      return matchesTags(e) && matchesSearch(e, tokens);
+    }).slice(0, 30);
+  }
+
+  // Tags in the URL that no loaded event carries (event passed, typo, …).
+  function unknownTags() {
+    var known = {};
+    pool().forEach(function (e) {
+      (e.tags || []).forEach(function (t) { known[t] = true; });
+    });
+    return state.tags.filter(function (t) { return !known[t]; });
+  }
+
+  // DOM removal only — state survives (the old version also cleared the active
+  // filters here, which silently wiped tag filters on every source toggle).
   function removeFilterBar() {
     if (filterBar && filterBar.parentNode) {
       filterBar.parentNode.removeChild(filterBar);
     }
     filterBar = null;
-    activeFilters = [];
+  }
+
+  // Mirror `state` into every control — checkbox, search input, chips, resets.
+  function applyStateToControls() {
+    var cb = document.getElementById("events-only-bitcircus");
+    if (cb) cb.checked = state.onlyBitcircus;
+    var input = document.getElementById("events-search");
+    if (input && input.value !== state.q && document.activeElement !== input) {
+      input.value = state.q;
+    }
+    var searchClear = document.querySelector(".events-search__clear");
+    if (searchClear) searchClear.hidden = !state.q;
+    if (filterBar) {
+      filterBar.querySelectorAll(".events-filter__tag").forEach(function (b) {
+        var on = state.tags.indexOf(b.getAttribute("data-tag")) > -1;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      var clearBtn = filterBar.querySelector(".events-filter__clear");
+      if (clearBtn) clearBtn.hidden = !state.tags.length && !state.q;
+    }
+  }
+
+  // Single entry point after any state change; every handler ends here.
+  function refresh(opts) {
+    opts = opts || {};
+    if (opts.rebuildChips) {
+      removeFilterBar();
+      buildChips();
+    }
+    applyStateToControls();
+    renderFilteredCards();
+    syncUrl();
+    updateFeedScope();
   }
 
   function ensureEventsToolbar(insertBeforeNode) {
@@ -78,49 +205,60 @@
     var parent = insertBeforeNode.parentNode;
     eventsToolbar = document.createElement("div");
     eventsToolbar.className = "events-toolbar";
+    // Built by JS on purpose: the toolbar only exists when events rendered, so
+    // a dead control never shows when JS or the data fails.
     eventsToolbar.innerHTML =
+      '<div class="events-toolbar__row">' +
       '<label class="events-toolbar__label" for="events-only-bitcircus">' +
       '<input type="checkbox" id="events-only-bitcircus" class="events-toolbar__checkbox" />' +
-      "<span>Nur Events im bitcircus101 anzeigen</span></label>";
+      "<span>Nur Events im bitcircus101 anzeigen</span></label>" +
+      "</div>" +
+      '<div class="events-toolbar__row events-search">' +
+      '<label class="events-search__label" for="events-search">suche:</label>' +
+      '<input type="search" id="events-search" class="events-search__input" ' +
+      'placeholder="titel, ort, schlagwort \u2026" autocomplete="off" />' +
+      '<button type="button" class="events-search__clear" hidden aria-label="Suche l\u00f6schen">\u00d7</button>' +
+      '<span class="events-search__count"></span>' +
+      "</div>";
     parent.insertBefore(eventsToolbar, insertBeforeNode);
+
     document.getElementById("events-only-bitcircus").addEventListener(
       "change",
       function () {
-        onlyBitcircus = this.checked;
-        removeFilterBar();
-        rebuildDisplayedUpcoming();
-        buildTagsAndFilter();
+        state.onlyBitcircus = this.checked;
+        refresh({ rebuildChips: true }); // pool changed \u2192 chip set changes
+      }
+    );
+
+    // One debounce for render AND URL \u2014 also caps replaceState frequency.
+    var searchInput = document.getElementById("events-search");
+    var searchTimer = null;
+    searchInput.addEventListener("input", function () {
+      var value = this.value;
+      if (searchTimer) clearTimeout(searchTimer);
+      searchTimer = setTimeout(function () {
+        state.q = value.trim();
+        refresh();
+      }, 150);
+    });
+    eventsToolbar.querySelector(".events-search__clear").addEventListener(
+      "click",
+      function () {
+        state.q = "";
+        refresh();
       }
     );
   }
 
-  function buildTagsAndFilter() {
-    var el = eventsContainer;
-    if (!allUpcoming.length) {
-      if (onlyBitcircus && allFutureSorted.length) {
-        el.innerHTML =
-          '<p class="events-empty">Keine bevorstehenden Termine nur im bitcircus101-Kalender in diesem Ausschnitt.</p>' +
-          "<p><a href=\"" + CALENDAR_URL + "\" target=\"_blank\" rel=\"noopener noreferrer\">" +
-          "Kalender \u00f6ffnen \u2197</a></p>";
-      } else {
-        el.innerHTML =
-          '<p class="events-empty">Keine kommenden Termine gefunden.</p>' +
-          '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener noreferrer">' +
-          "Kalender \u00f6ffnen \u2197</a></p>";
-      }
-      el.removeAttribute("aria-busy");
-      return;
-    }
-
+  // Chip source is pool() (pre-cap, post-toggle): stable while typing, changes
+  // only on data load or source toggle \u2014 never on a chip click or keystroke.
+  function buildChips() {
     var tagSet = {};
-    allUpcoming.forEach(function (e) {
+    pool().forEach(function (e) {
       (e.tags || []).forEach(function (t) { tagSet[t] = true; });
     });
     var allTags = Object.keys(tagSet).sort();
-    if (allTags.length) {
-      buildFilterBar(allTags, el);
-    }
-    renderFilteredCards();
+    if (allTags.length) buildFilterBar(allTags, eventsContainer);
   }
 
   // ── Card Renderer ─────────────────────────────────────────────────────────
@@ -139,12 +277,6 @@
         return (a.date + (a.time || "")).localeCompare(b.date + (b.time || ""));
       });
 
-    onlyBitcircus = false;
-    if (eventsToolbar) {
-      var resetCb = document.getElementById("events-only-bitcircus");
-      if (resetCb) resetCb.checked = false;
-    }
-
     if (!allFutureSorted.length) {
       if (eventsToolbar && eventsToolbar.parentNode) {
         eventsToolbar.parentNode.removeChild(eventsToolbar);
@@ -155,13 +287,24 @@
         '<p class="events-empty">Keine kommenden Termine gefunden.</p>' +
         '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener noreferrer">' +
         "Kalender \u00f6ffnen \u2197</a></p>";
+      el.removeAttribute("aria-busy");
       return;
     }
 
     ensureEventsToolbar(el);
-    rebuildDisplayedUpcoming();
-    removeFilterBar();
-    buildTagsAndFilter();
+    refresh({ rebuildChips: true });
+
+    // Anchor-wins: a permalink must always land. If the #ev-\u2026 target got
+    // filtered away by URL state, drop the filters once and re-render \u2014 the
+    // scroll happens in renderFilteredCards.
+    var h = window.location.hash;
+    if (h && h.indexOf("#ev-") === 0 && !document.getElementById(h.slice(1)) &&
+        (state.tags.length || state.q || state.onlyBitcircus)) {
+      state.tags = [];
+      state.q = "";
+      state.onlyBitcircus = false;
+      refresh({ rebuildChips: true });
+    }
   }
 
   function buildFilterBar(tags, el) {
@@ -187,45 +330,66 @@
     filterBar.querySelectorAll(".events-filter__tag").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var tag = btn.getAttribute("data-tag");
-        var idx = activeFilters.indexOf(tag);
-        if (idx > -1) {
-          activeFilters.splice(idx, 1);
-          btn.classList.remove("active");
-          btn.setAttribute("aria-pressed", "false");
-        } else {
-          activeFilters.push(tag);
-          btn.classList.add("active");
-          btn.setAttribute("aria-pressed", "true");
-        }
-        clearBtn.hidden = !activeFilters.length;
-        renderFilteredCards();
+        var idx = state.tags.indexOf(tag);
+        if (idx > -1) state.tags.splice(idx, 1);
+        else state.tags.push(tag);
+        refresh();
       });
     });
 
+    // Reset clears tags AND search (the search field has its own × for q only).
     clearBtn.addEventListener("click", function () {
-      activeFilters = [];
-      filterBar.querySelectorAll(".events-filter__tag").forEach(function (b) {
-        b.classList.remove("active");
-        b.setAttribute("aria-pressed", "false");
-      });
-      clearBtn.hidden = true;
-      renderFilteredCards();
+      state.tags = [];
+      state.q = "";
+      refresh();
     });
+  }
+
+  function updateCount(shown) {
+    var elC = document.querySelector(".events-search__count");
+    if (!elC) return;
+    // Only shown while a filter or search narrows the list \u2014 silent otherwise.
+    elC.textContent = (state.q || state.tags.length)
+      ? shown + " / " + pool().length + " termine"
+      : "";
   }
 
   function renderFilteredCards() {
     var el = eventsContainer;
-    var filtered = activeFilters.length
-      ? allUpcoming.filter(function (e) {
-          return activeFilters.some(function (f) {
-            return (e.tags || []).indexOf(f) > -1;
-          });
-        })
-      : allUpcoming;
+    var filtered = visibleEvents();
+    updateCount(filtered.length);
 
     if (!filtered.length) {
+      var unknown = unknownTags();
+      var msg;
+      if (unknown.length && !state.q) {
+        msg = "Unbekanntes Schlagwort: " + esc(unknown.join(", ")) +
+          " \u2014 vielleicht ist der Termin schon vorbei.";
+      } else if (state.q && state.tags.length) {
+        msg = "Keine Treffer f\u00fcr Filter + Suche.";
+      } else if (state.q) {
+        msg = "Keine Treffer f\u00fcr \u201e" + esc(state.q) + "\u201c.";
+      } else if (state.onlyBitcircus && !state.tags.length) {
+        msg = "Keine bevorstehenden Termine nur im bitcircus101-Kalender in diesem Ausschnitt.";
+      } else {
+        msg = "Keine Treffer f\u00fcr diesen Filter.";
+      }
+      var canReset = state.tags.length || state.q;
       el.innerHTML =
-        '<p class="events-empty">Keine Treffer f\u00fcr diesen Filter.</p>';
+        '<p class="events-empty">' + msg + "</p>" +
+        (canReset
+          ? '<p><button type="button" class="events-empty__reset">\u00d7 filter zur\u00fccksetzen</button></p>'
+          : '<p><a href="' + CALENDAR_URL + '" target="_blank" rel="noopener noreferrer">' +
+            "Kalender \u00f6ffnen \u2197</a></p>");
+      var resetBtn = el.querySelector(".events-empty__reset");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", function () {
+          state.tags = [];
+          state.q = "";
+          refresh();
+        });
+      }
+      el.removeAttribute("aria-busy");
       return;
     }
 
@@ -339,7 +503,9 @@
     el.innerHTML = html;
     el.removeAttribute("aria-busy");
 
-    // Permalink: copy URL to clipboard on click
+    // Permalink: copy URL to clipboard on click. Deliberately asymmetric: the
+    // clipboard gets a clean, query-free event permalink (anchor-wins makes it
+    // always land), while the address bar keeps the current filter query.
     el.querySelectorAll(".event-action--link").forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
@@ -376,6 +542,86 @@
   // Source descriptor for the fallback: only the primary Nextcloud calendar is
   // reachable from the browser, so cards carry the same source name the sync uses.
   var FALLBACK_CAL = { id: "bitcircus", name: "bitcircus101", url: CALENDAR_URL, cap: 30 };
+
+  // ── Subscribe box follows the filter ("Filter = Feed") ───────────────────
+  // The sync publishes per-tag/per-source feeds and lists them in the `feeds`
+  // manifest of events-data.json. With exactly one scope active, the subscribe
+  // buttons point at the matching feed; in every other case (no manifest, no
+  // match, multi-tag, search active) they keep their shipped targets — never
+  // advertise a feed the manifest does not list.
+
+  function snapshotFeedDefaults() {
+    if (feedDefaults) return;
+    feedDefaults = {};
+    var btns = document.querySelectorAll("[data-feed]");
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      feedDefaults[b.getAttribute("data-feed")] = {
+        href: b.getAttribute("href"),
+        download: b.getAttribute("download"),
+      };
+    }
+  }
+
+  // Exactly one scope, or none: one tag (and nothing else) → that tag's feed;
+  // the source toggle alone → the bitcircus source feed.
+  function feedScope() {
+    if (!feeds || state.q) return null;
+    if (state.tags.length === 1 && !state.onlyBitcircus) {
+      var key = state.tags[0].toLowerCase(); // manifest tag keys are lowercased
+      var entry = feeds.tags && feeds.tags[key];
+      return entry ? { entry: entry, label: key } : null;
+    }
+    if (state.onlyBitcircus && !state.tags.length) {
+      // Manifest sources are keyed by cal.id — resolve via the card-facing name.
+      var sources = feeds.sources || {};
+      for (var id in sources) {
+        if (sources[id].name === "bitcircus101") {
+          return { entry: sources[id], label: "nur bitcircus101" };
+        }
+      }
+    }
+    return null;
+  }
+
+  function updateFeedScope() {
+    var btns = document.querySelectorAll("[data-feed]");
+    if (!btns.length) return;
+    snapshotFeedDefaults();
+
+    var scope = feedScope();
+    for (var i = 0; i < btns.length; i++) {
+      var b = btns[i];
+      var kind = b.getAttribute("data-feed"); // webcal | ics | rss
+      var def = feedDefaults[kind] || {};
+      var path = scope && scope.entry && (kind === "rss" ? scope.entry.rss : scope.entry.ics);
+      if (path) {
+        // Manifest paths are root-absolute; resolve against the current origin
+        // so /events and /events.html behave identically.
+        var abs = new URL(path, window.location.href);
+        b.setAttribute("href", kind === "webcal" ? "webcal://" + abs.host + abs.pathname : abs.pathname);
+        if (kind === "ics") {
+          b.setAttribute("download", "bitcircus101-" + path.split("/").pop());
+        }
+      } else {
+        if (def.href) b.setAttribute("href", def.href);
+        if (kind === "ics") {
+          if (def.download) b.setAttribute("download", def.download);
+          else b.removeAttribute("download");
+        }
+      }
+    }
+
+    var note = document.getElementById("events-feed-scope");
+    if (note) {
+      if (scope) {
+        note.querySelector(".events-subscribe__scope-tag").textContent = scope.label;
+        note.hidden = false;
+      } else {
+        note.hidden = true;
+      }
+    }
+  }
 
   // ── Error / Loading ─────────────────────────────────────────────────────
 
@@ -507,6 +753,10 @@
       return;
     }
 
+    // Read URL state BEFORE the fetch so the very first render already
+    // reflects a shared link \u2014 no unfiltered flash.
+    parseState();
+
     el.innerHTML =
       '<p class="events-loading">' +
       '<span class="events-loading__cmd">lade termine</span>' +
@@ -521,6 +771,7 @@
         // Support both { lastSync, sources, events } wrapper and plain array
         var events = Array.isArray(data) ? data : data.events;
         var sources = Array.isArray(data) ? null : data.sources;
+        feeds = (!Array.isArray(data) && data.feeds) || null;
         if (!events || !events.length) throw new Error("empty");
         renderCards(events, el);
         if (sources) showLastSync(sources);

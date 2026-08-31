@@ -414,13 +414,16 @@
                         <h2 class="events-subscribe__title">bitcircus101 kalender<a class="section-anchor" href="#kalender" aria-label="Link zu: bitcircus101 Kalender">#</a></h2>
                         <div class="events-subscribe__actions">
                             <a class="events-subscribe__btn"
+                                data-feed="webcal"
                                 href="webcal://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
                             >&#8595; abonnieren</a>
                             <a class="events-subscribe__btn"
+                                data-feed="ics"
                                 href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export"
                                 download="bitcircus101.ics"
                             >&#8595; ics</a>
                             <a class="events-subscribe__btn"
+                                data-feed="rss"
                                 href="feed.xml"
                                 title="RSS Feed"
                                 aria-label="RSS-Feed der Termine"
@@ -436,6 +439,11 @@
                             </button>
                         </div>
                     </div>
+                    <!-- Filled by events.js when exactly one filter scope is active
+                         and the feeds manifest lists a matching filtered feed. -->
+                    <p class="events-subscribe__scope" id="events-feed-scope" hidden>
+                        feed folgt filter: <strong class="events-subscribe__scope-tag"></strong>
+                    </p>
                     <div class="events-info-panel" id="linkup-info-panel" hidden>
                         <p>
                             Jeden <strong>dritten Freitag</strong> gibt's linkup –
@@ -498,7 +506,7 @@
         <script defer src="storage.js?v=1"></script>
         <script defer src="ics-core.js?v=8"></script>
         <script defer src="events-core.js?v=1"></script>
-        <script defer src="events.js?v=10"></script>
+        <script defer src="events.js?v=11"></script>
         <script defer src="main.js?v=9"></script>
         <script>
             document.getElementById("linkup-info-btn").addEventListener("click", function() {
