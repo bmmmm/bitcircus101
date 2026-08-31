@@ -405,6 +405,41 @@ test.describe('Funding goals (fused into support.html)', () => {
         expect(await page.locator('.projekt-bar--total').count()).toBe(0);
         await expect(page.locator('.back-link a')).toBeVisible();
     });
+
+    test('funding pulse stays hidden without data, and leaks no figures with it', async ({ page }) => {
+        // No fixture: the seed finanz.json carries no `pulse`, so the block must
+        // render nothing at all rather than an empty box or a bare prompt line.
+        await page.goto('/support.html');
+        await expect(page.locator('#projekte-list .projekt-panel').first()).toBeVisible();
+        await expect(page.locator('#funding-pulse')).toBeHidden();
+        expect((await page.locator('#funding-pulse').textContent()).trim()).toBe('');
+
+        // With data, served through page.route so the assertions below cannot
+        // silently pass on an absent element (a guarded test is a no-op test).
+        await page.route('**/finanz.json', async (route) => {
+            const res = await route.fetch();
+            const data = await res.json();
+            data.pulse = { updated: '2026-09-01', levels: [0, 3, 3, 5, 4, 6, 5, 7] };
+            await route.fulfill({ response: res, json: data });
+        });
+        await page.goto('/support.html');
+
+        const pulse = page.locator('#funding-pulse');
+        await expect(pulse).toBeVisible();
+
+        // The whole point of the pulse: rhythm, no readable figures. One glyph
+        // per level, and nothing that could be mistaken for an amount.
+        const glyphs = await pulse.locator('.pulse-sparkline__glyphs').textContent();
+        expect(glyphs).toMatch(/^[▁▂▃▄▅▆▇█]{8}$/u);
+        const text = await pulse.textContent();
+        expect(text).not.toMatch(/\d/);
+        expect(text).not.toContain('€');
+        expect(text).not.toContain('%');
+
+        // Screen readers get the caveat, not just eight anonymous blocks.
+        expect(await pulse.getAttribute('aria-label')).toMatch(/keine exakten Beträge/);
+        await expect(pulse.locator('.pulse-sparkline__glyphs')).toHaveAttribute('aria-hidden', 'true');
+    });
 });
 
 // ─── Subpages ────────────────────────────────────────────────────────────────

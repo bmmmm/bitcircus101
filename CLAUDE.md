@@ -162,6 +162,8 @@ Every write validates **first** and refuses with an error naming the bad field, 
 
 **Privacy by construction:** only rounded aggregate totals plus a `pulse` track of integer 0..7 levels — never euro amounts, donor names, or per-donation records.
 
+The pulse is **opt-in**: `finanz.json` ships without a `pulse` key, and `pulse.js` renders nothing until one exists. `pnpm run finanz pulse <0..7>` appends a level; the CLI never accepts a euro figure, so no amount can leak into the public file through it.
+
 **Not yet rendered:** the schema accepts optional `url1`/`url2` per item and the CLI offers them, but `finanz.js` does not display them yet — staged separately (issue #28).
 
 ## Adding a new page
