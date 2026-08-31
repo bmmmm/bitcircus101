@@ -69,6 +69,13 @@ jobs:
             exit 1
           )
 
+      - name: Validate funding data
+        # Same gate as both ci.yml files. It lives here too because the PR gate
+        # only runs on the PR path: a commit pushed straight to main reaches the
+        # public site without ever passing it, and finanz.json can be
+        # hand-edited around the CLI's own validation.
+        run: node scripts/finanz.mjs validate
+
       - name: Run unit tests
         run: node --test tests/*.spec.mjs
 

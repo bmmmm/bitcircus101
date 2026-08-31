@@ -21,9 +21,11 @@
  *
  * UI text is German; code comments are English (project convention).
  */
+import path from "node:path";
 import readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import {
   read,
   write,
@@ -106,7 +108,93 @@ function printBoard(data) {
   console.log("");
 }
 
+// ── Machine-readable board (--json) ──────────────────────────────────────────
+
+/** Copy the optional string fields that are actually set, dropping the rest. */
+function pickOptional(item, keys) {
+  const out = {};
+  for (const k of keys) if (item[k]) out[k] = item[k];
+  return out;
+}
+
+/**
+ * The board as data — everything printBoard shows except the ASCII bar, which
+ * is presentation, not data. Every derived number (pct, remaining, reached)
+ * comes from Core.computeProject, the same function support.html renders
+ * through, so `list --json` can never drift from the public page.
+ *
+ * Optional item fields are omitted when unset, mirroring finanz.json itself.
+ * `pulse` is always present with a stable shape so a consumer can read
+ * .pulse.levels without a guard, even on a file that has no pulse key yet.
+ *
+ * Pure: no I/O, no clock — the caller passes both files in, which is what makes
+ * it unit-testable without spawning the CLI.
+ */
+export function boardJson(data, funding) {
+  data = data || {};
+  const currency = data.currency || "EUR";
+  const pulse = data.pulse || {};
+  return {
+    currency,
+    updated: data.updated || null,
+    percent: funding && funding.percent != null ? funding.percent : null,
+    einmalig: (data.einmalig || []).map((p) => {
+      const view = Core.computeProject(p, { currency });
+      return {
+        id: view.id,
+        title: view.title,
+        ...pickOptional(p, ["tagline", "icon"]),
+        target: view.target,
+        raised: view.raised,
+        remaining: view.remaining,
+        pct: view.pct,
+        reached: view.reached,
+      };
+    }),
+    monatlich: (data.monatlich || []).map((m) => ({
+      id: m.id,
+      title: m.title,
+      ...pickOptional(m, ["tagline", "icon"]),
+      monthly: m.monthly,
+    })),
+    pulse: { updated: pulse.updated || null, levels: pulse.levels || [] },
+  };
+}
+
 // ── Shared write helper ──────────────────────────────────────────────────────
+
+/**
+ * Print what to do with the file that was just written. finanz.json feeds a
+ * generated block in lite/index.html, so committing it WITHOUT rebuilding is
+ * exactly the HTML drift the CI gate rejects — the hint has to name the rebuild
+ * or it walks the caller into a red PR. funding.json feeds no generator and
+ * therefore gets no rebuild line.
+ */
+function printCommitHint(file) {
+  if (file === "finanz.json") {
+    console.log("  Danach: pnpm run build:lite-finanz");
+    console.log(
+      "  Dann committen: git add finanz.json lite/index.html && git commit"
+    );
+    return;
+  }
+  console.log(`  Bitte committen: git add ${file} && git commit`);
+}
+
+/**
+ * Refuse to open a prompt without a TTY. Headless — a script, an agent, CI —
+ * readline gets EOF on the first question, so these commands used to print one
+ * line, write nothing and still exit 0: a silent no-op that reads as success.
+ * Fail loudly on stderr instead, and name the way out rather than just the
+ * problem. Sets process.exitCode (not process.exit) so callers can unwind.
+ */
+function requireTTY(what, wayOut) {
+  if (process.stdin.isTTY) return true;
+  console.error(`✗ "${what}" ist interaktiv und braucht ein Terminal — stdin ist kein TTY.`);
+  console.error("  " + wayOut);
+  process.exitCode = 1;
+  return false;
+}
 
 /** Validate, write, and print the success + commit reminder. Returns true. */
 function commitWrite(next) {
@@ -118,7 +206,7 @@ function commitWrite(next) {
   }
   write(next);
   console.log(`✓ finanz.json aktualisiert (updated: ${next.updated})`);
-  console.log("  Bitte committen: git add finanz.json && git commit");
+  printCommitHint("finanz.json");
   return true;
 }
 
@@ -131,14 +219,18 @@ Aufruf:
   node scripts/finanz.mjs <Befehl> [args]  direkter Befehl
 
 Befehle:
-  list                       Board anzeigen
-  validate                   finanz.json gegen das Schema prüfen
+  --help, -h, help           diese Hilfe (Exit 0)
+  list [--json]              Board anzeigen (--json: nur JSON auf stdout)
+  validate [--json]          finanz.json prüfen (--json: {ok, errors})
   raise <id> <betrag>        Betrag zu "raised" eines Projekts addieren (auch negativ)
   finish <id>                Projekt auf erreicht setzen (raised = target)
   add                        neues einmaliges Projekt anlegen (interaktiv)
   monthly                    monatliche Kosten verwalten (interaktiv)
   pulse <level>              Puls-Level 0..7 anhängen (wertfrei, keine Euro-Angabe)
   percent <n>                Gesamt-% (funding.json) setzen, 0..100
+
+"add" und "monthly" sowie das Menü sind interaktiv: ohne TTY brechen sie mit
+Exit 1 ab, statt still nichts zu tun.
 
 Hinweis: Jeder Schreibvorgang validiert zuerst und bricht mit konkreter
 Fehlermeldung ab, wenn das Ergebnis ungültig wäre. Daten ohne Personenbezug —
@@ -151,16 +243,30 @@ function fail(message) {
   process.exit(1);
 }
 
-async function runSubcommand(cmd, args) {
+async function runSubcommand(cmd, rawArgs) {
   const date = today();
+  // --json is stripped before positional parsing so it can never be mistaken
+  // for an id or an amount, whichever subcommand it is passed to.
+  const wantsJson = rawArgs.includes("--json");
+  const args = rawArgs.filter((a) => a !== "--json");
 
   if (cmd === "list") {
+    if (wantsJson) {
+      console.log(JSON.stringify(boardJson(read(), readFunding()), null, 2));
+      return;
+    }
     printBoard(read());
     return;
   }
 
   if (cmd === "validate") {
     const { ok, errors } = validate(read());
+    if (wantsJson) {
+      // Same exit codes as the prose path; stdout stays parseable either way.
+      console.log(JSON.stringify({ ok, errors }, null, 2));
+      if (!ok) process.exitCode = 1;
+      return;
+    }
     if (ok) {
       console.log("✓ finanz.json ist gültig.");
       return;
@@ -232,7 +338,7 @@ async function runSubcommand(cmd, args) {
     }
     const written = setPercent(n);
     console.log(`✓ funding.json aktualisiert (percent: ${written})`);
-    console.log("  Bitte committen: git add funding.json && git commit");
+    printCommitHint("funding.json");
     return;
   }
 
@@ -299,6 +405,17 @@ function withOptional(base, fields) {
 
 async function interactiveAddEinmalig(date, rl = null) {
   const own = !rl;
+  // Only guard when we open our own readline — called from the menu one is
+  // already running and the menu checked for a TTY before it got here.
+  if (
+    own &&
+    !requireTTY(
+      "add",
+      'Einen nicht-interaktiven Weg zum Anlegen gibt es nicht: finanz.json direkt editieren, dann "pnpm run finanz:validate".'
+    )
+  ) {
+    return;
+  }
   if (own) rl = readline.createInterface({ input, output });
   try {
     console.log("\n  Neues einmaliges Projekt (DSGVO: keine Namen, nur Eckdaten):");
@@ -336,6 +453,15 @@ async function interactiveAddEinmalig(date, rl = null) {
 
 async function interactiveMonthly(date, rl = null) {
   const own = !rl;
+  if (
+    own &&
+    !requireTTY(
+      "monthly",
+      'Einen nicht-interaktiven Weg gibt es nicht: finanz.json direkt editieren, dann "pnpm run finanz:validate".'
+    )
+  ) {
+    return;
+  }
   if (own) rl = readline.createInterface({ input, output });
   try {
     console.log("\n  Monatliche Kosten — (1) hinzufügen  (2) entfernen");
@@ -402,6 +528,14 @@ async function interactiveMonthly(date, rl = null) {
 // ── Interactive top-level menu ───────────────────────────────────────────────
 
 async function interactiveMenu() {
+  if (
+    !requireTTY(
+      "Das Menü",
+      'Nicht-interaktiv gibt es die Unterbefehle — "node scripts/finanz.mjs --help" zeigt sie.'
+    )
+  ) {
+    return;
+  }
   const date = today();
   const rl = readline.createInterface({ input, output });
   try {
@@ -476,7 +610,7 @@ async function interactiveMenu() {
       if (await confirm(rl, `  funding.json auf ${Math.round(n)}% setzen?`)) {
         const written = setPercent(n);
         console.log(`✓ funding.json aktualisiert (percent: ${written})`);
-        console.log("  Bitte committen: git add funding.json && git commit");
+        printCommitHint("funding.json");
       } else {
         console.log("  Abgebrochen — nichts geschrieben.");
       }
@@ -506,10 +640,22 @@ async function main() {
     await interactiveMenu();
     return;
   }
+  // Help is not an error: stdout + exit 0, never the fail() path.
+  if (cmd === "--help" || cmd === "-h" || cmd === "help") {
+    console.log(USAGE);
+    return;
+  }
   await runSubcommand(cmd, args);
 }
 
-main().catch((e) => {
-  console.error("✗ " + (e && e.message ? e.message : e));
-  process.exit(1);
-});
+// Only run when invoked directly — importing this from a test must not start
+// the CLI (and must not open a prompt or touch finanz.json).
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
+  main().catch((e) => {
+    console.error("✗ " + (e && e.message ? e.message : e));
+    process.exit(1);
+  });
+}
