@@ -119,6 +119,7 @@ CI generates these — never hand-edit them. The calendar-sync outputs live **on
 - `events.js` — events page renderer (loads `events-data.json`, falls back to a live ICS fetch)
 - `ics-core.js` — **single shared ICS parser** (UMD, written in ES5 so the browser loads it raw). Used by both `events.js` (browser fallback) and `scripts/sync-events.mjs` (CI sync) — edit once, both consumers update; no parser drift.
 - `scripts/sync-events.mjs` — CI calendar sync: fetches sources → writes `events-data.json`, `feed.xml` (RSS) and `ical.ics` (iCal, with real DTSTART/DTEND) plus the `events/` copies of both feeds. Times are floating-local; CI pins `TZ=Europe/Berlin`, and the iCal export tags them `TZID=Europe/Berlin` with a bundled VTIMEZONE.
+- `scripts/check-calendars.mjs` — calendar-manifest guard rails. Offline (default): validates `calendars/` and exits non-zero on error. `--probe <url>`: fetches one ICS and previews the cards it would produce; `--probe` alone health-checks every configured source. Writes nothing in either mode. Tested by `tests/calendars.spec.mjs`.
 - `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay main→live preserving CI feeds and pruning files no longer on `main`; `?v=` cache-busting; post-deploy health check), tested via `tests/deploy-scripts.spec.mjs`. The smoke check walks every URL in the deployed `sitemap.xml` and fails on anything that is not a direct 200, so a dead page or a redirecting entry breaks the deploy instead of going unnoticed. Standalone: `node scripts/smoke-live.mjs https://bitcircus101.de`.
 - `llms.txt` — LLM-friendly site summary ([llms.txt standard](https://llmstxt.org/))
 - `changelog.md` — release history (auto-updated by release workflow)
@@ -127,7 +128,13 @@ CI generates these — never hand-edit them. The calendar-sync outputs live **on
 
 ## Adding a calendar source
 
-Every source lives in its own JSON file under `calendars/`. Manifest `calendars/config.json` lists which sources to process and in what order. Adding a new source = create the JSON file, list its relative path in `config.json`. Removing = remove the line (or delete the file).
+Full contributor/outsider guide: **`calendars/README.md`** — this section is the short form.
+
+Every source lives in its own JSON file under `calendars/`. Manifest `calendars/config.json` lists which sources to process and in what order. Removing = remove the line (or delete the file).
+
+**Workflow:** `node scripts/check-calendars.mjs --probe "<ics-url>"` (fetches the link, renders it through the real `toCards()` so the preview matches the sync exactly, prints a paste-ready snippet — writes nothing) → create the JSON file → list it in `config.json` → **`pnpm run check:calendars`**.
+
+Never run `sync-events.mjs` to try a link out: it overwrites the feeds **and rewrites the JSON-LD block in the tracked `events.html`**. `--probe` is the read-only path.
 
 ```
 calendars/
@@ -144,6 +151,8 @@ Source `type`s:
 - `ics-filtered` — full calendar with `filter.categoryAllow` / `categoryDeny` / `titleAllow` / `titleDeny` lists
 
 Each source can also set `tags` (always-added hashtags), `cap` (per-source slot override), `eventUrl` (fallback link when ICS lacks `URL`). Sources without `id`/`ics` are skipped with a warning.
+
+`pnpm run check:calendars` (also a PR gate in `ci.yml`, and asserted by `tests/calendars.spec.mjs`) turns the flow's silent failures into build failures: unknown keys — `id`/`name`/`ics` are required, and `name` must be **unique** because it keys `icsKeys`, the RSS source filter and the stale-cache lookup — bad types, misspelled `filter` keys, duplicate ids. A source file that exists but is not listed in `config.json` is a *warning*, not an error: parking a source that way is intentional.
 
 ## Adding a new page
 

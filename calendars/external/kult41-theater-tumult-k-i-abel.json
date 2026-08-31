@@ -5,7 +5,6 @@
   "type": "ics-single",
   "ics": "https://kult41.de/events/theater-tumult-k-i-und-abel-reggae-2/ical/",
   "url": "https://kult41.de/veranstaltungen/programm",
-  "primary": false,
   "rss": false,
   "tags": ["#kult41", "#theater"]
 }
