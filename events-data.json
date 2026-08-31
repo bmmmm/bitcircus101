@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-31T19:17:12.050Z",
+  "lastSync": "2026-08-31T19:41:20.520Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-31T19:17:11.843Z",
+      "fetchedAt": "2026-08-31T19:41:20.303Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-31T19:17:12.023Z",
+      "fetchedAt": "2026-08-31T19:41:20.292Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -24,18 +24,6 @@
       "total": 51,
       "past": 6,
       "upcoming": 45
-    },
-    {
-      "id": "kult41-theater-tumult-k-i-abel",
-      "name": "Kult 41",
-      "fetchedAt": "2026-08-31T19:17:12.033Z",
-      "status": "ok",
-      "events": 0,
-      "added": 0,
-      "removed": 0,
-      "total": 1,
-      "past": 0,
-      "upcoming": 1
     }
   ],
   "icsKeys": {
@@ -149,9 +137,6 @@
       "616b35a9-4e04-4be3-aa63-199b3bf93e8a",
       "57633315-cc75-4e91-b65a-ae41aad699c4",
       "d3a70a41-a602-4960-b0f8-7f19f966d890"
-    ],
-    "Kult 41": [
-      "2504@kult41.de"
     ]
   },
   "feeds": {
@@ -245,12 +230,6 @@
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
         "count": 20
-      },
-      "kult41-theater-tumult-k-i-abel": {
-        "name": "Kult 41",
-        "ics": "/feeds/source/kult41-theater-tumult-k-i-abel.ics",
-        "rss": "/feeds/source/kult41-theater-tumult-k-i-abel.xml",
-        "count": 0
       }
     },
     "retired": {}
