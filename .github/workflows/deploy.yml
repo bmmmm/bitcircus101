@@ -70,10 +70,15 @@ jobs:
       - name: Run unit tests
         run: node --test tests/*.spec.mjs
 
-      - name: Generate events-data.json for E2E tests
+      # The E2E suite no longer depends on this: the events tests serve their
+      # own fixture (tests/fixtures/events-data.js), because a failed fetch here
+      # used to leave an empty file and silently turn those tests into no-ops.
+      # Kept as the one place a real sync run is exercised before deploying —
+      # the unit tests cover its logic, not a live fetch against every source.
+      - name: Smoke-run the calendar sync
         run: |
           node scripts/sync-events.mjs || {
-            echo "::warning::Calendar fetch failed — using minimal test fixture"
+            echo "::warning::Calendar fetch failed — deploy will regenerate later"
             echo '{"lastSync":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","sources":[],"events":[]}' > events-data.json
           }
 
