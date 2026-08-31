@@ -23,8 +23,8 @@
 
   // State — shareable via the URL query (?tags=…&nur=bc&q=…). The hash stays
   // reserved for event anchors (#ev-…), so permalinks and filters compose.
-  var PARAM = { TAGS: "tags", ONLY: "nur", Q: "q", VIEW: "view" };
-  var state = { tags: [], onlyBitcircus: false, q: "", view: "list" };
+  var PARAM = { TAGS: "tags", ONLY: "nur", Q: "q" };
+  var state = { tags: [], onlyBitcircus: false, q: "" };
   var allFutureSorted = [];
   var feeds = null; // feeds manifest from events-data.json; null on old JSON / ICS fallback
   var eventsContainer = null;
@@ -74,7 +74,6 @@
     }
     state.onlyBitcircus = params.get(PARAM.ONLY) === "bc";
     state.q = (params.get(PARAM.Q) || "").trim();
-    state.view = params.get(PARAM.VIEW) === "tiles" ? "tiles" : "list";
   }
 
   // Fixed key order so identical views always serialize to one URL string.
@@ -87,7 +86,6 @@
     }
     if (state.onlyBitcircus) parts.push(PARAM.ONLY + "=bc");
     if (state.q) parts.push(PARAM.Q + "=" + encodeURIComponent(state.q));
-    if (state.view === "tiles") parts.push(PARAM.VIEW + "=tiles");
     return parts.length ? "?" + parts.join("&") : "";
   }
 
@@ -178,13 +176,6 @@
     }
     var searchClear = document.querySelector(".events-search__clear");
     if (searchClear) searchClear.hidden = !state.q;
-    document.querySelectorAll(".events-view__btn").forEach(function (b) {
-      var on = (b.getAttribute("data-view") === "tiles") === (state.view === "tiles");
-      b.setAttribute("aria-pressed", on ? "true" : "false");
-    });
-    if (eventsContainer) {
-      eventsContainer.classList.toggle("events-list--tiles", state.view === "tiles");
-    }
     if (filterBar) {
       filterBar.querySelectorAll(".events-filter__tag").forEach(function (b) {
         var on = state.tags.indexOf(b.getAttribute("data-tag")) > -1;
@@ -228,11 +219,6 @@
       'placeholder="titel, ort, schlagwort \u2026" autocomplete="off" />' +
       '<button type="button" class="events-search__clear" hidden aria-label="Suche l\u00f6schen">\u00d7</button>' +
       '<span class="events-search__count"></span>' +
-      "</div>" +
-      '<div class="events-toolbar__row events-view" role="group" aria-label="Ansicht w\u00e4hlen">' +
-      '<span class="events-view__label" aria-hidden="true">ansicht:</span>' +
-      '<button type="button" class="events-view__btn" data-view="list" aria-pressed="true">liste</button>' +
-      '<button type="button" class="events-view__btn" data-view="tiles" aria-pressed="false">kacheln</button>' +
       "</div>";
     parent.insertBefore(eventsToolbar, insertBeforeNode);
 
@@ -262,13 +248,6 @@
         refresh();
       }
     );
-
-    eventsToolbar.querySelectorAll(".events-view__btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        state.view = btn.getAttribute("data-view") === "tiles" ? "tiles" : "list";
-        refresh();
-      });
-    });
   }
 
   // Chip source is pool() (pre-cap, post-toggle): stable while typing, changes
@@ -438,9 +417,6 @@
         " ]</span>" +
         '<span class="events-month__chevron" aria-hidden="true"></span>' +
         "</summary>";
-      // Inner wrapper: the tiles grid goes here — display:grid directly on a
-      // <details> has a history of breaking its closed state.
-      html += '<div class="events-month__body">';
 
       groupMap[k].forEach(function (e) {
         var d = new Date(e.date + "T00:00:00");
@@ -521,7 +497,7 @@
         html += "</article>";
       });
 
-      html += "</div></details>";
+      html += "</details>";
     });
 
     el.innerHTML = html;
@@ -608,6 +584,44 @@
     return null;
   }
 
+  // Several tags at once have no feed of their own — a static site cannot
+  // combine them on demand, and pre-building every combination is not a thing.
+  // Rather than let the buttons quietly hand out the unfiltered feed, list the
+  // per-tag feeds the manifest does have. Only for a pure multi-tag filter:
+  // with the source toggle or a search on top, a tag feed would be wider than
+  // what the page shows, and advertising it would be a lie.
+  function splitScopes() {
+    if (!feeds || state.q || state.onlyBitcircus) return null;
+    if (state.tags.length < 2) return null;
+    var out = [];
+    for (var i = 0; i < state.tags.length; i++) {
+      var key = state.tags[i].toLowerCase();
+      var entry = feeds.tags && feeds.tags[key];
+      if (entry && entry.rss) out.push({ tag: key, rss: entry.rss });
+    }
+    return out.length ? out : null;
+  }
+
+  function updateFeedSplit() {
+    var box = document.getElementById("events-feed-split");
+    if (!box) return;
+    var list = box.querySelector(".events-subscribe__scope-links");
+    var scopes = splitScopes();
+    if (!scopes) {
+      box.hidden = true;
+      return;
+    }
+    while (list.firstChild) list.removeChild(list.firstChild);
+    for (var i = 0; i < scopes.length; i++) {
+      if (i) list.appendChild(document.createTextNode(" · "));
+      var a = document.createElement("a");
+      a.setAttribute("href", new URL(scopes[i].rss, window.location.href).pathname);
+      a.textContent = scopes[i].tag;
+      list.appendChild(a);
+    }
+    box.hidden = false;
+  }
+
   function updateFeedScope() {
     var btns = document.querySelectorAll("[data-feed]");
     if (!btns.length) return;
@@ -645,6 +659,8 @@
         note.hidden = true;
       }
     }
+
+    updateFeedSplit();
   }
 
   // ── Error / Loading ─────────────────────────────────────────────────────

@@ -313,35 +313,26 @@ test.describe('Events content', () => {
         const scopedHref = await rssBtn.getAttribute('href');
         expect(scopedHref).toContain('/feeds/tag/');
 
-        // A second active tag is no single scope — defaults return
+        // A second active tag is no single scope — defaults return, and the box
+        // says why instead of quietly handing out the unfiltered feed
         const second = page.locator('.events-filter__tag:not(.active)').first();
         if (await second.count()) {
+            const secondTag = (await second.getAttribute('data-tag')).toLowerCase();
             await second.click();
             await expect(note).toBeHidden();
             expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
+
+            const split = page.locator('#events-feed-split');
+            if (manifest.tags && manifest.tags[secondTag]) {
+                // Both tags are listed → one per-tag link each, no combined feed
+                await expect(split).toBeVisible();
+                const links = split.locator('.events-subscribe__scope-links a');
+                await expect(links).toHaveCount(2);
+                expect(await links.first().getAttribute('href')).toContain('/feeds/tag/');
+            } else {
+                await expect(split).toBeHidden();
+            }
         }
-    });
-
-    test('tiles view toggles via URL and buttons, and lays out as a grid', async ({ page }) => {
-        await page.setViewportSize({ width: 1280, height: 800 });
-        await page.goto('/events.html?view=tiles');
-        const card = page.locator('.event-card').first();
-        if (!await card.isVisible({ timeout: 5000 }).catch(() => false)) return;
-
-        // URL state applied on load
-        const list = page.locator('#events-list');
-        await expect(list).toHaveClass(/events-list--tiles/);
-        await expect(page.locator('.events-view__btn[data-view="tiles"]')).toHaveAttribute('aria-pressed', 'true');
-
-        // Actually a multi-column grid at desktop width
-        const cols = await page.locator('.events-month[open] .events-month__body').first()
-            .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(' ').length);
-        expect(cols).toBeGreaterThan(1);
-
-        // Toggling back removes the class and the URL param
-        await page.locator('.events-view__btn[data-view="list"]').click();
-        await expect(list).not.toHaveClass(/events-list--tiles/);
-        await expect(page).not.toHaveURL(/view=tiles/);
     });
 
     test('sync status labels are shown when data is available', async ({ page }) => {
