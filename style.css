@@ -1242,6 +1242,35 @@ h3.location-card__header::before { content: none; }
 .projekte-fallback, .projekte-empty { color: var(--ink-dim); padding: 0.5rem 0; }
 .projekte-updated { color: var(--ink-dim); font-size: 0.8rem; margin-top: 0.75rem; }
 
+/* Funding pulse — cryptic sparkline under the board. Mirrors .projekt-bar
+   above (same nowrap, same accent glyphs) so it reads as part of the same
+   instrument panel. Deliberately opaque: no digits, no "€", no percentage —
+   the data behind it is a 0..7 level track, never an amount. */
+.funding-pulse { margin: 1.25rem 0 0.5rem; }
+
+.pulse-prompt { margin: 0 0 2px; color: var(--ink-dim); font-size: 0.85em; line-height: 1; }
+.pulse-prompt__cmd { color: var(--accent); }
+
+.pulse-sparkline {
+    font-size: 1.15rem;
+    /* POSITIVE tracking, unlike .projekt-bar above: that bar is one continuous
+       run of blocks and wants them fused, while each glyph here is a separate
+       reading. At the bar's -0.02em the eight levels merge into a single blob
+       and the sparkline stops being one. */
+    letter-spacing: 2px;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.pulse-sparkline__glyphs { color: var(--accent); }
+
+.pulse-caption { margin: 4px 0 0; color: var(--ink-dim); font-size: 0.8rem; }
+
+/* One calm reveal, added by pulse.js only when motion is welcome. */
+.pulse--reveal { animation: pulse-fadein 0.6s ease both; }
+@keyframes pulse-fadein { from { opacity: 0 } to { opacity: 1 } }
+@media (prefers-reduced-motion: reduce) { .pulse--reveal { animation: none } }
+
 /* =============================================================================
    tuwat board (support.html) — open todo boxes
    ============================================================================= */
