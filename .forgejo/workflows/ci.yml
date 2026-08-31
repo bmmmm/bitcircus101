@@ -30,7 +30,10 @@ jobs:
     container:
       image: data.forgejo.org/oci/node:24-bookworm
     steps:
-      - uses: https://data.forgejo.org/actions/checkout@v4
+      # Pinned to a commit like the .github workflows. Dependabot does not scan
+      # .forgejo/, so this one is bumped by hand — check
+      # https://data.forgejo.org/actions/checkout for newer tags.
+      - uses: https://data.forgejo.org/actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Verify layout HTML matches partials and logo slider
         run: |
