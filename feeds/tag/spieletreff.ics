@@ -1,0 +1,116 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//bitcircus101//events//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:bitcircus101 – Termine: #spieletreff
+X-WR-TIMEZONE:Europe/Berlin
+BEGIN:VTIMEZONE
+TZID:Europe/Berlin
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260901T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20260901T190000
+DTEND;TZID=Europe/Berlin:20260901T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260908T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20260908T190000
+DTEND;TZID=Europe/Berlin:20260908T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260915T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20260915T190000
+DTEND;TZID=Europe/Berlin:20260915T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260922T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20260922T190000
+DTEND;TZID=Europe/Berlin:20260922T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260929T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20260929T190000
+DTEND;TZID=Europe/Berlin:20260929T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261006T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20261006T190000
+DTEND;TZID=Europe/Berlin:20261006T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261013T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20261013T190000
+DTEND;TZID=Europe/Berlin:20261013T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
+END:VEVENT
+END:VCALENDAR

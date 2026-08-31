@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bitcircus101 – Termine: Kult 41</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Alle Termine der Quelle Kult 41.</description>
+    <language>de-de</language>
+    <atom:link href="https://bitcircus101.de/feeds/source/kult41-theater-tumult-k-i-abel.xml" rel="self" type="application/rss+xml"/>
+
+  </channel>
+</rss>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bitcircus101 – Termine: #workshop</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Gefiltert nach #workshop – alle Termine mit diesem Schlagwort.</description>
+    <language>de-de</language>
+    <lastBuildDate>Tue, 16 Jun 2026 15:09:02 +0000</lastBuildDate>
+    <atom:link href="https://bitcircus101.de/feeds/tag/workshop.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>[2026-09-17 19:00] Raspberry Pi Workshop</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-17-raspberry-pi-workshop</link>
+      <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
+      <category>#workshop</category>
+      <category>#datenburg</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">dccb0e70-ca58-42f6-892d-55909fd35805-20260917T1900</guid>
+    </item>
+    <item>
+      <title>[2026-10-15 19:00] Raspberry Pi Workshop</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-15-raspberry-pi-workshop</link>
+      <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
+      <category>#workshop</category>
+      <category>#datenburg</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">dccb0e70-ca58-42f6-892d-55909fd35805-20261015T1900</guid>
+    </item>
+  </channel>
+</rss>

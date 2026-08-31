@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bitcircus101 – Termine: #offener-abend</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Gefiltert nach #offener-abend – alle Termine mit diesem Schlagwort.</description>
+    <language>de-de</language>
+    <lastBuildDate>Fri, 24 Jul 2026 18:16:21 +0000</lastBuildDate>
+    <atom:link href="https://bitcircus101.de/feeds/tag/offener-abend.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>[2026-09-01 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-01-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-01</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260901T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-08 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-08-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-08</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260908T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-15 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-15-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-15</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260915T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-19 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-19-32-offene-ateliers</link>
+      <description>32. Offene Ateliers · 2026-09-19</description>
+      <category>#offener-abend</category>
+      <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
+      <guid isPermaLink="false">6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260919T1400</guid>
+    </item>
+    <item>
+      <title>[2026-09-20 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-20-32-offene-ateliers</link>
+      <description>32. Offene Ateliers · 2026-09-20</description>
+      <category>#offener-abend</category>
+      <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
+      <guid isPermaLink="false">6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260920T1400</guid>
+    </item>
+    <item>
+      <title>[2026-09-22 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-22-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-22</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260922T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-29 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-29-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-29</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260929T1800</guid>
+    </item>
+    <item>
+      <title>[2026-10-06 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-06-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-10-06</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261006T1800</guid>
+    </item>
+    <item>
+      <title>[2026-10-13 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-13-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-10-13</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261013T1800</guid>
+    </item>
+  </channel>
+</rss>

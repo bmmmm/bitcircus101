@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bitcircus101 – Termine: #linux</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Gefiltert nach #linux – alle Termine mit diesem Schlagwort.</description>
+    <language>de-de</language>
+    <lastBuildDate>Tue, 18 Aug 2026 16:39:23 +0000</lastBuildDate>
+    <atom:link href="https://bitcircus101.de/feeds/tag/linux.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>[2026-10-10] Phosh Meetup! @ Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-10-phosh-meetup</link>
+      <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
+      <category>#linux</category>
+      <category>#datenburg</category>
+      <pubDate>Tue, 18 Aug 2026 16:39:23 +0000</pubDate>
+      <guid isPermaLink="false">d3a70a41-a602-4960-b0f8-7f19f966d890-20261010</guid>
+    </item>
+  </channel>
+</rss>

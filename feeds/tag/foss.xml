@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bitcircus101 – Termine: #foss</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Gefiltert nach #foss – alle Termine mit diesem Schlagwort.</description>
+    <language>de-de</language>
+    <lastBuildDate>Mon, 11 May 2026 19:45:03 +0000</lastBuildDate>
+    <atom:link href="https://bitcircus101.de/feeds/tag/foss.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>[2026-09-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-14-treffen-bonner-fsfe-community</link>
+      <description>Treffen: Bonner FSFE Community · 2026-09-14</description>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20260914T1900</guid>
+    </item>
+    <item>
+      <title>[2026-10-12 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-12-treffen-bonner-fsfe-community</link>
+      <description>Treffen: Bonner FSFE Community · 2026-10-12</description>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261012T1900</guid>
+    </item>
+  </channel>
+</rss>

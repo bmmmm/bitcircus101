@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-08-31T15:17:45.642Z",
+  "lastSync": "2026-08-31T15:43:17.053Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-08-31T15:17:45.389Z",
+      "fetchedAt": "2026-08-31T15:43:16.706Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-08-31T15:17:45.565Z",
+      "fetchedAt": "2026-08-31T15:43:16.747Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -28,7 +28,7 @@
     {
       "id": "kult41-theater-tumult-k-i-abel",
       "name": "Kult 41",
-      "fetchedAt": "2026-08-31T15:17:45.626Z",
+      "fetchedAt": "2026-08-31T15:43:17.044Z",
       "status": "ok",
       "events": 0,
       "added": 0,
@@ -152,6 +152,107 @@
     "Kult 41": [
       "2504@kult41.de"
     ]
+  },
+  "feeds": {
+    "primary": {
+      "ics": "/ical.ics",
+      "rss": "/feed.xml",
+      "title": "bitcircus101 – Termine"
+    },
+    "all": {
+      "ics": "/feeds/all.ics",
+      "rss": "/feeds/all.xml",
+      "title": "bitcircus101 – Alle Termine",
+      "count": 40
+    },
+    "tags": {
+      "#community": {
+        "ics": "/feeds/tag/community.ics",
+        "rss": "/feeds/tag/community.xml",
+        "count": 11
+      },
+      "#datenburg": {
+        "ics": "/feeds/tag/datenburg.ics",
+        "rss": "/feeds/tag/datenburg.xml",
+        "count": 10
+      },
+      "#foss": {
+        "ics": "/feeds/tag/foss.ics",
+        "rss": "/feeds/tag/foss.xml",
+        "count": 2
+      },
+      "#gaming": {
+        "ics": "/feeds/tag/gaming.ics",
+        "rss": "/feeds/tag/gaming.xml",
+        "count": 1
+      },
+      "#lightning-talks": {
+        "ics": "/feeds/tag/lightning-talks.ics",
+        "rss": "/feeds/tag/lightning-talks.xml",
+        "count": 2
+      },
+      "#linux": {
+        "ics": "/feeds/tag/linux.ics",
+        "rss": "/feeds/tag/linux.xml",
+        "count": 1
+      },
+      "#meetup": {
+        "ics": "/feeds/tag/meetup.ics",
+        "rss": "/feeds/tag/meetup.xml",
+        "count": 7
+      },
+      "#offener-abend": {
+        "ics": "/feeds/tag/offener-abend.ics",
+        "rss": "/feeds/tag/offener-abend.xml",
+        "count": 9
+      },
+      "#relax": {
+        "ics": "/feeds/tag/relax.ics",
+        "rss": "/feeds/tag/relax.xml",
+        "count": 7
+      },
+      "#social": {
+        "ics": "/feeds/tag/social.ics",
+        "rss": "/feeds/tag/social.xml",
+        "count": 7
+      },
+      "#spieletreff": {
+        "ics": "/feeds/tag/spieletreff.ics",
+        "rss": "/feeds/tag/spieletreff.xml",
+        "count": 7
+      },
+      "#talk": {
+        "ics": "/feeds/tag/talk.ics",
+        "rss": "/feeds/tag/talk.xml",
+        "count": 2
+      },
+      "#workshop": {
+        "ics": "/feeds/tag/workshop.ics",
+        "rss": "/feeds/tag/workshop.xml",
+        "count": 2
+      }
+    },
+    "sources": {
+      "bitcircus": {
+        "name": "bitcircus101",
+        "ics": "/feeds/source/bitcircus.ics",
+        "rss": "/feeds/source/bitcircus.xml",
+        "count": 20
+      },
+      "datenburg": {
+        "name": "Datenburg e.V.",
+        "ics": "/feeds/source/datenburg.ics",
+        "rss": "/feeds/source/datenburg.xml",
+        "count": 20
+      },
+      "kult41-theater-tumult-k-i-abel": {
+        "name": "Kult 41",
+        "ics": "/feeds/source/kult41-theater-tumult-k-i-abel.ics",
+        "rss": "/feeds/source/kult41-theater-tumult-k-i-abel.xml",
+        "count": 0
+      }
+    },
+    "retired": {}
   },
   "events": [
     {

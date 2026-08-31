@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bitcircus101 – Termine: #lightning-talks</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Gefiltert nach #lightning-talks – alle Termine mit diesem Schlagwort.</description>
+    <language>de-de</language>
+    <lastBuildDate>Fri, 15 May 2026 21:15:10 +0000</lastBuildDate>
+    <atom:link href="https://bitcircus101.de/feeds/tag/lightning-talks.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>[2026-09-18 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-18-linkup-bitcircus101</link>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …</description>
+      <category>#meetup</category>
+      <category>#lightning-talks</category>
+      <category>#talk</category>
+      <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
+      <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20260918T2000</guid>
+    </item>
+    <item>
+      <title>[2026-10-16 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-16-linkup-bitcircus101</link>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …</description>
+      <category>#meetup</category>
+      <category>#lightning-talks</category>
+      <category>#talk</category>
+      <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
+      <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20261016T2000</guid>
+    </item>
+  </channel>
+</rss>

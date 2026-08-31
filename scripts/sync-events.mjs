@@ -13,7 +13,8 @@ const SITE_URL = "https://bitcircus101.de";
 // byte-identical, which aggregators rely on to key the same occurrence.
 const EVENTS_URL = `${SITE_URL}/events`;
 
-import { readFileSync, writeFileSync, renameSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { dirname } from "node:path";
 import ICSCore from "../ics-core.js";
 import EventsCore from "../events-core.js";
 
@@ -119,20 +120,37 @@ function eventGuid(c) {
   return c.uid ? `${c.uid}-${slot}` : `bitcircus101-${slot}-${c.type}`;
 }
 
-function generateRSS(cards) {
-  const now = new Date().toUTCString().replace("GMT", "+0000");
+/**
+ * opts (all optional; the defaults reproduce the primary feed.xml byte-for-byte):
+ *   title, description — channel metadata
+ *   selfPath           — atom:link rel=self path, root-absolute
+ *   limit              — max items (the primary feed stays capped at 15)
+ *   lastBuildDate      — RFC822 string, or null to omit the element entirely
+ *                        (filtered feeds derive it from content so a no-op sync
+ *                        rewrites nothing — see buildFeedPlan)
+ */
+function generateRSS(cards, opts = {}) {
+  const {
+    title = "bitcircus101 – Termine",
+    description = "Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn",
+    selfPath = "/feed.xml",
+    limit = 15,
+    lastBuildDate = new Date().toUTCString().replace("GMT", "+0000"),
+  } = opts;
   let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>bitcircus101 – Termine</title>
+    <title>${escXml(title)}</title>
     <link>${EVENTS_URL}</link>
-    <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
+    <description>${escXml(description)}</description>
     <language>de-de</language>
-    <lastBuildDate>${now}</lastBuildDate>
-    <atom:link href="${SITE_URL}/feed.xml" rel="self" type="application/rss+xml"/>
 `;
+  if (lastBuildDate !== null) {
+    xml += `    <lastBuildDate>${lastBuildDate}</lastBuildDate>\n`;
+  }
+  xml += `    <atom:link href="${SITE_URL}${selfPath}" rel="self" type="application/rss+xml"/>\n`;
 
-  for (const c of cards.slice(0, 15)) {
+  for (const c of cards.slice(0, limit)) {
     // Recurring events share a single UID across every instance. Append the
     // occurrence's date+time slot so each item gets a unique GUID — otherwise feed
     // readers dedupe on GUID and collapse the whole series into one entry.
@@ -250,14 +268,15 @@ const ICS_DEFAULT_DURATION_H = 2;
  * next-day DTEND that RFC5545 mandates. DTEND falls back to +2h (timed) / +1 day
  * (all-day) only when the source ICS carried neither DTEND nor DURATION.
  */
-function generateICS(cards, nowISO) {
+function generateICS(cards, nowISO, opts = {}) {
+  const { calName = "bitcircus101 – Termine" } = opts;
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//bitcircus101//events//DE",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "X-WR-CALNAME:bitcircus101 – Termine",
+    `X-WR-CALNAME:${icsEsc(calName)}`,
     "X-WR-TIMEZONE:Europe/Berlin",
     ...VTIMEZONE_BERLIN,
   ];
@@ -302,6 +321,209 @@ function generateICS(cards, nowISO) {
 
   lines.push("END:VCALENDAR");
   return lines.map(icsFold).join("\r\n") + "\r\n";
+}
+
+// ── Filtered feeds ("the filter you see is the feed you get") ───────────────
+//
+// Besides the primary feed.xml/ical.ics (rss:true sources, aggregator-facing,
+// untouched), the sync emits one subscribable ICS+RSS pair per tag and per
+// configured source under feeds/, all derived from the SAME aggregated ≤40-card
+// window the events page renders. events-data.json carries a `feeds` manifest
+// mapping tags and sources to those files, so the frontend never re-derives a
+// slug and never advertises a feed that does not exist.
+
+const MAX_TAG_FEEDS = 60; // runaway guard against a source dumping dozens of CATEGORIES
+// How long a vanished tag keeps an empty-but-valid feed before its file is
+// dropped. An empty VCALENDAR is what a subscribed client handles gracefully; a
+// 404 is what makes it surface an error. 0 degenerates to "emit only current tags".
+const FEED_RETENTION_DAYS = 90;
+
+/** "#Löten & 3D" → "loeten-3d" — deterministic filename slug for a tag. */
+function slugifyTag(tag) {
+  const s = String(tag)
+    .replace(/^#/, "")
+    .toLowerCase()
+    .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40)
+    .replace(/-+$/, "");
+  return s || "tag";
+}
+
+/**
+ * Plan the whole feeds/ tree — which files exist and what they contain — plus
+ * the manifest embedded into events-data.json. Pure; I/O lives in syncFeedsDir().
+ *
+ * `cards` is aggregate()'s output: the page's ≤40 window, so a tag feed can
+ * never contain more than the page shows — that IS the "filter = feed" contract.
+ * `prevFeeds` is the previous run's manifest (or null); it carries the
+ * retirement ledger (see FEED_RETENTION_DAYS above).
+ *
+ * Manifest contract for the frontend: may be absent entirely (old JSON, local
+ * dev); tag keys are lowercased; paths are root-absolute; `retired` is
+ * machinery, never rendered; sources are keyed by cal.id (entry.name carries
+ * the card-facing source name).
+ */
+function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
+  const files = [];
+  const warn = (msg) => console.warn(`::warning::${msg}`);
+
+  // RSS lastBuildDate derived from content (newest firstSeen), omitted when the
+  // feed is empty — combined with writeIfChanged in syncFeedsDir this keeps a
+  // no-op sync from rewriting ~90 files every 30 minutes (repo bloat on live).
+  const derivedBuildDate = (list) => {
+    let max = null;
+    for (const c of list) if (c.firstSeen && (!max || c.firstSeen > max)) max = c.firstSeen;
+    return max ? toRFC822(max) : null;
+  };
+
+  const emitPair = (base, list, { title, description }) => {
+    files.push({ path: `${base}.ics`, data: generateICS(list, nowISO, { calName: title }) });
+    files.push({
+      path: `${base}.xml`,
+      data: generateRSS(list, {
+        title, description,
+        selfPath: `/${base}.xml`,
+        limit: Infinity,
+        lastBuildDate: derivedBuildDate(list),
+      }),
+    });
+    return { ics: `/${base}.ics`, rss: `/${base}.xml` };
+  };
+
+  const manifest = {
+    primary: { ics: "/ical.ics", rss: "/feed.xml", title: "bitcircus101 – Termine" },
+    all: null,
+    tags: {},
+    sources: {},
+    retired: {},
+  };
+
+  // all — the unfiltered page as a feed (NOT a copy of feed.xml: that one stays
+  // rss:true-sources-only and capped at 15, exactly as before).
+  const allTitle = "bitcircus101 – Alle Termine";
+  const allMeta = emitPair("feeds/all", cards, {
+    title: allTitle,
+    description: "Alle Termine aus dem Hackspace und befreundeten Spaces in Bonn.",
+  });
+  manifest.all = { ...allMeta, title: allTitle, count: cards.length };
+
+  // tags — keyed lowercased (collapses #KULT41 vs #kult41), selected by
+  // (count desc, key asc), capped. Slug collisions: the first claim wins, the
+  // loser is skipped entirely (no file, no manifest entry) — skipping keeps
+  // every emitted feed's semantics exact.
+  const byTag = new Map();
+  for (const c of cards) {
+    for (const t of c.tags || []) {
+      const k = t.toLowerCase();
+      if (!byTag.has(k)) byTag.set(k, []);
+      byTag.get(k).push(c);
+    }
+  }
+  const selected = [...byTag.entries()]
+    .sort((a, b) => b[1].length - a[1].length || (a[0] < b[0] ? -1 : 1))
+    .slice(0, MAX_TAG_FEEDS);
+  if (byTag.size > MAX_TAG_FEEDS) {
+    warn(`feeds: ${byTag.size} tags in window, capped at ${MAX_TAG_FEEDS}`);
+  }
+
+  const usedSlugs = new Set();
+  const tagEntries = [];
+  for (const [tag, list] of selected) {
+    const slug = slugifyTag(tag);
+    if (usedSlugs.has(slug)) {
+      warn(`feeds: tag ${tag} skipped — slug "${slug}" already taken`);
+      continue;
+    }
+    usedSlugs.add(slug);
+    const meta = emitPair(`feeds/tag/${slug}`, list, {
+      title: `bitcircus101 – Termine: ${tag}`,
+      description: `Gefiltert nach ${tag} – alle Termine mit diesem Schlagwort.`,
+    });
+    tagEntries.push([tag, { ...meta, count: list.length }]);
+  }
+  // Serialize sorted by key — stable, diff-friendly manifest.
+  tagEntries.sort((a, b) => (a[0] < b[0] ? -1 : 1));
+  for (const [tag, entry] of tagEntries) manifest.tags[tag] = entry;
+
+  // sources — config-driven, one pair per configured source even at zero events:
+  // the URL only disappears when a maintainer removes the source from
+  // calendars/config.json (a deliberate act), so no retirement machinery here.
+  for (const cal of calendars) {
+    const list = cards.filter((c) => c.source === cal.name);
+    const meta = emitPair(`feeds/source/${cal.id}`, list, {
+      title: `bitcircus101 – Termine: ${cal.name}`,
+      description: `Alle Termine der Quelle ${cal.name}.`,
+    });
+    manifest.sources[cal.id] = { name: cal.name, ...meta, count: list.length };
+  }
+
+  // Retirement: a tag known from the previous run but absent from the window
+  // keeps an empty feed until it ages past FEED_RETENTION_DAYS; after that no
+  // file is planned and syncFeedsDir deletes it. A retired slug colliding with
+  // a live one loses (live wins).
+  const liveTags = new Set(tagEntries.map(([t]) => t));
+  const prevKnown = [...new Set([
+    ...Object.keys(prevFeeds?.tags || {}),
+    ...Object.keys(prevFeeds?.retired || {}),
+  ])].sort();
+  for (const tag of prevKnown) {
+    if (liveTags.has(tag)) continue;
+    const retiredAt = prevFeeds?.retired?.[tag] || nowISO;
+    if (new Date(nowISO) - new Date(retiredAt) >= FEED_RETENTION_DAYS * 86400000) continue;
+    const slug = slugifyTag(tag);
+    if (usedSlugs.has(slug)) {
+      warn(`feeds: retired tag ${tag} dropped — slug "${slug}" now taken by a live tag`);
+      continue;
+    }
+    usedSlugs.add(slug);
+    emitPair(`feeds/tag/${slug}`, [], {
+      title: `bitcircus101 – Termine: ${tag}`,
+      description: "Dieses Schlagwort kommt derzeit in keinem Termin vor.",
+    });
+    manifest.retired[tag] = retiredAt;
+  }
+
+  return { manifest, files };
+}
+
+/**
+ * Materialize a feed plan: write changed files only (a no-op sync touches
+ * nothing, so `git add` stages nothing), delete everything under `dir` the plan
+ * no longer contains, prune emptied subdirectories. The tree is fully owned by
+ * the sync — a stray hand-dropped file is removed too. Returns {written, removed}.
+ */
+function syncFeedsDir(dir, files) {
+  const desired = new Map(files.map((f) => [f.path, f.data]));
+  let written = 0;
+  for (const [path, data] of desired) {
+    mkdirSync(dirname(path), { recursive: true });
+    let existing = null;
+    try { existing = readFileSync(path, "utf8"); } catch { /* new file */ }
+    if (existing !== data) {
+      writeFileAtomic(path, data);
+      written++;
+    }
+  }
+  let removed = 0;
+  const walk = (d) => {
+    let entries;
+    try { entries = readdirSync(d, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      const p = `${d}/${e.name}`;
+      if (e.isDirectory()) {
+        walk(p);
+        if (readdirSync(p).length === 0) rmSync(p, { recursive: true });
+      } else if (!desired.has(p)) {
+        rmSync(p);
+        removed++;
+      }
+    }
+  };
+  walk(dir);
+  return { written, removed };
 }
 
 // ── Generate schema.org JSON-LD (embedded in events.html) ──────────────────
@@ -410,7 +632,7 @@ function loadPrevious() {
   try {
     raw = readFileSync("events-data.json", "utf8");
   } catch (e) {
-    if (e.code === "ENOENT") return { icsKeys: {}, events: [], sources: [] }; // legit first run
+    if (e.code === "ENOENT") return { icsKeys: {}, events: [], sources: [], feeds: null }; // legit first run
     throw e;
   }
   try {
@@ -419,7 +641,9 @@ function loadPrevious() {
     const sources = prev.sources || [];
     // icsKeys stores ALL calendar events (before time filtering) from previous run
     const icsKeys = prev.icsKeys || {};
-    return { icsKeys, events, sources };
+    // feeds carries the previous feed manifest incl. the retirement ledger
+    const feeds = (!Array.isArray(prev) && prev.feeds) || null;
+    return { icsKeys, events, sources, feeds };
   } catch (e) {
     // A present-but-unparseable file (truncated/partial write, merge markers, bad edit)
     // must NOT be silently treated as "first run": a stale/dead source would then
@@ -611,7 +835,10 @@ async function main() {
   console.log(`Total: ${events.length} event cards from ${calendars.length} calendars`);
 
   const nowISO = new Date().toISOString();
-  const output = { lastSync: nowISO, sources, icsKeys, events };
+  // Plan the filtered feeds BEFORE the JSON write so the manifest lands inside
+  // events-data.json (the frontend reads feed paths from there, never guesses).
+  const feedPlan = buildFeedPlan(events, calendars, prev.feeds, nowISO);
+  const output = { lastSync: nowISO, sources, icsKeys, feeds: feedPlan.manifest, events };
   writeFileAtomic("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
@@ -636,6 +863,13 @@ async function main() {
     writeFileAtomic(file, data);
     console.log(`Written ${file}`);
   }
+
+  // Filtered per-tag/per-source feeds under feeds/ — the tree is fully owned by
+  // the sync (writeIfChanged + delete-what-vanished), see syncFeedsDir.
+  const feedStats = syncFeedsDir("feeds", feedPlan.files);
+  console.log(
+    `Feeds: ${feedPlan.files.length} planned, ${feedStats.written} written, ${feedStats.removed} removed`
+  );
 
   // Embed the same primary cards as schema.org JSON-LD in events.html — the
   // page every RSS item link resolves to. Guarded like the feed loops: a
@@ -668,6 +902,7 @@ export {
   isInternal, applyFilter, guessType, extractHashtags, keywordTags,
   buildTags, cleanLocation, truncateDesc, toCards,
   escXml, toRFC822, generateRSS, generateICS,
+  slugifyTag, buildFeedPlan, syncFeedsDir, MAX_TAG_FEEDS, FEED_RETENTION_DAYS,
   eventSlot, eventGuid,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
   aggregate, eventAnchor,

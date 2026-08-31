@@ -33,6 +33,13 @@ const FEEDS = [
     "events/ical.ics",
 ];
 
+// Live-only generated TREES (variable file set — one feed per tag/source, so an
+// exact-path list can't express them). Same contract as FEEDS: CI owns them on
+// live, main carries none. No save/restore across the overlay is needed for a
+// tree: it is gitignored on main, so `git checkout <ref> -- .` can never clobber
+// it — the exemption only matters for the prune step below.
+const FEED_DIRS = ["feeds"];
+
 // Dev-only content that must never reach the served site.
 const REMOVE_DIRS = ["tests", "node_modules", ".claude"];
 const REMOVE_FILES = [
@@ -92,13 +99,15 @@ const refFiles = new Set(
         .filter(Boolean),
 );
 const feedSet = new Set(FEEDS);
+const isPreserved = (f) =>
+    feedSet.has(f) || FEED_DIRS.some((d) => f === d || f.startsWith(d + "/"));
 const liveFiles = execFileSync("git", ["ls-files"], { encoding: "utf8" })
     .split("\n")
     .filter(Boolean);
 
 let pruned = 0;
 for (const f of liveFiles) {
-    if (refFiles.has(f) || feedSet.has(f)) continue;
+    if (refFiles.has(f) || isPreserved(f)) continue;
     fs.rmSync(f, { force: true });
     pruned++;
 

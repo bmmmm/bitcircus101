@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bitcircus101 – Termine: Datenburg e.V.</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Alle Termine der Quelle Datenburg e.V..</description>
+    <language>de-de</language>
+    <lastBuildDate>Tue, 18 Aug 2026 16:39:23 +0000</lastBuildDate>
+    <atom:link href="https://bitcircus101.de/feeds/source/datenburg.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>[2026-09-01 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-01-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-01</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260901T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-03 18:00] Interner Burgabend</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-03-interner-burgabend</link>
+      <description>Interner Burgabend · 2026-09-03</description>
+      <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
+      <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20260903T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-06 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-06-digital-independence-day-did</link>
+      <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
+      <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20260906T1400</guid>
+    </item>
+    <item>
+      <title>[2026-09-08 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-08-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-08</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260908T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-09 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-09-le-sabot-computerspiel-abend</link>
+      <description>Le Sabot Computerspiel-Abend · 2026-09-09</description>
+      <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
+      <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20260909T1930</guid>
+    </item>
+    <item>
+      <title>[2026-09-10 19:30] PPP (Putzen Plenum Pizza)</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-10-ppp-putzen-plenum-pizza</link>
+      <description>PPP (Putzen Plenum Pizza) · 2026-09-10</description>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">974a5337-34e5-496f-8f2c-62f74cd766ce-20260910T1930</guid>
+    </item>
+    <item>
+      <title>[2026-09-15 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-15-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-15</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260915T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-17 19:00] Raspberry Pi Workshop</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-17-raspberry-pi-workshop</link>
+      <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
+      <category>#workshop</category>
+      <category>#datenburg</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">dccb0e70-ca58-42f6-892d-55909fd35805-20260917T1900</guid>
+    </item>
+    <item>
+      <title>[2026-09-22 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-22-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-22</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260922T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-24 19:00] Spieleabend</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-24-spieleabend</link>
+      <description>Spieleabend · 2026-09-24</description>
+      <category>#gaming</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">19efb037-b521-4f7b-b508-bd63eb3b292b-20260924T1900</guid>
+    </item>
+    <item>
+      <title>[2026-09-29 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-29-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-09-29</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260929T1800</guid>
+    </item>
+    <item>
+      <title>[2026-09-29 19:00] Spermüll Rausstellen</title>
+      <link>https://bitcircus101.de/events#ev-2026-09-29-spermüll-rausstellen</link>
+      <description>Sperrmüll Rausstellen Abholung am 30.09 Hilfe wird gebaucht</description>
+      <pubDate>Tue, 04 Aug 2026 16:26:18 +0000</pubDate>
+      <guid isPermaLink="false">2a828714-52b9-4074-a76e-56790ff4720b-20260929T1900</guid>
+    </item>
+    <item>
+      <title>[2026-10-01 18:00] Interner Burgabend</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-01-interner-burgabend</link>
+      <description>Interner Burgabend · 2026-10-01</description>
+      <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
+      <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261001T1800</guid>
+    </item>
+    <item>
+      <title>[2026-10-04 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-04-digital-independence-day-did</link>
+      <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
+      <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261004T1400</guid>
+    </item>
+    <item>
+      <title>[2026-10-06 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-06-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-10-06</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261006T1800</guid>
+    </item>
+    <item>
+      <title>[2026-10-08 19:30] PPP (Putzen Plenum Pizza)</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-08-ppp-putzen-plenum-pizza</link>
+      <description>PPP (Putzen Plenum Pizza) · 2026-10-08</description>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">974a5337-34e5-496f-8f2c-62f74cd766ce-20261008T1930</guid>
+    </item>
+    <item>
+      <title>[2026-10-10] Phosh Meetup! @ Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-10-phosh-meetup</link>
+      <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
+      <category>#linux</category>
+      <category>#datenburg</category>
+      <pubDate>Tue, 18 Aug 2026 16:39:23 +0000</pubDate>
+      <guid isPermaLink="false">d3a70a41-a602-4960-b0f8-7f19f966d890-20261010</guid>
+    </item>
+    <item>
+      <title>[2026-10-13 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-13-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-10-13</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261013T1800</guid>
+    </item>
+    <item>
+      <title>[2026-10-14 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-14-le-sabot-computerspiel-abend</link>
+      <description>Le Sabot Computerspiel-Abend · 2026-10-14</description>
+      <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
+      <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261014T1930</guid>
+    </item>
+    <item>
+      <title>[2026-10-15 19:00] Raspberry Pi Workshop</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-15-raspberry-pi-workshop</link>
+      <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
+      <category>#workshop</category>
+      <category>#datenburg</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">dccb0e70-ca58-42f6-892d-55909fd35805-20261015T1900</guid>
+    </item>
+  </channel>
+</rss>
