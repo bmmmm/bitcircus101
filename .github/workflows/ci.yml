@@ -36,5 +36,12 @@ jobs:
             exit 1
           )
 
+      - name: Validate calendar sources
+        # Offline only — no network in the PR gate. Catches the silent failures of the
+        # two-step "add a calendar" flow: a source file that nobody listed in
+        # calendars/config.json, a misspelled key, a duplicate id/name. Warnings
+        # (e.g. an unlisted file) are surfaced as annotations but never fail the build.
+        run: node scripts/check-calendars.mjs
+
       - name: Run unit tests
         run: node --test tests/*.spec.mjs
