@@ -15,7 +15,12 @@
   var REFRESH_MS = 300000; // 5 min — the sync cron runs every 30, this is cheap
   var CLOCK_MS = 1000;
   var RELOAD_MS = 21600000; // 6 h watchdog reload to pick up new CSS/JS
-  var STALE_AFTER_MS = 3 * 3600000; // lastSync older than this → "daten alt"
+  // lastSync older than this → "daten alt". Not 3 h: the sync cron asks for
+  // every 30 min but GitHub really fires it every 2-3 h and never catches up
+  // (measured 2026-08-06, largest observed gap ~3 h 10 min), so a 3 h threshold
+  // cries wolf on a healthy feed. 5 h clears that jitter and still warns an
+  // hour before the external Uptime Kuma monitor (6 h) escalates.
+  var STALE_AFTER_MS = 5 * 3600000;
   var NOW_WINDOW_MS = 3 * 3600000; // started less than this ago → "läuft" marker
   var MONTHS = [
     "JAN", "FEB", "MÄR", "APR", "MAI", "JUN",
