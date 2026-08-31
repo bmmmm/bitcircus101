@@ -719,6 +719,16 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 }
 .events-subscribe__btn:hover { background: var(--ink); color: var(--paper); }
 
+/* "feed folgt filter" note — mirrors the active filter into the subscribe box.
+   Accent is in scope here: the token rule names the active event filter as a
+   current-selection marker; the buttons themselves stay reverse-video ink. */
+.events-subscribe__scope {
+    font-size: 0.8rem;
+    color: var(--ink-dim);
+    margin: 0.6rem 0 0;
+}
+.events-subscribe__scope-tag { color: var(--accent); font-weight: 700; }
+
 .events-info-panel {
     border-top: 1px solid var(--line);
     margin-top: 0.8rem;
@@ -743,6 +753,43 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .events-toolbar__label:hover { color: var(--ink); }
 .events-toolbar__checkbox { width: 1em; height: 1em; cursor: pointer; }
 
+.events-toolbar__row {
+    display: flex;
+    align-items: baseline;
+    gap: 1ch;
+    flex-wrap: wrap;
+}
+.events-toolbar__row + .events-toolbar__row { margin-top: 0.5rem; }
+
+/* search — a form control, so focus stays reverse-video ink, not accent */
+.events-search__label { color: var(--ink-dim); font-size: 0.9rem; }
+.events-search__input {
+    font-family: var(--font);
+    font-size: 0.85rem;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 0.25em 1ch;
+    min-width: 24ch;
+    flex: 1 1 24ch;
+    max-width: 48ch;
+}
+.events-search__input:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 1px;
+}
+.events-search__clear {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    padding: 0.2em 1ch;
+    font-family: var(--font);
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+.events-search__clear:hover { background: var(--ink); color: var(--paper); }
+.events-search__count { color: var(--ink-dim); font-size: 0.8rem; }
+
 .events-filter {
     display: flex;
     align-items: center;
@@ -754,7 +801,8 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .events-filter__label { color: var(--ink-dim); margin-right: 0.5ch; }
 
 .events-filter__tag,
-.events-filter__clear {
+.events-filter__clear,
+.events-empty__reset {
     background: none;
     border: 1px solid var(--line);
     color: var(--ink-dim);
@@ -764,7 +812,8 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     cursor: pointer;
 }
 .events-filter__tag:hover,
-.events-filter__clear:hover { background: var(--ink); color: var(--paper); }
+.events-filter__clear:hover,
+.events-empty__reset:hover { background: var(--ink); color: var(--paper); }
 .events-filter__tag.active {
     background: var(--accent);
     color: var(--paper);
