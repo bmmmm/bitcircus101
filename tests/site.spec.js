@@ -582,6 +582,16 @@ test.describe('Accessibility', () => {
 
         // Footer landmark
         await expect(page.locator('[role="contentinfo"]')).toBeVisible();
+
+        // Keyboard focus must stay visible on form controls: no outline:none
+        // may swallow the global :focus-visible ring (the ascii editor is the
+        // one form control that always exists without CI-generated data)
+        await page.goto('/ascii/');
+        const editor = page.locator('#ascii-editor');
+        await expect(editor).toBeVisible();
+        await editor.focus();
+        expect(await editor.evaluate((el) => el.matches(':focus-visible'))).toBe(true);
+        expect(await editor.evaluate((el) => getComputedStyle(el).outlineStyle)).not.toBe('none');
     });
 });
 
