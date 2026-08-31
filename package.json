@@ -8,6 +8,7 @@
     "build:layout": "node scripts/inject-layout.mjs",
     "build:logos": "node scripts/build-logo-slider.mjs",
     "build:lite-events": "node scripts/build-lite-events.mjs",
+    "check:calendars": "node scripts/check-calendars.mjs",
     "build": "pnpm run build:layout && pnpm run build:logos",
     "test": "node --test tests/*.spec.mjs && playwright test",
     "test:quick": "node --test tests/*.spec.mjs",

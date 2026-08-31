@@ -21,7 +21,7 @@ import ICSCore from "../ics-core.js";
 const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, eventAnchor } = ICSCore;
 
 const CAL_DIR = "calendars";
-const CAL_CONFIG = `${CAL_DIR}/config.json`;
+const CAL_CONFIG_FILE = "config.json";
 
 /**
  * Load calendar sources via the manifest at calendars/config.json. Each source
@@ -30,13 +30,16 @@ const CAL_CONFIG = `${CAL_DIR}/config.json`;
  * = order of processing. Remove an entry to disable a source without deleting its
  * file. Entries without `id` or `ics` are skipped with a warning so one malformed
  * file never breaks the whole sync.
+ *
+ * `dir` is injectable so tests (and check-calendars.mjs) can point the loader at a
+ * fixture directory instead of the repo's real calendars/.
  */
-function loadCalendars() {
-  const config = JSON.parse(readFileSync(CAL_CONFIG, "utf8"));
+function loadCalendars(dir = CAL_DIR) {
+  const config = JSON.parse(readFileSync(`${dir}/${CAL_CONFIG_FILE}`, "utf8"));
   const sources = Array.isArray(config?.sources) ? config.sources : [];
   const loaded = [];
   for (const rel of sources) {
-    const path = `${CAL_DIR}/${rel}`;
+    const path = `${dir}/${rel}`;
     try {
       const entry = JSON.parse(readFileSync(path, "utf8"));
       if (!entry?.id || !entry?.ics) {
@@ -788,7 +791,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 
 export {
-  loadCalendars,
+  loadCalendars, CAL_DIR, CAL_CONFIG_FILE,
   parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS,
   isInternal, applyFilter, guessType, extractHashtags, keywordTags,
   buildTags, cleanLocation, truncateDesc, toCards,
