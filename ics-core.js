@@ -31,9 +31,18 @@
   }
 
   function nthWeekday(year, month, wd, nth) {
-    var d = new Date(year, month, 1);
-    while (d.getDay() !== wd) d.setDate(d.getDate() + 1);
-    d.setDate(d.getDate() + (nth - 1) * 7);
+    var d;
+    if (nth < 0) {
+      // Negative ordinals count back from the end of the month: -1 is the last
+      // matching weekday, -2 the one before it (RFC5545 §3.3.10 BYDAY).
+      d = new Date(year, month + 1, 0); // day 0 of next month = last day of this one
+      while (d.getDay() !== wd) d.setDate(d.getDate() - 1);
+      d.setDate(d.getDate() + (nth + 1) * 7);
+    } else {
+      d = new Date(year, month, 1);
+      while (d.getDay() !== wd) d.setDate(d.getDate() + 1);
+      d.setDate(d.getDate() + (nth - 1) * 7);
+    }
     return d.getMonth() === month ? d : null;
   }
 
@@ -89,11 +98,22 @@
         cur.setDate(cur.getDate() + 1);
       }
     } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
-      // Support both "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3
-      var m = p.BYDAY.match(/^(\d+)([A-Z]{2})$/);
+      // Support "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3, each with an optional
+      // minus for end-of-month counting ("-1WE" = last Wednesday, BYSETPOS=-1).
+      // Without the sign in this regex "-1WE" fell through to nth=null and the whole
+      // series expanded to nothing — silently, since the branch below just skipped.
+      var m = p.BYDAY.match(/^(-?\d+)([A-Z]{2})$/);
       var nth = m ? +m[1] : (p.BYSETPOS ? +p.BYSETPOS : null);
-      var dayCode = m ? m[2] : p.BYDAY.replace(/\d/g, "").slice(-2);
+      var dayCode = m ? m[2] : p.BYDAY.replace(/[^A-Z]/g, "").slice(-2);
       var twd = WD[dayCode];
+      if (!nth || twd == null) {
+        // Reachable for multi-day BYDAY lists ("MO,WE") and unknown day codes. Warn
+        // rather than drop the series without a trace.
+        console.warn(
+          "[rrule] unsupported MONTHLY BYDAY=" + p.BYDAY +
+          (p.BYSETPOS ? ";BYSETPOS=" + p.BYSETPOS : "") + " — event not expanded"
+        );
+      }
       if (nth && twd != null) {
         var mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
         var genM = 0;
