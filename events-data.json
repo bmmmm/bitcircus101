@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-09-01T15:30:25.161Z",
+  "lastSync": "2026-09-01T16:17:18.606Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-01T15:30:25.106Z",
+      "fetchedAt": "2026-09-01T16:17:18.497Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-01T15:30:25.142Z",
+      "fetchedAt": "2026-09-01T16:17:18.584Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -235,25 +235,6 @@
     "retired": {}
   },
   "events": [
-    {
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-09-01",
-      "time": "18:00",
-      "endDate": "2026-09-01",
-      "endTime": "22:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Look at my toys!",
       "subtitle": "",
@@ -994,6 +975,25 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-15T21:15:10.361Z"
+    },
+    {
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-10-20",
+      "time": "18:00",
+      "endDate": "2026-10-20",
+      "endTime": "22:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
