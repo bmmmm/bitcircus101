@@ -189,7 +189,9 @@ function buildEventsData() {
  */
 async function useEventsFixture(page, data) {
   const body = JSON.stringify(data || buildEventsData());
-  await page.route("**/events-data.json", (route) =>
+  // Trailing `*`: the kiosk fetches `../events-data.json?t=…` with a
+  // cache buster, which a pattern ending at `.json` would not match.
+  await page.route("**/events-data.json*", (route) =>
     route.fulfill({ status: 200, contentType: "application/json", body })
   );
 }
