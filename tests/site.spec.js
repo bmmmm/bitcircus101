@@ -158,7 +158,7 @@ test.describe('Navigation', () => {
         await expect(page).toHaveURL(/events\.html/);
     });
 
-    test('mobile menu toggles, and closes again after picking an entry', async ({ page }) => {
+    test('mobile menu toggles, closes after a pick, and the anchor clears the header', async ({ page }) => {
         await page.setViewportSize({ width: 400, height: 800 });
         // /index.html, not / — from "/" the href "index.html#about" is a path
         // change and the browser reloads, which closes the menu on its own and
@@ -182,6 +182,26 @@ test.describe('Navigation', () => {
         await page.locator('nav ul.nav__links a[href="index.html#about"]').click();
         await expect(links).not.toBeVisible();
         await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+        // ...and the section has to land clear of the sticky header. At this
+        // width the condensed header wraps to two rows (~80px) while
+        // scroll-padding-top was sized for one, so the heading used to arrive
+        // 14px underneath it. Measure only once the smooth scroll has come to
+        // rest: mid-flight the section is still far below and every clearance
+        // check would pass, which is no check at all.
+        await expect.poll(async () => {
+            const a = await page.evaluate(() => Math.round(window.scrollY));
+            await page.waitForTimeout(120);
+            const b = await page.evaluate(() => Math.round(window.scrollY));
+            return a === b && b > 0;
+        }, { message: 'page never settled after the anchor jump' }).toBe(true);
+
+        const clearance = await page.evaluate(() => {
+            const header = document.querySelector('header').getBoundingClientRect().bottom;
+            const about = document.querySelector('#about').getBoundingClientRect().top;
+            return Math.round(about - header);
+        });
+        expect(clearance, '#about must not sit under the sticky header').toBeGreaterThanOrEqual(0);
     });
 
     test('the utility cluster stays hittable at every width and font size', async ({ page, browserName }) => {
