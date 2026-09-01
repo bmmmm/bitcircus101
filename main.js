@@ -52,6 +52,7 @@
 
       Navigation.markCurrentPage(mainNav);
       Navigation.bindHashUpdates();
+      Navigation.trackHeaderHeight(mainNav);
 
       if (!menuToggle) return;
 
@@ -81,6 +82,36 @@
       utils.addEventListenerSafe(mainNav, "click", (e) => {
         if (e.target.closest("ul.nav__links a")) closeMenu(false);
       });
+    },
+
+    /**
+     * Publish the sticky header's real height as --nav-height, so
+     * scroll-padding-top can clear it (see the rule in style.css).
+     *
+     * Deliberately skipped while the menu is open: that state is transient and
+     * ~300px tall, and an anchor jump must be measured against the header the
+     * reader lands under, not the one they just tapped through. Because the
+     * open state never publishes, the value in play during a menu click is
+     * still the closed one — which is exactly what the jump needs.
+     */
+    trackHeaderHeight(mainNav) {
+      const header = document.querySelector("header");
+      if (!header) return;
+
+      const publish = () => {
+        if (mainNav.classList.contains("active")) return;
+        document.documentElement.style.setProperty(
+          "--nav-height",
+          header.offsetHeight + "px",
+        );
+      };
+
+      publish();
+      if ("ResizeObserver" in window) {
+        new ResizeObserver(publish).observe(header);
+      } else {
+        utils.addEventListenerSafe(window, "resize", publish);
+      }
     },
 
     /**
