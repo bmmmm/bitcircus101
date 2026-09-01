@@ -30,8 +30,21 @@ body {
   color: #d8d8d8;
   font: 1rem/1.7 ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
 }
-a { color: #fff; text-underline-offset: .2em; text-decoration-color: #666 }
+a { color: #fff; text-underline-offset: .2em; text-decoration-color: #666; position: relative }
 a:hover, a:focus { background: #d8d8d8; color: #0a0a0a; text-decoration: none }
+/* Tap targets: a link here is one line of a 27px line box but only ~19px of
+   ink, so growing the zone by 4px each way uses space the layout already
+   reserves — nothing moves, and 27px clears the 24px WCAG 2.2 floor. 4 is half
+   the tightest measured gap between two stacked links (8px), so neighbouring
+   zones meet without ever overlapping. */
+a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -4px;
+  bottom: -4px;
+}
 a:focus-visible { outline: 2px solid #fff; outline-offset: 2px }
 ::selection { background: #d8d8d8; color: #0a0a0a }
 h1 { margin: 0 0 .3rem; font-size: 1.5rem; color: #fff }

@@ -10,45 +10,58 @@ const { buildEventsData, useEventsFixture } = require('./fixtures/events-data');
 // both answer the wrong question — only document.elementFromPoint reports what
 // a tap actually reaches. One probe, two readings:
 //
-//   hitsAt()  — does a tap dx/dy off the box centre still land on the element?
-//   hitBox()  — how many CSS pixels wide/tall is that zone?
+//   hitsAt()   — does a tap dx/dy off the box centre still land on the element?
+//   hitBox()   — how many CSS pixels wide/tall is that zone?
+//   hitBoxes() — the same, for every match, to sweep a whole page
 const REACH_MAX = 80;
 
-const PROBE = ([sel, dx, dy, measure, margin]) => {
-    const el = document.querySelector(sel);
-    if (!el) return null;
-    // elementFromPoint answers in viewport coordinates and returns null outside
-    // them, so a probe point past the fold reads as "miss" no matter what is
-    // really there. The box being on screen is not enough — the points this
-    // probe is about to ask for have to be too, which is what `margin` is. The
-    // scroll is conditional so that probing a sticky header does not drag the
-    // page out from under the next reading.
-    let b = el.getBoundingClientRect();
-    let cy = b.top + b.height / 2;
-    if (cy - margin < 0 || cy + margin > window.innerHeight) {
-        el.scrollIntoView({ block: 'center', behavior: 'instant' });
-        b = el.getBoundingClientRect();
-        cy = b.top + b.height / 2;
-    }
-    const cx = b.left + b.width / 2;
-    const owns = (x, y) => {
-        if (x < 0 || y < 0 || x >= window.innerWidth || y >= window.innerHeight) return false;
-        const hit = document.elementFromPoint(x, y);
-        return !!(hit && (hit === el || el.contains(hit)));
+// This whole function is serialised into the page, so everything it uses has to
+// live inside it — including the reach ceiling, which is why 80 appears as a
+// literal and REACH_MAX only sizes the scroll margin on the Node side.
+const PROBE = ([sel, dx, dy, measure, margin, all]) => {
+    const one = (el) => {
+        // elementFromPoint answers in viewport coordinates and returns null
+        // outside them, so a probe point past the fold reads as "miss" no matter
+        // what is really there. The box being on screen is not enough — the
+        // points this probe is about to ask for have to be too, which is what
+        // `margin` is. The scroll is conditional so that probing a sticky header
+        // does not drag the page out from under the next reading.
+        let b = el.getBoundingClientRect();
+        if (!b.width || !b.height) return null;
+        let cy = b.top + b.height / 2;
+        if (cy - margin < 0 || cy + margin > window.innerHeight) {
+            el.scrollIntoView({ block: 'center', behavior: 'instant' });
+            b = el.getBoundingClientRect();
+            cy = b.top + b.height / 2;
+        }
+        const cx = b.left + b.width / 2;
+        const owns = (x, y) => {
+            if (x < 0 || y < 0 || x >= window.innerWidth || y >= window.innerHeight) return false;
+            const hit = document.elementFromPoint(x, y);
+            return !!(hit && (hit === el || el.contains(hit)));
+        };
+        if (!measure) return owns(cx + dx, cy + dy);
+        // An inline link wrapped across two lines has its centre in the gap
+        // between them, where the parent answers. That is this probe's blind
+        // spot, not an unreachable control — a sweep skips it, a single lookup
+        // reports it, because there it means the caller aimed at the wrong thing.
+        if (!owns(cx, cy)) return all ? null : { w: 0, h: 0 };
+        // Walk outwards until the zone stops answering. The 80px cap is a
+        // ceiling, not a target: how far a 300px-wide link reaches is not what
+        // this measures.
+        const reach = (ux, uy) => { let n = 0; while (n < 80 && owns(cx + ux * (n + 1), cy + uy * (n + 1))) n++; return n; };
+        return { w: reach(-1, 0) + reach(1, 0) + 1, h: reach(0, -1) + reach(0, 1) + 1,
+                 text: (el.textContent || '').trim().slice(0, 40) };
     };
-    if (!measure) return owns(cx + dx, cy + dy);
-    if (!owns(cx, cy)) return { w: 0, h: 0 };
-    // Walk outwards until the zone stops answering. The 80px cap is a ceiling,
-    // not a target: how far a 300px-wide link reaches is not what this measures.
-    // (Kept in step with REACH_MAX, which sizes the scroll margin above — this
-    // function is serialised into the page, so it cannot read the constant.)
-    const reach = (ux, uy) => { let n = 0; while (n < 80 && owns(cx + ux * (n + 1), cy + uy * (n + 1))) n++; return n; };
-    return { w: reach(-1, 0) + reach(1, 0) + 1, h: reach(0, -1) + reach(0, 1) + 1 };
+    if (all) return [...document.querySelectorAll(sel)].map(one).filter(Boolean);
+    const el = document.querySelector(sel);
+    return el ? one(el) : null;
 };
 
 const hitsAt = (page, sel, dx, dy) =>
-    page.evaluate(PROBE, [sel, dx, dy, false, Math.max(Math.abs(dx), Math.abs(dy)) + 2]);
-const hitBox = (page, sel) => page.evaluate(PROBE, [sel, 0, 0, true, REACH_MAX]);
+    page.evaluate(PROBE, [sel, dx, dy, false, Math.max(Math.abs(dx), Math.abs(dy)) + 2, false]);
+const hitBox = (page, sel) => page.evaluate(PROBE, [sel, 0, 0, true, REACH_MAX, false]);
+const hitBoxes = (page, sel) => page.evaluate(PROBE, [sel, 0, 0, true, REACH_MAX, true]);
 
 /**
  * Assert a control's tap zone against the WCAG 2.2 target-size floor.
@@ -818,6 +831,19 @@ test.describe('Lite version', () => {
         expect(html).not.toMatch(/<link[^>]+rel=["']stylesheet/i);
         // Always offers the way back to the full site
         expect(html).toMatch(/href=["']\.\.\/index\.html["']/);
+    });
+
+    test('every link on /lite/ is big enough to tap', async ({ page }) => {
+        // The page is nothing but links, and each one is a single line of a 27px
+        // line box carrying only ~19px of ink. The CSS spends that reserved
+        // slack on the tap zone, which is why this is a sweep and not a list:
+        // any new link inherits the rule, and any edit that drops it fails here.
+        await page.goto('/lite/');
+        const zones = await hitBoxes(page, 'a[href]');
+        // A sweep that measured nothing would pass without testing anything.
+        expect(zones.length, 'no links measured — the sweep would be vacuous').toBeGreaterThan(15);
+        const small = zones.filter((z) => z.w < 24 || z.h < 24);
+        expect(small.map((z) => `${z.w}x${z.h} "${z.text}"`), 'links under the 24px WCAG floor').toEqual([]);
     });
 });
 
