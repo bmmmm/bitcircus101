@@ -2,6 +2,69 @@
 const { test, expect } = require('@playwright/test');
 const { buildEventsData, useEventsFixture } = require('./fixtures/events-data');
 
+// ─── Hit-area probe ──────────────────────────────────────────────────────────
+//
+// Several controls are deliberately small plain-text boxes, and the zone a
+// finger has to land in is widened by a pseudo-element. A pseudo-element moves
+// neither getBoundingClientRect() nor toBeVisible(), so geometry and visibility
+// both answer the wrong question — only document.elementFromPoint reports what
+// a tap actually reaches. One probe, two readings:
+//
+//   hitsAt()  — does a tap dx/dy off the box centre still land on the element?
+//   hitBox()  — how many CSS pixels wide/tall is that zone?
+const REACH_MAX = 80;
+
+const PROBE = ([sel, dx, dy, measure, margin]) => {
+    const el = document.querySelector(sel);
+    if (!el) return null;
+    // elementFromPoint answers in viewport coordinates and returns null outside
+    // them, so a probe point past the fold reads as "miss" no matter what is
+    // really there. The box being on screen is not enough — the points this
+    // probe is about to ask for have to be too, which is what `margin` is. The
+    // scroll is conditional so that probing a sticky header does not drag the
+    // page out from under the next reading.
+    let b = el.getBoundingClientRect();
+    let cy = b.top + b.height / 2;
+    if (cy - margin < 0 || cy + margin > window.innerHeight) {
+        el.scrollIntoView({ block: 'center', behavior: 'instant' });
+        b = el.getBoundingClientRect();
+        cy = b.top + b.height / 2;
+    }
+    const cx = b.left + b.width / 2;
+    const owns = (x, y) => {
+        if (x < 0 || y < 0 || x >= window.innerWidth || y >= window.innerHeight) return false;
+        const hit = document.elementFromPoint(x, y);
+        return !!(hit && (hit === el || el.contains(hit)));
+    };
+    if (!measure) return owns(cx + dx, cy + dy);
+    if (!owns(cx, cy)) return { w: 0, h: 0 };
+    // Walk outwards until the zone stops answering. The 80px cap is a ceiling,
+    // not a target: how far a 300px-wide link reaches is not what this measures.
+    // (Kept in step with REACH_MAX, which sizes the scroll margin above — this
+    // function is serialised into the page, so it cannot read the constant.)
+    const reach = (ux, uy) => { let n = 0; while (n < 80 && owns(cx + ux * (n + 1), cy + uy * (n + 1))) n++; return n; };
+    return { w: reach(-1, 0) + reach(1, 0) + 1, h: reach(0, -1) + reach(0, 1) + 1 };
+};
+
+const hitsAt = (page, sel, dx, dy) =>
+    page.evaluate(PROBE, [sel, dx, dy, false, Math.max(Math.abs(dx), Math.abs(dy)) + 2]);
+const hitBox = (page, sel) => page.evaluate(PROBE, [sel, 0, 0, true, REACH_MAX]);
+
+/**
+ * Assert a control's tap zone against the WCAG 2.2 target-size floor.
+ * Pass the numbers the CSS actually reaches, not aspirations — where a zone
+ * cannot grow to 44px without a visible layout change, the comment at the CSS
+ * rule says so and the number here matches it.
+ */
+async function expectHitZones(page, zones) {
+    for (const [sel, minW, minH] of zones) {
+        const z = await hitBox(page, sel);
+        expect(z, `${sel}: no element, or its own centre is not reachable`).not.toEqual({ w: 0, h: 0 });
+        expect(z.w, `${sel} tap zone width`).toBeGreaterThanOrEqual(minW);
+        expect(z.h, `${sel} tap zone height`).toBeGreaterThanOrEqual(minH);
+    }
+}
+
 // ─── Home Page ───────────────────────────────────────────────────────────────
 
 test.describe('Home page', () => {
@@ -31,11 +94,29 @@ test.describe('Home page', () => {
         // Wait for the actual state change, not a fixed sleep — race-free on slow CI.
         await expect.poll(() => page.locator('.dot.active').getAttribute('aria-label')).not.toBe(activeDotBefore);
 
+        // The controls are 17-26px boxes on purpose; what has to clear the WCAG
+        // 2.2 target-size floor is the zone a finger gets, widened by CSS.
+        // The dots stop at 27px wide because they sit 10px apart — see the CSS.
+        await expectHitZones(page, [
+            ['.carousel-button.prev', 44, 44],
+            ['.carousel-button.next', 44, 44],
+            ['.carousel-toggle',      44, 44],
+            ['.dot',                  24, 44],
+        ]);
+
         // Map
         await page.locator('#show-map-btn').click();
         await expect(page.locator('#osm-map-container')).toBeVisible();
-        const iframeSrc = await page.locator('#osm-map').getAttribute('src');
-        expect(iframeSrc).toContain('openstreetmap.org');
+        const frame = page.locator('#osm-map');
+        expect(await frame.getAttribute('src')).toContain('openstreetmap.org');
+        // The embed needs allow-scripts and allow-same-origin to draw tiles at
+        // all; the sandbox earns its keep through what it withholds — top-level
+        // navigation, popups, forms, modals, downloads. Pinned here because the
+        // attribute is one careless edit away from being dropped, and nothing
+        // visible breaks when it is. (That tiles still render under it was
+        // measured against the live OSM host; CI stays offline on purpose.)
+        expect(await frame.getAttribute('sandbox')).toBe('allow-scripts allow-same-origin');
+        expect(await frame.getAttribute('referrerpolicy')).toBe('no-referrer');
 
         await expect(page.locator('#freundinnen')).toBeVisible();
         await expect(page.locator('#logo-slider-heading')).toContainText('Freund*innen');
@@ -126,24 +207,6 @@ test.describe('Navigation', () => {
         '#theme-toggle',
     ];
 
-    /**
-     * Does a tap `dy` px above/below the element's centre still hit it?
-     *
-     * These controls are 24px tall on purpose (the plain-text look), and their
-     * usable hit area is widened by a pseudo-element. A pseudo-element changes
-     * neither getBoundingClientRect() nor toBeVisible(), so the only honest
-     * check is to probe the point a finger actually lands on.
-     */
-    async function hitsAt(page, selector, dy) {
-        return page.evaluate(([sel, offset]) => {
-            const el = document.querySelector(sel);
-            if (!el) return false;
-            const b = el.getBoundingClientRect();
-            const hit = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2 + offset);
-            return !!(hit && (hit === el || el.contains(hit)));
-        }, [selector, dy]);
-    }
-
     test('desktop nav links are inside the viewport and work', async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await page.goto('/');
@@ -167,10 +230,14 @@ test.describe('Navigation', () => {
         await page.goto('/index.html');
         const toggle = page.locator('#menu-toggle');
         const links = page.locator('nav ul.nav__links');
-        await expect(toggle).toBeVisible();
+        // toBeInViewport for the two states where "reachable" is the claim —
+        // a toggle or an opened menu parked off-screen is "visible" to
+        // Playwright and useless to a person. The closed states stay
+        // not.toBeVisible(): there the claim is display:none, not position.
+        await expect(toggle).toBeInViewport();
         await expect(links).not.toBeVisible();
         await toggle.click();
-        await expect(links).toBeVisible();
+        await expect(links).toBeInViewport();
         await toggle.click();
         await expect(links).not.toBeVisible();
 
@@ -178,7 +245,7 @@ test.describe('Navigation', () => {
         // so nothing reloads — leave the menu open and it stays parked over the
         // section it just jumped to, which reads as a dead tap.
         await toggle.click();
-        await expect(links).toBeVisible();
+        await expect(links).toBeInViewport();
         await page.locator('nav ul.nav__links a[href="index.html#about"]').click();
         await expect(links).not.toBeVisible();
         await expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -223,7 +290,7 @@ test.describe('Navigation', () => {
         // area — a realistic finger miss, which used to land on nothing.
         for (const sel of UTILS) {
             for (const dy of [-16, 16]) {
-                expect(await hitsAt(page, sel, dy), `${sel} tapped ${dy}px off centre`).toBe(true);
+                expect(await hitsAt(page, sel, 0, dy), `${sel} tapped ${dy}px off centre`).toBe(true);
             }
         }
 
@@ -317,6 +384,23 @@ test.describe('Events content', () => {
         const borderStyle = await page.locator('.event-card').first()
             .evaluate((el) => getComputedStyle(el).borderLeftStyle);
         expect(borderStyle).not.toBe('none');
+
+        // Tap zones. The one to watch is the toolbar LABEL, not the 16x16
+        // checkbox inside it: the label is what a tap actually activates, so it
+        // is the target whose size counts.
+        //
+        // The chips are gated at 25, not 24. Their bare 22.4px box already
+        // measures 24 once this probe rounds to whole pixels, so a 24 threshold
+        // would pass with the widening removed — a gate that cannot go red. 25
+        // pins the +4px the CSS adds (measured: 26) with a pixel to spare. They
+        // stop there because they wrap into rows only 4px apart; 44 would need
+        // a visibly roomier row gap.
+        await expectHitZones(page, [
+            ['.events-toolbar__label', 44, 44],
+            ['.events-filter__tag',    24, 25],
+            ['a.event-card__location', 44, 44],
+            ['.event-action',          44, 44],
+        ]);
     });
 
     test('URL state and search round-trip, and survive the bitcircus toggle', async ({ page }) => {
@@ -447,7 +531,12 @@ test.describe('Funding goals (fused into support.html)', () => {
         // also uses .projekt-panel) regardless of seed/DOM order.
         const panels = page.locator('#projekte-list .projekt-panel');
         const count = await panels.count();
-        if (count === 0) return; // no seed data in this environment
+        // This used to be `if (count === 0) return;` — a silent pass that turned
+        // a broken renderer into a green run. finanz.json is tracked on main, so
+        // every checkout and every CI job has seed data: zero panels is a defect,
+        // not an environment.
+        expect(count, 'finanz.json is tracked and seeded — zero panels means the renderer broke')
+            .toBeGreaterThan(0);
 
         // Recurring monthly costs render as projekt-panel cards in their OWN
         // always-visible block, but with no progress bar — the type-split fix,
@@ -559,6 +648,12 @@ test.describe('Raum nutzen page', () => {
         await expect(page).toHaveTitle(/Raum nutzen/);
         await expect(page.locator('#show-map-btn')).toBeVisible();
         await expect(page.locator('.back-link a')).toBeVisible();
+
+        // Second copy of the OSM embed — hardened like the home page's, and it
+        // has to stay that way independently of it.
+        const frame = page.locator('#osm-map');
+        expect(await frame.getAttribute('sandbox')).toBe('allow-scripts allow-same-origin');
+        expect(await frame.getAttribute('referrerpolicy')).toBe('no-referrer');
 
         const jsonLd = await page.locator('script[type="application/ld+json"]').textContent();
         const data = JSON.parse(jsonLd);
@@ -852,7 +947,9 @@ test.describe('Light theme toggle', () => {
         await page.reload();
 
         const toggle = page.locator('#theme-toggle');
-        await expect(toggle).toBeVisible();
+        // A nav control: the claim is that it can be reached without scrolling,
+        // which toBeVisible() does not check (see the utility-cluster test).
+        await expect(toggle).toBeInViewport();
         await expect(toggle).toHaveAttribute('aria-pressed', 'false');
 
         // Discriminating signal: the actual painted body background flips
