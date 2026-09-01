@@ -222,7 +222,7 @@ Befehle:
   --help, -h, help           diese Hilfe (Exit 0)
   list [--json]              Board anzeigen (--json: nur JSON auf stdout)
   validate [--json]          finanz.json prüfen (--json: {ok, errors})
-  raise <id> <betrag>        Betrag zu "raised" eines Projekts addieren (auch negativ)
+  raise <id> <betrag>        Betrag zu "raised" addieren, ganze Euro (auch negativ)
   finish <id>                Projekt auf erreicht setzen (raised = target)
   add                        neues einmaliges Projekt anlegen (interaktiv)
   monthly                    monatliche Kosten verwalten (interaktiv)
@@ -284,7 +284,14 @@ async function runSubcommand(cmd, rawArgs) {
     const amount = parseAmount(amountStr);
     if (amount === null) {
       fail(
-        `Betrag "${amountStr}" ist keine gültige Zahl — ganze Euro, z.B.: raise solar-speicher 100 (auch -50; Komma oder Punkt erlaubt, keine Buchstaben/Hex/Exponent)`
+        `Betrag "${amountStr}" ist keine gültige Zahl — ganze Euro, z.B.: raise solar-speicher 100 (auch -50; keine Buchstaben/Hex/Exponent)`
+      );
+    }
+    // The schema stores euros without cents. Catching it here names what was
+    // typed; letting it through would report the resulting sum instead.
+    if (!Number.isInteger(amount)) {
+      fail(
+        `Betrag "${amountStr}" hat Nachkommastellen — finanz.json führt nur ganze Euro, z.B.: raise solar-speicher 13`
       );
     }
     let next;
@@ -365,9 +372,27 @@ async function confirm(rl, question) {
 /**
  * Ask for a number. An empty line returns `fallback` when one is given, else it
  * re-asks (never silently coerces a bare Enter to 0). Garbage, hex and exponent
- * forms are rejected with an actionable hint; comma decimals are accepted.
+ * forms are rejected with an actionable hint.
+ *
+ * `integer: true` is what every euro field needs: the schema types `target`,
+ * `raised` and `monthly` as integers, so a decimal entered here would parse
+ * fine and then die at validation — reported as the resulting SUM ("ist
+ * 2012.5"), a number the user never typed. Rejecting it at the prompt names
+ * the input instead. A trailing ",00" still passes: it parses to a whole
+ * number.
+ *
+ * Exported for tests: it drives a retry loop, so it needs an `rl`-shaped
+ * object with .question(), not a terminal.
  */
-async function askNumber(rl, label, { min, max, fallback } = {}) {
+export async function askNumber(
+  rl,
+  label,
+  { min, max, fallback, integer, unit } = {}
+) {
+  const example = integer ? "1000" : "1000 oder 1000,50";
+  // `unit` keeps the euro wording off the pulse, which is a level, not money —
+  // the one place this CLI must never suggest an amount.
+  const whole = unit ? `ganze ${unit}` : "ganze Zahlen";
   for (;;) {
     const raw = (await rl.question(`${label}: `)).trim();
     if (raw === "") {
@@ -378,7 +403,15 @@ async function askNumber(rl, label, { min, max, fallback } = {}) {
     const n = parseAmount(raw);
     if (n === null) {
       console.log(
-        "  Bitte eine normale Zahl eingeben (z.B. 1000 oder 1000,50) — keine Buchstaben, Hex oder Exponenten."
+        `  Bitte eine normale Zahl eingeben (z.B. ${example}) — keine Buchstaben, Hex oder Exponenten.`
+      );
+      continue;
+    }
+    if (integer && !Number.isInteger(n)) {
+      console.log(
+        `  "${raw}" hat Nachkommastellen — hier zählen nur ${whole} (z.B. ${Math.round(
+          n
+        )} statt ${raw}).`
       );
       continue;
     }
@@ -394,6 +427,12 @@ async function askNumber(rl, label, { min, max, fallback } = {}) {
   }
 }
 
+// interactiveAddEinmalig / interactiveMonthly are exported for the same reason
+// askNumber is: they already take an `rl`, so a scripted stand-in drives their
+// prompts without a terminal — which is the only way to gate what the call
+// sites pass (whole euros, a minimum of 1). A test scripts "n" at the confirm,
+// so nothing is ever written.
+
 /** Build an item from a set of optional string fields, dropping empties. */
 function withOptional(base, fields) {
   const out = { ...base };
@@ -403,7 +442,7 @@ function withOptional(base, fields) {
   return out;
 }
 
-async function interactiveAddEinmalig(date, rl = null) {
+export async function interactiveAddEinmalig(date, rl = null) {
   const own = !rl;
   // Only guard when we open our own readline — called from the menu one is
   // already running and the menu checked for a TTY before it got here.
@@ -424,8 +463,18 @@ async function interactiveAddEinmalig(date, rl = null) {
     const tagline = await rl.question("  Tagline (optional): ");
     const description = await rl.question("  Beschreibung (optional): ");
     const icon = await rl.question("  Icon-Glyph (optional): ");
-    const target = await askNumber(rl, "  Zielbetrag (target)", { min: 0.0001 });
-    const raised = await askNumber(rl, "  Bisher (raised)", { min: 0, fallback: 0 });
+    // min 1, not 0.0001: with whole euros the smallest positive target IS 1.
+    const target = await askNumber(rl, "  Zielbetrag (target)", {
+      min: 1,
+      integer: true,
+      unit: "Euro",
+    });
+    const raised = await askNumber(rl, "  Bisher (raised)", {
+      min: 0,
+      fallback: 0,
+      integer: true,
+      unit: "Euro",
+    });
     const url1 = await rl.question("  URL 1 (https, optional): ");
     const url2 = await rl.question("  URL 2 (https, optional): ");
 
@@ -451,7 +500,7 @@ async function interactiveAddEinmalig(date, rl = null) {
   }
 }
 
-async function interactiveMonthly(date, rl = null) {
+export async function interactiveMonthly(date, rl = null) {
   const own = !rl;
   if (
     own &&
@@ -475,7 +524,9 @@ async function interactiveMonthly(date, rl = null) {
       const description = await rl.question("  Beschreibung (optional): ");
       const icon = await rl.question("  Icon-Glyph (optional): ");
       const monthly = await askNumber(rl, "  Betrag pro Monat (monthly)", {
-        min: 0.0001,
+        min: 1,
+        integer: true,
+        unit: "Euro",
       });
       const url1 = await rl.question("  URL 1 (https, optional): ");
       const url2 = await rl.question("  URL 2 (https, optional): ");
@@ -527,8 +578,13 @@ async function interactiveMonthly(date, rl = null) {
 
 // ── Interactive top-level menu ───────────────────────────────────────────────
 
-async function interactiveMenu() {
+export async function interactiveMenu(rl = null) {
+  // Same shape as interactiveAddEinmalig/interactiveMonthly: a caller may hand
+  // in a scripted rl, which is what lets a test drive the branches below. Only
+  // the real entry point opens its own — and only that path needs the TTY.
+  const own = !rl;
   if (
+    own &&
     !requireTTY(
       "Das Menü",
       'Nicht-interaktiv gibt es die Unterbefehle — "node scripts/finanz.mjs --help" zeigt sie.'
@@ -537,7 +593,7 @@ async function interactiveMenu() {
     return;
   }
   const date = today();
-  const rl = readline.createInterface({ input, output });
+  if (own) rl = readline.createInterface({ input, output });
   try {
     printBoard(read());
     console.log("  Aktionen:");
@@ -553,7 +609,10 @@ async function interactiveMenu() {
 
     if (choice === "1") {
       const id = (await rl.question("  Projekt-id: ")).trim();
-      const amount = await askNumber(rl, "  Betrag (+/-)");
+      const amount = await askNumber(rl, "  Betrag (+/-)", {
+        integer: true,
+        unit: "Euro",
+      });
       let next;
       try {
         next = raiseProject(read(), id, amount, date);
@@ -586,13 +645,13 @@ async function interactiveMenu() {
     } else if (choice === "4") {
       await interactiveMonthly(date, rl);
     } else if (choice === "5") {
+      // The bounds belong in the prompt, so a typo re-asks instead of throwing
+      // the user back out of the menu.
       const level = await askNumber(rl, "  Puls-Level 0..7 (wertfrei)", {
         min: 0,
+        max: 7,
+        integer: true,
       });
-      if (!Number.isInteger(level) || level > 7) {
-        console.log("  Muss eine ganze Zahl 0..7 sein.");
-        return;
-      }
       let next;
       try {
         next = setPulse(read(), level, date);
@@ -628,7 +687,7 @@ async function interactiveMenu() {
       console.log("  Ungültige Auswahl.");
     }
   } finally {
-    rl.close();
+    if (own) rl.close();
   }
 }
 

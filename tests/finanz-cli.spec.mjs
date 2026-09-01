@@ -76,6 +76,29 @@ describe("finanz CLI — headless interactive commands abort instead of no-op'in
   }
 });
 
+describe("finanz CLI — amounts are whole euros", () => {
+  // The schema types target/raised/monthly as integers. A decimal used to parse
+  // fine and die two layers later, reported as the resulting SUM ("ist 2012.5")
+  // — a number the caller never typed. It is now refused at the argument.
+  it("raise refuses a decimal and names what was typed, not the sum", () => {
+    const before = fs.readFileSync(FINANZ, "utf8");
+    const res = run("raise", "solar-speicher", "12,50");
+    assert.equal(res.status, 1);
+    assert.match(res.stderr, /"12,50"/);
+    assert.match(res.stderr, /Nachkommastellen|ganze Euro/);
+    // The confusing derived figure must not be what the user is shown.
+    assert.doesNotMatch(res.stderr, /2012\.5/);
+    assert.equal(fs.readFileSync(FINANZ, "utf8"), before);
+  });
+
+  it("the usage text no longer advertises decimals for amounts", () => {
+    const res = run("--help");
+    assert.equal(res.status, 0);
+    assert.doesNotMatch(res.stdout, /Komma oder Punkt erlaubt/);
+    assert.match(res.stdout, /ganze Euro/);
+  });
+});
+
 describe("finanz CLI — --json", () => {
   it("list --json emits parseable JSON and nothing else", () => {
     const res = run("list", "--json");
@@ -199,5 +222,263 @@ describe("boardJson", () => {
   it("reports percent 0 as 0, not as null", () => {
     // A funding.json at 0 % is meaningful; only a missing value is null.
     assert.equal(boardJson(BOARD, { percent: 0 }).percent, 0);
+  });
+});
+
+// ── askNumber: the retry loop behind every interactive amount ────────────────
+
+const { askNumber } = await import("../scripts/finanz.mjs");
+
+/** A readline stand-in: hands out scripted answers, records what was asked. */
+function fakeRl(answers) {
+  const asked = [];
+  return {
+    asked,
+    left: () => answers.length,
+    question: async (q) => {
+      asked.push(q);
+      if (!answers.length) throw new Error("askNumber asked once too often");
+      return answers.shift();
+    },
+  };
+}
+
+/** Run fn with console.log captured, so a re-ask hint can be asserted on. */
+async function captureLog(fn) {
+  const lines = [];
+  const real = console.log;
+  console.log = (...a) => lines.push(a.join(" "));
+  try {
+    return { value: await fn(), lines };
+  } finally {
+    console.log = real;
+  }
+}
+
+describe("askNumber", () => {
+  it("accepts a plain integer", async () => {
+    const { value } = await captureLog(() => askNumber(fakeRl(["100"]), "x"));
+    assert.equal(value, 100);
+  });
+
+  it("re-asks on a decimal when integer is set, then takes the correction", async () => {
+    const rl = fakeRl(["12,50", "13"]);
+    const { value, lines } = await captureLog(() =>
+      askNumber(rl, "Betrag", { integer: true })
+    );
+    assert.equal(value, 13);
+    assert.equal(rl.asked.length, 2, "must ask again, not give up");
+    assert.ok(
+      lines.some((l) => l.includes("12,50") && /ganze Zahlen/.test(l)),
+      `hint must name the input, got: ${JSON.stringify(lines)}`
+    );
+  });
+
+  it("accepts a decimal when integer is NOT set", async () => {
+    const { value } = await captureLog(() => askNumber(fakeRl(["12,50"]), "x"));
+    assert.equal(value, 12.5);
+  });
+
+  it("accepts a trailing ,00 as a whole euro amount", async () => {
+    const { value } = await captureLog(() =>
+      askNumber(fakeRl(["100,00"]), "x", { integer: true })
+    );
+    assert.equal(value, 100);
+  });
+
+  it("keeps negative whole amounts, which raise needs", async () => {
+    const { value } = await captureLog(() =>
+      askNumber(fakeRl(["-50"]), "x", { integer: true })
+    );
+    assert.equal(value, -50);
+  });
+
+  it("re-asks below min and above max instead of returning a bad value", async () => {
+    const lo = fakeRl(["0", "1"]);
+    const a = await captureLog(() => askNumber(lo, "x", { min: 1, integer: true }));
+    assert.equal(a.value, 1);
+    assert.equal(lo.asked.length, 2);
+
+    const hi = fakeRl(["8", "7"]);
+    const b = await captureLog(() =>
+      askNumber(hi, "x", { min: 0, max: 7, integer: true })
+    );
+    assert.equal(b.value, 7);
+    assert.equal(hi.asked.length, 2);
+  });
+
+  it("re-asks on garbage, hex and exponent forms", async () => {
+    for (const bad of ["abc", "0x10", "1e3"]) {
+      const rl = fakeRl([bad, "5"]);
+      const { value } = await captureLog(() => askNumber(rl, "x", { integer: true }));
+      assert.equal(value, 5, `${bad} must be rejected`);
+      assert.equal(rl.asked.length, 2);
+    }
+  });
+
+  it("returns the fallback on a bare Enter, but re-asks when there is none", async () => {
+    const withFb = await captureLog(() =>
+      askNumber(fakeRl([""]), "x", { fallback: 0, integer: true })
+    );
+    assert.equal(withFb.value, 0);
+
+    const rl = fakeRl(["", "7"]);
+    const without = await captureLog(() => askNumber(rl, "x", { integer: true }));
+    assert.equal(without.value, 7);
+    assert.equal(rl.asked.length, 2, "a bare Enter must never coerce to 0");
+  });
+});
+
+// ── The interactive call sites, driven by a scripted rl (no terminal) ────────
+
+const { interactiveAddEinmalig, interactiveMenu, interactiveMonthly } =
+  await import("../scripts/finanz.mjs");
+
+describe("interactive amount prompts enforce whole euros at the call site", () => {
+  // Every flow below answers "n" at the confirm, so finanz.json is never
+  // written; the assertion is on WHAT WAS ASKED, which is what pins the
+  // options the call sites pass.
+  it("add re-asks a decimal target and a target of 0, then accepts 1", async () => {
+    const before = fs.readFileSync(FINANZ, "utf8");
+    const rl = fakeRl([
+      "test-id",
+      "Titel",
+      "",
+      "",
+      "",
+      "12,50", // decimal target → re-ask
+      "0", // below the minimum of 1 → re-ask
+      "1", // accepted
+      "0", // raised
+      "",
+      "",
+      "n", // do not save
+    ]);
+    const { lines } = await captureLog(() =>
+      interactiveAddEinmalig("2026-09-01", rl)
+    );
+    const targetAsks = rl.asked.filter((q) => q.includes("Zielbetrag"));
+    assert.equal(targetAsks.length, 3, "must re-ask twice before accepting");
+    assert.ok(
+      lines.some((l) => /"12,50".*ganze Euro.*13/.test(l)),
+      `money prompts keep the euro wording and suggest 13, got: ${JSON.stringify(
+        lines
+      )}`
+    );
+    assert.ok(
+      lines.some((l) => /mindestens 1/.test(l)),
+      `minimum must be 1 euro, got: ${JSON.stringify(lines)}`
+    );
+    assert.ok(lines.some((l) => l.includes("Abgebrochen")));
+    assert.equal(fs.readFileSync(FINANZ, "utf8"), before);
+  });
+
+  it("monthly re-asks a decimal amount and a 0, then accepts 1", async () => {
+    const before = fs.readFileSync(FINANZ, "utf8");
+    const rl = fakeRl([
+      "1", // add
+      "test-monthly",
+      "Titel",
+      "",
+      "",
+      "",
+      "29,99", // decimal → re-ask
+      "0", // below minimum → re-ask
+      "1",
+      "",
+      "",
+      "n",
+    ]);
+    const { lines } = await captureLog(() =>
+      interactiveMonthly("2026-09-01", rl)
+    );
+    const asks = rl.asked.filter((q) => q.includes("Betrag pro Monat"));
+    assert.equal(asks.length, 3);
+    assert.ok(lines.some((l) => l.includes("29,99")));
+    assert.ok(lines.some((l) => /mindestens 1/.test(l)));
+    assert.equal(fs.readFileSync(FINANZ, "utf8"), before);
+  });
+});
+
+describe("the menu's own amount prompts", () => {
+  // Driven through an injected rl, so the branches are exercised without a
+  // terminal. Every case answers "n" at the confirm — nothing is written.
+  it("raise (1) re-asks a decimal before confirming", async () => {
+    const before = fs.readFileSync(FINANZ, "utf8");
+    const rl = fakeRl(["1", "solar-speicher", "12,50", "100", "n"]);
+    const { lines } = await captureLog(() => interactiveMenu(rl));
+    assert.equal(
+      rl.asked.filter((q) => q.includes("Betrag (+/-)")).length,
+      2,
+      "a decimal must be re-asked, not passed on to the validator"
+    );
+    assert.ok(lines.some((l) => l.includes("12,50")));
+    assert.ok(lines.some((l) => l.includes("Abgebrochen")));
+    assert.equal(fs.readFileSync(FINANZ, "utf8"), before);
+  });
+
+  it("pulse (5) re-asks 8 and a decimal instead of dropping out of the menu", async () => {
+    const before = fs.readFileSync(FINANZ, "utf8");
+    const rl = fakeRl(["5", "8", "3,5", "4", "n"]);
+    const { lines } = await captureLog(() => interactiveMenu(rl));
+    assert.equal(
+      rl.asked.filter((q) => q.includes("Puls-Level 0..7")).length,
+      3,
+      "out-of-range and non-integer levels must both re-ask"
+    );
+    assert.ok(
+      lines.some((l) => /höchstens 7/.test(l)),
+      `the upper bound must be 7, got: ${JSON.stringify(lines)}`
+    );
+    // The pulse is a level, not money. No prompt around it may say "Euro" —
+    // the whole point of the track is that it carries no amount.
+    const hints = lines.filter((l) => /3,5|höchstens 7/.test(l));
+    assert.equal(hints.length, 2, `expected both hints, got: ${JSON.stringify(hints)}`);
+    assert.ok(
+      hints.every((l) => !/Euro|€/.test(l)),
+      `the pulse must never be described in euros, got: ${JSON.stringify(hints)}`
+    );
+    assert.ok(
+      lines.some((l) => /"3,5".*ganze Zahlen/.test(l)),
+      `the hint must say "ganze Zahlen" here, got: ${JSON.stringify(lines)}`
+    );
+    assert.ok(lines.some((l) => l.includes("Abgebrochen")));
+    assert.equal(fs.readFileSync(FINANZ, "utf8"), before);
+  });
+
+  it("validate (7) is read-only and reports the real file", async () => {
+    const before = fs.readFileSync(FINANZ, "utf8");
+    const { lines } = await captureLog(() => interactiveMenu(fakeRl(["7"])));
+    assert.ok(lines.some((l) => l.includes("finanz.json ist gültig")));
+    assert.equal(fs.readFileSync(FINANZ, "utf8"), before);
+  });
+});
+
+describe("askNumber — the whole-number hint fits its context", () => {
+  it("says 'ganze Euro' with a unit and 'ganze Zahlen' without", async () => {
+    const money = await captureLog(() =>
+      askNumber(fakeRl(["12,50", "13"]), "x", { integer: true, unit: "Euro" })
+    );
+    assert.ok(money.lines.some((l) => /ganze Euro/.test(l)));
+
+    const level = await captureLog(() =>
+      askNumber(fakeRl(["3,5", "4"]), "x", { integer: true })
+    );
+    assert.ok(level.lines.some((l) => /ganze Zahlen/.test(l)));
+    assert.ok(level.lines.every((l) => !/Euro|€/.test(l)));
+  });
+
+  it("suggests the rounded value of what was actually typed", async () => {
+    const a = await captureLog(() =>
+      askNumber(fakeRl(["3,5", "4"]), "x", { integer: true })
+    );
+    assert.ok(
+      a.lines.some((l) => l.includes("4 statt 3,5")),
+      `got: ${JSON.stringify(a.lines)}`
+    );
+    const b = await captureLog(() =>
+      askNumber(fakeRl(["12,50", "13"]), "x", { integer: true, unit: "Euro" })
+    );
+    assert.ok(b.lines.some((l) => l.includes("13 statt 12,50")));
   });
 });
