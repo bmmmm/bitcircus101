@@ -11,14 +11,14 @@
             name="description"
             content="Interner ASCII-Spielplatz für bitcircus101 – nicht in der Navigation verlinkt."
         />
-        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg?v=a517bb3e" />
-        <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=a517bb3e" />
-        <link rel="manifest" href="../site.webmanifest?v=a517bb3e" />
+        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg?v=834e0c04" />
+        <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=834e0c04" />
+        <link rel="manifest" href="../site.webmanifest?v=834e0c04" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="../style.css?v=a517bb3e" />
+        <link rel="stylesheet" href="../style.css?v=834e0c04" />
     </head>
     <body class="ascii-playground-body">
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -37,7 +37,7 @@
                 </p>
                 <p>
                     Die Vorlage ist ein bewusst simples Zirkuszelt in
-                    <strong>14 Zeilen à 60 Zeichen</strong> — schmal genug, um es auf einem Telefon noch von
+                    <strong>14 Zeilen à 25 Zeichen</strong> — schmal genug, um es auf einem Telefon noch von
                     Hand zu bearbeiten. Das große
                     <code class="ascii-playground__code">.ascii-art</code> auf der Startseite ist etwas ganz
                     anderes: 63 Zeilen à 112 Zeichen, aus einem Foto gerendert, nicht von Hand gesetzt.
@@ -51,20 +51,23 @@
             </div>
 
             <div class="ascii-playground__grid">
-                <label class="ascii-playground__label">
-                    <span class="ascii-playground__labeltext">Editor</span>
+                <div class="ascii-playground__pane">
+                    <label class="ascii-playground__panehead" for="ascii-editor">Editor</label>
+                    <!-- wrap="off": a wrapped line is a different picture, so the
+                         editor scrolls sideways instead of reflowing the art. -->
                     <textarea
                         id="ascii-editor"
                         class="ascii-playground__editor"
                         spellcheck="false"
                         autocomplete="off"
                         autocapitalize="off"
-                        rows="24"
-                        aria-label="ASCII-Editor"
+                        autocorrect="off"
+                        wrap="off"
+                        rows="16"
                     ></textarea>
-                </label>
-                <div class="ascii-playground__preview-wrap">
-                    <span class="ascii-playground__labeltext">Vorschau</span>
+                </div>
+                <div class="ascii-playground__pane">
+                    <span class="ascii-playground__panehead">Vorschau</span>
                     <pre id="ascii-preview" class="ascii-playground__preview"></pre>
                 </div>
             </div>
@@ -81,31 +84,30 @@
   "use strict";
 
   var STORAGE_KEY = "bc.ascii-draft";
-  /* Einfacher bitcircus101-Logo-Entwurf (Zirkuszelt + Banner + V), je Zeile 60 Zeichen */
-  var _w = 60;
-  function _c(s) {
-    var p = Math.max(0, (_w - s.length) >> 1);
-    return " ".repeat(p) + s + " ".repeat(_w - p - s.length);
-  }
-  var _mid = "bitcircus101.de";
-  var _pad = _w - 2 - _mid.length;
-  var _pl = _pad >> 1;
-  var _pr = _pad - _pl;
+  /* Circus tent on its banner: 14 lines, 25 columns, mirrored about column 12.
+     Written out literally rather than centred at runtime — a centring helper is
+     what let the old template drift out of true, and the whole point of the page
+     is that the art is something you read in the source and edit by hand.
+     25 columns fit a phone (~205px at 0.85rem monospace); the previous 60 did not.
+     The roof widens by TWO columns per line, not one: a monospace cell is about
+     0.46 as wide as it is tall, so a 1:1 diagonal renders as a church spire. The
+     `_/` steps are what carry a 2:1 slope — a bare `/` would leave the edge in
+     pieces. */
   var defaultArt = [
-    _c(">--."),
-    _c("/    \\"),
-    _c("/ |  | \\"),
-    _c("/  |  |  \\"),
-    _c("/___|__|___\\"),
-    "+" + "=".repeat(58) + "+",
-    "|" + " ".repeat(_pl) + _mid + " ".repeat(_pr) + "|",
-    "+" + "=".repeat(58) + "+",
-    _c("\\  |  |  /"),
-    _c(" \\ |  | /"),
-    _c("  \\|  |/"),
-    _c("   \\    /"),
-    _c("    \\  /"),
-    _c("     V"),
+    "            |",
+    "           /|\\",
+    "          / | \\",
+    "       _/   |   \\_",
+    "     _/     |     \\_",
+    "   _/       |       \\_",
+    " _/         |         \\_",
+    "/___________|___________\\",
+    "|     |     |     |     |",
+    "|     |     |     |     |",
+    "|     |     |     |     |",
+    "+=======================+",
+    "|    bitcircus101.de    |",
+    "+=======================+",
   ].join("\n");
 
   var ta = document.getElementById("ascii-editor");
