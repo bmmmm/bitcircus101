@@ -2137,6 +2137,7 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 .kiosk-offline { color: var(--ink-dim); }
 
 .kiosk__bar {
+    position: relative;   /* anchors the settings panel above it */
     display: flex;
     align-items: center;
     gap: 1.5ch;
@@ -2262,10 +2263,15 @@ html[data-theme="light"][data-palette="pride"] {
 .kiosk__controls { display: flex; gap: 0.5ch; flex: none; }
 
 .kiosk__ctl {
-    /* 24px is the site's minimum control size; these sit in a 0.7em bar, so the
-       box is set in px rather than em to stay tappable when the type shrinks. */
-    min-width: 24px;
-    min-height: 24px;
+    /* 44px visible, not 24px with a grown ::after zone like .nav__util and the
+       carousel dots. Those keep a small box because their neighbours sit within
+       a finger's width and a wider zone would eat the next control's taps —
+       here there is no such constraint, so the honest box IS the zone. Measured
+       first: at 24px these came out 23x23 on a phone, under the WCAG floor.
+       In px, not em: the bar is 0.7em of a type scale that shrinks with the
+       screen, so an em-sized control would shrink with it. */
+    min-width: 44px;
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -2289,18 +2295,27 @@ html[data-theme="light"][data-palette="pride"] {
 
 /* ── settings panel ───────────────────────────────────────────────────────
    Sits over the list rather than beside it: the wall has no room to spare, and
-   the panel is a moment, not a layout. */
+   the panel is a moment, not a layout.
+
+   Anchored to the status bar, not to the viewport. A viewport-anchored panel
+   covered the very controls that open and close it — measured on a phone: the
+   `⚙` button's tap zone dropped from 44 to 32px with the panel open. Sitting
+   on top of the bar it clears them at any bar height, so no magic offset. */
 .kiosk-settings {
-    position: fixed;
-    right: 2vw;
-    bottom: 2vh;
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.5rem);
     z-index: var(--z-modal);
-    width: min(46ch, 92vw);
-    max-height: 86vh;
+    width: min(46ch, 100%);
+    /* Must fit the space ABOVE the status bar, not the viewport: the panel is
+       anchored to the bar, and .kiosk clips at 100vh, so anything taller loses
+       its heading off the top and its buttons behind the bar. 8rem covers the
+       bar plus the kiosk's own padding at every size measured. */
+    max-height: calc(100vh - 8rem);
     overflow-y: auto;
     background: var(--paper);
     border: 1px solid var(--line-strong);
-    padding: 1.25rem 1.25rem 1rem;
+    padding: 1rem 1rem 0.75rem;
     font-size: max(0.8rem, 0.42em);
     line-height: 1.6;
     color: var(--ink);
@@ -2312,17 +2327,22 @@ html[data-theme="light"][data-palette="pride"] {
     color: var(--ink-max);
     letter-spacing: 0.04em;
 }
+/* One line, clipped: the point is that the URL IS the setting, copyable
+   from the address bar — spelling it out over three wrapped lines only pushed
+   the controls below it further off a phone screen. */
 .kiosk-settings__hint {
-    margin: 0 0 1rem;
+    margin: 0 0 0.75rem;
     color: var(--ink-dim);
     font-size: 0.85em;
-    word-break: break-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .kiosk-set {
     border: 1px solid var(--line);
-    margin: 0 0 0.9rem;
-    padding: 0.5rem 0.75rem 0.75rem;
+    margin: 0 0 0.6rem;
+    padding: 0.25rem 0.75rem 0.5rem;
 }
 .kiosk-set legend {
     padding: 0 0.6ch;
@@ -2333,7 +2353,11 @@ html[data-theme="light"][data-palette="pride"] {
 
 .kiosk-set__opt,
 .kiosk-set__btn {
-    min-height: 24px;
+    /* 44 square, the size the rest of the site's real controls reach. These
+       wrap in a flex row with room to spare, so nothing is stolen from a
+       neighbour by taking it. */
+    min-height: 44px;
+    min-width: 44px;
     background: none;
     border: 1px solid var(--line-strong);
     color: var(--ink);
@@ -2352,17 +2376,25 @@ html[data-theme="light"][data-palette="pride"] {
     font-weight: 700;
 }
 
+/* The 13x13 checkbox is not the target — the label wraps it, so a tap
+   anywhere on the row already toggles it, the same reading as the events
+   toolbar. That makes the LABEL the thing to size, and it is a full-width flex
+   row, so height is all it needs. */
 .kiosk-set__check,
 .kiosk-set__field {
     display: flex;
     align-items: center;
     gap: 1ch;
     margin-top: 0.5rem;
-    min-height: 24px;
+    min-height: 44px;
+    cursor: pointer;
 }
+/* still worth seeing from arm's length, even though it is not the hit area */
+.kiosk-set__check input { width: 1.15em; height: 1.15em; }
 .kiosk-set__field span { flex: 1; }
 .kiosk-set__field input {
     width: 8ch;
+    min-height: 44px;
     background: var(--paper-2);
     border: 1px solid var(--line-strong);
     color: var(--ink-max);
@@ -2373,7 +2405,8 @@ html[data-theme="light"][data-palette="pride"] {
 .kiosk-settings__actions { display: flex; justify-content: flex-end; gap: 1ch; }
 
 @media (max-width: 700px) {
-    .kiosk-settings { left: 2vw; right: 2vw; width: auto; }
+    /* full width of the bar on a phone — 46ch would overflow it */
+    .kiosk-settings { left: 0; right: 0; width: auto; }
 }
 
 /* =============================================================================

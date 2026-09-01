@@ -1275,6 +1275,93 @@ test.describe('Kiosk view', () => {
         expect(dayColors).not.toContain(titleColors[0]);
     });
 
+    test('every control is big enough to tap on a phone', async ({ page }) => {
+        // The kiosk is a wall display, but it is reached from a phone to set it
+        // up — and that is the only time anyone touches these at all. Measured
+        // before this gate existed: the footer icons came out 23x23, under the
+        // WCAG 2.5.8 floor, and the settings rows 27-29px.
+        //
+        // Unlike .nav__util and the carousel dots, these do NOT keep a small
+        // visible box with a grown ::after zone: those have neighbours within a
+        // finger's width, so a wider zone would eat the next control's taps.
+        // Here there is room, so the visible box is the zone.
+        await page.setViewportSize({ width: 393, height: 727 });
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/');
+
+        await expectHitZones(page, [
+            ['#kiosk-theme', 40, 40],
+            ['#kiosk-palette', 40, 40],
+            ['#kiosk-settings-open', 40, 40],
+        ]);
+
+        await page.locator('#kiosk-settings-open').click();
+        await expect(page.locator('#kiosk-settings')).toBeVisible();
+
+        // The panel used to be anchored to the viewport, which laid it over the
+        // very buttons that open and close it. Stated as geometry rather than
+        // as a tap zone on purpose: a zone measurement shrinks by however much
+        // the overlap happens to be, so it reads as "a bit small" — a partly
+        // buried close button is not a sizing problem, and a gate that phrases
+        // it as one lets a small overlap through.
+        const clash = await page.evaluate(() => {
+            const p = document.querySelector('.kiosk-settings').getBoundingClientRect();
+            return [...document.querySelectorAll('.kiosk__ctl')]
+                .map((el) => ({ el, b: el.getBoundingClientRect() }))
+                .filter(({ b }) => b.left < p.right && b.right > p.left &&
+                                   b.top < p.bottom && b.bottom > p.top)
+                .map(({ el }) => el.id);
+        });
+        expect(clash, 'the open panel covers the controls that operate it').toEqual([]);
+
+        await expectHitZones(page, [
+            ['#kiosk-theme', 40, 40],
+            ['#kiosk-palette', 40, 40],
+            ['#kiosk-settings-open', 40, 40],
+        ]);
+
+        // Controls INSIDE the panel are scrolled in first — it is a scroll
+        // container on a phone, and probing something clipped at its edge
+        // measures the scroll position, not the control.
+        for (const sel of ['#kiosk-set-rows', '#kiosk-set-dwell',
+                           '#kiosk-set-reset', '#kiosk-settings-close']) {
+            await page.locator(sel).scrollIntoViewIfNeeded();
+            await expectHitZones(page, [[sel, 40, 40]]);
+        }
+
+        // The 16px checkbox is NOT the target — the label wraps it, so a tap
+        // anywhere on the row toggles it, the same reading the events toolbar
+        // takes. Measuring the input would fail on a control that is perfectly
+        // tappable, so the labels are what gets swept.
+        await page.locator('.kiosk-set__check').first().scrollIntoViewIfNeeded();
+        const rows = await hitBoxes(page, '.kiosk-set__check, .kiosk-set__field');
+        expect(rows.length, 'no settings rows measured').toBeGreaterThan(3);
+        expect(
+            rows.filter((z) => z.w < 40 || z.h < 40).map((z) => `${z.w}x${z.h} "${z.text}"`),
+            'settings rows under the tap floor',
+        ).toEqual([]);
+
+        // The option chips are swept rather than listed, so a new one inherits
+        // the gate. Row by row, each scrolled in first: the panel is a scroll
+        // container on a phone, and a chip clipped at its edge genuinely has
+        // less to hit right then — measured 29px instead of 43 that way, which
+        // says where the panel was scrolled, not how big the chip is. A finger
+        // scrolls before it taps; so does this.
+        let measured = 0;
+        for (const row of ['#kiosk-set-palette', '#kiosk-set-info', '#kiosk-set-source']) {
+            await page.locator(row).scrollIntoViewIfNeeded();
+            const chips = await hitBoxes(page, `${row} .kiosk-set__opt`);
+            expect(chips.length, `${row}: no chips measured`).toBeGreaterThan(1);
+            measured += chips.length;
+            expect(
+                chips.filter((z) => z.w < 40 || z.h < 40).map((z) => `${z.w}x${z.h} "${z.text}"`),
+                `${row}: chips under the tap floor`,
+            ).toEqual([]);
+        }
+        expect(measured, 'the sweep would be vacuous').toBeGreaterThan(8);
+    });
+
     test('a junk URL parameter falls back instead of breaking the wall', async ({ page }) => {
         await page.clock.install({ time: NOW });
         await useEventsFixture(page, kioskData());
