@@ -164,6 +164,8 @@ returning 0 — there is no non-interactive path for adding an item, so a script
 edits `finanz.json` and runs `finanz:validate`. `tests/finanz-cli.spec.mjs`
 pins those exit codes.
 
+**Amounts are whole euros.** `target`, `raised` and `monthly` are `integer` in the schema, so the CLI refuses a decimal at the point it is typed — naming the input ("12,50"), not the sum it would have produced. The interactive prompts re-ask instead of dropping out.
+
 Every write validates **first** and refuses with an error naming the bad field, so an invalid `finanz.json` never reaches disk. Both files stay tracked on `main` — commit them like any other change. `pnpm run finanz:validate` is also a gate in both `ci.yml` **and** in `deploy.yml`, which catches the one path the CLI cannot: hand-editing the JSON. It runs on the deploy path too because the PR gate never sees a commit pushed straight to `main`.
 
 **After changing `finanz.json`, run `pnpm run build:lite-finanz`** and commit `lite/index.html` alongside it. The lite page's "Projekte & Kosten" block and its "Stand" date are generated from `finanz.json` — the same drift gate that covers the layout partials covers this, so a forgotten rebuild fails the PR. (`pnpm run build` runs it together with the other deterministic generators.)
