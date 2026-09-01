@@ -899,27 +899,480 @@ test.describe('Signal redirect stubs', () => {
 // ─── Kiosk view ──────────────────────────────────────────────────────────────
 
 test.describe('Kiosk view', () => {
-    test('renders chrome-less, noindex, with a clock and an honest data state', async ({ page }) => {
-        await page.goto('/kiosk/');
+    // The wall clock is pinned so the timing cases below are assertable at all.
+    // Every event is dated against this instant, not against "now", so the test
+    // means the same thing at 03:00 in CI as it does at noon locally.
+    const NOW = new Date('2026-09-01T19:30:00');
+    const DAY = '2026-09-01';
+    const NEXT = '2026-09-02';
+
+    /**
+     * Four timing cases the old renderer got wrong or could not show at all.
+     * The marker used to gate on "started less than 3 h ago" and ignore
+     * endTime, so it dropped a long-running event and clung to a finished one.
+     */
+    function kioskData() {
+        const ev = (o) => ({
+            subtitle: '', description: '', location: '', endDate: o.date,
+            tags: [], type: '', source: 'bitcircus101', uid: o.title, ...o,
+        });
+        return {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: [
+                // runs 15:00–22:00 → started 4.5 h ago, still running.
+                // The 3 h heuristic called this over.
+                ev({
+                    title: 'Läuft seit langem', date: DAY, time: '15:00', endTime: '22:00',
+                    description: 'Kommt vorbei: https://matrix.to/#/!abc?via=x — wir haben Mate.',
+                    location: 'Dorotheenstraße 101, Bonn',
+                    tags: ['#offener-abend'],
+                }),
+                // ran 18:00–19:00 → over half an hour ago. Started 1.5 h ago,
+                // so the 3 h heuristic still called this running.
+                ev({ title: 'Schon vorbei', date: DAY, time: '18:00', endTime: '19:00' }),
+                // 19:00–22:00 → running, and overlapping BOTH of the above
+                ev({
+                    title: 'Parallel dazu', date: DAY, time: '19:00', endTime: '22:00',
+                    description: 'https://example.org/nur-ein-link',
+                    source: 'Datenburg e.V.',
+                }),
+                // 23:00 → after the whole bundle, so its own group
+                ev({ title: 'Später allein', date: DAY, time: '23:00', endTime: '23:30' }),
+                ev({ title: 'Morgen früh', date: NEXT, time: '10:00', endTime: '12:00' }),
+            ],
+        };
+    }
+
+    test('shows the events with their info texts, marks what runs and what is parallel', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        // rows=8 keeps everything on one page — paging has its own test below
+        await page.goto('/kiosk/?rows=8');
 
         // Unlisted wall display: noindex, and none of the site chrome
         const robots = await page.locator('meta[name="robots"]').getAttribute('content');
         expect(robots).toContain('noindex');
         expect(await page.locator('nav, .footer__grid').count()).toBe(0);
+        await expect(page.locator('#kiosk-clock')).toHaveText(/^19:30/);
 
-        // Clock ticks from the real time
-        await expect(page.locator('#kiosk-clock')).toHaveText(/^\d{2}:\d{2}/);
+        await expect(page.locator('.kiosk-ev')).toHaveCount(5);
 
-        // Data-tolerant like the events tests: events-data.json is gitignored,
-        // so locally/CI either rows render or the honest empty/offline state
-        await page.waitForFunction(() => {
-            return document.querySelector('.kiosk-row') ||
-                   document.querySelector('.kiosk-empty') ||
-                   document.querySelector('.kiosk-offline');
-        }, { timeout: 8000 });
+        // The info text is the point of the view: it renders, and the raw URL
+        // inside it does not — nobody reads a matrix.to link off a wall.
+        const desc = page.locator('.kiosk-ev').filter({ hasText: 'Läuft seit langem' })
+            .locator('.kiosk-ev__desc');
+        await expect(desc).toHaveText('Kommt vorbei — wir haben Mate.');
+        await expect(page.locator('.kiosk-ev__loc').first()).toContainText('Dorotheenstraße 101');
 
-        // Status line names the data stand or the source
-        await expect(page.locator('#kiosk-status')).toHaveText(/stand:|quelle:/);
+        // A description that is nothing BUT a link leaves no empty paragraph
+        await expect(
+            page.locator('.kiosk-ev').filter({ hasText: 'Parallel dazu' }).locator('.kiosk-ev__desc')
+        ).toHaveCount(0);
+
+        // Nothing anywhere on the wall renders a raw URL
+        expect(await page.locator('.kiosk__list').innerText()).not.toMatch(/https?:\/\//);
+
+        // "läuft" gates on the real end, both directions: the 4.5 h-old event
+        // still runs, the one that ended half an hour ago does not.
+        await expect(page.locator('.kiosk-ev--now .kiosk-ev__title'))
+            .toHaveText(['Läuft seit langem', 'Parallel dazu']);
+
+        // Parallel events are bracketed as such — all three overlap the long
+        // one, including the short one that already ended inside it.
+        await expect(page.locator('.kiosk-par')).toHaveCount(1);
+        await expect(page.locator('.kiosk-par .kiosk-ev')).toHaveCount(3);
+        await expect(page.locator('.kiosk-par__label')).toHaveCount(2);
+        // "Später allein" starts after the bundle ends → not bracketed
+        await expect(page.locator('.kiosk-par').filter({ hasText: 'Später allein' })).toHaveCount(0);
+
+        // Days are labelled, today reverse-video via its own badge
+        await expect(page.locator('.kiosk-day__label')).toHaveText(['HEUTE', 'MORGEN']);
+        await expect(page.locator('.kiosk-day--today')).toHaveCount(1);
+
+        await expect(page.locator('#kiosk-status')).toHaveText(/stand:.*quelle:/);
+    });
+
+    test('pages through the events without splitting a parallel bundle', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        // 3 fits the parallel bundle exactly; the bundle must never be cut
+        await page.goto('/kiosk/?rows=3');
+
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/2');
+        await expect(page.locator('.kiosk-par .kiosk-ev')).toHaveCount(3);
+        await expect(page.locator('.kiosk-ev')).toHaveCount(3);
+
+        await page.clock.runFor(21_000);
+        await expect(page.locator('#kiosk-status')).toContainText('seite 2/2');
+        await expect(page.locator('.kiosk-ev__title').first()).toHaveText('Später allein');
+    });
+
+    test('rotates through every page with a page count that holds still', async ({ page }) => {
+        // The pages are deliberately UNEVEN in height: short entries first,
+        // long descriptions after. Measuring the fit against whichever page
+        // happens to be up recomputes the page count on every flip, which
+        // resets the index and strands the wall — and it only shows up when
+        // pages differ in height, so an even fixture would pass either way.
+        await page.clock.install({ time: NOW });
+        const long = 'Ein absichtlich langer Infotext, der über mehrere Zeilen läuft und damit '
+            + 'so viel Platz frisst wie die echten Beschreibungen aus dem Kalender, die bei '
+            + 'zweihundert Zeichen gekappt werden.';
+        await useEventsFixture(page, {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: Array.from({ length: 8 }, (_, i) => ({
+                title: `Termin ${i + 1}`,
+                subtitle: '',
+                description: i < 4 ? '' : long,
+                location: '',
+                date: `2026-09-${String(10 + i).padStart(2, '0')}`,
+                time: '19:00',
+                endDate: `2026-09-${String(10 + i).padStart(2, '0')}`,
+                endTime: '22:00',
+                tags: [], type: '', source: 'bitcircus101', uid: `mixed-${i}`,
+            })),
+        });
+        await page.setViewportSize({ width: 1000, height: 520 });
+        await page.goto('/kiosk/?rows=4');
+
+        const readPage = async () => {
+            const m = /seite (\d+)\/(\d+)/.exec(await page.locator('#kiosk-status').innerText());
+            expect(m, 'status line must report a page').not.toBeNull();
+            return [Number(m[1]), Number(m[2])];
+        };
+
+        const [, total] = await readPage();
+        expect(total).toBeGreaterThan(1);
+
+        const seen = [];
+        const shown = [];
+        for (let i = 0; i < total; i++) {
+            const [current, reported] = await readPage();
+            // the count must not move under the rotation
+            expect(reported).toBe(total);
+            seen.push(current);
+            shown.push(...await page.locator('.kiosk-ev__title').allInnerTexts());
+            await page.clock.runFor(21_000);
+        }
+        // every page came up exactly once, in order, and it wrapped back to 1
+        expect(seen).toEqual(Array.from({ length: total }, (_, i) => i + 1));
+        expect((await readPage())[0]).toBe(1);
+
+        // and one full rotation shows every event exactly once — a page break
+        // must not drop an event or repeat it
+        expect(shown).toEqual(Array.from({ length: 8 }, (_, i) => `Termin ${i + 1}`));
+    });
+
+    test('never pushes the status bar off a small screen, however long the texts', async ({ page }) => {
+        // The status bar is the wall's honesty channel — "⚠ daten alt",
+        // "⚠ offline seit N min". A long list must page, not shove it past the
+        // bottom edge, so the renderer measures the fit instead of trusting a
+        // hard-coded row count.
+        await page.clock.install({ time: NOW });
+        const many = {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: Array.from({ length: 12 }, (_, i) => ({
+                title: `Termin ${i + 1}`,
+                subtitle: '',
+                description: 'Ein absichtlich langer Infotext, der über mehrere Zeilen läuft und '
+                    + 'damit genau so viel Platz frisst wie die echten Beschreibungen aus dem '
+                    + 'Kalender, die bei 200 Zeichen gekappt werden.',
+                location: 'Dorotheenstraße 101, Bonn',
+                date: `2026-09-${String(10 + i).padStart(2, '0')}`,
+                time: '19:00',
+                endDate: `2026-09-${String(10 + i).padStart(2, '0')}`,
+                endTime: '22:00',
+                tags: [], type: '', source: 'bitcircus101', uid: `many-${i}`,
+            })),
+        };
+        await useEventsFixture(page, many);
+        await page.setViewportSize({ width: 1000, height: 500 });
+        // rows=12 asks for everything at once — the fit must overrule it
+        await page.goto('/kiosk/?rows=12');
+
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/');
+        // toBeInViewport, not toBeVisible: an element pushed below the fold is
+        // still "visible" to Playwright.
+        await expect(page.locator('#kiosk-status')).toBeInViewport();
+        await expect(page.locator('.kiosk-ev').first()).toBeInViewport();
+
+        const overflow = await page.locator('.kiosk__list')
+            .evaluate((el) => el.scrollHeight - el.clientHeight);
+        expect(overflow).toBeLessThanOrEqual(0);
+        // and it really did drop events rather than squeeze them
+        expect(await page.locator('.kiosk-ev').count()).toBeLessThan(12);
+    });
+
+    // ── settings: URL, panel, and the two staying in step ────────────────────
+
+    test('a URL pins every setting, and the panel reflects what is on screen', async ({ page }) => {
+        // The URL is how a wall gets pinned — hand a screen this link and it
+        // must come up that way whatever anyone clicked on it before.
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?palette=amber&theme=light&info=off&source=bitcircus101&dwell=45&rows=6');
+
+        const root = page.locator('html');
+        await expect(root).toHaveAttribute('data-palette', 'amber');
+        await expect(root).toHaveAttribute('data-theme', 'light');
+        // info=off drops the paragraph from the DOM, it does not merely hide it:
+        // the page fit is measured, so a hidden one would still cost a break
+        await expect(page.locator('.kiosk-ev__desc')).toHaveCount(0);
+        // source=bitcircus101 hides the friendly spaces. Asserted on the event,
+        // not on the source label: narrow screens drop the side column by
+        // design, so a label check would pass for the wrong reason there.
+        await expect(page.locator('.kiosk-ev').filter({ hasText: 'Parallel dazu' })).toHaveCount(0);
+
+        // the panel opens from the ⚙ and shows the live values, not defaults
+        await page.locator('#kiosk-settings-open').click();
+        await expect(page.locator('#kiosk-settings')).toBeVisible();
+        await expect(page.locator('#kiosk-set-palette .kiosk-set__opt--on')).toHaveText('bernstein');
+        await expect(page.locator('#kiosk-set-info .kiosk-set__opt--on')).toHaveText('aus');
+        await expect(page.locator('#kiosk-set-source .kiosk-set__opt--on')).toHaveText('nur bitcircus101');
+        await expect(page.locator('#kiosk-set-dwell')).toHaveValue('45');
+        await expect(page.locator('#kiosk-set-rows')).toHaveValue('6');
+
+        // Escape closes it — a wall must not sit on an open settings panel
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#kiosk-settings')).toBeHidden();
+
+        // The promise only means something on a screen someone already fiddled
+        // with — with an empty store, URL-first and storage-first look
+        // identical. So put something in the store by hand (a URL alone does
+        // NOT persist: a pinned link must not silently overwrite the local
+        // choice) and only then check that a URL still overrules it.
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-palette .kiosk-set__opt', { hasText: 'weiß' }).click();
+        await page.locator('#kiosk-set-info .kiosk-set__opt', { hasText: 'kurz' }).click();
+        expect(await page.evaluate(() => localStorage.getItem('bc.kiosk.palette'))).toBe('mono');
+
+        await page.goto('/kiosk/?palette=green&theme=dark&info=full&source=all');
+        await expect(root).toHaveAttribute('data-palette', 'green');
+        await expect(root).not.toHaveAttribute('data-theme', 'light');
+        await expect(page.locator('.kiosk-ev__desc').first()).toBeVisible();
+        await expect(page.locator('.kiosk-ev').filter({ hasText: 'Parallel dazu' })).toHaveCount(1);
+    });
+
+    test('the panel writes back to the URL, so the screen stays copyable', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/');
+
+        // a default URL stays clean — no parameters for values nobody changed
+        expect(new URL(page.url()).search).toBe('');
+
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-info .kiosk-set__opt', { hasText: 'kurz' }).click();
+        await page.locator('#kiosk-set-palette .kiosk-set__opt', { hasText: 'rainbow' }).click();
+
+        const q = new URL(page.url()).searchParams;
+        expect(q.get('info')).toBe('short');
+        expect(q.get('palette')).toBe('pride');
+        // only the changed ones — theme was never touched
+        expect(q.get('theme')).toBeNull();
+
+        await expect(page.locator('html')).toHaveAttribute('data-palette', 'pride');
+        await expect(page.locator('.kiosk__list')).toHaveClass(/kiosk__list--info-short/);
+
+        // and it survives a reload without the URL, through storage
+        await page.goto('/kiosk/');
+        await expect(page.locator('html')).toHaveAttribute('data-palette', 'pride');
+
+        // reset puts everything back and empties the URL again
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-reset').click();
+        await expect(page.locator('html')).toHaveAttribute('data-palette', 'standard');
+        expect(new URL(page.url()).search).toBe('');
+    });
+
+    test('the footer icons cycle colour and invert, and dwell really re-times the flip', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?rows=3');
+
+        // ◉ steps through the palettes and wraps
+        const order = ['green', 'amber', 'mono', 'pride', 'standard'];
+        for (const want of order) {
+            await page.locator('#kiosk-palette').click();
+            await expect(page.locator('html')).toHaveAttribute('data-palette', want);
+        }
+
+        // ◐ inverts and says so to assistive tech
+        await page.locator('#kiosk-theme').click();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+        await expect(page.locator('#kiosk-theme')).toHaveAttribute('aria-pressed', 'true');
+        await page.locator('#kiosk-theme').click();
+        await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'light');
+
+        // dwell must re-arm the running interval, not just be stored: at 60 s
+        // the page must NOT have flipped after the old 20 s.
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-dwell').fill('60');
+        await page.locator('#kiosk-set-dwell').blur();
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/');
+
+        await page.clock.runFor(25_000);
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/');
+        await page.clock.runFor(40_000);
+        await expect(page.locator('#kiosk-status')).toContainText('seite 2/');
+    });
+
+    test('auto mode steps the colour and inverts once per full trip', async ({ page }) => {
+        // Burn-in protection: a wall shows near-static text for weeks. Rotating
+        // the hue alone leaves the same pixels lit, so a full trip through the
+        // palettes must also flip light/dark — that is the part that helps.
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?cycle=on&palette=standard&theme=dark');
+
+        const root = page.locator('html');
+        const STEP = 20 * 60_000; // CYCLE_MS
+        // fastForward, not runFor: runFor replays every intermediate tick, and
+        // the 1 s clock alone is 8000+ round trips across this much simulated
+        // time. Here only the 20 min step matters.
+        const step = () => page.clock.fastForward(STEP);
+
+        for (const want of ['green', 'amber', 'mono', 'pride']) {
+            await step();
+            await expect(root).toHaveAttribute('data-palette', want);
+            // no inversion mid-trip
+            await expect(root).not.toHaveAttribute('data-theme', 'light');
+        }
+
+        // the step that wraps back to the first palette also inverts
+        await step();
+        await expect(root).toHaveAttribute('data-palette', 'standard');
+        await expect(root).toHaveAttribute('data-theme', 'light');
+
+        // and it is genuinely opt-in: off means nothing moves
+        await page.goto('/kiosk/?cycle=off&palette=standard&theme=dark');
+        await step();
+        await step();
+        await expect(root).toHaveAttribute('data-palette', 'standard');
+        await expect(root).not.toHaveAttribute('data-theme', 'light');
+    });
+
+    test('rainbow mode colours the structure but leaves the text readable', async ({ page }) => {
+        // Six-colour body text is a flag, not a timetable. The day labels and
+        // rules take the stripes; the entries keep the normal ink.
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?palette=pride&rows=12');
+
+        const dayColors = await page.locator('.kiosk-day__label')
+            .evaluateAll((els) => els.map((el) => getComputedStyle(el).color));
+        expect(dayColors.length).toBeGreaterThan(1);
+        // consecutive days differ — that is the whole point of the mode
+        expect(new Set(dayColors).size).toBe(dayColors.length);
+
+        // the event text does NOT take a stripe
+        const titleColors = await page.locator('.kiosk-ev__title')
+            .evaluateAll((els) => els.map((el) => getComputedStyle(el).color));
+        expect(new Set(titleColors).size).toBe(1);
+        expect(dayColors).not.toContain(titleColors[0]);
+    });
+
+    test('every control is big enough to tap on a phone', async ({ page }) => {
+        // The kiosk is a wall display, but it is reached from a phone to set it
+        // up — and that is the only time anyone touches these at all. Measured
+        // before this gate existed: the footer icons came out 23x23, under the
+        // WCAG 2.5.8 floor, and the settings rows 27-29px.
+        //
+        // Unlike .nav__util and the carousel dots, these do NOT keep a small
+        // visible box with a grown ::after zone: those have neighbours within a
+        // finger's width, so a wider zone would eat the next control's taps.
+        // Here there is room, so the visible box is the zone.
+        await page.setViewportSize({ width: 393, height: 727 });
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/');
+
+        await expectHitZones(page, [
+            ['#kiosk-theme', 40, 40],
+            ['#kiosk-palette', 40, 40],
+            ['#kiosk-settings-open', 40, 40],
+        ]);
+
+        await page.locator('#kiosk-settings-open').click();
+        await expect(page.locator('#kiosk-settings')).toBeVisible();
+
+        // The panel used to be anchored to the viewport, which laid it over the
+        // very buttons that open and close it. Stated as geometry rather than
+        // as a tap zone on purpose: a zone measurement shrinks by however much
+        // the overlap happens to be, so it reads as "a bit small" — a partly
+        // buried close button is not a sizing problem, and a gate that phrases
+        // it as one lets a small overlap through.
+        const clash = await page.evaluate(() => {
+            const p = document.querySelector('.kiosk-settings').getBoundingClientRect();
+            return [...document.querySelectorAll('.kiosk__ctl')]
+                .map((el) => ({ el, b: el.getBoundingClientRect() }))
+                .filter(({ b }) => b.left < p.right && b.right > p.left &&
+                                   b.top < p.bottom && b.bottom > p.top)
+                .map(({ el }) => el.id);
+        });
+        expect(clash, 'the open panel covers the controls that operate it').toEqual([]);
+
+        await expectHitZones(page, [
+            ['#kiosk-theme', 40, 40],
+            ['#kiosk-palette', 40, 40],
+            ['#kiosk-settings-open', 40, 40],
+        ]);
+
+        // Controls INSIDE the panel are scrolled in first — it is a scroll
+        // container on a phone, and probing something clipped at its edge
+        // measures the scroll position, not the control.
+        for (const sel of ['#kiosk-set-rows', '#kiosk-set-dwell',
+                           '#kiosk-set-reset', '#kiosk-settings-close']) {
+            await page.locator(sel).scrollIntoViewIfNeeded();
+            await expectHitZones(page, [[sel, 40, 40]]);
+        }
+
+        // The 16px checkbox is NOT the target — the label wraps it, so a tap
+        // anywhere on the row toggles it, the same reading the events toolbar
+        // takes. Measuring the input would fail on a control that is perfectly
+        // tappable, so the labels are what gets swept.
+        await page.locator('.kiosk-set__check').first().scrollIntoViewIfNeeded();
+        const rows = await hitBoxes(page, '.kiosk-set__check, .kiosk-set__field');
+        expect(rows.length, 'no settings rows measured').toBeGreaterThan(3);
+        expect(
+            rows.filter((z) => z.w < 40 || z.h < 40).map((z) => `${z.w}x${z.h} "${z.text}"`),
+            'settings rows under the tap floor',
+        ).toEqual([]);
+
+        // The option chips are swept rather than listed, so a new one inherits
+        // the gate. Row by row, each scrolled in first: the panel is a scroll
+        // container on a phone, and a chip clipped at its edge genuinely has
+        // less to hit right then — measured 29px instead of 43 that way, which
+        // says where the panel was scrolled, not how big the chip is. A finger
+        // scrolls before it taps; so does this.
+        let measured = 0;
+        for (const row of ['#kiosk-set-palette', '#kiosk-set-info', '#kiosk-set-source']) {
+            await page.locator(row).scrollIntoViewIfNeeded();
+            const chips = await hitBoxes(page, `${row} .kiosk-set__opt`);
+            expect(chips.length, `${row}: no chips measured`).toBeGreaterThan(1);
+            measured += chips.length;
+            expect(
+                chips.filter((z) => z.w < 40 || z.h < 40).map((z) => `${z.w}x${z.h} "${z.text}"`),
+                `${row}: chips under the tap floor`,
+            ).toEqual([]);
+        }
+        expect(measured, 'the sweep would be vacuous').toBeGreaterThan(8);
+    });
+
+    test('a junk URL parameter falls back instead of breaking the wall', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?palette=chartreuse&info=maybe&rows=999&dwell=-3');
+
+        await expect(page.locator('html')).toHaveAttribute('data-palette', 'standard');
+        await expect(page.locator('.kiosk-ev__desc').first()).toBeVisible();
+        // numbers clamp to their range rather than being taken literally
+        await page.locator('#kiosk-settings-open').click();
+        await expect(page.locator('#kiosk-set-rows')).toHaveValue('12');
+        await expect(page.locator('#kiosk-set-dwell')).toHaveValue('5');
     });
 });
 

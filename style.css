@@ -1980,18 +1980,36 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 }
 
 /* =============================================================================
-   Kiosk (/kiosk/) — wall display, no chrome. Type scales with the screen;
-   today's rows are reverse-video (a state marker, so ink/paper — the running-
-   now dot is the one accent use, a current-state marker per the token rule).
+   Kiosk (/kiosk/) — wall display, no chrome. Type scales with the screen.
+
+   The wall shows the whole event, not a title line: time window, description,
+   location and tags. Two consequences of the real feed shape it:
+
+     - Overlapping events are the norm (every day carrying more than one event
+       in the measured feed had a real time overlap), so a parallel bundle gets
+       a left rule and a "gleichzeitig" divider instead of reading as a
+       sequence.
+     - An expanded list holds fewer events per screen, so kiosk.js pages
+       through them; ?rows=N is the events-per-page knob.
+
+   Today is marked on the day LABEL, reverse video like the rest of the site's
+   state markers — not on the whole block, which at this type size would be a
+   half-screen slab. The running-now dot is the one accent use (a current-state
+   marker, per the token rule).
    ============================================================================= */
 .kiosk-body { margin: 0; }
 
+/* height, not min-height: the status bar is the wall's honesty channel ("daten
+   alt", "offline seit …") and must never be pushed below the edge by a long
+   list. The overflow clip is the last line of defence — kiosk.js measures and
+   shrinks the page before it comes to that. */
 .kiosk {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     padding: 2vh 2vw;
-    font-size: clamp(1rem, 1.6vw, 2.2rem);
+    font-size: clamp(1rem, 1.35vw, 1.9rem);
+    overflow: hidden;
 }
 
 .kiosk__top {
@@ -2013,10 +2031,11 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 
 .kiosk__list {
     flex: 1;
+    min-height: 0;   /* so the flex item can shrink and scrollHeight means something */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: 0.4em;
+    gap: 1.1em;
     /* it IS a <main> — undo the global centered reading measure, the wall
        display uses the full width like its header and status bar */
     max-width: none;
@@ -2024,41 +2043,370 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     padding: 0;
 }
 
-.kiosk-row {
+/* ── day group ───────────────────────────────────────────────────────────── */
+.kiosk-day { display: flex; flex-direction: column; gap: 0.5em; }
+
+/* Setext rule like the site's headings: the label sits at the head of a line
+   that runs to the edge. */
+.kiosk-day__label {
+    display: flex;
+    align-items: center;
+    gap: 1.5ch;
+    margin: 0;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+}
+.kiosk-day__label::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--line);
+}
+/* today is a reverse-video badge on the LABEL, not a slab behind the whole
+   day — same ink/paper state marker the rest of the site uses */
+.kiosk-day__label > span { padding: 0.1em 0.8ch; }
+.kiosk-day--today .kiosk-day__label > span {
+    background: var(--ink);
+    color: var(--paper);
+}
+.kiosk-day--today .kiosk-day__label::after { border-top-color: var(--line-strong); }
+
+/* ── one event ───────────────────────────────────────────────────────────── */
+.kiosk-group { display: flex; flex-direction: column; gap: 0.35em; }
+
+.kiosk-ev {
     display: grid;
-    grid-template-columns: 9ch 10ch 1fr auto;
+    grid-template-columns: 13ch 1fr auto;
     gap: 0 2ch;
     align-items: baseline;
-    border-bottom: 1px solid var(--line);
-    padding: 0.4em 0.5ch;
 }
-.kiosk-row__when { color: var(--ink-dim); white-space: nowrap; }
-.kiosk-row__time { color: var(--ink); white-space: nowrap; }
-.kiosk-row__title {
-    color: var(--ink-max);
+.kiosk-ev__time {
+    color: var(--ink);
+    white-space: nowrap;
+}
+.kiosk-ev__title {
+    margin: 0;
+    font-size: 1em;
     font-weight: 700;
+    color: var(--ink-max);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.kiosk-row__side { color: var(--ink-dim); font-size: 0.7em; white-space: nowrap; }
+.kiosk-ev__side {
+    color: var(--ink-dim);
+    font-size: 0.75em;
+    white-space: nowrap;
+}
+/* description and location hang under the title column */
+.kiosk-ev__desc,
+.kiosk-ev__loc {
+    grid-column: 2 / -1;
+    margin: 0.15em 0 0;
+    font-size: 0.85em;
+    line-height: 1.45;
+    color: var(--ink);
+}
+.kiosk-ev__desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+}
+.kiosk-ev__loc { color: var(--ink-dim); }
+.kiosk-ev__loc::before { content: "○ "; }
 
-.kiosk-row--today { background: var(--ink); }
-.kiosk-row--today .kiosk-row__when,
-.kiosk-row--today .kiosk-row__time,
-.kiosk-row--today .kiosk-row__title,
-.kiosk-row--today .kiosk-row__side { color: var(--paper); }
+.kiosk-ev--now .kiosk-ev__time::before { content: "● "; color: var(--accent); }
 
-.kiosk-row--now .kiosk-row__when::before { content: "● "; color: var(--accent); }
+/* ── parallel bundle ─────────────────────────────────────────────────────── */
+/* every group carries the indent so the time column stays on one grid
+   across days; only a parallel bundle draws the rule in it */
+.kiosk-group { padding-left: 1.5ch; border-left: 2px solid transparent; }
+.kiosk-par { border-left-color: var(--line-strong); }
+.kiosk-par__label {
+    margin: 0.1em 0;
+    font-size: 0.7em;
+    letter-spacing: 0.06em;
+    color: var(--ink-dim);
+}
 
 .kiosk-empty,
 .kiosk-offline { color: var(--ink-dim); }
 
 .kiosk__bar {
+    position: relative;   /* anchors the settings panel above it */
+    display: flex;
+    align-items: center;
+    gap: 1.5ch;
     border-top: 1px solid var(--line);
+    margin-top: 0.6em;
     padding-top: 0.3em;
     color: var(--ink-dim);
     font-size: 0.7em;
+}
+.kiosk__status { flex: 1; min-width: 0; }
+
+/* ── palettes ─────────────────────────────────────────────────────────────
+   Wall-only colour. The kiosk is its own world (no chrome, no nav), so unlike
+   the rest of the site it may tint the ink itself — that is the whole point of
+   a phosphor mode. `standard` is the site's own monochrome look and stays the
+   default: the colour is opt-in, not a redecoration.
+
+   Every value is set for BOTH schemes. A phosphor hue that reads on near-black
+   paper is unreadable on near-white, so light gets its own darker set rather
+   than inheriting.
+   ------------------------------------------------------------------------- */
+:root[data-palette="green"] {
+    --ink:      #6ddc86;
+    --ink-max:  #9ff5b2;
+    --ink-dim:  #48a05c;
+    --accent:   #3ecf5c;
+    --line:     #1e4a29;
+    --line-strong: #2f7040;
+}
+:root[data-palette="amber"] {
+    --ink:      #f0b544;
+    --ink-max:  #ffd486;
+    --ink-dim:  #a87c2c;
+    --accent:   #ffb000;
+    --line:     #4a3a14;
+    --line-strong: #7a5f22;
+}
+/* mono: no hue at all — the accent stops being a colour and becomes ink, so the
+   running-now dot reads as emphasis rather than as green. */
+:root[data-palette="mono"] {
+    --ink:      #d0d0d0;
+    --ink-max:  #ffffff;
+    --ink-dim:  #909090;
+    --accent:   #ffffff;
+}
+
+html[data-theme="light"][data-palette="green"] {
+    --ink:      #14532d;
+    --ink-max:  #052e16;
+    --ink-dim:  #3f6b4d;
+    --accent:   #15803d;
+    --line:     #b6d4bf;
+    --line-strong: #6f9c7e;
+}
+html[data-theme="light"][data-palette="amber"] {
+    --ink:      #5a3d00;
+    --ink-max:  #3a2700;
+    --ink-dim:  #7a5c22;
+    --accent:   #8a5a00;
+    --line:     #dccaa4;
+    --line-strong: #a98f57;
+}
+html[data-theme="light"][data-palette="mono"] {
+    --ink:      #1a1a1a;
+    --ink-max:  #000000;
+    --ink-dim:  #565656;
+    --accent:   #000000;
+}
+
+/* ── rainbow / pride ──────────────────────────────────────────────────────
+   The ink stays neutral on purpose: six-colour body text is a flag, not a
+   timetable, and this hangs on a wall to be read from across the room. The
+   STRUCTURE carries the colours instead — each day takes the next stripe for
+   its label, its rules, its running-now dot and its parallel bracket. Reading
+   is untouched; the page is unmistakably a flag.
+   ------------------------------------------------------------------------- */
+:root[data-palette="pride"] {
+    --pride-1: #ff4d4d;  /* red    */
+    --pride-2: #ff9d2e;  /* orange */
+    --pride-3: #ffd93d;  /* yellow */
+    --pride-4: #3fbf5f;  /* green  */
+    --pride-5: #4b8cf5;  /* blue   */
+    --pride-6: #b06cf0;  /* violet */
+}
+html[data-theme="light"][data-palette="pride"] {
+    /* darkened so each stripe still clears text contrast on light paper */
+    --pride-1: #c81e1e;
+    --pride-2: #a85a00;
+    --pride-3: #8a6d00;
+    --pride-4: #12703a;
+    --pride-5: #2352b8;
+    --pride-6: #6b2fa8;
+}
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 1) { --day-hue: var(--pride-1); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 2) { --day-hue: var(--pride-2); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 3) { --day-hue: var(--pride-3); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 4) { --day-hue: var(--pride-4); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 5) { --day-hue: var(--pride-5); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 6) { --day-hue: var(--pride-6); }
+
+[data-palette="pride"] .kiosk-day__label { color: var(--day-hue); }
+[data-palette="pride"] .kiosk-day__label::after { border-top-color: var(--day-hue); }
+[data-palette="pride"] .kiosk-day--today .kiosk-day__label > span {
+    background: var(--day-hue);
+    color: var(--paper);
+}
+[data-palette="pride"] .kiosk-par { border-left-color: var(--day-hue); }
+[data-palette="pride"] .kiosk-ev--now .kiosk-ev__time::before { color: var(--day-hue); }
+[data-palette="pride"] .kiosk__top { border-bottom-color: var(--pride-1); }
+[data-palette="pride"] .kiosk__bar { border-top-color: var(--pride-6); }
+
+/* ── info density ─────────────────────────────────────────────────────────
+   `off` drops the paragraph in JS (the page fit is measured from the DOM, so a
+   hidden one would still cost a break); only the clamp lives here. */
+.kiosk__list--info-short .kiosk-ev__desc {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+}
+
+/* ── controls in the status bar ───────────────────────────────────────────
+   Reverse video on interaction, like every other control on the site — the
+   accent is reserved for state, and these are switches, not state. */
+.kiosk__controls { display: flex; gap: 0.5ch; flex: none; }
+
+.kiosk__ctl {
+    /* 44px visible, not 24px with a grown ::after zone like .nav__util and the
+       carousel dots. Those keep a small box because their neighbours sit within
+       a finger's width and a wider zone would eat the next control's taps —
+       here there is no such constraint, so the honest box IS the zone. Measured
+       first: at 24px these came out 23x23 on a phone, under the WCAG floor.
+       In px, not em: the bar is 0.7em of a type scale that shrinks with the
+       screen, so an em-sized control would shrink with it. */
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--ink-dim);
+    font: inherit;
+    font-size: 1.4em;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0.4ch;
+}
+.kiosk__ctl:hover,
+.kiosk__ctl:focus-visible,
+.kiosk__ctl[aria-pressed="true"],
+.kiosk__ctl[aria-expanded="true"] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+}
+
+/* ── settings panel ───────────────────────────────────────────────────────
+   Sits over the list rather than beside it: the wall has no room to spare, and
+   the panel is a moment, not a layout.
+
+   Anchored to the status bar, not to the viewport. A viewport-anchored panel
+   covered the very controls that open and close it — measured on a phone: the
+   `⚙` button's tap zone dropped from 44 to 32px with the panel open. Sitting
+   on top of the bar it clears them at any bar height, so no magic offset. */
+.kiosk-settings {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.5rem);
+    z-index: var(--z-modal);
+    width: min(46ch, 100%);
+    /* Must fit the space ABOVE the status bar, not the viewport: the panel is
+       anchored to the bar, and .kiosk clips at 100vh, so anything taller loses
+       its heading off the top and its buttons behind the bar. 8rem covers the
+       bar plus the kiosk's own padding at every size measured. */
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    padding: 1rem 1rem 0.75rem;
+    font-size: max(0.8rem, 0.42em);
+    line-height: 1.6;
+    color: var(--ink);
+}
+.kiosk-settings__title {
+    margin: 0 0 0.25rem;
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--ink-max);
+    letter-spacing: 0.04em;
+}
+/* One line, clipped: the point is that the URL IS the setting, copyable
+   from the address bar — spelling it out over three wrapped lines only pushed
+   the controls below it further off a phone screen. */
+.kiosk-settings__hint {
+    margin: 0 0 0.75rem;
+    color: var(--ink-dim);
+    font-size: 0.85em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.kiosk-set {
+    border: 1px solid var(--line);
+    margin: 0 0 0.6rem;
+    padding: 0.25rem 0.75rem 0.5rem;
+}
+.kiosk-set legend {
+    padding: 0 0.6ch;
+    color: var(--ink-dim);
+    letter-spacing: 0.06em;
+}
+.kiosk-set__row { display: flex; flex-wrap: wrap; gap: 0.5ch; }
+
+.kiosk-set__opt,
+.kiosk-set__btn {
+    /* 44 square, the size the rest of the site's real controls reach. These
+       wrap in a flex row with room to spare, so nothing is stolen from a
+       neighbour by taking it. */
+    min-height: 44px;
+    min-width: 44px;
+    background: none;
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    font: inherit;
+    padding: 0.25em 1ch;
+    cursor: pointer;
+}
+.kiosk-set__opt:hover,
+.kiosk-set__btn:hover,
+.kiosk-set__opt:focus-visible,
+.kiosk-set__btn:focus-visible { background: var(--ink); color: var(--paper); }
+/* the chosen option is a current-selection marker — accent, per the token rule */
+.kiosk-set__opt--on {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* The 13x13 checkbox is not the target — the label wraps it, so a tap
+   anywhere on the row already toggles it, the same reading as the events
+   toolbar. That makes the LABEL the thing to size, and it is a full-width flex
+   row, so height is all it needs. */
+.kiosk-set__check,
+.kiosk-set__field {
+    display: flex;
+    align-items: center;
+    gap: 1ch;
+    margin-top: 0.5rem;
+    min-height: 44px;
+    cursor: pointer;
+}
+/* still worth seeing from arm's length, even though it is not the hit area */
+.kiosk-set__check input { width: 1.15em; height: 1.15em; }
+.kiosk-set__field span { flex: 1; }
+.kiosk-set__field input {
+    width: 8ch;
+    min-height: 44px;
+    background: var(--paper-2);
+    border: 1px solid var(--line-strong);
+    color: var(--ink-max);
+    font: inherit;
+    padding: 0.2em 0.5ch;
+}
+
+.kiosk-settings__actions { display: flex; justify-content: flex-end; gap: 1ch; }
+
+@media (max-width: 700px) {
+    /* full width of the bar on a phone — 46ch would overflow it */
+    .kiosk-settings { left: 0; right: 0; width: auto; }
 }
 
 /* =============================================================================
@@ -2132,9 +2480,13 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     .location-card__grid { grid-template-columns: 1fr; }
     .location-card__map-ascii { border-right: none; border-bottom: 1px solid var(--line); }
     .footer__status { margin-left: 0; width: 100%; }
-    /* phones are not the kiosk target, but it must not fall apart there */
-    .kiosk-row { grid-template-columns: 8ch 1fr; }
-    .kiosk-row__side { display: none; }
+    /* phones are not the kiosk target, but it must not fall apart there:
+       the time keeps its own line above the title, the side column goes */
+    .kiosk-ev { grid-template-columns: 1fr; }
+    .kiosk-ev__side { display: none; }
+    .kiosk-ev__desc,
+    .kiosk-ev__loc { grid-column: 1; }
+    .kiosk-ev__title { white-space: normal; }
 }
 
 /* =============================================================================
