@@ -71,7 +71,12 @@ html[data-theme="light"] {
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--nav-row) + 1.5rem);
+    /* --nav-height is published by main.js as the sticky header's measured
+       height; --nav-row is the no-JS fallback. The condensed header wraps to two
+       rows once brand + utils no longer fit beside the toggle (~80px instead of
+       43px on phones), and that wrap point follows the nav's contents, not any
+       breakpoint — a hard-coded width would go stale the day a util is added. */
+    scroll-padding-top: calc(var(--nav-height, var(--nav-row)) + 1.5rem);
     scrollbar-color: var(--line-strong) transparent;
 }
 
