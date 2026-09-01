@@ -318,6 +318,23 @@ nav li a.nav__link--current:hover { background: var(--accent); color: var(--pape
     min-width: 2.2rem;
     cursor: pointer;
     text-decoration: none;
+    position: relative;   /* anchors the hit area below */
+}
+
+/* The visible box stays 24px tall — the thin plain-text look is deliberate. Only
+   the hit area grows, and only downwards/upwards: every miss measured on a phone
+   was vertical (half of 24px is 12px, less than a finger scatters), never
+   horizontal. Kept 2px inside --nav-row so the zone cannot reach past the header
+   and swallow clicks meant for the page below, and left/right stay at the box
+   edges so neighbouring zones never overlap. */
+.nav__util::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: calc(var(--nav-row) - 2px);
+    transform: translateY(-50%);
 }
 .nav__util:hover,
 .nav__util:focus-visible {
@@ -1878,7 +1895,12 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 /* =============================================================================
    Responsive — collapse nav links behind the toggle, keep utils visible
    ============================================================================= */
-@media (max-width: 1000px) {
+/* 62.5em == 1000px at the default browser font, so this is bit-identical for
+   most readers. In em because media-query em follows the *browser's* font
+   setting: turn that up and the nav's ch/rem contents outgrow a fixed 1000px
+   breakpoint, which used to push kiosk and the invert toggle off-screen
+   entirely between roughly 1010 and 1080px. Now the row collapses in time. */
+@media (max-width: 62.5em) {
     nav { flex-wrap: wrap; padding-top: 0.25rem; padding-bottom: 0.25rem; }
 
     .nav__brand { order: 1; }

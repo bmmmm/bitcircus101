@@ -118,46 +118,110 @@ test.describe('Privacy – no external font loading', () => {
 // ─── Navigation ──────────────────────────────────────────────────────────────
 
 test.describe('Navigation', () => {
-    test('desktop nav links are visible and work', async ({ page }) => {
+    // The whole utility cluster, in DOM order.
+    const UTILS = [
+        'nav a[href="feed.xml"]',
+        'nav a[href="lite/"]',
+        'nav a[href="kiosk/"]',
+        '#theme-toggle',
+    ];
+
+    /**
+     * Does a tap `dy` px above/below the element's centre still hit it?
+     *
+     * These controls are 24px tall on purpose (the plain-text look), and their
+     * usable hit area is widened by a pseudo-element. A pseudo-element changes
+     * neither getBoundingClientRect() nor toBeVisible(), so the only honest
+     * check is to probe the point a finger actually lands on.
+     */
+    async function hitsAt(page, selector, dy) {
+        return page.evaluate(([sel, offset]) => {
+            const el = document.querySelector(sel);
+            if (!el) return false;
+            const b = el.getBoundingClientRect();
+            const hit = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2 + offset);
+            return !!(hit && (hit === el || el.contains(hit)));
+        }, [selector, dy]);
+    }
+
+    test('desktop nav links are inside the viewport and work', async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 800 });
         await page.goto('/');
-        await expect(page.locator('nav a[href="events.html"]')).toBeVisible();
-        await expect(page.locator('nav a[href="support.html"]')).toBeVisible();
-        await expect(page.locator('nav a[href="raum-nutzen.html"]')).toBeVisible();
-        // Utility cluster: the lite link sits beside RSS/calm
-        await expect(page.locator('nav a[href="lite/"]')).toBeVisible();
+        // toBeInViewport, not toBeVisible: an element parked at x=1520 in a
+        // 1280px window is "visible" to Playwright and unreachable to a person.
+        for (const sel of ['nav a[href="events.html"]', 'nav a[href="support.html"]',
+                           'nav a[href="raum-nutzen.html"]', ...UTILS]) {
+            await expect(page.locator(sel), sel).toBeInViewport();
+        }
 
         await page.locator('nav a[href="events.html"]').click();
         await expect(page).toHaveURL(/events\.html/);
     });
 
-    test('mobile menu toggle shows/hides nav', async ({ page }) => {
+    test('mobile menu toggles, and closes again after picking an entry', async ({ page }) => {
         await page.setViewportSize({ width: 400, height: 800 });
-        await page.goto('/');
+        // /index.html, not / — from "/" the href "index.html#about" is a path
+        // change and the browser reloads, which closes the menu on its own and
+        // would make the assertion below pass with or without the handler.
+        // Only from /index.html is the click a pure hash change.
+        await page.goto('/index.html');
         const toggle = page.locator('#menu-toggle');
+        const links = page.locator('nav ul.nav__links');
         await expect(toggle).toBeVisible();
-        await expect(page.locator('nav ul')).not.toBeVisible();
+        await expect(links).not.toBeVisible();
         await toggle.click();
-        await expect(page.locator('nav ul')).toBeVisible();
+        await expect(links).toBeVisible();
         await toggle.click();
-        await expect(page.locator('nav ul')).not.toBeVisible();
+        await expect(links).not.toBeVisible();
+
+        // Picking an entry must close the menu. "/wir" is a same-page hash link,
+        // so nothing reloads — leave the menu open and it stays parked over the
+        // section it just jumped to, which reads as a dead tap.
+        await toggle.click();
+        await expect(links).toBeVisible();
+        await page.locator('nav ul.nav__links a[href="index.html#about"]').click();
+        await expect(links).not.toBeVisible();
+        await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     });
 
-    test('lite link stays reachable at every width', async ({ page }) => {
-        // Regression: the utility cluster (lite · RSS · calm) used to be pushed
+    test('the utility cluster stays hittable at every width and font size', async ({ page, browserName }) => {
+        // Regression: the cluster (lite · RSS · kiosk · invert) used to be pushed
         // off-screen between ~700-1155px. It now shows inline on desktop and
         // drops to its own always-visible row in the condensed layout.
         await page.goto('/');
-        const lite = page.locator('nav a[href="lite/"]');
-        const kiosk = page.locator('nav a[href="kiosk/"]');
         for (const width of [1280, 1100, 900, 700, 400]) {
             await page.setViewportSize({ width, height: 800 });
-            await expect(lite).toBeVisible();
-            await expect(kiosk).toBeVisible();
+            for (const sel of UTILS) {
+                await expect(page.locator(sel), `${sel} @ ${width}px`).toBeInViewport();
+            }
         }
         // Condensed layout: the cluster shows without opening the menu, while
         // the content links stay collapsed behind the toggle.
         await expect(page.locator('nav ul.nav__links')).not.toBeVisible();
+
+        // 16px off-centre is outside the 24px box but inside the widened hit
+        // area — a realistic finger miss, which used to land on nothing.
+        for (const sel of UTILS) {
+            for (const dy of [-16, 16]) {
+                expect(await hitsAt(page, sel, dy), `${sel} tapped ${dy}px off centre`).toBe(true);
+            }
+        }
+
+        // A reader who turns the browser font up used to lose kiosk and the
+        // invert toggle off the right edge between ~1010 and 1080px, because the
+        // breakpoint was a fixed 1000px while the nav's contents scale in ch/rem.
+        // Only the real browser setting reproduces this — a JS-set root
+        // font-size does not move media-query em — hence CDP.
+        test.skip(browserName !== 'chromium', 'Page.setFontSizes is Chromium-only');
+        const cdp = await page.context().newCDPSession(page);
+        await cdp.send('Page.setFontSizes', { fontSizes: { standard: 24, fixed: 24 } });
+        for (const width of [1010, 1040, 1080]) {
+            await page.setViewportSize({ width, height: 800 });
+            await page.goto('/');
+            for (const sel of UTILS) {
+                await expect(page.locator(sel), `${sel} @ ${width}px, 24px browser font`).toBeInViewport();
+            }
+        }
     });
 });
 
