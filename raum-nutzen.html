@@ -47,14 +47,14 @@
         <!-- Canonical URL -->
         <link rel="canonical" href="https://bitcircus101.de/raum-nutzen" />
 
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=a7ee04a7" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=a7ee04a7" />
-        <link rel="manifest" href="site.webmanifest?v=a7ee04a7" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=845276c4" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=845276c4" />
+        <link rel="manifest" href="site.webmanifest?v=845276c4" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=a7ee04a7" />
+        <link rel="stylesheet" href="style.css?v=845276c4" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -153,10 +153,17 @@
                             [ karte laden ]
                         </button>
                         <div id="osm-map-container" class="hidden">
+                            <!-- allow-scripts + allow-same-origin is what the
+                                 OSM embed needs to render tiles; the point of
+                                 the sandbox here is everything it leaves out —
+                                 top-level navigation, popups, forms, modals and
+                                 downloads. -->
                             <iframe
                                 id="osm-map"
                                 class="location-card__map-frame"
                                 title="OpenStreetMap – bitcircus101"
+                                sandbox="allow-scripts allow-same-origin"
+                                referrerpolicy="no-referrer"
                             ></iframe>
                             <a
                                 class="location-card__osm-link"
@@ -232,7 +239,7 @@
             </div>
         </footer>
 
-        <script defer src="storage.js?v=a7ee04a7"></script>
-        <script defer src="main.js?v=a7ee04a7"></script>
+        <script defer src="storage.js?v=845276c4"></script>
+        <script defer src="main.js?v=845276c4"></script>
     </body>
 </html>
