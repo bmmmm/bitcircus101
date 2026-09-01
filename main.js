@@ -55,6 +55,13 @@
 
       if (!menuToggle) return;
 
+      const closeMenu = (returnFocus) => {
+        if (!mainNav.classList.contains("active")) return;
+        mainNav.classList.remove("active");
+        menuToggle.setAttribute("aria-expanded", "false");
+        if (returnFocus) menuToggle.focus();
+      };
+
       utils.addEventListenerSafe(menuToggle, "click", () => {
         const expanded = mainNav.classList.toggle("active");
         menuToggle.setAttribute("aria-expanded", String(expanded));
@@ -62,11 +69,17 @@
 
       // Close mobile menu with Escape, return focus to toggle
       utils.addEventListenerSafe(document, "keydown", (e) => {
-        if (e.key === "Escape" && mainNav.classList.contains("active")) {
-          mainNav.classList.remove("active");
-          menuToggle.setAttribute("aria-expanded", "false");
-          menuToggle.focus();
-        }
+        if (e.key === "Escape") closeMenu(true);
+      });
+
+      // Close it after picking an entry too. Same-page hash links ("/wir",
+      // "/kontakt") never reload, so without this the open menu — 313px tall on a
+      // phone — stays parked over the very section it just jumped to, and the tap
+      // reads as dead. Closing first also lets the browser land the anchor under
+      // the collapsed header, which is what scroll-padding-top is sized for.
+      // No focus() here: the reader should end up at the target, not back up top.
+      utils.addEventListenerSafe(mainNav, "click", (e) => {
+        if (e.target.closest("ul.nav__links a")) closeMenu(false);
       });
     },
 
