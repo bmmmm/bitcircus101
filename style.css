@@ -215,6 +215,10 @@ section { margin: 0 0 2.5rem; }
 .panel > h2:first-child::after  { content: " ]"; color: var(--ink-dim); font-weight: 400; }
 
 /* heading anchor links — visible on hover, always focusable */
+/* Deliberately NOT given a widened hit area like the other 24px controls. It is
+   inline inside the heading, so WCAG 2.5.8's inline exception covers the 10x21
+   box; and it is opacity:0 with no hover on a phone, so a 44px zone would be an
+   invisible trap that turns a tap on the heading text into a URL jump. */
 .section-anchor {
     display: inline-block;
     margin-left: 0.6ch;
@@ -620,6 +624,22 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     line-height: 1;
     padding: 0.2em 0.5ch;
     cursor: pointer;
+    position: relative;   /* anchors the hit area below */
+}
+/* Same technique as .nav__util: the visible dot stays a 17x20 character, only
+   the zone a finger has to land in grows. 44px tall — nothing interactive sits
+   above or below the indicator strip, so height is free. Width stops at ±5px
+   because the dots sit 10px apart: any wider and one dot's zone starts eating
+   its neighbour's taps. That lands at 27x44 — over the 24px minimum, short of
+   44 square, which would need a visibly wider gap. */
+.dot::after {
+    content: "";
+    position: absolute;
+    left: -5px;
+    right: -5px;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
 }
 /* dots are characters: ○ inactive / ● active */
 .dot::before { content: "○"; }
@@ -641,6 +661,20 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     cursor: pointer;
     opacity: 0.85;
 }
+/* 26x34 visible, 44x44 to a finger. The two buttons sit 267px apart and the
+   nearest element above/below is 96px away, so ±9px horizontally and ±5px
+   vertically fit without touching anything. The strip is not clipped
+   (.carousel-container has no overflow), so the overhang past its left/right
+   border lands on the page gutter, where nothing is clickable. */
+.carousel-button::after {
+    content: "";
+    position: absolute;
+    left: -9px;
+    right: -9px;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+}
 .carousel-button:hover { background: var(--ink); color: var(--paper); opacity: 1; }
 .carousel-button.prev { left: 0; border-left: none; }
 .carousel-button.next { right: 0; border-right: none; }
@@ -659,6 +693,14 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     line-height: 1;
     padding: 0.45em 1ch;
     cursor: pointer;
+}
+/* 23x24 visible, 45x46 to a finger. Nearest neighbour is the last dot, 101px to
+   the left; below the strip the next block starts 16px down, so ±11px in every
+   direction stays clear on all sides. */
+.carousel-toggle::after {
+    content: "";
+    position: absolute;
+    inset: -11px;
 }
 .carousel-toggle:hover { background: var(--ink); color: var(--paper); }
 
@@ -773,6 +815,25 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     user-select: none;
 }
 .events-toolbar__label:hover { color: var(--ink); }
+/* The 16x16 checkbox is not the target — the label wraps it, so a tap anywhere
+   on the label already toggles it. That makes the label the thing to size:
+   335x24 becomes 335x44. The room is asymmetric — 44px of slack above, only 8px
+   down to the search field — so the zone grows 14 up and 6 down and keeps 2px
+   clear of the field below rather than stealing its top edge.
+   Two strips rather than one box on top: a box spanning the label would paint
+   over the checkbox and swallow clicks aimed straight at it. The 24px in
+   between needs no help — it is the label, and the label already toggles.
+   Both are absolutely positioned, so neither becomes a flex item here. */
+.events-toolbar__label { position: relative; }
+.events-toolbar__label::before,
+.events-toolbar__label::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+.events-toolbar__label::before { top: -14px; height: 14px; }
+.events-toolbar__label::after { bottom: -6px; height: 6px; }
 .events-toolbar__checkbox { width: 1em; height: 1em; cursor: pointer; }
 
 .events-toolbar__row {
@@ -832,6 +893,23 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     font-family: var(--font);
     font-size: 0.8rem;
     cursor: pointer;
+}
+/* 22px tall, and the rows they wrap into are only 4px apart — so ±2px is the
+   whole budget. That is enough: 22 + 4 = 26px clears the 24px minimum, and the
+   zones tile edge to edge with no dead strip between rows. 44px would need a
+   visibly roomier row gap, which is a design call, not a hit-area fix. */
+.events-filter__tag,
+.events-filter__clear,
+.events-empty__reset { position: relative; }
+.events-filter__tag::after,
+.events-filter__clear::after,
+.events-empty__reset::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -2px;
+    bottom: -2px;
 }
 .events-filter__tag:hover,
 .events-filter__clear:hover,
@@ -938,6 +1016,19 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     text-decoration: none;
     display: inline-block;
 }
+/* Only the linked variant is a target — without a map URL the renderer emits a
+   plain span. 254x22 visible, 254x44 to a finger: the nearest interactive
+   element is 195px above and 38px below, so ±11px is uncontested. */
+a.event-card__location { position: relative; }
+a.event-card__location::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+}
 a.event-card__location:hover { background: var(--ink); color: var(--paper); }
 
 .event-card__meta { display: flex; align-items: center; gap: 1.5ch; flex-wrap: wrap; }
@@ -964,6 +1055,19 @@ a.event-card__location:hover { background: var(--ink); color: var(--paper); }
     text-decoration: none;
     cursor: pointer;
     line-height: 1.4;
+}
+/* 24px tall, 60px+ wide, so height is the only shortfall: 44px to a finger.
+   Tightest measured clearance is 38px above (the location link, which grows
+   11px down) and 115px below, leaving 16px between the two zones. */
+.event-action { position: relative; }
+.event-action::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
 }
 .event-action:hover { background: var(--ink); color: var(--paper); }
 .event-action__icon { opacity: 0.7; }
