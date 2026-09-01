@@ -335,6 +335,52 @@ test.describe('Navigation', () => {
             }
         }
     });
+
+    test('the green marker tracks the section being read, and anchors land at once', async ({ page }) => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await page.goto('/index.html');
+
+        const marker = () => page.evaluate(() =>
+            [...document.querySelectorAll('.nav__links a')]
+                .filter((a) => a.classList.contains('nav__link--current'))
+                .map((a) => a.textContent.trim())
+                .join(','));
+
+        // Park a section's top inside the spy's band (10–25% of the viewport) and
+        // read back which entry lights up. The spy used to watch only #about and
+        // #contact, so everything between them fell through to "no section in
+        // view" and re-lit /wir — the marker claimed "wir" while the reader was
+        // at "nächste termine" or "keep the lights on", two screens further down.
+        const parkAt = async (id) => {
+            await page.evaluate((sid) => {
+                const top = document.getElementById(sid).getBoundingClientRect().top + scrollY;
+                window.scrollTo({ top: top - innerHeight * 0.12, behavior: 'instant' });
+            }, id);
+            // The observer reports on the next rendering opportunity, not synchronously.
+            await page.waitForTimeout(120);
+            return marker();
+        };
+
+        expect(await parkAt('about'), '#about is what /wir points at').toBe('/wir');
+        // Sections the nav has no entry for clear the marker rather than borrowing
+        // someone else's. The claim under test is the negative one: not /wir.
+        expect(await parkAt('next-events'), 'no nav entry owns #next-events').not.toBe('/wir');
+        expect(await parkAt('support'), 'no nav entry owns #support on the homepage').not.toBe('/wir');
+        expect(await parkAt('contact'), '#contact is what /kontakt points at').toBe('/kontakt');
+
+        // Anchor jumps land instead of panning. Measured with no wait at all after
+        // the click: `scroll-behavior: smooth` needed ~900ms for this distance and
+        // was barely 100px in by now, so "already most of the way there" is a
+        // claim only an instant jump can meet. Half the distance, not all of it,
+        // keeps the gate off the exact landing offset (scroll-padding-top owns that).
+        await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+        const target = await page.evaluate(() =>
+            document.getElementById('contact').getBoundingClientRect().top + scrollY);
+        await page.locator('.nav__links a[href="index.html#contact"]').click();
+        const landed = await page.evaluate(() => Math.round(scrollY));
+        expect(landed, 'anchor jump must not animate').toBeGreaterThan(target / 2);
+        expect(await marker(), 'and the marker arrives with it').toBe('/kontakt');
+    });
 });
 
 // ─── Events Page ─────────────────────────────────────────────────────────────
