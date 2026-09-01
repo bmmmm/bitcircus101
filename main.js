@@ -116,15 +116,27 @@
 
     /**
      * Map pathname to a logical HTML filename (root → index.html).
+     *
+     * Clean URLs are the production form: the host 308-redirects
+     * /events.html → /events, so the address bar reads "/events" and this has to
+     * resolve it back to "events.html". While it did not, every clean URL fell
+     * through to "index.html" — and on "index.html" the matcher below picks the
+     * homepage's own "/wir" link. Result: the green marker sat on "wir" on
+     * /events, /support and /raum-nutzen, i.e. on the live site but never
+     * locally, where the server hands out real .html files.
+     *
+     * A trailing slash stays a directory index (/lite/, /ascii/, /chat/,
+     * /kiosk/), which is why it is answered before the split — "/lite/" must
+     * become index.html, not lite.html.
      */
     normalizePageFile(pathname) {
       if (!pathname || pathname === "/") return "index.html";
-      const trimmed = pathname.replace(/\/+$/, "") || "/";
-      if (trimmed === "/" || trimmed === "") return "index.html";
-      const parts = trimmed.split("/").filter(Boolean);
+      if (/\/$/.test(pathname)) return "index.html";
+      const parts = pathname.split("/").filter(Boolean);
       const last = parts[parts.length - 1] || "";
+      if (!last) return "index.html";
       if (/\.html?$/i.test(last)) return last.toLowerCase();
-      return "index.html";
+      return last.toLowerCase() + ".html";
     },
 
     /**

@@ -379,7 +379,57 @@ test.describe('Navigation', () => {
         await page.locator('.nav__links a[href="index.html#contact"]').click();
         const landed = await page.evaluate(() => Math.round(scrollY));
         expect(landed, 'anchor jump must not animate').toBeGreaterThan(target / 2);
-        expect(await marker(), 'and the marker arrives with it').toBe('/kontakt');
+        // The marker is the one thing here that may NOT be read synchronously:
+        // `hashchange` is delivered as its own task and the spy reports on the
+        // next rendering opportunity, so a bare read right after the click is a
+        // race — it caught "" once on an otherwise green run. The jump is what
+        // has to be instant; the marker only has to arrive.
+        await expect.poll(marker, { message: 'marker never caught up with the jump' })
+            .toBe('/kontakt');
+    });
+
+    test('the marker survives the clean URLs production actually serves', async ({ page }) => {
+        // Production 308-redirects /events.html → /events, so the address bar
+        // never shows the extension. The local server hands out real .html
+        // files, which is why this only ever broke live: normalizePageFile fell
+        // through to "index.html" for anything without an extension, and on
+        // "index.html" the matcher picks the homepage's own /wir link. Clicking
+        // /termine landed you on /events with "wir" lit up.
+        //
+        // Rewrite the document request instead of teaching the test server clean
+        // URLs: an in-page href must still be the .html form (see CLAUDE.md), and
+        // a server that resolves both would quietly retire that rule.
+        const clean = async (path, file) => {
+            await page.route(`**${path}`, async (route) => {
+                if (route.request().resourceType() !== 'document') return route.fallback();
+                await route.fulfill({ path: file, contentType: 'text/html; charset=utf-8' });
+            });
+        };
+        await clean('/events', 'events.html');
+        await clean('/support', 'support.html');
+        await clean('/raum-nutzen', 'raum-nutzen.html');
+
+        const marker = () => page.evaluate(() =>
+            [...document.querySelectorAll('.nav__links a')]
+                .filter((a) => a.classList.contains('nav__link--current'))
+                .map((a) => a.textContent.trim())
+                .join(',') || '-');
+
+        for (const [url, expected] of [
+            ['/events', '/termine'],
+            ['/support', '/support'],
+            ['/raum-nutzen', '/raum'],
+        ]) {
+            await page.goto(url);
+            await page.waitForLoadState('domcontentloaded');
+            expect(await marker(), `${url} must light its own nav entry`).toBe(expected);
+        }
+
+        // Directory URLs keep resolving to their index — "/lite/" is index.html,
+        // not lite.html, and nothing in the nav may claim it.
+        await page.goto('/lite/');
+        expect(await page.evaluate(() => document.querySelectorAll('.nav__link--current').length),
+            '/lite/ has no shared nav to mark').toBe(0);
     });
 });
 
