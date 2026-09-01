@@ -13,10 +13,27 @@
         />
         <meta name="theme-color" content="#0a0a0a" />
         <script>
-            try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
+            /* Paint the chosen theme and palette BEFORE the first frame, so a
+               wall that is pinned to ?palette=amber never flashes the default
+               first. URL beats storage: the URL is how a screen is pinned.
+               Deliberately duplicated from kiosk.js (which owns the real
+               settings model) — this has to run before any external script. */
+            try {
+                var q = new URLSearchParams(location.search);
+                var pick = function (name, key, allowed) {
+                    var v = q.get(name) || localStorage.getItem(key);
+                    return allowed.indexOf(v) > -1 ? v : allowed[0];
+                };
+                var root = document.documentElement;
+                if (pick("theme", "bc.theme", ["dark", "light"]) === "light") {
+                    root.dataset.theme = "light";
+                }
+                root.dataset.palette = pick("palette", "bc.kiosk.palette",
+                    ["standard", "green", "amber", "mono", "pride"]);
+            } catch (e) {}
         </script>
-        <link rel="stylesheet" href="../style.css?v=834e0c04" />
-        <script defer src="../kiosk.js?v=834e0c04"></script>
+        <link rel="stylesheet" href="../style.css?v=de52f396" />
+        <script defer src="../kiosk.js?v=de52f396"></script>
     </head>
     <body class="kiosk-body">
         <div class="kiosk">
@@ -30,7 +47,110 @@
                     <p>JavaScript nötig — Termine unter bitcircus101.de/termine</p>
                 </noscript>
             </main>
-            <footer class="kiosk__bar" id="kiosk-status"></footer>
+            <footer class="kiosk__bar">
+                <span class="kiosk__status" id="kiosk-status"></span>
+                <!-- Controls sit in the status bar and fade out with it while
+                     nobody touches the screen: a wall display should show
+                     events, not its own chrome. -->
+                <div class="kiosk__controls">
+                    <button
+                        type="button"
+                        class="kiosk__ctl"
+                        id="kiosk-theme"
+                        aria-pressed="false"
+                        title="Invertieren (hell/dunkel)"
+                    >
+                        ◐<span class="sr-only">Helles Design umschalten</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="kiosk__ctl"
+                        id="kiosk-palette"
+                        title="Nächste Farbe"
+                    >
+                        ◉<span class="sr-only">Farbe wechseln</span>
+                    </button>
+                    <button
+                        type="button"
+                        class="kiosk__ctl"
+                        id="kiosk-settings-open"
+                        aria-expanded="false"
+                        aria-controls="kiosk-settings"
+                        title="Einstellungen"
+                    >
+                        ⚙<span class="sr-only">Einstellungen öffnen</span>
+                    </button>
+                </div>
+                <!-- Not a <dialog>: a wall browser may sit on an old engine, and a
+                     panel that fails to open is worse than one that is always in
+                     the DOM. Hidden via the attribute, per the no-inline-styles
+                     rule. -->
+                <section
+                    class="kiosk-settings"
+                    id="kiosk-settings"
+                    aria-label="Einstellungen"
+                    hidden
+                >
+                    <h1 class="kiosk-settings__title">[ einstellungen ]</h1>
+                    <p class="kiosk-settings__hint" id="kiosk-settings-url"></p>
+
+                    <fieldset class="kiosk-set">
+                        <legend>Farbe</legend>
+                        <div class="kiosk-set__row" id="kiosk-set-palette"></div>
+                        <label class="kiosk-set__check">
+                            <input type="checkbox" id="kiosk-set-cycle" />
+                            automatisch wechseln (schützt vor Einbrennen)
+                        </label>
+                        <label class="kiosk-set__check">
+                            <input type="checkbox" id="kiosk-set-light" />
+                            helles Design
+                        </label>
+                    </fieldset>
+
+                    <fieldset class="kiosk-set">
+                        <legend>Anzeige</legend>
+                        <label class="kiosk-set__field">
+                            <span>Termine pro Seite (höchstens)</span>
+                            <input
+                                type="number"
+                                id="kiosk-set-rows"
+                                min="1"
+                                max="12"
+                                step="1"
+                            />
+                        </label>
+                        <label class="kiosk-set__field">
+                            <span>Blättern alle … Sekunden</span>
+                            <input
+                                type="number"
+                                id="kiosk-set-dwell"
+                                min="5"
+                                max="300"
+                                step="5"
+                            />
+                        </label>
+                    </fieldset>
+
+                    <fieldset class="kiosk-set">
+                        <legend>Infotexte</legend>
+                        <div class="kiosk-set__row" id="kiosk-set-info"></div>
+                    </fieldset>
+
+                    <fieldset class="kiosk-set">
+                        <legend>Quellen</legend>
+                        <div class="kiosk-set__row" id="kiosk-set-source"></div>
+                    </fieldset>
+
+                    <div class="kiosk-settings__actions">
+                        <button type="button" class="kiosk-set__btn" id="kiosk-set-reset">
+                            zurücksetzen
+                        </button>
+                        <button type="button" class="kiosk-set__btn" id="kiosk-settings-close">
+                            schließen
+                        </button>
+                    </div>
+                </section>
+            </footer>
         </div>
     </body>
 </html>
