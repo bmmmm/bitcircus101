@@ -851,11 +851,32 @@ test.describe('Lite version', () => {
         // slack on the tap zone, which is why this is a sweep and not a list:
         // any new link inherits the rule, and any edit that drops it fails here.
         await page.goto('/lite/');
-        const zones = await hitBoxes(page, 'a[href]');
+        const zones = await hitBoxes(page, 'a[href]:not(footer a)');
         // A sweep that measured nothing would pass without testing anything.
         expect(zones.length, 'no links measured — the sweep would be vacuous').toBeGreaterThan(15);
         const small = zones.filter((z) => z.w < 24 || z.h < 24);
         expect(small.map((z) => `${z.w}x${z.h} "${z.text}"`), 'links under the 24px WCAG floor').toEqual([]);
+
+        // The footer is the one place 24 is out of reach. Its two links sit 7px
+        // apart inside a run of text — "(große Grafik, Karte, Live-Termine) · …
+        // · …" — so 23px is the hard ceiling before their zones start stealing
+        // from each other, and only a visibly roomier footer would buy the last
+        // pixel. WCAG 2.5.8 exempts a target inside a sentence for exactly this
+        // reason. They are still measured, at the height the CSS does reach, so
+        // they cannot quietly collapse back to bare text either.
+        // Not "both": at a desktop width the second one wraps across two lines,
+        // which puts its centre in the gap between them — the probe's blind spot,
+        // and a link that tall needs no help anyway.
+        const foot = await hitBoxes(page, 'footer a[href]');
+        expect(foot.length, 'no footer links measured').toBeGreaterThan(0);
+        // 20, not 23: bare footer links measure 17px and the rule takes them to
+        // 23-25 depending on the font's metrics (CI's monospace reads a pixel
+        // narrower than a local one — that spread is what made the first version
+        // of this gate fail on the machine rather than on the page). Anything
+        // from 18 to 23 tells those two states apart; 20 sits in the middle, so
+        // the gate neither trips on a font nor sleeps through the rule going away.
+        expect(foot.filter((z) => z.w < 24 || z.h < 20).map((z) => `${z.w}x${z.h} "${z.text}"`),
+            'footer links below what the line box allows').toEqual([]);
     });
 });
 
@@ -972,10 +993,17 @@ test.describe('Accessibility', () => {
         // and carry the zone instead. Named one by one because the page has
         // exactly three links — a sweep would be ceremony. (The skip link is
         // off-screen until focused, which is the whole point of it.)
+        //
+        // Height 44, width 24: the CSS grows these zones vertically only, so the
+        // width is however wide the words happen to render. Asserting 44 there
+        // pinned a number the stylesheet does not control — "github" is 48px in
+        // a local monospace and 40px in CI's, and the gate failed on the font
+        // rather than on anything being hard to hit. 24 is the WCAG floor and
+        // is what these actually have to clear.
         await expectHitZones(page, [
-            ['.ascii-playground__home', 44, 44],
-            ['.ascii-playground__foot a[href*="impressum"]', 44, 44],
-            ['.ascii-playground__foot a[href*="github"]', 44, 44],
+            ['.ascii-playground__home', 24, 44],
+            ['.ascii-playground__foot a[href*="impressum"]', 24, 44],
+            ['.ascii-playground__foot a[href*="github"]', 24, 44],
         ]);
     });
 });
