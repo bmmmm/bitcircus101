@@ -335,6 +335,102 @@ test.describe('Navigation', () => {
             }
         }
     });
+
+    test('the green marker tracks the section being read, and anchors land at once', async ({ page }) => {
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await page.goto('/index.html');
+
+        const marker = () => page.evaluate(() =>
+            [...document.querySelectorAll('.nav__links a')]
+                .filter((a) => a.classList.contains('nav__link--current'))
+                .map((a) => a.textContent.trim())
+                .join(','));
+
+        // Park a section's top inside the spy's band (10–25% of the viewport) and
+        // read back which entry lights up. The spy used to watch only #about and
+        // #contact, so everything between them fell through to "no section in
+        // view" and re-lit /wir — the marker claimed "wir" while the reader was
+        // at "nächste termine" or "keep the lights on", two screens further down.
+        const parkAt = async (id) => {
+            await page.evaluate((sid) => {
+                const top = document.getElementById(sid).getBoundingClientRect().top + scrollY;
+                window.scrollTo({ top: top - innerHeight * 0.12, behavior: 'instant' });
+            }, id);
+            // The observer reports on the next rendering opportunity, not synchronously.
+            await page.waitForTimeout(120);
+            return marker();
+        };
+
+        expect(await parkAt('about'), '#about is what /wir points at').toBe('/wir');
+        // Sections the nav has no entry for clear the marker rather than borrowing
+        // someone else's. The claim under test is the negative one: not /wir.
+        expect(await parkAt('next-events'), 'no nav entry owns #next-events').not.toBe('/wir');
+        expect(await parkAt('support'), 'no nav entry owns #support on the homepage').not.toBe('/wir');
+        expect(await parkAt('contact'), '#contact is what /kontakt points at').toBe('/kontakt');
+
+        // Anchor jumps land instead of panning. Measured with no wait at all after
+        // the click: `scroll-behavior: smooth` needed ~900ms for this distance and
+        // was barely 100px in by now, so "already most of the way there" is a
+        // claim only an instant jump can meet. Half the distance, not all of it,
+        // keeps the gate off the exact landing offset (scroll-padding-top owns that).
+        await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+        const target = await page.evaluate(() =>
+            document.getElementById('contact').getBoundingClientRect().top + scrollY);
+        await page.locator('.nav__links a[href="index.html#contact"]').click();
+        const landed = await page.evaluate(() => Math.round(scrollY));
+        expect(landed, 'anchor jump must not animate').toBeGreaterThan(target / 2);
+        // The marker is the one thing here that may NOT be read synchronously:
+        // `hashchange` is delivered as its own task and the spy reports on the
+        // next rendering opportunity, so a bare read right after the click is a
+        // race — it caught "" once on an otherwise green run. The jump is what
+        // has to be instant; the marker only has to arrive.
+        await expect.poll(marker, { message: 'marker never caught up with the jump' })
+            .toBe('/kontakt');
+    });
+
+    test('the marker survives the clean URLs production actually serves', async ({ page }) => {
+        // Production 308-redirects /events.html → /events, so the address bar
+        // never shows the extension. The local server hands out real .html
+        // files, which is why this only ever broke live: normalizePageFile fell
+        // through to "index.html" for anything without an extension, and on
+        // "index.html" the matcher picks the homepage's own /wir link. Clicking
+        // /termine landed you on /events with "wir" lit up.
+        //
+        // Rewrite the document request instead of teaching the test server clean
+        // URLs: an in-page href must still be the .html form (see CLAUDE.md), and
+        // a server that resolves both would quietly retire that rule.
+        const clean = async (path, file) => {
+            await page.route(`**${path}`, async (route) => {
+                if (route.request().resourceType() !== 'document') return route.fallback();
+                await route.fulfill({ path: file, contentType: 'text/html; charset=utf-8' });
+            });
+        };
+        await clean('/events', 'events.html');
+        await clean('/support', 'support.html');
+        await clean('/raum-nutzen', 'raum-nutzen.html');
+
+        const marker = () => page.evaluate(() =>
+            [...document.querySelectorAll('.nav__links a')]
+                .filter((a) => a.classList.contains('nav__link--current'))
+                .map((a) => a.textContent.trim())
+                .join(',') || '-');
+
+        for (const [url, expected] of [
+            ['/events', '/termine'],
+            ['/support', '/support'],
+            ['/raum-nutzen', '/raum'],
+        ]) {
+            await page.goto(url);
+            await page.waitForLoadState('domcontentloaded');
+            expect(await marker(), `${url} must light its own nav entry`).toBe(expected);
+        }
+
+        // Directory URLs keep resolving to their index — "/lite/" is index.html,
+        // not lite.html, and nothing in the nav may claim it.
+        await page.goto('/lite/');
+        expect(await page.evaluate(() => document.querySelectorAll('.nav__link--current').length),
+            '/lite/ has no shared nav to mark').toBe(0);
+    });
 });
 
 // ─── Events Page ─────────────────────────────────────────────────────────────
