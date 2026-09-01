@@ -899,27 +899,210 @@ test.describe('Signal redirect stubs', () => {
 // ─── Kiosk view ──────────────────────────────────────────────────────────────
 
 test.describe('Kiosk view', () => {
-    test('renders chrome-less, noindex, with a clock and an honest data state', async ({ page }) => {
-        await page.goto('/kiosk/');
+    // The wall clock is pinned so the timing cases below are assertable at all.
+    // Every event is dated against this instant, not against "now", so the test
+    // means the same thing at 03:00 in CI as it does at noon locally.
+    const NOW = new Date('2026-09-01T19:30:00');
+    const DAY = '2026-09-01';
+    const NEXT = '2026-09-02';
+
+    /**
+     * Four timing cases the old renderer got wrong or could not show at all.
+     * The marker used to gate on "started less than 3 h ago" and ignore
+     * endTime, so it dropped a long-running event and clung to a finished one.
+     */
+    function kioskData() {
+        const ev = (o) => ({
+            subtitle: '', description: '', location: '', endDate: o.date,
+            tags: [], type: '', source: 'bitcircus101', uid: o.title, ...o,
+        });
+        return {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: [
+                // runs 15:00–22:00 → started 4.5 h ago, still running.
+                // The 3 h heuristic called this over.
+                ev({
+                    title: 'Läuft seit langem', date: DAY, time: '15:00', endTime: '22:00',
+                    description: 'Kommt vorbei: https://matrix.to/#/!abc?via=x — wir haben Mate.',
+                    location: 'Dorotheenstraße 101, Bonn',
+                    tags: ['#offener-abend'],
+                }),
+                // ran 18:00–19:00 → over half an hour ago. Started 1.5 h ago,
+                // so the 3 h heuristic still called this running.
+                ev({ title: 'Schon vorbei', date: DAY, time: '18:00', endTime: '19:00' }),
+                // 19:00–22:00 → running, and overlapping BOTH of the above
+                ev({
+                    title: 'Parallel dazu', date: DAY, time: '19:00', endTime: '22:00',
+                    description: 'https://example.org/nur-ein-link',
+                    source: 'Datenburg e.V.',
+                }),
+                // 23:00 → after the whole bundle, so its own group
+                ev({ title: 'Später allein', date: DAY, time: '23:00', endTime: '23:30' }),
+                ev({ title: 'Morgen früh', date: NEXT, time: '10:00', endTime: '12:00' }),
+            ],
+        };
+    }
+
+    test('shows the events with their info texts, marks what runs and what is parallel', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        // rows=8 keeps everything on one page — paging has its own test below
+        await page.goto('/kiosk/?rows=8');
 
         // Unlisted wall display: noindex, and none of the site chrome
         const robots = await page.locator('meta[name="robots"]').getAttribute('content');
         expect(robots).toContain('noindex');
         expect(await page.locator('nav, .footer__grid').count()).toBe(0);
+        await expect(page.locator('#kiosk-clock')).toHaveText(/^19:30/);
 
-        // Clock ticks from the real time
-        await expect(page.locator('#kiosk-clock')).toHaveText(/^\d{2}:\d{2}/);
+        await expect(page.locator('.kiosk-ev')).toHaveCount(5);
 
-        // Data-tolerant like the events tests: events-data.json is gitignored,
-        // so locally/CI either rows render or the honest empty/offline state
-        await page.waitForFunction(() => {
-            return document.querySelector('.kiosk-row') ||
-                   document.querySelector('.kiosk-empty') ||
-                   document.querySelector('.kiosk-offline');
-        }, { timeout: 8000 });
+        // The info text is the point of the view: it renders, and the raw URL
+        // inside it does not — nobody reads a matrix.to link off a wall.
+        const desc = page.locator('.kiosk-ev').filter({ hasText: 'Läuft seit langem' })
+            .locator('.kiosk-ev__desc');
+        await expect(desc).toHaveText('Kommt vorbei — wir haben Mate.');
+        await expect(page.locator('.kiosk-ev__loc').first()).toContainText('Dorotheenstraße 101');
 
-        // Status line names the data stand or the source
-        await expect(page.locator('#kiosk-status')).toHaveText(/stand:|quelle:/);
+        // A description that is nothing BUT a link leaves no empty paragraph
+        await expect(
+            page.locator('.kiosk-ev').filter({ hasText: 'Parallel dazu' }).locator('.kiosk-ev__desc')
+        ).toHaveCount(0);
+
+        // Nothing anywhere on the wall renders a raw URL
+        expect(await page.locator('.kiosk__list').innerText()).not.toMatch(/https?:\/\//);
+
+        // "läuft" gates on the real end, both directions: the 4.5 h-old event
+        // still runs, the one that ended half an hour ago does not.
+        await expect(page.locator('.kiosk-ev--now .kiosk-ev__title'))
+            .toHaveText(['Läuft seit langem', 'Parallel dazu']);
+
+        // Parallel events are bracketed as such — all three overlap the long
+        // one, including the short one that already ended inside it.
+        await expect(page.locator('.kiosk-par')).toHaveCount(1);
+        await expect(page.locator('.kiosk-par .kiosk-ev')).toHaveCount(3);
+        await expect(page.locator('.kiosk-par__label')).toHaveCount(2);
+        // "Später allein" starts after the bundle ends → not bracketed
+        await expect(page.locator('.kiosk-par').filter({ hasText: 'Später allein' })).toHaveCount(0);
+
+        // Days are labelled, today reverse-video via its own badge
+        await expect(page.locator('.kiosk-day__label')).toHaveText(['HEUTE', 'MORGEN']);
+        await expect(page.locator('.kiosk-day--today')).toHaveCount(1);
+
+        await expect(page.locator('#kiosk-status')).toHaveText(/stand:.*quelle:/);
+    });
+
+    test('pages through the events without splitting a parallel bundle', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        // 3 fits the parallel bundle exactly; the bundle must never be cut
+        await page.goto('/kiosk/?rows=3');
+
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/2');
+        await expect(page.locator('.kiosk-par .kiosk-ev')).toHaveCount(3);
+        await expect(page.locator('.kiosk-ev')).toHaveCount(3);
+
+        await page.clock.runFor(21_000);
+        await expect(page.locator('#kiosk-status')).toContainText('seite 2/2');
+        await expect(page.locator('.kiosk-ev__title').first()).toHaveText('Später allein');
+    });
+
+    test('rotates through every page with a page count that holds still', async ({ page }) => {
+        // The pages are deliberately UNEVEN in height: short entries first,
+        // long descriptions after. Measuring the fit against whichever page
+        // happens to be up recomputes the page count on every flip, which
+        // resets the index and strands the wall — and it only shows up when
+        // pages differ in height, so an even fixture would pass either way.
+        await page.clock.install({ time: NOW });
+        const long = 'Ein absichtlich langer Infotext, der über mehrere Zeilen läuft und damit '
+            + 'so viel Platz frisst wie die echten Beschreibungen aus dem Kalender, die bei '
+            + 'zweihundert Zeichen gekappt werden.';
+        await useEventsFixture(page, {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: Array.from({ length: 8 }, (_, i) => ({
+                title: `Termin ${i + 1}`,
+                subtitle: '',
+                description: i < 4 ? '' : long,
+                location: '',
+                date: `2026-09-${String(10 + i).padStart(2, '0')}`,
+                time: '19:00',
+                endDate: `2026-09-${String(10 + i).padStart(2, '0')}`,
+                endTime: '22:00',
+                tags: [], type: '', source: 'bitcircus101', uid: `mixed-${i}`,
+            })),
+        });
+        await page.setViewportSize({ width: 1000, height: 520 });
+        await page.goto('/kiosk/?rows=4');
+
+        const readPage = async () => {
+            const m = /seite (\d+)\/(\d+)/.exec(await page.locator('#kiosk-status').innerText());
+            expect(m, 'status line must report a page').not.toBeNull();
+            return [Number(m[1]), Number(m[2])];
+        };
+
+        const [, total] = await readPage();
+        expect(total).toBeGreaterThan(1);
+
+        const seen = [];
+        const shown = [];
+        for (let i = 0; i < total; i++) {
+            const [current, reported] = await readPage();
+            // the count must not move under the rotation
+            expect(reported).toBe(total);
+            seen.push(current);
+            shown.push(...await page.locator('.kiosk-ev__title').allInnerTexts());
+            await page.clock.runFor(21_000);
+        }
+        // every page came up exactly once, in order, and it wrapped back to 1
+        expect(seen).toEqual(Array.from({ length: total }, (_, i) => i + 1));
+        expect((await readPage())[0]).toBe(1);
+
+        // and one full rotation shows every event exactly once — a page break
+        // must not drop an event or repeat it
+        expect(shown).toEqual(Array.from({ length: 8 }, (_, i) => `Termin ${i + 1}`));
+    });
+
+    test('never pushes the status bar off a small screen, however long the texts', async ({ page }) => {
+        // The status bar is the wall's honesty channel — "⚠ daten alt",
+        // "⚠ offline seit N min". A long list must page, not shove it past the
+        // bottom edge, so the renderer measures the fit instead of trusting a
+        // hard-coded row count.
+        await page.clock.install({ time: NOW });
+        const many = {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: Array.from({ length: 12 }, (_, i) => ({
+                title: `Termin ${i + 1}`,
+                subtitle: '',
+                description: 'Ein absichtlich langer Infotext, der über mehrere Zeilen läuft und '
+                    + 'damit genau so viel Platz frisst wie die echten Beschreibungen aus dem '
+                    + 'Kalender, die bei 200 Zeichen gekappt werden.',
+                location: 'Dorotheenstraße 101, Bonn',
+                date: `2026-09-${String(10 + i).padStart(2, '0')}`,
+                time: '19:00',
+                endDate: `2026-09-${String(10 + i).padStart(2, '0')}`,
+                endTime: '22:00',
+                tags: [], type: '', source: 'bitcircus101', uid: `many-${i}`,
+            })),
+        };
+        await useEventsFixture(page, many);
+        await page.setViewportSize({ width: 1000, height: 500 });
+        // rows=12 asks for everything at once — the fit must overrule it
+        await page.goto('/kiosk/?rows=12');
+
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/');
+        // toBeInViewport, not toBeVisible: an element pushed below the fold is
+        // still "visible" to Playwright.
+        await expect(page.locator('#kiosk-status')).toBeInViewport();
+        await expect(page.locator('.kiosk-ev').first()).toBeInViewport();
+
+        const overflow = await page.locator('.kiosk__list')
+            .evaluate((el) => el.scrollHeight - el.clientHeight);
+        expect(overflow).toBeLessThanOrEqual(0);
+        // and it really did drop events rather than squeeze them
+        expect(await page.locator('.kiosk-ev').count()).toBeLessThan(12);
     });
 });
 

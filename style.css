@@ -1980,18 +1980,36 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 }
 
 /* =============================================================================
-   Kiosk (/kiosk/) — wall display, no chrome. Type scales with the screen;
-   today's rows are reverse-video (a state marker, so ink/paper — the running-
-   now dot is the one accent use, a current-state marker per the token rule).
+   Kiosk (/kiosk/) — wall display, no chrome. Type scales with the screen.
+
+   The wall shows the whole event, not a title line: time window, description,
+   location and tags. Two consequences of the real feed shape it:
+
+     - Overlapping events are the norm (every day carrying more than one event
+       in the measured feed had a real time overlap), so a parallel bundle gets
+       a left rule and a "gleichzeitig" divider instead of reading as a
+       sequence.
+     - An expanded list holds fewer events per screen, so kiosk.js pages
+       through them; ?rows=N is the events-per-page knob.
+
+   Today is marked on the day LABEL, reverse video like the rest of the site's
+   state markers — not on the whole block, which at this type size would be a
+   half-screen slab. The running-now dot is the one accent use (a current-state
+   marker, per the token rule).
    ============================================================================= */
 .kiosk-body { margin: 0; }
 
+/* height, not min-height: the status bar is the wall's honesty channel ("daten
+   alt", "offline seit …") and must never be pushed below the edge by a long
+   list. The overflow clip is the last line of defence — kiosk.js measures and
+   shrinks the page before it comes to that. */
 .kiosk {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     padding: 2vh 2vw;
-    font-size: clamp(1rem, 1.6vw, 2.2rem);
+    font-size: clamp(1rem, 1.35vw, 1.9rem);
+    overflow: hidden;
 }
 
 .kiosk__top {
@@ -2013,10 +2031,11 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 
 .kiosk__list {
     flex: 1;
+    min-height: 0;   /* so the flex item can shrink and scrollHeight means something */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: 0.4em;
+    gap: 1.1em;
     /* it IS a <main> — undo the global centered reading measure, the wall
        display uses the full width like its header and status bar */
     max-width: none;
@@ -2024,38 +2043,102 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     padding: 0;
 }
 
-.kiosk-row {
+/* ── day group ───────────────────────────────────────────────────────────── */
+.kiosk-day { display: flex; flex-direction: column; gap: 0.5em; }
+
+/* Setext rule like the site's headings: the label sits at the head of a line
+   that runs to the edge. */
+.kiosk-day__label {
+    display: flex;
+    align-items: center;
+    gap: 1.5ch;
+    margin: 0;
+    font-size: 0.85em;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+}
+.kiosk-day__label::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--line);
+}
+/* today is a reverse-video badge on the LABEL, not a slab behind the whole
+   day — same ink/paper state marker the rest of the site uses */
+.kiosk-day__label > span { padding: 0.1em 0.8ch; }
+.kiosk-day--today .kiosk-day__label > span {
+    background: var(--ink);
+    color: var(--paper);
+}
+.kiosk-day--today .kiosk-day__label::after { border-top-color: var(--line-strong); }
+
+/* ── one event ───────────────────────────────────────────────────────────── */
+.kiosk-group { display: flex; flex-direction: column; gap: 0.35em; }
+
+.kiosk-ev {
     display: grid;
-    grid-template-columns: 9ch 10ch 1fr auto;
+    grid-template-columns: 13ch 1fr auto;
     gap: 0 2ch;
     align-items: baseline;
-    border-bottom: 1px solid var(--line);
-    padding: 0.4em 0.5ch;
 }
-.kiosk-row__when { color: var(--ink-dim); white-space: nowrap; }
-.kiosk-row__time { color: var(--ink); white-space: nowrap; }
-.kiosk-row__title {
-    color: var(--ink-max);
+.kiosk-ev__time {
+    color: var(--ink);
+    white-space: nowrap;
+}
+.kiosk-ev__title {
+    margin: 0;
+    font-size: 1em;
     font-weight: 700;
+    color: var(--ink-max);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.kiosk-row__side { color: var(--ink-dim); font-size: 0.7em; white-space: nowrap; }
+.kiosk-ev__side {
+    color: var(--ink-dim);
+    font-size: 0.75em;
+    white-space: nowrap;
+}
+/* description and location hang under the title column */
+.kiosk-ev__desc,
+.kiosk-ev__loc {
+    grid-column: 2 / -1;
+    margin: 0.15em 0 0;
+    font-size: 0.85em;
+    line-height: 1.45;
+    color: var(--ink);
+}
+.kiosk-ev__desc {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+}
+.kiosk-ev__loc { color: var(--ink-dim); }
+.kiosk-ev__loc::before { content: "○ "; }
 
-.kiosk-row--today { background: var(--ink); }
-.kiosk-row--today .kiosk-row__when,
-.kiosk-row--today .kiosk-row__time,
-.kiosk-row--today .kiosk-row__title,
-.kiosk-row--today .kiosk-row__side { color: var(--paper); }
+.kiosk-ev--now .kiosk-ev__time::before { content: "● "; color: var(--accent); }
 
-.kiosk-row--now .kiosk-row__when::before { content: "● "; color: var(--accent); }
+/* ── parallel bundle ─────────────────────────────────────────────────────── */
+/* every group carries the indent so the time column stays on one grid
+   across days; only a parallel bundle draws the rule in it */
+.kiosk-group { padding-left: 1.5ch; border-left: 2px solid transparent; }
+.kiosk-par { border-left-color: var(--line-strong); }
+.kiosk-par__label {
+    margin: 0.1em 0;
+    font-size: 0.7em;
+    letter-spacing: 0.06em;
+    color: var(--ink-dim);
+}
 
 .kiosk-empty,
 .kiosk-offline { color: var(--ink-dim); }
 
 .kiosk__bar {
     border-top: 1px solid var(--line);
+    margin-top: 0.6em;
     padding-top: 0.3em;
     color: var(--ink-dim);
     font-size: 0.7em;
@@ -2132,9 +2215,13 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     .location-card__grid { grid-template-columns: 1fr; }
     .location-card__map-ascii { border-right: none; border-bottom: 1px solid var(--line); }
     .footer__status { margin-left: 0; width: 100%; }
-    /* phones are not the kiosk target, but it must not fall apart there */
-    .kiosk-row { grid-template-columns: 8ch 1fr; }
-    .kiosk-row__side { display: none; }
+    /* phones are not the kiosk target, but it must not fall apart there:
+       the time keeps its own line above the title, the side column goes */
+    .kiosk-ev { grid-template-columns: 1fr; }
+    .kiosk-ev__side { display: none; }
+    .kiosk-ev__desc,
+    .kiosk-ev__loc { grid-column: 1; }
+    .kiosk-ev__title { white-space: normal; }
 }
 
 /* =============================================================================
