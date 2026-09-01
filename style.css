@@ -476,6 +476,43 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
    ============================================================================= */
 .ascii-art-viewport { overflow-x: auto; margin: 1.5rem 0; }
 
+/* The one visible way into /ascii/ — the page is noindex and out of the nav, so
+   without this it is reachable only by typing the URL. It sits under the art it
+   belongs to, right-aligned, and carries --accent because it is a hyperlink
+   (see the token scope rule above). Sized 44x44 outright rather than widened by
+   a pseudo-element: this element is new, so the room costs nothing to reserve —
+   the same reason .btn carries min-height. The negative top margin pulls the
+   row back into the art's own bottom margin so nothing below shifts down. */
+.ascii-art-credit {
+    margin: -1rem 0 1.25rem;
+    text-align: right;
+    line-height: 1;
+}
+/* The glyph stays a single character on its line — a 44px-tall visible row
+   would push everything below it down by 44px for one symbol. The tap zone is
+   44x44 all the same, spent on the margins either side, which are already
+   empty. Same trade the nav utilities make. */
+.ascii-art-link {
+    display: inline-block;
+    position: relative;
+    color: var(--accent);
+    font-size: 1.15rem;
+    line-height: 1;
+    padding: 0 0.4ch;
+    text-decoration: none;
+}
+.ascii-art-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+}
+.ascii-art-link:hover,
+.ascii-art-link:focus-visible { background: var(--accent); color: var(--paper); }
+
 .ascii-art {
     font-family: var(--font);
     line-height: 1.2;
@@ -1820,7 +1857,21 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 }
 .ascii-playground__masthead h1 { border: none; margin: 0; padding: 0; font-size: 1.1rem; }
 .ascii-playground__tag { color: var(--ink-dim); font-size: 0.85rem; }
-.ascii-playground__home { margin-left: auto; font-size: 0.85rem; }
+.ascii-playground__home { margin-left: auto; font-size: 0.85rem; position: relative; }
+/* 23px of ink, and nothing else interactive shares its row or column. The zone
+   hangs DOWNWARDS from the link's own top edge rather than being centred on it:
+   this masthead sits at the very top of the document, so a centred zone would
+   put a third of itself above y=0, where no finger can reach — measured 33px
+   effective instead of the 44 the CSS claimed. Growing into the 72px masthead
+   below keeps all 44 on screen. */
+.ascii-playground__home::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 44px;
+}
 
 .ascii-playground__intro { color: var(--ink-dim); font-size: 0.9rem; }
 
@@ -1893,6 +1944,19 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     border-top: 1px solid var(--line);
     color: var(--ink-dim);
     font-size: 0.8rem;
+}
+/* The two footer links are 15px of ink at 0.8rem. They sit 23px apart
+   horizontally and have 937px of empty page above them, so the zone grows
+   vertically only — width is already past 24px on both. */
+.ascii-playground__foot a { position: relative; }
+.ascii-playground__foot a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
 }
 .ascii-playground__prompt { color: var(--ink-dim); }
 .ascii-playground__labeltext { color: var(--ink); }
