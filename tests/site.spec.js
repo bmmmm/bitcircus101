@@ -86,6 +86,18 @@ test.describe('Home page', () => {
         await expect(page).toHaveTitle(/bitcircus101/);
         await expect(page.locator('h1')).toContainText('bitcircus101');
         await expect(page.locator('.ascii-art')).toBeVisible();
+
+        // The only way into /ascii/ — the page is noindex and out of the nav, so
+        // if this link goes, the playground is reachable by typed URL only.
+        const egg = page.locator('.ascii-art-link');
+        await expect(egg).toHaveAttribute('href', 'ascii/');
+        await expect(egg).toHaveText('▚');
+        // It must stay OUTSIDE the art's role="img" wrapper: everything inside
+        // one is hidden from assistive tech, which would make this link exist
+        // for sighted mouse users only.
+        expect(await egg.evaluate((el) => !!el.closest('[role="img"]')),
+            'the playground link is buried inside role="img"').toBe(false);
+        await expectHitZones(page, [['.ascii-art-link', 44, 44]]);
     });
 
     test('shows support and contact CTAs', async ({ page }) => {
@@ -955,6 +967,16 @@ test.describe('Accessibility', () => {
         await editor.focus();
         expect(await editor.evaluate((el) => el.matches(':focus-visible'))).toBe(true);
         expect(await editor.evaluate((el) => getComputedStyle(el).outlineStyle)).not.toBe('none');
+
+        // Same page, so no extra navigation: the chrome links are 15-23px of ink
+        // and carry the zone instead. Named one by one because the page has
+        // exactly three links — a sweep would be ceremony. (The skip link is
+        // off-screen until focused, which is the whole point of it.)
+        await expectHitZones(page, [
+            ['.ascii-playground__home', 44, 44],
+            ['.ascii-playground__foot a[href*="impressum"]', 44, 44],
+            ['.ascii-playground__foot a[href*="github"]', 44, 44],
+        ]);
     });
 });
 
