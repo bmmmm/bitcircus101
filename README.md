@@ -50,7 +50,7 @@ scripts/
 tests/
   site.spec.js              Playwright end-to-end tests (~20 tests × 2 browsers)
   sync-events.spec.mjs      Unit tests for ICS parser and RRULE expansion (22 tests)
-  finanz-cli.spec.mjs       Exit codes + --json contract of the funding CLI
+  finanz-cli.spec.mjs       Exit codes, --json contract and amount prompts of the funding CLI
 playwright.config.js        Playwright config (Chromium, Mobile Chrome)
 
 .github/workflows/
@@ -87,7 +87,8 @@ pnpm run finanz:validate         # validate against finanz.schema.json (a CI and
 ```
 
 `add` and `monthly` (and the bare menu) are interactive and exit 1 without a
-TTY rather than silently doing nothing.
+TTY rather than silently doing nothing. Amounts are whole euros — the schema
+has no cents, so a decimal is refused where it is typed.
 
 Every write validates first and refuses with an error naming the bad field. The
 board holds only rounded aggregate totals plus a value-free 0..7 "pulse" track —
