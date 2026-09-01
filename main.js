@@ -481,10 +481,11 @@
         const target = document.querySelector(href);
         if (target) {
           const isSkip = anchor.classList.contains("skip-link");
-          // Skip links jump instantly and must move keyboard focus to the target —
-          // smooth-scrolling without focusing leaves the next Tab in the nav, which
-          // defeats the skip link for keyboard/AT users.
-          target.scrollIntoView({ behavior: isSkip ? "auto" : "smooth", block: "start" });
+          // Every anchor lands instantly, the same way the nav's own
+          // "page.html#id" links now do (see the html rule in style.css). Skip
+          // links additionally move keyboard focus to the target — scrolling
+          // without focusing leaves the next Tab in the nav, which defeats them.
+          target.scrollIntoView({ behavior: "auto", block: "start" });
           history.pushState(null, "", href);
           if (isSkip) {
             if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
@@ -527,25 +528,46 @@
       });
       if (!spied.length) return;
 
+      // EVERY section is observed, not just the two the nav points at. The spy
+      // has to know it has left "wir" even when the section it entered — next
+      // events, keep-the-lights-on, Freund*innen — has no nav entry of its own.
+      // While only the mapped ones were watched, the "nothing in view" branch ran
+      // for the whole 1400px between #about and #contact and re-ran
+      // markCurrentPage, which on the homepage always resolves to /wir: the
+      // highlight sat on "wir" while the reader was three sections further down,
+      // and a click on /kontakt flickered back to /wir mid-scroll.
+      const order = Array.prototype.slice.call(observed);
       const visible = new Set();
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          const link = navLinks["#" + entry.target.id];
-          if (!link) return;
-          if (entry.isIntersecting) visible.add(link);
-          else visible.delete(link);
+          if (entry.isIntersecting) visible.add(entry.target);
+          else visible.delete(entry.target);
         });
-        // markCurrentPage owns aria-current (the stable page marker); the spy only
-        // drives the visual class. Highlight the in-view section(s); when none is in
-        // view, restore the page default so the highlight never vanishes mid-scroll.
-        if (visible.size) {
-          spied.forEach(l => l.classList.toggle("nav__link--current", visible.has(l)));
-        } else if (mainNav) {
-          Navigation.markCurrentPage(mainNav);
+
+        // Nothing in the band at all (above the first section, below the last):
+        // fall back to the page marker rather than blanking the nav.
+        if (!visible.size) {
+          if (mainNav) Navigation.markCurrentPage(mainNav);
+          return;
         }
+
+        // Of the sections in the band, the one being read is the one that started
+        // last — i.e. the last in document order, which the DOM already answers
+        // without re-measuring any geometry. Sections without a nav entry resolve
+        // to no link, which clears the highlight: the honest answer for the hero
+        // and for Freund*innen.
+        let current = null;
+        for (let i = order.length - 1; i >= 0; i--) {
+          if (visible.has(order[i])) { current = order[i]; break; }
+        }
+        const active = navLinks["#" + current.id];
+
+        // markCurrentPage owns aria-current (the stable page marker); the spy only
+        // drives the visual class.
+        spied.forEach(l => l.classList.toggle("nav__link--current", l === active));
       }, { rootMargin: "-10% 0px -75% 0px" });
 
-      observed.forEach(s => { if (navLinks["#" + s.id]) observer.observe(s); });
+      observed.forEach(s => observer.observe(s));
     },
 
     handleImageErrors() {
