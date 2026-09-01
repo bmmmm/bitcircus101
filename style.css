@@ -661,20 +661,24 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     cursor: pointer;
     opacity: 0.85;
 }
-/* 26x34 visible, 44x44 to a finger. The two buttons sit 267px apart and the
-   nearest element above/below is 96px away, so ±9px horizontally and ±5px
-   vertically fit without touching anything. The strip is not clipped
-   (.carousel-container has no overflow), so the overhang past its left/right
-   border lands on the page gutter, where nothing is clickable. */
+/* 26x34 visible, 44x44 to a finger — grown INWARDS, over the image. An earlier
+   version spread ±9px symmetrically, which pushed the zone past the container's
+   left/right border: on a narrow gutter that overhang lands off-screen, where no
+   finger can reach it, and the zone is a promise the display cannot keep (CI
+   measured 39 where a roomy local gutter measured 45). Anchoring each button's
+   zone to its own outer edge makes the 44px independent of how much page margin
+   the layout happens to have. The two buttons sit 267px apart, so neither
+   reaches the other. */
 .carousel-button::after {
     content: "";
     position: absolute;
-    left: -9px;
-    right: -9px;
     top: 50%;
+    width: 44px;
     height: 44px;
     transform: translateY(-50%);
 }
+.carousel-button.prev::after { left: 0; }
+.carousel-button.next::after { right: 0; }
 .carousel-button:hover { background: var(--ink); color: var(--paper); opacity: 1; }
 .carousel-button.prev { left: 0; border-left: none; }
 .carousel-button.next { right: 0; border-right: none; }
@@ -694,13 +698,17 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     padding: 0.45em 1ch;
     cursor: pointer;
 }
-/* 23x24 visible, 45x46 to a finger. Nearest neighbour is the last dot, 101px to
-   the left; below the strip the next block starts 16px down, so ±11px in every
-   direction stays clear on all sides. */
+/* 23x24 visible, 44x44 to a finger, anchored to the corner it already sits in
+   for the same reason as the arrows above: a zone hanging past the container's
+   right/bottom edge is off-screen on a narrow gutter. It grows left and up
+   instead — the nearest neighbour is the last dot, 101px to the left. */
 .carousel-toggle::after {
     content: "";
     position: absolute;
-    inset: -11px;
+    right: 0;
+    bottom: 0;
+    width: 44px;
+    height: 44px;
 }
 .carousel-toggle:hover { background: var(--ink); color: var(--paper); }
 
