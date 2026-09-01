@@ -1104,6 +1104,189 @@ test.describe('Kiosk view', () => {
         // and it really did drop events rather than squeeze them
         expect(await page.locator('.kiosk-ev').count()).toBeLessThan(12);
     });
+
+    // ── settings: URL, panel, and the two staying in step ────────────────────
+
+    test('a URL pins every setting, and the panel reflects what is on screen', async ({ page }) => {
+        // The URL is how a wall gets pinned — hand a screen this link and it
+        // must come up that way whatever anyone clicked on it before.
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?palette=amber&theme=light&info=off&source=bitcircus101&dwell=45&rows=6');
+
+        const root = page.locator('html');
+        await expect(root).toHaveAttribute('data-palette', 'amber');
+        await expect(root).toHaveAttribute('data-theme', 'light');
+        // info=off drops the paragraph from the DOM, it does not merely hide it:
+        // the page fit is measured, so a hidden one would still cost a break
+        await expect(page.locator('.kiosk-ev__desc')).toHaveCount(0);
+        // source=bitcircus101 hides the friendly spaces. Asserted on the event,
+        // not on the source label: narrow screens drop the side column by
+        // design, so a label check would pass for the wrong reason there.
+        await expect(page.locator('.kiosk-ev').filter({ hasText: 'Parallel dazu' })).toHaveCount(0);
+
+        // the panel opens from the ⚙ and shows the live values, not defaults
+        await page.locator('#kiosk-settings-open').click();
+        await expect(page.locator('#kiosk-settings')).toBeVisible();
+        await expect(page.locator('#kiosk-set-palette .kiosk-set__opt--on')).toHaveText('bernstein');
+        await expect(page.locator('#kiosk-set-info .kiosk-set__opt--on')).toHaveText('aus');
+        await expect(page.locator('#kiosk-set-source .kiosk-set__opt--on')).toHaveText('nur bitcircus101');
+        await expect(page.locator('#kiosk-set-dwell')).toHaveValue('45');
+        await expect(page.locator('#kiosk-set-rows')).toHaveValue('6');
+
+        // Escape closes it — a wall must not sit on an open settings panel
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#kiosk-settings')).toBeHidden();
+
+        // The promise only means something on a screen someone already fiddled
+        // with — with an empty store, URL-first and storage-first look
+        // identical. So put something in the store by hand (a URL alone does
+        // NOT persist: a pinned link must not silently overwrite the local
+        // choice) and only then check that a URL still overrules it.
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-palette .kiosk-set__opt', { hasText: 'weiß' }).click();
+        await page.locator('#kiosk-set-info .kiosk-set__opt', { hasText: 'kurz' }).click();
+        expect(await page.evaluate(() => localStorage.getItem('bc.kiosk.palette'))).toBe('mono');
+
+        await page.goto('/kiosk/?palette=green&theme=dark&info=full&source=all');
+        await expect(root).toHaveAttribute('data-palette', 'green');
+        await expect(root).not.toHaveAttribute('data-theme', 'light');
+        await expect(page.locator('.kiosk-ev__desc').first()).toBeVisible();
+        await expect(page.locator('.kiosk-ev').filter({ hasText: 'Parallel dazu' })).toHaveCount(1);
+    });
+
+    test('the panel writes back to the URL, so the screen stays copyable', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/');
+
+        // a default URL stays clean — no parameters for values nobody changed
+        expect(new URL(page.url()).search).toBe('');
+
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-info .kiosk-set__opt', { hasText: 'kurz' }).click();
+        await page.locator('#kiosk-set-palette .kiosk-set__opt', { hasText: 'rainbow' }).click();
+
+        const q = new URL(page.url()).searchParams;
+        expect(q.get('info')).toBe('short');
+        expect(q.get('palette')).toBe('pride');
+        // only the changed ones — theme was never touched
+        expect(q.get('theme')).toBeNull();
+
+        await expect(page.locator('html')).toHaveAttribute('data-palette', 'pride');
+        await expect(page.locator('.kiosk__list')).toHaveClass(/kiosk__list--info-short/);
+
+        // and it survives a reload without the URL, through storage
+        await page.goto('/kiosk/');
+        await expect(page.locator('html')).toHaveAttribute('data-palette', 'pride');
+
+        // reset puts everything back and empties the URL again
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-reset').click();
+        await expect(page.locator('html')).toHaveAttribute('data-palette', 'standard');
+        expect(new URL(page.url()).search).toBe('');
+    });
+
+    test('the footer icons cycle colour and invert, and dwell really re-times the flip', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?rows=3');
+
+        // ◉ steps through the palettes and wraps
+        const order = ['green', 'amber', 'mono', 'pride', 'standard'];
+        for (const want of order) {
+            await page.locator('#kiosk-palette').click();
+            await expect(page.locator('html')).toHaveAttribute('data-palette', want);
+        }
+
+        // ◐ inverts and says so to assistive tech
+        await page.locator('#kiosk-theme').click();
+        await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+        await expect(page.locator('#kiosk-theme')).toHaveAttribute('aria-pressed', 'true');
+        await page.locator('#kiosk-theme').click();
+        await expect(page.locator('html')).not.toHaveAttribute('data-theme', 'light');
+
+        // dwell must re-arm the running interval, not just be stored: at 60 s
+        // the page must NOT have flipped after the old 20 s.
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-dwell').fill('60');
+        await page.locator('#kiosk-set-dwell').blur();
+        await page.keyboard.press('Escape');
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/');
+
+        await page.clock.runFor(25_000);
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/');
+        await page.clock.runFor(40_000);
+        await expect(page.locator('#kiosk-status')).toContainText('seite 2/');
+    });
+
+    test('auto mode steps the colour and inverts once per full trip', async ({ page }) => {
+        // Burn-in protection: a wall shows near-static text for weeks. Rotating
+        // the hue alone leaves the same pixels lit, so a full trip through the
+        // palettes must also flip light/dark — that is the part that helps.
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?cycle=on&palette=standard&theme=dark');
+
+        const root = page.locator('html');
+        const STEP = 20 * 60_000; // CYCLE_MS
+        // fastForward, not runFor: runFor replays every intermediate tick, and
+        // the 1 s clock alone is 8000+ round trips across this much simulated
+        // time. Here only the 20 min step matters.
+        const step = () => page.clock.fastForward(STEP);
+
+        for (const want of ['green', 'amber', 'mono', 'pride']) {
+            await step();
+            await expect(root).toHaveAttribute('data-palette', want);
+            // no inversion mid-trip
+            await expect(root).not.toHaveAttribute('data-theme', 'light');
+        }
+
+        // the step that wraps back to the first palette also inverts
+        await step();
+        await expect(root).toHaveAttribute('data-palette', 'standard');
+        await expect(root).toHaveAttribute('data-theme', 'light');
+
+        // and it is genuinely opt-in: off means nothing moves
+        await page.goto('/kiosk/?cycle=off&palette=standard&theme=dark');
+        await step();
+        await step();
+        await expect(root).toHaveAttribute('data-palette', 'standard');
+        await expect(root).not.toHaveAttribute('data-theme', 'light');
+    });
+
+    test('rainbow mode colours the structure but leaves the text readable', async ({ page }) => {
+        // Six-colour body text is a flag, not a timetable. The day labels and
+        // rules take the stripes; the entries keep the normal ink.
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?palette=pride&rows=12');
+
+        const dayColors = await page.locator('.kiosk-day__label')
+            .evaluateAll((els) => els.map((el) => getComputedStyle(el).color));
+        expect(dayColors.length).toBeGreaterThan(1);
+        // consecutive days differ — that is the whole point of the mode
+        expect(new Set(dayColors).size).toBe(dayColors.length);
+
+        // the event text does NOT take a stripe
+        const titleColors = await page.locator('.kiosk-ev__title')
+            .evaluateAll((els) => els.map((el) => getComputedStyle(el).color));
+        expect(new Set(titleColors).size).toBe(1);
+        expect(dayColors).not.toContain(titleColors[0]);
+    });
+
+    test('a junk URL parameter falls back instead of breaking the wall', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        await page.goto('/kiosk/?palette=chartreuse&info=maybe&rows=999&dwell=-3');
+
+        await expect(page.locator('html')).toHaveAttribute('data-palette', 'standard');
+        await expect(page.locator('.kiosk-ev__desc').first()).toBeVisible();
+        // numbers clamp to their range rather than being taken literally
+        await page.locator('#kiosk-settings-open').click();
+        await expect(page.locator('#kiosk-set-rows')).toHaveValue('12');
+        await expect(page.locator('#kiosk-set-dwell')).toHaveValue('5');
+    });
 });
 
 // ─── Lite version ────────────────────────────────────────────────────────────

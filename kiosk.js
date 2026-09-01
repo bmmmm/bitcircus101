@@ -23,8 +23,13 @@
  *
  * An expanded list fits fewer events per screen, so it pages — and the page
  * breaks are MEASURED against the screen rather than counted, because how many
- * events fit depends on how long their descriptions are. ?rows=N caps the
- * count on top of that, PAGE_MS flips through the pages.
+ * events fit depends on how long their descriptions are. `rows` caps the count
+ * on top of that, `dwell` sets how long a page stands.
+ *
+ * Everything a wall operator might change — colour, theme, page size, dwell,
+ * how much info text, which calendars — is one settings model reachable two
+ * ways: the ⚙ panel in the status bar, and a URL parameter of the same name.
+ * See SETTINGS below.
  */
 (function () {
   "use strict";
@@ -32,8 +37,12 @@
   var DATA_URL = "../events-data.json";
   var REFRESH_MS = 300000; // 5 min — the sync cron runs every 30, this is cheap
   var CLOCK_MS = 1000;
-  var PAGE_MS = 20000; // page flip — long enough to read a description
   var RELOAD_MS = 21600000; // 6 h watchdog reload to pick up new CSS/JS
+  var PANEL_IDLE_MS = 90000; // settings panel closes itself after 90 s idle
+  // One step of the auto colour cycle. Long on purpose: this is burn-in
+  // protection, not decoration — a wall that changes hue every minute is a
+  // distraction, one that changes every 20 min is barely noticed.
+  var CYCLE_MS = 1200000;
   // lastSync older than this → "daten alt". Not 3 h: the sync cron asks for
   // every 30 min but GitHub really fires it every 2-3 h and never catches up
   // (measured 2026-08-06, largest observed gap ~3 h 10 min), so a 3 h threshold
@@ -57,6 +66,8 @@
   var lastClockText = "";
   var page = 0;
   var pageCount = 1;
+  var flipTimer = null;  // page rotation — restarted when `dwell` changes
+  var panelTimer = null; // idle close for the settings panel
 
   function pad(n) { return n < 10 ? "0" + n : "" + n; }
 
@@ -87,16 +98,117 @@
       .trim();
   }
 
-  // ?rows=N caps how many events a page may hold (1–12, default 8). It is an
-  // upper bound, not a target: render() shrinks the page until it actually fits
-  // the screen, because how many events fit depends on how long their
-  // descriptions are, and nobody is going to re-tune a query parameter on a
-  // wall when a calendar entry grows.
-  function rowCap() {
-    var m = /[?&]rows=(\d+)/.exec(window.location.search);
-    var n = m ? parseInt(m[1], 10) : 8;
-    return Math.max(1, Math.min(12, isNaN(n) ? 8 : n));
+  /* ===========================================================================
+     Settings — one model behind both the URL and the ⚙ panel.
+
+     Reading order is URL → localStorage → default, because the URL is how a
+     screen gets pinned: hand a wall `/kiosk/?palette=amber&info=off` and it
+     comes up that way regardless of what someone once clicked on it. Writing
+     goes to BOTH, and the address bar is kept in step with replaceState, so
+     the current URL is always a copyable description of what is on screen.
+
+     Names are English like the pre-existing `rows`; the labels in the panel are
+     German like the rest of the UI.
+     =========================================================================== */
+  var SETTINGS = {
+    // theme shares its key with the rest of the site — the ◐ toggle in the nav
+    // and the one here mean the same thing.
+    theme:   { key: "bc.theme",           values: ["dark", "light"] },
+    palette: { key: "bc.kiosk.palette",   values: ["standard", "green", "amber", "mono", "pride"] },
+    cycle:   { key: "bc.kiosk.cycle",     values: ["off", "on"] },
+    info:    { key: "bc.kiosk.info",      values: ["full", "short", "off"] },
+    source:  { key: "bc.kiosk.source",    values: ["all", "bitcircus101"] },
+    // numeric: [default, min, max]
+    rows:    { key: "bc.kiosk.rows",      num: [8, 1, 12] },
+    dwell:   { key: "bc.kiosk.dwell",     num: [20, 5, 300] },
+  };
+
+  var settings = {};
+
+  function store(key) {
+    try { return localStorage.getItem(key); } catch (e) { return null; }
   }
+
+  function remember(key, value) {
+    try { localStorage.setItem(key, value); } catch (e) { /* private mode */ }
+  }
+
+  function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+
+  function readSettings() {
+    var q = new URLSearchParams(window.location.search);
+    var out = {};
+    Object.keys(SETTINGS).forEach(function (name) {
+      var spec = SETTINGS[name];
+      var raw = q.get(name);
+      if (raw === null) raw = store(spec.key);
+      if (spec.num) {
+        var n = parseInt(raw, 10);
+        out[name] = isNaN(n) ? spec.num[0] : clamp(n, spec.num[1], spec.num[2]);
+      } else {
+        out[name] = spec.values.indexOf(raw) > -1 ? raw : spec.values[0];
+      }
+    });
+    return out;
+  }
+
+  /** Mirror the live settings into the address bar — only the non-default ones,
+   *  so a plain wall keeps a plain URL and a pinned one reads as its own recipe. */
+  function syncUrl() {
+    if (!window.history || !window.history.replaceState) return;
+    var q = new URLSearchParams();
+    Object.keys(SETTINGS).forEach(function (name) {
+      var spec = SETTINGS[name];
+      var def = spec.num ? spec.num[0] : spec.values[0];
+      if (settings[name] !== def) q.set(name, settings[name]);
+    });
+    var qs = q.toString();
+    window.history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : ""));
+  }
+
+  function applyChrome() {
+    var root = document.documentElement;
+    if (settings.theme === "light") root.dataset.theme = "light";
+    else delete root.dataset.theme;
+    root.dataset.palette = settings.palette;
+
+    var list = document.getElementById("kiosk-list");
+    if (list) {
+      list.classList.toggle("kiosk__list--info-short", settings.info === "short");
+      list.classList.toggle("kiosk__list--info-off", settings.info === "off");
+    }
+    var themeBtn = document.getElementById("kiosk-theme");
+    if (themeBtn) themeBtn.setAttribute("aria-pressed", String(settings.theme === "light"));
+  }
+
+  /** Change one setting and put the whole machine back in step. */
+  function setSetting(name, value) {
+    var spec = SETTINGS[name];
+    if (!spec) return;
+    if (spec.num) {
+      var n = parseInt(value, 10);
+      if (isNaN(n)) return;
+      value = clamp(n, spec.num[1], spec.num[2]);
+    } else if (spec.values.indexOf(value) < 0) {
+      return;
+    }
+    if (settings[name] === value) return;
+    settings[name] = value;
+    remember(spec.key, String(value));
+    syncUrl();
+    applyChrome();
+    if (name === "dwell") restartFlip();
+    // rows/info/source change what a page holds, so the fit must be re-measured
+    page = 0;
+    render();
+    status();
+    paintPanel();
+  }
+
+  // `rows` caps how many events a page may hold. It is an upper bound, not a
+  // target: render() shrinks the page until it actually fits the screen,
+  // because how many events fit depends on how long their descriptions are.
+  function rowCap() { return settings.rows; }
 
   function dateKey(d) {
     return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
@@ -202,7 +314,10 @@
     }
     html += '<span class="kiosk-ev__side">' + side + "</span>";
 
-    var desc = cleanText(e.description);
+    // info=off drops the text entirely rather than hiding it in CSS: the page
+    // fit is measured from the DOM, so an invisible paragraph would still cost
+    // a page break.
+    var desc = settings.info === "off" ? "" : cleanText(e.description);
     if (desc) html += '<p class="kiosk-ev__desc">' + esc(desc) + "</p>";
 
     var loc = cleanText(e.location);
@@ -242,7 +357,10 @@
 
     var rows = lastGood.events
       .filter(function (e) {
-        return new Date(e.date + "T23:59:59") >= startOfToday;
+        if (new Date(e.date + "T23:59:59") < startOfToday) return false;
+        // "nur bitcircus101" hides the friendly spaces' calendars, the same
+        // distinction the events page offers.
+        return settings.source === "all" || e.source === "bitcircus101";
       })
       .sort(function (a, b) {
         return (a.date + (a.time || "")).localeCompare(b.date + (b.time || ""));
@@ -341,6 +459,157 @@
     status();
   }
 
+  function restartFlip() {
+    if (flipTimer) clearInterval(flipTimer);
+    flipTimer = setInterval(flipPage, settings.dwell * 1000);
+  }
+
+  /* ===========================================================================
+     Colour
+     =========================================================================== */
+
+  /** Next palette in the cycle — what the ◉ button does. */
+  function nextPalette() {
+    var list = SETTINGS.palette.values;
+    var i = list.indexOf(settings.palette);
+    setSetting("palette", list[(i + 1) % list.length]);
+  }
+
+  /**
+   * Auto mode: step the palette AND flip light/dark on a long interval. The
+   * inversion is the part that actually helps against burn-in — a wall shows
+   * near-static text for weeks, and rotating the hue leaves the same pixels
+   * lit. Palette rotation on its own would look like a feature and protect
+   * nothing.
+   */
+  function cycleStep() {
+    if (settings.cycle !== "on") return;
+    var list = SETTINGS.palette.values;
+    var i = list.indexOf(settings.palette);
+    var wrapped = (i + 1) % list.length === 0;
+    setSetting("palette", list[(i + 1) % list.length]);
+    // invert once per full trip through the palettes, not on every step
+    if (wrapped) setSetting("theme", settings.theme === "light" ? "dark" : "light");
+  }
+
+  /* ===========================================================================
+     Settings panel
+     =========================================================================== */
+
+  var PANEL_LABELS = {
+    palette: { standard: "standard", green: "grün", amber: "bernstein", mono: "weiß", pride: "rainbow" },
+    info: { full: "lang", short: "kurz", off: "aus" },
+    source: { all: "alle kalender", bitcircus101: "nur bitcircus101" },
+  };
+
+  function choiceRow(el, name) {
+    if (!el) return;
+    var html = "";
+    SETTINGS[name].values.forEach(function (v) {
+      html += '<button type="button" class="kiosk-set__opt' +
+        (settings[name] === v ? " kiosk-set__opt--on" : "") +
+        '" data-set="' + name + '" data-value="' + v + '"' +
+        (settings[name] === v ? ' aria-pressed="true"' : ' aria-pressed="false"') +
+        ">" + esc(PANEL_LABELS[name][v]) + "</button>";
+    });
+    el.innerHTML = html;
+  }
+
+  /** Re-render the panel from the settings, so it never drifts from reality. */
+  function paintPanel() {
+    var panel = document.getElementById("kiosk-settings");
+    if (!panel || panel.hidden) return;
+    choiceRow(document.getElementById("kiosk-set-palette"), "palette");
+    choiceRow(document.getElementById("kiosk-set-info"), "info");
+    choiceRow(document.getElementById("kiosk-set-source"), "source");
+    var cycle = document.getElementById("kiosk-set-cycle");
+    if (cycle) cycle.checked = settings.cycle === "on";
+    var light = document.getElementById("kiosk-set-light");
+    if (light) light.checked = settings.theme === "light";
+    var rowsIn = document.getElementById("kiosk-set-rows");
+    if (rowsIn && document.activeElement !== rowsIn) rowsIn.value = settings.rows;
+    var dwellIn = document.getElementById("kiosk-set-dwell");
+    if (dwellIn && document.activeElement !== dwellIn) dwellIn.value = settings.dwell;
+    var url = document.getElementById("kiosk-settings-url");
+    if (url) url.textContent = window.location.href;
+  }
+
+  function openPanel() {
+    var panel = document.getElementById("kiosk-settings");
+    if (!panel) return;
+    panel.hidden = false;
+    document.body.classList.add("kiosk-body--settings");
+    var btn = document.getElementById("kiosk-settings-open");
+    if (btn) btn.setAttribute("aria-expanded", "true");
+    paintPanel();
+    armPanelTimeout();
+  }
+
+  function closePanel() {
+    var panel = document.getElementById("kiosk-settings");
+    if (!panel) return;
+    panel.hidden = true;
+    document.body.classList.remove("kiosk-body--settings");
+    var btn = document.getElementById("kiosk-settings-open");
+    if (btn) btn.setAttribute("aria-expanded", "false");
+    if (panelTimer) clearTimeout(panelTimer);
+  }
+
+  /** A wall left with its settings panel open is a wall showing no events. */
+  function armPanelTimeout() {
+    if (panelTimer) clearTimeout(panelTimer);
+    panelTimer = setTimeout(closePanel, PANEL_IDLE_MS);
+  }
+
+  function wireControls() {
+    var theme = document.getElementById("kiosk-theme");
+    if (theme) theme.addEventListener("click", function () {
+      setSetting("theme", settings.theme === "light" ? "dark" : "light");
+    });
+    var pal = document.getElementById("kiosk-palette");
+    if (pal) pal.addEventListener("click", nextPalette);
+
+    var open = document.getElementById("kiosk-settings-open");
+    if (open) open.addEventListener("click", function () {
+      var panel = document.getElementById("kiosk-settings");
+      if (panel && panel.hidden) openPanel(); else closePanel();
+    });
+    var close = document.getElementById("kiosk-settings-close");
+    if (close) close.addEventListener("click", closePanel);
+
+    var reset = document.getElementById("kiosk-set-reset");
+    if (reset) reset.addEventListener("click", function () {
+      Object.keys(SETTINGS).forEach(function (name) {
+        var spec = SETTINGS[name];
+        setSetting(name, spec.num ? spec.num[0] : spec.values[0]);
+      });
+      paintPanel();
+    });
+
+    var panel = document.getElementById("kiosk-settings");
+    if (panel) {
+      // one delegated listener for every choice button in the panel
+      panel.addEventListener("click", function (ev) {
+        armPanelTimeout();
+        var btn = ev.target.closest ? ev.target.closest("[data-set]") : null;
+        if (btn) setSetting(btn.getAttribute("data-set"), btn.getAttribute("data-value"));
+      });
+      panel.addEventListener("change", function (ev) {
+        armPanelTimeout();
+        var t = ev.target;
+        if (t.id === "kiosk-set-cycle") setSetting("cycle", t.checked ? "on" : "off");
+        if (t.id === "kiosk-set-light") setSetting("theme", t.checked ? "light" : "dark");
+        if (t.id === "kiosk-set-rows") setSetting("rows", t.value);
+        if (t.id === "kiosk-set-dwell") setSetting("dwell", t.value);
+      });
+      panel.addEventListener("input", armPanelTimeout);
+    }
+
+    document.addEventListener("keydown", function (ev) {
+      if (ev.key === "Escape") closePanel();
+    });
+  }
+
   function load() {
     // Minute-grained buster + no-store so a wall browser never serves a
     // week-old cached JSON.
@@ -387,11 +656,16 @@
   }
 
   function init() {
+    settings = readSettings();
+    applyChrome();
+    syncUrl();
+    wireControls();
     tick();
     load();
     setInterval(tick, CLOCK_MS);
     setInterval(load, REFRESH_MS);
-    setInterval(flipPage, PAGE_MS);
+    restartFlip();
+    setInterval(cycleStep, CYCLE_MS);
     // Watchdog: a browser that has been open for weeks picks up new CSS/JS —
     // but only reload while online, never loop through an outage.
     setInterval(function () {

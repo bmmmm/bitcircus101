@@ -2137,11 +2137,243 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 .kiosk-offline { color: var(--ink-dim); }
 
 .kiosk__bar {
+    display: flex;
+    align-items: center;
+    gap: 1.5ch;
     border-top: 1px solid var(--line);
     margin-top: 0.6em;
     padding-top: 0.3em;
     color: var(--ink-dim);
     font-size: 0.7em;
+}
+.kiosk__status { flex: 1; min-width: 0; }
+
+/* ── palettes ─────────────────────────────────────────────────────────────
+   Wall-only colour. The kiosk is its own world (no chrome, no nav), so unlike
+   the rest of the site it may tint the ink itself — that is the whole point of
+   a phosphor mode. `standard` is the site's own monochrome look and stays the
+   default: the colour is opt-in, not a redecoration.
+
+   Every value is set for BOTH schemes. A phosphor hue that reads on near-black
+   paper is unreadable on near-white, so light gets its own darker set rather
+   than inheriting.
+   ------------------------------------------------------------------------- */
+:root[data-palette="green"] {
+    --ink:      #6ddc86;
+    --ink-max:  #9ff5b2;
+    --ink-dim:  #48a05c;
+    --accent:   #3ecf5c;
+    --line:     #1e4a29;
+    --line-strong: #2f7040;
+}
+:root[data-palette="amber"] {
+    --ink:      #f0b544;
+    --ink-max:  #ffd486;
+    --ink-dim:  #a87c2c;
+    --accent:   #ffb000;
+    --line:     #4a3a14;
+    --line-strong: #7a5f22;
+}
+/* mono: no hue at all — the accent stops being a colour and becomes ink, so the
+   running-now dot reads as emphasis rather than as green. */
+:root[data-palette="mono"] {
+    --ink:      #d0d0d0;
+    --ink-max:  #ffffff;
+    --ink-dim:  #909090;
+    --accent:   #ffffff;
+}
+
+html[data-theme="light"][data-palette="green"] {
+    --ink:      #14532d;
+    --ink-max:  #052e16;
+    --ink-dim:  #3f6b4d;
+    --accent:   #15803d;
+    --line:     #b6d4bf;
+    --line-strong: #6f9c7e;
+}
+html[data-theme="light"][data-palette="amber"] {
+    --ink:      #5a3d00;
+    --ink-max:  #3a2700;
+    --ink-dim:  #7a5c22;
+    --accent:   #8a5a00;
+    --line:     #dccaa4;
+    --line-strong: #a98f57;
+}
+html[data-theme="light"][data-palette="mono"] {
+    --ink:      #1a1a1a;
+    --ink-max:  #000000;
+    --ink-dim:  #565656;
+    --accent:   #000000;
+}
+
+/* ── rainbow / pride ──────────────────────────────────────────────────────
+   The ink stays neutral on purpose: six-colour body text is a flag, not a
+   timetable, and this hangs on a wall to be read from across the room. The
+   STRUCTURE carries the colours instead — each day takes the next stripe for
+   its label, its rules, its running-now dot and its parallel bracket. Reading
+   is untouched; the page is unmistakably a flag.
+   ------------------------------------------------------------------------- */
+:root[data-palette="pride"] {
+    --pride-1: #ff4d4d;  /* red    */
+    --pride-2: #ff9d2e;  /* orange */
+    --pride-3: #ffd93d;  /* yellow */
+    --pride-4: #3fbf5f;  /* green  */
+    --pride-5: #4b8cf5;  /* blue   */
+    --pride-6: #b06cf0;  /* violet */
+}
+html[data-theme="light"][data-palette="pride"] {
+    /* darkened so each stripe still clears text contrast on light paper */
+    --pride-1: #c81e1e;
+    --pride-2: #a85a00;
+    --pride-3: #8a6d00;
+    --pride-4: #12703a;
+    --pride-5: #2352b8;
+    --pride-6: #6b2fa8;
+}
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 1) { --day-hue: var(--pride-1); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 2) { --day-hue: var(--pride-2); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 3) { --day-hue: var(--pride-3); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 4) { --day-hue: var(--pride-4); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 5) { --day-hue: var(--pride-5); }
+[data-palette="pride"] .kiosk-day:nth-of-type(6n + 6) { --day-hue: var(--pride-6); }
+
+[data-palette="pride"] .kiosk-day__label { color: var(--day-hue); }
+[data-palette="pride"] .kiosk-day__label::after { border-top-color: var(--day-hue); }
+[data-palette="pride"] .kiosk-day--today .kiosk-day__label > span {
+    background: var(--day-hue);
+    color: var(--paper);
+}
+[data-palette="pride"] .kiosk-par { border-left-color: var(--day-hue); }
+[data-palette="pride"] .kiosk-ev--now .kiosk-ev__time::before { color: var(--day-hue); }
+[data-palette="pride"] .kiosk__top { border-bottom-color: var(--pride-1); }
+[data-palette="pride"] .kiosk__bar { border-top-color: var(--pride-6); }
+
+/* ── info density ─────────────────────────────────────────────────────────
+   `off` drops the paragraph in JS (the page fit is measured from the DOM, so a
+   hidden one would still cost a break); only the clamp lives here. */
+.kiosk__list--info-short .kiosk-ev__desc {
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+}
+
+/* ── controls in the status bar ───────────────────────────────────────────
+   Reverse video on interaction, like every other control on the site — the
+   accent is reserved for state, and these are switches, not state. */
+.kiosk__controls { display: flex; gap: 0.5ch; flex: none; }
+
+.kiosk__ctl {
+    /* 24px is the site's minimum control size; these sit in a 0.7em bar, so the
+       box is set in px rather than em to stay tappable when the type shrinks. */
+    min-width: 24px;
+    min-height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--ink-dim);
+    font: inherit;
+    font-size: 1.4em;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0 0.4ch;
+}
+.kiosk__ctl:hover,
+.kiosk__ctl:focus-visible,
+.kiosk__ctl[aria-pressed="true"],
+.kiosk__ctl[aria-expanded="true"] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+}
+
+/* ── settings panel ───────────────────────────────────────────────────────
+   Sits over the list rather than beside it: the wall has no room to spare, and
+   the panel is a moment, not a layout. */
+.kiosk-settings {
+    position: fixed;
+    right: 2vw;
+    bottom: 2vh;
+    z-index: var(--z-modal);
+    width: min(46ch, 92vw);
+    max-height: 86vh;
+    overflow-y: auto;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    padding: 1.25rem 1.25rem 1rem;
+    font-size: max(0.8rem, 0.42em);
+    line-height: 1.6;
+    color: var(--ink);
+}
+.kiosk-settings__title {
+    margin: 0 0 0.25rem;
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--ink-max);
+    letter-spacing: 0.04em;
+}
+.kiosk-settings__hint {
+    margin: 0 0 1rem;
+    color: var(--ink-dim);
+    font-size: 0.85em;
+    word-break: break-all;
+}
+
+.kiosk-set {
+    border: 1px solid var(--line);
+    margin: 0 0 0.9rem;
+    padding: 0.5rem 0.75rem 0.75rem;
+}
+.kiosk-set legend {
+    padding: 0 0.6ch;
+    color: var(--ink-dim);
+    letter-spacing: 0.06em;
+}
+.kiosk-set__row { display: flex; flex-wrap: wrap; gap: 0.5ch; }
+
+.kiosk-set__opt,
+.kiosk-set__btn {
+    min-height: 24px;
+    background: none;
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    font: inherit;
+    padding: 0.25em 1ch;
+    cursor: pointer;
+}
+.kiosk-set__opt:hover,
+.kiosk-set__btn:hover,
+.kiosk-set__opt:focus-visible,
+.kiosk-set__btn:focus-visible { background: var(--ink); color: var(--paper); }
+/* the chosen option is a current-selection marker — accent, per the token rule */
+.kiosk-set__opt--on {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.kiosk-set__check,
+.kiosk-set__field {
+    display: flex;
+    align-items: center;
+    gap: 1ch;
+    margin-top: 0.5rem;
+    min-height: 24px;
+}
+.kiosk-set__field span { flex: 1; }
+.kiosk-set__field input {
+    width: 8ch;
+    background: var(--paper-2);
+    border: 1px solid var(--line-strong);
+    color: var(--ink-max);
+    font: inherit;
+    padding: 0.2em 0.5ch;
+}
+
+.kiosk-settings__actions { display: flex; justify-content: flex-end; gap: 1ch; }
+
+@media (max-width: 700px) {
+    .kiosk-settings { left: 2vw; right: 2vw; width: auto; }
 }
 
 /* =============================================================================
