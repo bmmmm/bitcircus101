@@ -26,6 +26,7 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     # Browsers + OS deps are baked into the image, so there is no fragile
     # `playwright install --with-deps` download step (which hung repeatedly and
     # which caching can't save us from: this site deploys less often than the
@@ -104,6 +105,7 @@ jobs:
   deploy:
     needs: test
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     # Same TZ pin as the test job for the events-data.json regeneration fallback.
     env:
       TZ: Europe/Berlin
