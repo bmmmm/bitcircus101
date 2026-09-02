@@ -5,9 +5,18 @@
     <link>https://bitcircus101.de/events</link>
     <description>Gefiltert nach #linux – alle Termine mit diesem Schlagwort.</description>
     <language>de-de</language>
-    <lastBuildDate>Tue, 18 Aug 2026 16:39:23 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 02 Sep 2026 08:17:11 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/linux.xml" rel="self" type="application/rss+xml"/>
 
+    <item>
+      <title>[2026-10-10] Phosh Meetup! @ Bornheimer Straße 25 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-10-phosh-meetup</link>
+      <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
+      <category>#linux</category>
+      <category>#datenburg</category>
+      <pubDate>Wed, 02 Sep 2026 08:17:11 +0000</pubDate>
+      <guid isPermaLink="false">51FBAB7D-F2D1-49C6-AAC8-F94504DFF459-20261010</guid>
+    </item>
     <item>
       <title>[2026-10-10] Phosh Meetup! @ Datenburg</title>
       <link>https://bitcircus101.de/events#ev-2026-10-10-phosh-meetup</link>

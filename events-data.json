@@ -1,22 +1,22 @@
 {
-  "lastSync": "2026-09-02T07:46:31.824Z",
+  "lastSync": "2026-09-02T08:17:11.748Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-02T07:46:31.546Z",
+      "fetchedAt": "2026-09-02T08:17:11.501Z",
       "status": "ok",
       "events": 20,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 56,
+      "total": 57,
       "past": 3,
-      "upcoming": 53
+      "upcoming": 54
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-02T07:46:31.804Z",
+      "fetchedAt": "2026-09-02T08:17:11.730Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -83,7 +83,8 @@
       "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
       "46D03F17-581F-4E98-9499-E3E9A8319A83",
       "A74487C2-42C1-48FF-A2BA-00AB6388CC2B",
-      "7F2C9A14-3B6D-4E58-9C1A-0D9E2F6A8B30"
+      "7F2C9A14-3B6D-4E58-9C1A-0D9E2F6A8B30",
+      "51FBAB7D-F2D1-49C6-AAC8-F94504DFF459"
     ],
     "Datenburg e.V.": [
       "a027fbdd-6b08-4f8b-89c4-65fbcd7f2c66",
@@ -160,7 +161,7 @@
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
         "rss": "/feeds/tag/datenburg.xml",
-        "count": 10
+        "count": 11
       },
       "#foss": {
         "ics": "/feeds/tag/foss.ics",
@@ -180,7 +181,7 @@
       "#linux": {
         "ics": "/feeds/tag/linux.ics",
         "rss": "/feeds/tag/linux.xml",
-        "count": 1
+        "count": 2
       },
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
@@ -195,17 +196,17 @@
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 7
+        "count": 6
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 7
+        "count": 6
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 7
+        "count": 6
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -825,6 +826,25 @@
       "title": "Phosh Meetup!",
       "subtitle": "",
       "description": "Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.",
+      "location": "Bornheimer Straße 25 Bonn",
+      "date": "2026-10-10",
+      "time": "",
+      "endDate": "2026-10-12",
+      "endTime": "",
+      "tags": [
+        "#linux",
+        "#datenburg"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "51FBAB7D-F2D1-49C6-AAC8-F94504DFF459",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-09-02T08:17:11.734Z"
+    },
+    {
+      "title": "Phosh Meetup!",
+      "subtitle": "",
+      "description": "Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.",
       "location": "Datenburg",
       "date": "2026-10-10",
       "time": "",
@@ -974,26 +994,6 @@
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
-    {
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-10-20",
-      "time": "19:00",
-      "endDate": "2026-10-20",
-      "endTime": "22:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-05-19T18:59:16.839Z"
     }
   ]
 }

@@ -5,7 +5,7 @@
     <link>https://bitcircus101.de/events</link>
     <description>Alle Termine der Quelle bitcircus101.</description>
     <language>de-de</language>
-    <lastBuildDate>Mon, 31 Aug 2026 14:17:23 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 02 Sep 2026 08:17:11 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/source/bitcircus.xml" rel="self" type="application/rss+xml"/>
 
     <item>
@@ -147,6 +147,15 @@
       <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20261009T2000</guid>
     </item>
     <item>
+      <title>[2026-10-10] Phosh Meetup! @ Bornheimer Straße 25 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-10-phosh-meetup</link>
+      <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
+      <category>#linux</category>
+      <category>#datenburg</category>
+      <pubDate>Wed, 02 Sep 2026 08:17:11 +0000</pubDate>
+      <guid isPermaLink="false">51FBAB7D-F2D1-49C6-AAC8-F94504DFF459-20261010</guid>
+    </item>
+    <item>
       <title>[2026-10-12 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/events#ev-2026-10-12-treffen-bonner-fsfe-community</link>
       <description>Treffen: Bonner FSFE Community · 2026-10-12</description>
@@ -173,16 +182,6 @@
       <category>#talk</category>
       <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
       <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20261016T2000</guid>
-    </item>
-    <item>
-      <title>[2026-10-20 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-20-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
-      <category>#relax</category>
-      <category>#social</category>
-      <category>#spieletreff</category>
-      <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
-      <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261020T1900</guid>
     </item>
   </channel>
 </rss>

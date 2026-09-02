@@ -361,6 +361,18 @@ URL:https://bitcircus101.de
 CATEGORIES:meetup
 END:VEVENT
 BEGIN:VEVENT
+UID:51FBAB7D-F2D1-49C6-AAC8-F94504DFF459-20261010@bitcircus101.de
+DTSTAMP:20260902T081711Z
+DTSTART;VALUE=DATE:20261010
+DTEND;VALUE=DATE:20261012
+SUMMARY:Phosh Meetup!
+DESCRIPTION:Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell f
+ ür Mobiltelefone.
+LOCATION:Bornheimer Straße 25 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:linux,datenburg
+END:VEVENT
+BEGIN:VEVENT
 UID:d3a70a41-a602-4960-b0f8-7f19f966d890-20261010@bitcircus101.de
 DTSTAMP:20260818T163923Z
 DTSTART;VALUE=DATE:20261010
@@ -445,18 +457,5 @@ DTEND;TZID=Europe/Berlin:20261020T220000
 SUMMARY:Offene Datenburg
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:datenburg,offener-abend
-END:VEVENT
-BEGIN:VEVENT
-UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261020T1900@bitcircus101.de
-DTSTAMP:20260519T185916Z
-DTSTART;TZID=Europe/Berlin:20261020T190000
-DTEND;TZID=Europe/Berlin:20261020T220000
-SUMMARY:Look at my toys!
-DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
- tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
- u're welcome to hang out and continue playing and chatting as …
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
-CATEGORIES:relax,social,spieletreff
 END:VEVENT
 END:VCALENDAR
