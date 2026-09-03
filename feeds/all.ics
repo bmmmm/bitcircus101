@@ -23,15 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:88fda39c-f934-44ad-b8e8-67e2cd9a2931-20260903T1800@bitcircus101.de
-DTSTAMP:20260611T183404Z
-DTSTART;TZID=Europe/Berlin:20260903T180000
-DTEND;TZID=Europe/Berlin:20260903T230000
-SUMMARY:Interner Burgabend
-URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
-CATEGORIES:community
-END:VEVENT
-BEGIN:VEVENT
 UID:casual-linkup-1fr@bitcircus101.de-20260904T2000@bitcircus101.de
 DTSTAMP:20260502T105121Z
 DTSTART;TZID=Europe/Berlin:20260904T200000
@@ -457,5 +448,18 @@ DTEND;TZID=Europe/Berlin:20261020T220000
 SUMMARY:Offene Datenburg
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:datenburg,offener-abend
+END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261020T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20261020T190000
+DTEND;TZID=Europe/Berlin:20261020T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
 END:VEVENT
 END:VCALENDAR

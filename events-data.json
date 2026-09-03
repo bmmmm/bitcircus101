@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-03T15:17:29.218Z",
+  "lastSync": "2026-09-03T16:17:15.153Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-03T15:17:28.659Z",
+      "fetchedAt": "2026-09-03T16:17:14.893Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 57,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-03T15:17:28.792Z",
+      "fetchedAt": "2026-09-03T16:17:15.011Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 51,
@@ -156,7 +156,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 11
+        "count": 10
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -196,17 +196,17 @@
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 6
+        "count": 7
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 6
+        "count": 7
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 6
+        "count": 7
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -224,36 +224,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 20
+        "count": 21
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 20
+        "count": 19
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "title": "Interner Burgabend",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-09-03",
-      "time": "18:00",
-      "endDate": "2026-09-03",
-      "endTime": "23:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-11T18:34:04.184Z"
-    },
     {
       "title": "Casual Linkup@bitcircus101 (1FR)",
       "subtitle": "",
@@ -994,6 +976,26 @@
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-10-20",
+      "time": "19:00",
+      "endDate": "2026-10-20",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     }
   ]
 }
