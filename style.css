@@ -1450,9 +1450,11 @@ h3.location-card__header::before { content: none; }
 /* =============================================================================
    Job board / Pinnwand (pinnwand.html, rendered by jobs.js)
    ============================================================================= */
-/* Values mirror .projekt-panel* above — same panel idiom, own selectors: an E2E
-   test asserts the project cards' shape, so extending .projekt-* here would make
-   a pinnwand tweak able to break support.html. */
+/* Values mirror .projekt-panel* above — same panel idiom, deliberately its own
+   selectors. The duplication buys independence: support.html's board and this
+   one are unrelated surfaces, and sharing selectors would make a pinnwand tweak
+   able to reshape the funding cards. Nothing enforces this — no test compares
+   the two blocks' computed styles — so it is a design rule, kept by hand. */
 .jobs-list { margin: 1.25rem 0; }
 
 .job-panel {
@@ -1545,7 +1547,7 @@ h3.location-card__header::before { content: none; }
 .tuwat-contact { color: var(--ink-dim); }
 
 /* =============================================================================
-   Donation grid (support.html)
+   Donation grid (support.html, and step 2 on pinnwand.html)
    ============================================================================= */
 .donation-grid {
     display: grid;
