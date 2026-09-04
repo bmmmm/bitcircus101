@@ -77,6 +77,14 @@ jobs:
         # hand-edited around the CLI's own validation.
         run: node scripts/finanz.mjs validate
 
+      - name: Validate job board
+        # jobs.json is edited by hand (companies open a PR against it), so this
+        # is the only thing between a typo and a broken card on /pinnwand.
+        # Offline, no dependencies. An EXPIRED posting is only a warning: it is
+        # housekeeping, and failing on it would turn every deploy red on the day
+        # a posting runs out.
+        run: node scripts/check-jobs.mjs
+
       - name: Run unit tests
         run: node --test tests/*.spec.mjs
 
