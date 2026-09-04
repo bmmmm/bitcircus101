@@ -48,7 +48,11 @@
       "</p>" +
       '<a class="btn job-panel__action" href="' +
       esc(entry.url) +
-      '" target="_blank" rel="noopener noreferrer">Stellenanzeige öffnen ↗</a>' +
+      '" target="_blank" rel="noopener noreferrer" aria-label="Stellenanzeige öffnen: ' +
+      esc(entry.title) +
+      ' bei ' +
+      esc(entry.company) +
+      '">Stellenanzeige öffnen ↗</a>' +
       "</div></article>"
     );
   }
@@ -109,6 +113,9 @@
       renderError(list);
       return;
     }
+    // aria-busy belongs to the loading state, not to the page: left in the
+    // static markup it would flag the <noscript> fallback as forever loading.
+    list.setAttribute("aria-busy", "true");
     list.innerHTML = loadingMarkup();
     fetch(JSON_URL)
       .then(function (res) {

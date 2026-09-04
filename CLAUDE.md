@@ -127,6 +127,7 @@ Detail lives in each file's own header comment — these are pointers:
 - `scripts/build-lite-finanz.mjs` — writes the lite page's funding block **and** its "Stand" date from `finanz.json` (deterministic → gated). Its sibling `build-lite-events.mjs` writes only the event list and is deploy-only (live data → never drift-free)
 - `scripts/check-calendars.mjs` — manifest validator (offline, exits non-zero) + read-only `--probe` card preview; tested by `tests/calendars.spec.mjs`
 - `jobs-core.js` — **shared expiry math** (UMD/ES5) for the job board: one file for `jobs.js` in the browser and for the CI gate, so a posting comes down on the same day everywhere
+- `jobs.js` — the Pinnwand renderer: filters against the visitor's own calendar day, escapes every field and independently refuses a non-https url (an E2E test feeds it postings the gate would reject)
 - `scripts/check-jobs.mjs` — offline gate for `jobs.json`: `validate()` is pure (no clock), `staleWarnings()` takes the day in; errors exit 1, expiry only warns. See [The job board](#the-job-board-pinnwand)
 - `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay preserving CI feeds + pruning, `?v=` busting, post-deploy health check incl. a full sitemap walk — any non-200 breaks the deploy), tested via `tests/deploy-scripts.spec.mjs`
 - `llms.txt` — LLM-friendly site summary ([llms.txt standard](https://llmstxt.org/))
