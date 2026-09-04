@@ -214,9 +214,11 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
     const pitch = /<p class="jobs-pitch">([\s\S]*?)<\/p>/.exec(html);
     assert.ok(pitch, 'no <p class="jobs-pitch"> found in pinnwand.html');
-    // Only the offer, not the worked example below it ("ein Monat ab dem 01.09.").
-    const offer = pitch[1].split("Richtwerte")[0];
-    const offered = [...offer.matchAll(/(\d+)\s+monate?\b/gi)].map((m) => Number(m[1]));
+    // The WHOLE paragraph, deliberately. An earlier version stopped at the word
+    // "Richtwerte" to skip a worked example that has since moved into the
+    // how-to — which left everything after that word unscanned, so "Sonderfall:
+    // 6 monate ab 220 €" would have passed while the schema refuses a 6.
+    const offered = [...pitch[1].matchAll(/(\d+)\s+monate?\b/gi)].map((m) => Number(m[1]));
     assert.deepEqual(offered, MONTHS);
   });
 
