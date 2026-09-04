@@ -60,6 +60,41 @@ function buildJobsData() {
   };
 }
 
+/**
+ * Postings the CI gate would REFUSE — which is exactly why they are here.
+ *
+ * jobs.js escapes every field and independently drops any url that is not
+ * https, and its header calls that "defense in depth: even if the gate were
+ * bypassed". A claim like that is worth nothing until something can prove it,
+ * so this fixture is the bypass: it reaches the renderer without ever passing
+ * scripts/check-jobs.mjs.
+ *
+ * Only the last entry has a usable https url, so exactly ONE card may render —
+ * and that card's own text is hostile, so it also proves the escaping.
+ */
+function buildHostileJobsData() {
+  const live = { from: '2026-09-01', months: 3 };
+  return {
+    postings: [
+      { id: 'scheme-js', company: 'Böse GmbH', title: 'javascript: URL',
+        url: 'javascript:window.__pwned = 1', ...live },
+      { id: 'scheme-data', company: 'Böse GmbH', title: 'data: URL',
+        url: 'data:text/html,<script>window.__pwned = 1</script>', ...live },
+      { id: 'scheme-relative', company: 'Böse GmbH', title: 'protocol-relative URL',
+        url: '//evil.example/jobs', ...live },
+      { id: 'scheme-upper', company: 'Böse GmbH', title: 'uppercase scheme',
+        url: 'HTTPS://evil.example/jobs', ...live },
+      {
+        id: 'markup"><img src=x onerror="window.__pwned = 1">',
+        company: '"><img src=x onerror="window.__pwned = 1">',
+        title: '</h3><svg onload="window.__pwned = 1"></svg>',
+        url: 'https://ok.example/jobs/real',
+        ...live,
+      },
+    ],
+  };
+}
+
 /** Serve the fixture for every jobs.json request on this page. */
 async function useJobsFixture(page, data) {
   const body = JSON.stringify(data || buildJobsData());
@@ -69,4 +104,4 @@ async function useJobsFixture(page, data) {
   );
 }
 
-module.exports = { buildJobsData, useJobsFixture, TODAY };
+module.exports = { buildJobsData, buildHostileJobsData, useJobsFixture, TODAY };
