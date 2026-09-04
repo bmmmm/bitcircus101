@@ -9,14 +9,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-04 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-04-casual-linkup-bitcircus101-1fr</link>
-      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
-      <category>#meetup</category>
-      <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
-      <guid isPermaLink="false">casual-linkup-1fr@bitcircus101.de-20260904T2000</guid>
-    </item>
-    <item>
       <title>[2026-09-06 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
       <link>https://bitcircus101.de/events#ev-2026-09-06-digital-independence-day-did</link>
       <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
@@ -346,6 +338,14 @@
       <category>#spieletreff</category>
       <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
       <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261020T1900</guid>
+    </item>
+    <item>
+      <title>[2026-10-22 19:00] Spieleabend</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-22-spieleabend</link>
+      <description>Spieleabend · 2026-10-22</description>
+      <category>#gaming</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">19efb037-b521-4f7b-b508-bd63eb3b292b-20261022T1900</guid>
     </item>
   </channel>
 </rss>

@@ -23,19 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:casual-linkup-1fr@bitcircus101.de-20260904T2000@bitcircus101.de
-DTSTAMP:20260502T105121Z
-DTSTART;TZID=Europe/Berlin:20260904T200000
-DTEND;TZID=Europe/Berlin:20260904T230000
-SUMMARY:Casual Linkup@bitcircus101 (1FR)
-DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
- nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
- . https://bitcircus101.de
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://bitcircus101.de
-CATEGORIES:meetup
-END:VEVENT
-BEGIN:VEVENT
 UID:aa6c53d5-be01-41d4-8b78-72bda610b0ce-20260906T1400@bitcircus101.de
 DTSTAMP:20260502T130846Z
 DTSTART;TZID=Europe/Berlin:20260906T140000
@@ -461,5 +448,14 @@ DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:19efb037-b521-4f7b-b508-bd63eb3b292b-20261022T1900@bitcircus101.de
+DTSTAMP:20260616T150902Z
+DTSTART;TZID=Europe/Berlin:20261022T190000
+DTEND;TZID=Europe/Berlin:20261022T220000
+SUMMARY:Spieleabend
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:gaming
 END:VEVENT
 END:VCALENDAR
