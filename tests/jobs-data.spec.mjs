@@ -16,6 +16,8 @@ import {
   ROOT_KEYS,
   POSTING_KEYS,
   MONTHS,
+  LIMITS,
+  ID_RE,
   JOBS_PATH,
 } from "../scripts/check-jobs.mjs";
 
@@ -107,6 +109,19 @@ describe("validate — one error class per case, each naming its field", () => {
     });
   }
 
+  it("rejects a company or title made only of spaces", () => {
+    // minLength:1 in the schema cannot say "not just whitespace"; the gate can.
+    for (const field of ["company", "title"]) {
+      const data = board(posting({ [field]: "   " }));
+      const errors = errorsFor(data);
+      assert.equal(validate(data).ok, false, field);
+      assert.ok(
+        errors.some((e) => e.includes(`postings[0].${field}: zu kurz`)),
+        errors.join(" | ")
+      );
+    }
+  });
+
   it("rejects a duplicate id and names it", () => {
     const data = board(posting(), posting({ from: "2026-10-01" }));
     const errors = errorsFor(data);
@@ -119,6 +134,9 @@ describe("validate — one error class per case, each naming its field", () => {
 
   it("reports the index of the offending entry, not just the first", () => {
     const errors = errorsFor(board(posting(), posting({ id: "b", months: 5 })));
+    // every() on [] is vacuously true — assert there IS an error before asserting
+    // about it, or a validate() that stopped reporting would pass this test.
+    assert.ok(errors.length > 0, "expected the second entry to be rejected");
     assert.ok(errors.every((e) => e.startsWith("postings[1]")), errors.join(" | "));
   });
 });
@@ -154,6 +172,19 @@ describe("staleWarnings — housekeeping only, never an error", () => {
   });
 });
 
+describe("staleWarnings on data that never validated", () => {
+  it("skips what has no usable date instead of throwing", () => {
+    // Exported, so a future --probe mode could hand it raw input.
+    assert.deepEqual(staleWarnings({ postings: [{ id: "a", months: 1 }] }, "2026-09-15"), []);
+    assert.deepEqual(staleWarnings({ postings: [null, "acme", 42] }, "2026-09-15"), []);
+    assert.deepEqual(
+      staleWarnings({ postings: [{ id: "a", from: 20260901, months: 1 }] }, "2026-09-15"),
+      []
+    );
+    assert.deepEqual(staleWarnings({}, "2026-09-15"), []);
+  });
+});
+
 describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schema.json)", () => {
   const sorted = (a) => [...a].sort();
 
@@ -175,6 +206,35 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
   it("MONTHS matches the schema's months enum — the price list is stated once", () => {
     assert.deepEqual(MONTHS, SCHEMA.$defs.posting.properties.months.enum);
   });
+
+  it("the page's runtime list enumerates MONTHS — the price list is stated once", () => {
+    // Three files name 1/3/12: jobs-core.js (the source), the schema's enum, and
+    // the <dl> a buyer reads. The lockstep test above covers the first two; this
+    // covers the one a company actually copies from.
+    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
+    const dl = /<dl class="man">([\s\S]*?)<\/dl>/.exec(html);
+    assert.ok(dl, 'no <dl class="man"> runtime list found in pinnwand.html');
+    const offered = [...dl[1].matchAll(/<dt>\s*(\d+)\s+monate?<\/dt>/g)].map((m) => Number(m[1]));
+    assert.deepEqual(offered, MONTHS);
+  });
+
+  it("the length limits match the schema a contributor's editor validates against", () => {
+    const props = SCHEMA.$defs.posting.properties;
+    assert.deepEqual(LIMITS.id, {
+      minLength: SCHEMA.$defs.id.minLength,
+      maxLength: SCHEMA.$defs.id.maxLength,
+    });
+    assert.deepEqual(LIMITS.company, {
+      minLength: props.company.minLength,
+      maxLength: props.company.maxLength,
+    });
+    assert.deepEqual(LIMITS.title, {
+      minLength: props.title.minLength,
+      maxLength: props.title.maxLength,
+    });
+    assert.equal(ID_RE.source, SCHEMA.$defs.id.pattern);
+  });
+
 });
 
 describe("the committed jobs.json", () => {

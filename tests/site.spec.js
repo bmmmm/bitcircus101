@@ -1,7 +1,7 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 const { buildEventsData, useEventsFixture } = require('./fixtures/events-data');
-const { useJobsFixture } = require('./fixtures/jobs-data');
+const { buildHostileJobsData, useJobsFixture } = require('./fixtures/jobs-data');
 
 // ─── Hit-area probe ──────────────────────────────────────────────────────────
 //
@@ -191,6 +191,10 @@ test.describe('SEO meta tags', () => {
 
         // Donations
         await page.goto('/support.html');
+        expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
+
+        // Pinnwand
+        await page.goto('/pinnwand.html');
         expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
 
         // Raum nutzen
@@ -817,6 +821,34 @@ test.describe('Pinnwand', () => {
         const empty = page.locator('.jobs-empty');
         await expect(empty).toBeVisible();
         await expect(empty.locator('a[href="#aufhaengen"]')).toBeVisible();
+    });
+
+    test('a posting that got past the gate can still not inject or link out unsafely', async ({ page }) => {
+        // The second lock, tested on the assumption the first one failed: these
+        // five postings would every one be refused by scripts/check-jobs.mjs.
+        await page.clock.install({ time: NOW });
+        await useJobsFixture(page, buildHostileJobsData());
+        await page.goto('/pinnwand.html');
+
+        // Four unusable schemes dropped — javascript:, data:, protocol-relative
+        // and an uppercase HTTPS:// that indexOf("https://") does not match.
+        const cards = page.locator('.job-panel');
+        await expect(cards).toHaveCount(1);
+        expect(await cards.locator('.job-panel__action').getAttribute('href'))
+            .toBe('https://ok.example/jobs/real');
+
+        // Nothing executed and nothing was injected: the markup in the fields
+        // came back as TEXT, and no element grew out of it.
+        expect(await page.evaluate(() => window.__pwned)).toBeUndefined();
+        await expect(page.locator('#jobs-list img, #jobs-list svg, #jobs-list script'))
+            .toHaveCount(0);
+        await expect(page.locator('.job-panel__title'))
+            .toHaveText('</h3><svg onload="window.__pwned = 1"></svg>');
+        await expect(page.locator('.job-panel__company'))
+            .toHaveText('"><img src=x onerror="window.__pwned = 1">');
+        // The id lands in an attribute AND in the chrome line — both escaped.
+        await expect(page.locator('.job-panel__path'))
+            .toHaveText('~/pinnwand/markup"><img src=x onerror="window.__pwned = 1">');
     });
 });
 
