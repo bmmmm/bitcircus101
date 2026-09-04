@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://bitcircus101.de/jobs.schema.json",
+  "title": "bitcircus101 jobs.json",
+  "description": "Job board behind pinnwand.html: one object per posting, each a LINK to a vacancy hosted elsewhere. Holds no applicant data, no contact details and no amounts — the donation is handled outside this file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["postings"],
+  "properties": {
+    "postings": {
+      "description": "Every posting ever paid for that is still up. Remove an entry once check-jobs.mjs warns that it expired. Two rules this schema cannot express, which scripts/check-jobs.mjs enforces on top: ids must be unique across the array, and company/title must hold at least one non-blank character.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/posting" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "description": "Slug used in DOM ids and URLs — lowercase, digits, dashes. Convention: <company>-<yyyy>-<mm>.",
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "minLength": 1,
+      "maxLength": 48
+    },
+    "posting": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "company", "title", "url", "from", "months"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "company": {
+          "description": "Who is hiring, as it should appear on the card.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "title": {
+          "description": "The vacancy plus its location or remote note, in one sentence.",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "url": {
+          "description": "Link to the vacancy — https only; we host nothing, we link.",
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "from": {
+          "description": "First day the posting is shown (YYYY-MM-DD). It runs until the day before the same day-of-month `months` later.",
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+        },
+        "months": {
+          "description": "Booked runtime in months. This enum IS the price list — 1 (ab 50 €), 3 (ab 120 €), 12 (ab 400 €); no other duration is sold.",
+          "type": "integer",
+          "enum": [1, 3, 12]
+        }
+      }
+    }
+  }
+}
