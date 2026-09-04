@@ -73,7 +73,7 @@ and blocks dependency build scripts. Local E2E needs browsers once:
 |------|------|
 | `includes/site-header.html` | Single source for `<header>` / nav |
 | `includes/site-footer.html` | Single source for `<footer>` |
-| `scripts/inject-layout.mjs` | Inlines those into the six layout HTML files |
+| `scripts/inject-layout.mjs` | Inlines those into the seven layout HTML files |
 | `pnpm run build:layout` | Run after editing the partials |
 
 **Workflow:** Edit the partials → `pnpm run build:layout` → commit partials **and** changed `*.html`. CI fails on any HTML drift; deploy re-runs inject before cache-busting.
@@ -126,6 +126,8 @@ Detail lives in each file's own header comment — these are pointers:
 - `scripts/finanz.mjs` + `scripts/finanz-data.mjs` — the funding board's CLI and its pure data layer; see [Editing the funding board](#editing-the-funding-board)
 - `scripts/build-lite-finanz.mjs` — writes the lite page's funding block **and** its "Stand" date from `finanz.json` (deterministic → gated). Its sibling `build-lite-events.mjs` writes only the event list and is deploy-only (live data → never drift-free)
 - `scripts/check-calendars.mjs` — manifest validator (offline, exits non-zero) + read-only `--probe` card preview; tested by `tests/calendars.spec.mjs`
+- `jobs-core.js` — **shared expiry math** (UMD/ES5) for the job board: one file for `jobs.js` in the browser and for the CI gate, so a posting comes down on the same day everywhere
+- `scripts/check-jobs.mjs` — offline gate for `jobs.json`: `validate()` is pure (no clock), `staleWarnings()` takes the day in; errors exit 1, expiry only warns. See [The job board](#the-job-board-pinnwand)
 - `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay preserving CI feeds + pruning, `?v=` busting, post-deploy health check incl. a full sitemap walk — any non-200 breaks the deploy), tested via `tests/deploy-scripts.spec.mjs`
 - `llms.txt` — LLM-friendly site summary ([llms.txt standard](https://llmstxt.org/))
 - `changelog.md` — release history (auto-updated by release workflow)
@@ -177,6 +179,21 @@ Every write validates **first** and refuses with an error naming the bad field, 
 The pulse is **opt-in**: `finanz.json` ships without a `pulse` key, and `pulse.js` renders nothing until one exists. `pnpm run finanz pulse <0..7>` appends a level; the CLI never accepts a euro figure, so no amount can leak into the public file through it.
 
 **Not yet rendered:** the schema accepts optional `url1`/`url2` per item and the CLI offers them, but `finanz.js` does not display them yet — staged separately (issue #28).
+
+## The job board (Pinnwand)
+
+`jobs.json` feeds `pinnwand.html` (clean URL `/pinnwand`): one object per posting, six required fields, **no optional ones**. Companies add theirs by pull request — the how-to, the copy-paste snippet and the donation channels all live on the page itself, so the instructions and the gate cannot drift apart (a unit test parses the snippet out of the HTML and validates it).
+
+```sh
+pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
+```
+
+- **Runtime is `months: 1 | 3 | 12`** — the enum *is* the price list (Richtwert ab 50 / 120 / 400 €). Any other value is refused at the gate.
+- **Half-open expiry:** a posting is up from `from` through the day *before* the same day-of-month `months` later — "1 month from 01.09." means up to and including 30.09. If that day-of-month does not exist in the target month (31.01. + 1), the run ends on the target month's last day. The math lives once, in `jobs-core.js`, and both the browser and the gate use it.
+- **The browser does the filtering**, against the visitor's local calendar day — so a posting comes down on its own last day with no redeploy.
+- **Expiry is a WARNING, never an error.** `check-jobs.mjs` runs in both `ci.yml` twins **and** in `deploy.yml`; failing on an expired posting would turn every deploy red on the day one runs out. Removing the entry is housekeeping, and the warning is the reminder.
+- **The donation is checked by hand before the merge** — there is no payment webhook, and this is the one deliberately manual step. Verwendungszweck is `JOBS-<id>`; contributors name their channel and date in the PR description.
+- No amounts, no contact details and no applicant data ever enter `jobs.json` — every card is a link to a vacancy hosted by the company.
 
 ## Adding a new page
 
