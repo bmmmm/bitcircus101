@@ -35,14 +35,14 @@
         <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
         <meta name="twitter:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
         <link rel="canonical" href="https://bitcircus101.de/pinnwand" />
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=8d454d1d" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=8d454d1d" />
-        <link rel="manifest" href="site.webmanifest?v=8d454d1d" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=44c7dd7d" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=44c7dd7d" />
+        <link rel="manifest" href="site.webmanifest?v=44c7dd7d" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=8d454d1d" />
+        <link rel="stylesheet" href="style.css?v=44c7dd7d" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -91,9 +91,9 @@
                         <div id="jobs-list" class="jobs-list" aria-live="polite">
                             <noscript>
                                 <p>
-                                    Die Zettel werden per JavaScript angezeigt – so verschwinden sie
-                                    von selbst, wenn ihre Laufzeit endet.
-                                    <a href="#aufhaengen">Selbst einen Zettel aufhängen ↓</a>
+                                    Die Zettel werden per JavaScript angezeigt – so nehmen sie sich
+                                    von selbst wieder ab, wenn ihre Laufzeit endet.
+                                    <a href="#aufhaengen">Einen Zettel aufhängen ↓</a>
                                 </p>
                             </noscript>
                         </div>
@@ -101,30 +101,26 @@
 
                     <section id="aufhaengen" class="panel" aria-labelledby="aufhaengen-heading">
                         <h2 id="aufhaengen-heading">zettel aufhängen<a class="section-anchor" href="#aufhaengen" aria-label="Link zu: Zettel aufhängen">#</a></h2>
-                        <p>
-                            Du suchst Leute für deine Firma und magst den Space? Dann häng deinen
-                            Zettel hier auf. Wie lange er hängt, suchst du dir aus:
-                        </p>
-                        <dl class="man">
-                            <dt>1 monat</dt>
-                            <dd>Richtwert ab 50 €</dd>
-                            <dt>3 monate</dt>
-                            <dd>Richtwert ab 120 €</dd>
-                            <dt>12 monate</dt>
-                            <dd>Richtwert ab 400 €</dd>
-                        </dl>
-                        <p>
-                            Richtwert heißt Richtwert: mehr ist eine Spende, weniger auch – sag uns
-                            einfach, was für dich passt. Gerechnet wird nach Kalender, ein Monat ab
-                            dem 01.09. hängt bis einschließlich 30.09.
+                        <p class="jobs-pitch">
+                            Ein Link auf eure Stellenanzeige, gegen eine Spende an den Space:
+                            <strong>1 monat ab 50 €</strong>, 3 monate ab 120 €, 12 monate ab 400 €.
+                            Richtwerte – mehr ist eine Spende, weniger auch.
                         </p>
 
-                        <ol>
-                            <li>
-                                <strong>Eintrag anhängen.</strong> Häng dieses Objekt in
-                                <code>jobs.json</code> ans <code>postings</code>-Array – eine Anzeige
-                                pro Pull Request:
-                                <pre class="jobs-snippet"><code>{
+                        <details class="sidenote jobs-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <span class="sidenote__title">so hängt ihr einen Zettel auf</span>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ol>
+                                    <li>
+                                        <strong>Eintrag anhängen.</strong> Häng dieses Objekt in
+                                        <code>jobs.json</code> ans <code>postings</code>-Array – eine
+                                        Anzeige pro Pull Request:
+                                        <pre class="jobs-snippet"><code>{
   "id": "acme-2026-09",
   "company": "ACME GmbH",
   "title": "Embedded-Entwickler:in (m/w/d), Bonn oder remote",
@@ -132,67 +128,81 @@
   "from": "2026-09-03",
   "months": 3
 }</code></pre>
-                                <p>
-                                    <a class="btn btn-primary" href="https://github.com/bmmmm/bitcircus101/edit/main/jobs.json" target="_blank" rel="noopener noreferrer">jobs.json auf GitHub bearbeiten&nbsp;↗</a>
-                                </p>
-                                <p>
-                                    Der Web-Editor legt die Kopie und den Pull Request selbst an, ganz
-                                    ohne Clone. Kein Git im Haus? Schick uns den Schnipsel
-                                    <a href="mailto:info@bitcircus101.de?subject=Pinnwand">per E-Mail</a>,
-                                    dann schreiben wir den Pull Request.
-                                </p>
-                            </li>
-                            <li>
-                                <strong>Spenden.</strong> Verwendungszweck <code>JOBS-&lt;id&gt;</code>,
-                                also z. B. <code>JOBS-acme-2026-09</code>. Schreib Kanal und Datum in
-                                die Beschreibung des Pull Requests, dann finden wir die Spende wieder.
-                                <div
-                                    class="donation-grid"
-                                    role="group"
-                                    aria-label="Wege zu spenden"
-                                >
-                                    <div class="donation-item">
-                                        <h3 class="donation-item__title">Überweisung</h3>
-                                        <p class="donation-item__text">Klassisch per Bank – IBAN auf Anfrage.</p>
-                                        <a class="btn donation-item__action" href="mailto:info@bitcircus101.de">IBAN anfragen</a>
-                                    </div>
-                                    <div class="donation-item">
-                                        <h3 class="donation-item__title">PayPal</h3>
-                                        <p class="donation-item__text">Direkt über PayPal.me.</p>
-                                        <a
-                                            class="btn btn-primary donation-item__action"
-                                            href="https://www.paypal.com/paypalme/b6m"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >PayPal öffnen&nbsp;↗</a>
-                                    </div>
-                                    <div class="donation-item">
-                                        <h3 class="donation-item__title">Ko&#x2011;fi</h3>
-                                        <p class="donation-item__text">Einmalig oder monatlich als Unterstützer:in.</p>
-                                        <a
-                                            class="btn btn-primary donation-item__action"
-                                            href="https://ko-fi.com/bmabma"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                        >Ko-fi öffnen&nbsp;↗</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <strong>Wir hängen auf.</strong> Die CI prüft den Eintrag, wir prüfen
-                                die Spende, dann wird gemergt – und der Zettel hängt. Abgenommen wird
-                                er von selbst, am Tag nach dem Ende der Laufzeit.
-                            </li>
-                        </ol>
+                                        <p>
+                                            <a class="btn btn-primary" href="https://github.com/bmmmm/bitcircus101/edit/main/jobs.json" target="_blank" rel="noopener noreferrer">jobs.json auf GitHub bearbeiten&nbsp;↗</a>
+                                        </p>
+                                        <p>
+                                            Der Web-Editor legt die Kopie und den Pull Request selbst an,
+                                            ganz ohne Clone. Kein Git im Haus? Schickt uns den Schnipsel
+                                            <a href="mailto:info@bitcircus101.de?subject=Pinnwand">per E-Mail</a>,
+                                            dann schreiben wir den Pull Request.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <strong>Spenden.</strong> Verwendungszweck <code>JOBS-&lt;id&gt;</code>,
+                                        also z. B. <code>JOBS-acme-2026-09</code>. Schreibt Kanal und Datum
+                                        in die Beschreibung des Pull Requests, dann finden wir die Spende
+                                        wieder.
+                                        <div
+                                            class="donation-grid"
+                                            role="group"
+                                            aria-label="Wege zu spenden"
+                                        >
+                                            <div class="donation-item">
+                                                <h3 class="donation-item__title">Überweisung</h3>
+                                                <p class="donation-item__text">Klassisch per Bank – IBAN auf Anfrage.</p>
+                                                <a class="btn donation-item__action" href="mailto:info@bitcircus101.de">IBAN anfragen</a>
+                                            </div>
+                                            <div class="donation-item">
+                                                <h3 class="donation-item__title">PayPal</h3>
+                                                <p class="donation-item__text">Direkt über PayPal.me.</p>
+                                                <a
+                                                    class="btn btn-primary donation-item__action"
+                                                    href="https://www.paypal.com/paypalme/b6m"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >PayPal öffnen&nbsp;↗</a>
+                                            </div>
+                                            <div class="donation-item">
+                                                <h3 class="donation-item__title">Ko&#x2011;fi</h3>
+                                                <p class="donation-item__text">Einmalig oder monatlich als Unterstützer:in.</p>
+                                                <a
+                                                    class="btn btn-primary donation-item__action"
+                                                    href="https://ko-fi.com/bmabma"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >Ko-fi öffnen&nbsp;↗</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <strong>Wir hängen auf.</strong> Die CI prüft den Eintrag, wir
+                                        prüfen die Spende, dann wird gemergt – und der Zettel hängt.
+                                        Gerechnet wird nach Kalender: ein Monat ab dem 01.09. hängt bis
+                                        einschließlich 30.09., danach nimmt sich der Zettel selbst
+                                        wieder ab.
+                                    </li>
+                                </ol>
+                            </div>
+                        </details>
 
-                        <h3>spielregeln</h3>
-                        <ul>
-                            <li>Nur <code>https</code>-Links, direkt auf die Anzeige.</li>
-                            <li>Eine Anzeige pro Pull Request.</li>
-                            <li>Nichts, was nach dem AGG diskriminiert.</li>
-                            <li>Wir dürfen einen Zettel ablehnen oder wieder abnehmen.</li>
-                            <li>Eine Spende ist eine Spende – keine Rechnung, keine Buchung von Werbefläche.</li>
-                        </ul>
+                        <details class="sidenote jobs-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <span class="sidenote__title">spielregeln</span>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ul>
+                                    <li>Nur <code>https</code>-Links, direkt auf die Anzeige.</li>
+                                    <li>Eine Anzeige pro Pull Request.</li>
+                                    <li>Nichts, was nach dem AGG diskriminiert.</li>
+                                    <li>Wir dürfen einen Zettel ablehnen oder wieder abnehmen.</li>
+                                    <li>Eine Spende ist eine Spende – keine Rechnung, keine Buchung von Werbefläche.</li>
+                                </ul>
+                            </div>
+                        </details>
                     </section>
                     <div class="back-link">
                         <a href="index.html" class="btn">← zurück zur startseite</a>
@@ -223,9 +233,9 @@
                 <span class="footer__status">lights: on</span>
             </div>
         </footer>
-        <script defer src="storage.js?v=8d454d1d"></script>
-        <script defer src="jobs-core.js?v=8d454d1d"></script>
-        <script defer src="jobs.js?v=8d454d1d"></script>
-        <script defer src="main.js?v=8d454d1d"></script>
+        <script defer src="storage.js?v=44c7dd7d"></script>
+        <script defer src="jobs-core.js?v=44c7dd7d"></script>
+        <script defer src="jobs.js?v=44c7dd7d"></script>
+        <script defer src="main.js?v=44c7dd7d"></script>
     </body>
 </html>
