@@ -10,6 +10,7 @@
     "build:lite-events": "node scripts/build-lite-events.mjs",
     "build:lite-finanz": "node scripts/build-lite-finanz.mjs",
     "check:calendars": "node scripts/check-calendars.mjs",
+    "check:jobs": "node scripts/check-jobs.mjs",
     "finanz": "node scripts/finanz.mjs",
     "finanz:validate": "node scripts/finanz.mjs validate",
     "build": "pnpm run build:layout && pnpm run build:logos && pnpm run build:lite-finanz",
