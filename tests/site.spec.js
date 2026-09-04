@@ -783,9 +783,11 @@ test.describe('Pinnwand', () => {
         await useJobsFixture(page);
         await page.goto('/pinnwand.html');
 
-        // Two of four: one expired two days ago, one starts next month.
-        const cards = page.locator('.job-panel');
+        // Two of four: one expired two days ago, one starts next month. The
+        // invite note is always there on top of them, so count real cards only.
+        const cards = page.locator('.job-panel:not(.job-panel--invite)');
         await expect(cards).toHaveCount(2);
+        await expect(page.locator('.job-panel--invite')).toHaveCount(1);
         await expect(page.locator('#job-expired-gmbh-2026-08')).toHaveCount(0);
         await expect(page.locator('#job-future-ag-2026-10')).toHaveCount(0);
 
@@ -793,14 +795,18 @@ test.describe('Pinnwand', () => {
         await expect(cards.nth(0)).toHaveAttribute('id', 'job-bytewerk-2026-09');
         await expect(cards.nth(1)).toHaveAttribute('id', 'job-acme-2026-09');
 
-        // Half-open runtime, shown as a date: 10.09. + 1 month runs to 09.10.,
-        // 01.09. + 3 months to 30.11. — the day BEFORE the anniversary.
-        await expect(cards.nth(0).locator('.job-panel__until')).toHaveText('läuft bis 09.10.2026');
-        await expect(cards.nth(1).locator('.job-panel__until')).toHaveText('läuft bis 30.11.2026');
+        // Both ends on the card. Half-open runtime, shown as a date: 10.09. + 1
+        // month runs to 09.10., 01.09. + 3 months to 30.11. — the day BEFORE the
+        // anniversary.
+        await expect(cards.nth(0).locator('.job-panel__dates'))
+            .toHaveText('hängt seit 10.09.2026 · läuft bis 09.10.2026');
+        await expect(cards.nth(1).locator('.job-panel__dates'))
+            .toHaveText('hängt seit 01.09.2026 · läuft bis 30.11.2026');
         await expect(cards.nth(0).locator('.job-panel__company')).toHaveText('Bytewerk eG');
 
-        // Every card is a link OUT: https only, new tab, rel-hardened.
-        const actions = page.locator('.job-panel__action');
+        // Every real card is a link OUT: https only, new tab, rel-hardened.
+        // (The invite note's action stays on the page, so it is not in here.)
+        const actions = cards.locator('.job-panel__action');
         await expect(actions).toHaveCount(2);
         for (const a of await actions.all()) {
             expect(await a.getAttribute('href')).toMatch(/^https:\/\//);
@@ -812,15 +818,22 @@ test.describe('Pinnwand', () => {
         await expect(page.locator('#jobs-list')).not.toHaveAttribute('aria-busy', 'true');
         await expect(page.locator('nav a[href="pinnwand.html"]')).toHaveAttribute('aria-current', 'page');
 
-        // Empty state via the FIXTURE, never against the committed jobs.json —
-        // otherwise the first real posting would break this test.
+        // The invite note hangs last, below the real ones, and points at the
+        // how-to rather than out to a vacancy.
+        const invite = page.locator('.job-panel--invite');
+        await expect(page.locator('.job-panel').last()).toHaveClass(/job-panel--invite/);
+        await expect(invite.locator('.job-panel__title')).toHaveText('Das könnte Euer Zettel sein :)');
+        await expect(invite.locator('.job-panel__action')).toHaveAttribute('href', '#aufhaengen');
+        await expect(invite.locator('.job-panel__dates')).toHaveCount(0);
+
+        // An empty wall still shows that one note — it IS the empty state. Via
+        // the FIXTURE, never against the committed jobs.json, or the first real
+        // posting would break this test.
         await page.unroute('**/jobs.json*');
         await useJobsFixture(page, { postings: [] });
         await page.goto('/pinnwand.html');
-        await expect(page.locator('.job-panel')).toHaveCount(0);
-        const empty = page.locator('.jobs-empty');
-        await expect(empty).toBeVisible();
-        await expect(empty.locator('a[href="#aufhaengen"]')).toBeVisible();
+        await expect(page.locator('.job-panel')).toHaveCount(1);
+        await expect(page.locator('.job-panel--invite')).toBeVisible();
     });
 
     test('a posting that got past the gate can still not inject or link out unsafely', async ({ page }) => {
@@ -832,7 +845,7 @@ test.describe('Pinnwand', () => {
 
         // Four unusable schemes dropped — javascript:, data:, protocol-relative
         // and an uppercase HTTPS:// that indexOf("https://") does not match.
-        const cards = page.locator('.job-panel');
+        const cards = page.locator('.job-panel:not(.job-panel--invite)');
         await expect(cards).toHaveCount(1);
         expect(await cards.locator('.job-panel__action').getAttribute('href'))
             .toBe('https://ok.example/jobs/real');
@@ -842,12 +855,12 @@ test.describe('Pinnwand', () => {
         expect(await page.evaluate(() => window.__pwned)).toBeUndefined();
         await expect(page.locator('#jobs-list img, #jobs-list svg, #jobs-list script'))
             .toHaveCount(0);
-        await expect(page.locator('.job-panel__title'))
+        await expect(cards.locator('.job-panel__title'))
             .toHaveText('</h3><svg onload="window.__pwned = 1"></svg>');
-        await expect(page.locator('.job-panel__company'))
+        await expect(cards.locator('.job-panel__company'))
             .toHaveText('"><img src=x onerror="window.__pwned = 1">');
         // The id lands in an attribute AND in the chrome line — both escaped.
-        await expect(page.locator('.job-panel__path'))
+        await expect(cards.locator('.job-panel__path'))
             .toHaveText('~/pinnwand/markup"><img src=x onerror="window.__pwned = 1">');
     });
 });

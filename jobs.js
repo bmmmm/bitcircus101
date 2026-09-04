@@ -6,6 +6,12 @@
  * filtering happens in the visitor's browser on purpose: a posting therefore
  * disappears on its own last day without anybody redeploying the site.
  *
+ * The last card on the wall is always the invite note ("Das könnte Euer Zettel
+ * sein :)"). It is rendered here rather than sitting in the HTML because jobs.js
+ * owns the list's innerHTML — and because it doubles as the empty state: a wall
+ * with nothing on it still shows one note, which reads better than a paragraph
+ * apologising for the emptiness.
+ *
  * We host no vacancy — every card is a link out. Defense in depth: the CI gate
  * (scripts/check-jobs.mjs) already refuses a non-https url, and this file
  * independently refuses to render one, so a card can never carry a javascript:
@@ -43,7 +49,9 @@
       '<p class="job-panel__company">' +
       esc(entry.company) +
       "</p>" +
-      '<p class="job-panel__until">läuft bis ' +
+      '<p class="job-panel__dates">hängt seit ' +
+      esc(Core.formatDay(entry.from)) +
+      '<span class="job-panel__sep" aria-hidden="true"> · </span>läuft bis ' +
       esc(until) +
       "</p>" +
       '<a class="btn job-panel__action" href="' +
@@ -53,6 +61,23 @@
       ' bei ' +
       esc(entry.company) +
       '">Stellenanzeige öffnen ↗</a>' +
+      "</div></article>"
+    );
+  }
+
+  // The note that is always up: an empty slot on the wall, drawn like a real
+  // card so the shape of the offer is visible before anyone has bought one.
+  // Dashed frame, no date line, and its action goes to the how-to instead of
+  // out to a vacancy.
+  function inviteMarkup() {
+    return (
+      '<article class="job-panel job-panel--invite" id="job-invite">' +
+      '<div class="job-panel__chrome" aria-hidden="true">' +
+      '<span class="job-panel__path">~/pinnwand/euer-zettel</span></div>' +
+      '<div class="job-panel__body">' +
+      '<h3 class="job-panel__title">Das könnte Euer Zettel sein :)</h3>' +
+      '<p class="job-panel__company">Noch frei</p>' +
+      '<a class="btn job-panel__action" href="#aufhaengen">Zettel aufhängen ↓</a>' +
       "</div></article>"
     );
   }
@@ -71,15 +96,8 @@
       '<div class="jobs-fallback">' +
       '<p class="jobs-fallback__cmd">zettel laden: ' +
       '<span class="jobs-fallback__err">fehlgeschlagen</span></p>' +
-      "<p>Du kannst trotzdem einen Zettel aufhängen: " +
+      "<p>Einen Zettel aufhängen geht trotzdem: " +
       '<a href="#aufhaengen">so geht das ↓</a></p></div>';
-    el.removeAttribute("aria-busy");
-  }
-
-  function renderEmpty(el) {
-    el.innerHTML =
-      '<p class="jobs-empty">Noch kein Zettel an der Wand — deiner könnte der ' +
-      'erste sein. <a href="#aufhaengen">Zettel aufhängen ↓</a></p>';
     el.removeAttribute("aria-busy");
   }
 
@@ -98,11 +116,8 @@
       html += cardMarkup(active[i]);
     }
 
-    if (!html) {
-      renderEmpty(list);
-      return;
-    }
-    list.innerHTML = html;
+    // Always last: real notes first, the free slot after them.
+    list.innerHTML = html + inviteMarkup();
     list.removeAttribute("aria-busy");
   }
 

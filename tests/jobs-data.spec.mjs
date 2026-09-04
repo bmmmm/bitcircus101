@@ -207,14 +207,16 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.deepEqual(MONTHS, SCHEMA.$defs.posting.properties.months.enum);
   });
 
-  it("the page's runtime list enumerates MONTHS — the price list is stated once", () => {
+  it("the runtimes the page offers are exactly MONTHS, in order", () => {
     // Three files name 1/3/12: jobs-core.js (the source), the schema's enum, and
-    // the <dl> a buyer reads. The lockstep test above covers the first two; this
-    // covers the one a company actually copies from.
+    // the sentence a buyer reads. The lockstep test above covers the first two;
+    // this covers the one a company acts on.
     const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
-    const dl = /<dl class="man">([\s\S]*?)<\/dl>/.exec(html);
-    assert.ok(dl, 'no <dl class="man"> runtime list found in pinnwand.html');
-    const offered = [...dl[1].matchAll(/<dt>\s*(\d+)\s+monate?<\/dt>/g)].map((m) => Number(m[1]));
+    const pitch = /<p class="jobs-pitch">([\s\S]*?)<\/p>/.exec(html);
+    assert.ok(pitch, 'no <p class="jobs-pitch"> found in pinnwand.html');
+    // Only the offer, not the worked example below it ("ein Monat ab dem 01.09.").
+    const offer = pitch[1].split("Richtwerte")[0];
+    const offered = [...offer.matchAll(/(\d+)\s+monate?\b/gi)].map((m) => Number(m[1]));
     assert.deepEqual(offered, MONTHS);
   });
 
