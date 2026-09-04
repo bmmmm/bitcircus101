@@ -127,7 +127,7 @@ Detail lives in each file's own header comment — these are pointers:
 - `scripts/build-lite-finanz.mjs` — writes the lite page's funding block **and** its "Stand" date from `finanz.json` (deterministic → gated). Its sibling `build-lite-events.mjs` writes only the event list and is deploy-only (live data → never drift-free)
 - `scripts/check-calendars.mjs` — manifest validator (offline, exits non-zero) + read-only `--probe` card preview; tested by `tests/calendars.spec.mjs`
 - `jobs-core.js` — **shared expiry math** (UMD/ES5) for the job board: one file for `jobs.js` in the browser and for the CI gate, so a posting comes down on the same day everywhere
-- `jobs.js` — the Pinnwand renderer: filters against the visitor's own calendar day, escapes every field and independently refuses a non-https url (an E2E test feeds it postings the gate would reject)
+- `jobs.js` — the Pinnwand renderer: filters against the visitor's own calendar day, always appends the invite note ("Das könnte Euer Zettel sein :)", which doubles as the empty state), escapes every field and independently refuses a non-https url (an E2E test feeds it postings the gate would reject)
 - `scripts/check-jobs.mjs` — offline gate for `jobs.json`: `validate()` is pure (no clock), `staleWarnings()` takes the day in; errors exit 1, expiry only warns. See [The job board](#the-job-board-pinnwand)
 - `scripts/live-overlay.mjs`, `scripts/cache-bust.mjs`, `scripts/smoke-live.mjs` — the deploy pipeline's file logic (overlay preserving CI feeds + pruning, `?v=` busting, post-deploy health check incl. a full sitemap walk — any non-200 breaks the deploy), tested via `tests/deploy-scripts.spec.mjs`
 - `llms.txt` — LLM-friendly site summary ([llms.txt standard](https://llmstxt.org/))
@@ -195,6 +195,7 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 - **Expiry is a WARNING, never an error.** `check-jobs.mjs` runs in both `ci.yml` twins **and** in `deploy.yml`; failing on an expired posting would turn every deploy red on the day one runs out. Removing the entry is housekeeping, and the warning is the reminder.
 - **The donation is checked by hand before the merge** — there is no payment webhook, and this is the one deliberately manual step. Verwendungszweck is `JOBS-<id>`; contributors name their channel and date in the PR description.
 - No amounts, no contact details and no applicant data ever enter `jobs.json` — every card is a link to a vacancy hosted by the company.
+- **The page is the wall.** One paragraph names the offer; everything procedural (the three steps, the snippet, the donation channels, the house rules) sits in collapsed `details.sidenote` blocks, the same idiom `raum-nutzen.html` uses. Companies are addressed as *ihr*, which is why the invite note says "Euer" — the rest of the site is *du*, this page is the exception, on purpose.
 
 ## Adding a new page
 
