@@ -26,7 +26,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -47,7 +47,16 @@ export const POSTING_KEYS = ["id", "company", "title", "url", "from", "months"];
 // jobs-core.js, and the schema's enum is asserted against this in the tests.
 export const MONTHS = JobsCore.MONTHS;
 
-const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
+// Exported so a test can hold them against jobs.schema.json: the schema is what
+// a contributor's editor validates against, this is what CI enforces, and a
+// contributor who gets a green editor and a red CI has been lied to once.
+export const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
+export const LIMITS = {
+  id: { minLength: 1, maxLength: 48 },
+  company: { minLength: 1, maxLength: 60 },
+  title: { minLength: 1, maxLength: 100 },
+};
+
 // A posting dated far in the future is almost always a typo in the year; more
 // than a month of lead time is warned about, never rejected.
 const FUTURE_WARN_DAYS = 31;
@@ -68,6 +77,8 @@ function checkUnknownKeys(obj, allowed, where, errors) {
   }
 }
 
+// minLength counts NON-BLANK characters: JSON Schema cannot say "not just
+// spaces", and a card whose company is " " renders as two blank lines.
 function checkString(obj, key, where, errors, { minLength, maxLength } = {}) {
   if (!(key in obj)) {
     errors.push(`${where}: Pflichtfeld "${key}" fehlt`);
@@ -78,9 +89,9 @@ function checkString(obj, key, where, errors, { minLength, maxLength } = {}) {
     return;
   }
   const len = obj[key].length;
-  if (minLength !== undefined && len < minLength) {
+  if (minLength !== undefined && obj[key].trim().length < minLength) {
     errors.push(
-      `${where}.${key}: zu kurz — mindestens ${minLength} Zeichen (sind ${len})`
+      `${where}.${key}: zu kurz — mindestens ${minLength} Zeichen, die keine Leerzeichen sind (sind ${obj[key].trim().length})`
     );
   }
   if (maxLength !== undefined && len > maxLength) {
@@ -127,9 +138,9 @@ function checkId(obj, where, errors, seen) {
     );
     return;
   }
-  if (obj.id.length > 48) {
+  if (obj.id.length > LIMITS.id.maxLength) {
     errors.push(
-      `${where}.id: "${obj.id}" ist zu lang — höchstens 48 Zeichen (sind ${obj.id.length})`
+      `${where}.id: "${obj.id}" ist zu lang — höchstens ${LIMITS.id.maxLength} Zeichen (sind ${obj.id.length})`
     );
     return;
   }
@@ -211,8 +222,8 @@ export function validate(data) {
     }
     checkUnknownKeys(entry, POSTING_KEYS, where, errors);
     checkId(entry, where, errors, seen);
-    checkString(entry, "company", where, errors, { minLength: 1, maxLength: 60 });
-    checkString(entry, "title", where, errors, { minLength: 1, maxLength: 100 });
+    checkString(entry, "company", where, errors, LIMITS.company);
+    checkString(entry, "title", where, errors, LIMITS.title);
     checkHttpsUrl(entry, "url", where, errors);
     checkCalendarDate(entry, "from", where, errors);
     checkMonths(entry, where, errors);
@@ -236,6 +247,10 @@ export function staleWarnings(data, today) {
   const out = [];
   const postings = (data && data.postings) || [];
   for (const entry of postings) {
+    // Exported, so it can be called on data that never went through validate().
+    // Skip what has no usable date rather than throwing a stack trace at a
+    // caller who asked for housekeeping notes.
+    if (!entry || typeof entry.from !== "string") continue;
     const end = JobsCore.lastDay(entry.from, entry.months);
     if (end && end < today) {
       out.push(
@@ -282,6 +297,9 @@ function main() {
   console.log(`\nOK: ${total} Anzeige(n) gültig, ${active} aktiv.`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL, not a template string: import.meta.url is percent-encoded and
+// argv[1] is not, so a checkout path with a space (or #, ?, a umlaut) makes the
+// two differ, main() never runs and the gate exits 0 having validated NOTHING.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main();
 }
