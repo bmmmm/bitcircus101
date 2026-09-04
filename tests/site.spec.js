@@ -16,6 +16,21 @@ const { buildHostileJobsData, useJobsFixture } = require('./fixtures/jobs-data')
 //   hitBoxes() — the same, for every match, to sweep a whole page
 const REACH_MAX = 80;
 
+/**
+ * What a screen reader would read out of an element: its text with every
+ * aria-hidden subtree removed. toHaveText() does NOT do this — it sees the
+ * hidden nodes' whitespace too, so a separator that swallows its own spaces
+ * ("…2026läuft bis…") passes toHaveText and fails a human.
+ */
+async function spokenText(locator) {
+    return locator.evaluate((el) => {
+        const clone = el.cloneNode(true);
+        clone.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
+        return clone.textContent.replace(/\s+/g, ' ').trim();
+    });
+}
+
+
 // This whole function is serialised into the page, so everything it uses has to
 // live inside it — including the reach ceiling, which is why 80 appears as a
 // literal and REACH_MAX only sizes the scroll margin on the Node side.
@@ -802,6 +817,10 @@ test.describe('Pinnwand', () => {
             .toHaveText('hängt seit 10.09.2026 · läuft bis 09.10.2026');
         await expect(cards.nth(1).locator('.job-panel__dates'))
             .toHaveText('hängt seit 01.09.2026 · läuft bis 30.11.2026');
+        // And how it is READ: the separator is aria-hidden, so the spaces around
+        // it have to sit outside it or the two dates fuse into one token.
+        expect(await spokenText(cards.nth(0).locator('.job-panel__dates')))
+            .toBe('hängt seit 10.09.2026 läuft bis 09.10.2026');
         await expect(cards.nth(0).locator('.job-panel__company')).toHaveText('Bytewerk eG');
 
         // Every real card is a link OUT: https only, new tab, rel-hardened.
@@ -825,6 +844,9 @@ test.describe('Pinnwand', () => {
         await expect(invite.locator('.job-panel__title')).toHaveText('Das könnte Euer Zettel sein :)');
         await expect(invite.locator('.job-panel__action')).toHaveAttribute('href', '#aufhaengen');
         await expect(invite.locator('.job-panel__dates')).toHaveCount(0);
+        // Its own id namespace: a posting with id "invite" renders #job-invite,
+        // so the note may not claim that too.
+        await expect(invite).toHaveAttribute('id', 'jobs-invite');
 
         // An empty wall still shows that one note — it IS the empty state. Via
         // the FIXTURE, never against the committed jobs.json, or the first real
@@ -862,6 +884,33 @@ test.describe('Pinnwand', () => {
         // The id lands in an attribute AND in the chrome line — both escaped.
         await expect(cards.locator('.job-panel__path'))
             .toHaveText('~/pinnwand/markup"><img src=x onerror="window.__pwned = 1">');
+    });
+
+    test('the how-to is folded away and opens — by click, and from the wall\'s own CTA', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useJobsFixture(page, { postings: [] });
+        await page.goto('/pinnwand.html');
+
+        // The offer stays open; everything procedural starts collapsed. That is
+        // the point of the section — the page is about the wall, not the how-to.
+        await expect(page.locator('.jobs-pitch')).toBeVisible();
+        const folds = page.locator('details.jobs-howto');
+        await expect(folds).toHaveCount(2);
+        await expect(page.locator('.jobs-snippet')).toBeHidden();
+        await expect(page.locator('#aufhaengen a[href*="github.com"]')).toBeHidden();
+
+        // Clicking a summary reveals its body.
+        await folds.nth(1).locator('summary').click();
+        await expect(folds.nth(1)).toHaveAttribute('open', '');
+        await expect(page.getByText('Nichts, was nach dem AGG diskriminiert.')).toBeVisible();
+
+        // The invite note's CTA jumps to #aufhaengen — main.js intercepts every
+        // in-page anchor, so the browser never opens the fold by itself. The
+        // visitor must not land on a shut box.
+        await expect(folds.nth(0)).not.toHaveAttribute('open', '');
+        await page.locator('.job-panel--invite .job-panel__action').click();
+        await expect(folds.nth(0)).toHaveAttribute('open', '');
+        await expect(page.locator('.jobs-snippet')).toBeVisible();
     });
 });
 

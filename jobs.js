@@ -49,9 +49,11 @@
       '<p class="job-panel__company">' +
       esc(entry.company) +
       "</p>" +
+      // The spaces live OUTSIDE the aria-hidden span. Inside it they are hidden
+      // with the dot, and a screen reader reads "…2026läuft bis…" as one token.
       '<p class="job-panel__dates">hängt seit ' +
       esc(Core.formatDay(entry.from)) +
-      '<span class="job-panel__sep" aria-hidden="true"> · </span>läuft bis ' +
+      ' <span class="job-panel__sep" aria-hidden="true">·</span> läuft bis ' +
       esc(until) +
       "</p>" +
       '<a class="btn job-panel__action" href="' +
@@ -71,7 +73,9 @@
   // out to a vacancy.
   function inviteMarkup() {
     return (
-      '<article class="job-panel job-panel--invite" id="job-invite">' +
+      // "jobs-invite", not "job-invite": the job-<id> namespace belongs to
+      // jobs.json, and a posting with id "invite" would collide with it.
+      '<article class="job-panel job-panel--invite" id="jobs-invite">' +
       '<div class="job-panel__chrome" aria-hidden="true">' +
       '<span class="job-panel__path">~/pinnwand/euer-zettel</span></div>' +
       '<div class="job-panel__body">' +
@@ -119,6 +123,23 @@
     // Always last: real notes first, the free slot after them.
     list.innerHTML = html + inviteMarkup();
     list.removeAttribute("aria-busy");
+    wireInviteAction(list);
+  }
+
+  /**
+   * The wall's primary call to action jumps to #aufhaengen, where the how-to
+   * is a closed <details>. A real fragment navigation makes the browser open
+   * it; this click is not one — main.js intercepts every in-page anchor and
+   * scrolls with preventDefault — so without this the visitor lands on a shut
+   * box. Opening it here keeps that knowledge next to the link that needs it.
+   */
+  function wireInviteAction(list) {
+    var action = list.querySelector(".job-panel--invite .job-panel__action");
+    if (!action) return;
+    action.addEventListener("click", function () {
+      var howto = document.querySelector("details.jobs-howto");
+      if (howto) howto.open = true;
+    });
   }
 
   function init() {
