@@ -1483,10 +1483,31 @@ h3.location-card__header::before { content: none; }
 }
 .job-panel__title::before { content: none; }
 .job-panel__company { color: var(--ink); font-size: 0.9rem; margin: 0 0 0.25rem; }
-.job-panel__until { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 0.75rem; }
+.job-panel__dates { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 0.75rem; }
+.job-panel__sep { color: var(--line-strong); }
 .job-panel__action { margin-top: 0.25rem; }
 
-.jobs-loading, .jobs-fallback, .jobs-empty { color: var(--ink-dim); padding: 0.5rem 0; }
+/* The free slot, always the last card: a dashed frame is the plain-text way of
+   drawing "nothing here yet" — same box, not filled in. It reads as an empty
+   pin on the board rather than as an advert for ourselves, so it stays in ink,
+   never in --accent (that belongs to its link, like every other CTA). */
+.job-panel--invite {
+    border-style: dashed;
+    border-color: var(--line-strong);
+}
+.job-panel--invite .job-panel__chrome { border-bottom-style: dashed; }
+.job-panel--invite .job-panel__title { color: var(--ink-dim); }
+.job-panel--invite .job-panel__company { color: var(--ink-dim); }
+
+.jobs-loading, .jobs-fallback { color: var(--ink-dim); padding: 0.5rem 0; }
+
+/* The one paragraph that stays open above the two collapsibles: the offer in a
+   breath. Everything procedural sits inside .jobs-howto — this page is about
+   the wall, not about how to file a pull request. */
+.jobs-pitch { color: var(--ink); }
+.jobs-howto { margin-top: 1.25rem; }
+.jobs-howto .sidenote__body > ol,
+.jobs-howto .sidenote__body > ul { margin-top: 0.5rem; }
 .jobs-loading__cmd { color: var(--accent); }
 .jobs-fallback__err { color: var(--ink-max); }
 

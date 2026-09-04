@@ -42,7 +42,7 @@ pulse.js                    Frontend: value-free funding sparkline (opt-in, need
 finanz.schema.json          Structural contract for finanz.json
 jobs.json                   Job board postings (one object per posting, added by PR)
 jobs.schema.json            Structural contract for jobs.json
-jobs.js                     Frontend: renders the active postings on pinnwand.html
+jobs.js                     Frontend: active postings + the invite note on pinnwand.html
 jobs-core.js                Shared expiry math for jobs.js + the CI gate
 funding.json                Footer funding percentage (edited via pnpm run finanz percent)
 
