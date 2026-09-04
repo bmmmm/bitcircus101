@@ -18,6 +18,7 @@ This repository contains the website for bitcircus101.
 index.html                  Main landing page
 events.html                 Events page (loads events-data.json)
 support.html                Donation / funding page (loads funding.json)
+pinnwand.html               Job board ("Pinnwand") — renders jobs.json in the browser
 raum-nutzen.html            Room usage info
 impressum-datenschutz.html  Legal / privacy
 dankedankedanke.html        Thank you page
@@ -27,7 +28,7 @@ ascii/index.html            Internal ASCII playground (/ascii/) — noindex, not
 includes/
   site-header.html          Shared <header> (nav); inlined into pages by build:layout
   site-footer.html          Shared <footer>; inlined into pages by build:layout
-scripts/inject-layout.mjs   Writes header/footer into the six layout HTML files
+scripts/inject-layout.mjs   Writes header/footer into the seven layout HTML files
 
 style.css                   Global styles (monochrome plain-text/man-page theme, dark default + light toggle)
 main.js                     Frontend: nav, carousel, map, events preview, footer
@@ -39,6 +40,10 @@ feeds/                      Filtered ICS/RSS feeds per tag & source (generated b
 finanz.json                 Cost/funding board data (edited via pnpm run finanz)
 pulse.js                    Frontend: value-free funding sparkline (opt-in, needs finanz.json pulse)
 finanz.schema.json          Structural contract for finanz.json
+jobs.json                   Job board postings (one object per posting, added by PR)
+jobs.schema.json            Structural contract for jobs.json
+jobs.js                     Frontend: renders the active postings on pinnwand.html
+jobs-core.js                Shared expiry math for jobs.js + the CI gate
 funding.json                Footer funding percentage (edited via pnpm run finanz percent)
 
 scripts/
@@ -46,11 +51,14 @@ scripts/
   finanz.mjs                Maintainer CLI for finanz.json / funding.json (--json, --help)
   finanz-data.mjs           Pure data layer behind that CLI (mutate + validate)
   build-lite-finanz.mjs     Writes the lite page's funding block + Stand date from finanz.json
+  check-jobs.mjs            Offline gate for jobs.json (errors exit 1, expiry only warns)
 
 tests/
   site.spec.js              Playwright end-to-end tests (~20 tests × 2 browsers)
   sync-events.spec.mjs      Unit tests for ICS parser and RRULE expansion (22 tests)
   finanz-cli.spec.mjs       Exit codes, --json contract and amount prompts of the funding CLI
+  jobs-core.spec.mjs        Expiry math: month overflow, both boundaries, ordering
+  jobs-data.spec.mjs        jobs.json gate: every error class, schema lockstep, page snippet
 playwright.config.js        Playwright config (Chromium, Mobile Chrome)
 
 .github/workflows/

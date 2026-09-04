@@ -1448,6 +1448,66 @@ h3.location-card__header::before { content: none; }
 @media (prefers-reduced-motion: reduce) { .pulse--reveal { animation: none } }
 
 /* =============================================================================
+   Job board / Pinnwand (pinnwand.html, rendered by jobs.js)
+   ============================================================================= */
+/* Values mirror .projekt-panel* above — same panel idiom, deliberately its own
+   selectors. The duplication buys independence: support.html's board and this
+   one are unrelated surfaces, and sharing selectors would make a pinnwand tweak
+   able to reshape the funding cards. Nothing enforces this — no test compares
+   the two blocks' computed styles — so it is a design rule, kept by hand. */
+.jobs-list { margin: 1.25rem 0; }
+
+.job-panel {
+    border: 1px solid var(--line);
+    margin-bottom: 1rem;
+}
+
+.job-panel__chrome {
+    display: flex;
+    align-items: center;
+    gap: 1ch;
+    padding: 0.3em 1ch;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 0.8rem;
+    user-select: none;
+}
+.job-panel__path { letter-spacing: 0.03em; }
+
+.job-panel__body { padding: 0.9rem 1.1rem; }
+
+.job-panel__title {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    color: var(--ink-max);
+}
+.job-panel__title::before { content: none; }
+.job-panel__company { color: var(--ink); font-size: 0.9rem; margin: 0 0 0.25rem; }
+.job-panel__until { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 0.75rem; }
+.job-panel__action { margin-top: 0.25rem; }
+
+.jobs-loading, .jobs-fallback, .jobs-empty { color: var(--ink-dim); padding: 0.5rem 0; }
+.jobs-loading__cmd { color: var(--accent); }
+.jobs-fallback__err { color: var(--ink-max); }
+
+/* The copy-paste snippet. There is no global `pre` rule — only `code` carries a
+   border — so the frame lives here and the inner <code> gives its own back. */
+.jobs-snippet {
+    border: 1px solid var(--line);
+    background: var(--paper-2);
+    padding: 0.75rem 1.1rem;
+    margin: 0.75rem 0;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+.jobs-snippet code {
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+/* =============================================================================
    tuwat board (support.html) — open todo boxes
    ============================================================================= */
 .tuwat-board {
@@ -1487,7 +1547,7 @@ h3.location-card__header::before { content: none; }
 .tuwat-contact { color: var(--ink-dim); }
 
 /* =============================================================================
-   Donation grid (support.html)
+   Donation grid (support.html, and step 2 on pinnwand.html)
    ============================================================================= */
 .donation-grid {
     display: grid;
