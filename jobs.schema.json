@@ -8,7 +8,7 @@
   "required": ["postings"],
   "properties": {
     "postings": {
-      "description": "Every posting ever paid for that is still up. Remove an entry once check-jobs.mjs warns that it expired.",
+      "description": "Every posting ever paid for that is still up. Remove an entry once check-jobs.mjs warns that it expired. Two rules this schema cannot express, which scripts/check-jobs.mjs enforces on top: ids must be unique across the array, and company/title must hold at least one non-blank character.",
       "type": "array",
       "items": { "$ref": "#/$defs/posting" }
     }
