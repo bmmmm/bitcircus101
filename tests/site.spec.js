@@ -1,6 +1,7 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 const { buildEventsData, useEventsFixture } = require('./fixtures/events-data');
+const { buildHostileJobsData, useJobsFixture } = require('./fixtures/jobs-data');
 
 // ─── Hit-area probe ──────────────────────────────────────────────────────────
 //
@@ -192,6 +193,10 @@ test.describe('SEO meta tags', () => {
         await page.goto('/support.html');
         expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
 
+        // Pinnwand
+        await page.goto('/pinnwand.html');
+        expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
+
         // Raum nutzen
         await page.goto('/raum-nutzen.html');
         expect(await page.locator('meta[name="description"]').getAttribute('content')).toBeTruthy();
@@ -238,6 +243,7 @@ test.describe('Navigation', () => {
         // toBeInViewport, not toBeVisible: an element parked at x=1520 in a
         // 1280px window is "visible" to Playwright and unreachable to a person.
         for (const sel of ['nav a[href="events.html"]', 'nav a[href="support.html"]',
+                           'nav a[href="pinnwand.html"]',
                            'nav a[href="raum-nutzen.html"]', ...UTILS]) {
             await expect(page.locator(sel), sel).toBeInViewport();
         }
@@ -407,6 +413,7 @@ test.describe('Navigation', () => {
         };
         await clean('/events', 'events.html');
         await clean('/support', 'support.html');
+        await clean('/pinnwand', 'pinnwand.html');
         await clean('/raum-nutzen', 'raum-nutzen.html');
 
         const marker = () => page.evaluate(() =>
@@ -418,6 +425,7 @@ test.describe('Navigation', () => {
         for (const [url, expected] of [
             ['/events', '/termine'],
             ['/support', '/support'],
+            ['/pinnwand', '/pinnwand'],
             ['/raum-nutzen', '/raum'],
         ]) {
             await page.goto(url);
@@ -763,6 +771,87 @@ test.describe('Support page', () => {
     });
 });
 
+test.describe('Pinnwand', () => {
+    // The clock is pinned so "expired" and "not up yet" mean something: the
+    // fixture's four postings sit at known distances from this day. LOCAL time,
+    // no trailing Z — a UTC instant lands on the previous day in a negative
+    // offset, which would silently change which postings are up.
+    const NOW = new Date('2026-09-15T12:00:00');
+
+    test('shows only what is up today, newest first, and the empty board invites the first note', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        await useJobsFixture(page);
+        await page.goto('/pinnwand.html');
+
+        // Two of four: one expired two days ago, one starts next month.
+        const cards = page.locator('.job-panel');
+        await expect(cards).toHaveCount(2);
+        await expect(page.locator('#job-expired-gmbh-2026-08')).toHaveCount(0);
+        await expect(page.locator('#job-future-ag-2026-10')).toHaveCount(0);
+
+        // Newest `from` first — the order is the whole point of activeEntries().
+        await expect(cards.nth(0)).toHaveAttribute('id', 'job-bytewerk-2026-09');
+        await expect(cards.nth(1)).toHaveAttribute('id', 'job-acme-2026-09');
+
+        // Half-open runtime, shown as a date: 10.09. + 1 month runs to 09.10.,
+        // 01.09. + 3 months to 30.11. — the day BEFORE the anniversary.
+        await expect(cards.nth(0).locator('.job-panel__until')).toHaveText('läuft bis 09.10.2026');
+        await expect(cards.nth(1).locator('.job-panel__until')).toHaveText('läuft bis 30.11.2026');
+        await expect(cards.nth(0).locator('.job-panel__company')).toHaveText('Bytewerk eG');
+
+        // Every card is a link OUT: https only, new tab, rel-hardened.
+        const actions = page.locator('.job-panel__action');
+        await expect(actions).toHaveCount(2);
+        for (const a of await actions.all()) {
+            expect(await a.getAttribute('href')).toMatch(/^https:\/\//);
+            expect(await a.getAttribute('target')).toBe('_blank');
+            expect(await a.getAttribute('rel')).toContain('noopener');
+        }
+
+        // The live region stops announcing once the board is rendered.
+        await expect(page.locator('#jobs-list')).not.toHaveAttribute('aria-busy', 'true');
+        await expect(page.locator('nav a[href="pinnwand.html"]')).toHaveAttribute('aria-current', 'page');
+
+        // Empty state via the FIXTURE, never against the committed jobs.json —
+        // otherwise the first real posting would break this test.
+        await page.unroute('**/jobs.json*');
+        await useJobsFixture(page, { postings: [] });
+        await page.goto('/pinnwand.html');
+        await expect(page.locator('.job-panel')).toHaveCount(0);
+        const empty = page.locator('.jobs-empty');
+        await expect(empty).toBeVisible();
+        await expect(empty.locator('a[href="#aufhaengen"]')).toBeVisible();
+    });
+
+    test('a posting that got past the gate can still not inject or link out unsafely', async ({ page }) => {
+        // The second lock, tested on the assumption the first one failed: these
+        // five postings would every one be refused by scripts/check-jobs.mjs.
+        await page.clock.install({ time: NOW });
+        await useJobsFixture(page, buildHostileJobsData());
+        await page.goto('/pinnwand.html');
+
+        // Four unusable schemes dropped — javascript:, data:, protocol-relative
+        // and an uppercase HTTPS:// that indexOf("https://") does not match.
+        const cards = page.locator('.job-panel');
+        await expect(cards).toHaveCount(1);
+        expect(await cards.locator('.job-panel__action').getAttribute('href'))
+            .toBe('https://ok.example/jobs/real');
+
+        // Nothing executed and nothing was injected: the markup in the fields
+        // came back as TEXT, and no element grew out of it.
+        expect(await page.evaluate(() => window.__pwned)).toBeUndefined();
+        await expect(page.locator('#jobs-list img, #jobs-list svg, #jobs-list script'))
+            .toHaveCount(0);
+        await expect(page.locator('.job-panel__title'))
+            .toHaveText('</h3><svg onload="window.__pwned = 1"></svg>');
+        await expect(page.locator('.job-panel__company'))
+            .toHaveText('"><img src=x onerror="window.__pwned = 1">');
+        // The id lands in an attribute AND in the chrome line — both escaped.
+        await expect(page.locator('.job-panel__path'))
+            .toHaveText('~/pinnwand/markup"><img src=x onerror="window.__pwned = 1">');
+    });
+});
+
 test.describe('Raum nutzen page', () => {
     test('loads with title, structured data, and a collapsible room-rental note', async ({ page }) => {
         await page.goto('/raum-nutzen.html');
@@ -854,6 +943,7 @@ test.describe('No JavaScript errors', () => {
         ['/', 'Home'],
         ['/events.html', 'Events'],
         ['/support.html', 'Support'],
+        ['/pinnwand.html', 'Pinnwand'],
         ['/raum-nutzen.html', 'Raum nutzen'],
         ['/impressum-datenschutz.html', 'Impressum'],
         ['/dankedankedanke.html', 'Danke'],
@@ -1434,7 +1524,7 @@ test.describe('Lite version', () => {
 test.describe('Internal links', () => {
     test('all internal links and <link>/manifest resources resolve', async ({ page }) => {
         const pagesToCheck = [
-            '/', '/events.html', '/support.html',
+            '/', '/events.html', '/support.html', '/pinnwand.html',
             '/raum-nutzen.html', '/impressum-datenschutz.html',
             '/dankedankedanke.html',
         ];
