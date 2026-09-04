@@ -1484,7 +1484,6 @@ h3.location-card__header::before { content: none; }
 .job-panel__title::before { content: none; }
 .job-panel__company { color: var(--ink); font-size: 0.9rem; margin: 0 0 0.25rem; }
 .job-panel__dates { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 0.75rem; }
-.job-panel__sep { color: var(--line-strong); }
 .job-panel__action { margin-top: 0.25rem; }
 
 /* The free slot, always the last card: a dashed frame is the plain-text way of
