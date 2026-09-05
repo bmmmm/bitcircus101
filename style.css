@@ -801,6 +801,15 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .events-intro { color: var(--ink-dim); }
 
 .events-list { margin: 1.5rem 0; min-height: 60px; }
+/* While the list is still loading it holds one line of text, so the footer
+   sits right under it — inside the first viewport. The rendered list is
+   thousands of pixels tall, and the footer's jump out of view was a layout
+   shift of 0.39 (measured, Lighthouse mobile). Reserving a viewport's worth of
+   height in the busy state keeps the footer below the fold from the first
+   paint; it also keeps the filter chips, which arrive with the data, from
+   pushing anything visible. (The toolbar is built before the fetch — see
+   events.js — so it never shifts anything.) */
+.events-list[aria-busy="true"] { min-height: 100vh; }
 
 /* subscribe strip */
 .events-subscribe {
@@ -1413,8 +1422,6 @@ h3.location-card__header::before { content: none; }
 .projekt-action--donate { border-color: var(--accent); color: var(--accent); }
 .projekt-action--donate:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 
-.projekt-cursor { display: none; }
-
 .projekte-fallback, .projekte-empty { color: var(--ink-dim); padding: 0.5rem 0; }
 .projekte-updated { color: var(--ink-dim); font-size: 0.8rem; margin-top: 0.75rem; }
 
@@ -1442,7 +1449,7 @@ h3.location-card__header::before { content: none; }
 
 .pulse-caption { margin: 4px 0 0; color: var(--ink-dim); font-size: 0.8rem; }
 
-/* One calm reveal, added by pulse.js only when motion is welcome. */
+/* One calm reveal, added by finanz.js only when motion is welcome. */
 .pulse--reveal { animation: pulse-fadein 0.6s ease both; }
 @keyframes pulse-fadein { from { opacity: 0 } to { opacity: 1 } }
 @media (prefers-reduced-motion: reduce) { .pulse--reveal { animation: none } }
@@ -1884,9 +1891,6 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     text-decoration: none;
 }
 .footer__funding-info a:hover { background: var(--ink); color: var(--paper); }
-
-/* funding levels stay monochrome: the number carries the signal, not hue */
-.fs--green, .fs--amber, .fs--red { color: var(--ink); }
 
 @media (max-width: 600px) {
     .footer__funding-info { right: auto; left: 0; white-space: normal; min-width: 240px; }
