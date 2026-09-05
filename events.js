@@ -189,6 +189,9 @@
 
   // Single entry point after any state change; every handler ends here.
   function refresh(opts) {
+    // The toolbar is live before the data is: a keystroke or a toggle during
+    // the fetch only updates `state` — renderCards applies it once cards exist.
+    if (!eventsContainer) return;
     opts = opts || {};
     if (opts.rebuildChips) {
       removeFilterBar();
@@ -200,13 +203,23 @@
     updateFeedScope();
   }
 
+  function removeToolbar() {
+    if (eventsToolbar && eventsToolbar.parentNode) {
+      eventsToolbar.parentNode.removeChild(eventsToolbar);
+    }
+    eventsToolbar = null;
+  }
+
   function ensureEventsToolbar(insertBeforeNode) {
     if (eventsToolbar && eventsToolbar.parentNode) return;
     var parent = insertBeforeNode.parentNode;
     eventsToolbar = document.createElement("div");
     eventsToolbar.className = "events-toolbar";
-    // Built by JS on purpose: the toolbar only exists when events rendered, so
-    // a dead control never shows when JS or the data fails.
+    // Built by JS on purpose, so a dead control never shows when JS fails —
+    // and built in init(), BEFORE the fetch, so it is part of the first layout:
+    // inserted after the data it pushed the loading list down by its own
+    // height, a layout shift on every visit. When the data fails or is empty,
+    // removeToolbar() takes it away again.
     eventsToolbar.innerHTML =
       '<div class="events-toolbar__row">' +
       '<label class="events-toolbar__label" for="events-only-bitcircus">' +
@@ -278,10 +291,7 @@
       });
 
     if (!allFutureSorted.length) {
-      if (eventsToolbar && eventsToolbar.parentNode) {
-        eventsToolbar.parentNode.removeChild(eventsToolbar);
-        eventsToolbar = null;
-      }
+      removeToolbar();
       removeFilterBar();
       el.innerHTML =
         '<p class="events-empty">Keine kommenden Termine gefunden.</p>' +
@@ -666,6 +676,8 @@
   // ── Error / Loading ─────────────────────────────────────────────────────
 
   function renderError(el) {
+    removeToolbar();
+    removeFilterBar();
     el.innerHTML =
       '<div class="events-fallback">' +
       '<p class="events-fallback__cmd">' +
@@ -801,6 +813,11 @@
       '<p class="events-loading">' +
       '<span class="events-loading__cmd">lade termine</span>' +
       '<span class="events-cursor"> \u2026</span></p>';
+
+    // Toolbar first, data second \u2014 see ensureEventsToolbar. The controls
+    // already mirror a shared link's state while the list is still loading.
+    ensureEventsToolbar(el);
+    applyStateToControls();
 
     fetch(JSON_URL)
       .then(function (res) {
