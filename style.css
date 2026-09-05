@@ -808,8 +808,16 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
    height in the busy state keeps the footer below the fold from the first
    paint; it also keeps the filter chips, which arrive with the data, from
    pushing anything visible. (The toolbar is built before the fetch — see
-   events.js — so it never shifts anything.) */
+   events.js — so it never shifts anything.)
+   The attribute has to be in the markup: set by the deferred script it came
+   after the first paint, and the reservation itself became the shift
+   (0.21, measured). Without JavaScript the list keeps the attribute forever,
+   so the second rule takes the reservation back for that render — with
+   scripting on, a <noscript> holds raw text and never has a <p> child; with
+   scripting off, it does. Browsers without :has() keep the tall box in the
+   no-JS case, which is cosmetic. */
 .events-list[aria-busy="true"] { min-height: 100vh; }
+.events-list[aria-busy="true"]:has(> noscript > p) { min-height: 0; }
 
 /* subscribe strip */
 .events-subscribe {

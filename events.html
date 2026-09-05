@@ -478,6 +478,9 @@
 
                 <section aria-labelledby="events-list-heading">
                     <h2 id="events-list-heading" class="sr-only">Kommende Termine</h2>
+                    <!-- aria-busy sits in the markup (unlike jobs.js's list) because the
+                         busy-state CSS reserves the list's height, and that has to hold
+                         from the first paint — set by the deferred script it came too late. -->
                     <div id="events-list" class="events-list" aria-live="polite" aria-busy="true">
                         <noscript>
                             <p>JavaScript wird für die Kalender-Anzeige benötigt.
