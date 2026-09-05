@@ -20,16 +20,23 @@ import path from "node:path";
 
 // Order matters for hash stability; missing files are skipped like the old
 // `cat … 2>/dev/null` did, so the hash is unchanged for identical content.
+// Every script a page references with ?v= belongs here: the rewrite below
+// stamps ALL of them with this one hash, so a script missing from the list
+// keeps its old hash after a deploy that changed only it — and is served
+// stale for the CDN's TTL. (storage.js and the finanz pair were that case.)
 // Do NOT add the generated feeds (feed.xml, ical.ics, feeds/**): they change on
 // every calendar sync, and hashing them would invalidate the browser cache for
 // CSS/JS every 30 minutes. Calendar clients fetch feeds at stable URLs, no ?v=.
 const ASSETS = [
     "style.css",
     "main.js",
+    "storage.js",
     "events.js",
     "ics-core.js",
     "events-core.js",
     "kiosk.js",
+    "finanz-core.js",
+    "finanz.js",
     "jobs-core.js",
     "jobs.js",
     "images/favicon.svg",
