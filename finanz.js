@@ -324,6 +324,14 @@
   // ── Init ────────────────────────────────────────────────────────────────
 
   function render(data) {
+    // The pulse first, and independent of the board: a throwing board item
+    // below ends in renderError, and the pulse (as its own file it had its
+    // own fetch and catch) must not disappear with it.
+    renderPulse(
+      document.getElementById("funding-pulse"),
+      data && data.pulse && Array.isArray(data.pulse.levels) ? data.pulse.levels : null
+    );
+
     var list = document.getElementById("projekte-list");
     var updatedEl = document.getElementById("projekte-updated");
     var monatlichEl = document.getElementById("kosten-monatlich");
@@ -369,11 +377,6 @@
     if (updatedEl && data.updated) {
       updatedEl.textContent = "zuletzt aktualisiert: " + data.updated;
     }
-
-    renderPulse(
-      document.getElementById("funding-pulse"),
-      data && data.pulse && Array.isArray(data.pulse.levels) ? data.pulse.levels : null
-    );
   }
 
   // ── Funding pulse (opt-in: finanz.json ships without a `pulse` key) ────────
