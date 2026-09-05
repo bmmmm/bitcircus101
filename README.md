@@ -24,7 +24,7 @@ syntax may be introduced there.
 ```
 index.html                  Main landing page
 events.html                 Events page (loads events-data.json)
-support.html                Donation / funding page (loads funding.json)
+support.html                Donation / funding page (loads finanz.json)
 pinnwand.html               Job board ("Pinnwand") — renders jobs.json in the browser
 raum-nutzen.html            Room usage info
 impressum-datenschutz.html  Legal / privacy
@@ -41,7 +41,9 @@ includes/
   site-skip.html            Shared skip link; inlined into pages by build:layout
   site-header.html          Shared <header> (nav); inlined into pages by build:layout
   site-footer.html          Shared <footer>; inlined into pages by build:layout
-scripts/inject-layout.mjs   Writes header/footer into the seven layout HTML files
+scripts/inject-layout.mjs   Writes header/footer into the seven layout HTML files and stamps
+                            the footer percent from funding.json (data-funding) — so no page
+                            fetches funding.json
 
 style.css                   Global styles (monochrome plain-text/man-page theme, dark default + light toggle)
 main.js                     Frontend: nav, carousel, map, events preview, footer
@@ -57,14 +59,16 @@ feeds/                      Filtered ICS/RSS feeds per tag & source (generated b
 finanz.json                 Cost/funding board data (edited via pnpm run finanz)
 finanz-core.js              Shared funding math + the field predicates (isCalendarDate,
                             isCleanHttpsUrl) that finanz.js and the CLI validator both call
-pulse.js                    Frontend: value-free funding sparkline (opt-in, needs finanz.json pulse)
+finanz.js                   Frontend: cost/funding board on support.html, plus the value-free
+                            funding sparkline (opt-in, needs finanz.json pulse) — one fetch for both
 finanz.schema.json          Structural contract for finanz.json
 jobs.json                   Job board postings (one object per posting, added by PR)
 jobs.schema.json            Structural contract for jobs.json
 jobs.js                     Frontend: active postings + the invite note (also the empty state)
                             on pinnwand.html; escapes every field, refuses a non-https url
 jobs-core.js                Shared expiry math for jobs.js + the CI gate
-funding.json                Footer funding percentage (edited via pnpm run finanz percent)
+funding.json                Footer funding percentage (edited via pnpm run finanz percent, then
+                            pnpm run build:layout — the value is stamped into the HTML, not fetched)
 
 scripts/
   sync-events.mjs           Fetches ICS from Nextcloud, generates events-data.json + feed.xml
@@ -132,7 +136,8 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
 `main` and edited through the maintainer CLI — never by hand, and no longer by a
 workflow. `finanz.json` feeds the cost/funding
 board on `support.html#projekte`, `funding.json` the footer's "LIGHTS ON?"
-percentage:
+percentage — stamped into every layout page by `pnpm run build:layout`
+(`data-funding` on the footer status), so the browser never fetches it:
 
 ```sh
 pnpm run finanz                  # interactive menu (prints the board first)
@@ -162,7 +167,7 @@ renders.
 **Privacy by construction:** the board holds only rounded aggregate totals plus
 a value-free 0..7 "pulse" track — never euro amounts, donor names or
 per-donation records. The pulse is opt-in: `finanz.json` ships without a `pulse`
-key and `pulse.js` renders nothing until one exists.
+key and `finanz.js` renders nothing until one exists.
 
 `finanz.schema.json` is the structural contract; `scripts/finanz-data.mjs`
 mirrors it in a hand-rolled validator (no ajv, no new dependency), and
