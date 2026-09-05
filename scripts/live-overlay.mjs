@@ -19,15 +19,19 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-// Live-only generated files (calendar sync / sitemap / funding workflows own
-// these on the live branch). Tracked seeds coming from main must not clobber
-// them, so they are stashed across the overlay. Missing entries are normal:
-// on a first deploy none of them exist yet.
+// Live-only generated files (calendar sync / sitemap workflows own these on
+// the live branch). Tracked seeds coming from main must not clobber them, so
+// they are stashed across the overlay. Missing entries are normal: on a first
+// deploy none of them exist yet.
+// funding.json is deliberately NOT here any more: the funding workflow that
+// used to write it on live is gone, the file is tracked on main and edited
+// through `pnpm run finanz percent`, and inject-layout.mjs stamps its value
+// into the footer at deploy time — a live copy restored over main's would
+// freeze that percent forever (reviewer finding on PR #59).
 const FEEDS = [
     "events-data.json",
     "feed.xml",
     "ical.ics",
-    "funding.json",
     "sitemap.xml",
     "events/feed.xml",
     "events/ical.ics",
