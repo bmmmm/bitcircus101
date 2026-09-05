@@ -113,11 +113,11 @@ Permissions-Policy: geolocation=(), camera=(), microphone=()
 
 - `script-src` keeps `'unsafe-inline'`: every page ships inline `<script>`
   blocks (theme no-flash, consent, date) and static hosting can't mint
-  per-request nonces. `style-src` keeps `'unsafe-inline'` too: the zero-JS
-  `/lite/` view inlines its entire stylesheet by design (a pinned test
-  invariant — no external stylesheet), and the support-page ASCII scenes paint
-  glyphs via inline `style=`. Most JS-set styles use the CSSOM (`el.style.x =
-  …`), which `style-src` doesn't govern — but those two inline cases need it.
+  per-request nonces. `style-src` keeps `'unsafe-inline'` for exactly one
+  reason: the zero-JS `/lite/` view inlines its entire stylesheet by design (a
+  pinned test invariant — no external stylesheet). No tracked HTML file carries
+  a single `style="` attribute, and JS-set styles go through the CSSOM
+  (`el.style.setProperty`), which `style-src` does not govern.
 - The hardening wins: `object-src 'none'`, `base-uri 'self'`, clickjacking
   defence via `frame-ancestors 'none'` + `X-Frame-Options: DENY` (the header for
   older browsers; no `<meta>` equivalent), the `frame-src` allowlist, and
@@ -125,8 +125,11 @@ Permissions-Policy: geolocation=(), camera=(), microphone=()
   before embedding any new third party.
 - `img-src data:` covers the logo-slider placeholders; `connect-src` the events
   page's Nextcloud ICS fallback fetch.
-- `Referrer-Policy` is also a `<meta>` on every page (so it applies even without
-  the rule); the header is the authoritative copy. The old `frame-src`-only CSP
+- `Referrer-Policy` is also a `<meta>` on ten pages — the seven that carry the
+  shared chrome plus `/ascii/`, `/chat/` and `404.html` (so it applies even
+  without the rule); the header is the authoritative copy and covers all routes. The stubs
+  without it — `/lite/`, `/kiosk/`, `donations.html`, the Google verification
+  file and the four `invite-*`/`join-*` redirects — rely on the header alone. The old `frame-src`-only CSP
   `<meta>` on the homepage was removed in favour of this single complete policy.
 
 ## Questions?
