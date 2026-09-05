@@ -87,6 +87,7 @@ tests/
   finanz-cli.spec.mjs       Exit codes, --json contract and amount prompts of the funding CLI
   jobs-core.spec.mjs        Expiry math: month overflow, both boundaries, ordering
   jobs-data.spec.mjs        jobs.json gate: every error class, schema lockstep, page snippet
+  markup.spec.mjs           Repo-wide invariants: no inline styles, no external fonts
                             (plus one spec per module: calendars, deploy scripts, finanz, lite)
 playwright.config.js        Playwright config (Chromium, Mobile Chrome)
 
@@ -382,7 +383,7 @@ pnpm run test:ui           # Playwright UI mode
 ### Test coverage
 
 **Unit tests** (`tests/sync-events.spec.mjs` — 166 tests, ~200ms; the whole
-`pnpm run test:quick` suite is 448 tests across all specs):
+`pnpm run test:quick` suite is 453 tests across all specs):
 
 | Area | What is tested |
 |------|---------------|
