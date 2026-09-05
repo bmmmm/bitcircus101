@@ -14,6 +14,13 @@
  * progress. Donate buttons stay on-site (jump to #dauerhaft) unless a project
  * ships its own Ko-fi page; the shared href policy lives in
  * FinanzCore.donateTarget so every view links consistently.
+ *
+ * The funding pulse (#funding-pulse) is rendered here too, from the same
+ * response: it used to live in its own pulse.js with its own fetch, which
+ * loaded finanz.json twice on every visit. Its output is DELIBERATELY opaque —
+ * no digits, no "€", no percentage — only 8 discrete bar glyphs (▁▂▃▄▅▆▇█)
+ * that show rhythm, not amounts. Personal data is structurally impossible:
+ * pulse stores only integer 0..7 levels, never a euro figure.
  */
 (function () {
   "use strict";
@@ -362,6 +369,42 @@
     if (updatedEl && data.updated) {
       updatedEl.textContent = "zuletzt aktualisiert: " + data.updated;
     }
+
+    renderPulse(
+      document.getElementById("funding-pulse"),
+      data && data.pulse && Array.isArray(data.pulse.levels) ? data.pulse.levels : null
+    );
+  }
+
+  // ── Funding pulse (opt-in: finanz.json ships without a `pulse` key) ────────
+
+  function renderPulse(mount, levels) {
+    if (!mount) return;
+    // Degrade silently: the pulse is cosmetic, and the mount is hidden by default.
+    var sparkline = levels && levels.length ? Core.pulseSparkline(levels) : "";
+    if (!sparkline) {
+      mount.setAttribute("hidden", "");
+      return;
+    }
+
+    // The prompt line gives it a terminal context; the sparkline itself carries
+    // no digits, no currency, no percentage.
+    var html =
+      '<p class="pulse-prompt" aria-hidden="true">' +
+      '<span class="pulse-prompt__cmd">$ funding --pulse</span>' +
+      "</p>" +
+      '<p class="pulse-sparkline">' +
+      '<span class="pulse-sparkline__glyphs" aria-hidden="true">' +
+      sparkline +
+      "</span>" +
+      "</p>" +
+      '<p class="pulse-caption">grober Verlauf \xB7 keine Betr\xE4ge</p>';
+
+    // Reveal before paint so the CSS transition starts from the right state.
+    mount.removeAttribute("hidden");
+    mount.innerHTML = html;
+    // One calm reveal, CSS handles it — unless motion is reduced.
+    if (!reduceMotion) mount.classList.add("pulse--reveal");
   }
 
   function init() {
