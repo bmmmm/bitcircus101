@@ -173,9 +173,12 @@ jobs:
         # Every first-party script the pages load is in the list — the ones
         # added for /support and /pinnwand used to ship raw (Lighthouse flagged
         # "unminified JavaScript" on /support). confetti.min.js is already
-        # minified. Keep this list and cache-bust.mjs's ASSETS in step: a script
-        # minified here but not hashed there is served from a stale cache after
-        # a deploy that changed only that file.
+        # minified. This list, cache-bust.mjs's ASSETS and the <script src>
+        # tags in the tracked HTML are held in lockstep by a unit test
+        # (tests/deploy-scripts.spec.mjs, "minify list"): a script minified
+        # here but not hashed there is served from a stale cache after a
+        # deploy that changed only that file, and a script a page loads but
+        # neither list names ships raw.
         run: |
           scripts="main.js events.js ics-core.js events-core.js kiosk.js storage.js finanz-core.js finanz.js jobs-core.js jobs.js"
           echo "Before: style.css=$(wc -c < style.css)B $(for f in $scripts; do printf '%s=%sB ' "$f" "$(wc -c < "$f")"; done)"
