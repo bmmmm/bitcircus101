@@ -9,7 +9,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Lockfiles from blocked package managers (pnpm-only — see CLAUDE.md)
+# Lockfiles from blocked package managers (pnpm-only — see CONTRIBUTING.md)
 package-lock.json
 yarn.lock
 
