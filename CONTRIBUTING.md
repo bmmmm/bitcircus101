@@ -35,9 +35,15 @@ pnpm run test:quick   # ~100ms, no browser needed
 
 That runs unit tests and matches what PR CI enforces (plus a layout sync check — see below).
 
+**pnpm only**, as a supply-chain policy: npm's and yarn's lockfiles are
+git-ignored, and `pnpm-workspace.yaml` enforces a 3-day release cooldown on new
+package versions and blocks dependency build scripts. Local E2E needs the
+browsers once: `pnpm exec playwright install` — they are already baked into the
+CI container, so CI needs no such step.
+
 ## Navigation and footer (shared layout)
 
-Header and footer live in **`includes/site-header.html`** and **`includes/site-footer.html`**. A small Node script copies them into the layout HTML files — no bundler or framework.
+Header and footer live in **`includes/site-header.html`** and **`includes/site-footer.html`** (the skip link in **`includes/site-skip.html`**). A small Node script copies them into the layout HTML files — no bundler or framework.
 
 After you change those files:
 
@@ -45,9 +51,15 @@ After you change those files:
 pnpm run build:layout
 ```
 
-Commit **`includes/`** and the updated **`*.html`** files together. **PR checks** fail if partials and pages drift apart. See [CLAUDE.md](CLAUDE.md) for details.
+Commit **`includes/`** and the updated **`*.html`** files together. **PR checks** fail if partials and pages drift apart.
 
 If you only edit a page body, you do not need `build:layout`.
+
+The homepage logo strip (Freund*innen) works the same way: add or delete partner
+logos under `images/logo-slider/` (`.svg`, `.png`, `.jpg`, `.jpeg`), run
+`pnpm run build:logos`, and commit `index.html` together with the image files.
+`scripts/build-logo-slider.mjs` writes the marked block in `index.html` from
+that folder — same drift check in CI.
 
 ## You do NOT need to
 
@@ -79,9 +91,10 @@ Nothing reaches production without passing all tests. But that's CI's job, not y
 
 - Keep it simple — this is a static site, no frameworks
 - German UI text, English code/comments
-- No Google Fonts (privacy)
+- No Google Fonts and no external font loading of any kind (privacy)
 - No inline styles — use `style.css`
-- Plain-text aesthetic: monochrome ink-on-paper, monospace, no accent color (dark default, light via `◐` toggle)
+- Plain-text aesthetic: ink-on-paper, monospace, dark default, light via the `◐` toggle
+- One accent (`--accent`, terminal green): hyperlinks, primary CTAs and current-selection markers. Form controls and UI toggles stay reverse-video ink — the full scope rule sits at the token definition in `style.css`
 
 ## Security headers (Cloudflare)
 
