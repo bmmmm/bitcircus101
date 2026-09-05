@@ -267,34 +267,55 @@
                     <div class="carousel-container">
                         <div class="carousel">
                             <div class="carousel-item active">
-                                <img
-                                    src="images/img1.jpeg"
-                                    alt="Werkraum bitcircus101 – Tische und Arbeitsflächen"
-                                    width="1024"
-                                    height="768"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
+                                <picture>
+                                    <source
+                                        type="image/webp"
+                                        srcset="images/img1-800.webp 800w, images/img1-1024.webp 1024w"
+                                        sizes="(max-width: 800px) 100vw, 94ch"
+                                    />
+                                    <img
+                                        src="images/img1.jpeg"
+                                        alt="Werkraum bitcircus101 – Tische und Arbeitsflächen"
+                                        width="1024"
+                                        height="768"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                </picture>
                             </div>
                             <div class="carousel-item">
-                                <img
-                                    src="images/img2.jpeg"
-                                    alt="Gemeinschaftsbereich bitcircus101"
-                                    width="1024"
-                                    height="768"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
+                                <picture>
+                                    <source
+                                        type="image/webp"
+                                        srcset="images/img2-800.webp 800w, images/img2-1024.webp 1024w"
+                                        sizes="(max-width: 800px) 100vw, 94ch"
+                                    />
+                                    <img
+                                        src="images/img2.jpeg"
+                                        alt="Gemeinschaftsbereich bitcircus101"
+                                        width="1024"
+                                        height="768"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                </picture>
                             </div>
                             <div class="carousel-item">
-                                <img
-                                    src="images/img3.jpeg"
-                                    alt="Raumansicht bitcircus101, Bonn"
-                                    width="1024"
-                                    height="768"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
+                                <picture>
+                                    <source
+                                        type="image/webp"
+                                        srcset="images/img3-800.webp 800w, images/img3-1024.webp 1024w"
+                                        sizes="(max-width: 800px) 100vw, 94ch"
+                                    />
+                                    <img
+                                        src="images/img3.jpeg"
+                                        alt="Raumansicht bitcircus101, Bonn"
+                                        width="1024"
+                                        height="768"
+                                        loading="lazy"
+                                        decoding="async"
+                                    />
+                                </picture>
                             </div>
                         </div>
                         <div class="carousel-indicators">
@@ -511,7 +532,7 @@
                 <span>fr ab 20:00</span>
                 <span class="footer__sep">│</span>
                 <span class="footer__year"></span>
-                <span class="footer__status">lights: on</span>
+                <span class="footer__status" data-funding="18">lights: on</span>
             </div>
         </footer>
 
