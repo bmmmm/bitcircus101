@@ -164,17 +164,26 @@ export function boardJson(data, funding) {
 // ── Shared write helper ──────────────────────────────────────────────────────
 
 /**
- * Print what to do with the file that was just written. finanz.json feeds a
- * generated block in lite/index.html, so committing it WITHOUT rebuilding is
- * exactly the HTML drift the CI gate rejects — the hint has to name the rebuild
- * or it walks the caller into a red PR. funding.json feeds no generator and
- * therefore gets no rebuild line.
+ * Print what to do with the file that was just written. Both files feed a
+ * generator, so committing either WITHOUT rebuilding is exactly the HTML drift
+ * the CI gate rejects — the hint has to name the rebuild or it walks the caller
+ * into a red PR. finanz.json feeds the block in lite/index.html; funding.json
+ * feeds the footer's data-funding attribute that inject-layout.mjs stamps into
+ * every layout page (so the browser reads the percent from the HTML instead of
+ * fetching funding.json on every page view).
  */
 function printCommitHint(file) {
   if (file === "finanz.json") {
     console.log("  Danach: pnpm run build:lite-finanz");
     console.log(
       "  Dann committen: git add finanz.json lite/index.html && git commit"
+    );
+    return;
+  }
+  if (file === "funding.json") {
+    console.log("  Danach: pnpm run build:layout");
+    console.log(
+      "  Dann committen: git add funding.json '*.html' && git commit"
     );
     return;
   }
