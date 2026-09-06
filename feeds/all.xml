@@ -9,13 +9,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-06 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-06-digital-independence-day-did</link>
-      <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
-      <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
-      <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20260906T1400</guid>
-    </item>
-    <item>
       <title>[2026-09-08 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/events#ev-2026-09-08-offene-datenburg</link>
       <description>Offene Datenburg · 2026-09-08</description>
@@ -346,6 +339,15 @@
       <category>#gaming</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
       <guid isPermaLink="false">19efb037-b521-4f7b-b508-bd63eb3b292b-20261022T1900</guid>
+    </item>
+    <item>
+      <title>[2026-10-27 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-27-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-10-27</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261027T1800</guid>
     </item>
   </channel>
 </rss>

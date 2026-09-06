@@ -23,18 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:aa6c53d5-be01-41d4-8b78-72bda610b0ce-20260906T1400@bitcircus101.de
-DTSTAMP:20260502T130846Z
-DTSTART;TZID=Europe/Berlin:20260906T140000
-DTEND;TZID=Europe/Berlin:20260906T160000
-SUMMARY:Digital Independence Day (DID)
-DESCRIPTION:Treffen für Menschen\, die Unterstützung zu Themen rund um de
- n DID suchen und/oder sich austauschen wollen. https://di.day/
-LOCATION:Bornheimer Straße 25\, Bonn
-URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
-CATEGORIES:community
-END:VEVENT
-BEGIN:VEVENT
 UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260908T1800@bitcircus101.de
 DTSTAMP:20260616T150902Z
 DTSTART;TZID=Europe/Berlin:20260908T180000
@@ -215,5 +203,14 @@ DTEND;TZID=Europe/Berlin:20261022T220000
 SUMMARY:Spieleabend
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:gaming
+END:VEVENT
+BEGIN:VEVENT
+UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261027T1800@bitcircus101.de
+DTSTAMP:20260616T150902Z
+DTSTART;TZID=Europe/Berlin:20261027T180000
+DTEND;TZID=Europe/Berlin:20261027T220000
+SUMMARY:Offene Datenburg
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:datenburg,offener-abend
 END:VEVENT
 END:VCALENDAR

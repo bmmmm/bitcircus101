@@ -129,4 +129,13 @@ SUMMARY:Offene Datenburg
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:datenburg,offener-abend
 END:VEVENT
+BEGIN:VEVENT
+UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261027T1800@bitcircus101.de
+DTSTAMP:20260616T150902Z
+DTSTART;TZID=Europe/Berlin:20261027T180000
+DTEND;TZID=Europe/Berlin:20261027T220000
+SUMMARY:Offene Datenburg
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:datenburg,offener-abend
+END:VEVENT
 END:VCALENDAR
