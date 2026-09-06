@@ -96,12 +96,21 @@ function buildHostileJobsData() {
 }
 
 /** Serve the fixture for every jobs.json request on this page. */
-async function useJobsFixture(page, data) {
+/**
+ * @param {import('@playwright/test').Page} page
+ * @param {object} [data] fixture payload (default: buildJobsData())
+ * @param {{ delayMs?: number }} [opts] delayMs holds the response back so the
+ *   loading state is painted before the cards land — what a layout-stability
+ *   assertion needs (same shape as the events fixture).
+ */
+async function useJobsFixture(page, data, opts) {
   const body = JSON.stringify(data || buildJobsData());
+  const delayMs = (opts && opts.delayMs) || 0;
   // Trailing `*` mirrors the events fixture: a cache-busted URL must match too.
-  await page.route("**/jobs.json*", (route) =>
-    route.fulfill({ status: 200, contentType: "application/json", body })
-  );
+  await page.route("**/jobs.json*", async (route) => {
+    if (delayMs) await new Promise((r) => setTimeout(r, delayMs));
+    await route.fulfill({ status: 200, contentType: "application/json", body });
+  });
 }
 
 module.exports = { buildJobsData, buildHostileJobsData, useJobsFixture, TODAY };
