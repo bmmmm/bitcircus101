@@ -35,14 +35,14 @@
         <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
         <meta name="twitter:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
         <link rel="canonical" href="https://bitcircus101.de/pinnwand" />
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=62e56bda" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=62e56bda" />
-        <link rel="manifest" href="site.webmanifest?v=62e56bda" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=be0bd4e6" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=be0bd4e6" />
+        <link rel="manifest" href="site.webmanifest?v=be0bd4e6" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=62e56bda" />
+        <link rel="stylesheet" href="style.css?v=be0bd4e6" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -100,14 +100,18 @@
                                 </noscript>
                             </div>
                             <!-- "jobs-invite", not "job-invite": the job-<id> namespace belongs
-                                 to jobs.json, and a posting with id "invite" would collide. -->
-                            <article class="job-panel job-panel--invite" id="jobs-invite">
+                                 to jobs.json, and a posting with id "invite" would collide.
+                                 aria-live="off": jobs.js cycles the karussell names through the
+                                 title, and the surrounding polite region must not read each one. -->
+                            <article class="job-panel job-panel--invite" id="jobs-invite" aria-live="off">
                                 <div class="job-panel__chrome" aria-hidden="true">
-                                    <span class="job-panel__path">~/pinnwand/euer-zettel</span>
+                                    <span class="job-panel__path">~/pinnwand/dauerplatz</span>
                                 </div>
                                 <div class="job-panel__body">
-                                    <h3 class="job-panel__title">Das könnte Euer Zettel sein :)</h3>
-                                    <p class="job-panel__company">Noch frei</p>
+                                    <!-- One line, like the names jobs.js swaps in (gate caps them at 24
+                                         characters) — the title's height must not change on the swap. -->
+                                    <h3 class="job-panel__title">Frei für Euren Zettel :)</h3>
+                                    <p class="job-panel__company">Dauerplatz im Karussell · da passt auch Euer Zettel rein</p>
                                     <a class="btn job-panel__action" href="#aufhaengen">Zettel aufhängen ↓</a>
                                 </div>
                             </article>
@@ -116,9 +120,14 @@
 
                     <section id="aufhaengen" class="panel" aria-labelledby="aufhaengen-heading">
                         <h2 id="aufhaengen-heading">zettel aufhängen<a class="section-anchor" href="#aufhaengen" aria-label="Link zu: Zettel aufhängen">#</a></h2>
+                        <!-- A unit test reads every "<n> monat(e)" out of this paragraph and expects
+                             exactly the sold durations 1/3/12 — so the Dauerplatz says "ein Jahr",
+                             never "12 monate". -->
                         <p class="jobs-pitch">
                             Ein Link auf eure Stellenanzeige, gegen eine Spende an den Space:
                             <strong>1 monat ab 50 €</strong>, 3 monate ab 120 €, 12 monate ab 400 €.
+                            Oder der <strong>Dauerplatz im Karussell</strong>: euer Name im Wechsel
+                            auf dem letzten Zettel, ein Jahr ab 120 €.
                             Richtwerte – mehr ist eine Spende, weniger auch.
                         </p>
 
@@ -143,6 +152,9 @@
   "from": "2026-09-03",
   "months": 3
 }</code></pre>
+                                        Für den <strong>Dauerplatz</strong> stattdessen ins
+                                        <code>karussell</code>-Array – nur Name und Link, kein Datum:
+                                        <pre class="jobs-snippet jobs-snippet--slot"><code>{ "name": "ACME GmbH", "url": "https://acme.example" }</code></pre>
                                         <p>
                                             <a class="btn btn-primary" href="https://github.com/bmmmm/bitcircus101/edit/main/jobs.json" target="_blank" rel="noopener noreferrer">jobs.json auf GitHub bearbeiten&nbsp;↗</a>
                                         </p>
@@ -248,9 +260,9 @@
                 <span class="footer__status" data-funding="18">lights: on</span>
             </div>
         </footer>
-        <script defer src="storage.js?v=62e56bda"></script>
-        <script defer src="jobs-core.js?v=62e56bda"></script>
-        <script defer src="jobs.js?v=62e56bda"></script>
-        <script defer src="main.js?v=62e56bda"></script>
+        <script defer src="storage.js?v=be0bd4e6"></script>
+        <script defer src="jobs-core.js?v=be0bd4e6"></script>
+        <script defer src="jobs.js?v=be0bd4e6"></script>
+        <script defer src="main.js?v=be0bd4e6"></script>
     </body>
 </html>
