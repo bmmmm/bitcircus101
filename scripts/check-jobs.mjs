@@ -58,7 +58,7 @@ export const LIMITS = {
   id: { minLength: 1, maxLength: 48 },
   company: { minLength: 1, maxLength: 60 },
   title: { minLength: 1, maxLength: 100 },
-  name: { minLength: 1, maxLength: 40 },
+  name: { minLength: 1, maxLength: 24 },
 };
 
 // A posting dated far in the future is almost always a typo in the year; more
@@ -204,6 +204,7 @@ export function validate(data) {
     return { ok: false, errors: ["jobs.json: muss ein JSON-Objekt sein"] };
   }
   checkUnknownKeys(data, ROOT_KEYS, "jobs.json", errors);
+  checkSlots(data, errors);
   if (!("postings" in data)) {
     errors.push('jobs.json: Pflichtfeld "postings" fehlt');
     return { ok: false, errors };
@@ -233,28 +234,34 @@ export function validate(data) {
     checkMonths(entry, where, errors);
   });
 
-  if ("karussell" in data) {
-    if (!Array.isArray(data.karussell)) {
-      errors.push(
-        `jobs.json.karussell: muss ein Array sein (ist ${
-          isPlainObject(data.karussell) ? "object" : typeof data.karussell
-        })`
-      );
-    } else {
-      data.karussell.forEach((entry, i) => {
-        const where = `karussell[${i}]`;
-        if (!isPlainObject(entry)) {
-          errors.push(`${where}: muss ein Objekt sein`);
-          return;
-        }
-        checkUnknownKeys(entry, SLOT_KEYS, where, errors);
-        checkString(entry, "name", where, errors, LIMITS.name);
-        checkHttpsUrl(entry, "url", where, errors);
-      });
-    }
-  }
-
   return { ok: errors.length === 0, errors };
+}
+
+/**
+ * The permanent slot's entries. Called BEFORE the postings checks and their
+ * early returns, so a board with a broken `postings` still reports every slot
+ * error in the same run — one red run, not two.
+ */
+function checkSlots(data, errors) {
+  if (!("karussell" in data)) return;
+  if (!Array.isArray(data.karussell)) {
+    errors.push(
+      `jobs.json.karussell: muss ein Array sein (ist ${
+        isPlainObject(data.karussell) ? "object" : typeof data.karussell
+      })`
+    );
+    return;
+  }
+  data.karussell.forEach((entry, i) => {
+    const where = `karussell[${i}]`;
+    if (!isPlainObject(entry)) {
+      errors.push(`${where}: muss ein Objekt sein`);
+      return;
+    }
+    checkUnknownKeys(entry, SLOT_KEYS, where, errors);
+    checkString(entry, "name", where, errors, LIMITS.name);
+    checkHttpsUrl(entry, "url", where, errors);
+  });
 }
 
 /** Whole days from `a` to `b`, both ISO days. Date.UTC is a pure construction. */

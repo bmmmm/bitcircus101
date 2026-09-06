@@ -110,6 +110,12 @@ describe("validate — the permanent slot (karussell)", () => {
     assert.equal(errors.length, 1);
     assert.match(errors[0], /^karussell\[1\]\.url/);
   });
+
+  it("reports slot errors even when postings is missing — one red run, not two", () => {
+    const errors = errorsFor({ karussell: [slot({ url: "http://x" })] });
+    assert.ok(errors.some((e) => /^karussell\[0\]\.url/.test(e)), errors.join(" | "));
+    assert.ok(errors.some((e) => /"postings" fehlt/.test(e)), errors.join(" | "));
+  });
 });
 
 describe("validate — one error class per case, each naming its field", () => {
@@ -254,6 +260,11 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
       minLength: SCHEMA.$defs.slot.properties.name.minLength,
       maxLength: SCHEMA.$defs.slot.properties.name.maxLength,
     });
+    // The two rules the gate enforces by hand: no extra keys, https only. An
+    // editor validating against a schema that lost either would go green
+    // where CI stays red.
+    assert.equal(SCHEMA.$defs.slot.additionalProperties, false);
+    assert.equal(SCHEMA.$defs.slot.properties.url.pattern, "^https://");
   });
 
   it("MONTHS matches the schema's months enum — the price list is stated once", () => {

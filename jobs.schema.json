@@ -69,10 +69,10 @@
       "required": ["name", "url"],
       "properties": {
         "name": {
-          "description": "The company, as it should appear on the card.",
+          "description": "The company, as it should appear on the card. Capped at 24 characters so the name fits the card's one-line title on a phone: the title swaps every few seconds and must never change height.",
           "type": "string",
           "minLength": 1,
-          "maxLength": 40
+          "maxLength": 24
         },
         "url": {
           "description": "Where the name links — https only; we host nothing, we link.",
