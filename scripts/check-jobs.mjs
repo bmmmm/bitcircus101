@@ -40,8 +40,11 @@ export const JOBS_PATH = path.join(root, "jobs.json");
 
 // Schema mirror: which keys each shape allows (additionalProperties:false).
 // Exported so a test can assert they stay in lockstep with jobs.schema.json.
-export const ROOT_KEYS = ["postings"];
+export const ROOT_KEYS = ["postings", "karussell"];
 export const POSTING_KEYS = ["id", "company", "title", "url", "from", "months"];
+// The permanent slot (Dauerplatz): name + https link, no dates — booked per
+// year, curated by hand, so there is nothing for the expiry math to compute.
+export const SLOT_KEYS = ["name", "url"];
 
 // Re-exported, not re-typed: the durations we sell are declared once, in
 // jobs-core.js, and the schema's enum is asserted against this in the tests.
@@ -55,6 +58,7 @@ export const LIMITS = {
   id: { minLength: 1, maxLength: 48 },
   company: { minLength: 1, maxLength: 60 },
   title: { minLength: 1, maxLength: 100 },
+  name: { minLength: 1, maxLength: 24 },
 };
 
 // A posting dated far in the future is almost always a typo in the year; more
@@ -200,6 +204,7 @@ export function validate(data) {
     return { ok: false, errors: ["jobs.json: muss ein JSON-Objekt sein"] };
   }
   checkUnknownKeys(data, ROOT_KEYS, "jobs.json", errors);
+  checkSlots(data, errors);
   if (!("postings" in data)) {
     errors.push('jobs.json: Pflichtfeld "postings" fehlt');
     return { ok: false, errors };
@@ -230,6 +235,33 @@ export function validate(data) {
   });
 
   return { ok: errors.length === 0, errors };
+}
+
+/**
+ * The permanent slot's entries. Called BEFORE the postings checks and their
+ * early returns, so a board with a broken `postings` still reports every slot
+ * error in the same run — one red run, not two.
+ */
+function checkSlots(data, errors) {
+  if (!("karussell" in data)) return;
+  if (!Array.isArray(data.karussell)) {
+    errors.push(
+      `jobs.json.karussell: muss ein Array sein (ist ${
+        isPlainObject(data.karussell) ? "object" : typeof data.karussell
+      })`
+    );
+    return;
+  }
+  data.karussell.forEach((entry, i) => {
+    const where = `karussell[${i}]`;
+    if (!isPlainObject(entry)) {
+      errors.push(`${where}: muss ein Objekt sein`);
+      return;
+    }
+    checkUnknownKeys(entry, SLOT_KEYS, where, errors);
+    checkString(entry, "name", where, errors, LIMITS.name);
+    checkHttpsUrl(entry, "url", where, errors);
+  });
 }
 
 /** Whole days from `a` to `b`, both ISO days. Date.UTC is a pure construction. */
@@ -294,7 +326,8 @@ function main() {
 
   const total = data.postings.length;
   const active = JobsCore.activeEntries(data.postings, today).length;
-  console.log(`\nOK: ${total} Anzeige(n) gültig, ${active} aktiv.`);
+  const slots = (data.karussell || []).length;
+  console.log(`\nOK: ${total} Anzeige(n) gültig, ${active} aktiv, ${slots} im Karussell.`);
 }
 
 // pathToFileURL, not a template string: import.meta.url is percent-encoded and

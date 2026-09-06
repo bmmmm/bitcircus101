@@ -15,6 +15,16 @@
  * as the empty state: a wall with nothing on it shows one note, which reads
  * better than a paragraph apologising for the emptiness.
  *
+ * That note is also the permanent slot (Dauerplatz): jobs.json's `karussell`
+ * lists companies — name and https link, no dates — and this file cycles their
+ * names through the note's title, one every few seconds. Only the title text
+ * is swapped, never the card's structure — and the title is one line by CSS
+ * (nowrap, ellipsis; names are capped at 24 characters by the gate), so the
+ * how-to below never moves. Without JavaScript, without the key, or when the
+ * fetch fails, the static title stands. The cycle pauses while the card is
+ * hovered, focused or touched and while the tab is hidden, and does not run
+ * at all under prefers-reduced-motion (one random name for the visit then).
+ *
  * We host no vacancy — every card is a link out. Defense in depth: the CI gate
  * (scripts/check-jobs.mjs) already refuses a non-https url, and this file
  * independently refuses to render one, so a card can never carry a javascript:
@@ -114,6 +124,84 @@
     // follows it, so it is always last — and an empty board is just it.
     postings.innerHTML = html;
     list.removeAttribute("aria-busy");
+    renderSlots(list, data && data.karussell);
+  }
+
+  // ── Permanent slot (Dauerplatz) ──────────────────────────────────────────
+
+  var SLOT_MS = 7000;
+
+  var reduceMotion = false;
+  try {
+    reduceMotion = !!(
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  } catch (e) {}
+
+  /**
+   * Cycle the karussell names through the invite note's title. Only the
+   * title's text changes — one line stays one line — so nothing below moves.
+   * Refuses a non-https url exactly like cardMarkup does: the gate already
+   * rejects one, this is the second lock.
+   */
+  function renderSlots(list, slots) {
+    var title = list.querySelector("#jobs-invite .job-panel__title");
+    var card = list.querySelector("#jobs-invite");
+    if (!title || !card || !slots || !slots.length) return;
+
+    var clean = [];
+    for (var i = 0; i < slots.length; i++) {
+      var s = slots[i];
+      if (s && String(s.url).indexOf("https://") === 0 && String(s.name).trim()) clean.push(s);
+    }
+    if (!clean.length) return;
+
+    var at = Math.floor(Math.random() * clean.length);
+    function show() {
+      title.innerHTML =
+        '<a href="' + esc(clean[at].url) +
+        '" target="_blank" rel="noopener noreferrer">' + esc(clean[at].name) + " ↗</a>";
+    }
+    show();
+    if (clean.length < 2 || reduceMotion) return;
+
+    // Three reasons to hold still, each its own flag: a name must not vanish
+    // under the pointer, under the focus ring (show() replaces the <a>, and
+    // focus would fall back to <body>), or between a finger touching down and
+    // the click it becomes. Only when none of them holds — and the tab is
+    // visible — does the cycle run; a resume from one reason never overrides
+    // another. Every start() is a fresh interval, so the first swap after a
+    // resume is a full SLOT_MS away — a tap can never land on a moving link.
+    var timer = null;
+    var held = { hover: false, focus: false, touch: false };
+    function sync() {
+      var hold = held.hover || held.focus || held.touch || document.hidden;
+      if (hold && timer) {
+        clearInterval(timer);
+        timer = null;
+      } else if (!hold && !timer) {
+        timer = setInterval(function () {
+          at = (at + 1) % clean.length;
+          show();
+        }, SLOT_MS);
+      }
+    }
+    function holder(key, on) {
+      return function () {
+        held[key] = on;
+        sync();
+      };
+    }
+    card.addEventListener("mouseenter", holder("hover", true));
+    card.addEventListener("mouseleave", holder("hover", false));
+    card.addEventListener("focusin", holder("focus", true));
+    card.addEventListener("focusout", holder("focus", false));
+    card.addEventListener("touchstart", holder("touch", true), { passive: true });
+    card.addEventListener("touchend", holder("touch", false));
+    card.addEventListener("touchcancel", holder("touch", false));
+    document.addEventListener("visibilitychange", sync);
+    sync();
   }
 
   /**

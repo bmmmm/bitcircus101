@@ -907,12 +907,38 @@ test.describe('Pinnwand', () => {
         // how-to rather than out to a vacancy.
         const invite = page.locator('.job-panel--invite');
         await expect(page.locator('.job-panel').last()).toHaveClass(/job-panel--invite/);
-        await expect(invite.locator('.job-panel__title')).toHaveText('Das könnte Euer Zettel sein :)');
         await expect(invite.locator('.job-panel__action')).toHaveAttribute('href', '#aufhaengen');
         await expect(invite.locator('.job-panel__dates')).toHaveCount(0);
         // Its own id namespace: a posting with id "invite" renders #job-invite,
         // so the note may not claim that too.
         await expect(invite).toHaveAttribute('id', 'jobs-invite');
+
+        // The note is also the permanent slot: with `karussell` in the data its
+        // title becomes one of the names, linked out like a real card, and the
+        // clock (installed above) advances the cycle to the other one. The
+        // card opts out of the live region, or every swap would be read aloud.
+        await expect(invite).toHaveAttribute('aria-live', 'off');
+        const slotLink = invite.locator('.job-panel__title a');
+        await expect(slotLink).toHaveCount(1);
+        const first = await slotLink.getAttribute('href');
+        expect(first).toMatch(/^https:\/\/freund-[ab]\.example$/);
+        expect(await slotLink.getAttribute('target')).toBe('_blank');
+        expect(await slotLink.getAttribute('rel')).toContain('noopener');
+        await expect(slotLink).toHaveText(/^Freund (A|B Langname GmbH x) ↗$/);
+        // The swap must not change the card's height: the title is one line by
+        // CSS, and the how-to below sits on it. Measured at 320 px, where the
+        // 24-character name would wrap to a second line without that rule —
+        // the widths the mobile project uses have room for it and prove nothing.
+        await page.setViewportSize({ width: 320, height: 568 });
+        const heightBefore = (await invite.boundingBox()).height;
+        await page.clock.runFor(7000);
+        await expect(slotLink).not.toHaveAttribute('href', first);
+        expect((await invite.boundingBox()).height, 'the swap changed the card height').toBe(heightBefore);
+        // Hovering parks the cycle: the name under the pointer stays put.
+        const parked = await slotLink.getAttribute('href');
+        await invite.hover();
+        await page.clock.runFor(7000);
+        await expect(slotLink).toHaveAttribute('href', parked);
 
         // An empty wall still shows that one note — it IS the empty state. Via
         // the FIXTURE, never against the committed jobs.json, or the first real
@@ -922,6 +948,9 @@ test.describe('Pinnwand', () => {
         await page.goto('/pinnwand.html');
         await expect(page.locator('.job-panel')).toHaveCount(1);
         await expect(page.locator('.job-panel--invite')).toBeVisible();
+        // No `karussell` key: the static title stands, and it is plain text.
+        await expect(page.locator('.job-panel--invite .job-panel__title')).toHaveText('Frei für Euren Zettel :)');
+        await expect(page.locator('.job-panel--invite .job-panel__title a')).toHaveCount(0);
         // The empty wall is the live default — and the case the static note
         // fixes outright: nothing arrives, nothing goes away, nothing moves.
         // With postings the wall grows by exactly their cards; that shift is
@@ -959,6 +988,13 @@ test.describe('Pinnwand', () => {
         // The id lands in an attribute AND in the chrome line — both escaped.
         await expect(cards.locator('.job-panel__path'))
             .toHaveText('~/pinnwand/markup"><img src=x onerror="window.__pwned = 1">');
+        // The permanent slot has the same two locks: the javascript: entry is
+        // never rendered, the markup-named one lands as text with its https link.
+        const slot = page.locator('#jobs-invite .job-panel__title a');
+        await expect(slot).toHaveCount(1);
+        await expect(slot).toHaveAttribute('href', 'https://ok.example');
+        await expect(slot).toHaveText('"><img src=x onerror="window.__pwned = 1"> ↗');
+        await expect(page.locator('#jobs-list a[href^="javascript:"]')).toHaveCount(0);
     });
 
     test('the how-to is folded away and opens — by click, and from the wall\'s own CTA', async ({ page }) => {
@@ -971,7 +1007,9 @@ test.describe('Pinnwand', () => {
         await expect(page.locator('.jobs-pitch')).toBeVisible();
         const folds = page.locator('details.jobs-howto');
         await expect(folds).toHaveCount(2);
-        await expect(page.locator('.jobs-snippet')).toBeHidden();
+        // Two snippets live in that box (posting + permanent slot); the first
+        // stands for both — they open and close with the same <details>.
+        await expect(page.locator('.jobs-snippet').first()).toBeHidden();
         await expect(page.locator('#aufhaengen a[href*="github.com"]')).toBeHidden();
 
         // Clicking a summary reveals its body.
@@ -985,7 +1023,7 @@ test.describe('Pinnwand', () => {
         await expect(folds.nth(0)).not.toHaveAttribute('open', '');
         await page.locator('.job-panel--invite .job-panel__action').click();
         await expect(folds.nth(0)).toHaveAttribute('open', '');
-        await expect(page.locator('.jobs-snippet')).toBeVisible();
+        await expect(page.locator('.jobs-snippet').first()).toBeVisible();
     });
 });
 
