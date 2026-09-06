@@ -924,9 +924,16 @@ test.describe('Pinnwand', () => {
         expect(first).toMatch(/^https:\/\/freund-[ab]\.example$/);
         expect(await slotLink.getAttribute('target')).toBe('_blank');
         expect(await slotLink.getAttribute('rel')).toContain('noopener');
-        await expect(slotLink).toHaveText(/^Freund [AB] ↗$/);
+        await expect(slotLink).toHaveText(/^Freund (A|B Langname GmbH x) ↗$/);
+        // The swap must not change the card's height: the title is one line by
+        // CSS, and the how-to below sits on it. Measured at 320 px, where the
+        // 24-character name would wrap to a second line without that rule —
+        // the widths the mobile project uses have room for it and prove nothing.
+        await page.setViewportSize({ width: 320, height: 568 });
+        const heightBefore = (await invite.boundingBox()).height;
         await page.clock.runFor(7000);
         await expect(slotLink).not.toHaveAttribute('href', first);
+        expect((await invite.boundingBox()).height, 'the swap changed the card height').toBe(heightBefore);
         // Hovering parks the cycle: the name under the pointer stays put.
         const parked = await slotLink.getAttribute('href');
         await invite.hover();
@@ -942,7 +949,7 @@ test.describe('Pinnwand', () => {
         await expect(page.locator('.job-panel')).toHaveCount(1);
         await expect(page.locator('.job-panel--invite')).toBeVisible();
         // No `karussell` key: the static title stands, and it is plain text.
-        await expect(page.locator('.job-panel--invite .job-panel__title')).toHaveText('Das könnte Euer Zettel sein :)');
+        await expect(page.locator('.job-panel--invite .job-panel__title')).toHaveText('Frei für Euren Zettel :)');
         await expect(page.locator('.job-panel--invite .job-panel__title a')).toHaveCount(0);
         // The empty wall is the live default — and the case the static note
         // fixes outright: nothing arrives, nothing goes away, nothing moves.

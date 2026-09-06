@@ -18,10 +18,12 @@
  * That note is also the permanent slot (Dauerplatz): jobs.json's `karussell`
  * lists companies — name and https link, no dates — and this file cycles their
  * names through the note's title, one every few seconds. Only the title text
- * is swapped, never the card's structure, so the how-to below never moves;
- * without JavaScript (or without the key) the static title stands. The cycle
- * pauses while the card is hovered or focused, while the tab is hidden, and
- * does not run at all under prefers-reduced-motion (one random name then).
+ * is swapped, never the card's structure — and the title is one line by CSS
+ * (nowrap, ellipsis; names are capped at 24 characters by the gate), so the
+ * how-to below never moves. Without JavaScript, without the key, or when the
+ * fetch fails, the static title stands. The cycle pauses while the card is
+ * hovered, focused or touched and while the tab is hidden, and does not run
+ * at all under prefers-reduced-motion (one random name for the visit then).
  *
  * We host no vacancy — every card is a link out. Defense in depth: the CI gate
  * (scripts/check-jobs.mjs) already refuses a non-https url, and this file
@@ -158,35 +160,48 @@
     var at = Math.floor(Math.random() * clean.length);
     function show() {
       title.innerHTML =
-        '<a class="job-panel__slot" href="' + esc(clean[at].url) +
+        '<a href="' + esc(clean[at].url) +
         '" target="_blank" rel="noopener noreferrer">' + esc(clean[at].name) + " ↗</a>";
     }
     show();
     if (clean.length < 2 || reduceMotion) return;
 
+    // Three reasons to hold still, each its own flag: a name must not vanish
+    // under the pointer, under the focus ring (show() replaces the <a>, and
+    // focus would fall back to <body>), or between a finger touching down and
+    // the click it becomes. Only when none of them holds — and the tab is
+    // visible — does the cycle run; a resume from one reason never overrides
+    // another. Every start() is a fresh interval, so the first swap after a
+    // resume is a full SLOT_MS away — a tap can never land on a moving link.
     var timer = null;
-    function start() {
-      if (timer || document.hidden) return;
-      timer = setInterval(function () {
-        at = (at + 1) % clean.length;
-        show();
-      }, SLOT_MS);
+    var held = { hover: false, focus: false, touch: false };
+    function sync() {
+      var hold = held.hover || held.focus || held.touch || document.hidden;
+      if (hold && timer) {
+        clearInterval(timer);
+        timer = null;
+      } else if (!hold && !timer) {
+        timer = setInterval(function () {
+          at = (at + 1) % clean.length;
+          show();
+        }, SLOT_MS);
+      }
     }
-    function stop() {
-      if (timer) clearInterval(timer);
-      timer = null;
+    function holder(key, on) {
+      return function () {
+        held[key] = on;
+        sync();
+      };
     }
-    // A name should not vanish under the pointer or the focus ring, and a
-    // hidden tab has no reader to cycle for.
-    card.addEventListener("mouseenter", stop);
-    card.addEventListener("mouseleave", start);
-    card.addEventListener("focusin", stop);
-    card.addEventListener("focusout", start);
-    document.addEventListener("visibilitychange", function () {
-      if (document.hidden) stop();
-      else start();
-    });
-    start();
+    card.addEventListener("mouseenter", holder("hover", true));
+    card.addEventListener("mouseleave", holder("hover", false));
+    card.addEventListener("focusin", holder("focus", true));
+    card.addEventListener("focusout", holder("focus", false));
+    card.addEventListener("touchstart", holder("touch", true), { passive: true });
+    card.addEventListener("touchend", holder("touch", false));
+    card.addEventListener("touchcancel", holder("touch", false));
+    document.addEventListener("visibilitychange", sync);
+    sync();
   }
 
   /**

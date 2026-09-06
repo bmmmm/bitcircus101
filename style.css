@@ -1521,16 +1521,24 @@ h3.location-card__header::before { content: none; }
 .job-panel__dates { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 0.75rem; }
 .job-panel__action { margin-top: 0.25rem; }
 
-/* The free slot, always the last card: a dashed frame is the plain-text way of
-   drawing "nothing here yet" — same box, not filled in. It reads as an empty
-   pin on the board rather than as an advert for ourselves, so it stays in ink,
-   never in --accent (that belongs to its link, like every other CTA). */
+/* The permanent slot, always the last card: a dashed frame is the plain-text
+   way of drawing "room here" — same box, not filled in. The frame and the
+   copy stay in ink; the only accent is the link in the title, which jobs.js
+   swaps for the karussell names — a hyperlink, like every other CTA.
+   The title is pinned to ONE line (nowrap + ellipsis, and the gate caps a
+   name at 24 characters): the swap must never change the card's height, or
+   the how-to below would move on every cycle. */
 .job-panel--invite {
     border-style: dashed;
     border-color: var(--line-strong);
 }
 .job-panel--invite .job-panel__chrome { border-bottom-style: dashed; }
-.job-panel--invite .job-panel__title { color: var(--ink-dim); }
+.job-panel--invite .job-panel__title {
+    color: var(--ink-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .job-panel--invite .job-panel__company { color: var(--ink-dim); }
 
 .jobs-fallback { color: var(--ink-dim); padding: 0.5rem 0; }

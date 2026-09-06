@@ -57,10 +57,12 @@ function buildJobsData() {
         months: 1,
       },
     ],
-    // Two, so the cycle has somewhere to go; the test advances the clock.
+    // Two, so the cycle has somewhere to go; the test advances the clock. The
+    // second name sits exactly at the gate's 24-character cap: on a 320 px
+    // viewport it only stays one line because the CSS pins the title.
     karussell: [
       { name: "Freund A", url: "https://freund-a.example" },
-      { name: "Freund B", url: "https://freund-b.example" },
+      { name: "Freund B Langname GmbH x", url: "https://freund-b.example" },
     ],
   };
 }
