@@ -397,9 +397,28 @@
 
                 <aside class="pinnwand-teaser" aria-label="Hinweis für Unternehmen">
                     <p class="pinnwand-teaser__label">[ anzeige in eigener sache ]</p>
-                    <p class="pinnwand-teaser__slogan">Ihr sucht Leute, die Dinge wirklich bauen? Die sitzen freitags hier.</p>
-                    <a class="pinnwand-teaser__cta" href="pinnwand.html#aufhaengen">Zettel an die Pinnwand hängen →</a>
+                    <p class="pinnwand-teaser__slogan">ihr auf unserer pinnwand?</p>
+                    <a class="pinnwand-teaser__cta" href="pinnwand.html#aufhaengen">*click* →</a>
                 </aside>
+                <script>
+                    // One of these lines per page view. Inline, like the theme
+                    // script in <head>: running right after the markup, the swap
+                    // lands before the first paint, so the contact section below
+                    // never moves — main.js is deferred and would be too late.
+                    // The markup above is the no-JS default and the first entry.
+                    (function () {
+                        var lines = [
+                            ["ihr auf unserer pinnwand?", "*click* →"],
+                            ["not linkedin.", "pinnwand →"],
+                            ["ihr seid cool? wir auch.", "pinnwand →"],
+                            ["linkedin hat eine milliarde. wir haben die richtigen dreißig.", "zettel aufhängen →"],
+                            ["euer job. unsere wand. freitags jemand davor.", "*click* →"],
+                        ];
+                        var pick = lines[Math.floor(Math.random() * lines.length)];
+                        document.querySelector(".pinnwand-teaser__slogan").textContent = pick[0];
+                        document.querySelector(".pinnwand-teaser__cta").textContent = pick[1];
+                    })();
+                </script>
 
                 <section id="contact" class="panel">
                     <h2>kontakt<a class="section-anchor" href="#contact" aria-label="Link zu: kontakt">#</a></h2>
