@@ -53,6 +53,9 @@ describe("live-overlay.mjs", () => {
         // CI-generated state on live: regenerated seeds + untracked feeds
         write(dir, "sitemap.xml", "generated-sitemap");
         write(dir, "events-data.json", "generated-events");
+        // a leftover from the retired funding workflow — main's tracked copy
+        // is the source of truth now and must win over it
+        write(dir, "funding.json", "stale-live-funding");
         write(dir, "events/feed.xml", "generated-feed-copy");
         // the filtered-feed TREE (variable file set → FEED_DIRS, not FEEDS)
         write(dir, "feeds/all.ics", "generated-all-feed");
@@ -78,7 +81,8 @@ describe("live-overlay.mjs", () => {
         assert.equal(fs.readFileSync(path.join(dir, "events-data.json"), "utf8"), "generated-events");
         assert.equal(fs.readFileSync(path.join(dir, "events/feed.xml"), "utf8"), "generated-feed-copy");
         assert.equal(fs.readFileSync(path.join(dir, "feeds/tag/linkup.ics"), "utf8"), "generated-tag-feed");
-        // tracked seed with no live counterpart still arrives from main
+        // funding.json is tracked on main and feeds inject-layout's footer
+        // percent — main's copy must overwrite whatever live still holds
         assert.equal(fs.readFileSync(path.join(dir, "funding.json"), "utf8"), "seed-funding");
     });
 
@@ -275,5 +279,53 @@ describe("smoke-live.mjs", () => {
                 (e) => e.code === 1 && e.stderr.includes("non-canonical or build-only"),
             );
         }
+    });
+});
+
+describe("minify list (deploy.yml) ↔ cache-bust ASSETS ↔ scripts the pages load", () => {
+    // Three lists name the first-party scripts: the terser loop in deploy.yml,
+    // the hash inputs in cache-bust.mjs, and the <script src> tags in the
+    // tracked HTML. They drifted apart once — storage.js and the finanz pair
+    // shipped raw and were hashed with a stale ?v= — so this pins all three to
+    // the same set. Read from the sources, not from a copy: a fourth list
+    // would only be a fourth thing to drift.
+    const ROOT = new URL("../", import.meta.url).pathname;
+
+    function minifyList() {
+        const yml = fs.readFileSync(path.join(ROOT, ".github/workflows/deploy.yml"), "utf8");
+        const m = yml.match(/^\s*scripts="([^"]+)"/m);
+        assert.ok(m, 'deploy.yml: no scripts="…" line in the minify step');
+        return new Set(m[1].trim().split(/\s+/));
+    }
+
+    function hashedScripts() {
+        const src = fs.readFileSync(path.join(SCRIPTS, "cache-bust.mjs"), "utf8");
+        const m = src.match(/const ASSETS = \[([^\]]*)\]/);
+        assert.ok(m, "cache-bust.mjs: ASSETS array not found");
+        return new Set([...m[1].matchAll(/"([^"]+\.js)"/g)].map((x) => x[1]));
+    }
+
+    function loadedScripts() {
+        const files = execFileSync("git", ["ls-files", "*.html"], { cwd: ROOT, encoding: "utf8" })
+            .split("\n").filter(Boolean);
+        const found = new Set();
+        for (const f of files) {
+            const html = fs.readFileSync(path.join(ROOT, f), "utf8");
+            for (const m of html.matchAll(/<script[^>]*\ssrc="([^"]+)"/g)) {
+                const raw = m[1].split("?")[0];
+                if (/^(https?:)?\/\//.test(raw) || raw.startsWith("/cdn-cgi/")) continue;
+                const name = path.basename(raw);
+                if (name.endsWith(".min.js")) continue; // shipped pre-minified
+                found.add(name);
+            }
+        }
+        return found;
+    }
+
+    it("names the same scripts in all three places", () => {
+        const loaded = loadedScripts();
+        assert.ok(loaded.size >= 5, `expected the pages to load several scripts, saw ${[...loaded].join(", ")}`);
+        assert.deepEqual([...minifyList()].sort(), [...loaded].sort(), "deploy.yml minify list ≠ scripts the pages load");
+        assert.deepEqual([...hashedScripts()].sort(), [...loaded].sort(), "cache-bust ASSETS ≠ scripts the pages load");
     });
 });

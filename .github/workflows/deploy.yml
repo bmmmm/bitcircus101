@@ -170,15 +170,23 @@ jobs:
         # considered but rejected: it needs package.json kept past the live
         # overlay cleanup, and this deploy job can't be exercised locally, so the
         # only smoke test would be a real production push. Bump these manually.
+        # Every first-party script the pages load is in the list — the ones
+        # added for /support and /pinnwand used to ship raw (Lighthouse flagged
+        # "unminified JavaScript" on /support). confetti.min.js is already
+        # minified. This list, cache-bust.mjs's ASSETS and the <script src>
+        # tags in the tracked HTML are held in lockstep by a unit test
+        # (tests/deploy-scripts.spec.mjs, "minify list"): a script minified
+        # here but not hashed there is served from a stale cache after a
+        # deploy that changed only that file, and a script a page loads but
+        # neither list names ships raw.
         run: |
-          echo "Before: style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B events-core.js=$(wc -c < events-core.js)B"
+          scripts="main.js events.js ics-core.js events-core.js kiosk.js storage.js finanz-core.js finanz.js jobs-core.js jobs.js"
+          echo "Before: style.css=$(wc -c < style.css)B $(for f in $scripts; do printf '%s=%sB ' "$f" "$(wc -c < "$f")"; done)"
           pnpm dlx csso-cli@4.0.2 style.css -o style.css
-          pnpm dlx terser@5.48.0 main.js -o main.js --compress --mangle
-          pnpm dlx terser@5.48.0 events.js -o events.js --compress --mangle
-          pnpm dlx terser@5.48.0 ics-core.js -o ics-core.js --compress --mangle
-          pnpm dlx terser@5.48.0 events-core.js -o events-core.js --compress --mangle
-          pnpm dlx terser@5.48.0 kiosk.js -o kiosk.js --compress --mangle
-          echo "After:  style.css=$(wc -c < style.css)B main.js=$(wc -c < main.js)B events.js=$(wc -c < events.js)B ics-core.js=$(wc -c < ics-core.js)B events-core.js=$(wc -c < events-core.js)B kiosk.js=$(wc -c < kiosk.js)B"
+          for f in $scripts; do
+            pnpm dlx terser@5.48.0 "$f" -o "$f" --compress --mangle
+          done
+          echo "After:  style.css=$(wc -c < style.css)B $(for f in $scripts; do printf '%s=%sB ' "$f" "$(wc -c < "$f")"; done)"
 
       - name: Cache-bust asset references
         id: cachebust

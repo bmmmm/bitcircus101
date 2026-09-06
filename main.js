@@ -660,25 +660,13 @@
   // =============================================================================
   const FundingStatus = {
     init() {
-      var elements = utils.querySelectorAll(".footer__status");
-      if (!elements.length) return;
-
-      fetch("funding.json")
-        .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
-        .then(function (data) {
-          var pct = parseInt(data.percent, 10);
-          if (isNaN(pct)) return;
-          elements.forEach(function (el) {
-            FundingStatus.render(el, pct);
-          });
-        })
-        .catch(function () {
-          // fallback: try data-funding attribute
-          elements.forEach(function (el) {
-            var pct = parseInt(el.getAttribute("data-funding"), 10);
-            if (!isNaN(pct)) FundingStatus.render(el, pct);
-          });
-        });
+      // The percent arrives in the HTML: scripts/inject-layout.mjs stamps it
+      // from funding.json at build time, so no page fetches that file. Without
+      // the attribute the span keeps its static "lights: on" text.
+      utils.querySelectorAll(".footer__status").forEach(function (el) {
+        var pct = parseInt(el.getAttribute("data-funding"), 10);
+        if (!isNaN(pct)) FundingStatus.render(el, pct);
+      });
     },
 
     render(el, pct) {

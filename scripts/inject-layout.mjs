@@ -2,6 +2,12 @@
 /**
  * Inline includes/site-skip.html, site-header.html, and site-footer.html into
  * each allowlisted page. Edit the partials, then run: npm run build:layout
+ *
+ * The footer's "LIGHTS ON?" percent is stamped in here from funding.json
+ * (data-funding on .footer__status), so main.js renders it from the HTML and
+ * no page has to fetch funding.json. The value only changes through
+ * `pnpm run finanz percent`, which prints this rebuild as its next step; the
+ * CI drift gate catches a forgotten one.
  */
 import fs from "fs";
 import path from "path";
@@ -9,6 +15,30 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
+
+/**
+ * Read the footer percent from funding.json. Any value the CLI would refuse
+ * (missing file, non-integer, out of 0..100) throws: a silently blank footer
+ * on every page is worse than a red build.
+ */
+function readFundingPercent() {
+  const file = path.join(root, "funding.json");
+  const raw = JSON.parse(fs.readFileSync(file, "utf8"));
+  const percent = raw && raw.percent;
+  if (!Number.isInteger(percent) || percent < 0 || percent > 100) {
+    throw new Error(`funding.json: "percent" must be an integer 0..100, got ${JSON.stringify(percent)}`);
+  }
+  return percent;
+}
+
+/** Stamp the percent into the footer partial's data-funding attribute (exactly once). */
+function withFundingPercent(footer, percent) {
+  const needle = /(<span class="footer__status")( data-funding="[^"]*")?(>)/;
+  if (!needle.test(footer)) {
+    throw new Error('includes/site-footer.html: <span class="footer__status"> not found');
+  }
+  return footer.replace(needle, `$1 data-funding="${percent}"$3`);
+}
 
 const LAYOUT_PAGES = [
   "index.html",
@@ -92,7 +122,7 @@ function main() {
   const footerPath = path.join(root, "includes", "site-footer.html");
   const skip = fs.readFileSync(skipPath, "utf8");
   const header = fs.readFileSync(headerPath, "utf8");
-  const footer = fs.readFileSync(footerPath, "utf8");
+  const footer = withFundingPercent(fs.readFileSync(footerPath, "utf8"), readFundingPercent());
 
   for (const name of LAYOUT_PAGES) {
     const filePath = path.join(root, name);

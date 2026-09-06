@@ -187,13 +187,24 @@ function buildEventsData() {
  * Serve the fixture for every events-data.json request on this page, so the
  * test no longer depends on what the calendar returned today.
  */
-async function useEventsFixture(page, data) {
+/**
+ * @param {import('@playwright/test').Page} page
+ * @param {object} [data] fixture payload (default: buildEventsData())
+ * @param {{ delayMs?: number }} [opts] delayMs holds the response back, so
+ *   the page's loading state is guaranteed to paint before the data lands —
+ *   what a layout-stability assertion needs (an instant answer would skip
+ *   the very frame it measures). Playwright matches routes newest-first, so
+ *   a test may call this again on top of the beforeEach fixture.
+ */
+async function useEventsFixture(page, data, opts) {
   const body = JSON.stringify(data || buildEventsData());
+  const delayMs = (opts && opts.delayMs) || 0;
   // Trailing `*`: the kiosk fetches `../events-data.json?t=…` with a
   // cache buster, which a pattern ending at `.json` would not match.
-  await page.route("**/events-data.json*", (route) =>
-    route.fulfill({ status: 200, contentType: "application/json", body })
-  );
+  await page.route("**/events-data.json*", async (route) => {
+    if (delayMs) await new Promise((r) => setTimeout(r, delayMs));
+    await route.fulfill({ status: 200, contentType: "application/json", body });
+  });
 }
 
 module.exports = { buildEventsData, useEventsFixture };
