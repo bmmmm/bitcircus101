@@ -480,6 +480,28 @@ test.describe('Events page', () => {
         // Back link
         await expect(page.locator('.back-link a')).toBeVisible();
     });
+
+    test('without JavaScript the list shows its hint at natural height', async ({ browser }) => {
+        // The busy-state CSS reserves a viewport of height for the list, and
+        // the attribute has to be in the markup (see events.html). With
+        // scripting off nothing ever removes it, so a second rule takes the
+        // reservation back for that render — this is the one place it shows.
+        const context = await browser.newContext({ javaScriptEnabled: false });
+        const page = await context.newPage();
+        await page.goto('/events.html');
+        const list = page.locator('#events-list');
+        // textContent, not toContainText: Playwright's text matchers read the
+        // rendered text and skip <noscript> even when its children are laid out.
+        const probe = await list.evaluate((el) => ({
+            text: el.textContent,
+            cards: el.querySelectorAll('.event-card').length,
+            height: el.getBoundingClientRect().height,
+        }));
+        expect(probe.text).toContain('JavaScript wird');
+        expect(probe.cards, 'scripting was off, so nothing rendered cards').toBe(0);
+        expect(probe.height, 'the no-JS hint must not sit above a screen of reserved space').toBeLessThan(300);
+        await context.close();
+    });
 });
 
 // ─── Events Content & Functionality ──────────────────────────────────────────
@@ -494,8 +516,30 @@ test.describe('Events content', () => {
     });
 
     test('tags, filtering and month grouping work when events are loaded', async ({ page }) => {
+        // Layout stability: the list starts as one line of "lade termine" and
+        // grows to thousands of pixels once the data lands. Before the busy
+        // state reserved a viewport of height, that growth pushed the footer
+        // out of view — a shift of 0.39, measured on the live page. The
+        // observer is installed before navigation so it sees every frame.
+        await page.addInitScript(() => {
+            window.__cls = 0;
+            new PerformanceObserver((list) => {
+                for (const e of list.getEntries()) if (!e.hadRecentInput) window.__cls += e.value;
+            }).observe({ type: 'layout-shift', buffered: true });
+        });
+        // Hold the data back so the loading state is painted first — an
+        // instant fixture answer can land before the first frame, and a
+        // page that never showed its loading state cannot shift out of it.
+        await useEventsFixture(page, undefined, { delayMs: 250 });
         await page.goto('/events.html');
         await expect(page.locator('.event-card').first()).toBeVisible();
+        await expect(page.locator('.events-filter')).toBeVisible();
+        // Settle: the sync line and the header measurement render after the
+        // cards, and layout-shift entries arrive a frame after the shift.
+        await page.waitForLoadState('networkidle');
+        const cls = await page.evaluate(() => new Promise((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve(window.__cls)))));
+        expect(cls, 'rendering the list must not shift the page').toBeLessThan(0.1);
 
         // Tags present
         expect(await page.locator('.event-tag').count()).toBeGreaterThan(0);
@@ -659,8 +703,18 @@ test.describe('Funding goals (fused into support.html)', () => {
     });
 
     test('support.html renders funding panels with ASCII bars, progressbar a11y and donate links', async ({ page }) => {
+        // The footer percent is stamped into the HTML at build time
+        // (inject-layout.mjs, data-funding) — no page may fetch funding.json,
+        // and finanz.json is fetched exactly once (the pulse used to fetch it
+        // a second time from its own file).
+        const dataRequests = [];
+        page.on('request', (req) => {
+            const m = req.url().match(/\/(funding|finanz)\.json$/);
+            if (m) dataRequests.push(m[1]);
+        });
         await page.goto('/support.html');
         await expect(page).toHaveTitle(/Unterstütz/);
+        await expect(page.locator('.footer__status')).toContainText(/\d+%/);
 
         // Wait for JS (finanz.js / projects.js) to render panels (or a fallback)
         // before asserting.
@@ -669,6 +723,7 @@ test.describe('Funding goals (fused into support.html)', () => {
             document.querySelector('.projekte-fallback') ||
             document.querySelector('.projekte-empty'),
             { timeout: 8000 });
+        expect(dataRequests, 'one finanz.json fetch, no funding.json fetch').toEqual(['finanz']);
 
         // One-time funding panels live in #projekte-list; scope here so the bar
         // assertions can't accidentally pick up a barless monatlich card (which
@@ -1020,9 +1075,17 @@ test.describe('No JavaScript errors', () => {
         test(`${name} page has no JS errors`, async ({ page }) => {
             const errors = [];
             page.on('pageerror', (err) => errors.push(err.message));
+            // The footer percent is stamped into the HTML at build time; a
+            // funding.json request from any page means main.js grew the fetch
+            // back (it ran on all seven layout pages before).
+            const fundingRequests = [];
+            page.on('request', (req) => {
+                if (/\/funding\.json(\?|$)/.test(req.url())) fundingRequests.push(req.url());
+            });
             await page.goto(url);
             await page.waitForLoadState('networkidle');
             expect(errors).toEqual([]);
+            expect(fundingRequests, 'no page fetches funding.json').toEqual([]);
         });
     }
 });
