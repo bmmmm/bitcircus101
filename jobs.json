@@ -1,3 +1,8 @@
 {
-  "postings": []
+  "postings": [],
+  "karussell": [
+    { "name": "kippdata", "url": "https://www.kippdata.de" },
+    { "name": "terrasense", "url": "https://www.terrasense.de" },
+    { "name": "bonn.digital", "url": "https://bonn.digital" }
+  ]
 }

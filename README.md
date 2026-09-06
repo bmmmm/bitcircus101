@@ -190,9 +190,21 @@ The schema accepts optional `url1`/`url2` per item and the CLI offers them, but
 
 `jobs.json` feeds `pinnwand.html`: one object per posting, six required fields,
 no optional ones. Companies add theirs by pull request — the how-to, the
-copy-paste snippet and the donation channels live on the page itself, so the
-instructions and the gate cannot drift apart — a unit test parses the snippet
-out of the HTML and validates it.
+copy-paste snippets and the donation channels live on the page itself, so the
+instructions and the gate cannot drift apart — a unit test parses both snippets
+out of the HTML and validates them.
+
+The second key, `karussell`, is the **permanent slot (Dauerplatz)**: name and
+https link per entry, no dates. The invite note — always the last card — cycles
+those names through its title (jobs.js, 7 s; held still while the card is
+hovered, focused or touched and while the tab is hidden; under
+`prefers-reduced-motion` one random name stands for the whole visit, no
+cycling). Only the title text changes, and the title is pinned to one line by
+CSS with names capped at 24 characters, so the card's height — and the how-to
+below — never moves. A slot is booked per year (Richtwert ab 120 €) and the
+list is curated by hand: remove an entry when its year runs out. The key is
+optional — without it, or when the fetch fails, the note keeps its static
+title.
 
 ```sh
 pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
@@ -416,7 +428,7 @@ pnpm run test:ui           # Playwright UI mode
 | Danke page | 1 | Title, noindex, content, back link |
 | Monochrome theme | 1 | Dark bg, monospace, no inline styles |
 | Light theme toggle | 1 | data-theme flip, localStorage persistence, painted background inverts |
-| Pinnwand | 1 | Job board: active postings, invite note, escaping |
+| Pinnwand | 3 | Job board: active postings, the permanent slot's cycle, escaping, the how-to |
 | JS errors | 12 | Every page in the `pages` array (incl. /ascii/, /chat/, /lite/, /kiosk/, /404.html) free of console errors |
 | Internal links | 1 | Crawls all pages, verifies every internal link resolves |
 | Accessibility | 1 | Aria-labels, alt texts, landmark roles |

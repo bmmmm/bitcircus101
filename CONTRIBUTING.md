@@ -85,7 +85,7 @@ Nothing reaches production without passing all tests. But that's CI's job, not y
 - Add or update content
 - CSS tweaks and improvements
 - Add a calendar source (JSON file in `calendars/`, listed in `config.json`)
-- Hang a note on the Pinnwand (one object in `jobs.json` — the how-to lives on [/pinnwand](https://bitcircus101.de/pinnwand))
+- Hang a note on the Pinnwand (one object in `jobs.json`, either a posting or a permanent-slot entry in `karussell` — the how-to lives on [/pinnwand](https://bitcircus101.de/pinnwand))
 
 ## Guidelines
 
