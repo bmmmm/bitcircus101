@@ -35,14 +35,14 @@
         <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
         <meta name="twitter:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
         <link rel="canonical" href="https://bitcircus101.de/pinnwand" />
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=9bc0d979" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=9bc0d979" />
-        <link rel="manifest" href="site.webmanifest?v=9bc0d979" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=62e56bda" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=62e56bda" />
+        <link rel="manifest" href="site.webmanifest?v=62e56bda" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=9bc0d979" />
+        <link rel="stylesheet" href="style.css?v=62e56bda" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -89,13 +89,28 @@
                     <section id="zettel" class="panel" aria-labelledby="zettel-heading">
                         <h2 id="zettel-heading">zettel<a class="section-anchor" href="#zettel" aria-label="Link zu: Zettel">#</a></h2>
                         <div id="jobs-list" class="jobs-list" aria-live="polite">
-                            <noscript>
-                                <p>
-                                    Die Zettel werden per JavaScript angezeigt – so nehmen sie sich
-                                    von selbst wieder ab, wenn ihre Laufzeit endet.
-                                    <a href="#aufhaengen">Einen Zettel aufhängen ↓</a>
-                                </p>
-                            </noscript>
+                            <!-- jobs.js owns #jobs-postings; the invite note after it is
+                                 static so the wall never shifts when the postings land. -->
+                            <div id="jobs-postings">
+                                <noscript>
+                                    <p>
+                                        Die Zettel werden per JavaScript angezeigt – so nehmen sie sich
+                                        von selbst wieder ab, wenn ihre Laufzeit endet.
+                                    </p>
+                                </noscript>
+                            </div>
+                            <!-- "jobs-invite", not "job-invite": the job-<id> namespace belongs
+                                 to jobs.json, and a posting with id "invite" would collide. -->
+                            <article class="job-panel job-panel--invite" id="jobs-invite">
+                                <div class="job-panel__chrome" aria-hidden="true">
+                                    <span class="job-panel__path">~/pinnwand/euer-zettel</span>
+                                </div>
+                                <div class="job-panel__body">
+                                    <h3 class="job-panel__title">Das könnte Euer Zettel sein :)</h3>
+                                    <p class="job-panel__company">Noch frei</p>
+                                    <a class="btn job-panel__action" href="#aufhaengen">Zettel aufhängen ↓</a>
+                                </div>
+                            </article>
                         </div>
                     </section>
 
@@ -233,9 +248,9 @@
                 <span class="footer__status" data-funding="18">lights: on</span>
             </div>
         </footer>
-        <script defer src="storage.js?v=9bc0d979"></script>
-        <script defer src="jobs-core.js?v=9bc0d979"></script>
-        <script defer src="jobs.js?v=9bc0d979"></script>
-        <script defer src="main.js?v=9bc0d979"></script>
+        <script defer src="storage.js?v=62e56bda"></script>
+        <script defer src="jobs-core.js?v=62e56bda"></script>
+        <script defer src="jobs.js?v=62e56bda"></script>
+        <script defer src="main.js?v=62e56bda"></script>
     </body>
 </html>
