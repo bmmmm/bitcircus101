@@ -190,9 +190,17 @@ The schema accepts optional `url1`/`url2` per item and the CLI offers them, but
 
 `jobs.json` feeds `pinnwand.html`: one object per posting, six required fields,
 no optional ones. Companies add theirs by pull request — the how-to, the
-copy-paste snippet and the donation channels live on the page itself, so the
-instructions and the gate cannot drift apart — a unit test parses the snippet
-out of the HTML and validates it.
+copy-paste snippets and the donation channels live on the page itself, so the
+instructions and the gate cannot drift apart — a unit test parses both snippets
+out of the HTML and validates them.
+
+The second key, `karussell`, is the **permanent slot (Dauerplatz)**: name and
+https link per entry, no dates. The invite note — always the last card — cycles
+those names through its title (jobs.js, 7 s, paused on hover/focus and hidden
+tabs, off under `prefers-reduced-motion`); only the title text changes, so the
+how-to below never moves. A slot is booked per year (Richtwert ab 120 €) and
+the list is curated by hand: remove an entry when its year runs out. The key
+is optional — without it the note keeps its static title.
 
 ```sh
 pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]

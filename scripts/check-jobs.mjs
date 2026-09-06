@@ -40,8 +40,11 @@ export const JOBS_PATH = path.join(root, "jobs.json");
 
 // Schema mirror: which keys each shape allows (additionalProperties:false).
 // Exported so a test can assert they stay in lockstep with jobs.schema.json.
-export const ROOT_KEYS = ["postings"];
+export const ROOT_KEYS = ["postings", "karussell"];
 export const POSTING_KEYS = ["id", "company", "title", "url", "from", "months"];
+// The permanent slot (Dauerplatz): name + https link, no dates — booked per
+// year, curated by hand, so there is nothing for the expiry math to compute.
+export const SLOT_KEYS = ["name", "url"];
 
 // Re-exported, not re-typed: the durations we sell are declared once, in
 // jobs-core.js, and the schema's enum is asserted against this in the tests.
@@ -55,6 +58,7 @@ export const LIMITS = {
   id: { minLength: 1, maxLength: 48 },
   company: { minLength: 1, maxLength: 60 },
   title: { minLength: 1, maxLength: 100 },
+  name: { minLength: 1, maxLength: 40 },
 };
 
 // A posting dated far in the future is almost always a typo in the year; more
@@ -229,6 +233,27 @@ export function validate(data) {
     checkMonths(entry, where, errors);
   });
 
+  if ("karussell" in data) {
+    if (!Array.isArray(data.karussell)) {
+      errors.push(
+        `jobs.json.karussell: muss ein Array sein (ist ${
+          isPlainObject(data.karussell) ? "object" : typeof data.karussell
+        })`
+      );
+    } else {
+      data.karussell.forEach((entry, i) => {
+        const where = `karussell[${i}]`;
+        if (!isPlainObject(entry)) {
+          errors.push(`${where}: muss ein Objekt sein`);
+          return;
+        }
+        checkUnknownKeys(entry, SLOT_KEYS, where, errors);
+        checkString(entry, "name", where, errors, LIMITS.name);
+        checkHttpsUrl(entry, "url", where, errors);
+      });
+    }
+  }
+
   return { ok: errors.length === 0, errors };
 }
 
@@ -294,7 +319,8 @@ function main() {
 
   const total = data.postings.length;
   const active = JobsCore.activeEntries(data.postings, today).length;
-  console.log(`\nOK: ${total} Anzeige(n) gültig, ${active} aktiv.`);
+  const slots = (data.karussell || []).length;
+  console.log(`\nOK: ${total} Anzeige(n) gültig, ${active} aktiv, ${slots} im Karussell.`);
 }
 
 // pathToFileURL, not a template string: import.meta.url is percent-encoded and

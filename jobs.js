@@ -15,6 +15,14 @@
  * as the empty state: a wall with nothing on it shows one note, which reads
  * better than a paragraph apologising for the emptiness.
  *
+ * That note is also the permanent slot (Dauerplatz): jobs.json's `karussell`
+ * lists companies — name and https link, no dates — and this file cycles their
+ * names through the note's title, one every few seconds. Only the title text
+ * is swapped, never the card's structure, so the how-to below never moves;
+ * without JavaScript (or without the key) the static title stands. The cycle
+ * pauses while the card is hovered or focused, while the tab is hidden, and
+ * does not run at all under prefers-reduced-motion (one random name then).
+ *
  * We host no vacancy — every card is a link out. Defense in depth: the CI gate
  * (scripts/check-jobs.mjs) already refuses a non-https url, and this file
  * independently refuses to render one, so a card can never carry a javascript:
@@ -114,6 +122,71 @@
     // follows it, so it is always last — and an empty board is just it.
     postings.innerHTML = html;
     list.removeAttribute("aria-busy");
+    renderSlots(list, data && data.karussell);
+  }
+
+  // ── Permanent slot (Dauerplatz) ──────────────────────────────────────────
+
+  var SLOT_MS = 7000;
+
+  var reduceMotion = false;
+  try {
+    reduceMotion = !!(
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  } catch (e) {}
+
+  /**
+   * Cycle the karussell names through the invite note's title. Only the
+   * title's text changes — one line stays one line — so nothing below moves.
+   * Refuses a non-https url exactly like cardMarkup does: the gate already
+   * rejects one, this is the second lock.
+   */
+  function renderSlots(list, slots) {
+    var title = list.querySelector("#jobs-invite .job-panel__title");
+    var card = list.querySelector("#jobs-invite");
+    if (!title || !card || !slots || !slots.length) return;
+
+    var clean = [];
+    for (var i = 0; i < slots.length; i++) {
+      var s = slots[i];
+      if (s && String(s.url).indexOf("https://") === 0 && String(s.name).trim()) clean.push(s);
+    }
+    if (!clean.length) return;
+
+    var at = Math.floor(Math.random() * clean.length);
+    function show() {
+      title.innerHTML =
+        '<a class="job-panel__slot" href="' + esc(clean[at].url) +
+        '" target="_blank" rel="noopener noreferrer">' + esc(clean[at].name) + " ↗</a>";
+    }
+    show();
+    if (clean.length < 2 || reduceMotion) return;
+
+    var timer = null;
+    function start() {
+      if (timer || document.hidden) return;
+      timer = setInterval(function () {
+        at = (at + 1) % clean.length;
+        show();
+      }, SLOT_MS);
+    }
+    function stop() {
+      if (timer) clearInterval(timer);
+      timer = null;
+    }
+    // A name should not vanish under the pointer or the focus ring, and a
+    // hidden tab has no reader to cycle for.
+    card.addEventListener("mouseenter", stop);
+    card.addEventListener("mouseleave", start);
+    card.addEventListener("focusin", stop);
+    card.addEventListener("focusout", start);
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) stop();
+      else start();
+    });
+    start();
   }
 
   /**

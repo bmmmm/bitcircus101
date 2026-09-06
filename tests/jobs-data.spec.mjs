@@ -15,6 +15,7 @@ import {
   staleWarnings,
   ROOT_KEYS,
   POSTING_KEYS,
+  SLOT_KEYS,
   MONTHS,
   LIMITS,
   ID_RE,
@@ -39,6 +40,13 @@ const posting = (over = {}) => ({
 });
 const board = (...postings) => ({ postings });
 const errorsFor = (data) => validate(data).errors;
+/** A valid permanent-slot entry; each test breaks exactly one field. */
+const slot = (over = {}) => ({
+  name: "kippdata",
+  url: "https://www.kippdata.de",
+  ...over,
+});
+const withSlots = (...slots) => ({ postings: [], karussell: slots });
 
 describe("validate — the shapes that pass", () => {
   it("accepts an empty board and a full posting", () => {
@@ -65,6 +73,42 @@ describe("validate — the shapes that pass", () => {
     for (const months of MONTHS) {
       assert.equal(validate(board(posting({ months }))).ok, true, `months=${months}`);
     }
+  });
+});
+
+describe("validate — the permanent slot (karussell)", () => {
+  it("accepts a board with slots, and one without the key at all", () => {
+    assert.deepEqual(validate(withSlots(slot(), slot({ name: "terrasense", url: "https://www.terrasense.de" }))).errors, []);
+    assert.deepEqual(validate(board()).errors, []);
+  });
+
+  it("accepts the exact boundary length of a name", () => {
+    assert.deepEqual(validate(withSlots(slot({ name: "x".repeat(LIMITS.name.maxLength) }))).errors, []);
+  });
+
+  const cases = {
+    "karussell that is not an array": { postings: [], karussell: { name: "x" } },
+    "a slot that is not an object": withSlots("kippdata"),
+    "an unknown key on a slot": withSlots(slot({ from: "2026-09-01" })),
+    "a slot without a name": withSlots({ url: "https://www.kippdata.de" }),
+    "a slot without a url": withSlots({ name: "kippdata" }),
+    "a name made only of spaces": withSlots(slot({ name: "   " })),
+    "a name over the limit": withSlots(slot({ name: "x".repeat(LIMITS.name.maxLength + 1) })),
+    "an http url": withSlots(slot({ url: "http://www.kippdata.de" })),
+    "a javascript: url": withSlots(slot({ url: "javascript:alert(1)" })),
+  };
+  for (const [name, data] of Object.entries(cases)) {
+    it(`rejects: ${name}`, () => {
+      const errors = errorsFor(data);
+      assert.ok(errors.length >= 1, "expected at least one error");
+      assert.ok(errors.every((e) => /karussell/.test(e)), errors.join(" | "));
+    });
+  }
+
+  it("keeps the slot errors apart from the posting errors, by index", () => {
+    const errors = errorsFor({ postings: [], karussell: [slot(), slot({ url: "ftp://x" })] });
+    assert.equal(errors.length, 1);
+    assert.match(errors[0], /^karussell\[1\]\.url/);
   });
 });
 
@@ -203,6 +247,15 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.deepEqual(sorted(SCHEMA.$defs.posting.required), sorted(POSTING_KEYS));
   });
 
+  it("SLOT_KEYS matches the schema's slot properties, all of them required", () => {
+    assert.deepEqual(sorted(SLOT_KEYS), sorted(Object.keys(SCHEMA.$defs.slot.properties)));
+    assert.deepEqual(sorted(SCHEMA.$defs.slot.required), sorted(SLOT_KEYS));
+    assert.deepEqual(LIMITS.name, {
+      minLength: SCHEMA.$defs.slot.properties.name.minLength,
+      maxLength: SCHEMA.$defs.slot.properties.name.maxLength,
+    });
+  });
+
   it("MONTHS matches the schema's months enum — the price list is stated once", () => {
     assert.deepEqual(MONTHS, SCHEMA.$defs.posting.properties.months.enum);
   });
@@ -262,6 +315,15 @@ describe("the copy-paste snippet on pinnwand.html", () => {
       .replace(/&amp;/g, "&"); // last: an escaped &amp;lt; must not become "<"
     const entry = JSON.parse(json);
     const { ok, errors } = validate({ postings: [entry] });
+    assert.equal(ok, true, errors.join(" | "));
+  });
+
+  it("the permanent-slot snippet is an entry the gate accepts, too", () => {
+    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
+    const m = /<pre class="jobs-snippet jobs-snippet--slot"><code>([\s\S]*?)<\/code><\/pre>/.exec(html);
+    assert.ok(m, 'no <pre class="jobs-snippet jobs-snippet--slot"><code> block found in pinnwand.html');
+    const entry = JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, "&"));
+    const { ok, errors } = validate({ postings: [], karussell: [entry] });
     assert.equal(ok, true, errors.join(" | "));
   });
 });
