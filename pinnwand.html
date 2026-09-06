@@ -89,13 +89,28 @@
                     <section id="zettel" class="panel" aria-labelledby="zettel-heading">
                         <h2 id="zettel-heading">zettel<a class="section-anchor" href="#zettel" aria-label="Link zu: Zettel">#</a></h2>
                         <div id="jobs-list" class="jobs-list" aria-live="polite">
-                            <noscript>
-                                <p>
-                                    Die Zettel werden per JavaScript angezeigt – so nehmen sie sich
-                                    von selbst wieder ab, wenn ihre Laufzeit endet.
-                                    <a href="#aufhaengen">Einen Zettel aufhängen ↓</a>
-                                </p>
-                            </noscript>
+                            <!-- jobs.js owns #jobs-postings; the invite note after it is
+                                 static so the wall never shifts when the postings land. -->
+                            <div id="jobs-postings">
+                                <noscript>
+                                    <p>
+                                        Die Zettel werden per JavaScript angezeigt – so nehmen sie sich
+                                        von selbst wieder ab, wenn ihre Laufzeit endet.
+                                    </p>
+                                </noscript>
+                            </div>
+                            <!-- "jobs-invite", not "job-invite": the job-<id> namespace belongs
+                                 to jobs.json, and a posting with id "invite" would collide. -->
+                            <article class="job-panel job-panel--invite" id="jobs-invite">
+                                <div class="job-panel__chrome" aria-hidden="true">
+                                    <span class="job-panel__path">~/pinnwand/euer-zettel</span>
+                                </div>
+                                <div class="job-panel__body">
+                                    <h3 class="job-panel__title">Das könnte Euer Zettel sein :)</h3>
+                                    <p class="job-panel__company">Noch frei</p>
+                                    <a class="btn job-panel__action" href="#aufhaengen">Zettel aufhängen ↓</a>
+                                </div>
+                            </article>
                         </div>
                     </section>
 
