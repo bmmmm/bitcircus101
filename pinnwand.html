@@ -100,14 +100,16 @@
                                 </noscript>
                             </div>
                             <!-- "jobs-invite", not "job-invite": the job-<id> namespace belongs
-                                 to jobs.json, and a posting with id "invite" would collide. -->
-                            <article class="job-panel job-panel--invite" id="jobs-invite">
+                                 to jobs.json, and a posting with id "invite" would collide.
+                                 aria-live="off": jobs.js cycles the karussell names through the
+                                 title, and the surrounding polite region must not read each one. -->
+                            <article class="job-panel job-panel--invite" id="jobs-invite" aria-live="off">
                                 <div class="job-panel__chrome" aria-hidden="true">
-                                    <span class="job-panel__path">~/pinnwand/euer-zettel</span>
+                                    <span class="job-panel__path">~/pinnwand/dauerplatz</span>
                                 </div>
                                 <div class="job-panel__body">
                                     <h3 class="job-panel__title">Das könnte Euer Zettel sein :)</h3>
-                                    <p class="job-panel__company">Noch frei</p>
+                                    <p class="job-panel__company">Dauerplatz im Karussell · da passt auch Euer Zettel rein</p>
                                     <a class="btn job-panel__action" href="#aufhaengen">Zettel aufhängen ↓</a>
                                 </div>
                             </article>
@@ -119,6 +121,8 @@
                         <p class="jobs-pitch">
                             Ein Link auf eure Stellenanzeige, gegen eine Spende an den Space:
                             <strong>1 monat ab 50 €</strong>, 3 monate ab 120 €, 12 monate ab 400 €.
+                            Oder der <strong>Dauerplatz im Karussell</strong>: euer Name im Wechsel
+                            auf dem letzten Zettel, ein Jahr ab 120 €.
                             Richtwerte – mehr ist eine Spende, weniger auch.
                         </p>
 
@@ -143,6 +147,9 @@
   "from": "2026-09-03",
   "months": 3
 }</code></pre>
+                                        Für den <strong>Dauerplatz</strong> stattdessen ins
+                                        <code>karussell</code>-Array – nur Name und Link, kein Datum:
+                                        <pre class="jobs-snippet jobs-snippet--slot"><code>{ "name": "ACME GmbH", "url": "https://acme.example" }</code></pre>
                                         <p>
                                             <a class="btn btn-primary" href="https://github.com/bmmmm/bitcircus101/edit/main/jobs.json" target="_blank" rel="noopener noreferrer">jobs.json auf GitHub bearbeiten&nbsp;↗</a>
                                         </p>

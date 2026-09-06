@@ -57,6 +57,11 @@ function buildJobsData() {
         months: 1,
       },
     ],
+    // Two, so the cycle has somewhere to go; the test advances the clock.
+    karussell: [
+      { name: "Freund A", url: "https://freund-a.example" },
+      { name: "Freund B", url: "https://freund-b.example" },
+    ],
   };
 }
 
@@ -91,6 +96,12 @@ function buildHostileJobsData() {
         url: 'https://ok.example/jobs/real',
         ...live,
       },
+    ],
+    // The permanent slot gets the same treatment: a javascript: link must not
+    // render at all, and markup in a name must land as text.
+    karussell: [
+      { name: 'Böse', url: 'javascript:window.__pwned = 1' },
+      { name: '"><img src=x onerror="window.__pwned = 1">', url: 'https://ok.example' },
     ],
   };
 }
