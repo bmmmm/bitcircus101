@@ -622,6 +622,26 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .hx404__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; }
 
 /* =============================================================================
+   Pinnwand teaser — one dashed note for companies, between funding and contact.
+   Deliberately quiet: dim label, one line of copy, the link is the only accent.
+   ============================================================================= */
+.pinnwand-teaser {
+    max-width: 60ch;
+    margin: 2rem auto;
+    padding: 0.9rem 1.1rem;
+    border: 1px dashed var(--line-strong);
+    text-align: center;
+}
+.pinnwand-teaser__label {
+    margin: 0 0 0.35rem;
+    color: var(--ink-dim);
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+}
+.pinnwand-teaser__slogan { margin: 0 0 0.5rem; color: var(--ink-max); }
+.pinnwand-teaser__cta { font-size: 0.9rem; }
+
+/* =============================================================================
    Filmstrip / carousel — grayscale stills, color on demand
    ============================================================================= */
 .carousel-container {
@@ -1513,7 +1533,7 @@ h3.location-card__header::before { content: none; }
 .job-panel--invite .job-panel__title { color: var(--ink-dim); }
 .job-panel--invite .job-panel__company { color: var(--ink-dim); }
 
-.jobs-loading, .jobs-fallback { color: var(--ink-dim); padding: 0.5rem 0; }
+.jobs-fallback { color: var(--ink-dim); padding: 0.5rem 0; }
 
 /* The one paragraph that stays open above the two collapsibles: the offer in a
    breath. Everything procedural sits inside .jobs-howto — this page is about
@@ -1522,7 +1542,6 @@ h3.location-card__header::before { content: none; }
 .jobs-howto { margin-top: 1.25rem; }
 .jobs-howto .sidenote__body > ol,
 .jobs-howto .sidenote__body > ul { margin-top: 0.5rem; }
-.jobs-loading__cmd { color: var(--accent); }
 .jobs-fallback__err { color: var(--ink-max); }
 
 /* The copy-paste snippet. There is no global `pre` rule — only `code` carries a
