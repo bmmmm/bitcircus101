@@ -64,8 +64,10 @@ finanz.js                   Frontend: cost/funding board on support.html, plus t
 finanz.schema.json          Structural contract for finanz.json
 jobs.json                   Job board postings (one object per posting, added by PR)
 jobs.schema.json            Structural contract for jobs.json
-jobs.js                     Frontend: active postings + the invite note (also the empty state)
-                            on pinnwand.html; escapes every field, refuses a non-https url
+jobs.js                     Frontend: renders the active postings into #jobs-postings on
+                            pinnwand.html (the invite note after them is static markup — the
+                            empty state, and nothing shifts when postings land); escapes every
+                            field, refuses a non-https url
 jobs-core.js                Shared expiry math for jobs.js + the CI gate
 funding.json                Footer funding percentage (edited via pnpm run finanz percent, then
                             pnpm run build:layout — the value is stamped into the HTML, not fetched)

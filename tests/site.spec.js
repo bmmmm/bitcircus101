@@ -850,7 +850,18 @@ test.describe('Pinnwand', () => {
 
     test('shows only what is up today, newest first, and the empty board invites the first note', async ({ page }) => {
         await page.clock.install({ time: NOW });
-        await useJobsFixture(page);
+        // Layout stability: the invite note used to arrive with the postings
+        // and pushed the how-to section down by a card on every visit (0.075,
+        // Lighthouse mobile). It is static markup now; the observer is armed
+        // before navigation and the fixture is held back so the loading state
+        // is painted before the cards land.
+        await page.addInitScript(() => {
+            window.__cls = 0;
+            new PerformanceObserver((list) => {
+                for (const e of list.getEntries()) if (!e.hadRecentInput) window.__cls += e.value;
+            }).observe({ type: 'layout-shift', buffered: true });
+        });
+        await useJobsFixture(page, undefined, { delayMs: 250 });
         await page.goto('/pinnwand.html');
 
         // Two of four: one expired two days ago, one starts next month. The
@@ -907,10 +918,19 @@ test.describe('Pinnwand', () => {
         // the FIXTURE, never against the committed jobs.json, or the first real
         // posting would break this test.
         await page.unroute('**/jobs.json*');
-        await useJobsFixture(page, { postings: [] });
+        await useJobsFixture(page, { postings: [] }, { delayMs: 250 });
         await page.goto('/pinnwand.html');
         await expect(page.locator('.job-panel')).toHaveCount(1);
         await expect(page.locator('.job-panel--invite')).toBeVisible();
+        // The empty wall is the live default — and the case the static note
+        // fixes outright: nothing arrives, nothing goes away, nothing moves.
+        // With postings the wall grows by exactly their cards; that shift is
+        // the content itself and is not gated here. Bound at 0.02: the
+        // JS-rendered note alone measured 0.045 in this viewport.
+        await page.waitForLoadState('networkidle');
+        const cls = await page.evaluate(() => new Promise((resolve) =>
+            requestAnimationFrame(() => requestAnimationFrame(() => resolve(window.__cls)))));
+        expect(cls, 'an empty wall must not shift the how-to below it').toBeLessThan(0.02);
     });
 
     test('a posting that got past the gate can still not inject or link out unsafely', async ({ page }) => {

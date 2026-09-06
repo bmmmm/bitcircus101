@@ -7,10 +7,13 @@
  * disappears on its own last day without anybody redeploying the site.
  *
  * The last card on the wall is always the invite note ("Das könnte Euer Zettel
- * sein :)"). It is rendered here rather than sitting in the HTML because jobs.js
- * owns the list's innerHTML — and because it doubles as the empty state: a wall
- * with nothing on it still shows one note, which reads better than a paragraph
- * apologising for the emptiness.
+ * sein :)"). It sits in the HTML (pinnwand.html, #jobs-invite), not in this
+ * file: it has no data to wait for, and rendered from here it arrived with
+ * the postings and pushed the how-to section below it down by a whole card on
+ * every visit (layout shift 0.075, Lighthouse mobile). jobs.js owns only the
+ * postings container (#jobs-postings) in front of it. The note still doubles
+ * as the empty state: a wall with nothing on it shows one note, which reads
+ * better than a paragraph apologising for the emptiness.
  *
  * We host no vacancy — every card is a link out. Defense in depth: the CI gate
  * (scripts/check-jobs.mjs) already refuses a non-https url, and this file
@@ -71,48 +74,35 @@
   // card so the shape of the offer is visible before anyone has bought one.
   // Dashed frame, no date line, and its action goes to the how-to instead of
   // out to a vacancy.
-  function inviteMarkup() {
-    return (
-      // "jobs-invite", not "job-invite": the job-<id> namespace belongs to
-      // jobs.json, and a posting with id "invite" would collide with it.
-      '<article class="job-panel job-panel--invite" id="jobs-invite">' +
-      '<div class="job-panel__chrome" aria-hidden="true">' +
-      '<span class="job-panel__path">~/pinnwand/euer-zettel</span></div>' +
-      '<div class="job-panel__body">' +
-      '<h3 class="job-panel__title">Das könnte Euer Zettel sein :)</h3>' +
-      '<p class="job-panel__company">Noch frei</p>' +
-      '<a class="btn job-panel__action" href="#aufhaengen">Zettel aufhängen ↓</a>' +
-      "</div></article>"
-    );
-  }
-
   // ── States ────────────────────────────────────────────────────────────────
+  // No visible "loading" line on purpose: the invite note is on the wall from
+  // the first paint, and a one-line placeholder that appears and goes away
+  // again moved it twice (2 × 0.029, Lighthouse mobile). aria-busy on the live
+  // region carries the loading state for assistive tech instead.
 
-  function loadingMarkup() {
-    return (
-      '<p class="jobs-loading"><span class="jobs-loading__cmd">' +
-      "lade zettel …</span></p>"
-    );
-  }
-
-  function renderError(el) {
-    el.innerHTML =
+  /**
+   * @param {HTMLElement} list the live region (#jobs-list) that carries aria-busy
+   * @param {HTMLElement} postings the container in front of the invite note
+   */
+  function renderError(list, postings) {
+    postings.innerHTML =
       '<div class="jobs-fallback">' +
       '<p class="jobs-fallback__cmd">zettel laden: ' +
       '<span class="jobs-fallback__err">fehlgeschlagen</span></p>' +
       "<p>Einen Zettel aufhängen geht trotzdem: " +
       '<a href="#aufhaengen">so geht das ↓</a></p></div>';
-    el.removeAttribute("aria-busy");
+    list.removeAttribute("aria-busy");
   }
 
   // ── Init ────────────────────────────────────────────────────────────────
 
   function render(data) {
     var list = document.getElementById("jobs-list");
-    if (!list) return;
+    var postings = document.getElementById("jobs-postings");
+    if (!list || !postings) return;
 
-    var postings = (data && data.postings) || [];
-    var active = Core.activeEntries(postings, Core.todayString());
+    var entries = (data && data.postings) || [];
+    var active = Core.activeEntries(entries, Core.todayString());
     var html = "";
     for (var i = 0; i < active.length; i++) {
       // Only ever link out over https — see the file header.
@@ -120,10 +110,10 @@
       html += cardMarkup(active[i]);
     }
 
-    // Always last: real notes first, the free slot after them.
-    list.innerHTML = html + inviteMarkup();
+    // Real notes go into their container; the invite note (static markup)
+    // follows it, so it is always last — and an empty board is just it.
+    postings.innerHTML = html;
     list.removeAttribute("aria-busy");
-    wireInviteAction(list);
   }
 
   /**
@@ -144,15 +134,18 @@
 
   function init() {
     var list = document.getElementById("jobs-list");
-    if (!list) return;
+    var postings = document.getElementById("jobs-postings");
+    if (!list || !postings) return;
+    // The invite note is in the markup from the first paint; its CTA still
+    // needs the how-to opened by hand (see wireInviteAction).
+    wireInviteAction(list);
     if (!Core) {
-      renderError(list);
+      renderError(list, postings);
       return;
     }
     // aria-busy belongs to the loading state, not to the page: left in the
     // static markup it would flag the <noscript> fallback as forever loading.
     list.setAttribute("aria-busy", "true");
-    list.innerHTML = loadingMarkup();
     fetch(JSON_URL)
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP " + res.status);
@@ -160,7 +153,7 @@
       })
       .then(render)
       .catch(function () {
-        renderError(list);
+        renderError(list, postings);
       });
   }
 
