@@ -447,12 +447,16 @@ URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:gaming
 END:VEVENT
 BEGIN:VEVENT
-UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261027T1800@bitcircus101.de
-DTSTAMP:20260616T150902Z
-DTSTART;TZID=Europe/Berlin:20261027T180000
-DTEND;TZID=Europe/Berlin:20261027T220000
-SUMMARY:Offene Datenburg
-URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
-CATEGORIES:datenburg,offener-abend
+UID:casual-linkup-4fr@bitcircus101.de-20261023T2000@bitcircus101.de
+DTSTAMP:20260423T190953Z
+DTSTART;TZID=Europe/Berlin:20261023T200000
+DTEND;TZID=Europe/Berlin:20261023T230000
+SUMMARY:Casual Linkup@bitcircus101 (4FR)
+DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
+ nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
+ . https://bitcircus101.de
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup
 END:VEVENT
 END:VCALENDAR
