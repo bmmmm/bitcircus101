@@ -864,11 +864,38 @@ test.describe('Pinnwand', () => {
         await useJobsFixture(page, undefined, { delayMs: 250 });
         await page.goto('/pinnwand.html');
 
-        // Two of four: one expired two days ago, one starts next month. The
-        // invite note is always there on top of them, so count real cards only.
-        const cards = page.locator('.job-panel:not(.job-panel--invite)');
+        // Two of four: one expired two days ago, one starts next month. The two
+        // static notes (sample, invite) sit outside #jobs-postings, so counting
+        // that container counts real cards only.
+        const cards = page.locator('#jobs-postings .job-panel');
         await expect(cards).toHaveCount(2);
         await expect(page.locator('.job-panel--invite')).toHaveCount(1);
+        // Real postings retire the sample note — it is the empty wall's filler,
+        // not a card to stand between vacancies.
+        await expect(page.locator('#jobs-sample')).toBeHidden();
+
+        // A taken note wears the accent frame, the empty permanent slot stays
+        // ink — that contrast IS the visibility those slots are for. The
+        // expected colour is read out of the token, never written down here, so
+        // repainting --accent repaints the assertion with it.
+        const frames = await page.evaluate(() => {
+            const probe = document.createElement('span');
+            probe.style.color = 'var(--accent)';
+            document.body.appendChild(probe);
+            const accent = getComputedStyle(probe).color;
+            probe.remove();
+            const border = (sel) =>
+                getComputedStyle(document.querySelector(sel)).borderTopColor;
+            return {
+                accent,
+                posting: border('#jobs-postings .job-panel'),
+                sample: border('#jobs-sample'),
+                invite: border('.job-panel--invite'),
+            };
+        });
+        expect(frames.posting, 'a real posting must wear the accent frame').toBe(frames.accent);
+        expect(frames.sample, 'the sample note must wear it too').toBe(frames.accent);
+        expect(frames.invite, 'the permanent slot must stay ink').not.toBe(frames.accent);
         await expect(page.locator('#job-expired-gmbh-2026-08')).toHaveCount(0);
         await expect(page.locator('#job-future-ag-2026-10')).toHaveCount(0);
 
@@ -946,7 +973,12 @@ test.describe('Pinnwand', () => {
         await page.unroute('**/jobs.json*');
         await useJobsFixture(page, { postings: [] }, { delayMs: 250 });
         await page.goto('/pinnwand.html');
-        await expect(page.locator('.job-panel')).toHaveCount(1);
+        // Two static notes and nothing else: the leetspeak sample showing what a
+        // Zettel looks like, and the invite note that IS the empty state.
+        await expect(page.locator('.job-panel')).toHaveCount(2);
+        await expect(page.locator('#jobs-sample')).toBeVisible();
+        await expect(page.locator('#jobs-sample .job-panel__action'))
+            .toHaveAttribute('href', '#aufhaengen');
         await expect(page.locator('.job-panel--invite')).toBeVisible();
         // No `karussell` key: the static title stands, and it is plain text.
         await expect(page.locator('.job-panel--invite .job-panel__title')).toHaveText('Frei für Euren Zettel :)');
@@ -971,7 +1003,7 @@ test.describe('Pinnwand', () => {
 
         // Four unusable schemes dropped — javascript:, data:, protocol-relative
         // and an uppercase HTTPS:// that indexOf("https://") does not match.
-        const cards = page.locator('.job-panel:not(.job-panel--invite)');
+        const cards = page.locator('#jobs-postings .job-panel');
         await expect(cards).toHaveCount(1);
         expect(await cards.locator('.job-panel__action').getAttribute('href'))
             .toBe('https://ok.example/jobs/real');
