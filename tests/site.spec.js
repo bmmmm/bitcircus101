@@ -873,6 +873,29 @@ test.describe('Pinnwand', () => {
         // Real postings retire the sample note — it is the empty wall's filler,
         // not a card to stand between vacancies.
         await expect(page.locator('#jobs-sample')).toBeHidden();
+
+        // A taken note wears the accent frame, the empty permanent slot stays
+        // ink — that contrast IS the visibility those slots are for. The
+        // expected colour is read out of the token, never written down here, so
+        // repainting --accent repaints the assertion with it.
+        const frames = await page.evaluate(() => {
+            const probe = document.createElement('span');
+            probe.style.color = 'var(--accent)';
+            document.body.appendChild(probe);
+            const accent = getComputedStyle(probe).color;
+            probe.remove();
+            const border = (sel) =>
+                getComputedStyle(document.querySelector(sel)).borderTopColor;
+            return {
+                accent,
+                posting: border('#jobs-postings .job-panel'),
+                sample: border('#jobs-sample'),
+                invite: border('.job-panel--invite'),
+            };
+        });
+        expect(frames.posting, 'a real posting must wear the accent frame').toBe(frames.accent);
+        expect(frames.sample, 'the sample note must wear it too').toBe(frames.accent);
+        expect(frames.invite, 'the permanent slot must stay ink').not.toBe(frames.accent);
         await expect(page.locator('#job-expired-gmbh-2026-08')).toHaveCount(0);
         await expect(page.locator('#job-future-ag-2026-10')).toHaveCount(0);
 
