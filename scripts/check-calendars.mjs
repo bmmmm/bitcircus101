@@ -20,6 +20,7 @@
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
+import { pathToFileURL } from "node:url";
 import ICSCore from "../ics-core.js";
 import { CAL_DIR, CAL_CONFIG_FILE, toCards } from "./sync-events.mjs";
 
@@ -365,7 +366,10 @@ async function main() {
   );
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// pathToFileURL, not a template string: import.meta.url is percent-encoded and
+// argv[1] is not, so a checkout path with a space (or #, ?, an umlaut) makes the
+// two differ and main() never runs — the script exits 0 having done NOTHING.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((err) => {
     console.error(err);
     process.exit(1);
