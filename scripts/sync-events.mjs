@@ -15,6 +15,7 @@ const EVENTS_URL = `${SITE_URL}/events`;
 
 import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { dirname } from "node:path";
+import { pathToFileURL } from "node:url";
 import ICSCore from "../ics-core.js";
 import EventsCore from "../events-core.js";
 
@@ -888,8 +889,12 @@ async function main() {
   }
 }
 
-// Run main() only when executed directly (not when imported by tests)
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Run main() only when executed directly (not when imported by tests).
+// pathToFileURL, not a template string: import.meta.url is percent-encoded and
+// argv[1] is not, so a checkout path with a space (or #, ?, an umlaut) makes the
+// two differ and main() never runs — a hand-run sync would look like a
+// successful no-op while nothing was fetched or written.
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((err) => {
     console.error(err);
     process.exit(1);

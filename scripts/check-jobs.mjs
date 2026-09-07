@@ -331,7 +331,7 @@ function main() {
 }
 
 // pathToFileURL, not a template string: import.meta.url is percent-encoded and
-// argv[1] is not, so a checkout path with a space (or #, ?, a umlaut) makes the
+// argv[1] is not, so a checkout path with a space (or #, ?, an umlaut) makes the
 // two differ, main() never runs and the gate exits 0 having validated NOTHING.
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main();
