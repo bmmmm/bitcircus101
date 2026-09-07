@@ -1039,6 +1039,37 @@ test.describe('Pinnwand', () => {
         await expect(page.locator('.jobs-pitch')).toBeVisible();
         const folds = page.locator('details.jobs-howto');
         await expect(folds).toHaveCount(2);
+
+        // Both folds must stay in the heading outline while collapsed. Here the
+        // folded content IS the section's primary content, so a summary with no
+        // heading left a screen-reader user navigating by headings with no
+        // entry for either block (#53). Read the outline of <main>, which is
+        // what such a user actually gets.
+        const outline = await page.evaluate(() =>
+            [...document.querySelectorAll('main h1, main h2, main h3, main h4')]
+                .map((h) => h.tagName + ' ' + h.textContent.trim()));
+        expect(outline, 'the how-to headings fell out of the outline')
+            .toEqual(expect.arrayContaining([
+                'H3 so hängt ihr einen Zettel auf',
+                'H3 spielregeln',
+            ]));
+
+        // ...and making them headings must not change how they look. Pin only
+        // what the CSS sets — not text metrics or wrapping, which depend on the
+        // font the machine happens to have. Measured identical to the <span>
+        // this replaced: same size as the surrounding note, no heading margin,
+        // and none of the "── " marker h3 normally carries.
+        const title = page.locator('.jobs-howto .sidenote__title').first();
+        const styled = await title.evaluate((t) => ({
+            fontSize: getComputedStyle(t).fontSize,
+            parentFontSize: getComputedStyle(t.parentElement).fontSize,
+            margin: getComputedStyle(t).margin,
+            marker: getComputedStyle(t, '::before').content,
+        }));
+        expect(styled.fontSize, 'the heading must inherit the note\'s size, not h3\'s')
+            .toBe(styled.parentFontSize);
+        expect(styled.margin, 'the h1–h4 margin must be reset here').toBe('0px');
+        expect(styled.marker, 'the h3::before marker has no place in a summary').toBe('none');
         // Two snippets live in that box (posting + permanent slot); the first
         // stands for both — they open and close with the same <details>.
         await expect(page.locator('.jobs-snippet').first()).toBeHidden();
