@@ -282,18 +282,36 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     // "Richtwerte" to skip a worked example that has since moved into the
     // how-to — which left everything after that word unscanned, so "Sonderfall:
     // 6 monate ab 220 €" would have passed while the schema refuses a 6.
-    const offered = [...pitch[1].matchAll(/(\d+)\s+monate?\b/gi)].map((m) => Number(m[1]));
+    // "monaten" too: the dative plural reads perfectly well in a sentence
+    // ("ab 6 monaten"), and matching only "monat(e)" would wave it through.
+    const offered = [...pitch[1].matchAll(/(\d+)\s+monat(?:en|e)?\b/gi)].map((m) => Number(m[1]));
     assert.deepEqual(offered, MONTHS);
   });
 
-  it("the wall quotes no euro amount — crates are the whole price list", () => {
+  it("neither the wall nor the schema names a euro amount", () => {
     // Deliberate: the pinnwand asks companies to support the space, not to book
     // advertising space, so it names crates of Mate and never what one costs.
-    // The whole file, not just the pitch — the how-to and the house rules are
-    // exactly where a euro amount would creep back in as a "helpful" hint.
-    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
-    const euros = [...html.matchAll(/.{0,60}\d[\d.,]*\s*(?:€|EUR|Euro)/gi)].map((m) => m[0]);
-    assert.deepEqual(euros, [], "pinnwand.html names a euro amount");
+    //
+    // The currency is banned outright, not "a digit next to a € sign": this file
+    // writes &nbsp; and entities by hand, so "20&nbsp;&euro;", "&#8364; 20",
+    // "EUR 20" and "20,- €" all render as a price while sailing past a
+    // number-anchored pattern (measured). No digit is required here — a page
+    // that has no business naming euros has no business writing the word.
+    // \bEuro\b leaves Europa, Eurorack and friends alone.
+    const CURRENCY = /(?:€|&euro;|&#8364;|&#x20ac;|\bEUR\b|\bEuros?\b)/gi;
+    const sources = {
+      "pinnwand.html": fs.readFileSync(path.join(root, "pinnwand.html"), "utf8"),
+      // The schema description is the other thing a contributing company reads,
+      // and it makes the same promise — so it is held to it.
+      "jobs.schema.json months description":
+        SCHEMA.$defs.posting.properties.months.description,
+    };
+    for (const [name, text] of Object.entries(sources)) {
+      const hits = [...text.matchAll(CURRENCY)].map((m) =>
+        text.slice(Math.max(0, m.index - 50), m.index + m[0].length).replace(/\s+/g, " ")
+      );
+      assert.deepEqual(hits, [], `${name} names a euro amount`);
+    }
   });
 
   it("the Matekisten per runtime match the schema's — the price is stated once", () => {
@@ -306,11 +324,14 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     const desc = SCHEMA.$defs.posting.properties.months.description;
 
     // "1 monat · 3 kisten" -> [1, 3]. The gap between the two numbers is
-    // bounded: without a limit a dropped crate count would silently pair a
-    // runtime with the next number anywhere further down the paragraph. The
-    // Dauerplatz contributes no pair — it is a slot, not a sold runtime.
+    // bounded twice over: no full stop (a runtime and a crate count that belong
+    // together are never two sentences) and at most 40 characters. With only the
+    // length bound a runtime whose crate count was dropped still paired up with
+    // the next number across the sentence break, and the gate stayed green —
+    // measured, on a shortened Dauerplatz sentence. The Dauerplatz itself
+    // contributes no pair: it is a slot, not a sold runtime.
     const quoted = [
-      ...pitch.matchAll(/(\d+)\s+monate?\b[^\d]{0,40}?(\d+)\s+kisten\b/gi),
+      ...pitch.matchAll(/(\d+)\s+monat(?:en|e)?\b[^\d.]{0,40}?(\d+)\s+kisten\b/gi),
     ].map((m) => [Number(m[1]), Number(m[2])]);
     const declared = [...desc.matchAll(/(\d+)\s+\((\d+)\s+Kisten\)/g)].map((m) => [
       Number(m[1]),
