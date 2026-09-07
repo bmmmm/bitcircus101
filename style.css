@@ -1364,6 +1364,14 @@ h3.location-card__header::before { content: none; }
 .sidenote[open] .sidenote__caret::before { content: "[-]"; }
 .sidenote__label { display: flex; flex-direction: column; gap: 0.1em; }
 .sidenote__title { color: var(--ink-max); font-weight: 700; }
+/* The title may be a real heading, so a collapsed block still has an outline
+   entry for screen-reader heading navigation — on /pinnwand the folded content
+   IS the section's primary content, and losing it left the page with no entry
+   for either how-to (#53). raum-nutzen.html keeps a span: there the fold is a
+   genuine aside. The reset below is what makes the two spellings render
+   identically — the heading is for the outline, not for a size change. */
+h3.sidenote__title { margin: 0; font-size: inherit; line-height: inherit; }
+h3.sidenote__title::before { content: none; }
 .sidenote__body { padding: 0 1.1rem 0.9rem; }
 .sidenote__body > p:first-child { margin-top: 0.5rem; }
 
