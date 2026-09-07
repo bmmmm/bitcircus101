@@ -170,40 +170,11 @@
     return next;
   }
 
-  // ── Shared field predicates ──────────────────────────────────────────────
-  // finanz.schema.json declares format:"date" / format:"uri", but a JSON-Schema
-  // pattern can't express calendar validity or "no whitespace / has a host".
-  // These live here — not in the CLI validator — so the browser side can call
-  // the same rule the moment it needs to, with no second implementation to
-  // drift from this one.
-
-  // Calendar-validate a YYYY-MM-DD string: well-formed AND a date that actually
-  // exists (so "2026-13-99" / "2026-02-30" are rejected). Date.UTC is a pure,
-  // clock-free construction — deterministic, no wall-clock read.
-  function isCalendarDate(s) {
-    if (typeof s !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(s)) return false;
-    var y = +s.slice(0, 4),
-      m = +s.slice(5, 7),
-      d = +s.slice(8, 10);
-    var dt = new Date(Date.UTC(y, m - 1, d));
-    return (
-      dt.getUTCFullYear() === y &&
-      dt.getUTCMonth() === m - 1 &&
-      dt.getUTCDate() === d
-    );
-  }
-
-  // A usable https link: "https://" prefix, an actual host after it, and no
-  // embedded whitespace — the part of format:"uri" the ^https:// pattern can't
-  // catch (a bare "https://" or "https://a b c" both satisfy the pattern).
-  function isCleanHttpsUrl(s) {
-    return (
-      typeof s === "string" &&
-      s.indexOf("https://") === 0 &&
-      s.length > "https://".length &&
-      !/\s/.test(s)
-    );
-  }
+  // The field predicates isCalendarDate / isCleanHttpsUrl used to sit here, on
+  // the theory that the browser would one day want them. It never did, while a
+  // second Node consumer (the job board's gate) arrived and had to import this
+  // whole funding module to reach them. They now live in scripts/validate.mjs
+  // as plain ESM — see #48.
 
   return {
     BAR_WIDTH: BAR_WIDTH,
@@ -218,7 +189,5 @@
     pulseGlyph: pulseGlyph,
     pulseSparkline: pulseSparkline,
     pushPulse: pushPulse,
-    isCalendarDate: isCalendarDate,
-    isCleanHttpsUrl: isCleanHttpsUrl,
   };
 });

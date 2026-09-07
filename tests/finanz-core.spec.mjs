@@ -21,8 +21,6 @@ const {
   pulseGlyph,
   pulseSparkline,
   pushPulse,
-  isCalendarDate,
-  isCleanHttpsUrl,
 } = FinanzCore;
 
 describe("rawPercent", () => {
@@ -203,32 +201,6 @@ describe("pushPulse", () => {
   });
 });
 
-// Shared field predicates — one source, so the CLI validator
-// (scripts/finanz-data.mjs) and any future browser-side check cannot drift.
-describe("isCalendarDate", () => {
-  it("accepts real dates including a leap day", () => {
-    assert.equal(isCalendarDate("2026-06-22"), true);
-    assert.equal(isCalendarDate("2024-02-29"), true);
-  });
-  it("rejects impossible or malformed dates", () => {
-    assert.equal(isCalendarDate("2026-13-99"), false);
-    assert.equal(isCalendarDate("2026-02-30"), false);
-    assert.equal(isCalendarDate("2023-02-29"), false); // 2023 is not a leap year
-    assert.equal(isCalendarDate("22.06.2026"), false);
-    assert.equal(isCalendarDate(""), false);
-    assert.equal(isCalendarDate(null), false);
-  });
-});
-
-describe("isCleanHttpsUrl", () => {
-  it("accepts a normal https URL", () => {
-    assert.equal(isCleanHttpsUrl("https://ko-fi.com/bitcircus"), true);
-  });
-  it("rejects a bare scheme, whitespace, non-https and non-strings", () => {
-    assert.equal(isCleanHttpsUrl("https://"), false);
-    assert.equal(isCleanHttpsUrl("https://a b c"), false);
-    assert.equal(isCleanHttpsUrl("http://ko-fi.com"), false);
-    assert.equal(isCleanHttpsUrl(""), false);
-    assert.equal(isCleanHttpsUrl(null), false);
-  });
-});
+// isCalendarDate / isCleanHttpsUrl moved to scripts/validate.mjs with their
+// tests (#48) — they were never funding math, and a second Node consumer had
+// to import this whole module to reach them.

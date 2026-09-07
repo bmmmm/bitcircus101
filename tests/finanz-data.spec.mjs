@@ -15,7 +15,6 @@ import {
   write,
   validate,
   parseAmount,
-  isCalendarDate,
   raiseProject,
   finishProject,
   addEinmalig,
@@ -509,19 +508,9 @@ describe("parseAmount (shared CLI input parser)", () => {
   });
 });
 
-describe("isCalendarDate", () => {
-  it("accepts real dates including a leap day", () => {
-    assert.equal(isCalendarDate("2026-06-22"), true);
-    assert.equal(isCalendarDate("2024-02-29"), true);
-  });
-  it("rejects impossible or malformed dates", () => {
-    assert.equal(isCalendarDate("2026-13-99"), false);
-    assert.equal(isCalendarDate("2026-02-30"), false);
-    assert.equal(isCalendarDate("2023-02-29"), false); // 2023 is not a leap year
-    assert.equal(isCalendarDate("22.06.2026"), false);
-    assert.equal(isCalendarDate(""), false);
-  });
-});
+// The isCalendarDate cases moved to tests/validate.spec.mjs with the predicate
+// itself (#48); that file also asserts this module re-exports the same
+// function object rather than a copy of it.
 
 describe("schema/CLI lockstep (the hand-maintained mirror must match finanz.schema.json)", () => {
   const sorted = (a) => [...a].sort();
