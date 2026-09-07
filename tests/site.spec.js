@@ -864,11 +864,15 @@ test.describe('Pinnwand', () => {
         await useJobsFixture(page, undefined, { delayMs: 250 });
         await page.goto('/pinnwand.html');
 
-        // Two of four: one expired two days ago, one starts next month. The
-        // invite note is always there on top of them, so count real cards only.
-        const cards = page.locator('.job-panel:not(.job-panel--invite)');
+        // Two of four: one expired two days ago, one starts next month. The two
+        // static notes (sample, invite) sit outside #jobs-postings, so counting
+        // that container counts real cards only.
+        const cards = page.locator('#jobs-postings .job-panel');
         await expect(cards).toHaveCount(2);
         await expect(page.locator('.job-panel--invite')).toHaveCount(1);
+        // Real postings retire the sample note — it is the empty wall's filler,
+        // not a card to stand between vacancies.
+        await expect(page.locator('#jobs-sample')).toBeHidden();
         await expect(page.locator('#job-expired-gmbh-2026-08')).toHaveCount(0);
         await expect(page.locator('#job-future-ag-2026-10')).toHaveCount(0);
 
@@ -946,7 +950,12 @@ test.describe('Pinnwand', () => {
         await page.unroute('**/jobs.json*');
         await useJobsFixture(page, { postings: [] }, { delayMs: 250 });
         await page.goto('/pinnwand.html');
-        await expect(page.locator('.job-panel')).toHaveCount(1);
+        // Two static notes and nothing else: the leetspeak sample showing what a
+        // Zettel looks like, and the invite note that IS the empty state.
+        await expect(page.locator('.job-panel')).toHaveCount(2);
+        await expect(page.locator('#jobs-sample')).toBeVisible();
+        await expect(page.locator('#jobs-sample .job-panel__action'))
+            .toHaveAttribute('href', '#aufhaengen');
         await expect(page.locator('.job-panel--invite')).toBeVisible();
         // No `karussell` key: the static title stands, and it is plain text.
         await expect(page.locator('.job-panel--invite .job-panel__title')).toHaveText('Frei für Euren Zettel :)');
@@ -971,7 +980,7 @@ test.describe('Pinnwand', () => {
 
         // Four unusable schemes dropped — javascript:, data:, protocol-relative
         // and an uppercase HTTPS:// that indexOf("https://") does not match.
-        const cards = page.locator('.job-panel:not(.job-panel--invite)');
+        const cards = page.locator('#jobs-postings .job-panel');
         await expect(cards).toHaveCount(1);
         expect(await cards.locator('.job-panel__action').getAttribute('href'))
             .toBe('https://ok.example/jobs/real');

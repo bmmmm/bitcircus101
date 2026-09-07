@@ -123,6 +123,13 @@
     // Real notes go into their container; the invite note (static markup)
     // follows it, so it is always last — and an empty board is just it.
     postings.innerHTML = html;
+
+    // The sample note is decoration for an empty wall: as soon as a real
+    // posting is up, it steps aside rather than sitting between vacancies
+    // looking like one. Hidden, not removed — the wall fills and empties again
+    // with the calendar, and this way the card is simply back.
+    var sample = document.getElementById("jobs-sample");
+    if (sample) sample.hidden = html !== "";
     list.removeAttribute("aria-busy");
     renderSlots(list, data && data.karussell);
   }
