@@ -477,36 +477,46 @@
   // =============================================================================
   const Accessibility = {
     init() {
-      this.setupSmoothScrolling();
+      this.setupAnchorExtras();
       this.setupNavHighlight();
       this.handleImageErrors();
     },
 
-    setupSmoothScrolling() {
+    setupAnchorExtras() {
       utils.addEventListenerSafe(document, "click", (e) => {
         const anchor = e.target.closest('a[href^="#"]');
         if (!anchor) return;
-        e.preventDefault();
         const href = anchor.getAttribute("href");
         // A bare "#" is not a valid selector — querySelector("#") throws a SyntaxError.
         if (href.length < 2) return;
-        const target = document.querySelector(href);
-        if (target) {
-          const isSkip = anchor.classList.contains("skip-link");
-          // Every anchor lands instantly, the same way the nav's own
-          // "page.html#id" links now do (see the html rule in style.css). Skip
-          // links additionally move keyboard focus to the target — scrolling
-          // without focusing leaves the next Tab in the nav, which defeats them.
-          target.scrollIntoView({ behavior: "auto", block: "start" });
-          history.pushState(null, "", href);
-          if (isSkip) {
+
+        // NO preventDefault. This used to swallow the navigation and redo it
+        // with scrollIntoView + pushState, which cost the one visual "you are
+        // here" confirmation the page has: pushState does not update :target,
+        // so `section:target > h2 { text-decoration: underline }` fired only
+        // for people who pasted a URL, never for people who clicked (#54).
+        //
+        // Nothing is lost by letting the browser do it. Measured on
+        // /pinnwand.html: the native jump lands #aufhaengen 24px clear of the
+        // sticky header, because `scroll-padding-top` on html (style.css)
+        // already handles that clearance — and the smooth scrolling this
+        // handler was named for is gone anyway (`behavior: "auto"`).
+        if (anchor.classList.contains("skip-link")) {
+          // A fragment navigation moves the sequential-focus starting point but
+          // does not focus the target, so the next Tab would stay in the nav —
+          // which is the one thing a skip link exists to prevent.
+          const target = document.querySelector(href);
+          if (target) {
             if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
             target.focus();
           }
         }
         // Section anchor: share or copy URL
         if (anchor.classList.contains("section-anchor")) {
-          const url = location.href;
+          // anchor.href, not location.href: without preventDefault the address
+          // bar still holds the OLD url while this handler runs, so reading
+          // location here would share the previously visited section.
+          const url = anchor.href;
           if (navigator.share) {
             navigator.share({ url }).catch(() => {});
           } else if (navigator.clipboard) {
