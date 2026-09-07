@@ -9,7 +9,9 @@
  *
  * Pulse math is REUSED from finanz-core.js (the single source of truth shared
  * with the browser renderer). finanz-core.js is a CommonJS UMD module, so it is
- * pulled in via createRequire rather than a bare ESM import.
+ * pulled in via createRequire rather than a bare ESM import. The field
+ * predicates come from validate.mjs, which is plain ESM and belongs to no
+ * single board.
  *
  * DSGVO: this layer manages ONLY aggregate totals plus a value-free pulse. It
  * never stores donor names, emails, or per-donation records, and the pulse holds
@@ -19,6 +21,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import { isCalendarDate, isCleanHttpsUrl } from "./validate.mjs";
 
 const require = createRequire(import.meta.url);
 const Core = require("../finanz-core.js");
@@ -65,10 +68,10 @@ export const MONATLICH_KEYS = [
   "url2",
 ];
 
-// Calendar-date validity is shared with the browser editor via finanz-core.js
-// (single source — neither validator drifts). Re-exported so the CLI's public
-// surface and its tests keep one obvious import.
-export const isCalendarDate = Core.isCalendarDate;
+// No re-export of isCalendarDate: it lives in validate.mjs, and anything that
+// wants the predicate should say so by importing it from there. The old
+// pass-through existed only for a test that now measures the real call path
+// instead (tests/validate.spec.mjs).
 
 /**
  * Parse a hand-typed euro/level amount. Accepts an optional sign, digits, and a
@@ -161,7 +164,7 @@ function checkHttpsUrl(obj, key, where, errors) {
     errors.push(
       `${where}.${key}: muss mit "https://" beginnen (ist "${obj[key]}")`
     );
-  } else if (!Core.isCleanHttpsUrl(obj[key])) {
+  } else if (!isCleanHttpsUrl(obj[key])) {
     // Schema declares format:uri; the same shared predicate the browser editor
     // uses rejects the non-URLs the ^https:// pattern lets through: a bare
     // "https://" with no host, or whitespace inside the URL.
