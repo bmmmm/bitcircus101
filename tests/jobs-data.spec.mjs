@@ -288,6 +288,25 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.deepEqual(offered, MONTHS);
   });
 
+  it("the length limits match the schema a contributor's editor validates against", () => {
+    const props = SCHEMA.$defs.posting.properties;
+    assert.deepEqual(LIMITS.id, {
+      minLength: SCHEMA.$defs.id.minLength,
+      maxLength: SCHEMA.$defs.id.maxLength,
+    });
+    assert.deepEqual(LIMITS.company, {
+      minLength: props.company.minLength,
+      maxLength: props.company.maxLength,
+    });
+    assert.deepEqual(LIMITS.title, {
+      minLength: props.title.minLength,
+      maxLength: props.title.maxLength,
+    });
+    assert.equal(ID_RE.source, SCHEMA.$defs.id.pattern);
+  });
+});
+
+describe("the copy on pinnwand.html — what the wall may and may not say", () => {
   it("neither the wall nor the schema names a euro amount", () => {
     // Deliberate: the pinnwand asks companies to support the space, not to book
     // advertising space, so it names crates of Mate and never what one costs.
@@ -298,7 +317,13 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     // number-anchored pattern (measured). No digit is required here — a page
     // that has no business naming euros has no business writing the word.
     // \bEuro\b leaves Europa, Eurorack and friends alone.
-    const CURRENCY = /(?:€|&euro;|&#8364;|&#x20ac;|\bEUR\b|\bEuros?\b)/gi;
+    //
+    // The numeric references are matched the way a browser resolves them, not
+    // the way they are usually written: leading zeros are allowed and the
+    // semicolon is optional, because "20&#8364." renders as "20€" all the same
+    // (measured in Chromium). The named &euro DOES need its semicolon — without
+    // one it is not in the legacy table and stays literal text.
+    const CURRENCY = /(?:€|&euro;|&#x0*20ac;?|&#0*8364;?|\bEUR\b|\bEuros?\b)/gi;
     const sources = {
       "pinnwand.html": fs.readFileSync(path.join(root, "pinnwand.html"), "utf8"),
       // The schema description is the other thing a contributing company reads,
@@ -344,24 +369,6 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     );
     assert.deepEqual(quoted, declared);
   });
-
-  it("the length limits match the schema a contributor's editor validates against", () => {
-    const props = SCHEMA.$defs.posting.properties;
-    assert.deepEqual(LIMITS.id, {
-      minLength: SCHEMA.$defs.id.minLength,
-      maxLength: SCHEMA.$defs.id.maxLength,
-    });
-    assert.deepEqual(LIMITS.company, {
-      minLength: props.company.minLength,
-      maxLength: props.company.maxLength,
-    });
-    assert.deepEqual(LIMITS.title, {
-      minLength: props.title.minLength,
-      maxLength: props.title.maxLength,
-    });
-    assert.equal(ID_RE.source, SCHEMA.$defs.id.pattern);
-  });
-
 });
 
 describe("the committed jobs.json", () => {
