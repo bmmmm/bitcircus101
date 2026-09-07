@@ -57,7 +57,7 @@
           "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
         },
         "months": {
-          "description": "Booked runtime in months. This enum IS the ladder the page quotes, counted in crates of Mate — 1 (3 Kisten), 3 (6 Kisten), 12 (20 Kisten); no other duration is sold. Crates are the only unit named, on purpose: no currency amount in this file or in the page's own copy (a posting's title is the company's text and may say what it likes).",
+          "description": "How long the note hangs, in months: 1, 3 or 12 — nothing else. No amount belongs anywhere near it: a note goes up because somebody asked, not because they paid, and neither this file nor the page's own copy names a currency (a posting's title is the company's text and may say what it likes).",
           "type": "integer",
           "enum": [1, 3, 12]
         }

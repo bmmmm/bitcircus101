@@ -201,8 +201,7 @@ hovered, focused or touched and while the tab is hidden; under
 `prefers-reduced-motion` one random name stands for the whole visit, no
 cycling). Only the title text changes, and the title is pinned to one line by
 CSS with names capped at 24 characters, so the card's height — and the how-to
-below — never moves. A slot is booked per year; its crate count is quoted on
-the page and nowhere else, so it cannot drift. The list is curated by hand:
+below — never moves. A slot runs for a year and the list is curated by hand:
 remove an entry when its year runs out. The key is optional — without it, or
 when the fetch fails, the note keeps its static title.
 
@@ -210,14 +209,22 @@ when the fetch fails, the note keeps its static title.
 pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 ```
 
-- Runtime is `months: 1 | 3 | 12` — the enum *is* the ladder the page quotes,
-  counted in crates of Mate. The crate count per runtime lives in the schema
-  description and in the pitch on the page, nowhere else, and a unit test holds
-  the two to each other. Any other duration is refused at the gate.
-- **The wall names no euro amount, deliberately** — it asks for support, not for
-  a booking, so the crate is the whole unit a company reads. A unit test refuses
-  the currency (symbol, HTML entities, spelled-out word) in `pinnwand.html` and
-  in that schema description; don't add one back as a conversion hint.
+- Runtime is `months: 1 | 3 | 12` — any other duration is refused at the gate.
+  The three numbers appear in `jobs-core.js`, in the schema enum and in the
+  pitch on the page; unit tests hold all three to each other.
+- **A note is not sold, and the page must not sound like it is.** Three gates in
+  `tests/jobs-data.spec.mjs` enforce that, and they exist because the wording
+  keeps drifting back: no currency anywhere in `pinnwand.html` or in the schema
+  description (symbol, HTML entities and the spelled-out word alike), no German
+  vocabulary of buying (Tarif, Preis, Gebühr, Rechnung, Gegenleistung, bezahlen,
+  kostet — `kostenlos` stays fine), and no number in the pitch paragraph other
+  than the runtimes themselves, so an amount cannot arrive as a bare "Richtwert".
+  Support lives one link away on `support.html` and nothing on the wall depends
+  on it — don't wire the two together.
+- The static **sample note** (`#jobs-sample`) shows what a Zettel looks like on
+  an empty wall: leetspeak, an invented company, and its only link points at the
+  how-to. `jobs.js` sets `hidden` on it as soon as real postings render, so it
+  never stands between actual vacancies.
 - **Half-open expiry:** a posting is up from `from` through the day *before* the
   same day-of-month `months` later — "1 month from 01.09." means up to and
   including 30.09. If that day-of-month does not exist in the
