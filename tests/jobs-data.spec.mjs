@@ -286,6 +286,39 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.deepEqual(offered, MONTHS);
   });
 
+  it("the Matekisten per runtime match the schema's — the price is stated once", () => {
+    // Prices are quoted in crates of Mate, and a company reads that number in
+    // two places: the sentence on the wall and the schema description their
+    // editor shows while they write the entry. Both sides are parsed, never
+    // written down here, so raising a price has to touch both or this turns red.
+    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
+    const pitch = /<p class="jobs-pitch">([\s\S]*?)<\/p>/.exec(html)[1];
+    const desc = SCHEMA.$defs.posting.properties.months.description;
+
+    // "1 monat · 3 kisten" -> [1, 3]. The gap between the two numbers is
+    // bounded: without a limit a dropped crate count would silently pair a
+    // runtime with the next number anywhere further down the paragraph. The
+    // Dauerplatz contributes no pair — it is a slot, not a sold runtime.
+    const quoted = [
+      ...pitch.matchAll(/(\d+)\s+monate?\b[^\d]{0,40}?(\d+)\s+kisten\b/gi),
+    ].map((m) => [Number(m[1]), Number(m[2])]);
+    const declared = [...desc.matchAll(/(\d+)\s+\((\d+)\s+Kisten\)/g)].map((m) => [
+      Number(m[1]),
+      Number(m[2]),
+    ]);
+    assert.deepEqual(
+      quoted.map(([months]) => months),
+      MONTHS,
+      "every sold runtime on the page must quote a crate count"
+    );
+    assert.deepEqual(quoted, declared);
+
+    // What one crate costs — the only euro amount either side names.
+    const euroOf = (text) => /(\d+)\s*€/.exec(text)?.[1];
+    assert.ok(euroOf(pitch), "the pitch names no crate price in €");
+    assert.equal(euroOf(pitch), euroOf(desc));
+  });
+
   it("the length limits match the schema a contributor's editor validates against", () => {
     const props = SCHEMA.$defs.posting.properties;
     assert.deepEqual(LIMITS.id, {
