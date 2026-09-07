@@ -213,10 +213,14 @@
 
   /**
    * The wall's primary call to action jumps to #aufhaengen, where the how-to
-   * is a closed <details>. A real fragment navigation makes the browser open
-   * it; this click is not one — main.js intercepts every in-page anchor and
-   * scrolls with preventDefault — so without this the visitor lands on a shut
-   * box. Opening it here keeps that knowledge next to the link that needs it.
+   * is a closed <details>, and without this the visitor lands on a shut box.
+   *
+   * A browser opens a closed <details> only when the fragment names a node
+   * INSIDE it. #aufhaengen is the section that CONTAINS the fold, so the
+   * browser has no reason to touch it — measured in Chromium, and unchanged by
+   * #54 removing main.js's click interception: the fold stayed shut on a fresh
+   * load of the URL, on the intercepted click, and on the native one. This
+   * stays until the CTA points at something within the fold.
    */
   function wireInviteAction(list) {
     var action = list.querySelector(".job-panel--invite .job-panel__action");
