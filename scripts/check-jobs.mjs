@@ -7,11 +7,10 @@
  *
  * No dependencies, no network, no install step — the PR gate has no
  * `pnpm install`, so this file may only use node builtins and the repo's own
- * modules. The shared predicates come from finanz-core.js via createRequire (the
- * idiom finanz-data.mjs uses); they live there for historic reasons and moving
- * them into a neutral module is a follow-up, not this PR's job. The expiry math
- * comes from jobs-core.js, the same file the browser renderer loads, so the gate
- * and the page can never disagree about when a posting comes down.
+ * modules. The shared field predicates come from validate.mjs, which belongs to
+ * no board (they used to be reached through finanz-core.js — #48). The expiry
+ * math comes from jobs-core.js, the same file the browser renderer loads, so
+ * the gate and the page can never disagree about when a posting comes down.
  *
  * The small check* helpers below are COPIED from scripts/finanz-data.mjs rather
  * than imported: they are not exported there, and exporting them would couple
@@ -28,9 +27,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { createRequire } from "node:module";
+import { isCalendarDate, isCleanHttpsUrl } from "./validate.mjs";
 
 const require = createRequire(import.meta.url);
-const Core = require("../finanz-core.js");
 const JobsCore = require("../jobs-core.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -118,7 +117,7 @@ function checkHttpsUrl(obj, key, where, errors) {
     errors.push(
       `${where}.${key}: muss mit "https://" beginnen (ist "${obj[key]}")`
     );
-  } else if (!Core.isCleanHttpsUrl(obj[key])) {
+  } else if (!isCleanHttpsUrl(obj[key])) {
     // The shared predicate rejects what the ^https:// pattern lets through: a
     // bare "https://" with no host, or whitespace inside the URL.
     errors.push(
@@ -166,7 +165,7 @@ function checkCalendarDate(obj, key, where, errors) {
     errors.push(`${where}.${key}: muss ein String sein (ist ${typeof obj[key]})`);
     return;
   }
-  if (!Core.isCalendarDate(obj[key])) {
+  if (!isCalendarDate(obj[key])) {
     errors.push(
       `${where}.${key}: kein gültiges Kalenderdatum im Format YYYY-MM-DD (ist "${obj[key]}")`
     );
