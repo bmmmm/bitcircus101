@@ -286,6 +286,16 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.deepEqual(offered, MONTHS);
   });
 
+  it("the wall quotes no euro amount — crates are the whole price list", () => {
+    // Deliberate: the pinnwand asks companies to support the space, not to book
+    // advertising space, so it names crates of Mate and never what one costs.
+    // The whole file, not just the pitch — the how-to and the house rules are
+    // exactly where a euro amount would creep back in as a "helpful" hint.
+    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
+    const euros = [...html.matchAll(/.{0,60}\d[\d.,]*\s*(?:€|EUR|Euro)/gi)].map((m) => m[0]);
+    assert.deepEqual(euros, [], "pinnwand.html names a euro amount");
+  });
+
   it("the Matekisten per runtime match the schema's — the price is stated once", () => {
     // Prices are quoted in crates of Mate, and a company reads that number in
     // two places: the sentence on the wall and the schema description their
@@ -312,11 +322,6 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
       "every sold runtime on the page must quote a crate count"
     );
     assert.deepEqual(quoted, declared);
-
-    // What one crate costs — the only euro amount either side names.
-    const euroOf = (text) => /(\d+)\s*€/.exec(text)?.[1];
-    assert.ok(euroOf(pitch), "the pitch names no crate price in €");
-    assert.equal(euroOf(pitch), euroOf(desc));
   });
 
   it("the length limits match the schema a contributor's editor validates against", () => {

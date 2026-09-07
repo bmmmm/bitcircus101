@@ -211,8 +211,11 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 ```
 
 - Runtime is `months: 1 | 3 | 12` — the enum *is* the price list, counted in
-  Matekisten at 20 € each (Richtwert 3 / 6 / 20 Kisten). Any other value is
-  refused at the gate.
+  crates of Mate (Richtwert 3 / 6 / 20 Kisten). Any other value is refused at
+  the gate.
+- **The wall names no euro amount, deliberately** — it asks for support, not for
+  a booking, so the crate is the whole unit a company reads. A unit test refuses
+  any euro amount in `pinnwand.html`; don't add one back as a conversion hint.
 - **Half-open expiry:** a posting is up from `from` through the day *before* the
   same day-of-month `months` later — "1 month from 01.09." means up to and
   including 30.09. If that day-of-month does not exist in the
