@@ -15,7 +15,6 @@ import {
   write,
   validate,
   parseAmount,
-  isCalendarDate,
   raiseProject,
   finishProject,
   addEinmalig,

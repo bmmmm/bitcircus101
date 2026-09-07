@@ -68,10 +68,10 @@ export const MONATLICH_KEYS = [
   "url2",
 ];
 
-// Re-exported so the CLI's public surface and its tests keep one obvious
-// import; the predicate itself lives in validate.mjs, shared with the job
-// board's gate (#48).
-export { isCalendarDate };
+// No re-export of isCalendarDate: it lives in validate.mjs, and anything that
+// wants the predicate should say so by importing it from there. The old
+// pass-through existed only for a test that now measures the real call path
+// instead (tests/validate.spec.mjs).
 
 /**
  * Parse a hand-typed euro/level amount. Accepts an optional sign, digits, and a
