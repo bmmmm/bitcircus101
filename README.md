@@ -201,8 +201,8 @@ hovered, focused or touched and while the tab is hidden; under
 `prefers-reduced-motion` one random name stands for the whole visit, no
 cycling). Only the title text changes, and the title is pinned to one line by
 CSS with names capped at 24 characters, so the card's height — and the how-to
-below — never moves. A slot is booked per year (Richtwert 6 Matekisten) and the
-list is curated by hand: remove an entry when its year runs out. The key is
+below — never moves. A slot is booked per year; its crate count is quoted on
+the page and nowhere else, so it cannot drift. The list is curated by hand: remove an entry when its year runs out. The key is
 optional — without it, or when the fetch fails, the note keeps its static
 title.
 
@@ -210,9 +210,9 @@ title.
 pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 ```
 
-- Runtime is `months: 1 | 3 | 12` — the enum *is* the price list, counted in
-  crates of Mate (Richtwert 3 / 6 / 20 Kisten). Any other value is refused at
-  the gate.
+- Runtime is `months: 1 | 3 | 12` — the enum *is* the ladder the page quotes,
+  counted in crates of Mate (Richtwert 3 / 6 / 20 Kisten). Any other value is
+  refused at the gate.
 - **The wall names no euro amount, deliberately** — it asks for support, not for
   a booking, so the crate is the whole unit a company reads. A unit test refuses
   any euro amount in `pinnwand.html`; don't add one back as a conversion hint.
