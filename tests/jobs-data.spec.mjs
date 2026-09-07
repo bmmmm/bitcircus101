@@ -267,23 +267,8 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.equal(SCHEMA.$defs.slot.properties.url.pattern, "^https://");
   });
 
-  it("MONTHS matches the schema's months enum — the price list is stated once", () => {
+  it("MONTHS matches the schema's months enum — the runtimes are stated once", () => {
     assert.deepEqual(MONTHS, SCHEMA.$defs.posting.properties.months.enum);
-  });
-
-  it("the runtimes the page offers are exactly MONTHS, in order", () => {
-    // Three files name 1/3/12: jobs-core.js (the source), the schema's enum, and
-    // the sentence a buyer reads. The lockstep test above covers the first two;
-    // this covers the one a company acts on.
-    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
-    const pitch = /<p class="jobs-pitch">([\s\S]*?)<\/p>/.exec(html);
-    assert.ok(pitch, 'no <p class="jobs-pitch"> found in pinnwand.html');
-    // The WHOLE paragraph, deliberately. An earlier version stopped at the word
-    // "Richtwerte" to skip a worked example that has since moved into the
-    // how-to — which left everything after that word unscanned, so "Sonderfall:
-    // 6 monate ab 220 €" would have passed while the schema refuses a 6.
-    const offered = [...pitch[1].matchAll(/(\d+)\s+monate?\b/gi)].map((m) => Number(m[1]));
-    assert.deepEqual(offered, MONTHS);
   });
 
   it("the length limits match the schema a contributor's editor validates against", () => {
@@ -302,7 +287,81 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     });
     assert.equal(ID_RE.source, SCHEMA.$defs.id.pattern);
   });
+});
 
+describe("the copy on pinnwand.html — what the wall may and may not say", () => {
+  const page = () => fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
+
+  it("neither the wall nor the schema names a currency", () => {
+    // Deliberate: hanging a note here buys nothing, so the page names no amount
+    // at all — and a page that must not name a price has no use for the word.
+    //
+    // The currency is banned outright, not "a digit next to a € sign": this file
+    // writes &nbsp; and entities by hand, so "20&nbsp;&euro;", "&#8364; 20",
+    // "EUR 20" and "20,- €" all render as a price while sailing past a
+    // number-anchored pattern (measured). \bEuro\b leaves Europa, Eurorack and
+    // friends alone.
+    //
+    // The numeric references are matched the way a browser resolves them, not
+    // the way they are usually written: leading zeros are allowed and the
+    // semicolon is optional, because "20&#8364." renders as "20€" all the same
+    // (measured in Chromium). The named &euro DOES need its semicolon — without
+    // one it is not in the legacy table and stays literal text.
+    const CURRENCY = /(?:€|&euro;|&#x0*20ac;?|&#0*8364;?|\bEUR\b|\bEuros?\b)/gi;
+    const sources = {
+      "pinnwand.html": page(),
+      // The schema description is the other thing a contributing company reads,
+      // and it makes the same promise — so it is held to it.
+      "jobs.schema.json months description":
+        SCHEMA.$defs.posting.properties.months.description,
+    };
+    for (const [name, text] of Object.entries(sources)) {
+      const hits = [...text.matchAll(CURRENCY)].map((m) =>
+        text.slice(Math.max(0, m.index - 50), m.index + m[0].length).replace(/\s+/g, " ")
+      );
+      assert.deepEqual(hits, [], `${name} names a currency`);
+    }
+  });
+
+  it("the wall does not talk like a shop", () => {
+    // The harder half of the same promise. A note goes up because someone asked
+    // for it, not because they paid, and no sentence here may suggest otherwise
+    // — not as a tariff, not as a "Richtwert", not as a favour to be returned.
+    // The vocabulary of buying is out, German only: this is a German page, and
+    // the English words in the source comments are not what a visitor reads.
+    // "kostenlos"/"kostenfrei" stay allowed — they say the opposite.
+    const SHOP_TALK =
+      /\b(?:tarif\w*|preis\w*|gebühr\w*|entgelt\w*|honorar\w*|rechnung\w*|gegenleistung\w*|bezahl\w*|zahlung\w*|kosten(?!los|frei)\w*|kostet)\b/gi;
+    const hits = [...page().matchAll(SHOP_TALK)].map((m) => m[0]);
+    assert.deepEqual(hits, [], "pinnwand.html uses the vocabulary of buying");
+  });
+
+  it("the pitch names the sold runtimes and not one number more", () => {
+    // Every digit in that paragraph is checked, not just the ones next to
+    // "monate": an amount would arrive as a bare number ("richtwert: 3") long
+    // before it arrived with a unit, and this is the sentence a company acts on.
+    const pitch = /<p class="jobs-pitch">([\s\S]*?)<\/p>/.exec(page());
+    assert.ok(pitch, 'no <p class="jobs-pitch"> found in pinnwand.html');
+    const numbers = [...pitch[1].matchAll(/\d+/g)].map((m) => Number(m[0]));
+    assert.deepEqual(numbers, MONTHS);
+  });
+
+  it("the sample note is a sample, not a vacancy", () => {
+    // It looks like a real card on purpose, so the two things that keep it
+    // honest are gated: it links nowhere outside, and jobs.js retires it as
+    // soon as real postings render.
+    const card = /<article class="job-panel" id="jobs-sample">([\s\S]*?)<\/article>/.exec(page());
+    assert.ok(card, "no #jobs-sample card in pinnwand.html");
+    const hrefs = [...card[1].matchAll(/href="([^"]*)"/g)].map((m) => m[1]);
+    assert.deepEqual(hrefs, ["#aufhaengen"], "the sample note links out");
+
+    const js = fs.readFileSync(path.join(root, "jobs.js"), "utf8");
+    assert.match(
+      js,
+      /getElementById\("jobs-sample"\)[\s\S]{0,160}?\.hidden\s*=/,
+      "jobs.js no longer hides the sample note when postings render"
+    );
+  });
 });
 
 describe("the committed jobs.json", () => {

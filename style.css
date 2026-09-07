@@ -29,10 +29,13 @@
     --ink-dim:     #8a8a8a;  /* secondary text (>=4.5:1)    */
     --line:        #333333;  /* hairlines, panel borders    */
     --line-strong: #666666;  /* structural rules            */
-    /* accent = hyperlinks, primary CTAs, and current-selection markers in
-       content navigation (current nav item, active event filter, project
-       funding progress/donate); form controls and UI toggles (theme
-       toggle, carousel dots, checkboxes, focus rings) stay reverse-video ink. */
+    /* accent = hyperlinks, primary CTAs, current-selection markers in content
+       navigation (current nav item, active event filter, project funding
+       progress/donate), and the frame of a pinnwand note that is actually
+       taken — a real posting or the sample; form controls and UI toggles
+       (theme toggle, carousel dots, checkboxes, focus rings) stay
+       reverse-video ink, and so does the empty permanent slot, whose dashed
+       ink frame is what makes the taken ones stand out. */
     --accent:      #3ecf5c;  /* terminal green */
     --accent-soft: color-mix(in srgb, var(--accent) 45%, transparent);
 
@@ -1489,11 +1492,15 @@ h3.location-card__header::before { content: none; }
    selectors. The duplication buys independence: support.html's board and this
    one are unrelated surfaces, and sharing selectors would make a pinnwand tweak
    able to reshape the funding cards. Nothing enforces this — no test compares
-   the two blocks' computed styles — so it is a design rule, kept by hand. */
+   the two blocks' computed styles — so it is a design rule, kept by hand.
+   The frames are the exception that no longer mirrors: a taken note wears the
+   accent (see the token's scope rule), the empty slot stays ink. An e2e test
+   holds the two apart and reads the expected colour out of the token rather
+   than naming a hex, so repainting --accent does not turn it red. */
 .jobs-list { margin: 1.25rem 0; }
 
 .job-panel {
-    border: 1px solid var(--line);
+    border: 1px solid var(--accent);
     margin-bottom: 1rem;
 }
 
@@ -1502,7 +1509,7 @@ h3.location-card__header::before { content: none; }
     align-items: center;
     gap: 1ch;
     padding: 0.3em 1ch;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--accent-soft);
     color: var(--ink-dim);
     font-size: 0.8rem;
     user-select: none;
@@ -1532,7 +1539,10 @@ h3.location-card__header::before { content: none; }
     border-style: dashed;
     border-color: var(--line-strong);
 }
-.job-panel--invite .job-panel__chrome { border-bottom-style: dashed; }
+.job-panel--invite .job-panel__chrome {
+    border-bottom-style: dashed;
+    border-bottom-color: var(--line-strong);
+}
 .job-panel--invite .job-panel__title {
     color: var(--ink-dim);
     white-space: nowrap;
