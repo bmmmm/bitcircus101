@@ -1049,13 +1049,47 @@ test.describe('Pinnwand', () => {
         await expect(folds.nth(1)).toHaveAttribute('open', '');
         await expect(page.getByText('Nichts, was nach dem AGG diskriminiert.')).toBeVisible();
 
-        // The invite note's CTA jumps to #aufhaengen — main.js intercepts every
-        // in-page anchor, so the browser never opens the fold by itself. The
-        // visitor must not land on a shut box.
+        // The invite note's CTA jumps to #aufhaengen. A browser opens a closed
+        // <details> only when the fragment names a node INSIDE it, and this one
+        // names the section that contains the fold — so jobs.js opens it by
+        // hand. The visitor must not land on a shut box.
         await expect(folds.nth(0)).not.toHaveAttribute('open', '');
         await page.locator('.job-panel--invite .job-panel__action').click();
         await expect(folds.nth(0)).toHaveAttribute('open', '');
         await expect(page.locator('.jobs-snippet').first()).toBeVisible();
+
+        // ...and the click must leave :target set, which is the page's only
+        // visual "you have arrived here" (style.css: section:target > h2).
+        // main.js used to preventDefault every in-page anchor and re-do the
+        // jump with pushState — and pushState does not update :target, so the
+        // underline appeared for people who pasted a URL and never for people
+        // who clicked (#54). Read the computed style, not the class list: the
+        // rule is what the visitor actually sees.
+        await expect.poll(
+            () => page.evaluate(() => document.querySelector(':target')?.id ?? null),
+            { message: ':target was lost — is an in-page anchor being preventDefault-ed again?' }
+        ).toBe('aufhaengen');
+        await expect(page.locator('#aufhaengen > h2')).toHaveCSS('text-decoration-line', 'underline');
+
+        // The section anchor shares the section it points at, not the one the
+        // address bar happened to hold when the handler ran. Without
+        // preventDefault, location.href is still the OLD url inside the click
+        // handler — reading it there would share the previous section. Spy on
+        // the API instead of opening a native sheet, which would block the run.
+        await page.evaluate(() => {
+            window.__shared = null;
+            navigator.share = (p) => { window.__shared = p; return Promise.resolve(); };
+        });
+        await page.goto('/pinnwand.html#zettel');
+        await page.evaluate(() => {
+            window.__shared = null;
+            navigator.share = (p) => { window.__shared = p; return Promise.resolve(); };
+        });
+        await page.locator('#aufhaengen > h2 > a.section-anchor').click();
+        await expect.poll(
+            () => page.evaluate(() => window.__shared?.url ?? null),
+            { message: 'the section anchor shared nothing' }
+        ).toMatch(/#aufhaengen$/);
     });
 });
 
@@ -1821,6 +1855,18 @@ test.describe('Accessibility', () => {
 
         // Nav landmark
         await expect(page.locator('nav[aria-label]')).toBeVisible();
+
+        // The skip link has to move actual focus, not just scroll. A fragment
+        // navigation moves the sequential-focus starting point but leaves
+        // document.activeElement alone, so main.js focuses the target by hand —
+        // untested until #54 touched that path, and the whole point of the link
+        // is that the next Tab continues past the nav.
+        await page.locator('.skip-link').focus();
+        await page.keyboard.press('Enter');
+        await expect.poll(
+            () => page.evaluate(() => document.activeElement?.id ?? null),
+            { message: 'the skip link did not move focus to the content' }
+        ).toBe('main-content');
 
         // All images have alt
         const images = page.locator('img');
