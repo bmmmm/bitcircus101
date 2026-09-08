@@ -9,16 +9,6 @@
     <atom:link href="https://bitcircus101.de/feeds/source/bitcircus.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-08 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-08-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
-      <category>#relax</category>
-      <category>#social</category>
-      <category>#spieletreff</category>
-      <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
-      <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260908T1900</guid>
-    </item>
-    <item>
       <title>[2026-09-09 10:00] Apple Event @ https://www.apple.com/de/apple-events/</title>
       <link>https://bitcircus101.de/events#ev-2026-09-09-apple-event</link>
       <description>Einladung zum Apple Special Event. Online auf apple.com.</description>
@@ -192,6 +182,16 @@
       <category>#meetup</category>
       <pubDate>Thu, 23 Apr 2026 19:09:53 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-4fr@bitcircus101.de-20261023T2000</guid>
+    </item>
+    <item>
+      <title>[2026-10-27 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-27-look-at-my-toys</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <category>#relax</category>
+      <category>#social</category>
+      <category>#spieletreff</category>
+      <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
+      <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261027T1900</guid>
     </item>
   </channel>
 </rss>
