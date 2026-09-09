@@ -276,4 +276,17 @@ LOCATION:Dorotheenstraße 101 Bonn
 URL:https://bolle-bonn.de
 CATEGORIES:community
 END:VEVENT
+BEGIN:VEVENT
+UID:A181B019-30E9-40E0-8250-45DC8DF5B788-20261030T2000@bitcircus101.de
+DTSTAMP:20260909T175345Z
+DTSTART;TZID=Europe/Berlin:20261030T200000
+DTEND;TZID=Europe/Berlin:20261030T230000
+SUMMARY:Casual Linkup@bitcircus101 (5FR)
+DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
+ nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
+ . Hosted by bitcircus101 – https://bitcircus101.de
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup
+END:VEVENT
 END:VCALENDAR

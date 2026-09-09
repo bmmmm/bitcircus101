@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-09T17:17:11.779Z",
+  "lastSync": "2026-09-09T17:53:45.460Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-09T17:17:11.749Z",
+      "fetchedAt": "2026-09-09T17:53:45.280Z",
       "status": "ok",
-      "events": 21,
+      "events": 22,
       "added": 0,
       "removed": 0,
       "total": 57,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-09T17:17:11.570Z",
+      "fetchedAt": "2026-09-09T17:53:45.436Z",
       "status": "ok",
-      "events": 19,
+      "events": 18,
       "added": 0,
       "removed": 0,
       "total": 51,
@@ -156,7 +156,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 9
+        "count": 8
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -186,7 +186,7 @@
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
-        "count": 7
+        "count": 8
       },
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
@@ -224,36 +224,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 21
+        "count": 22
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 19
+        "count": 18
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "title": "Le Sabot Computerspiel-Abend",
-      "subtitle": "",
-      "description": "",
-      "location": "Breite Str. 76",
-      "date": "2026-09-09",
-      "time": "19:30",
-      "endDate": "2026-09-09",
-      "endTime": "22:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "4f3eb937-ebc8-4dda-bec7-9f3547ca6240",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-08-13T18:25:49.154Z"
-    },
     {
       "title": "PPP (Putzen Plenum Pizza)",
       "subtitle": "",
@@ -997,6 +979,25 @@
       "calendarUrl": "https://bolle-bonn.de",
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-08-31T14:17:23.283Z"
+    },
+    {
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-10-30",
+      "time": "20:00",
+      "endDate": "2026-10-30",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "A181B019-30E9-40E0-8250-45DC8DF5B788",
+      "calendarUrl": "https://bitcircus101.de",
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-09-09T17:53:45.441Z"
     }
   ]
 }
