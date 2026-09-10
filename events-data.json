@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-09-10T17:17:16.808Z",
+  "lastSync": "2026-09-10T18:05:53.354Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-10T17:17:16.550Z",
+      "fetchedAt": "2026-09-10T18:05:53.312Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-10T17:17:16.660Z",
+      "fetchedAt": "2026-09-10T18:05:53.316Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -236,24 +236,6 @@
     "retired": {}
   },
   "events": [
-    {
-      "title": "PPP (Putzen Plenum Pizza)",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-09-10",
-      "time": "19:30",
-      "endDate": "2026-09-10",
-      "endTime": "22:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "974a5337-34e5-496f-8f2c-62f74cd766ce",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "title": "Casual Linkup@bitcircus101 (2FR)",
       "subtitle": "",
@@ -998,6 +980,24 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-09-09T17:53:45.441Z"
+    },
+    {
+      "title": "Digital Independence Day (DID)",
+      "subtitle": "",
+      "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
+      "location": "Bornheimer Straße 25, Bonn",
+      "date": "2026-11-01",
+      "time": "14:00",
+      "endDate": "2026-11-01",
+      "endTime": "16:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-02T13:08:46.350Z"
     }
   ]
 }

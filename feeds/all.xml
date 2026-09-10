@@ -9,13 +9,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-10 19:30] PPP (Putzen Plenum Pizza)</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-10-ppp-putzen-plenum-pizza</link>
-      <description>PPP (Putzen Plenum Pizza) · 2026-09-10</description>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">974a5337-34e5-496f-8f2c-62f74cd766ce-20260910T1930</guid>
-    </item>
-    <item>
       <title>[2026-09-11 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/events#ev-2026-09-11-casual-linkup-bitcircus101-2fr</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
@@ -348,6 +341,13 @@
       <category>#meetup</category>
       <pubDate>Wed, 09 Sep 2026 17:53:45 +0000</pubDate>
       <guid isPermaLink="false">A181B019-30E9-40E0-8250-45DC8DF5B788-20261030T2000</guid>
+    </item>
+    <item>
+      <title>[2026-11-01 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-01-digital-independence-day-did</link>
+      <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
+      <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261101T1400</guid>
     </item>
   </channel>
 </rss>
