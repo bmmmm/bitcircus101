@@ -253,11 +253,12 @@ URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
 END:VEVENT
 BEGIN:VEVENT
-UID:974a5337-34e5-496f-8f2c-62f74cd766ce-20261008T1930@bitcircus101.de
-DTSTAMP:20260616T150902Z
-DTSTART;TZID=Europe/Berlin:20261008T193000
-DTEND;TZID=Europe/Berlin:20261008T220000
-SUMMARY:PPP (Putzen Plenum Pizza)
+UID:36f59fc2-7422-47d0-bc19-38bed610e3ac-20261008T1900@bitcircus101.de
+DTSTAMP:20260910T191713Z
+DTSTART;TZID=Europe/Berlin:20261008T190000
+DTEND;TZID=Europe/Berlin:20261008T203000
+SUMMARY:Plenum mit anschließendem Essen
+DESCRIPTION:Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
 END:VEVENT
