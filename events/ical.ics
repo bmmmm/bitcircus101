@@ -72,6 +72,20 @@ URL:https://bitcircus101.de
 CATEGORIES:meetup,lightning-talks,talk
 END:VEVENT
 BEGIN:VEVENT
+UID:a35f62f7-3be4-4941-a1ac-ea4044eb41b5@bitcircus101.de-20260918T2030@bitc
+ ircus101.de
+DTSTAMP:20260911T155312Z
+DTSTART;TZID=Europe/Berlin:20260918T203000
+DTEND;TZID=Europe/Berlin:20260918T211500
+SUMMARY:Special: Öffentliche Dateninfrastruktur - Vortrag Markus Drenger
+DESCRIPTION:Markus Drenger über öffentliche Dateninfrastruktur - Aufhäng
+ er ist sein eigener Fall: Geodaten aus "Hauskoordinaten Deutschland" auf G
+ itHub veröffentlicht\, das bayerische Landesamt für …
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:meetup,talk
+END:VEVENT
+BEGIN:VEVENT
 UID:6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260919T1400@bitcircus101.de
 DTSTAMP:20260724T181621Z
 DTSTART;TZID=Europe/Berlin:20260919T140000
