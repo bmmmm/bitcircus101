@@ -5,17 +5,9 @@
     <link>https://bitcircus101.de/events</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Fri, 11 Sep 2026 17:17:12 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 11 Sep 2026 18:17:12 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-09-11 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-11-casual-linkup-bitcircus101-2fr</link>
-      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
-      <category>#meetup</category>
-      <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
-      <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20260911T2000</guid>
-    </item>
     <item>
       <title>[2026-09-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/events#ev-2026-09-14-treffen-bonner-fsfe-community</link>
@@ -138,6 +130,14 @@
       <category>#datenburg</category>
       <pubDate>Wed, 02 Sep 2026 08:17:11 +0000</pubDate>
       <guid isPermaLink="false">51FBAB7D-F2D1-49C6-AAC8-F94504DFF459-20261010</guid>
+    </item>
+    <item>
+      <title>[2026-10-12 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/events#ev-2026-10-12-treffen-bonner-fsfe-community</link>
+      <description>Treffen: Bonner FSFE Community · 2026-10-12</description>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261012T1900</guid>
     </item>
   </channel>
 </rss>

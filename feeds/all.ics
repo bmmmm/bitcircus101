@@ -23,19 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:casual-linkup-2fr@bitcircus101.de-20260911T2000@bitcircus101.de
-DTSTAMP:20260509T101220Z
-DTSTART;TZID=Europe/Berlin:20260911T200000
-DTEND;TZID=Europe/Berlin:20260911T230000
-SUMMARY:Casual Linkup@bitcircus101 (2FR)
-DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
- nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
- . https://bitcircus101.de
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://bitcircus101.de
-CATEGORIES:meetup
-END:VEVENT
-BEGIN:VEVENT
 UID:401025E2-82B0-4010-876A-22DFA0C51B32-20260914T1900@bitcircus101.de
 DTSTAMP:20260511T194503Z
 DTSTART;TZID=Europe/Berlin:20260914T190000
@@ -466,5 +453,17 @@ DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://bitcircus101.de
 CATEGORIES:meetup
+END:VEVENT
+BEGIN:VEVENT
+UID:aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261101T1400@bitcircus101.de
+DTSTAMP:20260502T130846Z
+DTSTART;TZID=Europe/Berlin:20261101T140000
+DTEND;TZID=Europe/Berlin:20261101T160000
+SUMMARY:Digital Independence Day (DID)
+DESCRIPTION:Treffen für Menschen\, die Unterstützung zu Themen rund um de
+ n DID suchen und/oder sich austauschen wollen. https://di.day/
+LOCATION:Bornheimer Straße 25\, Bonn
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:community
 END:VEVENT
 END:VCALENDAR

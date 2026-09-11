@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-11T17:17:12.186Z",
+  "lastSync": "2026-09-11T18:17:12.044Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-11T17:17:11.905Z",
+      "fetchedAt": "2026-09-11T18:17:11.812Z",
       "status": "ok",
-      "events": 23,
+      "events": 22,
       "added": 0,
       "removed": 0,
       "total": 58,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-11T17:17:12.164Z",
+      "fetchedAt": "2026-09-11T18:17:12.015Z",
       "status": "ok",
-      "events": 17,
+      "events": 18,
       "added": 0,
       "removed": 0,
       "total": 52,
@@ -158,7 +158,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 7
+        "count": 8
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -188,7 +188,7 @@
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
-        "count": 9
+        "count": 8
       },
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
@@ -226,37 +226,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 23
+        "count": 22
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 17
+        "count": 18
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "title": "Casual Linkup@bitcircus101 (2FR)",
-      "subtitle": "",
-      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-09-11",
-      "time": "20:00",
-      "endDate": "2026-09-11",
-      "endTime": "23:00",
-      "tags": [
-        "#meetup"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
-      "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-05-09T10:12:20.662Z"
-    },
     {
       "title": "Treffen: Bonner FSFE Community",
       "subtitle": "",
@@ -1001,6 +982,24 @@
       "calendarUrl": "https://bitcircus101.de",
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-09-09T17:53:45.441Z"
+    },
+    {
+      "title": "Digital Independence Day (DID)",
+      "subtitle": "",
+      "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
+      "location": "Bornheimer Straße 25, Bonn",
+      "date": "2026-11-01",
+      "time": "14:00",
+      "endDate": "2026-11-01",
+      "endTime": "16:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-05-02T13:08:46.350Z"
     }
   ]
 }
