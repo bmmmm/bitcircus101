@@ -10,7 +10,7 @@
 
     <item>
       <title>[2026-09-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-14-treffen-bonner-fsfe-community</link>
+      <link>https://bitcircus101.de/e/c131139aced7/</link>
       <description>Treffen: Bonner FSFE Community · 2026-09-14</description>
       <category>#foss</category>
       <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
@@ -18,7 +18,7 @@
     </item>
     <item>
       <title>[2026-09-15 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-15-offene-datenburg</link>
+      <link>https://bitcircus101.de/e/398ccb6a5edc/</link>
       <description>Offene Datenburg · 2026-09-15</description>
       <category>#datenburg</category>
       <category>#offener-abend</category>
@@ -27,8 +27,14 @@
     </item>
     <item>
       <title>[2026-09-15 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-15-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <link>https://bitcircus101.de/e/bcf53114201a/</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
+We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
+
+Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
+Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
+
+#relax&amp;chill #social</description>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -37,7 +43,7 @@
     </item>
     <item>
       <title>[2026-09-17 19:00] Raspberry Pi Workshop</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-17-raspberry-pi-workshop</link>
+      <link>https://bitcircus101.de/e/b936f8f9538e/</link>
       <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
       <category>#workshop</category>
       <category>#datenburg</category>
@@ -46,8 +52,10 @@
     </item>
     <item>
       <title>[2026-09-18 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-18-linkup-bitcircus101</link>
-      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …</description>
+      <link>https://bitcircus101.de/e/67d0a07d76fd/</link>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.
+
+On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests</description>
       <category>#meetup</category>
       <category>#lightning-talks</category>
       <category>#talk</category>
@@ -56,8 +64,11 @@
     </item>
     <item>
       <title>[2026-09-18 20:30] Special: Öffentliche Dateninfrastruktur - Vortrag Markus Drenger @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-18-special-öffentliche-dateninfrastruktur-v</link>
-      <description>Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &quot;Hauskoordinaten Deutschland&quot; auf GitHub veröffentlicht, das bayerische Landesamt für …</description>
+      <link>https://bitcircus101.de/e/bef4fc45327a/</link>
+      <description>Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &quot;Hauskoordinaten Deutschland&quot; auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht nur wegen eines Prozessfehlers, sondern weil das Amt vor Gericht gelogen hat.
+
+Vortrag 20:30-21:15 (30 min + 15 min Q&amp;A), innerhalb des linkup@bitcircus101.
+https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/</description>
       <category>#meetup</category>
       <category>#talk</category>
       <pubDate>Fri, 11 Sep 2026 15:53:12 +0000</pubDate>
@@ -65,7 +76,7 @@
     </item>
     <item>
       <title>[2026-09-19 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-19-32-offene-ateliers</link>
+      <link>https://bitcircus101.de/e/2c8a32452fc1/</link>
       <description>32. Offene Ateliers · 2026-09-19</description>
       <category>#offener-abend</category>
       <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
@@ -73,7 +84,7 @@
     </item>
     <item>
       <title>[2026-09-20 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-20-32-offene-ateliers</link>
+      <link>https://bitcircus101.de/e/2d87f541a8c8/</link>
       <description>32. Offene Ateliers · 2026-09-20</description>
       <category>#offener-abend</category>
       <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
@@ -81,7 +92,7 @@
     </item>
     <item>
       <title>[2026-09-22 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-22-offene-datenburg</link>
+      <link>https://bitcircus101.de/e/3a8f0b94ebd5/</link>
       <description>Offene Datenburg · 2026-09-22</description>
       <category>#datenburg</category>
       <category>#offener-abend</category>
@@ -90,8 +101,14 @@
     </item>
     <item>
       <title>[2026-09-22 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-22-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <link>https://bitcircus101.de/e/29ed8de6211c/</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
+We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
+
+Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
+Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
+
+#relax&amp;chill #social</description>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -100,7 +117,7 @@
     </item>
     <item>
       <title>[2026-09-24 19:00] Spieleabend</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-24-spieleabend</link>
+      <link>https://bitcircus101.de/e/2584e7559146/</link>
       <description>Spieleabend · 2026-09-24</description>
       <category>#gaming</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -108,7 +125,7 @@
     </item>
     <item>
       <title>[2026-09-25 20:00] Casual Linkup@bitcircus101 (4FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-25-casual-linkup-bitcircus101-4fr</link>
+      <link>https://bitcircus101.de/e/1d9a350e2120/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
       <category>#meetup</category>
       <pubDate>Thu, 23 Apr 2026 19:09:53 +0000</pubDate>
@@ -116,7 +133,7 @@
     </item>
     <item>
       <title>[2026-09-29 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-29-offene-datenburg</link>
+      <link>https://bitcircus101.de/e/358f03b5e2d5/</link>
       <description>Offene Datenburg · 2026-09-29</description>
       <category>#datenburg</category>
       <category>#offener-abend</category>
@@ -125,8 +142,14 @@
     </item>
     <item>
       <title>[2026-09-29 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-29-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <link>https://bitcircus101.de/e/30ed98eb1c1c/</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
+We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
+
+Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
+Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
+
+#relax&amp;chill #social</description>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -135,28 +158,30 @@
     </item>
     <item>
       <title>[2026-09-29 19:00] Spermüll Rausstellen</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-29-spermüll-rausstellen</link>
-      <description>Sperrmüll Rausstellen Abholung am 30.09 Hilfe wird gebaucht</description>
+      <link>https://bitcircus101.de/e/9c9e8e980a93/</link>
+      <description>Sperrmüll Rausstellen
+Abholung am 30.09
+Hilfe wird gebaucht</description>
       <pubDate>Tue, 04 Aug 2026 16:26:18 +0000</pubDate>
       <guid isPermaLink="false">2a828714-52b9-4074-a76e-56790ff4720b-20260929T1900</guid>
     </item>
     <item>
       <title>[2026-09-30 20:00] Treffen: Bolle-Bonn.de @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-09-30-treffen-bolle-bonn-de</link>
+      <link>https://bitcircus101.de/e/8797f899c84a/</link>
       <description>Treffen: Bolle-Bonn.de · 2026-09-30</description>
       <pubDate>Mon, 31 Aug 2026 14:17:23 +0000</pubDate>
       <guid isPermaLink="false">B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20260930T2000</guid>
     </item>
     <item>
       <title>[2026-10-01 18:00] Interner Burgabend</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-01-interner-burgabend</link>
+      <link>https://bitcircus101.de/e/753144bf386d/</link>
       <description>Interner Burgabend · 2026-10-01</description>
       <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
       <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261001T1800</guid>
     </item>
     <item>
       <title>[2026-10-02 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-02-casual-linkup-bitcircus101-1fr</link>
+      <link>https://bitcircus101.de/e/3309141a8e57/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
       <category>#meetup</category>
       <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
@@ -164,14 +189,14 @@
     </item>
     <item>
       <title>[2026-10-04 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-04-digital-independence-day-did</link>
+      <link>https://bitcircus101.de/e/eeb6e38114ed/</link>
       <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
       <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
       <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261004T1400</guid>
     </item>
     <item>
       <title>[2026-10-06 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-06-offene-datenburg</link>
+      <link>https://bitcircus101.de/e/4e8ce7c8e5e0/</link>
       <description>Offene Datenburg · 2026-10-06</description>
       <category>#datenburg</category>
       <category>#offener-abend</category>
@@ -180,8 +205,14 @@
     </item>
     <item>
       <title>[2026-10-06 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-06-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <link>https://bitcircus101.de/e/bb806176eec6/</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
+We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
+
+Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
+Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
+
+#relax&amp;chill #social</description>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -190,14 +221,14 @@
     </item>
     <item>
       <title>[2026-10-08 19:00] Plenum mit anschließendem Essen</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-08-plenum-mit-anschlie-endem-essen</link>
+      <link>https://bitcircus101.de/e/e60eb1e098f7/</link>
       <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
       <pubDate>Thu, 10 Sep 2026 19:17:13 +0000</pubDate>
       <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261008T1900</guid>
     </item>
     <item>
       <title>[2026-10-09 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-09-casual-linkup-bitcircus101-2fr</link>
+      <link>https://bitcircus101.de/e/184ba0f4c433/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
       <category>#meetup</category>
       <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
@@ -205,7 +236,7 @@
     </item>
     <item>
       <title>[2026-10-10] Phosh Meetup! @ Bornheimer Straße 25 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-10-phosh-meetup</link>
+      <link>https://bitcircus101.de/e/fc7b7b7f441a/</link>
       <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
       <category>#linux</category>
       <category>#datenburg</category>
@@ -214,7 +245,7 @@
     </item>
     <item>
       <title>[2026-10-10] Phosh Meetup! @ Datenburg</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-10-phosh-meetup</link>
+      <link>https://bitcircus101.de/e/a7ab79e10919/</link>
       <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
       <category>#linux</category>
       <category>#datenburg</category>
@@ -223,7 +254,7 @@
     </item>
     <item>
       <title>[2026-10-12 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-12-treffen-bonner-fsfe-community</link>
+      <link>https://bitcircus101.de/e/930208fa5a93/</link>
       <description>Treffen: Bonner FSFE Community · 2026-10-12</description>
       <category>#foss</category>
       <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
@@ -231,7 +262,7 @@
     </item>
     <item>
       <title>[2026-10-13 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-13-offene-datenburg</link>
+      <link>https://bitcircus101.de/e/bb8fd1f6eae2/</link>
       <description>Offene Datenburg · 2026-10-13</description>
       <category>#datenburg</category>
       <category>#offener-abend</category>
@@ -240,8 +271,14 @@
     </item>
     <item>
       <title>[2026-10-13 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-13-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <link>https://bitcircus101.de/e/c082a7ecdbc9/</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
+We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
+
+Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
+Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
+
+#relax&amp;chill #social</description>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -250,14 +287,14 @@
     </item>
     <item>
       <title>[2026-10-14 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-14-le-sabot-computerspiel-abend</link>
+      <link>https://bitcircus101.de/e/9546cc9a30f0/</link>
       <description>Le Sabot Computerspiel-Abend · 2026-10-14</description>
       <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
       <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261014T1930</guid>
     </item>
     <item>
       <title>[2026-10-15 19:00] Raspberry Pi Workshop</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-15-raspberry-pi-workshop</link>
+      <link>https://bitcircus101.de/e/c92f18d1118c/</link>
       <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
       <category>#workshop</category>
       <category>#datenburg</category>
@@ -266,8 +303,10 @@
     </item>
     <item>
       <title>[2026-10-16 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-16-linkup-bitcircus101</link>
-      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …</description>
+      <link>https://bitcircus101.de/e/8d0fdd318df3/</link>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.
+
+On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests</description>
       <category>#meetup</category>
       <category>#lightning-talks</category>
       <category>#talk</category>
@@ -276,7 +315,7 @@
     </item>
     <item>
       <title>[2026-10-20 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-20-offene-datenburg</link>
+      <link>https://bitcircus101.de/e/48886128d3e4/</link>
       <description>Offene Datenburg · 2026-10-20</description>
       <category>#datenburg</category>
       <category>#offener-abend</category>
@@ -285,8 +324,14 @@
     </item>
     <item>
       <title>[2026-10-20 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-20-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <link>https://bitcircus101.de/e/c984f4ae68c1/</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
+We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
+
+Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
+Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
+
+#relax&amp;chill #social</description>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -295,7 +340,7 @@
     </item>
     <item>
       <title>[2026-10-22 19:00] Spieleabend</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-22-spieleabend</link>
+      <link>https://bitcircus101.de/e/7c3144896687/</link>
       <description>Spieleabend · 2026-10-22</description>
       <category>#gaming</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -303,7 +348,7 @@
     </item>
     <item>
       <title>[2026-10-23 20:00] Casual Linkup@bitcircus101 (4FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-23-casual-linkup-bitcircus101-4fr</link>
+      <link>https://bitcircus101.de/e/05bfccda9d0f/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
       <category>#meetup</category>
       <pubDate>Thu, 23 Apr 2026 19:09:53 +0000</pubDate>
@@ -311,7 +356,7 @@
     </item>
     <item>
       <title>[2026-10-27 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-27-offene-datenburg</link>
+      <link>https://bitcircus101.de/e/4f886c2dd6e4/</link>
       <description>Offene Datenburg · 2026-10-27</description>
       <category>#datenburg</category>
       <category>#offener-abend</category>
@@ -320,8 +365,14 @@
     </item>
     <item>
       <title>[2026-10-27 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-27-look-at-my-toys</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …</description>
+      <link>https://bitcircus101.de/e/cc84f9676fc1/</link>
+      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
+We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
+
+Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
+Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
+
+#relax&amp;chill #social</description>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -330,14 +381,14 @@
     </item>
     <item>
       <title>[2026-10-28 20:00] Treffen: Bolle-Bonn.de @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-28-treffen-bolle-bonn-de</link>
+      <link>https://bitcircus101.de/e/b14bcce61fed/</link>
       <description>Treffen: Bolle-Bonn.de · 2026-10-28</description>
       <pubDate>Mon, 31 Aug 2026 14:17:23 +0000</pubDate>
       <guid isPermaLink="false">B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20261028T2000</guid>
     </item>
     <item>
       <title>[2026-10-30 20:00] Casual Linkup@bitcircus101 (5FR) @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-30-casual-linkup-bitcircus101-5fr</link>
+      <link>https://bitcircus101.de/e/1f9a61d121da/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de</description>
       <category>#meetup</category>
       <pubDate>Wed, 09 Sep 2026 17:53:45 +0000</pubDate>
@@ -345,7 +396,7 @@
     </item>
     <item>
       <title>[2026-11-01 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2026-11-01-digital-independence-day-did</link>
+      <link>https://bitcircus101.de/e/cdf2a6e36bfd/</link>
       <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
       <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
       <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261101T1400</guid>

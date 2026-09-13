@@ -1,0 +1,113 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//bitcircus101//events//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:bitcircus101 – Termine
+X-WR-TIMEZONE:Europe/Berlin
+BEGIN:VTIMEZONE
+TZID:Europe/Berlin
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:B354382B-F062-4757-840F-16C0C77178D9-20260718T1100@bitcircus101.de
+DTSTAMP:20260913T165055Z
+DTSTART;TZID=Europe/Berlin:20260718T110000
+DTEND;TZID=Europe/Berlin:20260718T150000
+SUMMARY:Pride Bonn
+DESCRIPTION:Es gibt wieder eine queere Pride Demonstration in Bonn.\nSie is
+ t am 18. Juli 2026.\nWir starten an der Rheinlust. Das ist in Beuel am Rhe
+ in.\nDie Demonstration endet am Münsterplatz. Da gibt es noch eine Kundge
+ bung.\nViele queere Menschen sprechen darüber\, was ihnen wichtig ist.\nI
+ hr könnt auf der Pride andere queere Menschen kennenlernen.\nIhr könnt a
+ uch gerne kommen\, wenn Ihr nicht queer seid.\n\nEs gibt ein Paar Regeln f
+ ür die Demonstration.\nWir wollen\n– keine Länder-Fahnen\n– keine Pa
+ rtei-Fahnen\nWir arbeiten nicht mit Parteien zusammen. Wir möchten nicht\
+ , dass sie für sich bei unserer Demonstration werben.\nWir sind also Part
+ ei•los.\n– keine Werbung für Unternehmen\nWir sind un-kommerziell. Wi
+ r wollen mit der Demonstration kein Geld verdienen.\n\nWir möchten\, dass
+  die Demonstration barrierefrei ist.\nWir wissen\, dass wir sie nicht ganz
+  barrierefrei machen können.\nAber wir strengen uns sehr an.\nEs gibt ein
+ e Person\, die alles in Deutsche Gebärden-Sprache übersetzt.\nEs gibt Ri
+ kschas für Menschen\, die nicht so gut laufen können.\nEs gibt einen Ruh
+ e-Block. Hier gibt es keine Musik. Es ist ruhiger. Es ist auch mehr Platz 
+ zwischen den Menschen. Es ist auch nicht so eng.\nEs gibt ein Awareness-Te
+ am. Das sind Menschen\, die Euch helfen\, wenn es Euch nicht gut geht.\nOd
+ er wenn Ihr Diskriminierung erlebt. Das Awareness-Team hat auch Masken\, B
+ inden\, Wasser und Trauben-Zucker dabei.\nAlle Reden gibt es auch auf Engl
+ isch und in Einfacher Sprache zu lesen. Für manche Menschen ist es besser
+ \, Dinge zu lesen als sie zu hören. Zum Beispiel weil sie nicht gut höre
+ n können. Oder weil sie sich schlecht konzentrieren können.\n\nWir möch
+ ten\, dass die Demonstration\n– Intersektional\n– Inklusiv\n– Nachha
+ ltig ist.\n\nWer macht diese Demonstration?\n\nDie erste Demonstration gab
+  es es 2020. Es gab schon queere Gruppen in Bonn.\nViele haben sich zusamm
+ en geschlossen. Sie haben das Bündnis „Pride Demo Bonn“ geschaffen.\n
+ Sie wollten zusammen eine queere Pride Demonstration in Bonn machen.\nDies
+ e Demo sollte nachhaltig und inklusiv sein.\nEs gab 2020 noch keine Demons
+ tration. Es gab aber eine Kundgebung. 200 Menschen waren da.\n2021 waren s
+ chon mehr Menschen da. Da gab es auch eine Demonstration\, auf der wir dur
+ ch Bonn gelaufen sind.\nDas Bündnis hat sich 2022 neu aufgestellt. Es gab
+  wieder eine Demo.\n2023 waren fast 700 Menschen bei der queeren Pride in 
+ Bonn. Richtig gut!\n2024 waren wir 1.200 Menschen. Nächstes Jahr hoffentl
+ ich noch mehr!\n\nDas Motto der queeren Pride Bonn ist:\nUnkommerziell –
+  kämpferisch – parteilos\nEin Motto ist etwas\, woran wir uns orientier
+ en.\nWir wollen unkommerziell\, kämpferisch und parteilos bei allem sein\
+ , was wir machen.\nKämpferisch bedeutet: Wir kämpfen für unsere Rechte.
+  Wir sind nicht immer lieb und nett.\n\nWir erklären jetzt Wörter in Ein
+ facher Sprache.\n\nQueer ist ein Wort für Menschen\, die mit Blick auf Ge
+ schlecht\, sexuelle oder romantische\nOrientierung anders sind\, als es di
+ e Gesellschaft gut findet.\nDas sind zum Beispiel Frauen\, die Frauen lieb
+ en.\nOder Menschen\, die keine Anziehung erleben. Die zum Beispiel keinen 
+ Sex mit anderen\nMenschen haben wollen.\nOder Menschen\, die keine Frau un
+ d kein Mann sind.\nQueer zu sein heißt\, Strukturen zu durch•brechen.\n
+ Nicht alle queeren Menschen möchten politisch sein.\nViele wollen einfach
+  in Ruhe leben.\nAlle queeren Menschen erleben viel Diskriminierung.\nDies
+ e Diskriminierung heißt Queer•feindlichkeit.\nViele queere Menschen set
+ zen sich politisch dafür ein\, mehr Rechte zu bekommen.\nSie machen zum B
+ eispiel bei Demonstrationen mit.\n\nBei einer Demonstration treffen sich M
+ enschen\, um für oder gegen etwas zu kämpfen.\nEine Demonstration heißt
+  oft: Menschen gehen durch die Straßen. Sie haben oft Plakate dabei.\nSie
+  rufen Sprüche. Auch Menschen\, die nicht bei der Demonstration sind\, so
+ llen die\nDemonstration sehen.\nWenn Leute von „Demo“ sprechen\, dann 
+ meinen sie „Demonstration“.\nAuch bei einer Kundgebung treffen sich Me
+ nschen\, um für oder gegen etwas zu kämpfen. Sie treffen sich an einem O
+ rt und bleiben dort. Es gibt Reden.\nEine Demonstration besteht oft aus ei
+ ner Kundgebung und einem Teil\, wo die Menschen durch die Straßen laufen.
+ \n\nAwareness ist Englisch und bedeutet „Bewusst-Sein“. Wir möchten n
+ icht\, dass Menschen auf der Demonstration Diskriminierung erleben. Wir wi
+ ssen aber auch\, dass Diskriminierung sehr schnell passiert. Wir lassen Me
+ nschen\, die Diskriminierung erleben\, nicht damit alleine. Wir wissen auc
+ h\, dass eine Demonstration anstrengend ist. Wir helfen Menschen\, denen e
+ s nicht gut geht. Wir möchten aber auch sagen: Wir sind keine Therapeut*i
+ nnen.\n\nWir wissen\, dass viele Menschen Diskriminierung erleben. Viele M
+ enschen sind von mehreren Formen der Diskriminierung betroffen. Schwarze q
+ ueere Menschen erleben zum Beispiel Rassismus und Queer-Feindlichkeit. Wen
+ n wir ihr Leben beschreiben wollen\, können wir nicht einfach Rassismus u
+ nd Queer-Feindlichkeit zusammen rechnen.\nEs entsteht auch eine neue Form 
+ der Diskriminierung. Das ist dann die Verschränkung von Rassismus und Que
+ er-Feindlichkeit. Schwarze queere Menschen erleben zum Beispiel mehr Gewal
+ t als weiße queere Menschen.\n\nDas können wir mit dem Konzept der Inter
+ sektionalität erklären. Das kommt von\nKimberlé Crenshaw. Es erklärt d
+ as Leben vom Menschen\, die von mehr als einer Form der\nDiskriminierung b
+ etroffen sind.\n\nNachhaltig kann vieles bedeuten. Zum Beispiel: Wir gehen
+  gut mit den Ressourcen um\, die wir haben. Energie\, Wasser und Essen sin
+ d Ressourcen. Für unsere Demonstration bedeutet das: Wir nutzen vieles wi
+ eder und lange. Wir nutzen wenig Plastik.
+LOCATION:TBA
+URL:https://pridebonn.org/einfache-sprache/
+CATEGORIES:offener-abend
+END:VEVENT
+END:VCALENDAR

@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-09-13T16:17:11.162Z",
+  "lastSync": "2026-09-13T16:50:55.355Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-13T16:17:10.970Z",
+      "fetchedAt": "2026-09-13T16:50:53.851Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-13T16:17:11.135Z",
+      "fetchedAt": "2026-09-13T16:50:55.335Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -239,6 +239,7 @@
   },
   "events": [
     {
+      "id": "c131139aced7",
       "title": "Treffen: Bonner FSFE Community",
       "subtitle": "",
       "description": "",
@@ -254,10 +255,12 @@
       "source": "bitcircus101",
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "recurring": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-05-11T19:45:03.502Z"
     },
     {
+      "id": "398ccb6a5edc",
       "title": "Offene Datenburg",
       "subtitle": "",
       "description": "",
@@ -274,12 +277,14 @@
       "source": "Datenburg e.V.",
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "bcf53114201a",
       "title": "Look at my toys!",
       "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-09-15",
       "time": "19:00",
@@ -294,9 +299,11 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
+      "id": "b936f8f9538e",
       "title": "Raspberry Pi Workshop",
       "subtitle": "",
       "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
@@ -313,12 +320,14 @@
       "source": "Datenburg e.V.",
       "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "67d0a07d76fd",
       "title": "Linkup@bitcircus101",
       "subtitle": "",
-      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.\n\nOn all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-09-18",
       "time": "20:00",
@@ -333,13 +342,15 @@
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
       "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-15T21:15:10.361Z"
     },
     {
+      "id": "bef4fc45327a",
       "title": "Special: Öffentliche Dateninfrastruktur - Vortrag Markus Drenger",
       "subtitle": "",
-      "description": "Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus \"Hauskoordinaten Deutschland\" auf GitHub veröffentlicht, das bayerische Landesamt für …",
+      "description": "Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus \"Hauskoordinaten Deutschland\" auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht nur wegen eines Prozessfehlers, sondern weil das Amt vor Gericht gelogen hat.\n\nVortrag 20:30-21:15 (30 min + 15 min Q&A), innerhalb des linkup@bitcircus101.\nhttps://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-09-18",
       "time": "20:30",
@@ -356,6 +367,7 @@
       "firstSeen": "2026-09-11T15:53:12.335Z"
     },
     {
+      "id": "2c8a32452fc1",
       "title": "32. Offene Ateliers",
       "subtitle": "",
       "description": "",
@@ -371,10 +383,12 @@
       "source": "bitcircus101",
       "uid": "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
       "calendarUrl": "https://offene-ateliers-bonn.de/",
+      "recurring": true,
       "eventUrl": "https://offene-ateliers-bonn.de/",
       "firstSeen": "2026-07-24T18:16:21.482Z"
     },
     {
+      "id": "2d87f541a8c8",
       "title": "32. Offene Ateliers",
       "subtitle": "",
       "description": "",
@@ -390,10 +404,12 @@
       "source": "bitcircus101",
       "uid": "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
       "calendarUrl": "https://offene-ateliers-bonn.de/",
+      "recurring": true,
       "eventUrl": "https://offene-ateliers-bonn.de/",
       "firstSeen": "2026-07-24T18:16:21.482Z"
     },
     {
+      "id": "3a8f0b94ebd5",
       "title": "Offene Datenburg",
       "subtitle": "",
       "description": "",
@@ -410,12 +426,14 @@
       "source": "Datenburg e.V.",
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "29ed8de6211c",
       "title": "Look at my toys!",
       "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-09-22",
       "time": "19:00",
@@ -430,9 +448,11 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
+      "id": "2584e7559146",
       "title": "Spieleabend",
       "subtitle": "",
       "description": "",
@@ -448,9 +468,11 @@
       "source": "Datenburg e.V.",
       "uid": "19efb037-b521-4f7b-b508-bd63eb3b292b",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "1d9a350e2120",
       "title": "Casual Linkup@bitcircus101 (4FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
@@ -466,10 +488,12 @@
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
       "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-04-23T19:09:53.469Z"
     },
     {
+      "id": "358f03b5e2d5",
       "title": "Offene Datenburg",
       "subtitle": "",
       "description": "",
@@ -486,12 +510,14 @@
       "source": "Datenburg e.V.",
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "30ed98eb1c1c",
       "title": "Look at my toys!",
       "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-09-29",
       "time": "19:00",
@@ -506,12 +532,14 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
+      "id": "9c9e8e980a93",
       "title": "Spermüll Rausstellen",
       "subtitle": "",
-      "description": "Sperrmüll Rausstellen Abholung am 30.09 Hilfe wird gebaucht",
+      "description": "Sperrmüll Rausstellen\nAbholung am 30.09\nHilfe wird gebaucht",
       "location": "",
       "date": "2026-09-29",
       "time": "19:00",
@@ -527,6 +555,7 @@
       "firstSeen": "2026-08-04T16:26:18.904Z"
     },
     {
+      "id": "8797f899c84a",
       "title": "Treffen: Bolle-Bonn.de",
       "subtitle": "",
       "description": "",
@@ -542,10 +571,12 @@
       "source": "bitcircus101",
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-08-31T14:17:23.283Z"
     },
     {
+      "id": "753144bf386d",
       "title": "Interner Burgabend",
       "subtitle": "",
       "description": "",
@@ -561,9 +592,11 @@
       "source": "Datenburg e.V.",
       "uid": "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-11T18:34:04.184Z"
     },
     {
+      "id": "3309141a8e57",
       "title": "Casual Linkup@bitcircus101 (1FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
@@ -579,10 +612,12 @@
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
       "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-02T10:51:21.504Z"
     },
     {
+      "id": "eeb6e38114ed",
       "title": "Digital Independence Day (DID)",
       "subtitle": "",
       "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
@@ -598,9 +633,11 @@
       "source": "Datenburg e.V.",
       "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-05-02T13:08:46.350Z"
     },
     {
+      "id": "4e8ce7c8e5e0",
       "title": "Offene Datenburg",
       "subtitle": "",
       "description": "",
@@ -617,12 +654,14 @@
       "source": "Datenburg e.V.",
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "bb806176eec6",
       "title": "Look at my toys!",
       "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-10-06",
       "time": "19:00",
@@ -637,9 +676,11 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
+      "id": "e60eb1e098f7",
       "title": "Plenum mit anschließendem Essen",
       "subtitle": "",
       "description": "Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein",
@@ -655,9 +696,11 @@
       "source": "Datenburg e.V.",
       "uid": "36f59fc2-7422-47d0-bc19-38bed610e3ac",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-09-10T19:17:13.849Z"
     },
     {
+      "id": "184ba0f4c433",
       "title": "Casual Linkup@bitcircus101 (2FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
@@ -673,10 +716,12 @@
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
       "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-09T10:12:20.662Z"
     },
     {
+      "id": "fc7b7b7f441a",
       "title": "Phosh Meetup!",
       "subtitle": "",
       "description": "Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.",
@@ -696,6 +741,7 @@
       "firstSeen": "2026-09-02T08:17:11.734Z"
     },
     {
+      "id": "a7ab79e10919",
       "title": "Phosh Meetup!",
       "subtitle": "",
       "description": "Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.",
@@ -715,6 +761,7 @@
       "firstSeen": "2026-08-18T16:39:23.867Z"
     },
     {
+      "id": "930208fa5a93",
       "title": "Treffen: Bonner FSFE Community",
       "subtitle": "",
       "description": "",
@@ -730,10 +777,12 @@
       "source": "bitcircus101",
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "recurring": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-05-11T19:45:03.502Z"
     },
     {
+      "id": "bb8fd1f6eae2",
       "title": "Offene Datenburg",
       "subtitle": "",
       "description": "",
@@ -750,12 +799,14 @@
       "source": "Datenburg e.V.",
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "c082a7ecdbc9",
       "title": "Look at my toys!",
       "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-10-13",
       "time": "19:00",
@@ -770,9 +821,11 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
+      "id": "9546cc9a30f0",
       "title": "Le Sabot Computerspiel-Abend",
       "subtitle": "",
       "description": "",
@@ -788,9 +841,11 @@
       "source": "Datenburg e.V.",
       "uid": "4f3eb937-ebc8-4dda-bec7-9f3547ca6240",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-08-13T18:25:49.154Z"
     },
     {
+      "id": "c92f18d1118c",
       "title": "Raspberry Pi Workshop",
       "subtitle": "",
       "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
@@ -807,12 +862,14 @@
       "source": "Datenburg e.V.",
       "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "8d0fdd318df3",
       "title": "Linkup@bitcircus101",
       "subtitle": "",
-      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with …",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.\n\nOn all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-10-16",
       "time": "20:00",
@@ -827,10 +884,12 @@
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
       "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-15T21:15:10.361Z"
     },
     {
+      "id": "48886128d3e4",
       "title": "Offene Datenburg",
       "subtitle": "",
       "description": "",
@@ -847,12 +906,14 @@
       "source": "Datenburg e.V.",
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "c984f4ae68c1",
       "title": "Look at my toys!",
       "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-10-20",
       "time": "19:00",
@@ -867,9 +928,11 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
+      "id": "7c3144896687",
       "title": "Spieleabend",
       "subtitle": "",
       "description": "",
@@ -885,9 +948,11 @@
       "source": "Datenburg e.V.",
       "uid": "19efb037-b521-4f7b-b508-bd63eb3b292b",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "05bfccda9d0f",
       "title": "Casual Linkup@bitcircus101 (4FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
@@ -903,10 +968,12 @@
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
       "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-04-23T19:09:53.469Z"
     },
     {
+      "id": "4f886c2dd6e4",
       "title": "Offene Datenburg",
       "subtitle": "",
       "description": "",
@@ -923,12 +990,14 @@
       "source": "Datenburg e.V.",
       "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
+      "id": "cc84f9676fc1",
       "title": "Look at my toys!",
       "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as …",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
       "location": "Dorotheenstraße 101, 53111 Bonn",
       "date": "2026-10-27",
       "time": "19:00",
@@ -943,9 +1012,11 @@
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
     {
+      "id": "b14bcce61fed",
       "title": "Treffen: Bolle-Bonn.de",
       "subtitle": "",
       "description": "",
@@ -961,10 +1032,12 @@
       "source": "bitcircus101",
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-08-31T14:17:23.283Z"
     },
     {
+      "id": "1f9a61d121da",
       "title": "Casual Linkup@bitcircus101 (5FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de",
@@ -980,10 +1053,12 @@
       "source": "bitcircus101",
       "uid": "A181B019-30E9-40E0-8250-45DC8DF5B788",
       "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-09-09T17:53:45.441Z"
     },
     {
+      "id": "cdf2a6e36bfd",
       "title": "Digital Independence Day (DID)",
       "subtitle": "",
       "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
@@ -999,6 +1074,7 @@
       "source": "Datenburg e.V.",
       "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
       "firstSeen": "2026-05-02T13:08:46.350Z"
     }
   ]

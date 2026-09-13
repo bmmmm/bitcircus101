@@ -28,7 +28,7 @@ DTSTAMP:20260804T162618Z
 DTSTART;TZID=Europe/Berlin:20260929T190000
 DTEND;TZID=Europe/Berlin:20260929T200000
 SUMMARY:Spermüll Rausstellen
-DESCRIPTION:Sperrmüll Rausstellen Abholung am 30.09 Hilfe wird gebaucht
+DESCRIPTION:Sperrmüll Rausstellen\nAbholung am 30.09\nHilfe wird gebaucht
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
 END:VEVENT
