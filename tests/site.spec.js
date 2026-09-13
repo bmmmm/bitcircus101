@@ -1282,7 +1282,10 @@ test.describe('Event details', () => {
         await own.click();
         await expect(page).toHaveURL(new RegExp(`/e/${data.events[0].id}/$`));
         await expect(page.locator('h1')).toContainText('Hardware Hackingabend');
-        await expect(page.locator('header .nav__links')).toBeVisible();
+        // The nav list is folded behind the menu button on a phone, so assert
+        // the chrome is there and wired (links rebased), not that it is open.
+        await expect(page.locator('header')).toBeVisible();
+        await expect(page.locator('header .nav__links a[href="../../events.html"]')).toHaveCount(1);
         await expect(page.locator('footer')).toBeVisible();
         const css = await page.locator('link[rel="stylesheet"]').getAttribute('href');
         expect(css).toMatch(/^\.\.\/\.\.\/style\.css/);
