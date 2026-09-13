@@ -9,6 +9,7 @@ bitcircus101 ist ein privat und nicht-kommerziell betriebener Hackspace in Bonn.
 - [Startseite](https://bitcircus101.de/): Überblick, Signal-Channels, Kontakt
 - [Signal-Gruppen](https://bitcircus101.de/chat/): INFO-Gruppe beitreten (TALK-Gruppe nur auf Anfrage)
 - [Veranstaltungen](https://bitcircus101.de/events): Termine, linkup@bitcircus101 Lightning Talks, offene Freitagabende
+- [Archiv](https://bitcircus101.de/archiv/): vergangene Termine, jeder mit eigener Seite unter /e/<id>/ (volle Beschreibung, Einzel-ICS)
 - [Raum mieten](https://bitcircus101.de/raum-nutzen): bitcircus101 für Workshops, Meetups, Drehs buchen
 - [Unterstützen](https://bitcircus101.de/support): bitcircus101 finanziell unterstützen
 - [Pinnwand](https://bitcircus101.de/pinnwand): Stellenanzeigen aus der Community an einer echten Wand im Hackspace

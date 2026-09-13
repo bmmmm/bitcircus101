@@ -125,6 +125,9 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
 | `ical.ics` | `sync-events.yml` | Every 30 minutes |
 | `events/feed.xml`, `events/ical.ics` | `sync-events.yml` | Every 30 minutes |
 | `feeds/` | `sync-events.yml` | Every 30 minutes |
+| `events-archive.json` | `sync-events.yml` | Every 30 minutes (append-only) |
+| `e/<id>/index.html`, `e/<id>/event.ics` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy (sitemap) |
+| `archiv/index.html` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy |
 | `sitemap.xml` | `deploy.yml` | Every deploy (push to `main`) |
 
 - `ical.ics` is the aggregator-facing iCal export with real `DTSTART`/`DTEND`
@@ -135,6 +138,15 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   (`feeds/source/<id>.*`) and `feeds/all.*`, in the same ≤40-event window as the
   page. The `feeds` manifest inside `events-data.json` maps them — the frontend
   never derives slugs.
+- `events-archive.json` keeps every card the primary (`rss: true`) sources ever
+  exported since `ARCHIVE_MIN_DATE` (see `scripts/sync-events.mjs`), keyed by the
+  card `id` — a hash of the calendar UID (plus the date for series occurrences),
+  so a shared link survives a reschedule and needs no registry. Entries are never
+  deleted; an upcoming one that vanishes from a healthy export is flagged
+  `cancelled`. `scripts/build-event-pages.mjs` renders it into `e/<id>/` (one
+  page + single-event `.ics` each, the RSS item links and the JSON-LD `url`
+  point there) and `archiv/index.html`, using the checkout's `events.html` as
+  the header/footer template. Locally: `pnpm run build:event-pages <archive.json>`.
 
 `finanz.json` and `funding.json` are **not** in that list — they are versioned on
 `main` and edited through the maintainer CLI — never by hand, and no longer by a

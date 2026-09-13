@@ -57,10 +57,15 @@ describe("live-overlay.mjs", () => {
         // is the source of truth now and must win over it
         write(dir, "funding.json", "stale-live-funding");
         write(dir, "events/feed.xml", "generated-feed-copy");
+        write(dir, "events-archive.json", "generated-archive-json");
         // the filtered-feed TREE (variable file set → FEED_DIRS, not FEEDS)
         write(dir, "feeds/all.ics", "generated-all-feed");
         write(dir, "feeds/tag/linkup.ics", "generated-tag-feed");
         write(dir, "feeds/source/bitcircus.xml", "generated-source-feed");
+        // per-event page TREE + archive index (same FEED_DIRS contract as feeds/)
+        write(dir, "e/abc123def456/index.html", "generated-event-page");
+        write(dir, "e/abc123def456/event.ics", "generated-event-ics");
+        write(dir, "archiv/index.html", "generated-archive-index");
         // deliberately NO ical.ics / feed.xml / events/ical.ics → the
         // missing-file case that aborted the old bash loop (d558e5a)
         return dir;
@@ -80,7 +85,12 @@ describe("live-overlay.mjs", () => {
         assert.equal(fs.readFileSync(path.join(dir, "sitemap.xml"), "utf8"), "generated-sitemap");
         assert.equal(fs.readFileSync(path.join(dir, "events-data.json"), "utf8"), "generated-events");
         assert.equal(fs.readFileSync(path.join(dir, "events/feed.xml"), "utf8"), "generated-feed-copy");
+        assert.equal(fs.readFileSync(path.join(dir, "events-archive.json"), "utf8"), "generated-archive-json");
         assert.equal(fs.readFileSync(path.join(dir, "feeds/tag/linkup.ics"), "utf8"), "generated-tag-feed");
+        // the per-event page tree and the archive index survive the overlay too
+        assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/index.html"), "utf8"), "generated-event-page");
+        assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/event.ics"), "utf8"), "generated-event-ics");
+        assert.equal(fs.readFileSync(path.join(dir, "archiv/index.html"), "utf8"), "generated-archive-index");
         // funding.json is tracked on main and feeds inject-layout's footer
         // percent — main's copy must overwrite whatever live still holds
         assert.equal(fs.readFileSync(path.join(dir, "funding.json"), "utf8"), "seed-funding");
@@ -112,11 +122,15 @@ describe("live-overlay.mjs", () => {
         // FEEDS entries (tracked on live only, absent from ref) survive pruning
         assert.equal(fs.readFileSync(path.join(dir, "events-data.json"), "utf8"), "generated-events");
         assert.equal(fs.readFileSync(path.join(dir, "events/feed.xml"), "utf8"), "generated-feed-copy");
+        assert.equal(fs.readFileSync(path.join(dir, "events-archive.json"), "utf8"), "generated-archive-json");
         // the FEED_DIRS tree survives pruning too — the exemption is scoped to
-        // the feeds/ prefix (old-page/old-assets above prove pruning still runs)
+        // the feeds/e/archiv prefixes (old-page/old-assets above prove pruning still runs)
         assert.equal(fs.readFileSync(path.join(dir, "feeds/all.ics"), "utf8"), "generated-all-feed");
         assert.equal(fs.readFileSync(path.join(dir, "feeds/tag/linkup.ics"), "utf8"), "generated-tag-feed");
         assert.equal(fs.readFileSync(path.join(dir, "feeds/source/bitcircus.xml"), "utf8"), "generated-source-feed");
+        assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/index.html"), "utf8"), "generated-event-page");
+        assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/event.ics"), "utf8"), "generated-event-ics");
+        assert.equal(fs.readFileSync(path.join(dir, "archiv/index.html"), "utf8"), "generated-archive-index");
     });
 });
 
@@ -168,6 +182,8 @@ describe("smoke-live.mjs", () => {
     // Simulates the Pages build still running: that many feed requests 404
     // before the file appears (the race that broke run 33409874725).
     let feedDelay = 0;
+    // Every request path the fake server saw, in order; reset per test that reads it.
+    let requestLog = [];
     const HASH = "abc12345";
     const sitemap = () =>
         `<?xml version="1.0" encoding="UTF-8"?><urlset>${locs
@@ -176,6 +192,7 @@ describe("smoke-live.mjs", () => {
 
     before(async () => {
         server = http.createServer((req, res) => {
+            requestLog.push(req.url);
             if (req.url === "/") {
                 res.writeHead(200, { "content-type": "text/html" });
                 res.end(`<link href="style.css?v=${HASH}">`);
@@ -279,6 +296,41 @@ describe("smoke-live.mjs", () => {
                 (e) => e.code === 1 && e.stderr.includes("non-canonical or build-only"),
             );
         }
+    });
+
+    it("always checks every shallow page and samples at most 5 of many deep ones", async () => {
+        // Deep /e/<id>/ pages listed FIRST, shallow pages last — a plain
+        // prefix slice of the sitemap would starve the shallow pages entirely.
+        const deepPaths = Array.from({ length: 30 }, (_, i) => `/e/deep-page-${i}/`);
+        const shallowPaths = [
+            "/",
+            "/events",
+            "/support",
+            "/impressum",
+            "/datenschutz",
+            "/kontakt",
+            "/pinnwand",
+            "/archiv",
+            "/mitmachen",
+            "/verein",
+        ];
+        locs = [...deepPaths, ...shallowPaths].map((p) => `${base}${p}`);
+        requestLog = [];
+        try {
+            await smoke();
+        } catch {
+            // Most of these paths aren't stubbed on the fake server and 404 —
+            // irrelevant here, only which paths were REQUESTED is under test.
+        }
+
+        for (const p of shallowPaths) {
+            assert.ok(requestLog.includes(p), `expected a request for shallow page ${p}`);
+        }
+        const deepRequested = deepPaths.filter((p) => requestLog.includes(p));
+        assert.ok(
+            deepRequested.length <= 5,
+            `expected at most 5 deep pages requested, got ${deepRequested.length}: ${deepRequested.join(", ")}`,
+        );
     });
 });
 

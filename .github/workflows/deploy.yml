@@ -209,6 +209,12 @@ jobs:
             node scripts/sync-events.mjs
           fi
 
+      # After cache-bust (the pages inherit events.html's final ?v=) and before
+      # the sitemap, so new event pages are indexed in the same deploy. The
+      # archive itself is live-only state that live-overlay.mjs preserves.
+      - name: Build event pages and archive
+        run: node scripts/build-event-pages.mjs
+
       - name: Generate sitemap.xml
         # Used to live in its own workflow (sitemap.yml) triggered on `push:
         # branches: [live]` — but the push below uses the default

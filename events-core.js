@@ -120,13 +120,64 @@
     return s.trim();
   }
 
-  /** Truncate description to ~200 chars at word boundary */
+  /**
+   * Truncate a description to ~max chars at a word boundary — the card teaser on
+   * /events and the <meta description> of an event page. Cards themselves carry
+   * the full text since the detail pages exist; consumers shorten, the data doesn't.
+   */
   function truncateDesc(s, max) {
     if (max == null) max = 200;
     if (!s || s.length <= max) return s;
     var cut = s.slice(0, max);
     var last = cut.lastIndexOf(" ");
     return (last > 0 ? cut.slice(0, last) : cut) + " …";
+  }
+
+  /**
+   * Display helper: drop trailing lines that are nothing but #hashtags (the tag
+   * source, see buildTags) so the tags don't show twice — once as chips, once as
+   * a stray last paragraph. Data stays untouched; only renderers call this.
+   */
+  function stripTagLines(s) {
+    if (!s) return "";
+    var lines = s.split("\n");
+    while (lines.length && /^\s*(#[a-zA-Z0-9äöüÄÖÜß_-]+\s*)+$/.test(lines[lines.length - 1])) {
+      lines.pop();
+    }
+    while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
+    return lines.join("\n");
+  }
+
+  /** FNV-1a 32-bit over the UTF-16 code units — plain ES5, no crypto, same in Node and browser. */
+  function fnv1a32(str, offsetBasis) {
+    var h = offsetBasis >>> 0;
+    for (var i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      // h * 16777619 mod 2^32 without float drift
+      h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+    }
+    return ("00000000" + h.toString(16)).slice(-8);
+  }
+
+  /**
+   * Stable, reproducible per-occurrence id — the path of the event page (/e/<id>/).
+   * Keyed so that a one-off keeps its URL when it is moved (uid only), every
+   * occurrence of a series gets its own (uid + date), and a source without UIDs
+   * still gets a deterministic id from what identifies the occurrence for humans.
+   * Two FNV-1a lanes → 12 lowercase hex chars (~48 bits): a collision is a dead
+   * permanent URL, so 32 bits alone were too thin for an append-only archive.
+   * Derived, not registered on purpose: a lost events-archive.json must never
+   * change a single URL.
+   */
+  function eventId(e, cal) {
+    var key;
+    if (e.uid) {
+      key = e.recurring ? e.uid + "|" + e.date : e.uid;
+    } else {
+      var title = (e.title || "").toLowerCase().replace(/\s+/g, " ").trim();
+      key = (cal && cal.name ? cal.name : e.source || "") + "|" + e.date + "|" + (e.time || "") + "|" + title;
+    }
+    return (fnv1a32(key, 0x811c9dc5) + fnv1a32(key, 0x050c5d1f)).slice(0, 12);
   }
 
   /** ONE parsed ICS event → ONE card. Pure — no date filtering, no cap, no sort. */
@@ -140,13 +191,16 @@
     // Carry the parsed end through as local date/time strings so the iCal export
     // can emit a real DTEND. Empty when the source gave neither DTEND nor DURATION.
     var end = e.dtend || null;
+    var date = e.dtstart.getFullYear() + "-" + pad(e.dtstart.getMonth() + 1) + "-" + pad(e.dtstart.getDate());
+    var time = e.allDay ? "" : pad(e.dtstart.getHours()) + ":" + pad(e.dtstart.getMinutes());
     var card = {
+      id: eventId({ uid: e.uid, recurring: e.recurring, title: e.summary, date: date, time: time }, cal),
       title: e.summary,
       subtitle: "",
-      description: truncateDesc(e.description),
+      description: e.description || "",
       location: cleanLocation(e.location),
-      date: e.dtstart.getFullYear() + "-" + pad(e.dtstart.getMonth() + 1) + "-" + pad(e.dtstart.getDate()),
-      time: e.allDay ? "" : pad(e.dtstart.getHours()) + ":" + pad(e.dtstart.getMinutes()),
+      date: date,
+      time: time,
       endDate: end ? end.getFullYear() + "-" + pad(end.getMonth() + 1) + "-" + pad(end.getDate()) : "",
       endTime: end && !e.allDay ? pad(end.getHours()) + ":" + pad(end.getMinutes()) : "",
       tags: buildTags(e.summary, e.description, e.categories, cal.tags || []),
@@ -155,8 +209,10 @@
       uid: e.uid || "",
       calendarUrl: eventLink || cal.url,
     };
-    // Appended after the literal on purpose: eventUrl is optional and must stay
-    // the LAST key when present (JSON.stringify order in events-data.json).
+    // Appended after the literal on purpose: both are optional, and eventUrl must
+    // stay the LAST key when present (JSON.stringify order in events-data.json);
+    // `id` is the FIRST for the same reason — all pinned by the golden test.
+    if (e.recurring) card.recurring = true;
     if (eventLink) card.eventUrl = eventLink;
     return card;
   }
@@ -183,6 +239,29 @@
       .map(function (e) { return toCard(e, cal); });
   }
 
+  /** Runaway guard for the archive pass — a series cap of 200 (ics-core) times a
+   *  handful of series is fine, thousands would mean a broken export. */
+  var MAX_ALL_CARDS = 500;
+
+  /**
+   * Archive pipeline: every event the export still carries — past and future —
+   * minus internal ones, sorted, NO date filter and NO per-source cap. Feeds the
+   * event-page archive (sync-events.mjs mergeArchive). Warns and truncates instead
+   * of throwing: the sync must never die on data.
+   */
+  function toAllCards(icsEvents, cal) {
+    var all = icsEvents
+      .filter(function (e) { return !isInternal(e.summary); })
+      .sort(function (a, b) { return a.dtstart - b.dtstart; });
+    if (all.length > MAX_ALL_CARDS) {
+      if (typeof console !== "undefined" && console.warn) {
+        console.warn("[" + cal.name + "] archive pass: " + all.length + " events, keeping the latest " + MAX_ALL_CARDS);
+      }
+      all = all.slice(all.length - MAX_ALL_CARDS);
+    }
+    return all.map(function (e) { return toCard(e, cal); });
+  }
+
   return {
     isInternal: isInternal,
     guessType: guessType,
@@ -191,7 +270,12 @@
     buildTags: buildTags,
     cleanLocation: cleanLocation,
     truncateDesc: truncateDesc,
+    stripTagLines: stripTagLines,
+    fnv1a32: fnv1a32,
+    eventId: eventId,
     toCard: toCard,
     toCards: toCards,
+    toAllCards: toAllCards,
+    MAX_ALL_CARDS: MAX_ALL_CARDS,
   };
 });

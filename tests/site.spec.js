@@ -1208,12 +1208,133 @@ test.describe('Monochrome theme', () => {
     });
 });
 
+// ─── Event details: fold, deep link, own page, kiosk density ────────────────
+
+test.describe('Event details', () => {
+    const LONG = 'Erster Absatz mit genug Text, dass der Teaser bei zweihundert Zeichen '
+        + 'abgeschnitten werden muss und der Rest hinter dem Aufklapper verschwindet, '
+        + 'so wie es die echten Beschreibungen aus dem Kalender tun.\n\n'
+        + 'Zweiter Absatz: Vortrag 20:30 bis 21:15, danach Fragen.\n\n#talk #hardware';
+
+    test('a long description folds behind [mehr] and unfolds in place', async ({ page }) => {
+        const data = buildEventsData();
+        data.events[0].description = LONG;
+        await useEventsFixture(page, data);
+        await page.goto('/events.html');
+
+        const card = page.locator('.event-card').first();
+        const fold = card.locator('details.event-card__more');
+        await expect(fold).toHaveCount(1);
+        await expect(fold).not.toHaveAttribute('open', '');
+        await expect(card.locator('.event-card__teaser')).toBeVisible();
+        await expect(card.locator('.event-card__teaser')).toContainText('…');
+        await expect(card.locator('.event-card__desc--full')).toBeHidden();
+
+        await fold.locator('summary').click();
+        await expect(fold).toHaveAttribute('open', '');
+        await expect(card.locator('.event-card__teaser')).toBeHidden();
+        const full = card.locator('.event-card__desc--full');
+        await expect(full).toBeVisible();
+        await expect(full).toContainText('Zweiter Absatz');
+        // Paragraphs survive (data carries "\n\n", CSS renders it), the trailing
+        // hashtag line is the tag source, not prose — chips show it, the text not.
+        expect(await full.evaluate((el) => getComputedStyle(el).whiteSpace)).toBe('pre-line');
+        await expect(full).not.toContainText('#talk');
+
+        await fold.locator('summary').click();
+        await expect(fold).not.toHaveAttribute('open', '');
+        await expect(card.locator('.event-card__teaser')).toBeVisible();
+
+        // A short description needs no fold at all.
+        const second = page.locator('.event-card').nth(1);
+        await expect(second.locator('details.event-card__more')).toHaveCount(0);
+    });
+
+    test('a #ev- permalink into a later month lands on an open, unfolded card', async ({ page }) => {
+        const data = buildEventsData();
+        const target = data.events[3]; // +40d: always a later, collapsed month group
+        target.description = LONG;
+        await useEventsFixture(page, data);
+        const anchor = `ev-${target.date}-monatstreffen-orga`;
+        await page.goto(`/events.html#${anchor}`);
+
+        const card = page.locator(`#${anchor}`);
+        await expect(card).toBeInViewport();
+        await expect(page.locator('.events-month').filter({ has: card })).toHaveAttribute('open', '');
+        await expect(card.locator('details.event-card__more')).toHaveAttribute('open', '');
+        await expect(card.locator('.event-card__desc--full')).toBeVisible();
+    });
+
+    test('only primary-source cards link to their own page, and it exists', async ({ page }) => {
+        const data = buildEventsData();
+        await useEventsFixture(page, data);
+        await page.goto('/events.html');
+        await expect(page.locator('.event-card').first()).toBeVisible();
+
+        const own = page.locator(`#ev-${data.events[0].date}-hardware-hackingabend .event-action--details`);
+        await expect(own).toHaveAttribute('href', `e/${data.events[0].id}/`);
+        const foreign = page.locator(`#ev-${data.events[2].date}-offener-abend-datenburg`);
+        await expect(foreign).toBeVisible();
+        await expect(foreign.locator('.event-action--details')).toHaveCount(0);
+
+        // The page globalSetup generated from the same fixture: full chrome,
+        // rebased asset paths, the description as paragraphs.
+        await own.click();
+        await expect(page).toHaveURL(new RegExp(`/e/${data.events[0].id}/$`));
+        await expect(page.locator('h1')).toContainText('Hardware Hackingabend');
+        // The nav list is folded behind the menu button on a phone, so assert
+        // the chrome is there and wired (links rebased), not that it is open.
+        await expect(page.locator('header')).toBeVisible();
+        await expect(page.locator('header .nav__links a[href="../../events.html"]')).toHaveCount(1);
+        // A nested directory index used to normalize to "index.html" and light
+        // up the homepage's "/wir" link as the current page.
+        await expect(page.locator('header .nav__links a[aria-current]')).toHaveCount(0);
+        await expect(page.locator('footer')).toBeVisible();
+        const css = await page.locator('link[rel="stylesheet"]').getAttribute('href');
+        expect(css).toMatch(/^\.\.\/\.\.\/style\.css/);
+        await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+            'href', `https://bitcircus101.de/e/${data.events[0].id}/`
+        );
+        await expect(page.locator('a[href="event.ics"]')).toHaveCount(1);
+
+        // Archive index: past entries only, newest first, linking to their pages.
+        await page.goto('/archiv/');
+        await expect(page.locator('h1')).toContainText('rchiv');
+        const rows = page.locator('.archive a[href^="../e/"]');
+        expect(await rows.count()).toBeGreaterThanOrEqual(2);
+        await expect(rows.first()).toContainText('Vergangener Lötabend');
+        await expect(page.locator('.archive')).not.toContainText('Hardware Hackingabend');
+    });
+
+    test('kiosk info=full shows the whole description, info=short one line', async ({ page }) => {
+        // Gate on what the CSS sets (the clamp), never on font metrics.
+        const data = buildEventsData();
+        data.events[0].description = LONG;
+        await useEventsFixture(page, data);
+
+        await page.goto('/kiosk/?info=full');
+        const desc = page.locator('.kiosk-ev__desc').first();
+        await expect(desc).toBeVisible();
+        expect(await desc.evaluate((el) => getComputedStyle(el).webkitLineClamp)).toBe('none');
+
+        await page.goto('/kiosk/?info=short');
+        await expect(page.locator('.kiosk-ev__desc').first()).toBeVisible();
+        expect(await page.locator('.kiosk-ev__desc').first()
+            .evaluate((el) => getComputedStyle(el).webkitLineClamp)).toBe('1');
+    });
+});
+
 // ─── No Console Errors ───────────────────────────────────────────────────────
 
 test.describe('No JavaScript errors', () => {
+    // Generated by tests/global-setup.js from the events fixture (id = hash of
+    // the uid, so it is the same in every run).
+    const FIXTURE_EVENT_ID = buildEventsData().events[0].id;
     const pages = [
         ['/', 'Home'],
         ['/events.html', 'Events'],
+        [`/e/${FIXTURE_EVENT_ID}/`, 'Event detail'],
+        ['/archiv/', 'Archiv'],
         ['/support.html', 'Support'],
         ['/pinnwand.html', 'Pinnwand'],
         ['/raum-nutzen.html', 'Raum nutzen'],
@@ -1811,8 +1932,18 @@ test.describe('Internal links', () => {
         const checked = new Set();
         const broken = [];
 
+        // The events page renders its cards (with "→ details" links into the
+        // generated e/<id>/ pages) from the fixture, so the crawl sees the same
+        // ids globalSetup built — a real events-data.json in the checkout would
+        // point at pages that do not exist here. Wait for the cards: before,
+        // the link scan raced the render and never saw a card link at all.
+        await useEventsFixture(page);
+
         for (const p of pagesToCheck) {
             await page.goto(p);
+            if (p === '/events.html') {
+                await expect(page.locator('.event-card').first()).toBeVisible();
+            }
             const links = await page.locator('a[href]').evaluateAll((els) =>
                 els
                     .map((el) => el.getAttribute('href'))
