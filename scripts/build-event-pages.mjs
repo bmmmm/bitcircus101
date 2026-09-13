@@ -462,7 +462,7 @@ function sortKey(e) {
 export function renderArchiveIndex(entries, chrome, todayStr = berlinToday()) {
   const { assetVersion } = chrome;
   const past = (entries || [])
-    .filter((e) => e && e.id && e.date && e.date < todayStr && !e.cancelled)
+    .filter((e) => isRenderable(e) && e.date < todayStr && !e.cancelled)
     .sort((a, b) => (sortKey(a) < sortKey(b) ? 1 : sortKey(a) > sortKey(b) ? -1 : 0));
 
   const parts = [];
@@ -534,18 +534,27 @@ export function renderArchiveIndex(entries, chrome, todayStr = berlinToday()) {
  * archive index is written separately (it lives outside e/, and syncFeedsDir
  * owns every file in the directory it is given).
  */
+/** An entry the generator can turn into a page: usable id (it becomes a
+ *  directory name) and a YYYY-MM-DD date (it drives every date string). */
+export function isRenderable(entry) {
+  return !!entry && ID_RE.test(String(entry.id || "")) && /^\d{4}-\d{2}-\d{2}$/.test(String(entry.date || ""));
+}
+
 export function planPages(archive, chrome, todayStr = berlinToday()) {
   const entries = Object.values((archive && archive.events) || {});
   const files = [];
   for (const entry of entries) {
-    if (!entry || !ID_RE.test(String(entry.id || ""))) {
-      console.warn(`::warning::event-pages: skipping entry with unusable id ${JSON.stringify(entry && entry.id)}`);
+    if (!isRenderable(entry)) {
+      console.warn(`::warning::event-pages: skipping entry with unusable id/date ${JSON.stringify(entry && [entry.id, entry.date])}`);
       continue;
     }
     files.push({ path: `e/${entry.id}/index.html`, data: renderEventPage(entry, chrome, todayStr) });
     // DTSTAMP from firstSeen, not from now: a rebuild must not rewrite every
-    // ics on every run (syncFeedsDir only writes what changed).
-    files.push({ path: `e/${entry.id}/event.ics`, data: generateICS([entry], entry.firstSeen) });
+    // ics on every run (syncFeedsDir only writes what changed). A missing or
+    // unparsable firstSeen (hand-edited archive) falls back to now instead of
+    // throwing — this step must never fail the sync.
+    const stamp = Number.isFinite(Date.parse(entry.firstSeen)) ? entry.firstSeen : new Date().toISOString();
+    files.push({ path: `e/${entry.id}/event.ics`, data: generateICS([entry], stamp) });
   }
   files.sort((a, b) => (a.path < b.path ? -1 : a.path > b.path ? 1 : 0));
   return files;

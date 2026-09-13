@@ -126,8 +126,8 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
 | `events/feed.xml`, `events/ical.ics` | `sync-events.yml` | Every 30 minutes |
 | `feeds/` | `sync-events.yml` | Every 30 minutes |
 | `events-archive.json` | `sync-events.yml` | Every 30 minutes (append-only) |
-| `e/<id>/index.html`, `e/<id>/event.ics` | `sync-events.yml` → `build-event-pages.mjs` | Every 30 minutes |
-| `archiv/index.html` | `sync-events.yml` → `build-event-pages.mjs` | Every 30 minutes |
+| `e/<id>/index.html`, `e/<id>/event.ics` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy (sitemap) |
+| `archiv/index.html` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy |
 | `sitemap.xml` | `deploy.yml` | Every deploy (push to `main`) |
 
 - `ical.ics` is the aggregator-facing iCal export with real `DTSTART`/`DTEND`

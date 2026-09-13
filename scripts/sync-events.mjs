@@ -740,7 +740,12 @@ function mergeArchive(prevArchive, results, todayStr, nowISO) {
         continue;
       }
       seen.add(c.id);
-      const entry = { ...c, firstSeen: (prev && prev.firstSeen) || c.firstSeen || nowISO, lastSeen: todayStr };
+      // lastSeen only moves for upcoming entries: the export re-lists all of
+      // history every run, and bumping ~200 past entries would rewrite the
+      // whole file once a day for nothing (only cancellation reads it, and
+      // only for upcoming dates).
+      const lastSeen = c.date >= todayStr || !(prev && prev.lastSeen) ? todayStr : prev.lastSeen;
+      const entry = { ...c, firstSeen: (prev && prev.firstSeen) || c.firstSeen || nowISO, lastSeen };
       delete entry.cancelled;
       events[c.id] = entry;
       admitted++;
@@ -977,8 +982,9 @@ async function main() {
   try {
     const prevArchive = loadArchive();
     const prevBytes = serializeArchive(prevArchive);
-    const now = new Date();
-    const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    // Berlin-pinned like build-event-pages.mjs berlinToday(): CI sets TZ, a
+    // hand-run sync elsewhere must not decide lastSeen/cancelled a day off.
+    const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date());
     const archive = mergeArchive(prevArchive, results, todayStr, nowISO);
     const bytes = serializeArchive(archive);
     if (bytes !== prevBytes) {

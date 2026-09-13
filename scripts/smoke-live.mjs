@@ -72,24 +72,13 @@ function samplePages(locs, max) {
         .map((u, i) => ({ u, d: pathDepth(u), i }))
         .sort((a, b) => a.d - b.d || a.i - b.i);
 
-    // Grow the shallow bucket by whole depth levels (shallowest first) so the
-    // cap never splits same-depth pages between "always checked" and
-    // "sampled" — e.g. a hundred /e/<id>/ pages never eat into the slots
-    // meant for the handful of real top-level pages.
-    let shallowEnd = 0;
-    while (shallowEnd < sorted.length) {
-        let groupEnd = shallowEnd;
-        while (groupEnd < sorted.length && sorted[groupEnd].d === sorted[shallowEnd].d) groupEnd++;
-        if (groupEnd > shallowCap && shallowEnd > 0) break;
-        shallowEnd = groupEnd;
-        if (shallowEnd >= shallowCap) break;
-    }
-    // Still respect the cap even in the degenerate case where a single depth
-    // level alone exceeds it.
-    if (shallowEnd > shallowCap) shallowEnd = shallowCap;
-
-    const shallow = sorted.slice(0, shallowEnd);
-    const deep = sorted.slice(shallowEnd);
+    // "Shallow" is the top level of the site (/, /events, /archiv/, …): those
+    // are always checked, capped at shallowCap in sitemap order so the gate
+    // degrades to "the first 20 top-level pages", never to "none of them".
+    // Everything nested deeper (/e/<id>/ and whatever comes next) is only
+    // sampled, so a hundred event pages can never eat a top-level slot.
+    const shallow = sorted.filter((x) => x.d <= 1).slice(0, shallowCap);
+    const deep = sorted.filter((x) => x.d > 1);
 
     return [...shallow, ...pickSpread(deep, deepCap)].map((x) => x.u);
 }

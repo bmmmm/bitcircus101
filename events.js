@@ -468,7 +468,8 @@
             html += '<details class="event-card__more">' +
               '<summary class="event-card__desc">' +
               '<span class="event-card__teaser">' + esc(teaser) + "</span>" +
-              '<span class="event-card__more-label" aria-hidden="true"></span>' +
+              '<span class="event-card__more-label">' +
+              '<span class="sr-only">Beschreibung ein- oder ausklappen</span></span>' +
               "</summary>" +
               '<div class="event-card__desc event-card__desc--full">' + esc(text) + "</div>" +
               "</details>";

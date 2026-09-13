@@ -8,7 +8,7 @@
 
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
-import { mkdtempSync, writeFileSync, readFileSync, existsSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -2708,13 +2708,21 @@ describe("loadArchive", () => {
   it("returns an empty archive when the file is missing", () => {
     const dir = mkdtempSync(join(tmpdir(), "bc101-archive-"));
     const missing = join(dir, "does-not-exist.json");
-    assert.deepEqual(loadArchive(missing), { version: 1, events: {} });
+    try {
+      assert.deepEqual(loadArchive(missing), { version: 1, events: {} });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it("throws, naming the file, when the JSON is invalid", () => {
     const dir = mkdtempSync(join(tmpdir(), "bc101-archive-"));
     const file = join(dir, "events-archive.json");
     writeFileSync(file, "{ not valid json");
-    assert.throws(() => loadArchive(file), (err) => err.message.includes(file));
+    try {
+      assert.throws(() => loadArchive(file), (err) => err.message.includes(file));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
