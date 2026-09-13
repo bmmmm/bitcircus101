@@ -72,6 +72,11 @@ more are tooling-only:
   the JSON and runs `pnpm run finanz:validate`). Whole euros. After a change:
   `pnpm run build:lite-finanz`, commit `lite/index.html`.
 - `jobs.json` — gate is `pnpm run check:jobs`; expiry only warns, never errors.
+- `events-archive.json`, `e/`, `archiv/` — live-only, written by the sync and
+  `scripts/build-event-pages.mjs` (template: the checkout's `events.html`, so
+  keep its first `<header>`/`<footer>` blocks intact — `tests/event-pages.spec.mjs`
+  renders against the real file). Try it locally with a fixture:
+  `pnpm run build:event-pages <archive.json>`; the output is git-ignored.
 
 **Never run `scripts/sync-events.mjs` to try a calendar link out** — it
 overwrites the feeds *and* rewrites the JSON-LD in the tracked `events.html`.

@@ -8,6 +8,7 @@
     "build:layout": "node scripts/inject-layout.mjs",
     "build:logos": "node scripts/build-logo-slider.mjs",
     "build:lite-events": "node scripts/build-lite-events.mjs",
+    "build:event-pages": "node scripts/build-event-pages.mjs",
     "build:lite-finanz": "node scripts/build-lite-finanz.mjs",
     "check:calendars": "node scripts/check-calendars.mjs",
     "check:jobs": "node scripts/check-jobs.mjs",

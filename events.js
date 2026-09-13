@@ -456,8 +456,25 @@
         if (e.subtitle) {
           html += '<p class="event-card__subtitle">' + esc(e.subtitle) + "</p>";
         }
-        if (e.description) {
-          html += '<p class="event-card__desc">' + esc(e.description) + "</p>";
+        // Full text lives in the card since the detail pages exist; the list shows
+        // a teaser and folds the rest into a native <details> (no state to keep,
+        // a #ev-… deep link opens it, see the hash block below). Trailing
+        // hashtag-only lines are the tag source, not prose — hidden here.
+        var core = window.EventsCore;
+        var text = core ? core.stripTagLines(e.description) : (e.description || "");
+        if (text) {
+          var teaser = core ? core.truncateDesc(text, 200) : text;
+          if (teaser !== text) {
+            html += '<details class="event-card__more">' +
+              '<summary class="event-card__desc">' +
+              '<span class="event-card__teaser">' + esc(teaser) + "</span>" +
+              '<span class="event-card__more-label" aria-hidden="true"></span>' +
+              "</summary>" +
+              '<div class="event-card__desc event-card__desc--full">' + esc(text) + "</div>" +
+              "</details>";
+          } else {
+            html += '<p class="event-card__desc event-card__desc--full">' + esc(text) + "</p>";
+          }
         }
         if (e.location) {
           var osmLoc = encodeURIComponent(e.location);
@@ -491,6 +508,14 @@
         html += '<button class="event-action event-action--link" ' +
           'data-href="#' + anchor + '" title="Link kopieren">' +
           '\u2190 link</button>';
+        // Own page with the full text \u2014 only the primary (rss:true) sources get
+        // one (sync-events.mjs mergeArchive), which is what isBitcircusEvent
+        // distinguishes. Relative directory href: serves locally and live alike.
+        if (e.id && isBitcircusEvent(e)) {
+          html += '<a class="event-action event-action--details" href="e/' +
+            esc(e.id) + '/" title="Alle Details auf eigener Seite">' +
+            '\u2192 details</a>';
+        }
         html += '<a class="event-action event-action--cal" href="' +
           esc(calHref) +
           '" target="_blank" rel="noopener noreferrer" title="' + calTitle + '">' +
@@ -537,10 +562,22 @@
       });
     });
 
-    // Scroll to anchor if URL has hash
+    // Scroll to anchor if URL has hash. A permalink must land on an OPEN card:
+    // the month group is a <details> that only starts open for the current
+    // month, and the description fold is one too — open every <details> on the
+    // way up plus the card's own before measuring where to scroll.
     if (window.location.hash) {
       var target = document.getElementById(window.location.hash.slice(1));
-      if (target) target.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (target) {
+        var node = target;
+        while (node && node !== el) {
+          if (node.tagName === "DETAILS") node.open = true;
+          node = node.parentNode;
+        }
+        var fold = target.querySelector(".event-card__more");
+        if (fold) fold.open = true;
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     }
   }
 
