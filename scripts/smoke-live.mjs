@@ -32,6 +32,68 @@ const getRaw = (url) => fetch(url, { redirect: "manual", signal: AbortSignal.tim
 // Upper bound on page fetches so a runaway sitemap cannot stall the deploy.
 const MAX_PAGE_CHECKS = 25;
 
+// With hundreds of /e/<id>/ pages once the archive tree ships, a plain prefix
+// slice of the sitemap would burn its whole budget on the first alphabetical
+// (or sitemap-order) run of event pages and never re-check the shallow pages
+// (/, /events, /support, …) that matter most. Sample instead: depth-sort so
+// shallow pages always win a slot, then spend a small fixed slice of the
+// budget on a deterministic spread of the deeper pages so that tree still
+// gets *some* coverage every run.
+function pathDepth(url) {
+    try {
+        return new URL(url).pathname.split("/").filter(Boolean).length;
+    } catch {
+        return 0;
+    }
+}
+
+// Pick up to `n` entries from `arr`, spread evenly across it (first, middle,
+// ..., last) rather than just the head — so repeated runs sample different
+// parts of a long, stable list about as well as a single deterministic pass
+// can. Deterministic: same input always yields the same picks.
+function pickSpread(arr, n) {
+    if (n <= 0 || arr.length === 0) return [];
+    if (arr.length <= n) return arr.slice();
+    if (n === 1) return [arr[0]];
+    const picked = [];
+    for (let i = 0; i < n; i++) {
+        picked.push(arr[Math.round((i * (arr.length - 1)) / (n - 1))]);
+    }
+    return [...new Set(picked)];
+}
+
+// Pure so it's unit-testable without spinning up the fake server: given the
+// full `<loc>` list and the overall cap, returns the URLs to actually fetch.
+function samplePages(locs, max) {
+    const shallowCap = Math.min(20, max);
+    const deepCap = Math.max(max - shallowCap, 0);
+
+    const sorted = locs
+        .map((u, i) => ({ u, d: pathDepth(u), i }))
+        .sort((a, b) => a.d - b.d || a.i - b.i);
+
+    // Grow the shallow bucket by whole depth levels (shallowest first) so the
+    // cap never splits same-depth pages between "always checked" and
+    // "sampled" — e.g. a hundred /e/<id>/ pages never eat into the slots
+    // meant for the handful of real top-level pages.
+    let shallowEnd = 0;
+    while (shallowEnd < sorted.length) {
+        let groupEnd = shallowEnd;
+        while (groupEnd < sorted.length && sorted[groupEnd].d === sorted[shallowEnd].d) groupEnd++;
+        if (groupEnd > shallowCap && shallowEnd > 0) break;
+        shallowEnd = groupEnd;
+        if (shallowEnd >= shallowCap) break;
+    }
+    // Still respect the cap even in the degenerate case where a single depth
+    // level alone exceeds it.
+    if (shallowEnd > shallowCap) shallowEnd = shallowCap;
+
+    const shallow = sorted.slice(0, shallowEnd);
+    const deep = sorted.slice(shallowEnd);
+
+    return [...shallow, ...pickSpread(deep, deepCap)].map((x) => x.u);
+}
+
 function fail(msg) {
     console.error(`smoke: FAILED — ${msg}`);
     process.exit(1);
@@ -135,9 +197,9 @@ try {
     const bogus = locs.filter((u) => u.endsWith(".html") || u.includes("/includes/"));
     if (bogus.length) fail(`sitemap lists non-canonical or build-only paths: ${bogus.join(", ")}`);
 
-    const checked = locs.slice(0, MAX_PAGE_CHECKS);
+    const checked = samplePages(locs, MAX_PAGE_CHECKS);
     if (checked.length < locs.length) {
-        console.error(`smoke: sitemap has ${locs.length} entries, checking the first ${checked.length}`);
+        console.error(`smoke: sitemap has ${locs.length} entries, checking a sample of ${checked.length}`);
     }
 
     const bad = (
