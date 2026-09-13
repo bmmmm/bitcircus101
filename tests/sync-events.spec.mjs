@@ -8,7 +8,7 @@
 
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
-import { mkdtempSync, writeFileSync, readFileSync, existsSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, existsSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -16,10 +16,18 @@ import {
   applyFilter, buildTags, toCards,
   escXml, toRFC822, generateRSS, generateICS,
   slugifyTag, buildFeedPlan, syncFeedsDir, MAX_TAG_FEEDS, FEED_RETENTION_DAYS,
-  eventSlot, eventGuid,
+  eventSlot, eventGuid, eventPageUrl,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
-  aggregate, eventAnchor,
+  aggregate, dedupeCards, eventAnchor, eventId, toAllCards,
+  loadArchive, mergeArchive, serializeArchive,
+  ARCHIVE_MIN_DATE, MAX_ARCHIVE_ENTRIES, CANCEL_HORIZON_DAYS, CANCEL_STORM,
 } from "../scripts/sync-events.mjs";
+// toCard, stripTagLines and MAX_ALL_CARDS are card-shaping internals that live in
+// events-core.js and aren't re-exported from sync-events.mjs (only the pipeline
+// entry points eventId/toAllCards are) — imported the same way sync-events.mjs
+// itself imports them.
+import EventsCore from "../events-core.js";
+const { toCard, stripTagLines, MAX_ALL_CARDS } = EventsCore;
 
 // ── parseDate ─────────────────────────────────────────────────────────────
 
@@ -556,7 +564,7 @@ describe("parseICS", () => {
     ].join("\r\n");
     const events = parseICS(ics);
     assert.equal(events[0].summary, "Hello, World");
-    assert.equal(events[0].description, "Line1 Line2;end");
+    assert.equal(events[0].description, "Line1\nLine2;end");
   });
 });
 
@@ -1411,6 +1419,7 @@ describe("card pipeline — golden output", () => {
 
   const GOLDEN_CARDS_BUILTIN = `[
   {
+    "id": "e0c1cde9b67a",
     "title": "Crowd Gaming",
     "subtitle": "",
     "description": "Wir spielen Retro-Spiele und puzzeln den ganzen Abend.",
@@ -1432,6 +1441,7 @@ describe("card pipeline — golden output", () => {
     "eventUrl": "https://example.org/programm/crowd-gaming"
   },
   {
+    "id": "c219e25cd208",
     "title": "Tag der offenen Tür",
     "subtitle": "",
     "description": "Komm vorbei!",
@@ -1449,6 +1459,7 @@ describe("card pipeline — golden output", () => {
     "calendarUrl": "https://nc.example.org/apps/calendar/p/abc"
   },
   {
+    "id": "15107eb32c8b",
     "title": "Löt-Workshop für Einsteiger:innen und Fortgeschrittene aller Art",
     "subtitle": "",
     "description": "Hands-on Abend. #löten #hardware Mit Lötkolben und Platinen.",
@@ -1468,9 +1479,10 @@ describe("card pipeline — golden output", () => {
     "calendarUrl": "https://nc.example.org/apps/calendar/p/abc"
   },
   {
+    "id": "6867f3e2c39f",
     "title": "linkup",
     "subtitle": "",
-    "description": "Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer …",
+    "description": "Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer etwas zu entdecken und jemanden zum Fachsimpeln.",
     "location": "",
     "date": "2099-06-11",
     "time": "19:00",
@@ -1488,6 +1500,7 @@ describe("card pipeline — golden output", () => {
 
   const GOLDEN_CARDS_SINGLE = `[
   {
+    "id": "e0c1cde9b67a",
     "title": "Crowd Gaming",
     "subtitle": "",
     "description": "Wir spielen Retro-Spiele und puzzeln den ganzen Abend.",
@@ -1511,6 +1524,7 @@ describe("card pipeline — golden output", () => {
     "eventUrl": "https://example.org/programm/crowd-gaming"
   },
   {
+    "id": "00cd94dc4437",
     "title": "Tag der offenen Tür",
     "subtitle": "",
     "description": "Komm vorbei!",
@@ -1534,6 +1548,7 @@ describe("card pipeline — golden output", () => {
 
   const GOLDEN_CARDS_FILTERED = `[
   {
+    "id": "e0c1cde9b67a",
     "title": "Crowd Gaming",
     "subtitle": "",
     "description": "Wir spielen Retro-Spiele und puzzeln den ganzen Abend.",
@@ -1555,6 +1570,7 @@ describe("card pipeline — golden output", () => {
     "eventUrl": "https://example.org/programm/crowd-gaming"
   },
   {
+    "id": "42f5b30f24f6",
     "title": "Tag der offenen Tür",
     "subtitle": "",
     "description": "Komm vorbei!",
@@ -1573,6 +1589,7 @@ describe("card pipeline — golden output", () => {
     "eventUrl": "https://extern.example.org/programm"
   },
   {
+    "id": "15107eb32c8b",
     "title": "Löt-Workshop für Einsteiger:innen und Fortgeschrittene aller Art",
     "subtitle": "",
     "description": "Hands-on Abend. #löten #hardware Mit Lötkolben und Platinen.",
@@ -1593,9 +1610,10 @@ describe("card pipeline — golden output", () => {
     "eventUrl": "https://extern.example.org/programm"
   },
   {
+    "id": "6867f3e2c39f",
     "title": "linkup",
     "subtitle": "",
-    "description": "Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer …",
+    "description": "Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer etwas zu entdecken und jemanden zum Fachsimpeln.",
     "location": "",
     "date": "2099-06-11",
     "time": "19:00",
@@ -1615,6 +1633,7 @@ describe("card pipeline — golden output", () => {
   const GOLDEN_AGGREGATE = `{
   "events": [
     {
+      "id": "e0c1cde9b67a",
       "title": "Crowd Gaming",
       "subtitle": "",
       "description": "Wir spielen Retro-Spiele und puzzeln den ganzen Abend.",
@@ -1637,6 +1656,7 @@ describe("card pipeline — golden output", () => {
       "firstSeen": "2026-01-15T11:00:00.000Z"
     },
     {
+      "id": "c219e25cd208",
       "title": "Tag der offenen Tür",
       "subtitle": "",
       "description": "Komm vorbei!",
@@ -1655,6 +1675,7 @@ describe("card pipeline — golden output", () => {
       "firstSeen": "2026-01-15T11:00:00.000Z"
     },
     {
+      "id": "15107eb32c8b",
       "title": "Löt-Workshop für Einsteiger:innen und Fortgeschrittene aller Art",
       "subtitle": "",
       "description": "Hands-on Abend. #löten #hardware Mit Lötkolben und Platinen.",
@@ -1675,9 +1696,10 @@ describe("card pipeline — golden output", () => {
       "firstSeen": "2026-01-15T11:00:00.000Z"
     },
     {
+      "id": "6867f3e2c39f",
       "title": "linkup",
       "subtitle": "",
-      "description": "Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer …",
+      "description": "Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer etwas zu entdecken und jemanden zum Fachsimpeln.",
       "location": "",
       "date": "2099-06-11",
       "time": "19:00",
@@ -1775,7 +1797,8 @@ describe("card pipeline — golden output", () => {
     "SUMMARY:linkup",
     "DESCRIPTION:Der klassische linkup Abend im Space: Leute treffen\\, Projekte ",
     " zeigen\\, an Ideen schrauben und bei Mate über Technik reden. Bring dein a",
-    " ktuelles Projekt mit oder komm einfach so vorbei — es gibt immer …",
+    " ktuelles Projekt mit oder komm einfach so vorbei — es gibt immer etwas z",
+    " u entdecken und jemanden zum Fachsimpeln.",
     "URL:https://nc.example.org/apps/calendar/p/abc",
     "CATEGORIES:meetup",
     "END:VEVENT",
@@ -1795,7 +1818,7 @@ describe("card pipeline — golden output", () => {
 
     <item>
       <title>[2099-03-20 20:00] Crowd Gaming @ Heerstraße 101 53111 Bonn</title>
-      <link>https://bitcircus101.de/events#ev-2099-03-20-crowd-gaming</link>
+      <link>https://bitcircus101.de/e/e0c1cde9b67a/</link>
       <description>Wir spielen Retro-Spiele und puzzeln den ganzen Abend.</description>
       <category>#retro-gaming</category>
       <category>#chaos</category>
@@ -1806,7 +1829,7 @@ describe("card pipeline — golden output", () => {
     </item>
     <item>
       <title>[2099-04-10] Tag der offenen Tür</title>
-      <link>https://bitcircus101.de/events#ev-2099-04-10-tag-der-offenen-tür</link>
+      <link>https://bitcircus101.de/e/c219e25cd208/</link>
       <description>Komm vorbei!</description>
       <category>#offener-abend</category>
       <pubDate>Thu, 15 Jan 2026 11:00:00 +0000</pubDate>
@@ -1814,7 +1837,7 @@ describe("card pipeline — golden output", () => {
     </item>
     <item>
       <title>[2099-05-15 18:00] Löt-Workshop für Einsteiger:innen und Fortgeschrittene aller Art</title>
-      <link>https://bitcircus101.de/events#ev-2099-05-15-löt-workshop-für-einsteiger-innen-und-fo</link>
+      <link>https://bitcircus101.de/e/15107eb32c8b/</link>
       <description>Hands-on Abend. #löten #hardware Mit Lötkolben und Platinen.</description>
       <category>#löten</category>
       <category>#hardware</category>
@@ -1824,8 +1847,8 @@ describe("card pipeline — golden output", () => {
     </item>
     <item>
       <title>[2099-06-11 19:00] linkup</title>
-      <link>https://bitcircus101.de/events#ev-2099-06-11-linkup</link>
-      <description>Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer …</description>
+      <link>https://bitcircus101.de/e/6867f3e2c39f/</link>
+      <description>Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer etwas zu entdecken und jemanden zum Fachsimpeln.</description>
       <category>#meetup</category>
       <pubDate>Thu, 15 Jan 2026 11:00:00 +0000</pubDate>
       <guid isPermaLink="false">evt-4@example.com-20990611T1900</guid>
@@ -2140,5 +2163,566 @@ describe("syncFeedsDir", () => {
     const base = mkdtempSync(join(tmpdir(), "bc101-feeds-"));
     const r = syncFeedsDir(join(base, "feeds"), []);
     assert.deepEqual(r, { written: 0, removed: 0 });
+  });
+});
+
+// ── clean — keepNewlines ─────────────────────────────────────────────────
+//
+// The `clean` describe above (line ~563) covers the default (flatten-to-space)
+// behavior and stays untouched; this one covers the keepNewlines=true path used
+// for DESCRIPTION.
+
+describe("clean — keepNewlines", () => {
+  it("turns \\n and \\N into a real newline when keepNewlines is set", () => {
+    assert.equal(clean("a\\nb", true), "a\nb");
+    assert.equal(clean("a\\Nb", true), "a\nb");
+  });
+
+  it("collapses 3+ consecutive newlines down to 2", () => {
+    assert.equal(clean("a\n\n\n\nb", true), "a\n\nb");
+  });
+
+  it("drops trailing spaces/tabs before a newline", () => {
+    assert.equal(clean("a   \nb", true), "a\nb");
+    assert.equal(clean("a\t\t\nb", true), "a\nb");
+  });
+
+  it("keeps a literal backslash untouched, never mistaken for a newline marker", () => {
+    // \\ is consumed atomically with its own escaped char before "n" is ever
+    // looked at — same guarantee as the default-mode case above, now checked
+    // with keepNewlines on too.
+    assert.equal(clean("C:\\\\nope", true), "C:\\nope");
+  });
+
+  it("still flattens to a single space without keepNewlines", () => {
+    assert.equal(clean("a\\nb"), "a b");
+  });
+
+  it("via parseICS: DESCRIPTION with a blank line yields two paragraphs", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART:20260601T190000",
+      "SUMMARY:X",
+      "DESCRIPTION:Paragraph one\\n\\nParagraph two",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    assert.equal(parseICS(ics)[0].description, "Paragraph one\n\nParagraph two");
+  });
+
+  it("via parseICS: SUMMARY with \\n collapses to a space (single-line field)", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART:20260601T190000",
+      "SUMMARY:Line one\\nLine two",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    assert.equal(parseICS(ics)[0].summary, "Line one Line two");
+  });
+});
+
+// ── parseICS — recurring flag ────────────────────────────────────────────
+
+describe("parseICS — recurring flag", () => {
+  const wrap = (...body) =>
+    ["BEGIN:VCALENDAR", "BEGIN:VEVENT", ...body, "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+
+  it("marks every RRULE instance as recurring", () => {
+    const events = parseICS(wrap(
+      "DTSTART:20260105T190000", "RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=3", "SUMMARY:Weekly"
+    ));
+    assert.equal(events.length, 3);
+    for (const e of events) assert.equal(e.recurring, true);
+  });
+
+  it("leaves a plain (non-recurring) event without a recurring key at all", () => {
+    const events = parseICS(wrap("DTSTART:20260105T190000", "SUMMARY:OneOff"));
+    assert.equal(events.length, 1);
+    assert.equal(Object.prototype.hasOwnProperty.call(events[0], "recurring"), false);
+  });
+});
+
+// ── eventId ───────────────────────────────────────────────────────────────
+
+describe("eventId", () => {
+  it("is deterministic for identical input", () => {
+    const cal = { name: "Cal" };
+    const input = { title: "Same", date: "2026-01-01", time: "20:00" };
+    assert.equal(eventId(input, cal), eventId({ ...input }, cal));
+  });
+
+  it("returns 12 lowercase hex characters", () => {
+    assert.match(eventId({ uid: "x@y" }, { name: "Cal" }), /^[0-9a-f]{12}$/);
+  });
+
+  it("keys a uid-bearing one-off only by uid — date/time/title never matter", () => {
+    const cal = { name: "Cal" };
+    const before = eventId({ uid: "stable@x", date: "2026-01-01", time: "19:00", title: "Old Title" }, cal);
+    const after = eventId({ uid: "stable@x", date: "2099-12-31", time: "23:59", title: "New Title" }, cal);
+    assert.equal(before, after, "a moved one-off must keep its id");
+  });
+
+  it("folds the date into the key for recurring instances (same uid)", () => {
+    const cal = { name: "Cal" };
+    const occ1a = eventId({ uid: "series@x", recurring: true, date: "2026-01-05" }, cal);
+    const occ1b = eventId({ uid: "series@x", recurring: true, date: "2026-01-05" }, cal);
+    const occ2 = eventId({ uid: "series@x", recurring: true, date: "2026-01-12" }, cal);
+    assert.equal(occ1a, occ1b, "same occurrence is stable");
+    assert.notEqual(occ1a, occ2, "different occurrences of the same series differ");
+  });
+
+  it("keys a uid-less event by source|date|time|normalized title (case/whitespace-insensitive)", () => {
+    const cal = { name: "Cal A" };
+    const a = eventId({ title: "Hello   World", date: "2026-01-01", time: "20:00" }, cal);
+    const b = eventId({ title: "hello world", date: "2026-01-01", time: "20:00" }, cal);
+    assert.equal(a, b);
+  });
+
+  it("differentiates uid-less events by time and by source", () => {
+    const byTime1 = eventId({ title: "Hello", date: "2026-01-01", time: "20:00" }, { name: "Cal A" });
+    const byTime2 = eventId({ title: "Hello", date: "2026-01-01", time: "21:00" }, { name: "Cal A" });
+    assert.notEqual(byTime1, byTime2);
+
+    const bySource1 = eventId({ title: "Hello", date: "2026-01-01", time: "20:00" }, { name: "Cal A" });
+    const bySource2 = eventId({ title: "Hello", date: "2026-01-01", time: "20:00" }, { name: "Cal B" });
+    assert.notEqual(bySource1, bySource2);
+  });
+
+  it("has no collisions across 20,000 generated keys (uid and uid-less mixes)", () => {
+    const cal = { name: "Cal" };
+    const ids = new Set();
+    for (let i = 0; i < 10000; i++) {
+      ids.add(eventId({ uid: `uid-${i}@example.com` }, cal));
+    }
+    for (let i = 0; i < 10000; i++) {
+      ids.add(eventId({
+        title: `Event number ${i}`,
+        date: `2026-01-${String((i % 28) + 1).padStart(2, "0")}`,
+        time: "20:00",
+      }, cal));
+    }
+    assert.equal(ids.size, 20000);
+  });
+
+  it("orders toCard output with id first and eventUrl last; recurring only when set", () => {
+    const mkParsedEvent = (over = {}) => ({
+      uid: "evt@x", url: "", summary: "Sample", description: "", location: "",
+      categories: "", allDay: false, dtstart: new Date(2026, 5, 1, 20, 0), dtend: null,
+      ...over,
+    });
+    const cal = { name: "X", url: "https://x.example", type: "ics-single" };
+
+    const withLink = toCard(mkParsedEvent({ url: "https://x.example/e" }), cal);
+    const keys = Object.keys(withLink);
+    assert.equal(keys[0], "id");
+    assert.equal(keys[keys.length - 1], "eventUrl");
+    assert.equal("recurring" in withLink, false);
+
+    const recurringCard = toCard(mkParsedEvent({ recurring: true, url: "https://x.example/e" }), cal);
+    const rKeys = Object.keys(recurringCard);
+    assert.equal(rKeys[0], "id");
+    assert.equal(rKeys[rKeys.length - 1], "eventUrl");
+    assert.equal(recurringCard.recurring, true);
+
+    const noLink = toCard(mkParsedEvent({ url: "" }), { name: "X", url: "https://x.example" });
+    assert.equal("eventUrl" in noLink, false);
+    assert.equal(Object.keys(noLink)[0], "id");
+  });
+});
+
+// ── stripTagLines ─────────────────────────────────────────────────────────
+
+describe("stripTagLines", () => {
+  it("removes a single trailing hashtag-only line", () => {
+    assert.equal(stripTagLines("Text here\n#workshop"), "Text here");
+  });
+
+  it("removes several trailing hashtag-only lines", () => {
+    assert.equal(stripTagLines("Text here\n#workshop #hardware\n#chaos"), "Text here");
+  });
+
+  it("keeps an inline hashtag that's part of a text line", () => {
+    assert.equal(stripTagLines("Bring your #laptop please"), "Bring your #laptop please");
+  });
+
+  it("returns an empty string for empty or undefined input", () => {
+    assert.equal(stripTagLines(""), "");
+    assert.equal(stripTagLines(undefined), "");
+  });
+});
+
+// ── toAllCards ────────────────────────────────────────────────────────────
+
+describe("toAllCards", () => {
+  const mkIcsEvent = (over = {}) => ({
+    uid: "", url: "", summary: "Event", description: "", location: "",
+    categories: "", allDay: false, dtstart: new Date(2020, 0, 1, 20, 0), dtend: null,
+    ...over,
+  });
+  const cal = { name: "X", url: "https://x.example" };
+
+  it("keeps past events too, with no 30-item cap (build 40)", () => {
+    const events = Array.from({ length: 40 }, (_, i) =>
+      mkIcsEvent({ uid: `e${i}`, dtstart: new Date(2020, 0, i + 1, 20, 0) })
+    );
+    assert.equal(toAllCards(events, cal).length, 40);
+  });
+
+  it("drops internal/blocker events", () => {
+    const events = [
+      mkIcsEvent({ uid: "a", summary: "Blocker: Privat gebucht" }),
+      mkIcsEvent({ uid: "b", summary: "Normal Event" }),
+    ];
+    const cards = toAllCards(events, cal);
+    assert.equal(cards.length, 1);
+    assert.equal(cards[0].title, "Normal Event");
+  });
+
+  it("sorts the output by start date", () => {
+    const events = [
+      mkIcsEvent({ uid: "c", dtstart: new Date(2026, 5, 1) }),
+      mkIcsEvent({ uid: "a", dtstart: new Date(2020, 0, 1) }),
+      mkIcsEvent({ uid: "b", dtstart: new Date(2023, 2, 1) }),
+    ];
+    assert.deepEqual(toAllCards(events, cal).map((c) => c.uid), ["a", "b", "c"]);
+  });
+
+  it("warns and keeps only the latest 500 when the export exceeds MAX_ALL_CARDS", (t) => {
+    const warnSpy = t.mock.method(console, "warn", () => {});
+    const events = Array.from({ length: MAX_ALL_CARDS + 1 }, (_, i) =>
+      mkIcsEvent({ uid: `e${i}`, dtstart: new Date(2020, 0, 1 + i, 20, 0) })
+    );
+    const cards = toAllCards(events, cal);
+    assert.equal(cards.length, MAX_ALL_CARDS);
+    assert.equal(warnSpy.mock.calls.length, 1);
+    assert.ok(!cards.some((c) => c.uid === "e0"), "the earliest event must be dropped");
+    assert.ok(cards.some((c) => c.uid === `e${MAX_ALL_CARDS}`), "the latest event must survive");
+  });
+});
+
+// ── dedupeCards ───────────────────────────────────────────────────────────
+
+describe("dedupeCards", () => {
+  const card = (over) => ({ uid: "", title: "T", date: "2026-07-01", time: "19:00", source: "A", ...over });
+
+  it("collapses an exact uid+slot repeat into one card", () => {
+    const cards = [card({ uid: "x@y" }), card({ uid: "x@y" })];
+    assert.equal(dedupeCards(cards).length, 1);
+  });
+
+  it("keeps two different-uid cards sharing the same slot", () => {
+    const cards = [card({ uid: "a@x" }), card({ uid: "b@x" })];
+    assert.equal(dedupeCards(cards).length, 2);
+  });
+
+  it("drops a uid-less duplicate of an already-kept title+slot", () => {
+    const cards = [card({ uid: "a@x" }), card({ uid: "" })];
+    const result = dedupeCards(cards);
+    assert.equal(result.length, 1);
+    assert.equal(result[0].uid, "a@x");
+  });
+
+  it("preserves original order among kept cards", () => {
+    const cards = [
+      card({ uid: "a@x", title: "First", date: "2026-07-01" }),
+      card({ uid: "b@x", title: "Second", date: "2026-07-02" }),
+      card({ uid: "c@x", title: "Third", date: "2026-07-03" }),
+    ];
+    assert.deepEqual(dedupeCards(cards).map((c) => c.title), ["First", "Second", "Third"]);
+  });
+
+  it("keeps the uid-bearing card over a uid-less twin regardless of order", () => {
+    const uidFirst = dedupeCards([card({ uid: "real@x" }), card({ uid: "" })]);
+    assert.equal(uidFirst.length, 1);
+    assert.equal(uidFirst[0].uid, "real@x");
+
+    const uidLast = dedupeCards([card({ uid: "" }), card({ uid: "real@x" })]);
+    assert.equal(uidLast.length, 1);
+    assert.equal(uidLast[0].uid, "real@x");
+  });
+});
+
+// ── eventPageUrl / toJsonLdEvent ─────────────────────────────────────────
+
+describe("eventPageUrl / toJsonLdEvent — url + cancellation", () => {
+  const withId = { id: "abc123def456", title: "Event", date: "2026-07-01", time: "20:00", tags: [] };
+  const withoutId = { title: "Event", date: "2026-07-01", time: "20:00", tags: [] };
+
+  it("builds the permalink URL for a card with an id", () => {
+    assert.equal(eventPageUrl(withId), "https://bitcircus101.de/e/abc123def456/");
+  });
+
+  it("falls back to the /events anchor for a card without an id", () => {
+    assert.equal(eventPageUrl(withoutId), `https://bitcircus101.de/events#${eventAnchor(withoutId)}`);
+  });
+
+  it("keeps the RSS <link> and the JSON-LD url byte-identical", () => {
+    const card = {
+      ...withId, description: "", location: "", subtitle: "",
+      endDate: "", endTime: "", type: "special", firstSeen: "2026-01-01T00:00:00.000Z",
+    };
+    const rss = generateRSS([card]);
+    // The channel itself has its own <link> (the /events page); the item's <link>
+    // is the one that must match the JSON-LD url byte-for-byte.
+    const itemMatch = /<item>[\s\S]*?<link>([^<]+)<\/link>/.exec(rss);
+    assert.ok(itemMatch);
+    assert.equal(itemMatch[1], toJsonLdEvent(card).url);
+  });
+
+  it("sets eventStatus to Cancelled only when the card is cancelled", () => {
+    const cancelled = toJsonLdEvent({ ...withId, cancelled: true });
+    assert.equal(cancelled.eventStatus, "https://schema.org/EventCancelled");
+    const notCancelled = toJsonLdEvent(withId);
+    assert.equal("eventStatus" in notCancelled, false);
+  });
+});
+
+// ── mergeArchive / serializeArchive / loadArchive ────────────────────────
+//
+// `results` fixtures below are shaped like processSource()'s real output:
+// { cards, allCards, source: { id, name, status }, icsKeys }.
+
+const mkArchiveCard = (over = {}) => ({
+  id: "card1", title: "Event", date: "2026-07-01", time: "20:00",
+  source: "A", uid: "u1", recurring: false, ...over,
+});
+const mkArchiveResult = (allCards, overSource = {}) => ({
+  cards: [], allCards, icsKeys: {},
+  source: { id: "a", name: "A", status: "ok", ...overSource },
+});
+
+describe("mergeArchive", () => {
+  it("sets firstSeen from prev (if any), else the card, else nowISO — and lastSeen to today", () => {
+    const today = "2026-07-01";
+    const now = "2026-07-01T10:00:00.000Z";
+
+    const noPrevNoCardSeen = mergeArchive(null, [mkArchiveResult([mkArchiveCard()])], today, now);
+    assert.equal(noPrevNoCardSeen.events.card1.firstSeen, now);
+    assert.equal(noPrevNoCardSeen.events.card1.lastSeen, today);
+
+    const noPrevCardSeen = mergeArchive(
+      null, [mkArchiveResult([mkArchiveCard({ firstSeen: "2026-01-01T00:00:00.000Z" })])], today, now
+    );
+    assert.equal(noPrevCardSeen.events.card1.firstSeen, "2026-01-01T00:00:00.000Z");
+
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard(), firstSeen: "2025-01-01T00:00:00.000Z", lastSeen: "2026-06-01" } },
+    };
+    const withPrev = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ firstSeen: "2026-01-01T00:00:00.000Z" })])], today, now
+    );
+    assert.equal(withPrev.events.card1.firstSeen, "2025-01-01T00:00:00.000Z", "prev's firstSeen always wins");
+  });
+
+  it("updates entry fields from the current card", () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ title: "Old Title" }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const r = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ title: "New Title" })])],
+      "2026-07-01", "2026-07-01T00:00:00.000Z"
+    );
+    assert.equal(r.events.card1.title, "New Title");
+  });
+
+  it("never deletes an entry absent from the current pass", () => {
+    const prevArchive = {
+      version: 1,
+      events: { other: { ...mkArchiveCard({ id: "other" }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const r = mergeArchive(prevArchive, [mkArchiveResult([])], "2026-07-01", "2026-07-01T00:00:00.000Z");
+    assert.ok("other" in r.events);
+  });
+
+  it(`drops cards dated before ARCHIVE_MIN_DATE (${ARCHIVE_MIN_DATE})`, () => {
+    const tooOld = mkArchiveCard({ id: "tooOld", date: "2024-12-31" });
+    const r = mergeArchive(null, [mkArchiveResult([tooOld])], "2026-07-01", "2026-07-01T00:00:00.000Z");
+    assert.ok(!("tooOld" in r.events));
+  });
+
+  it("leaves everything untouched when the source is stale (allCards null) or not ok", () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard(), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const stale = mkArchiveResult(null, { status: "stale" });
+    const r1 = mergeArchive(prevArchive, [stale], "2026-07-05", "2026-07-05T00:00:00.000Z");
+    assert.deepEqual(r1.events.card1, prevArchive.events.card1);
+
+    const notOk = mkArchiveResult([mkArchiveCard({ date: "2026-07-10" })], { status: "error" });
+    const r2 = mergeArchive(prevArchive, [notOk], "2026-07-05", "2026-07-05T00:00:00.000Z");
+    assert.deepEqual(r2.events.card1, prevArchive.events.card1);
+  });
+
+  it("cancels nothing when allCards is an empty array", () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ date: "2026-08-01" }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const r = mergeArchive(prevArchive, [mkArchiveResult([])], "2026-07-05", "2026-07-05T00:00:00.000Z");
+    assert.equal(r.events.card1.cancelled, undefined);
+  });
+
+  it("cancels an upcoming entry missing from a non-empty ok pass", () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ date: "2026-08-01" }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const r = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ id: "card2", date: "2026-08-02" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    assert.equal(r.events.card1.cancelled, true);
+  });
+
+  it("does not cancel a past entry that's missing", () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ date: "2026-01-01" }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const r = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ id: "card2", date: "2026-08-02" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    assert.equal(r.events.card1.cancelled, undefined);
+  });
+
+  it(`does not cancel a recurring entry beyond the ${CANCEL_HORIZON_DAYS}-day cancel horizon`, () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ date: "2027-01-01", recurring: true }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const r = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ id: "card2", date: "2026-08-02" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    assert.equal(r.events.card1.cancelled, undefined);
+  });
+
+  it("cancels a recurring entry that's still within the cancel horizon", () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ date: "2026-08-01", recurring: true }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const r = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ id: "card2", date: "2026-08-02" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    assert.equal(r.events.card1.cancelled, true);
+  });
+
+  it("clears cancelled when the card reappears", () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ date: "2026-08-01" }), firstSeen: "x", lastSeen: "2026-06-01", cancelled: true } },
+    };
+    const r = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ date: "2026-08-01" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    assert.equal(r.events.card1.cancelled, undefined);
+  });
+
+  it(`marks every flip even past CANCEL_STORM (${CANCEL_STORM}), but warns`, (t) => {
+    const warnSpy = t.mock.method(console, "warn", () => {});
+    const count = CANCEL_STORM + 2;
+    const events = {};
+    for (let i = 0; i < count; i++) {
+      events[`old${i}`] = { ...mkArchiveCard({ id: `old${i}`, date: "2026-08-01" }), firstSeen: "x", lastSeen: "2026-06-01" };
+    }
+    const prevArchive = { version: 1, events };
+    const r = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ id: "newcard", date: "2026-08-02" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    for (let i = 0; i < count; i++) assert.equal(r.events[`old${i}`].cancelled, true);
+    assert.ok(warnSpy.mock.calls.some((c) => String(c.arguments[0]).includes("::warning::")));
+  });
+
+  it("on an id collision (same id, different identity) keeps the incumbent, skips the newcomer, warns, never throws", (t) => {
+    const warnSpy = t.mock.method(console, "warn", () => {});
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ uid: "incumbent@x" }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const newcomer = mkArchiveCard({ uid: "newcomer@y" }); // same id "card1", different uid → different identity
+    let r;
+    assert.doesNotThrow(() => {
+      r = mergeArchive(prevArchive, [mkArchiveResult([newcomer])], "2026-07-05", "2026-07-05T00:00:00.000Z");
+    });
+    assert.equal(r.events.card1.uid, "incumbent@x");
+    assert.ok(warnSpy.mock.calls.some((c) => String(c.arguments[0]).includes("collision")));
+  });
+
+  it("returns an admitted count of cards actually written this pass", () => {
+    const r = mergeArchive(
+      null,
+      [mkArchiveResult([mkArchiveCard({ id: "a" }), mkArchiveCard({ id: "b", uid: "u2" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    assert.equal(r.admitted, 2);
+  });
+
+  it(`warns (never throws or truncates) when MAX_ARCHIVE_ENTRIES (${MAX_ARCHIVE_ENTRIES}) is exceeded`, (t) => {
+    const warnSpy = t.mock.method(console, "warn", () => {});
+    const events = {};
+    for (let i = 0; i < MAX_ARCHIVE_ENTRIES + 1; i++) {
+      events[`e${i}`] = { ...mkArchiveCard({ id: `e${i}` }), firstSeen: "x", lastSeen: "2026-06-01" };
+    }
+    const prevArchive = { version: 1, events };
+    const r = mergeArchive(prevArchive, [], "2026-07-05", "2026-07-05T00:00:00.000Z");
+    assert.equal(Object.keys(r.events).length, MAX_ARCHIVE_ENTRIES + 1);
+    assert.ok(warnSpy.mock.calls.some((c) => String(c.arguments[0]).includes("archive holds")));
+  });
+});
+
+describe("serializeArchive", () => {
+  it("orders entries by date+time then id", () => {
+    const archive = {
+      version: 1,
+      events: {
+        z1: { date: "2026-07-01", time: "20:00", title: "Z" },
+        a1: { date: "2026-07-01", time: "19:00", title: "A" },
+        b1: { date: "2026-07-01", time: "19:00", title: "B" }, // same date+time as a1 → id tiebreak
+        c1: { date: "2026-06-01", time: "10:00", title: "C" },
+      },
+    };
+    const parsed = JSON.parse(serializeArchive(archive));
+    assert.deepEqual(Object.keys(parsed.events), ["c1", "a1", "b1", "z1"]);
+  });
+
+  it("produces byte-identical output for two same-day merges regardless of nowISO (write-if-changed premise)", () => {
+    const results = [mkArchiveResult([mkArchiveCard({ id: "x" })])];
+    const firstRun = mergeArchive({ version: 1, events: {} }, results, "2026-07-05", "2026-07-05T09:00:00.000Z");
+    const secondRun = mergeArchive(firstRun, results, "2026-07-05", "2026-07-05T18:00:00.000Z");
+    assert.equal(serializeArchive(firstRun), serializeArchive(secondRun));
+  });
+});
+
+describe("loadArchive", () => {
+  it("returns an empty archive when the file is missing", () => {
+    const dir = mkdtempSync(join(tmpdir(), "bc101-archive-"));
+    const missing = join(dir, "does-not-exist.json");
+    try {
+      assert.deepEqual(loadArchive(missing), { version: 1, events: {} });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("throws, naming the file, when the JSON is invalid", () => {
+    const dir = mkdtempSync(join(tmpdir(), "bc101-archive-"));
+    const file = join(dir, "events-archive.json");
+    writeFileSync(file, "{ not valid json");
+    try {
+      assert.throws(() => loadArchive(file), (err) => err.message.includes(file));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

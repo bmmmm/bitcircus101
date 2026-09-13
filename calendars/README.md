@@ -20,7 +20,12 @@ so ziemlich alles andere exportieren). Alle 30 Minuten läuft ein Job, der:
 5. **Tags vergibt** — aus `#hashtags` in der Terminbeschreibung, aus den Kategorien
    des Kalenders, sonst automatisch aus Stichworten im Titel;
 6. **alles chronologisch sortiert** und daraus die Events-Seite, den RSS-Feed
-   (`/feed.xml`) und einen iCal-Feed zum Abonnieren (`/ical.ics`) schreibt.
+   (`/feed.xml`) und einen iCal-Feed zum Abonnieren (`/ical.ics`) schreibt;
+7. **jedem Termin eine eigene Seite gibt** — `/e/<id>/` mit der vollen
+   Beschreibung (Absätze und Links bleiben erhalten), plus ein Archiv unter
+   `/archiv/`. Die `id` ist ein Hash der Kalender-`UID` (bei Serien plus Datum):
+   ein verschobener Termin behält seinen Link. Seiten und Archiv gibt es nur für
+   Quellen mit `rss: true`; fremde Kalender verlinken weiter auf ihre eigene Seite.
 
 Das Ergebnis landet auf dem `live`-Branch — nie im Quellcode. Wer einen Kalender
 ändert, ändert damit direkt die Website; niemand muss etwas nachpflegen.

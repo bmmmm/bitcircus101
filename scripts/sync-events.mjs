@@ -13,6 +13,22 @@ const SITE_URL = "https://bitcircus101.de";
 // byte-identical, which aggregators rely on to key the same occurrence.
 const EVENTS_URL = `${SITE_URL}/events`;
 
+// The event-page archive: every card the primary (rss:true) sources ever
+// exported since ARCHIVE_MIN_DATE, keyed by card id. Append-only — the pages
+// under /e/<id>/ are built from it (scripts/build-event-pages.mjs), and a
+// shared link must keep resolving after the event has left the calendar.
+const ARCHIVE_FILE = "events-archive.json";
+const ARCHIVE_MIN_DATE = "2025-01-01";
+// Runaway guard, not a quota: warn when the archive grows past this.
+const MAX_ARCHIVE_ENTRIES = 5000;
+// A one-off that vanishes from an otherwise healthy export was cancelled. For a
+// series occurrence that only holds inside the RRULE expansion horizon
+// (ics-core HORIZON_DAYS = 120) — later ones were never guaranteed to be there.
+const CANCEL_HORIZON_DAYS = 110;
+// More than this many upcoming ids of one source flipping to cancelled in a
+// single run smells like a source-side problem; still marked, but shouted.
+const CANCEL_STORM = 5;
+
 import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { dirname } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -25,7 +41,7 @@ const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, even
 // Card shaping (tags, type, toCards) is shared the same way via events-core.js, so
 // the browser's live-ICS fallback renders the same cards as the generated JSON.
 // Re-exported below so tests and check-calendars.mjs keep importing from here.
-const { isInternal, guessType, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, toCards } = EventsCore;
+const { isInternal, guessType, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, toCards, toAllCards, eventId } = EventsCore;
 
 const CAL_DIR = "calendars";
 const CAL_CONFIG_FILE = "config.json";
@@ -122,6 +138,16 @@ function eventGuid(c) {
 }
 
 /**
+ * Canonical outward-facing URL of one occurrence: its own page when the card
+ * carries an id (every card from events-core does), the /events anchor for
+ * legacy cards. ONE function for the RSS item <link> and the JSON-LD url —
+ * aggregators key the same occurrence on both, so they must stay byte-identical.
+ */
+function eventPageUrl(c) {
+  return c.id ? `${SITE_URL}/e/${c.id}/` : `${EVENTS_URL}#${eventAnchor(c)}`;
+}
+
+/**
  * opts (all optional; the defaults reproduce the primary feed.xml byte-for-byte):
  *   title, description — channel metadata
  *   selfPath           — atom:link rel=self path, root-absolute
@@ -166,7 +192,7 @@ function generateRSS(cards, opts = {}) {
     xml += `
     <item>
       <title>${escXml(fullTitle)}</title>
-      <link>${EVENTS_URL}#${eventAnchor(c)}</link>
+      <link>${eventPageUrl(c)}</link>
       <description>${escXml(c.description || c.title + " · " + c.date)}</description>`;
     for (const tag of tags) {
       xml += `
@@ -588,9 +614,10 @@ function toJsonLdEvent(c) {
 
   if (c.description) node.description = c.description;
   if (c.location) node.location = { "@type": "Place", name: c.location };
-  node.url = `${EVENTS_URL}#${eventAnchor(c)}`;
+  node.url = eventPageUrl(c);
   const keywords = (c.tags || []).map((t) => t.replace(/^#/, "")).filter(Boolean);
   if (keywords.length) node.keywords = keywords;
+  if (c.cancelled) node.eventStatus = "https://schema.org/EventCancelled";
   return node;
 }
 
@@ -655,6 +682,106 @@ function loadPrevious() {
   }
 }
 
+/** Read the event-page archive. Missing → empty (first run); present but broken
+ *  → throw, for the same reason as loadPrevious: never overwrite with nothing. */
+function loadArchive(file = ARCHIVE_FILE) {
+  let raw;
+  try {
+    raw = readFileSync(file, "utf8");
+  } catch (e) {
+    if (e.code === "ENOENT") return { version: 1, events: {} };
+    throw e;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    return { version: 1, events: parsed.events || {} };
+  } catch (e) {
+    throw new Error(
+      `${file} exists but is not valid JSON (${e.message}); refusing to overwrite the archive`
+    );
+  }
+}
+
+/**
+ * Pure archive merge — `results` are the processSource() outputs, `todayStr` a
+ * local YYYY-MM-DD, `nowISO` the firstSeen fallback. Rules, in order:
+ *   - an entry is keyed by card id; the current card wins, older fields are
+ *     replaced, `firstSeen` is kept; nothing is ever deleted;
+ *   - cards before ARCHIVE_MIN_DATE are not admitted;
+ *   - `lastSeen` is a day, not a timestamp — a no-change sync must not rewrite
+ *     the file 48 times a day;
+ *   - an id already held by a different identity (uid / title key) is a hash
+ *     collision: warn, keep the incumbent, skip the newcomer. Never throw here:
+ *     the sync runs unattended every 30 minutes and must not freeze on data;
+ *   - `cancelled` is set only for an upcoming entry of a source that answered
+ *     with a non-empty fresh export and no longer lists it (series occurrences
+ *     only inside the expansion horizon); it clears when the card reappears.
+ */
+function mergeArchive(prevArchive, results, todayStr, nowISO) {
+  const events = {};
+  for (const [id, e] of Object.entries((prevArchive && prevArchive.events) || {})) {
+    events[id] = { ...e };
+  }
+  const identityOf = (c) => c.uid ? (c.recurring ? `${c.uid}|${c.date}` : c.uid)
+    : `${c.source}|${c.date}|${c.time || ""}|${c.title.toLowerCase().replace(/\s+/g, " ").trim()}`;
+
+  const horizon = shiftDate(todayStr, CANCEL_HORIZON_DAYS);
+  let admitted = 0;
+  for (const r of results) {
+    if (!r.allCards || r.source.status !== "ok") continue;
+    const seen = new Set();
+    for (const c of r.allCards) {
+      if (!c.id || c.date < ARCHIVE_MIN_DATE) continue;
+      const prev = events[c.id];
+      if (prev && identityOf(prev) !== identityOf(c)) {
+        console.warn(
+          `::warning::archive id collision ${c.id}: "${prev.title}" (${prev.date}) vs "${c.title}" (${c.date}) — keeping the first`
+        );
+        continue;
+      }
+      seen.add(c.id);
+      // lastSeen only moves for upcoming entries: the export re-lists all of
+      // history every run, and bumping ~200 past entries would rewrite the
+      // whole file once a day for nothing (only cancellation reads it, and
+      // only for upcoming dates).
+      const lastSeen = c.date >= todayStr || !(prev && prev.lastSeen) ? todayStr : prev.lastSeen;
+      const entry = { ...c, firstSeen: (prev && prev.firstSeen) || c.firstSeen || nowISO, lastSeen };
+      delete entry.cancelled;
+      events[c.id] = entry;
+      admitted++;
+    }
+    // Cancellation pass — only meaningful when the export answered with content.
+    if (!r.allCards.length) continue;
+    let flipped = 0;
+    for (const e of Object.values(events)) {
+      if (e.source !== r.source.name || seen.has(e.id) || e.cancelled) continue;
+      if (e.date < todayStr) continue;
+      if (e.recurring && e.date > horizon) continue;
+      e.cancelled = true;
+      flipped++;
+    }
+    if (flipped > CANCEL_STORM) {
+      console.warn(`::warning::[${r.source.id}] ${flipped} upcoming archive entries vanished at once — marked cancelled, please check the source`);
+    }
+  }
+  const size = Object.keys(events).length;
+  if (size > MAX_ARCHIVE_ENTRIES) {
+    console.warn(`::warning::archive holds ${size} entries (guard ${MAX_ARCHIVE_ENTRIES}) — is a source exporting garbage?`);
+  }
+  return { version: 1, events, admitted };
+}
+
+/** Serialize the archive with entries in date order so diffs stay readable. */
+function serializeArchive(archive) {
+  const ordered = {};
+  const ids = Object.keys(archive.events).sort((a, b) => {
+    const x = archive.events[a], y = archive.events[b];
+    return (x.date + (x.time || "")).localeCompare(y.date + (y.time || "")) || a.localeCompare(b);
+  });
+  for (const id of ids) ordered[id] = archive.events[id];
+  return JSON.stringify({ version: 1, events: ordered }, null, 2) + "\n";
+}
+
 const FETCH_TIMEOUT_MS = 15000;
 
 /** fetch() with an abort timeout so one hanging source can't stall the whole sync. */
@@ -684,6 +811,7 @@ async function processSource(cal, prev) {
     const cached = prev.events.filter((e) => e.source === cal.name && e.date >= today);
     return {
       cards: cached,
+      allCards: null, // no fresh export → the archive leaves this source untouched
       source: {
         id: cal.id, name: cal.name,
         fetchedAt: prevSource?.fetchedAt || null,
@@ -713,6 +841,9 @@ async function processSource(cal, prev) {
 
     const cards = toCards(icsEvents, cal);
     console.log(`[${cal.id}] ${cards.length} upcoming cards`);
+    // Archive pass from the SAME parse (no second fetch): past and future, no
+    // cap — only for the primary sources, which are the ones that get pages.
+    const allCards = cal.rss ? dedupeCards(toAllCards(icsEvents, cal)) : null;
 
     // Diff against previous sync — prefer UID (stable), fall back to date|summary
     // so natural event expiry doesn't count as a "removed" change.
@@ -735,6 +866,7 @@ async function processSource(cal, prev) {
 
     return {
       cards,
+      allCards,
       source: {
         id: cal.id, name: cal.name, fetchedAt, status: "ok",
         events: cards.length, added, removed,
@@ -745,6 +877,40 @@ async function processSource(cal, prev) {
   } catch (err) {
     return stale(err.name === "AbortError" ? `timeout after ${FETCH_TIMEOUT_MS}ms` : err.message);
   }
+}
+
+/**
+ * Dedupe cards across (and within) sources, order-preserving. The same event
+ * cross-posted to several calendars should appear once, even when only one
+ * calendar exports a UID. Two passes, so the result is independent of source
+ * order: pass 1 keeps UID-bearing cards deduped by UID+slot, so two *different*
+ * UIDs in the same slot ALWAYS both survive (genuine same-title events are never
+ * merged); pass 2 keeps a UID-less card only when no already-kept card occupies
+ * its title+slot (otherwise it is a UID-less cross-post). Within a slot the
+ * earlier card wins among same-identity cards, and a UID-bearing card is always
+ * preferred over a UID-less twin regardless of order. Shared by the upcoming
+ * list (aggregate) and the archive pass (processSource) so both agree.
+ */
+function dedupeCards(cards) {
+  const slotOf = (c) => "|" + c.date + "|" + (c.time || "");
+  const titleSlotOf = (c) => c.title.toLowerCase() + slotOf(c);
+  const seenUidSlot = new Set();
+  const keptTitleSlot = new Set(); // title+slot of every kept card (UID-bearing or not)
+  const keep = new Set();          // card objects to retain
+  for (const c of cards) {
+    if (!c.uid) continue;
+    if (seenUidSlot.has(c.uid + slotOf(c))) continue; // exact UID repeat
+    seenUidSlot.add(c.uid + slotOf(c));
+    keptTitleSlot.add(titleSlotOf(c));
+    keep.add(c);
+  }
+  for (const c of cards) {
+    if (c.uid) continue;
+    if (keptTitleSlot.has(titleSlotOf(c))) continue; // cross-post of an already-kept card
+    keptTitleSlot.add(titleSlotOf(c));
+    keep.add(c);
+  }
+  return cards.filter((c) => keep.has(c)); // preserve original order
 }
 
 /**
@@ -782,33 +948,7 @@ function aggregate(results, prev, nowISO) {
       || nowISO;
   }
 
-  // Dedupe across sources. The same event cross-posted to several calendars should
-  // appear once, even when only one calendar exports a UID. Two passes, so the result
-  // is independent of source order: pass 1 keeps UID-bearing cards deduped by UID+slot,
-  // so two *different* UIDs in the same slot ALWAYS both survive (genuine same-title
-  // events are never merged); pass 2 keeps a UID-less card only when no already-kept
-  // card occupies its title+slot (otherwise it is a UID-less cross-post). Within a slot
-  // the earlier source wins among same-identity cards, and a UID-bearing card is always
-  // preferred over a UID-less twin regardless of source order.
-  const slotOf = (c) => "|" + c.date + "|" + (c.time || "");
-  const titleSlotOf = (c) => c.title.toLowerCase() + slotOf(c);
-  const seenUidSlot = new Set();
-  const keptTitleSlot = new Set(); // title+slot of every kept card (UID-bearing or not)
-  const keep = new Set();          // card objects to retain
-  for (const c of allCards) {
-    if (!c.uid) continue;
-    if (seenUidSlot.has(c.uid + slotOf(c))) continue; // exact UID repeat
-    seenUidSlot.add(c.uid + slotOf(c));
-    keptTitleSlot.add(titleSlotOf(c));
-    keep.add(c);
-  }
-  for (const c of allCards) {
-    if (c.uid) continue;
-    if (keptTitleSlot.has(titleSlotOf(c))) continue; // cross-post of an already-kept card
-    keptTitleSlot.add(titleSlotOf(c));
-    keep.add(c);
-  }
-  allCards = allCards.filter((c) => keep.has(c)); // preserve original order
+  allCards = dedupeCards(allCards);
 
   // Sort by date then time so same-day events run chronologically (all-day first).
   allCards.sort((a, b) =>
@@ -836,6 +976,27 @@ async function main() {
   console.log(`Total: ${events.length} event cards from ${calendars.length} calendars`);
 
   const nowISO = new Date().toISOString();
+
+  // Event-page archive: merge every fresh primary export in, write only when
+  // the bytes changed (lastSeen is a day, so a quiet day is a no-op commit-wise).
+  try {
+    const prevArchive = loadArchive();
+    const prevBytes = serializeArchive(prevArchive);
+    // Berlin-pinned like build-event-pages.mjs berlinToday(): CI sets TZ, a
+    // hand-run sync elsewhere must not decide lastSeen/cancelled a day off.
+    const todayStr = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date());
+    const archive = mergeArchive(prevArchive, results, todayStr, nowISO);
+    const bytes = serializeArchive(archive);
+    if (bytes !== prevBytes) {
+      writeFileAtomic(ARCHIVE_FILE, bytes);
+      console.log(`Written ${ARCHIVE_FILE} (${Object.keys(archive.events).length} entries, ${archive.admitted} seen this run)`);
+    } else {
+      console.log(`${ARCHIVE_FILE} unchanged (${Object.keys(archive.events).length} entries)`);
+    }
+  } catch (err) {
+    // A corrupt archive is loud (see loadArchive) but must not take the feeds down.
+    console.warn(`::warning::${ARCHIVE_FILE} skipped: ${err.message}`);
+  }
   // Plan the filtered feeds BEFORE the JSON write so the manifest lands inside
   // events-data.json (the frontend reads feed paths from there, never guesses).
   const feedPlan = buildFeedPlan(events, calendars, prev.feeds, nowISO);
@@ -905,10 +1066,13 @@ export {
   loadCalendars, CAL_DIR, CAL_CONFIG_FILE,
   parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS,
   isInternal, applyFilter, guessType, extractHashtags, keywordTags,
-  buildTags, cleanLocation, truncateDesc, toCards,
+  buildTags, cleanLocation, truncateDesc, toCards, toAllCards, eventId,
   escXml, toRFC822, generateRSS, generateICS,
-  slugifyTag, buildFeedPlan, syncFeedsDir, MAX_TAG_FEEDS, FEED_RETENTION_DAYS,
-  eventSlot, eventGuid,
+  slugifyTag, buildFeedPlan, syncFeedsDir, writeFileAtomic, MAX_TAG_FEEDS, FEED_RETENTION_DAYS,
+  eventSlot, eventGuid, eventPageUrl,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
-  aggregate, eventAnchor,
+  aggregate, dedupeCards, eventAnchor,
+  loadArchive, mergeArchive, serializeArchive,
+  ARCHIVE_FILE, ARCHIVE_MIN_DATE, MAX_ARCHIVE_ENTRIES, CANCEL_HORIZON_DAYS, CANCEL_STORM,
+  SITE_URL, EVENTS_URL,
 };

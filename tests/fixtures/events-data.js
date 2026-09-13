@@ -16,6 +16,12 @@
 
 const DAY = 86400000;
 
+// The same id the sync stamps on real cards (events-core.js eventId): a hash of
+// the uid, so it is date-independent here and tests can name a page path
+// (`/e/<id>/`) at module load. tests/global-setup.js generates those pages
+// from this very fixture before the suite runs.
+const EventsCore = require("../../events-core.js");
+
 function iso(date) {
   return [
     date.getFullYear(),
@@ -126,6 +132,8 @@ function buildEventsData() {
       uid: "fixture-6",
     },
   ];
+
+  for (const e of events) e.id = EventsCore.eventId(e, { name: e.source });
 
   return {
     lastSync: now,

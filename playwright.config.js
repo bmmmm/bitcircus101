@@ -7,6 +7,9 @@ module.exports = defineConfig({
     // node:test units — without this scope Playwright imports them during
     // collection, which executes them as a side effect.
     testMatch: 'site.spec.js',
+    // Generates the live-only event pages (e/<id>/, archiv/) from the events
+    // fixture so the suite can open and link-check them — see the file.
+    globalSetup: require.resolve('./tests/global-setup.js'),
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
     retries: process.env.CI ? 2 : 0,
