@@ -45,6 +45,12 @@ jobs:
       - name: Rebuild lite page event list
         run: node scripts/build-lite-events.mjs
 
+      # One static page per event (e/<id>/) plus the archive index, from
+      # events-archive.json — the template is this checkout's events.html, so
+      # the pages carry live's asset hashes without a cache-bust run.
+      - name: Build event pages and archive
+        run: node scripts/build-event-pages.mjs
+
       - name: Commit and push if changed
         run: |
           git config user.name  "github-actions[bot]"
@@ -54,7 +60,7 @@ jobs:
           # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5).
           # -A on the feeds/ pathspec stages DELETIONS too — a retired tag feed
           # that syncFeedsDir removed must stop being tracked on live.
-          git add -f -A events-data.json feed.xml ical.ics events/feed.xml events/ical.ics feeds lite/index.html events.html
+          git add -f -A events-data.json events-archive.json feed.xml ical.ics events/feed.xml events/ical.ics feeds e archiv lite/index.html events.html
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0

@@ -450,6 +450,12 @@
                             </button>
                         </div>
                     </div>
+                    <!-- Past events keep their pages (/e/<id>/, built by the sync on
+                         live); the archive index lists them. Directory href on purpose:
+                         serves as archiv/index.html locally and live alike. -->
+                    <p class="events-subscribe__archive">
+                        <a href="archiv/">vergangene termine im archiv →</a>
+                    </p>
                     <!-- Filled by events.js when exactly one filter scope is active
                          and the feeds manifest lists a matching filtered feed. -->
                     <p class="events-subscribe__scope" id="events-feed-scope" hidden>
