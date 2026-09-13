@@ -1286,6 +1286,9 @@ test.describe('Event details', () => {
         // the chrome is there and wired (links rebased), not that it is open.
         await expect(page.locator('header')).toBeVisible();
         await expect(page.locator('header .nav__links a[href="../../events.html"]')).toHaveCount(1);
+        // A nested directory index used to normalize to "index.html" and light
+        // up the homepage's "/wir" link as the current page.
+        await expect(page.locator('header .nav__links a[aria-current]')).toHaveCount(0);
         await expect(page.locator('footer')).toBeVisible();
         const css = await page.locator('link[rel="stylesheet"]').getAttribute('href');
         expect(css).toMatch(/^\.\.\/\.\.\/style\.css/);

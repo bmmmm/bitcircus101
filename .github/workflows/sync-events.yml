@@ -60,7 +60,13 @@ jobs:
           # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5).
           # -A on the feeds/ pathspec stages DELETIONS too — a retired tag feed
           # that syncFeedsDir removed must stop being tracked on live.
-          git add -f -A events-data.json events-archive.json feed.xml ical.ics events/feed.xml events/ical.ics feeds e archiv lite/index.html events.html
+          git add -f -A events-data.json feed.xml ical.ics events/feed.xml events/ical.ics feeds lite/index.html events.html
+          # The archive tree only exists once a primary source answered; a
+          # pathspec with no match aborts git add (exit 128) and would take
+          # the feed commit down with it.
+          for p in events-archive.json e archiv; do
+            [ -e "$p" ] && git add -f -A -- "$p"
+          done
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0

@@ -76,7 +76,8 @@ more are tooling-only:
   `scripts/build-event-pages.mjs` (template: the checkout's `events.html`, so
   keep its first `<header>`/`<footer>` blocks intact — `tests/event-pages.spec.mjs`
   renders against the real file). Try it locally with a fixture:
-  `pnpm run build:event-pages <archive.json>`; the output is git-ignored.
+  `pnpm run build:event-pages <archive.json>`; the output is git-ignored, and
+  until it exists the `archiv/` link on `events.html` 404s in a plain checkout.
 
 **Never run `scripts/sync-events.mjs` to try a calendar link out** — it
 overwrites the feeds *and* rewrites the JSON-LD in the tracked `events.html`.

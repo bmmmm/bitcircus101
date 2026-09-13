@@ -131,7 +131,12 @@
      */
     normalizePageFile(pathname) {
       if (!pathname || pathname === "/") return "index.html";
-      if (/\/$/.test(pathname)) return "index.html";
+      // A nested directory index (/e/<id>/, /archiv/) is its own page: mapping
+      // it to "index.html" would hand the marker to the homepage's "/wir" link.
+      if (/\/$/.test(pathname)) {
+        const dirs = pathname.split("/").filter(Boolean);
+        return dirs.length ? dirs[dirs.length - 1].toLowerCase() + "/index.html" : "index.html";
+      }
       const parts = pathname.split("/").filter(Boolean);
       const last = parts[parts.length - 1] || "";
       if (!last) return "index.html";

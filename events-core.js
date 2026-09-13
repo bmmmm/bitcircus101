@@ -141,7 +141,7 @@
   function stripTagLines(s) {
     if (!s) return "";
     var lines = s.split("\n");
-    while (lines.length && /^\s*(#[a-zA-Z0-9äöüß_-]+\s*)+$/.test(lines[lines.length - 1])) {
+    while (lines.length && /^\s*(#[a-zA-Z0-9äöüÄÖÜß_-]+\s*)+$/.test(lines[lines.length - 1])) {
       lines.pop();
     }
     while (lines.length && !lines[lines.length - 1].trim()) lines.pop();
