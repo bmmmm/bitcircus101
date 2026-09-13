@@ -223,13 +223,17 @@
     return sign * secs * 1000;
   }
 
-  function clean(s) {
+  function clean(s, keepNewlines) {
     // Unescape RFC5545 text escapes in a single pass. Crucially "\\" is consumed
     // atomically with its escaped char, so a literal backslash is never mistaken
     // for a "\n" newline marker (e.g. "C:\\nope" -> "C:\nope", not "C:\ ope").
-    return s.replace(/\\([\\;,nN])/g, function (_, c) {
-      return c === "n" || c === "N" ? " " : c;
-    }).trim();
+    // Single-line fields (SUMMARY, LOCATION) flatten "\n" to a space; DESCRIPTION
+    // passes keepNewlines so paragraphs survive into the cards, feeds and pages.
+    var out = s.replace(/\\([\\;,nN])/g, function (_, c) {
+      return c === "n" || c === "N" ? (keepNewlines ? "\n" : " ") : c;
+    });
+    if (keepNewlines) out = out.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n");
+    return out.trim();
   }
 
   /** Pull TZID parameter out of a property like "DTSTART;TZID=Europe/Berlin" */
@@ -279,7 +283,7 @@
           uid: ev.uid || "",
           url: ev.url || "",
           summary: clean(ev.summary || "(kein Titel)"),
-          description: clean(ev.description || ""),
+          description: clean(ev.description || "", true),
           location: clean(ev.location || ""),
           categories: ev.categories || "",
           allDay: allDay,
@@ -288,6 +292,9 @@
           expandRRule(dtstart, ev.rrule, ev.exdates).forEach(function (d) {
             var inst = {};
             for (var k in base) inst[k] = base[k];
+            // Every occurrence shares the series UID, so the card id has to add the
+            // date for these — a one-off keeps a date-free id and survives a move.
+            inst.recurring = true;
             inst.dtstart = d;
             inst.dtend = durationMs != null ? new Date(d.getTime() + durationMs) : null;
             events.push(inst);
