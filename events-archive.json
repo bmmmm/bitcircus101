@@ -4971,6 +4971,28 @@
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
+    },
+    "3fecd3cae4eb": {
+      "id": "3fecd3cae4eb",
+      "title": "Treffen: Bonner FSFE Community",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2027-01-11",
+      "time": "19:00",
+      "endDate": "2027-01-11",
+      "endTime": "22:00",
+      "tags": [
+        "#foss"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
+      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "recurring": true,
+      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "firstSeen": "2026-09-13T17:17:13.336Z",
+      "lastSeen": "2026-09-13"
     }
   }
 }
