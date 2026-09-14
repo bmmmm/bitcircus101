@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-14T16:17:14.304Z",
+  "lastSync": "2026-09-14T17:17:13.479Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-14T16:17:14.200Z",
+      "fetchedAt": "2026-09-14T17:17:13.361Z",
       "status": "ok",
-      "events": 22,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 58,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-14T16:17:14.283Z",
+      "fetchedAt": "2026-09-14T17:17:13.460Z",
       "status": "ok",
-      "events": 18,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 52,
@@ -163,12 +163,12 @@
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
         "rss": "/feeds/tag/datenburg.xml",
-        "count": 11
+        "count": 12
       },
       "#foss": {
         "ics": "/feeds/tag/foss.ics",
         "rss": "/feeds/tag/foss.xml",
-        "count": 2
+        "count": 1
       },
       "#gaming": {
         "ics": "/feeds/tag/gaming.ics",
@@ -193,7 +193,7 @@
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
         "rss": "/feeds/tag/offener-abend.xml",
-        "count": 9
+        "count": 10
       },
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
@@ -226,39 +226,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 22
+        "count": 21
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 18
+        "count": 19
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "id": "c131139aced7",
-      "title": "Treffen: Bonner FSFE Community",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstraße 101 Bonn",
-      "date": "2026-09-14",
-      "time": "19:00",
-      "endDate": "2026-09-14",
-      "endTime": "22:00",
-      "tags": [
-        "#foss"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
-      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
-      "recurring": true,
-      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
-      "firstSeen": "2026-05-11T19:45:03.502Z"
-    },
     {
       "id": "398ccb6a5edc",
       "title": "Offene Datenburg",
@@ -1076,6 +1055,27 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-05-02T13:08:46.350Z"
+    },
+    {
+      "id": "a98115321382",
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-11-03",
+      "time": "18:00",
+      "endDate": "2026-11-03",
+      "endTime": "22:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }

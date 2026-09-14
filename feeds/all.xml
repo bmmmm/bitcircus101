@@ -9,14 +9,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/e/c131139aced7/</link>
-      <description>Treffen: Bonner FSFE Community · 2026-09-14</description>
-      <category>#foss</category>
-      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
-      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20260914T1900</guid>
-    </item>
-    <item>
       <title>[2026-09-15 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/398ccb6a5edc/</link>
       <description>Offene Datenburg · 2026-09-15</description>
@@ -400,6 +392,15 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
       <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
       <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261101T1400</guid>
+    </item>
+    <item>
+      <title>[2026-11-03 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/e/a98115321382/</link>
+      <description>Offene Datenburg · 2026-11-03</description>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261103T1800</guid>
     </item>
   </channel>
 </rss>
