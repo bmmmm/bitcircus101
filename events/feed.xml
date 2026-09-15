@@ -5,25 +5,9 @@
     <link>https://bitcircus101.de/events</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
-    <lastBuildDate>Tue, 15 Sep 2026 16:49:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Sep 2026 17:17:13 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-09-15 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/e/bcf53114201a/</link>
-      <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
-We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
-
-Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
-Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
-
-#relax&amp;chill #social</description>
-      <category>#relax</category>
-      <category>#social</category>
-      <category>#spieletreff</category>
-      <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
-      <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260915T1900</guid>
-    </item>
     <item>
       <title>[2026-09-18 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/67d0a07d76fd/</link>
@@ -175,6 +159,18 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <category>#spieletreff</category>
       <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
       <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261013T1900</guid>
+    </item>
+    <item>
+      <title>[2026-10-16 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/8d0fdd318df3/</link>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.
+
+On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests</description>
+      <category>#meetup</category>
+      <category>#lightning-talks</category>
+      <category>#talk</category>
+      <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
+      <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20261016T2000</guid>
     </item>
   </channel>
 </rss>
