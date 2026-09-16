@@ -152,6 +152,11 @@ jobs:
           node scripts/build-lite-events.mjs
           node scripts/build-lite-finanz.mjs
 
+      - name: Build the Pinnwand feed
+        # Live-only, like the event feeds: pinnwand/ is gitignored on main, so
+        # a posting PR against the tracked jobs.json needs no build commit.
+        run: node scripts/build-pinnwand-feed.mjs
+
       - name: Remove build-only includes/ partials
         # includes/site-header.html, site-footer.html and site-skip.html are
         # build inputs, not pages — inject-layout.mjs above already inlined

@@ -71,6 +71,7 @@ events/
 feeds/
 e/
 archiv/
+pinnwand/
 
 # Playwright MCP
 .playwright-mcp/
