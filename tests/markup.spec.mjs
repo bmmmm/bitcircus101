@@ -122,3 +122,38 @@ describe("no external font loading (CLAUDE.md § Conventions, CONTRIBUTING § Gu
     );
   });
 });
+
+describe("feed autodiscovery (README § Generated files, CLAUDE.md § Adding a page)", () => {
+  // Every page that carries the shared chrome (the nav utility cluster) must
+  // announce both site feeds in its <head>, so a feed reader pointed at ANY
+  // page — not just /events — finds them. The set is derived from the pages'
+  // own content, not from a list: a new page inherits the rule with the chrome.
+  const chromePages = htmlFiles.filter(
+    (f) => !f.includes("/") && read(f).includes('class="nav__utils"'),
+  );
+  const FEEDS = [
+    'type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml"',
+    'type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml"',
+  ];
+
+  it("has a non-empty input set", () => {
+    // Eight today (the seven LAYOUT_PAGES of inject-layout.mjs plus rss.html);
+    // a page that loses the chrome must not silently leave the set.
+    assert.ok(
+      chromePages.length >= 8,
+      `expected at least 8 root pages with the shared nav, found ${chromePages.length}`,
+    );
+  });
+
+  it("every page with the shared nav links both feeds in its <head>", () => {
+    const missing = chromePages.flatMap((f) => {
+      const head = read(f).split("</head>")[0];
+      return FEEDS.filter((feed) => !head.includes(feed)).map((feed) => `${f}: ${feed}`);
+    });
+    assert.deepEqual(
+      missing,
+      [],
+      `add the <link rel="alternate" …> lines after <link rel="canonical">:\n${missing.join("\n")}`,
+    );
+  });
+});

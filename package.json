@@ -10,6 +10,7 @@
     "build:lite-events": "node scripts/build-lite-events.mjs",
     "build:event-pages": "node scripts/build-event-pages.mjs",
     "build:lite-finanz": "node scripts/build-lite-finanz.mjs",
+    "build:pinnwand-feed": "node scripts/build-pinnwand-feed.mjs",
     "check:calendars": "node scripts/check-calendars.mjs",
     "check:jobs": "node scripts/check-jobs.mjs",
     "finanz": "node scripts/finanz.mjs",

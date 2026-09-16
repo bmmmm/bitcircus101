@@ -48,6 +48,7 @@ const LAYOUT_PAGES = [
   "raum-nutzen.html",
   "impressum-datenschutz.html",
   "dankedankedanke.html",
+  "rss.html",
 ];
 
 /** Prepend the same indent used for direct children of <body> (8 spaces in this site). */
