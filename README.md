@@ -27,6 +27,7 @@ events.html                 Events page (loads events-data.json)
 support.html                Donation / funding page (loads finanz.json)
 pinnwand.html               Job board ("Pinnwand") — renders jobs.json in the browser
 raum-nutzen.html            Room usage info
+rss.html                    Feed overview (/rss): every RSS/iCal feed, how to subscribe
 impressum-datenschutz.html  Legal / privacy
 dankedankedanke.html        Thank you page
 
@@ -74,6 +75,9 @@ funding.json                Footer funding percentage (edited via pnpm run finan
 
 scripts/
   sync-events.mjs           Fetches ICS from Nextcloud, generates events-data.json + feed.xml
+  rss.mjs                   RSS 2.0 envelope shared by every feed (ttl, image, namespaces)
+  html-text.mjs             esc/linkify/paragraphs — description → HTML for pages and feeds
+  build-pinnwand-feed.mjs   Renders the active jobs.json postings to pinnwand/feed.xml (live-only)
   check-calendars.mjs       Offline manifest validator + read-only --probe preview of an ICS URL
   build-logo-slider.mjs     Writes the homepage logo strip from images/logo-slider/
   finanz.mjs                Maintainer CLI for finanz.json / funding.json (--json, --help)
@@ -91,7 +95,7 @@ scripts/
 
 tests/
   site.spec.js              Playwright end-to-end tests (~56 tests × 2 browsers)
-  sync-events.spec.mjs      Unit tests for the ICS parser, RRULE expansion and the feeds (166)
+  sync-events.spec.mjs      Unit tests for the ICS parser, RRULE expansion and the feeds (225)
   finanz-cli.spec.mjs       Exit codes, --json contract and amount prompts of the funding CLI
   jobs-core.spec.mjs        Expiry math: month overflow, both boundaries, ordering
   jobs-data.spec.mjs        jobs.json gate: every error class, schema lockstep, page snippet
@@ -128,12 +132,20 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
 | `events-archive.json` | `sync-events.yml` | Every 30 minutes (append-only) |
 | `e/<id>/index.html`, `e/<id>/event.ics` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy (sitemap) |
 | `archiv/index.html` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy |
+| `pinnwand/feed.xml` | `sync-events.yml` and `deploy.yml` → `build-pinnwand-feed.mjs` | Every 30 minutes, and on deploy |
 | `sitemap.xml` | `deploy.yml` | Every deploy (push to `main`) |
 
 - `ical.ics` is the aggregator-facing iCal export with real `DTSTART`/`DTEND`
   and a bundled VTIMEZONE; times are floating-local (CI pins `TZ=Europe/Berlin`).
 - `events/feed.xml` and `events/ical.ics` are copies, so a relative `<link>`
   resolved from the `/events` clean URL still hits the real feed.
+- `feed.xml` lists every primary card in the window (no item cap), carries the
+  full description as HTML in `content:encoded` with a plain-text teaser in
+  `description`, and derives `lastBuildDate` from the newest `firstSeen` — the
+  bytes only change when the events do, so readers get a 304. The envelope
+  (`ttl`, `image`, namespaces) lives in `scripts/rss.mjs`, shared with
+  `pinnwand/feed.xml`. Every page with the shared nav announces both feeds via
+  `<link rel="alternate">`; `/rss` (`rss.html`) is the human-readable index.
 - `feeds/` holds the filtered ICS/RSS per tag (`feeds/tag/<slug>.*`), per source
   (`feeds/source/<id>.*`) and `feeds/all.*`, in the same ≤40-event window as the
   page. The `feeds` manifest inside `events-data.json` maps them — the frontend
@@ -206,7 +218,9 @@ The schema accepts optional `url1`/`url2` per item and the CLI offers them, but
 no optional ones. Companies add theirs by pull request — the how-to, the
 copy-paste snippets and the donation channels live on the page itself, so the
 instructions and the gate cannot drift apart — a unit test parses both snippets
-out of the HTML and validates them.
+out of the HTML and validates them. `scripts/build-pinnwand-feed.mjs` renders
+the active postings as RSS (`pinnwand/feed.xml`, live-only — see Generated
+files); its window logic is `jobs-core.js`, the same the browser uses.
 
 The second key, `karussell`, is the **permanent slot (Dauerplatz)**: name and
 https link per entry, no dates. The invite note — always the last card — cycles
@@ -300,8 +314,9 @@ Nothing reaches production without passing all tests first.
   3. Parses VEVENT entries, expands RRULE recurrences (weekly, monthly with BYDAY/BYSETPOS)
   4. Filters out internal/blocker events and past events
   5. Generates `events-data.json` with `lastSync` timestamp (max 40 cards, 120-day horizon)
-  6. Generates `feed.xml` (RSS 2.0, primary calendar only, max 15 items)
-  7. Commits and pushes to `live` with retry logic
+  6. Generates `feed.xml` (RSS 2.0, primary calendar only, every card in the window)
+  7. Runs `scripts/build-pinnwand-feed.mjs` (`pinnwand/feed.xml` from `jobs.json`)
+  8. Commits and pushes to `live` with retry logic
 
 ### Create release (`release.yml`)
 
@@ -428,8 +443,8 @@ pnpm run test:ui           # Playwright UI mode
 
 ### Test coverage
 
-**Unit tests** (`tests/sync-events.spec.mjs` — 166 tests, ~200ms; the whole
-`pnpm run test:quick` suite is 453 tests across all specs):
+**Unit tests** (`tests/sync-events.spec.mjs` — 225 tests, ~200ms; the whole
+`pnpm run test:quick` suite is 594 tests across all specs):
 
 | Area | What is tested |
 |------|---------------|
