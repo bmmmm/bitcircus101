@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>bitcircus101 – Pinnwand</title>
+    <link>https://bitcircus101.de/pinnwand</link>
+    <description>Firmen hängen an der Pinnwand von bitcircus101 in Bonn einen Zettel mit ihrer Stellenanzeige auf – eine echte Wand im Hackspace statt Werbeplatz im Feed.</description>
+    <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Pinnwand</title>
+      <link>https://bitcircus101.de/pinnwand</link>
+    </image>
+    <atom:link href="https://bitcircus101.de/pinnwand/feed.xml" rel="self" type="application/rss+xml"/>
+
+  </channel>
+</rss>

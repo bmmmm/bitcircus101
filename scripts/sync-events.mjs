@@ -5,7 +5,7 @@
  * Runs in GitHub Actions (Node 22, no dependencies).
  */
 
-const SITE_URL = "https://bitcircus101.de";
+// SITE_URL lives in rss.mjs (shared feed envelope); re-exported below.
 // Canonical address of the events page. The site is served with clean URLs
 // (/events.html 308-redirects to /events), so every outward-facing link — RSS
 // <link>, JSON-LD url, sitemap entry, the page's own canonical — has to use the
@@ -34,6 +34,8 @@ import { dirname } from "node:path";
 import { pathToFileURL } from "node:url";
 import ICSCore from "../ics-core.js";
 import EventsCore from "../events-core.js";
+import { SITE_URL, escXml, toRFC822, rssDocument } from "./rss.mjs";
+import { paragraphs } from "./html-text.mjs";
 
 // ICS parsing primitives are shared with the browser fallback (events.js) via the
 // UMD module ics-core.js — single source of truth, no drift between the two parsers.
@@ -41,7 +43,7 @@ const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, even
 // Card shaping (tags, type, toCards) is shared the same way via events-core.js, so
 // the browser's live-ICS fallback renders the same cards as the generated JSON.
 // Re-exported below so tests and check-calendars.mjs keep importing from here.
-const { isInternal, guessType, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, toCards, toAllCards, eventId } = EventsCore;
+const { isInternal, guessType, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId } = EventsCore;
 
 const CAL_DIR = "calendars";
 const CAL_CONFIG_FILE = "config.json";
@@ -114,14 +116,7 @@ function applyFilter(icsEvents, filter) {
 
 // ── Generate RSS feed ───────────────────────────────────────────────────────
 
-function escXml(s) {
-  return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-}
-
-function toRFC822(isoOrDate) {
-  const d = isoOrDate instanceof Date ? isoOrDate : new Date(isoOrDate);
-  return d.toUTCString().replace("GMT", "+0000");
-}
+// escXml / toRFC822 come from rss.mjs (re-exported below for the tests).
 
 /**
  * Per-occurrence slot suffix (YYYYMMDD[THHMM]) and stable GUID/UID for a card.
@@ -148,35 +143,46 @@ function eventPageUrl(c) {
 }
 
 /**
- * opts (all optional; the defaults reproduce the primary feed.xml byte-for-byte):
+ * RSS lastBuildDate derived from content: the newest firstSeen among the cards,
+ * null when there is none. Combined with the write-if-changed logic this keeps
+ * a no-op sync from rewriting every feed every 30 minutes — same bytes, same
+ * ETag, so readers get a 304 instead of a re-download. Shared by the primary
+ * feed and the filtered feeds (buildFeedPlan).
+ */
+function feedBuildDate(cards) {
+  let max = null;
+  for (const c of cards) if (c.firstSeen && (!max || c.firstSeen > max)) max = c.firstSeen;
+  return max ? toRFC822(max) : null;
+}
+
+/** Plain-text teaser for the RSS <description>; the full text goes to content:encoded. */
+const RSS_TEASER_CHARS = 300;
+
+/**
+ * opts (all optional; the defaults produce the primary feed.xml):
  *   title, description — channel metadata
+ *   link               — channel link (defaults to the events page)
  *   selfPath           — atom:link rel=self path, root-absolute
- *   limit              — max items (the primary feed stays capped at 15)
- *   lastBuildDate      — RFC822 string, or null to omit the element entirely
- *                        (filtered feeds derive it from content so a no-op sync
- *                        rewrites nothing — see buildFeedPlan)
+ *   limit              — max items; unlimited by default. The old 15-item cap
+ *                        hid every upcoming event beyond the fifteen soonest
+ *                        until earlier ones had passed — and then surfaced it
+ *                        with a weeks-old pubDate, which readers bury. The
+ *                        aggregate window (≤40 cards, ≤30 per source) already
+ *                        bounds the feed.
+ *   lastBuildDate      — RFC822 string, or null to omit the element entirely;
+ *                        defaults to feedBuildDate(cards)
  */
 function generateRSS(cards, opts = {}) {
   const {
     title = "bitcircus101 – Termine",
     description = "Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn",
+    link = EVENTS_URL,
     selfPath = "/feed.xml",
-    limit = 15,
-    lastBuildDate = new Date().toUTCString().replace("GMT", "+0000"),
+    limit = Infinity,
+    lastBuildDate = feedBuildDate(cards),
   } = opts;
-  let xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>${escXml(title)}</title>
-    <link>${EVENTS_URL}</link>
-    <description>${escXml(description)}</description>
-    <language>de-de</language>
-`;
-  if (lastBuildDate !== null) {
-    xml += `    <lastBuildDate>${lastBuildDate}</lastBuildDate>\n`;
-  }
-  xml += `    <atom:link href="${SITE_URL}${selfPath}" rel="self" type="application/rss+xml"/>\n`;
 
+  const items = [];
   for (const c of cards.slice(0, limit)) {
     // Recurring events share a single UID across every instance. Append the
     // occurrence's date+time slot so each item gets a unique GUID — otherwise feed
@@ -189,26 +195,40 @@ function generateRSS(cards, opts = {}) {
 
     const tags = (c.tags || []).filter((t) => t && t !== "#community");
 
-    xml += `
+    // <description>: a plain-text teaser (readers show it in list views).
+    // <content:encoded>: the full description as HTML — paragraphs and links
+    // rendered exactly like the event page does — plus the link to that page.
+    // Both are XML-escaped text nodes; the reader unescapes and renders the HTML.
+    // A description that is nothing but #hashtag lines strips to "", so the
+    // fallback applies after stripping, not before.
+    const fallback = c.title + " · " + c.date;
+    const teaser = truncateDesc(stripTagLines(c.description || "") || fallback, RSS_TEASER_CHARS);
+    const pageUrl = eventPageUrl(c);
+    const body =
+      paragraphs(c.description || "") +
+      `<p><a href="${pageUrl}">Details, Kalendereintrag (.ics) und Ort</a></p>`;
+
+    let item = `
     <item>
       <title>${escXml(fullTitle)}</title>
-      <link>${eventPageUrl(c)}</link>
-      <description>${escXml(c.description || c.title + " · " + c.date)}</description>`;
+      <link>${pageUrl}</link>
+      <description>${escXml(teaser)}</description>
+      <content:encoded>${escXml(body)}</content:encoded>`;
     for (const tag of tags) {
-      xml += `
+      item += `
       <category>${escXml(tag)}</category>`;
     }
-    xml += `
+    item += `
       <pubDate>${toRFC822(c.firstSeen || new Date().toISOString())}</pubDate>
       <guid isPermaLink="false">${escXml(guid)}</guid>
     </item>`;
+    items.push(item);
   }
 
-  xml += `
-  </channel>
-</rss>
-`;
-  return xml;
+  return rssDocument(
+    { title, link, description, selfUrl: `${SITE_URL}${selfPath}`, lastBuildDate },
+    items
+  );
 }
 
 // ── Generate iCal (.ics) feed ─────────────────────────────────────────────────
@@ -397,15 +417,9 @@ function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
   const files = [];
   const warn = (msg) => console.warn(`::warning::${msg}`);
 
-  // RSS lastBuildDate derived from content (newest firstSeen), omitted when the
-  // feed is empty — combined with writeIfChanged in syncFeedsDir this keeps a
-  // no-op sync from rewriting ~90 files every 30 minutes (repo bloat on live).
-  const derivedBuildDate = (list) => {
-    let max = null;
-    for (const c of list) if (c.firstSeen && (!max || c.firstSeen > max)) max = c.firstSeen;
-    return max ? toRFC822(max) : null;
-  };
-
+  // lastBuildDate is content-derived (feedBuildDate) — combined with
+  // writeIfChanged in syncFeedsDir this keeps a no-op sync from rewriting ~90
+  // files every 30 minutes (repo bloat on live).
   const emitPair = (base, list, { title, description }) => {
     files.push({ path: `${base}.ics`, data: generateICS(list, nowISO, { calName: title }) });
     files.push({
@@ -414,7 +428,7 @@ function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
         title, description,
         selfPath: `/${base}.xml`,
         limit: Infinity,
-        lastBuildDate: derivedBuildDate(list),
+        lastBuildDate: feedBuildDate(list),
       }),
     });
     return { ics: `/${base}.ics`, rss: `/${base}.xml` };
@@ -1067,7 +1081,7 @@ export {
   parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS,
   isInternal, applyFilter, guessType, extractHashtags, keywordTags,
   buildTags, cleanLocation, truncateDesc, toCards, toAllCards, eventId,
-  escXml, toRFC822, generateRSS, generateICS,
+  escXml, toRFC822, feedBuildDate, generateRSS, generateICS,
   slugifyTag, buildFeedPlan, syncFeedsDir, writeFileAtomic, MAX_TAG_FEEDS, FEED_RETENTION_DAYS,
   eventSlot, eventGuid, eventPageUrl,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
