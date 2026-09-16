@@ -72,6 +72,8 @@ more are tooling-only:
   the JSON and runs `pnpm run finanz:validate`). Whole euros. After a change:
   `pnpm run build:lite-finanz`, commit `lite/index.html`.
 - `jobs.json` — gate is `pnpm run check:jobs`; expiry only warns, never errors.
+- `pinnwand/feed.xml` — live-only, `scripts/build-pinnwand-feed.mjs` in the sync
+  and on deploy; the button on `pinnwand.html` 404s in a plain checkout.
 - `events-archive.json`, `e/`, `archiv/` — live-only, written by the sync and
   `scripts/build-event-pages.mjs` (template: the checkout's `events.html`, so
   keep its first `<header>`/`<footer>` blocks intact — `tests/event-pages.spec.mjs`
@@ -87,7 +89,9 @@ then create the source file, list it in `calendars/config.json`, run
 
 ## Adding a page
 
-1. Create the HTML file.
+1. Create the HTML file, with the two feed `<link rel="alternate">` lines after
+   `<link rel="canonical">` (copy them from `events.html`; `tests/markup.spec.mjs`
+   gates every page that carries the shared nav).
 2. Nav link into `includes/site-header.html` (register it in
    `scripts/inject-layout.mjs` if it shares the chrome) → `pnpm run build:layout`
    → commit partial + HTML.
