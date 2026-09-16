@@ -36,6 +36,8 @@ const FEEDS = [
     "sitemap.xml",
     "events/feed.xml",
     "events/ical.ics",
+    // Job-board feed: built on live by the deploy and the 30-min sync, gitignored on main.
+    "pinnwand/feed.xml",
 ];
 
 // Live-only generated TREES (variable file set — one feed per tag/source, so an
