@@ -246,7 +246,7 @@ test.describe('Privacy – no external font loading', () => {
 test.describe('Navigation', () => {
     // The whole utility cluster, in DOM order.
     const UTILS = [
-        'nav a[href="feed.xml"]',
+        'nav a[href="rss.html"]',
         'nav a[href="lite/"]',
         'nav a[href="kiosk/"]',
         '#theme-toggle',
@@ -466,8 +466,12 @@ test.describe('Events page', () => {
         await expect(page.locator('.events-subscribe__btn').first()).toBeVisible();
         await expect(page.locator('#linkup-info-btn')).toBeVisible();
 
-        // RSS feed link in head
-        const href = await page.locator('link[type="application/rss+xml"]').getAttribute('href');
+        // RSS feed links in head: the events feed and the pinnwand feed (every
+        // page carries both — tests/markup.spec.mjs gates that; here only the
+        // events one is pinned, by title, since the selector alone is ambiguous).
+        const href = await page
+            .locator('link[type="application/rss+xml"][title="bitcircus101 Termine"]')
+            .getAttribute('href');
         expect(href).toContain('feed.xml');
 
         // Wait for JS to finish rendering
@@ -1340,6 +1344,7 @@ test.describe('No JavaScript errors', () => {
         ['/raum-nutzen.html', 'Raum nutzen'],
         ['/impressum-datenschutz.html', 'Impressum'],
         ['/dankedankedanke.html', 'Danke'],
+        ['/rss.html', 'RSS'],
         ['/ascii/', 'ASCII playground'],
         ['/chat/', 'Signal'],
         ['/lite/', 'Lite'],
@@ -1927,7 +1932,7 @@ test.describe('Internal links', () => {
         const pagesToCheck = [
             '/', '/events.html', '/support.html', '/pinnwand.html',
             '/raum-nutzen.html', '/impressum-datenschutz.html',
-            '/dankedankedanke.html',
+            '/dankedankedanke.html', '/rss.html',
         ];
         const checked = new Set();
         const broken = [];
@@ -1979,7 +1984,10 @@ test.describe('Internal links', () => {
         const linkHrefs = await page.locator('link[href]').evaluateAll((els) =>
             els
                 .map((el) => el.getAttribute('href'))
-                .filter((h) => h && !h.startsWith('http')) // canonical is absolute
+                // canonical is absolute; the feed alternates are live-only
+                // artifacts (feed.xml, pinnwand/feed.xml — built by CI), same
+                // exemption as the a[href] scan above.
+                .filter((h) => h && !h.startsWith('http') && !h.endsWith('.xml') && !h.endsWith('.ics'))
         );
         for (const h of linkHrefs) resources.push(new URL(h, page.url()).href);
 
