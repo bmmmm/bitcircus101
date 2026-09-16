@@ -198,12 +198,26 @@ try {
         console.error(`smoke: sitemap has ${locs.length} entries, checking a sample of ${checked.length}`);
     }
 
+    // A page that is NEW in this deploy can trail the Pages build by a few
+    // seconds: on the deploy that introduced /rss (run 35108448432) the sitemap
+    // already listed it while Pages still answered 404 for ~40 s after the
+    // push. So a 404 is polled until the overall deadline, exactly like the
+    // feed anchors above; every other non-200 (a redirect, a 5xx) fails at
+    // once, and a page that really vanished still fails — after the deadline.
+    const probe = async (u) => {
+        for (;;) {
+            const r = await getRaw(u);
+            if (r.status !== 404 || Date.now() > deadline) return r.status;
+            console.error(`smoke: ${u} returned 404 — retrying`);
+            await sleep(INTERVAL);
+        }
+    };
     const bad = (
         await Promise.all(
             checked.map(async (u) => {
                 try {
-                    const r = await getRaw(u);
-                    return r.status === 200 ? null : `${u} → ${r.status}`;
+                    const status = await probe(u);
+                    return status === 200 ? null : `${u} → ${status}`;
                 } catch (e) {
                     return `${u} → ${e.message}`;
                 }
