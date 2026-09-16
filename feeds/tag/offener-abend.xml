@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>bitcircus101 – Termine: #offener-abend</title>
     <link>https://bitcircus101.de/events</link>
     <description>Gefiltert nach #offener-abend – alle Termine mit diesem Schlagwort.</description>
     <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine: #offener-abend</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
     <lastBuildDate>Fri, 24 Jul 2026 18:16:21 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/offener-abend.xml" rel="self" type="application/rss+xml"/>
 
@@ -12,6 +18,7 @@
       <title>[2026-09-19 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/2c8a32452fc1/</link>
       <description>32. Offene Ateliers · 2026-09-19</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/2c8a32452fc1/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#offener-abend</category>
       <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
       <guid isPermaLink="false">6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260919T1400</guid>
@@ -20,6 +27,7 @@
       <title>[2026-09-20 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/2d87f541a8c8/</link>
       <description>32. Offene Ateliers · 2026-09-20</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/2d87f541a8c8/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#offener-abend</category>
       <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
       <guid isPermaLink="false">6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260920T1400</guid>
@@ -28,6 +36,7 @@
       <title>[2026-09-22 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/3a8f0b94ebd5/</link>
       <description>Offene Datenburg · 2026-09-22</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3a8f0b94ebd5/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -37,6 +46,7 @@
       <title>[2026-09-29 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/358f03b5e2d5/</link>
       <description>Offene Datenburg · 2026-09-29</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/358f03b5e2d5/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -46,6 +56,7 @@
       <title>[2026-10-06 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/4e8ce7c8e5e0/</link>
       <description>Offene Datenburg · 2026-10-06</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4e8ce7c8e5e0/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -55,6 +66,7 @@
       <title>[2026-10-13 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/bb8fd1f6eae2/</link>
       <description>Offene Datenburg · 2026-10-13</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/bb8fd1f6eae2/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -64,6 +76,7 @@
       <title>[2026-10-20 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/48886128d3e4/</link>
       <description>Offene Datenburg · 2026-10-20</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/48886128d3e4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -73,6 +86,7 @@
       <title>[2026-10-27 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/4f886c2dd6e4/</link>
       <description>Offene Datenburg · 2026-10-27</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4f886c2dd6e4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -82,6 +96,7 @@
       <title>[2026-11-03 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/a98115321382/</link>
       <description>Offene Datenburg · 2026-11-03</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a98115321382/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>

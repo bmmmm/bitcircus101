@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>bitcircus101 – Termine: Datenburg e.V.</title>
     <link>https://bitcircus101.de/events</link>
     <description>Alle Termine der Quelle Datenburg e.V..</description>
     <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine: Datenburg e.V.</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
     <lastBuildDate>Thu, 10 Sep 2026 19:17:13 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/source/datenburg.xml" rel="self" type="application/rss+xml"/>
 
@@ -12,6 +18,7 @@
       <title>[2026-09-17 19:00] Raspberry Pi Workshop</title>
       <link>https://bitcircus101.de/e/b936f8f9538e/</link>
       <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://datenburg.org/veranstaltungen/raspberrypi/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://datenburg.org/veranstaltungen/raspberrypi/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b936f8f9538e/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#workshop</category>
       <category>#datenburg</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -21,6 +28,7 @@
       <title>[2026-09-22 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/3a8f0b94ebd5/</link>
       <description>Offene Datenburg · 2026-09-22</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3a8f0b94ebd5/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -30,6 +38,7 @@
       <title>[2026-09-24 19:00] Spieleabend</title>
       <link>https://bitcircus101.de/e/2584e7559146/</link>
       <description>Spieleabend · 2026-09-24</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/2584e7559146/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#gaming</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
       <guid isPermaLink="false">19efb037-b521-4f7b-b508-bd63eb3b292b-20260924T1900</guid>
@@ -38,6 +47,7 @@
       <title>[2026-09-29 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/358f03b5e2d5/</link>
       <description>Offene Datenburg · 2026-09-29</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/358f03b5e2d5/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -49,6 +59,7 @@
       <description>Sperrmüll Rausstellen
 Abholung am 30.09
 Hilfe wird gebaucht</description>
+      <content:encoded>&lt;p&gt;Sperrmüll Rausstellen&lt;br /&gt;Abholung am 30.09&lt;br /&gt;Hilfe wird gebaucht&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/9c9e8e980a93/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Tue, 04 Aug 2026 16:26:18 +0000</pubDate>
       <guid isPermaLink="false">2a828714-52b9-4074-a76e-56790ff4720b-20260929T1900</guid>
     </item>
@@ -56,6 +67,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-01 18:00] Interner Burgabend</title>
       <link>https://bitcircus101.de/e/753144bf386d/</link>
       <description>Interner Burgabend · 2026-10-01</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/753144bf386d/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
       <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261001T1800</guid>
     </item>
@@ -63,6 +75,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-04 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
       <link>https://bitcircus101.de/e/eeb6e38114ed/</link>
       <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <content:encoded>&lt;p&gt;Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. &lt;a href=&quot;https://di.day/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://di.day/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/eeb6e38114ed/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
       <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261004T1400</guid>
     </item>
@@ -70,6 +83,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-06 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/4e8ce7c8e5e0/</link>
       <description>Offene Datenburg · 2026-10-06</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4e8ce7c8e5e0/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -79,6 +93,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-08 19:00] Plenum mit anschließendem Essen</title>
       <link>https://bitcircus101.de/e/e60eb1e098f7/</link>
       <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
+      <content:encoded>&lt;p&gt;Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/e60eb1e098f7/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 10 Sep 2026 19:17:13 +0000</pubDate>
       <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261008T1900</guid>
     </item>
@@ -86,6 +101,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-10] Phosh Meetup! @ Datenburg</title>
       <link>https://bitcircus101.de/e/a7ab79e10919/</link>
       <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
+      <content:encoded>&lt;p&gt;Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a7ab79e10919/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#linux</category>
       <category>#datenburg</category>
       <pubDate>Tue, 18 Aug 2026 16:39:23 +0000</pubDate>
@@ -95,6 +111,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-13 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/bb8fd1f6eae2/</link>
       <description>Offene Datenburg · 2026-10-13</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/bb8fd1f6eae2/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -104,6 +121,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-14 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
       <link>https://bitcircus101.de/e/9546cc9a30f0/</link>
       <description>Le Sabot Computerspiel-Abend · 2026-10-14</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/9546cc9a30f0/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
       <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261014T1930</guid>
     </item>
@@ -111,6 +129,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-15 19:00] Raspberry Pi Workshop</title>
       <link>https://bitcircus101.de/e/c92f18d1118c/</link>
       <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://datenburg.org/veranstaltungen/raspberrypi/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://datenburg.org/veranstaltungen/raspberrypi/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c92f18d1118c/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#workshop</category>
       <category>#datenburg</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -120,6 +139,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-20 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/48886128d3e4/</link>
       <description>Offene Datenburg · 2026-10-20</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/48886128d3e4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -129,6 +149,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-22 19:00] Spieleabend</title>
       <link>https://bitcircus101.de/e/7c3144896687/</link>
       <description>Spieleabend · 2026-10-22</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/7c3144896687/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#gaming</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
       <guid isPermaLink="false">19efb037-b521-4f7b-b508-bd63eb3b292b-20261022T1900</guid>
@@ -137,6 +158,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-27 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/4f886c2dd6e4/</link>
       <description>Offene Datenburg · 2026-10-27</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4f886c2dd6e4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -146,6 +168,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-11-01 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
       <link>https://bitcircus101.de/e/cdf2a6e36bfd/</link>
       <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <content:encoded>&lt;p&gt;Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. &lt;a href=&quot;https://di.day/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://di.day/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/cdf2a6e36bfd/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
       <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261101T1400</guid>
     </item>
@@ -153,6 +176,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-11-03 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/a98115321382/</link>
       <description>Offene Datenburg · 2026-11-03</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a98115321382/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#datenburg</category>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -162,6 +186,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-11-05 18:00] Interner Burgabend</title>
       <link>https://bitcircus101.de/e/42f99ee2c80f/</link>
       <description>Interner Burgabend · 2026-11-05</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/42f99ee2c80f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
       <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261105T1800</guid>
     </item>

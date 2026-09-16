@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>bitcircus101 – Termine: #workshop</title>
     <link>https://bitcircus101.de/events</link>
     <description>Gefiltert nach #workshop – alle Termine mit diesem Schlagwort.</description>
     <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine: #workshop</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
     <lastBuildDate>Tue, 16 Jun 2026 15:09:02 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/workshop.xml" rel="self" type="application/rss+xml"/>
 
@@ -12,6 +18,7 @@
       <title>[2026-09-17 19:00] Raspberry Pi Workshop</title>
       <link>https://bitcircus101.de/e/b936f8f9538e/</link>
       <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://datenburg.org/veranstaltungen/raspberrypi/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://datenburg.org/veranstaltungen/raspberrypi/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b936f8f9538e/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#workshop</category>
       <category>#datenburg</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
@@ -21,6 +28,7 @@
       <title>[2026-10-15 19:00] Raspberry Pi Workshop</title>
       <link>https://bitcircus101.de/e/c92f18d1118c/</link>
       <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://datenburg.org/veranstaltungen/raspberrypi/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://datenburg.org/veranstaltungen/raspberrypi/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c92f18d1118c/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#workshop</category>
       <category>#datenburg</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>

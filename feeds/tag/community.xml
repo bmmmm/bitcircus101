@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>bitcircus101 – Termine: #community</title>
     <link>https://bitcircus101.de/events</link>
     <description>Gefiltert nach #community – alle Termine mit diesem Schlagwort.</description>
     <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine: #community</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
     <lastBuildDate>Thu, 10 Sep 2026 19:17:13 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/community.xml" rel="self" type="application/rss+xml"/>
 
@@ -14,6 +20,7 @@
       <description>Sperrmüll Rausstellen
 Abholung am 30.09
 Hilfe wird gebaucht</description>
+      <content:encoded>&lt;p&gt;Sperrmüll Rausstellen&lt;br /&gt;Abholung am 30.09&lt;br /&gt;Hilfe wird gebaucht&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/9c9e8e980a93/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Tue, 04 Aug 2026 16:26:18 +0000</pubDate>
       <guid isPermaLink="false">2a828714-52b9-4074-a76e-56790ff4720b-20260929T1900</guid>
     </item>
@@ -21,6 +28,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-09-30 20:00] Treffen: Bolle-Bonn.de @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/8797f899c84a/</link>
       <description>Treffen: Bolle-Bonn.de · 2026-09-30</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/8797f899c84a/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Mon, 31 Aug 2026 14:17:23 +0000</pubDate>
       <guid isPermaLink="false">B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20260930T2000</guid>
     </item>
@@ -28,6 +36,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-01 18:00] Interner Burgabend</title>
       <link>https://bitcircus101.de/e/753144bf386d/</link>
       <description>Interner Burgabend · 2026-10-01</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/753144bf386d/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
       <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261001T1800</guid>
     </item>
@@ -35,6 +44,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-04 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
       <link>https://bitcircus101.de/e/eeb6e38114ed/</link>
       <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <content:encoded>&lt;p&gt;Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. &lt;a href=&quot;https://di.day/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://di.day/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/eeb6e38114ed/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
       <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261004T1400</guid>
     </item>
@@ -42,6 +52,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-08 19:00] Plenum mit anschließendem Essen</title>
       <link>https://bitcircus101.de/e/e60eb1e098f7/</link>
       <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
+      <content:encoded>&lt;p&gt;Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/e60eb1e098f7/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 10 Sep 2026 19:17:13 +0000</pubDate>
       <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261008T1900</guid>
     </item>
@@ -49,6 +60,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-14 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
       <link>https://bitcircus101.de/e/9546cc9a30f0/</link>
       <description>Le Sabot Computerspiel-Abend · 2026-10-14</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/9546cc9a30f0/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
       <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261014T1930</guid>
     </item>
@@ -56,6 +68,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-10-28 20:00] Treffen: Bolle-Bonn.de @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/b14bcce61fed/</link>
       <description>Treffen: Bolle-Bonn.de · 2026-10-28</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b14bcce61fed/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Mon, 31 Aug 2026 14:17:23 +0000</pubDate>
       <guid isPermaLink="false">B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20261028T2000</guid>
     </item>
@@ -63,6 +76,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-11-01 14:00] Digital Independence Day (DID) @ Bornheimer Straße 25, Bonn</title>
       <link>https://bitcircus101.de/e/cdf2a6e36bfd/</link>
       <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <content:encoded>&lt;p&gt;Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. &lt;a href=&quot;https://di.day/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://di.day/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/cdf2a6e36bfd/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Sat, 02 May 2026 13:08:46 +0000</pubDate>
       <guid isPermaLink="false">aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261101T1400</guid>
     </item>
@@ -70,6 +84,7 @@ Hilfe wird gebaucht</description>
       <title>[2026-11-05 18:00] Interner Burgabend</title>
       <link>https://bitcircus101.de/e/42f99ee2c80f/</link>
       <description>Interner Burgabend · 2026-11-05</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/42f99ee2c80f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
       <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261105T1800</guid>
     </item>

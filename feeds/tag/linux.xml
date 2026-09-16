@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>bitcircus101 – Termine: #linux</title>
     <link>https://bitcircus101.de/events</link>
     <description>Gefiltert nach #linux – alle Termine mit diesem Schlagwort.</description>
     <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine: #linux</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
     <lastBuildDate>Wed, 02 Sep 2026 08:17:11 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/linux.xml" rel="self" type="application/rss+xml"/>
 
@@ -12,6 +18,7 @@
       <title>[2026-10-10] Phosh Meetup! @ Bornheimer Straße 25 Bonn</title>
       <link>https://bitcircus101.de/e/fc7b7b7f441a/</link>
       <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
+      <content:encoded>&lt;p&gt;Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/fc7b7b7f441a/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#linux</category>
       <category>#datenburg</category>
       <pubDate>Wed, 02 Sep 2026 08:17:11 +0000</pubDate>
@@ -21,6 +28,7 @@
       <title>[2026-10-10] Phosh Meetup! @ Datenburg</title>
       <link>https://bitcircus101.de/e/a7ab79e10919/</link>
       <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
+      <content:encoded>&lt;p&gt;Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a7ab79e10919/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#linux</category>
       <category>#datenburg</category>
       <pubDate>Tue, 18 Aug 2026 16:39:23 +0000</pubDate>

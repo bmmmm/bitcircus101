@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>bitcircus101 – Termine: #talk</title>
     <link>https://bitcircus101.de/events</link>
     <description>Gefiltert nach #talk – alle Termine mit diesem Schlagwort.</description>
     <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine: #talk</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
     <lastBuildDate>Fri, 11 Sep 2026 15:53:12 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/talk.xml" rel="self" type="application/rss+xml"/>
 
     <item>
       <title>[2026-09-18 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/67d0a07d76fd/</link>
-      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.
-
-On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests</description>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
+      <content:encoded>&lt;p&gt;Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.&lt;/p&gt;
+&lt;p&gt;On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/67d0a07d76fd/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <category>#lightning-talks</category>
       <category>#talk</category>
@@ -23,10 +29,9 @@ On all the other Fridays, we host Casual Linkup at the same time—no talks, jus
     <item>
       <title>[2026-09-18 20:30] Special: Öffentliche Dateninfrastruktur - Vortrag Markus Drenger @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/bef4fc45327a/</link>
-      <description>Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &quot;Hauskoordinaten Deutschland&quot; auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht nur wegen eines Prozessfehlers, sondern weil das Amt vor Gericht gelogen hat.
-
-Vortrag 20:30-21:15 (30 min + 15 min Q&amp;A), innerhalb des linkup@bitcircus101.
-https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/</description>
+      <description>Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &quot;Hauskoordinaten Deutschland&quot; auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht …</description>
+      <content:encoded>&lt;p&gt;Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &amp;quot;Hauskoordinaten Deutschland&amp;quot; auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht nur wegen eines Prozessfehlers, sondern weil das Amt vor Gericht gelogen hat.&lt;/p&gt;
+&lt;p&gt;Vortrag 20:30-21:15 (30 min + 15 min Q&amp;amp;A), innerhalb des linkup@bitcircus101.&lt;br /&gt;&lt;a href=&quot;https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/bef4fc45327a/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <category>#talk</category>
       <pubDate>Fri, 11 Sep 2026 15:53:12 +0000</pubDate>
@@ -35,9 +40,9 @@ https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/</descri
     <item>
       <title>[2026-10-16 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/8d0fdd318df3/</link>
-      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.
-
-On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests</description>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
+      <content:encoded>&lt;p&gt;Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.&lt;/p&gt;
+&lt;p&gt;On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/8d0fdd318df3/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <category>#lightning-talks</category>
       <category>#talk</category>

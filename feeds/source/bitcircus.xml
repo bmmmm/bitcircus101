@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>bitcircus101 – Termine: bitcircus101</title>
     <link>https://bitcircus101.de/events</link>
     <description>Alle Termine der Quelle bitcircus101.</description>
     <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine: bitcircus101</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
     <lastBuildDate>Fri, 11 Sep 2026 15:53:12 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/source/bitcircus.xml" rel="self" type="application/rss+xml"/>
 
     <item>
       <title>[2026-09-18 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/67d0a07d76fd/</link>
-      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.
-
-On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests</description>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
+      <content:encoded>&lt;p&gt;Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.&lt;/p&gt;
+&lt;p&gt;On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/67d0a07d76fd/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <category>#lightning-talks</category>
       <category>#talk</category>
@@ -23,10 +29,9 @@ On all the other Fridays, we host Casual Linkup at the same time—no talks, jus
     <item>
       <title>[2026-09-18 20:30] Special: Öffentliche Dateninfrastruktur - Vortrag Markus Drenger @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/bef4fc45327a/</link>
-      <description>Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &quot;Hauskoordinaten Deutschland&quot; auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht nur wegen eines Prozessfehlers, sondern weil das Amt vor Gericht gelogen hat.
-
-Vortrag 20:30-21:15 (30 min + 15 min Q&amp;A), innerhalb des linkup@bitcircus101.
-https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/</description>
+      <description>Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &quot;Hauskoordinaten Deutschland&quot; auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht …</description>
+      <content:encoded>&lt;p&gt;Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &amp;quot;Hauskoordinaten Deutschland&amp;quot; auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht nur wegen eines Prozessfehlers, sondern weil das Amt vor Gericht gelogen hat.&lt;/p&gt;
+&lt;p&gt;Vortrag 20:30-21:15 (30 min + 15 min Q&amp;amp;A), innerhalb des linkup@bitcircus101.&lt;br /&gt;&lt;a href=&quot;https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/bef4fc45327a/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <category>#talk</category>
       <pubDate>Fri, 11 Sep 2026 15:53:12 +0000</pubDate>
@@ -36,6 +41,7 @@ https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/</descri
       <title>[2026-09-19 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/2c8a32452fc1/</link>
       <description>32. Offene Ateliers · 2026-09-19</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/2c8a32452fc1/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#offener-abend</category>
       <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
       <guid isPermaLink="false">6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260919T1400</guid>
@@ -44,6 +50,7 @@ https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/</descri
       <title>[2026-09-20 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/2d87f541a8c8/</link>
       <description>32. Offene Ateliers · 2026-09-20</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/2d87f541a8c8/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#offener-abend</category>
       <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
       <guid isPermaLink="false">6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260920T1400</guid>
@@ -52,12 +59,10 @@ https://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/</descri
       <title>[2026-09-22 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/29ed8de6211c/</link>
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
-We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
-
-Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
-Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
-
-#relax&amp;chill #social</description>
+We play inclusive and together. There is stim toys and you can grab something to drink from …</description>
+      <content:encoded>&lt;p&gt;We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.&lt;br /&gt;We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.&lt;/p&gt;
+&lt;p&gt;Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.&lt;br /&gt;Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.&lt;/p&gt;
+&lt;p&gt;#relax&amp;amp;chill #social&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/29ed8de6211c/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -68,6 +73,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-09-25 20:00] Casual Linkup@bitcircus101 (4FR) @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/1d9a350e2120/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/1d9a350e2120/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <pubDate>Thu, 23 Apr 2026 19:09:53 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-4fr@bitcircus101.de-20260925T2000</guid>
@@ -76,12 +82,10 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-09-29 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/30ed98eb1c1c/</link>
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
-We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
-
-Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
-Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
-
-#relax&amp;chill #social</description>
+We play inclusive and together. There is stim toys and you can grab something to drink from …</description>
+      <content:encoded>&lt;p&gt;We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.&lt;br /&gt;We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.&lt;/p&gt;
+&lt;p&gt;Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.&lt;br /&gt;Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.&lt;/p&gt;
+&lt;p&gt;#relax&amp;amp;chill #social&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/30ed98eb1c1c/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -92,6 +96,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-09-30 20:00] Treffen: Bolle-Bonn.de @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/8797f899c84a/</link>
       <description>Treffen: Bolle-Bonn.de · 2026-09-30</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/8797f899c84a/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Mon, 31 Aug 2026 14:17:23 +0000</pubDate>
       <guid isPermaLink="false">B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20260930T2000</guid>
     </item>
@@ -99,6 +104,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-02 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/3309141a8e57/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3309141a8e57/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-1fr@bitcircus101.de-20261002T2000</guid>
@@ -107,12 +113,10 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-06 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/bb806176eec6/</link>
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
-We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
-
-Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
-Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
-
-#relax&amp;chill #social</description>
+We play inclusive and together. There is stim toys and you can grab something to drink from …</description>
+      <content:encoded>&lt;p&gt;We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.&lt;br /&gt;We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.&lt;/p&gt;
+&lt;p&gt;Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.&lt;br /&gt;Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.&lt;/p&gt;
+&lt;p&gt;#relax&amp;amp;chill #social&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/bb806176eec6/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -123,6 +127,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-09 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/184ba0f4c433/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/184ba0f4c433/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20261009T2000</guid>
@@ -131,6 +136,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-10] Phosh Meetup! @ Bornheimer Straße 25 Bonn</title>
       <link>https://bitcircus101.de/e/fc7b7b7f441a/</link>
       <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
+      <content:encoded>&lt;p&gt;Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/fc7b7b7f441a/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#linux</category>
       <category>#datenburg</category>
       <pubDate>Wed, 02 Sep 2026 08:17:11 +0000</pubDate>
@@ -140,6 +146,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-12 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/930208fa5a93/</link>
       <description>Treffen: Bonner FSFE Community · 2026-10-12</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/930208fa5a93/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#foss</category>
       <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
       <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261012T1900</guid>
@@ -148,12 +155,10 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-13 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/c082a7ecdbc9/</link>
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
-We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
-
-Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
-Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
-
-#relax&amp;chill #social</description>
+We play inclusive and together. There is stim toys and you can grab something to drink from …</description>
+      <content:encoded>&lt;p&gt;We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.&lt;br /&gt;We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.&lt;/p&gt;
+&lt;p&gt;Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.&lt;br /&gt;Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.&lt;/p&gt;
+&lt;p&gt;#relax&amp;amp;chill #social&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c082a7ecdbc9/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -163,9 +168,9 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
     <item>
       <title>[2026-10-16 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/8d0fdd318df3/</link>
-      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.
-
-On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests</description>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
+      <content:encoded>&lt;p&gt;Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.&lt;/p&gt;
+&lt;p&gt;On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/8d0fdd318df3/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <category>#lightning-talks</category>
       <category>#talk</category>
@@ -176,12 +181,10 @@ On all the other Fridays, we host Casual Linkup at the same time—no talks, jus
       <title>[2026-10-20 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/c984f4ae68c1/</link>
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
-We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
-
-Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
-Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
-
-#relax&amp;chill #social</description>
+We play inclusive and together. There is stim toys and you can grab something to drink from …</description>
+      <content:encoded>&lt;p&gt;We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.&lt;br /&gt;We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.&lt;/p&gt;
+&lt;p&gt;Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.&lt;br /&gt;Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.&lt;/p&gt;
+&lt;p&gt;#relax&amp;amp;chill #social&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c984f4ae68c1/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -192,6 +195,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-23 20:00] Casual Linkup@bitcircus101 (4FR) @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/05bfccda9d0f/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/05bfccda9d0f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <pubDate>Thu, 23 Apr 2026 19:09:53 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-4fr@bitcircus101.de-20261023T2000</guid>
@@ -200,12 +204,10 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-27 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/cc84f9676fc1/</link>
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
-We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
-
-Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
-Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
-
-#relax&amp;chill #social</description>
+We play inclusive and together. There is stim toys and you can grab something to drink from …</description>
+      <content:encoded>&lt;p&gt;We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.&lt;br /&gt;We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.&lt;/p&gt;
+&lt;p&gt;Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.&lt;br /&gt;Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.&lt;/p&gt;
+&lt;p&gt;#relax&amp;amp;chill #social&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/cc84f9676fc1/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
@@ -216,6 +218,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-28 20:00] Treffen: Bolle-Bonn.de @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/b14bcce61fed/</link>
       <description>Treffen: Bolle-Bonn.de · 2026-10-28</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b14bcce61fed/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Mon, 31 Aug 2026 14:17:23 +0000</pubDate>
       <guid isPermaLink="false">B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20261028T2000</guid>
     </item>
@@ -223,6 +226,7 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-10-30 20:00] Casual Linkup@bitcircus101 (5FR) @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/1f9a61d121da/</link>
       <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/1f9a61d121da/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <pubDate>Wed, 09 Sep 2026 17:53:45 +0000</pubDate>
       <guid isPermaLink="false">A181B019-30E9-40E0-8250-45DC8DF5B788-20261030T2000</guid>
@@ -231,12 +235,10 @@ Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bi
       <title>[2026-11-03 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/3eb855200367/</link>
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
-We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.
-
-Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.
-Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.
-
-#relax&amp;chill #social</description>
+We play inclusive and together. There is stim toys and you can grab something to drink from …</description>
+      <content:encoded>&lt;p&gt;We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.&lt;br /&gt;We play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.&lt;/p&gt;
+&lt;p&gt;Einmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.&lt;br /&gt;Wir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.&lt;/p&gt;
+&lt;p&gt;#relax&amp;amp;chill #social&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3eb855200367/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#relax</category>
       <category>#social</category>
       <category>#spieletreff</category>
