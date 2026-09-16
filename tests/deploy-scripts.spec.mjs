@@ -190,6 +190,9 @@ describe("smoke-live.mjs", () => {
     // Simulates the Pages build still running: that many feed requests 404
     // before the file appears (the race that broke run 33409874725).
     let feedDelay = 0;
+    // Same race for a page that is new in this deploy (the /rss deploy, run
+    // 35108448432): that many requests 404 before the page is served.
+    let pageDelay = 0;
     // Every request path the fake server saw, in order; reset per test that reads it.
     let requestLog = [];
     const HASH = "abc12345";
@@ -225,6 +228,15 @@ describe("smoke-live.mjs", () => {
             } else if (req.url === "/pinnwand/feed.xml" && !pinnwandDown) {
                 res.writeHead(200, { "content-type": "application/xml" });
                 res.end('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel/></rss>');
+            } else if (req.url === "/late") {
+                if (pageDelay > 0) {
+                    pageDelay--;
+                    res.writeHead(404);
+                    res.end("building");
+                    return;
+                }
+                res.writeHead(200, { "content-type": "text/html" });
+                res.end("<h1>late</h1>");
             } else if (req.url === "/moved") {
                 // Stands in for the clean-URL redirect production serves.
                 res.writeHead(308, { location: "/events" });
@@ -264,6 +276,19 @@ describe("smoke-live.mjs", () => {
             assert.match(stderr, /filtered-feed anchor OK/);
         } finally {
             feedDelay = 0;
+        }
+    });
+
+    it("keeps polling a sitemap page that 404s until the pages build catches up", async () => {
+        locs = [`${base}/`, `${base}/late`];
+        pageDelay = 2;
+        try {
+            const { stderr } = await smoke();
+            assert.match(stderr, /\/late returned 404 — retrying/);
+            assert.match(stderr, /2 sitemap URLs OK/);
+        } finally {
+            pageDelay = 0;
+            locs = [`${base}/`, `${base}/events`];
         }
     });
 
