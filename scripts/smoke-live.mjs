@@ -135,9 +135,9 @@ try {
 }
 console.error("smoke: 404 handling OK");
 
-// The filtered-feed tree never appears in the sitemap (feeds are not pages), so
-// the sitemap walk below cannot see it. One explicit probe of its anchor file
-// catches the whole class of "deploy pruned feeds/" regressions.
+// Feeds never appear in the sitemap (they are not pages), so the sitemap walk
+// below cannot see them. One explicit probe per feed tree catches the whole
+// class of "deploy pruned the generated files" regressions.
 //
 // Polled against the SAME overall deadline as the hash check, because the hash
 // is no freshness signal when a deploy changes no hashed asset: the poll above
@@ -145,24 +145,31 @@ console.error("smoke: 404 handling OK");
 // new commit is still running (~1 min) — seen live on the deploy that
 // introduced feeds/ (run 33409874725: push at :19.45, probe 404 at :20.11,
 // Pages build finished 46s later with the file present).
-const feedUrl = `${base}/feeds/all.ics`;
-for (;;) {
-    try {
-        const feed = await get(feedUrl);
-        const feedBody = feed.ok ? await feed.text() : "";
-        if (feed.ok && feedBody.startsWith("BEGIN:VCALENDAR")) break;
-        console.error(
-            `smoke: ${feedUrl} returned ${feed.status}${feed.ok ? " without a VCALENDAR body" : ""} — retrying`,
-        );
-    } catch (e) {
-        console.error(`smoke: feed fetch failed: ${e.message}`);
+async function waitForFeed(url, prefix, label) {
+    for (;;) {
+        try {
+            const feed = await get(url);
+            const feedBody = feed.ok ? await feed.text() : "";
+            if (feed.ok && feedBody.startsWith(prefix)) break;
+            console.error(
+                `smoke: ${url} returned ${feed.status}${feed.ok ? ` without a ${prefix} body` : ""} — retrying`,
+            );
+        } catch (e) {
+            console.error(`smoke: feed fetch failed: ${e.message}`);
+        }
+        if (Date.now() > deadline) {
+            fail(`${url} did not serve ${prefix} within ${TIMEOUT}ms`);
+        }
+        await sleep(INTERVAL);
     }
-    if (Date.now() > deadline) {
-        fail(`${feedUrl} did not serve a VCALENDAR within ${TIMEOUT}ms`);
-    }
-    await sleep(INTERVAL);
+    console.error(`smoke: ${label} OK`);
 }
-console.error("smoke: filtered-feed anchor OK");
+
+await waitForFeed(`${base}/feeds/all.ics`, "BEGIN:VCALENDAR", "filtered-feed anchor");
+// The job board's feed comes out of a different pipeline than the calendar
+// feeds (build-pinnwand-feed.mjs, run by both the deploy and the sync), so it
+// needs its own probe — feeds/all.ics being live says nothing about it.
+await waitForFeed(`${base}/pinnwand/feed.xml`, "<?xml", "pinnwand feed");
 
 // ── Sitemap-driven page check ───────────────────────────────────────────────
 // The sitemap is the site's own claim about which URLs exist, so it is the one

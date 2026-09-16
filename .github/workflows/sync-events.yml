@@ -33,7 +33,9 @@ jobs:
       - name: Use scripts and config from main
         run: |
           git fetch origin main
-          git checkout origin/main -- scripts/ calendars/ ics-core.js events-core.js
+          # jobs-core.js: build-pinnwand-feed.mjs needs it in step with the script,
+          # not live's copy from the last deploy (a deploy can lag this cron).
+          git checkout origin/main -- scripts/ calendars/ ics-core.js events-core.js jobs-core.js
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -44,6 +46,12 @@ jobs:
 
       - name: Rebuild lite page event list
         run: node scripts/build-lite-events.mjs
+
+      # Not calendar data, but the same live-only contract and the same cadence:
+      # a note whose `from` is today has to appear without waiting for a deploy.
+      # jobs.json is tracked on main and the overlay copies it to live.
+      - name: Rebuild the Pinnwand feed
+        run: node scripts/build-pinnwand-feed.mjs
 
       # One static page per event (e/<id>/) plus the archive index, from
       # events-archive.json — the template is this checkout's events.html, so
@@ -60,7 +68,9 @@ jobs:
           # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5).
           # -A on the feeds/ pathspec stages DELETIONS too — a retired tag feed
           # that syncFeedsDir removed must stop being tracked on live.
-          git add -f -A events-data.json feed.xml ical.ics events/feed.xml events/ical.ics feeds lite/index.html events.html
+          # pinnwand/feed.xml is in the fixed list, not the guarded loop below:
+          # the build step above always writes it, even for an empty wall.
+          git add -f -A events-data.json feed.xml ical.ics events/feed.xml events/ical.ics feeds lite/index.html events.html pinnwand/feed.xml
           # The archive tree only exists once a primary source answered; a
           # pathspec with no match aborts git add (exit 128) and would take
           # the feed commit down with it.

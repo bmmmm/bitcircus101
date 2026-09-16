@@ -823,14 +823,86 @@ describe("generateRSS", () => {
     assert.match(xml, /<pubDate>Tue, 10 Mar 2026 22:45:00 \+0000<\/pubDate>/);
   });
 
-  it("limits output to 15 items", () => {
+  it("emits every card by default and honours the limit opt", () => {
     const cards = Array.from({ length: 20 }, (_, i) => ({
       ...baseCard,
       date: `2026-04-${String(i + 1).padStart(2, "0")}`,
       firstSeen: "2026-03-01T00:00:00.000Z",
     }));
-    const xml = generateRSS(cards);
-    assert.equal((xml.match(/<item>/g) || []).length, 15);
+    // No default cap: the old 15-item cap hid every upcoming event beyond the
+    // fifteen soonest until earlier ones had passed — and then surfaced it with
+    // a weeks-old pubDate, which readers bury. The aggregate window bounds it.
+    assert.equal((generateRSS(cards).match(/<item>/g) || []).length, 20);
+    assert.equal((generateRSS(cards, { limit: 3 }).match(/<item>/g) || []).length, 3);
+  });
+
+  it("declares the content namespace and renders the description as HTML in content:encoded", () => {
+    const card = {
+      ...baseCard,
+      id: "abc123def456",
+      description: "Erster Absatz mit https://example.org/x.\n\nZweiter Absatz\nmit Umbruch\n\n#löten #hardware",
+    };
+    const xml = generateRSS([card]);
+    assert.match(xml, /<rss [^>]*xmlns:content="http:\/\/purl\.org\/rss\/1\.0\/modules\/content\/"/);
+    const enc = /<content:encoded>([\s\S]*?)<\/content:encoded>/.exec(xml);
+    assert.ok(enc, "content:encoded present");
+    // The body is a text node — the reader unescapes it, so no raw "<" may be inside.
+    assert.ok(!enc[1].includes("<"), "content:encoded body is XML-escaped");
+    const html = enc[1]
+      .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+    assert.match(
+      html,
+      /^<p>Erster Absatz mit <a href="https:\/\/example\.org\/x"[^>]*>https:\/\/example\.org\/x<\/a>\.<\/p>\n<p>Zweiter Absatz<br \/>mit Umbruch<\/p>/
+    );
+    assert.ok(!html.includes("#löten"), "trailing hashtag line is dropped (tags are <category>)");
+    assert.ok(
+      html.endsWith('<p><a href="https://bitcircus101.de/e/abc123def456/">Details, Kalendereintrag (.ics) und Ort</a></p>'),
+      "ends with the link to the event page"
+    );
+  });
+
+  it("keeps <description> a plain-text teaser cut at a word boundary", () => {
+    const long = "Wort ".repeat(100).trim() + "\n\n#tag";
+    const xml = generateRSS([{ ...baseCard, description: long }]);
+    // First match is the channel description, second the item's.
+    const [, item] = [...xml.matchAll(/<description>([^<]*)<\/description>/g)].map((m) => m[1]);
+    assert.ok(item.length <= 305, `teaser is ${item.length} chars`);
+    assert.ok(item.endsWith(" …"), "cut with an ellipsis");
+    assert.ok(!item.includes("#tag"), "no hashtag line in the teaser");
+    assert.ok(!item.includes("&lt;p&gt;"), "no HTML in the teaser");
+  });
+
+  it("emits the channel image and ttl", () => {
+    const xml = generateRSS([baseCard]);
+    assert.match(xml, /<image>\s*<url>https:\/\/bitcircus101\.de\/images\/icon-192\.png<\/url>/);
+    assert.match(xml, /<ttl>30<\/ttl>/);
+  });
+
+  it("derives lastBuildDate from the newest firstSeen and omits it without one", () => {
+    const xml = generateRSS([
+      { ...baseCard, firstSeen: "2026-03-10T22:45:00.000Z" },
+      { ...baseCard, date: "2026-03-22", firstSeen: "2026-03-12T08:00:00.000Z" },
+    ]);
+    assert.match(xml, /<lastBuildDate>Thu, 12 Mar 2026 08:00:00 \+0000<\/lastBuildDate>/);
+    const { firstSeen, ...noStamp } = baseCard;
+    assert.ok(!generateRSS([noStamp]).includes("<lastBuildDate"), "omitted without firstSeen");
+  });
+
+  it("is byte-stable for the same cards across time (same ETag → readers get a 304)", (t) => {
+    // Two renders a minute apart must not differ: a clock-derived
+    // lastBuildDate (the old `new Date()` default) would change the bytes
+    // every sync and defeat conditional GETs. Mocked Date makes the minute real.
+    t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-03-15T10:00:00Z") });
+    const cards = [baseCard, { ...baseCard, date: "2026-03-28" }];
+    const first = generateRSS(cards);
+    t.mock.timers.setTime(new Date("2026-03-15T10:01:00Z").getTime());
+    assert.equal(generateRSS(cards), first);
+  });
+
+  it("falls back to title · date in the teaser when the description is only hashtag lines", () => {
+    const xml = generateRSS([{ ...baseCard, description: "#repaircafe #werkstatt" }]);
+    const [, item] = [...xml.matchAll(/<description>([^<]*)<\/description>/g)].map((m) => m[1]);
+    assert.equal(item, "Crowd Gaming · 2026-03-21");
   });
 
   it("escapes special characters in title and description", () => {
@@ -885,7 +957,7 @@ describe("generateRSS", () => {
     };
     const xml = generateRSS([nasty]);
     assert.ok(!/&(?!amp;|lt;|gt;|quot;|#)/.test(xml), "no unescaped ampersand");
-    for (const tag of ["item", "title", "link", "description", "guid", "pubDate"]) {
+    for (const tag of ["item", "title", "link", "description", "content:encoded", "guid", "pubDate"]) {
       const open = (xml.match(new RegExp("<" + tag + "[ >]", "g")) || []).length;
       const close = (xml.match(new RegExp("</" + tag + ">", "g")) || []).length;
       assert.equal(open, close, tag + " tags balanced");
@@ -1807,12 +1879,18 @@ describe("card pipeline — golden output", () => {
   ].join("\r\n");
 
   const GOLDEN_RSS = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>bitcircus101 – Termine</title>
     <link>https://bitcircus101.de/events</link>
     <description>Freitags ab 20:00 – offene Abende und linkup@bitcircus101 im Hackspace Bonn</description>
     <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
     <lastBuildDate/>
     <atom:link href="https://bitcircus101.de/feed.xml" rel="self" type="application/rss+xml"/>
 
@@ -1820,6 +1898,7 @@ describe("card pipeline — golden output", () => {
       <title>[2099-03-20 20:00] Crowd Gaming @ Heerstraße 101 53111 Bonn</title>
       <link>https://bitcircus101.de/e/e0c1cde9b67a/</link>
       <description>Wir spielen Retro-Spiele und puzzeln den ganzen Abend.</description>
+      <content:encoded>&lt;p&gt;Wir spielen Retro-Spiele und puzzeln den ganzen Abend.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/e0c1cde9b67a/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#retro-gaming</category>
       <category>#chaos</category>
       <category>#gaming</category>
@@ -1831,6 +1910,7 @@ describe("card pipeline — golden output", () => {
       <title>[2099-04-10] Tag der offenen Tür</title>
       <link>https://bitcircus101.de/e/c219e25cd208/</link>
       <description>Komm vorbei!</description>
+      <content:encoded>&lt;p&gt;Komm vorbei!&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c219e25cd208/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#offener-abend</category>
       <pubDate>Thu, 15 Jan 2026 11:00:00 +0000</pubDate>
       <guid isPermaLink="false">bitcircus101-20990410-special</guid>
@@ -1839,6 +1919,7 @@ describe("card pipeline — golden output", () => {
       <title>[2099-05-15 18:00] Löt-Workshop für Einsteiger:innen und Fortgeschrittene aller Art</title>
       <link>https://bitcircus101.de/e/15107eb32c8b/</link>
       <description>Hands-on Abend. #löten #hardware Mit Lötkolben und Platinen.</description>
+      <content:encoded>&lt;p&gt;Hands-on Abend. #löten #hardware Mit Lötkolben und Platinen.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/15107eb32c8b/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#löten</category>
       <category>#hardware</category>
       <category>#workshop</category>
@@ -1849,6 +1930,7 @@ describe("card pipeline — golden output", () => {
       <title>[2099-06-11 19:00] linkup</title>
       <link>https://bitcircus101.de/e/6867f3e2c39f/</link>
       <description>Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer etwas zu entdecken und jemanden zum Fachsimpeln.</description>
+      <content:encoded>&lt;p&gt;Der klassische linkup Abend im Space: Leute treffen, Projekte zeigen, an Ideen schrauben und bei Mate über Technik reden. Bring dein aktuelles Projekt mit oder komm einfach so vorbei — es gibt immer etwas zu entdecken und jemanden zum Fachsimpeln.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/6867f3e2c39f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <category>#meetup</category>
       <pubDate>Thu, 15 Jan 2026 11:00:00 +0000</pubDate>
       <guid isPermaLink="false">evt-4@example.com-20990611T1900</guid>

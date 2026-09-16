@@ -58,6 +58,8 @@ describe("live-overlay.mjs", () => {
         write(dir, "funding.json", "stale-live-funding");
         write(dir, "events/feed.xml", "generated-feed-copy");
         write(dir, "events-archive.json", "generated-archive-json");
+        // the job-board feed: a single fixed path (FEEDS), not a tree
+        write(dir, "pinnwand/feed.xml", "generated-pinnwand-feed");
         // the filtered-feed TREE (variable file set → FEED_DIRS, not FEEDS)
         write(dir, "feeds/all.ics", "generated-all-feed");
         write(dir, "feeds/tag/linkup.ics", "generated-tag-feed");
@@ -86,6 +88,7 @@ describe("live-overlay.mjs", () => {
         assert.equal(fs.readFileSync(path.join(dir, "events-data.json"), "utf8"), "generated-events");
         assert.equal(fs.readFileSync(path.join(dir, "events/feed.xml"), "utf8"), "generated-feed-copy");
         assert.equal(fs.readFileSync(path.join(dir, "events-archive.json"), "utf8"), "generated-archive-json");
+        assert.equal(fs.readFileSync(path.join(dir, "pinnwand/feed.xml"), "utf8"), "generated-pinnwand-feed");
         assert.equal(fs.readFileSync(path.join(dir, "feeds/tag/linkup.ics"), "utf8"), "generated-tag-feed");
         // the per-event page tree and the archive index survive the overlay too
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/index.html"), "utf8"), "generated-event-page");
@@ -123,6 +126,9 @@ describe("live-overlay.mjs", () => {
         assert.equal(fs.readFileSync(path.join(dir, "events-data.json"), "utf8"), "generated-events");
         assert.equal(fs.readFileSync(path.join(dir, "events/feed.xml"), "utf8"), "generated-feed-copy");
         assert.equal(fs.readFileSync(path.join(dir, "events-archive.json"), "utf8"), "generated-archive-json");
+        // the job-board feed is live-only too: absent from main, so the prune
+        // step would take it out without its FEEDS entry
+        assert.equal(fs.readFileSync(path.join(dir, "pinnwand/feed.xml"), "utf8"), "generated-pinnwand-feed");
         // the FEED_DIRS tree survives pruning too — the exemption is scoped to
         // the feeds/e/archiv prefixes (old-page/old-assets above prove pruning still runs)
         assert.equal(fs.readFileSync(path.join(dir, "feeds/all.ics"), "utf8"), "generated-all-feed");
@@ -179,6 +185,8 @@ describe("smoke-live.mjs", () => {
     let locs = [];
     // Simulates a deploy that lost the feeds/ tree; reset by the test that sets it.
     let feedDown = false;
+    // Same for the job-board feed, which comes from its own build step.
+    let pinnwandDown = false;
     // Simulates the Pages build still running: that many feed requests 404
     // before the file appears (the race that broke run 33409874725).
     let feedDelay = 0;
@@ -214,6 +222,9 @@ describe("smoke-live.mjs", () => {
                 }
                 res.writeHead(200, { "content-type": "text/calendar" });
                 res.end("BEGIN:VCALENDAR\r\nEND:VCALENDAR\r\n");
+            } else if (req.url === "/pinnwand/feed.xml" && !pinnwandDown) {
+                res.writeHead(200, { "content-type": "application/xml" });
+                res.end('<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel/></rss>');
             } else if (req.url === "/moved") {
                 // Stands in for the clean-URL redirect production serves.
                 res.writeHead(308, { location: "/events" });
@@ -240,6 +251,9 @@ describe("smoke-live.mjs", () => {
         locs = [`${base}/`, `${base}/events`];
         const { stderr } = await smoke();
         assert.match(stderr, /2 sitemap URLs OK/);
+        // Both feed probes ran — neither tree is visible to the sitemap walk.
+        assert.match(stderr, /filtered-feed anchor OK/);
+        assert.match(stderr, /pinnwand feed OK/);
     });
 
     it("keeps polling the feed anchor until the pages build catches up", async () => {
@@ -262,6 +276,20 @@ describe("smoke-live.mjs", () => {
             );
         } finally {
             feedDown = false;
+        }
+    });
+
+    it("fails when the pinnwand feed is missing", async () => {
+        // Its own probe, because it comes from its own build step: the calendar
+        // feeds can be perfectly live while build-pinnwand-feed.mjs never ran.
+        pinnwandDown = true;
+        try {
+            await assert.rejects(
+                () => smoke(),
+                (e) => e.code === 1 && e.stderr.includes("/pinnwand/feed.xml"),
+            );
+        } finally {
+            pinnwandDown = false;
         }
     });
 
