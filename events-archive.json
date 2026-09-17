@@ -5016,6 +5016,30 @@
       "recurring": true,
       "firstSeen": "2026-09-14T17:17:13.479Z",
       "lastSeen": "2026-09-17"
+    },
+    "8ae01b3568e9": {
+      "id": "8ae01b3568e9",
+      "title": "Linkup@bitcircus101",
+      "subtitle": "",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.\n\nOn all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-15",
+      "time": "20:00",
+      "endDate": "2027-01-15",
+      "endTime": "22:30",
+      "tags": [
+        "#meetup",
+        "#lightning-talks",
+        "#talk"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
+      "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-09-17T18:17:14.667Z",
+      "lastSeen": "2026-09-17"
     }
   }
 }
