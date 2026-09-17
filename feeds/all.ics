@@ -23,16 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:dccb0e70-ca58-42f6-892d-55909fd35805-20260917T1900@bitcircus101.de
-DTSTAMP:20260616T150902Z
-DTSTART;TZID=Europe/Berlin:20260917T190000
-DTEND;TZID=Europe/Berlin:20260917T220000
-SUMMARY:Raspberry Pi Workshop
-DESCRIPTION:https://datenburg.org/veranstaltungen/raspberrypi/
-URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
-CATEGORIES:workshop,datenburg
-END:VEVENT
-BEGIN:VEVENT
 UID:19471ECE-D83E-4AA6-B70D-545B3F281B66-20260918T2000@bitcircus101.de
 DTSTAMP:20260515T211510Z
 DTSTART;TZID=Europe/Berlin:20260918T200000
@@ -547,5 +537,18 @@ DTEND;TZID=Europe/Berlin:20261105T230000
 SUMMARY:Interner Burgabend
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
+END:VEVENT
+BEGIN:VEVENT
+UID:casual-linkup-1fr@bitcircus101.de-20261106T2000@bitcircus101.de
+DTSTAMP:20260502T105121Z
+DTSTART;TZID=Europe/Berlin:20261106T200000
+DTEND;TZID=Europe/Berlin:20261106T230000
+SUMMARY:Casual Linkup@bitcircus101 (1FR)
+DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
+ nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
+ . https://bitcircus101.de
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup
 END:VEVENT
 END:VCALENDAR

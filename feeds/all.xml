@@ -15,16 +15,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-17 19:00] Raspberry Pi Workshop</title>
-      <link>https://bitcircus101.de/e/b936f8f9538e/</link>
-      <description>https://datenburg.org/veranstaltungen/raspberrypi/</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://datenburg.org/veranstaltungen/raspberrypi/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://datenburg.org/veranstaltungen/raspberrypi/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b936f8f9538e/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#workshop</category>
-      <category>#datenburg</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">dccb0e70-ca58-42f6-892d-55909fd35805-20260917T1900</guid>
-    </item>
-    <item>
       <title>[2026-09-18 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/67d0a07d76fd/</link>
       <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
@@ -420,6 +410,15 @@ We play inclusive and together. There is stim toys and you can grab something to
       <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/42f99ee2c80f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
       <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261105T1800</guid>
+    </item>
+    <item>
+      <title>[2026-11-06 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/61abb4973c47/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/61abb4973c47/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-1fr@bitcircus101.de-20261106T2000</guid>
     </item>
   </channel>
 </rss>
