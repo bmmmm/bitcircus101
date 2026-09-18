@@ -15,18 +15,6 @@
     <atom:link href="https://bitcircus101.de/feeds/source/bitcircus.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-18 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
-      <link>https://bitcircus101.de/e/67d0a07d76fd/</link>
-      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
-      <content:encoded>&lt;p&gt;Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.&lt;/p&gt;
-&lt;p&gt;On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/67d0a07d76fd/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#meetup</category>
-      <category>#lightning-talks</category>
-      <category>#talk</category>
-      <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
-      <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20260918T2000</guid>
-    </item>
-    <item>
       <title>[2026-09-18 20:30] Special: Öffentliche Dateninfrastruktur - Vortrag Markus Drenger @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/bef4fc45327a/</link>
       <description>Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus &quot;Hauskoordinaten Deutschland&quot; auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht …</description>
@@ -253,6 +241,15 @@ We play inclusive and together. There is stim toys and you can grab something to
       <category>#meetup</category>
       <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-1fr@bitcircus101.de-20261106T2000</guid>
+    </item>
+    <item>
+      <title>[2026-11-09 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/c1d0794b2df4/</link>
+      <description>Treffen: Bonner FSFE Community · 2026-11-09</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c1d0794b2df4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261109T1900</guid>
     </item>
   </channel>
 </rss>

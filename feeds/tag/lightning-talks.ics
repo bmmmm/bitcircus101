@@ -23,30 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:19471ECE-D83E-4AA6-B70D-545B3F281B66-20260918T2000@bitcircus101.de
-DTSTAMP:20260515T211510Z
-DTSTART;TZID=Europe/Berlin:20260918T200000
-DTEND;TZID=Europe/Berlin:20260918T223000
-SUMMARY:Linkup@bitcircus101
-DESCRIPTION:Linkup@bitcircus101 is our signature monthly meetup for anyone 
- in Bonn’s tech scene to come together\, share ideas and unwind. Every th
- ird Friday of the month starting at 8 PM\, we kick things off with a serie
- s of lightning talks—short\, punchy presentations (3 slides in 3 minutes
-  each) where people can showcase a project\, demo a tool or pose a new que
- stion. After the talks\, the formal program wraps up and we transition int
- o an open\, relaxed hangout: you can grab a drink or snack\, pull up a cha
- ir and dive into conversations with fellow tech-enthusiasts in a friendly\
- , low-pressure atmosphere.\n\nOn all the other Fridays\, we host Casual Li
- nkup at the same time—no talks\, just a laid-back environment to brainst
- orm\, get feedback\, troubleshoot problems or simply meet others who love 
- technology. Whether you’re here to present or to listen\, to ask questio
- ns or to offer advice\, Linkup is all about building real human connection
- s around shared tech interests
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://bitcircus101.de
-CATEGORIES:meetup,lightning-talks,talk
-END:VEVENT
-BEGIN:VEVENT
 UID:19471ECE-D83E-4AA6-B70D-545B3F281B66-20261016T2000@bitcircus101.de
 DTSTAMP:20260515T211510Z
 DTSTART;TZID=Europe/Berlin:20261016T200000
