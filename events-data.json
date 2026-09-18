@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-18T18:17:16.812Z",
+  "lastSync": "2026-09-18T18:52:27.916Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-18T18:17:16.508Z",
+      "fetchedAt": "2026-09-18T18:52:27.842Z",
       "status": "ok",
-      "events": 22,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 58,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-18T18:17:16.756Z",
+      "fetchedAt": "2026-09-18T18:52:27.901Z",
       "status": "ok",
-      "events": 18,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 52,
@@ -163,7 +163,7 @@
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
         "rss": "/feeds/tag/datenburg.xml",
-        "count": 10
+        "count": 11
       },
       "#foss": {
         "ics": "/feeds/tag/foss.ics",
@@ -188,12 +188,12 @@
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
-        "count": 8
+        "count": 7
       },
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
         "rss": "/feeds/tag/offener-abend.xml",
-        "count": 9
+        "count": 10
       },
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
@@ -213,7 +213,7 @@
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
         "rss": "/feeds/tag/talk.xml",
-        "count": 2
+        "count": 1
       },
       "#workshop": {
         "ics": "/feeds/tag/workshop.ics",
@@ -226,38 +226,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 22
+        "count": 21
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 18
+        "count": 19
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "id": "bef4fc45327a",
-      "title": "Special: Öffentliche Dateninfrastruktur - Vortrag Markus Drenger",
-      "subtitle": "",
-      "description": "Markus Drenger über öffentliche Dateninfrastruktur - Aufhänger ist sein eigener Fall: Geodaten aus \"Hauskoordinaten Deutschland\" auf GitHub veröffentlicht, das bayerische Landesamt für Digitalisierung klagte auf Unterlassung und Schadenersatz. Das OLG München wies die Klage im Juli 2026 ab - nicht nur wegen eines Prozessfehlers, sondern weil das Amt vor Gericht gelogen hat.\n\nVortrag 20:30-21:15 (30 min + 15 min Q&A), innerhalb des linkup@bitcircus101.\nhttps://blog.wikimedia.de/2026/09/03/wem-gehoeren-oeffentliche-geodaten/",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-09-18",
-      "time": "20:30",
-      "endDate": "2026-09-18",
-      "endTime": "21:15",
-      "tags": [
-        "#meetup",
-        "#talk"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "a35f62f7-3be4-4941-a1ac-ea4044eb41b5@bitcircus101.de",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-09-11T15:53:12.335Z"
-    },
     {
       "id": "2c8a32452fc1",
       "title": "32. Offene Ateliers",
@@ -1073,6 +1053,27 @@
       "recurring": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-05-11T19:45:03.502Z"
+    },
+    {
+      "id": "a27ecb961080",
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-11-10",
+      "time": "18:00",
+      "endDate": "2026-11-10",
+      "endTime": "22:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
