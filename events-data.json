@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-20T11:17:17.543Z",
+  "lastSync": "2026-09-20T12:17:13.070Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-20T11:17:17.252Z",
+      "fetchedAt": "2026-09-20T12:17:12.878Z",
       "status": "ok",
-      "events": 21,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 58,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-20T11:17:17.524Z",
+      "fetchedAt": "2026-09-20T12:17:12.959Z",
       "status": "ok",
-      "events": 19,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 52,
@@ -158,7 +158,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 9
+        "count": 10
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -193,7 +193,7 @@
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
         "rss": "/feeds/tag/offener-abend.xml",
-        "count": 9
+        "count": 8
       },
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
@@ -226,39 +226,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 21
+        "count": 20
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 19
+        "count": 20
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "id": "2d87f541a8c8",
-      "title": "32. Offene Ateliers",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstraße 101 Bonn",
-      "date": "2026-09-20",
-      "time": "14:00",
-      "endDate": "2026-09-20",
-      "endTime": "19:00",
-      "tags": [
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
-      "calendarUrl": "https://offene-ateliers-bonn.de/",
-      "recurring": true,
-      "eventUrl": "https://offene-ateliers-bonn.de/",
-      "firstSeen": "2026-07-24T18:16:21.482Z"
-    },
     {
       "id": "3a8f0b94ebd5",
       "title": "Offene Datenburg",
@@ -1075,6 +1054,26 @@
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "id": "ef98796895f9",
+      "title": "Le Sabot Computerspiel-Abend",
+      "subtitle": "",
+      "description": "",
+      "location": "Breite Str. 76",
+      "date": "2026-11-11",
+      "time": "19:30",
+      "endDate": "2026-11-11",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "4f3eb937-ebc8-4dda-bec7-9f3547ca6240",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
+      "firstSeen": "2026-08-13T18:25:49.154Z"
     }
   ]
 }

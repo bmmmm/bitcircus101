@@ -15,15 +15,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-20 14:00] 32. Offene Ateliers @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/e/2d87f541a8c8/</link>
-      <description>32. Offene Ateliers · 2026-09-20</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/2d87f541a8c8/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#offener-abend</category>
-      <pubDate>Fri, 24 Jul 2026 18:16:21 +0000</pubDate>
-      <guid isPermaLink="false">6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA-20260920T1400</guid>
-    </item>
-    <item>
       <title>[2026-09-22 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/3a8f0b94ebd5/</link>
       <description>Offene Datenburg · 2026-09-22</description>
@@ -420,6 +411,14 @@ We play inclusive and together. There is stim toys and you can grab something to
       <category>#spieletreff</category>
       <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
       <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261110T1900</guid>
+    </item>
+    <item>
+      <title>[2026-11-11 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
+      <link>https://bitcircus101.de/e/ef98796895f9/</link>
+      <description>Le Sabot Computerspiel-Abend · 2026-11-11</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/ef98796895f9/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
+      <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261111T1930</guid>
     </item>
   </channel>
 </rss>

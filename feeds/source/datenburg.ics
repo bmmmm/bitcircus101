@@ -206,4 +206,14 @@ SUMMARY:Offene Datenburg
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:datenburg,offener-abend
 END:VEVENT
+BEGIN:VEVENT
+UID:4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261111T1930@bitcircus101.de
+DTSTAMP:20260813T182549Z
+DTSTART;TZID=Europe/Berlin:20261111T193000
+DTEND;TZID=Europe/Berlin:20261111T220000
+SUMMARY:Le Sabot Computerspiel-Abend
+LOCATION:Breite Str. 76
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:community
+END:VEVENT
 END:VCALENDAR
