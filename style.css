@@ -35,7 +35,9 @@
        taken — a real posting or the sample; form controls and UI toggles
        (theme toggle, carousel dots, checkboxes, focus rings) stay
        reverse-video ink, and so does the empty permanent slot, whose dashed
-       ink frame is what makes the taken ones stand out. */
+       ink frame is what makes the taken ones stand out. On /status the bars
+       that happened and the pulse levels wear it too (state markers in
+       content); the bar buttons' focus rings and selection outlines stay ink. */
     --accent:      #3ecf5c;  /* terminal green */
     --accent-soft: color-mix(in srgb, var(--accent) 45%, transparent);
 
@@ -2727,6 +2729,160 @@ html[data-theme="light"][data-palette="pride"] {
     /* full width of the bar on a phone — 46ch would overflow it */
     .kiosk-settings { left: 0; right: 0; width: auto; }
 }
+
+/* =============================================================================
+   Status page (status.html, rendered by status.js)
+
+   status.claude.com's uptime rows in this site's idiom: one thin bar per time
+   bucket, the newest on the right, buckets coarsening with age (weeks →
+   months → quarters → years; the math lives in status-core.js). Every state
+   is a glyph AND a colour, never colour alone, and the legend spells them out.
+
+   Accent is in scope here (see the token rule at the top): a bar that
+   happened and a pulse level are state markers in content, like the funding
+   progress. The bar buttons' focus rings and the selection outline stay
+   reverse-video ink like every other control.
+
+   Heights are reserved in the stylesheet (min-height) and aria-busy sits in
+   the markup, so the rows keep their size from the first paint — a deferred
+   script setting either would itself be the layout shift.
+   ============================================================================= */
+.status-headline {
+    display: flex;
+    align-items: baseline;
+    gap: 1ch;
+    margin: 1.25rem 0 0.75rem;
+    min-height: calc(var(--line-height) * 1em);
+    color: var(--ink-max);
+}
+.status-headline__glyph { color: var(--ink-dim); }
+.status-headline--ok .status-headline__glyph { color: var(--accent); }
+.status-headline--degraded .status-headline__glyph { color: var(--ink-max); }
+
+.status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5ch;
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-dim);
+    font-size: 0.85rem;
+}
+.status-legend > li { display: inline-flex; align-items: center; gap: 0.5ch; }
+.status-legend > li::before { content: none; } /* the swatch is the marker */
+.status-swatch {
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 6px;
+    height: 14px;
+    font-size: 0.55rem;
+    line-height: 1;
+    color: var(--paper);
+    background: var(--line);
+}
+.status-swatch--happened { background: var(--accent); }
+.status-swatch--partial { background: linear-gradient(to top, var(--ink-max) 50%, var(--accent) 50%); }
+.status-swatch--cancelled { background: var(--ink-max); }
+.status-swatch--scheduled { background: transparent; border: 1px dashed var(--line-strong); color: var(--ink-dim); }
+.status-swatch--empty { height: 6px; font-size: 0; }
+
+.status-panel__hint { margin: 0 0 0.75rem; color: var(--ink-dim); font-size: 0.85rem; }
+
+/* The row: thin bars with 2px of surface between them, bottom-aligned. It
+   overflows sideways on narrow screens; status.js opens it scrolled to
+   "heute". The row's padding is part of every bar's hit area. */
+.status-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    min-height: 48px;
+    padding: 6px 0 4px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+}
+.status-bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 6px;
+    height: 32px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: var(--line);
+    color: var(--paper);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+}
+/* The newest bar sits under "heute": push the run to the right while there is
+   room. An auto margin, not justify-content:flex-end — a flex container that
+   overflows at its start cannot be scrolled there, so the auto margin (which
+   collapses to 0 on overflow) keeps the phone row scrollable to "früher". The
+   zoom rows inside a detail stay left-aligned like the text around them. */
+.status-bars:not(.status-bars--zoom) > .status-bar:first-child { margin-left: auto; }
+.status-bar__glyph { display: block; padding-bottom: 1px; font-size: 0.55rem; line-height: 1; }
+.status-bar--happened { background: var(--accent); }
+.status-bar--partial { background: linear-gradient(to top, var(--ink-max) 50%, var(--accent) 50%); }
+.status-bar--cancelled { background: var(--ink-max); }
+.status-bar--scheduled { background: transparent; border: 1px dashed var(--line-strong); color: var(--ink-dim); }
+.status-bar--empty { height: 10px; }
+.status-bar--empty .status-bar__glyph { display: none; }
+.status-bar:hover { outline: 1px solid var(--ink-dim); outline-offset: 1px; }
+.status-bar:focus-visible { outline: 2px solid var(--ink-max); outline-offset: 2px; }
+.status-bar[aria-pressed="true"] { outline: 1px solid var(--ink-max); outline-offset: 1px; }
+
+/* Pulse: eight heights, one hue, no number anywhere near them. A gap (no
+   month recorded) is a stub, never a zero-height bar. */
+.status-bar--pulse { background: var(--accent); }
+.status-bar--pulse .status-bar__glyph { display: none; }
+.status-bar--gap { height: 6px; background: var(--line); }
+.status-bar--l0 { height: 4px; }
+.status-bar--l1 { height: 8px; }
+.status-bar--l2 { height: 12px; }
+.status-bar--l3 { height: 16px; }
+.status-bar--l4 { height: 20px; }
+.status-bar--l5 { height: 24px; }
+.status-bar--l6 { height: 28px; }
+.status-bar--l7 { height: 32px; }
+
+.status-bars__axis {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    color: var(--ink-dim);
+    font-size: 0.75rem;
+}
+.status-readout {
+    margin: 0.25rem 0 0;
+    min-height: calc(var(--line-height) * 0.85rem);
+    color: var(--ink-dim);
+    font-size: 0.85rem;
+}
+.status-readout .status-label,
+.status-detail__item .status-label,
+.status-incident .status-label { color: var(--ink); }
+
+.status-detail { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--line); }
+.status-detail__title { margin: 0 0 0.5rem; color: var(--ink-max); font-size: 0.95rem; }
+.status-detail__hint,
+.status-detail__trend { margin: 0.25rem 0; color: var(--ink-dim); font-size: 0.85rem; }
+.status-detail__list,
+.status-incidents { margin: 0.5rem 0 0; padding: 0; list-style: none; }
+.status-detail__item,
+.status-incident { padding: 0.15rem 0; }
+.status-detail__state,
+.status-incident__series { color: var(--ink-dim); }
+.status-detail__item--cancelled .status-detail__state { color: var(--ink-max); }
+.status-detail__empty,
+.status-incidents__empty { color: var(--ink-dim); }
+.status-detail__actions { margin: 0.75rem 0 0; }
+.status-detail__close { min-height: 32px; padding: 0.25em 1ch; font-size: 0.85rem; }
+.status-empty { align-self: center; margin: 0; color: var(--ink-dim); }
 
 /* =============================================================================
    Utilities

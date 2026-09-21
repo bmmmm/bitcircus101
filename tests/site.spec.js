@@ -1328,6 +1328,105 @@ test.describe('Event details', () => {
     });
 });
 
+// ─── Status page ─────────────────────────────────────────────────────────────
+
+test.describe('Status page', () => {
+    test('bars from the fixture, click opens the detail, keyboard walks the row, pulse hidden without data', async ({ page }) => {
+        // globalSetup built status-data.json from the same archive as e/ and
+        // archiv/: past linkups a week apart (one cancelled), one old enough
+        // for a squashed month bucket, and the fixture's future cards as
+        // "geplant". Every row shares the same buckets, so every row has bars.
+        await page.goto('/status.html');
+        const linkupBars = page.locator('#status-bars-linkup .status-bar');
+        await expect(linkupBars.first()).toBeVisible();
+        expect(await linkupBars.count()).toBeGreaterThan(5);
+        for (const key of ['workshop', 'special']) {
+            expect(await page.locator(`#status-bars-${key} .status-bar`).count()).toBe(await linkupBars.count());
+        }
+        // aria-busy is in the markup (height reservation from the first paint)
+        // and gone once the bars are in; every bar carries a glyph, not colour alone.
+        await expect(page.locator('#status-bars-linkup')).not.toHaveAttribute('aria-busy', /.*/);
+        expect(await page.locator('#status-bars-linkup .status-bar .status-bar__glyph').count()).toBe(await linkupBars.count());
+        await expect(page.locator('#status-headline')).toHaveClass(/status-headline--degraded/);
+        await expect(page.locator('#status-headline .status-headline__text')).toHaveText(/\d+ von \d+ Terminen abgesagt/);
+
+        // The cancelled fixture linkup: exactly one such bar; its click opens the
+        // detail with the title, the state word and the link to its page.
+        const cancelled = page.locator('#status-bars-linkup .status-bar--cancelled');
+        await expect(cancelled).toHaveCount(1);
+        await cancelled.click();
+        const detail = page.locator('#status-detail-linkup');
+        await expect(detail).toBeVisible();
+        await expect(detail).toContainText('Linkup ausgefallen (Fixture)');
+        await expect(detail).toContainText('abgesagt');
+        await expect(detail.locator('a[href^="e/"]')).toHaveCount(1);
+        await expect(cancelled).toHaveAttribute('aria-pressed', 'true');
+        await expect(page.locator('#status-readout-linkup')).toContainText('abgesagt');
+
+        // Keyboard: ArrowRight moves the focus to the next bar, Enter opens
+        // that bucket, Escape closes and clears the selection.
+        await cancelled.focus();
+        const focusedKey = () => page.evaluate(() => document.activeElement && document.activeElement.getAttribute('data-key'));
+        const before = await focusedKey();
+        await page.keyboard.press('ArrowRight');
+        expect(await focusedKey()).not.toBe(before);
+        await page.keyboard.press('Enter');
+        await expect(detail).toBeVisible();
+        await expect(detail).not.toContainText('Linkup ausgefallen (Fixture)');
+        await page.keyboard.press('Escape');
+        await expect(detail).toBeHidden();
+        await expect(page.locator('#status-bars-linkup .status-bar[aria-pressed="true"]')).toHaveCount(0);
+
+        // The incident list names the cancelled one; the 400-day-old linkup
+        // sits in a squashed month bucket whose detail zooms into weeks.
+        await expect(page.locator('#status-incidents')).toContainText('Linkup ausgefallen (Fixture)');
+        const squashed = page.locator('#status-bars-linkup .status-bar--happened[data-key^="m:"]');
+        await expect(squashed).toHaveCount(1);
+        await squashed.click();
+        await expect(detail).toContainText('Uralter Linkup (Fixture)');
+        expect(await detail.locator('.status-bars--zoom .status-bar').count()).toBeGreaterThan(3);
+
+        // The seed finanz.json carries no pulse: the panel renders nothing.
+        await expect(page.locator('#status-pulse')).toBeHidden();
+    });
+
+    test('pulse with data: one bar per month, a tendency word per bar, no figure anywhere', async ({ page }) => {
+        // Served through page.route so the assertions cannot pass on an absent
+        // element (the pulse is opt-in and the seed has none).
+        await page.route('**/finanz.json', async (route) => {
+            const res = await route.fetch();
+            const data = await res.json();
+            data.pulse = { updated: '2026-09-01', start: '2025-05', levels: [1, 3, 3, 5, 4, 6, 5, 7, 2, 2, 4, 5] };
+            await route.fulfill({ response: res, json: data });
+        });
+        await page.goto('/status.html');
+        const pulse = page.locator('#status-pulse');
+        await expect(pulse).toBeVisible();
+        const bars = pulse.locator('#status-bars-pulse .status-bar');
+        expect(await bars.count()).toBeGreaterThanOrEqual(12);
+        // Every bar says where it points, never how high: a bucket label and a
+        // tendency word, nothing else.
+        const labels = await bars.evaluateAll((els) => els.map((el) => el.getAttribute('aria-label')));
+        for (const label of labels) {
+            expect(label).toMatch(/^(?:[A-Za-zäöü]{3} \d{2}|Q[1-4] \d{2}|\d{4}|vor \d{4}) · (?:Tendenz (?:steigend|fallend|gleich) [▲▼▬]|Beginn der Aufzeichnung|keine Angabe)$/u);
+        }
+        expect(labels.some((l) => /steigend/.test(l))).toBe(true);
+        expect(labels.some((l) => /fallend/.test(l))).toBe(true);
+
+        // Open a bar so the detail is in the DOM, then read the whole panel with
+        // the date labels removed: what is left has no digit, no €, no %.
+        await bars.nth(3).click();
+        await expect(pulse.locator('#status-detail-pulse')).toBeVisible();
+        const text = await pulse.evaluate((el) => {
+            const clone = el.cloneNode(true);
+            clone.querySelectorAll('.status-label').forEach((n) => n.remove());
+            return clone.textContent;
+        });
+        expect(text).toMatch(/^[^\d€%]*$/);
+        expect(text).toMatch(/Tendenz|Beginn/);
+    });
+});
+
 // ─── No Console Errors ───────────────────────────────────────────────────────
 
 test.describe('No JavaScript errors', () => {
@@ -1345,6 +1444,7 @@ test.describe('No JavaScript errors', () => {
         ['/impressum-datenschutz.html', 'Impressum'],
         ['/dankedankedanke.html', 'Danke'],
         ['/rss.html', 'RSS'],
+        ['/status.html', 'Status'],
         ['/ascii/', 'ASCII playground'],
         ['/chat/', 'Signal'],
         ['/lite/', 'Lite'],
@@ -1932,7 +2032,7 @@ test.describe('Internal links', () => {
         const pagesToCheck = [
             '/', '/events.html', '/support.html', '/pinnwand.html',
             '/raum-nutzen.html', '/impressum-datenschutz.html',
-            '/dankedankedanke.html', '/rss.html',
+            '/dankedankedanke.html', '/rss.html', '/status.html',
         ];
         const checked = new Set();
         const broken = [];
