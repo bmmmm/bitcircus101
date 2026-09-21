@@ -1386,6 +1386,27 @@ test.describe('Status page', () => {
         await expect(detail).toContainText('Uralter Linkup (Fixture)');
         expect(await detail.locator('.status-bars--zoom .status-bar').count()).toBeGreaterThan(3);
 
+        // Back to the plain row: the close button sits in the detail's head,
+        // and a second click on the chosen bar closes it too, focus on the bar.
+        await detail.locator('.status-detail__close').click();
+        await expect(detail).toBeHidden();
+        await expect(page.locator('#status-bars-linkup .status-bar[aria-pressed="true"]')).toHaveCount(0);
+        // …and the focus is back on the bar that opened it, not on <body>.
+        expect(await focusedKey()).toBe(await squashed.getAttribute('data-key'));
+        await squashed.click();
+        await expect(detail).toBeVisible();
+        await squashed.click();
+        await expect(detail).toBeHidden();
+        expect(await focusedKey()).toBe(await squashed.getAttribute('data-key'));
+
+        // The row runs on into the scheduled weeks, so "heute" is a marker on
+        // the current bucket (▲ + aria-current), not the right edge.
+        const today = page.locator('#status-bars-linkup .status-bar--today');
+        await expect(today).toHaveCount(1);
+        await expect(today).toHaveAttribute('aria-current', 'date');
+        await expect(today).toHaveAttribute('aria-label', /heute$/);
+        await expect(page.locator('#linkup .status-bars__axis')).toContainText('später');
+
         // The seed finanz.json carries no pulse: the panel renders nothing.
         await expect(page.locator('#status-pulse')).toBeHidden();
     });
@@ -1408,7 +1429,7 @@ test.describe('Status page', () => {
         // tendency word, nothing else.
         const labels = await bars.evaluateAll((els) => els.map((el) => el.getAttribute('aria-label')));
         for (const label of labels) {
-            expect(label).toMatch(/^(?:[A-Za-zäöü]{3} \d{2}|Q[1-4] \d{2}|\d{4}|vor \d{4}) · (?:Tendenz (?:steigend|fallend|gleich) [▲▼▬]|Beginn der Aufzeichnung|keine Angabe)$/u);
+            expect(label).toMatch(/^(?:[A-Za-zäöü]{3} \d{2}|Q[1-4] \d{2}|\d{4}|vor \d{4}) · (?:Tendenz (?:steigend|fallend|gleich) [▲▼▬]|Beginn der Aufzeichnung|keine Angabe)(?: · heute)?$/u);
         }
         expect(labels.some((l) => /steigend/.test(l))).toBe(true);
         expect(labels.some((l) => /fallend/.test(l))).toBe(true);
