@@ -58,14 +58,14 @@
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
 
         <!-- Icons & Manifest -->
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=14d799bc" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=14d799bc" />
-        <link rel="manifest" href="site.webmanifest?v=14d799bc" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=e1e57a12" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=e1e57a12" />
+        <link rel="manifest" href="site.webmanifest?v=e1e57a12" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=14d799bc" />
+        <link rel="stylesheet" href="style.css?v=e1e57a12" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -372,6 +372,10 @@
                     <p class="events-more-link"><a href="events.html">alle Termine →</a></p>
                     <p class="events-more-link"><a href="rss.html">termine &amp; pinnwand als rss abonnieren →</a></p>
                     <p class="events-more-link"><a href="kiosk/" title="Wandanzeige: Termine groß, ohne Menü, aktualisiert sich selbst">kiosk-modus: termine als wandanzeige für den space →</a></p>
+                    <!-- The line below is stamped with the live streak by
+                         scripts/build-status-data.mjs (sync + deploy); the text
+                         committed here is the no-archive fallback. -->
+                    <p class="events-more-link"><!-- status-streak:start --><a href="status.html">status: 38 wochen in folge offen &#8594;</a><!-- status-streak:end --></p>
                 </section>
 
                 <section id="support" class="panel">
@@ -566,7 +570,7 @@
             </div>
         </footer>
 
-        <script defer src="storage.js?v=14d799bc"></script>
-        <script defer src="main.js?v=14d799bc"></script>
+        <script defer src="storage.js?v=e1e57a12"></script>
+        <script defer src="main.js?v=e1e57a12"></script>
     </body>
 </html>
