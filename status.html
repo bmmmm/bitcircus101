@@ -41,14 +41,14 @@
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
         <link rel="alternate" type="text/calendar" title="bitcircus101 Termine (iCal)" href="ical.ics" />
 
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=bd823b2f" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=bd823b2f" />
-        <link rel="manifest" href="site.webmanifest?v=bd823b2f" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=14d799bc" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=14d799bc" />
+        <link rel="manifest" href="site.webmanifest?v=14d799bc" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=bd823b2f" />
+        <link rel="stylesheet" href="style.css?v=14d799bc" />
         <!-- The fetch in status.js names the same bare path, so the preload counts.
              Live-only: a plain checkout 404s here and the page says so. -->
         <link rel="preload" href="status-data.json" as="fetch" crossorigin />
@@ -94,7 +94,8 @@
                         Findet statt, was im Kalender steht? Der Verlauf aller Termine von
                         bitcircus101 seit Mai 2025: ein Balken pro Woche, weiter zurück pro
                         Monat, Quartal und Jahr. Ein Klick auf einen Balken zeigt die
-                        Termine dahinter. Abgeleitet aus dem Kalender-Export – ein Termin,
+                        Termine dahinter, ein zweiter Klick schließt sie wieder. Abgeleitet
+                        aus dem Kalender-Export – ein Termin,
                         der aus dem Kalender verschwand, bevor er stattfand, zählt als
                         abgesagt.
                     </p>
@@ -117,7 +118,7 @@
                     <h2>linkup<a class="section-anchor" href="#linkup" aria-label="Link zu: Linkup">#</a></h2>
                     <p class="status-panel__hint">freitags ab 20 Uhr, jeden dritten Freitag mit Lightning Talks</p>
                     <div class="status-bars" id="status-bars-linkup" role="group" aria-label="Verlauf Linkup" aria-busy="true"></div>
-                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span>heute</span></p>
+                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span class="status-bars__today">▲ heute</span><span>später</span></p>
                     <p class="status-readout" id="status-readout-linkup" aria-live="polite"></p>
                     <div class="status-detail" id="status-detail-linkup" hidden></div>
                 </section>
@@ -126,7 +127,7 @@
                     <h2>workshops<a class="section-anchor" href="#workshops" aria-label="Link zu: Workshops">#</a></h2>
                     <p class="status-panel__hint">angekündigte Workshops</p>
                     <div class="status-bars" id="status-bars-workshop" role="group" aria-label="Verlauf Workshops" aria-busy="true"></div>
-                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span>heute</span></p>
+                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span class="status-bars__today">▲ heute</span><span>später</span></p>
                     <p class="status-readout" id="status-readout-workshop" aria-live="polite"></p>
                     <div class="status-detail" id="status-detail-workshop" hidden></div>
                 </section>
@@ -135,7 +136,7 @@
                     <h2>specials<a class="section-anchor" href="#specials" aria-label="Link zu: Specials">#</a></h2>
                     <p class="status-panel__hint">Sonderformate</p>
                     <div class="status-bars" id="status-bars-special" role="group" aria-label="Verlauf Specials" aria-busy="true"></div>
-                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span>heute</span></p>
+                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span class="status-bars__today">▲ heute</span><span>später</span></p>
                     <p class="status-readout" id="status-readout-special" aria-live="polite"></p>
                     <div class="status-detail" id="status-detail-special" hidden></div>
                 </section>
@@ -147,7 +148,7 @@
                     <h2>unterstützung<a class="section-anchor" href="#status-pulse" aria-label="Link zu: Unterstützung">#</a></h2>
                     <p class="status-panel__hint">Tendenz pro Monat, ohne Zahlen – ein grober Puls, kein Kontoauszug.</p>
                     <div class="status-bars status-bars--pulse" id="status-bars-pulse" role="group" aria-label="Verlauf Unterstützung"></div>
-                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span>heute</span></p>
+                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span class="status-bars__today">▲ heute</span></p>
                     <p class="status-readout" id="status-readout-pulse" aria-live="polite"></p>
                     <div class="status-detail" id="status-detail-pulse" hidden></div>
                 </section>
@@ -197,9 +198,9 @@
             </div>
         </footer>
 
-        <script defer src="storage.js?v=bd823b2f"></script>
-        <script defer src="main.js?v=bd823b2f"></script>
-        <script defer src="status-core.js?v=bd823b2f"></script>
-        <script defer src="status.js?v=bd823b2f"></script>
+        <script defer src="storage.js?v=14d799bc"></script>
+        <script defer src="main.js?v=14d799bc"></script>
+        <script defer src="status-core.js?v=14d799bc"></script>
+        <script defer src="status.js?v=14d799bc"></script>
     </body>
 </html>
