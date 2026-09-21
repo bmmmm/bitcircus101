@@ -1,6 +1,6 @@
 {
   "currency": "EUR",
-  "updated": "2026-06-19",
+  "updated": "2026-09-21",
   "einmalig": [
     {
       "id": "solar-speicher",
@@ -21,5 +21,12 @@
       "icon": "⇅",
       "monthly": 30
     }
-  ]
+  ],
+  "pulse": {
+    "updated": "2026-09-21",
+    "start": "2025-05",
+    "levels": [
+      3
+    ]
+  }
 }

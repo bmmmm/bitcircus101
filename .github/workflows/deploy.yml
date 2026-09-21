@@ -185,7 +185,7 @@ jobs:
         # deploy that changed only that file, and a script a page loads but
         # neither list names ships raw.
         run: |
-          scripts="main.js events.js ics-core.js events-core.js kiosk.js storage.js finanz-core.js finanz.js jobs-core.js jobs.js"
+          scripts="main.js events.js ics-core.js events-core.js kiosk.js storage.js finanz-core.js finanz.js jobs-core.js jobs.js status-core.js status.js"
           echo "Before: style.css=$(wc -c < style.css)B $(for f in $scripts; do printf '%s=%sB ' "$f" "$(wc -c < "$f")"; done)"
           pnpm dlx csso-cli@4.0.2 style.css -o style.css
           for f in $scripts; do
@@ -219,6 +219,11 @@ jobs:
       # archive itself is live-only state that live-overlay.mjs preserves.
       - name: Build event pages and archive
         run: node scripts/build-event-pages.mjs
+
+      # The status page's data, from the same archive — live-only like the
+      # pages above; status.js says "nicht verfügbar" until the file exists.
+      - name: Build the status page data
+        run: node scripts/build-status-data.mjs
 
       - name: Generate sitemap.xml
         # Used to live in its own workflow (sitemap.yml) triggered on `push:
