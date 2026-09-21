@@ -39,6 +39,8 @@ const ASSETS = [
     "finanz.js",
     "jobs-core.js",
     "jobs.js",
+    "status-core.js",
+    "status.js",
     "images/favicon.svg",
     "images/apple-touch-icon.png",
     "images/icon-192.png",
