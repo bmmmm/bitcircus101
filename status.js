@@ -50,16 +50,26 @@
   function labelSpan(text) { return '<span class="status-label">' + esc(text) + "</span>"; }
 
   // ── bars ───────────────────────────────────────────────────────────────────
-  function barHtml(classes, key, text, glyph) {
+  function barHtml(classes, key, text, glyph, current) {
     return (
       '<button type="button" class="status-bar ' + classes + '" data-key="' + esc(key) +
-      '" title="' + esc(text) + '" aria-label="' + esc(text) + '" aria-pressed="false" tabindex="-1">' +
+      '" title="' + esc(text) + '" aria-label="' + esc(text) + '" aria-pressed="false" tabindex="-1"' +
+      (current ? ' aria-current="date"' : "") + ">" +
       '<span class="status-bar__glyph" aria-hidden="true">' + glyph + "</span></button>"
     );
   }
+  /** Flag the bucket holding the reader's date: the ▲ under the row and
+   *  aria-current. The row runs on into the scheduled weeks, so the right
+   *  edge is "später", never today. */
+  function markToday(items, today) {
+    for (var i = 0; i < items.length; i++) items[i].today = items[i].from <= today && today <= items[i].to;
+    return items;
+  }
   function seriesText(b) { return Core.rangeLabel(b) + SEP + Core.countsText(b.counts); }
   function seriesBar(b) {
-    return barHtml("status-bar--" + b.state, b.key, b.label + SEP + seriesText(b), GLYPH[b.state]);
+    var cls = "status-bar--" + b.state + (b.today ? " status-bar--today" : "");
+    var text = b.label + SEP + seriesText(b) + (b.today ? SEP + "heute" : "");
+    return barHtml(cls, b.key, text, GLYPH[b.state], b.today);
   }
   function pulseText(p) {
     if (p.level === null) return "keine Angabe";
@@ -67,15 +77,18 @@
     return "Tendenz " + Core.trendWord(p.delta) + " " + TREND_GLYPH[String(p.delta)];
   }
   function pulseBar(p) {
-    var cls = "status-bar--pulse " + (p.level === null ? "status-bar--gap" : "status-bar--l" + p.level);
+    var cls = "status-bar--pulse " + (p.level === null ? "status-bar--gap" : "status-bar--l" + p.level) +
+      (p.today ? " status-bar--today" : "");
     var glyph = p.level === null ? GLYPH.empty : PULSE_GLYPHS[p.level];
-    return barHtml(cls, p.key, p.label + SEP + pulseText(p), glyph);
+    return barHtml(cls, p.key, p.label + SEP + pulseText(p) + (p.today ? SEP + "heute" : ""), glyph, p.today);
   }
 
   /**
    * Mount a bar row: one button per item (each has key + label), a roving
    * tabindex with the newest bar as the entry point, hover/focus → readout,
-   * click → opts.select(item), Escape → opts.close(). Arrow keys walk the row.
+   * click → opts.select(item), a second click on the chosen bar →
+   * opts.deselect() (falls back to opts.close()), Escape → opts.close().
+   * Arrow keys walk the row.
    */
   function mountRow(row, readout, items, opts) {
     var byKey = {};
@@ -108,7 +121,13 @@
     row.addEventListener("click", function (e) {
       var h = hit(e.target);
       if (!h || !h.item) return;
+      var again = h.btn.getAttribute("aria-pressed") === "true";
       for (var k = 0; k < bars.length; k++) bars[k].setAttribute("aria-pressed", "false");
+      if (again) {
+        // The chosen bar clicked once more is the way back to the plain row.
+        (opts.deselect || opts.close)();
+        return;
+      }
       h.btn.setAttribute("aria-pressed", "true");
       focusBar(h.btn);
       opts.select(h.item);
@@ -139,18 +158,22 @@
     for (var k = 0; k < pressed.length; k++) pressed[k].setAttribute("aria-pressed", "false");
   }
   function closeDetail(detail, row) {
+    // Hand the focus back to the bar that opened the detail before its DOM goes,
+    // so a keyboard reader lands on the row again, not at the top of the page.
+    var pressed = row.querySelector('.status-bar[aria-pressed="true"]');
+    if (pressed && detail.contains(document.activeElement)) pressed.focus();
     detail.hidden = true;
     detail.innerHTML = "";
     clearPressed(row);
   }
+  /** Title row with the way back on the right — at the top, so a long list
+   *  never hides it. */
   function detailHead(item) {
     return (
-      '<h3 class="status-detail__title">' + labelSpan(item.label) + SEP +
-      labelSpan(Core.rangeLabel(item)) + "</h3>"
+      '<div class="status-detail__head"><h3 class="status-detail__title">' + labelSpan(item.label) + SEP +
+      labelSpan(Core.rangeLabel(item)) + "</h3>" +
+      '<button type="button" class="btn status-detail__close">zurück</button></div>'
     );
-  }
-  function closeButton() {
-    return '<p class="status-detail__actions"><button type="button" class="btn status-detail__close">schließen</button></p>';
   }
   function wireClose(detail, onClose) {
     var btn = detail.querySelector(".status-detail__close");
@@ -183,20 +206,21 @@
     var html = detailHead(bucket);
     if (zoom) {
       html +=
-        '<p class="status-detail__hint">Feinraster – ein Klick filtert die Liste, Escape schließt.</p>' +
+        '<p class="status-detail__hint">Feinraster – ein Klick filtert die Liste, ein zweiter hebt den Filter auf.</p>' +
         '<div class="status-bars status-bars--zoom" role="group" aria-label="Feinraster ' + esc(bucket.label) + '"></div>' +
         '<p class="status-readout status-readout--zoom" aria-live="polite"></p>';
     }
-    html += '<ul class="status-detail__list">' + listHtml(bucket.events, today) + "</ul>" + closeButton();
+    html += '<ul class="status-detail__list">' + listHtml(bucket.events, today) + "</ul>";
     detail.innerHTML = html;
     detail.hidden = false;
     var list = detail.querySelector(".status-detail__list");
     if (zoom) {
-      var sub = Core.assign(Core.bucketizeRange(bucket.from, bucket.to, finer), bucket.events, today);
+      var sub = markToday(Core.assign(Core.bucketizeRange(bucket.from, bucket.to, finer), bucket.events, today), today);
       mountRow(detail.querySelector(".status-bars--zoom"), detail.querySelector(".status-readout--zoom"), sub, {
         bar: seriesBar,
         text: seriesText,
         select: function (sb) { list.innerHTML = listHtml(sb.events, today); },
+        deselect: function () { list.innerHTML = listHtml(bucket.events, today); },
         close: function () { closeDetail(detail, row); }
       });
     }
@@ -272,14 +296,14 @@
       var key = sections[j].getAttribute("data-series");
       var mine = [];
       for (var k = 0; k < events.length; k++) if (events[k].series === key) mine.push(events[k]);
-      renderSeries(sections[j], Core.assign(Core.ladder(since, today, { horizon: horizon }), mine, today), today);
+      renderSeries(sections[j], markToday(Core.assign(Core.ladder(since, today, { horizon: horizon }), mine, today), today), today);
     }
     renderHeadline(Core.headline(events, today));
     renderIncidents(events, function (k) { return labels[k] || k; });
   }
 
   // ── funding pulse (opt-in: finanz.json ships without pulse.start) ──────────
-  function openPulseDetail(detail, row, p) {
+  function openPulseDetail(detail, row, p, today) {
     var zoom = p.months.length > 1;
     var html = detailHead(p);
     if (zoom) {
@@ -287,14 +311,15 @@
         '<div class="status-bars status-bars--zoom status-bars--pulse" role="group" aria-label="Monate in ' + esc(p.label) + '"></div>' +
         '<p class="status-readout status-readout--zoom" aria-live="polite"></p>';
     }
-    html += '<p class="status-detail__trend">' + esc(pulseText(p)) + "</p>" + closeButton();
+    html += '<p class="status-detail__trend">' + esc(pulseText(p)) + "</p>";
     detail.innerHTML = html;
     detail.hidden = false;
     if (zoom) {
-      mountRow(detail.querySelector(".status-bars--zoom"), detail.querySelector(".status-readout--zoom"), p.months, {
+      mountRow(detail.querySelector(".status-bars--zoom"), detail.querySelector(".status-readout--zoom"), markToday(p.months, today), {
         bar: pulseBar,
         text: pulseText,
         select: function () {},
+        deselect: function () {},
         close: function () { closeDetail(detail, row); }
       });
     }
@@ -307,11 +332,11 @@
     if (!mount || !row || !detail || !finanz) return;
     var months = Core.pulseMonths(finanz.pulse);
     if (!months.length) return; // no time axis → the panel stays hidden
-    var buckets = Core.pulseBuckets(months, Core.ladder(months[0].from, today, { finest: "month" }));
+    var buckets = markToday(Core.pulseBuckets(months, Core.ladder(months[0].from, today, { finest: "month" })), today);
     mountRow(row, byId("status-readout-pulse"), buckets, {
       bar: pulseBar,
       text: pulseText,
-      select: function (p) { openPulseDetail(detail, row, p); },
+      select: function (p) { openPulseDetail(detail, row, p, today); },
       close: function () { closeDetail(detail, row); }
     });
     mount.hidden = false;
