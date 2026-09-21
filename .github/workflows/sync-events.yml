@@ -70,12 +70,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           # -f: the feeds are .gitignored on main (rebuilt here); force-add so the
           # first run can track them on live. ical.ics + events/ copies are new (issue #1).
-          # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5).
+          # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5),
+          # index.html: build-status-data.mjs stamps the streak line in place.
           # -A on the feeds/ pathspec stages DELETIONS too — a retired tag feed
           # that syncFeedsDir removed must stop being tracked on live.
           # pinnwand/feed.xml is in the fixed list, not the guarded loop below:
           # the build step above always writes it, even for an empty wall.
-          git add -f -A events-data.json feed.xml ical.ics events/feed.xml events/ical.ics feeds lite/index.html events.html pinnwand/feed.xml
+          git add -f -A events-data.json feed.xml ical.ics events/feed.xml events/ical.ics feeds lite/index.html events.html index.html pinnwand/feed.xml
           # The archive tree only exists once a primary source answered; a
           # pathspec with no match aborts git add (exit 128) and would take
           # the feed commit down with it.

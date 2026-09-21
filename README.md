@@ -84,6 +84,7 @@ scripts/
   html-text.mjs             esc/linkify/paragraphs — description → HTML for pages and feeds
   build-pinnwand-feed.mjs   Renders the active jobs.json postings to pinnwand/feed.xml (live-only)
   build-status-data.mjs     Derives status-data.json (the /status timeline) from events-archive.json (live-only)
+                            and stamps the homepage's uptime line between its <!-- status-streak --> markers
   check-calendars.mjs       Offline manifest validator + read-only --probe preview of an ICS URL
   build-logo-slider.mjs     Writes the homepage logo strip from images/logo-slider/
   finanz.mjs                Maintainer CLI for finanz.json / funding.json (--json, --help)
@@ -140,6 +141,7 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
 | `archiv/index.html` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy |
 | `pinnwand/feed.xml` | `sync-events.yml` and `deploy.yml` → `build-pinnwand-feed.mjs` | Every 30 minutes, and on deploy |
 | `status-data.json` | `sync-events.yml` and `deploy.yml` → `build-status-data.mjs` | Every 30 minutes, and on deploy |
+| `index.html` (the streak line only) | `sync-events.yml` and `deploy.yml` → `build-status-data.mjs` | Every 30 minutes, and on deploy |
 | `sitemap.xml` | `deploy.yml` | Every deploy (push to `main`) |
 
 - `ical.ics` is the aggregator-facing iCal export with real `DTSTART`/`DTEND`

@@ -287,6 +287,28 @@
     }
     return { total: total, cancelled: cancelled, state: cancelled ? "degraded" : "ok", text: text };
   }
+  /**
+   * Uptime as a status page means it: consecutive ISO weeks, counting back from
+   * today, that hold at least one event that happened. The running week is
+   * skipped when it holds none yet — its Friday may still be ahead — so the
+   * count only ever covers completed weeks. Returns { weeks, from }, `from`
+   * being the Monday of the oldest week in the run ("" when there is no run).
+   */
+  function streak(events, today) {
+    var seen = {};
+    for (var i = 0; i < events.length; i++) {
+      if (eventState(events[i], today) === "happened") seen[isoWeekStart(events[i].date)] = true;
+    }
+    var week = isoWeekStart(today);
+    if (!seen[week]) week = addDays(week, -7);
+    var weeks = 0;
+    while (seen[week]) {
+      weeks += 1;
+      week = addDays(week, -7);
+    }
+    return { weeks: weeks, from: weeks ? addDays(week, 7) : "" };
+  }
+
   /** Cancelled events, newest first (date desc, then id asc), optionally capped. */
   function incidents(events, limit) {
     var out = [];
@@ -389,6 +411,7 @@
     ladder: ladder,
     assign: assign,
     headline: headline,
+    streak: streak,
     incidents: incidents,
     pulseMonths: pulseMonths,
     pulseBuckets: pulseBuckets

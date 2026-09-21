@@ -245,6 +245,35 @@ describe("headline", () => {
   });
 });
 
+describe("streak", () => {
+  it("counts consecutive weeks back from today that held an event", () => {
+    const run = [ev("2026-09-18"), ev("2026-09-11"), ev("2026-09-04")];
+    assert.deepEqual(Core.streak(run, TODAY), { weeks: 3, from: "2026-08-31" });
+  });
+  it("skips the running week while its own event is still ahead", () => {
+    // TODAY is the Monday of KW 39; nothing has happened in it yet, and that
+    // must not end a run that is otherwise intact.
+    assert.equal(Core.streak([ev("2026-09-18")], TODAY).weeks, 1);
+    // Saturday of the same week, with Friday behind us: the week counts.
+    assert.deepEqual(Core.streak([ev("2026-09-25"), ev("2026-09-18")], "2026-09-26"), {
+      weeks: 2,
+      from: "2026-09-14",
+    });
+  });
+  it("stops at the first week without one", () => {
+    const gap = [ev("2026-09-18"), ev("2026-09-04"), ev("2026-08-28")];
+    assert.deepEqual(Core.streak(gap, TODAY), { weeks: 1, from: "2026-09-14" });
+  });
+  it("counts a week only for an event that happened", () => {
+    assert.equal(Core.streak([ev("2026-09-18", { cancelled: true })], TODAY).weeks, 0);
+    assert.equal(Core.streak([ev("2026-09-25")], TODAY).weeks, 0);
+    assert.deepEqual(Core.streak([], TODAY), { weeks: 0, from: "" });
+  });
+  it("counts a week once, however many events it held", () => {
+    assert.equal(Core.streak([ev("2026-09-18"), ev("2026-09-17"), ev("2026-09-16")], TODAY).weeks, 1);
+  });
+});
+
 describe("incidents", () => {
   it("lists only cancelled events, newest first, capped", () => {
     const list = Core.incidents([

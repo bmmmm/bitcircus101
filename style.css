@@ -1365,6 +1365,9 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
 .events-empty { color: var(--ink-dim); }
 
 .events-privacy { color: var(--ink-dim); font-size: 0.85rem; }
+/* Static companion of the sync box: freshness is one question, whether the
+   dates held is the other. Not part of the box's own 30s re-render. */
+.events-status-link { margin: 0.5rem 0 0; font-size: 0.85rem; }
 
 /* sync freshness */
 .events-last-sync {

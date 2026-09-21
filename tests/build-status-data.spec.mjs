@@ -14,7 +14,16 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { buildStatusData, PRIMARY_SOURCE, SERIES, STATUS_SINCE } from "../scripts/build-status-data.mjs";
+import {
+  buildStatusData,
+  injectStreak,
+  streakMarkup,
+  PRIMARY_SOURCE,
+  SERIES,
+  STATUS_SINCE,
+  STREAK_END,
+  STREAK_START,
+} from "../scripts/build-status-data.mjs";
 
 const SCRIPT = fileURLToPath(new URL("../scripts/build-status-data.mjs", import.meta.url));
 
@@ -102,6 +111,40 @@ describe("buildStatusData", () => {
   });
 });
 
+describe("the homepage streak line", () => {
+  const home = (inner) => `<p class="events-more-link">${STREAK_START}${inner}${STREAK_END}</p>\n`;
+
+  it("names the weeks, singular and plural, and links the status page", () => {
+    assert.match(streakMarkup(38), /^<a href="status\.html">status: 38 wochen in folge offen &#8594;<\/a>$/);
+    assert.match(streakMarkup(1), /status: 1 woche in folge offen/);
+  });
+
+  it("falls back to a sentence that is true without an archive — never 0 wochen", () => {
+    const zero = streakMarkup(0);
+    assert.equal(zero.includes("0 "), false, zero);
+    assert.match(zero, /freitags offen seit mai 2025/);
+    assert.equal(streakMarkup(0), streakMarkup(undefined));
+  });
+
+  it("splices between the markers and keeps everything around them", () => {
+    const out = injectStreak(home("<a>alt</a>") + "<p>rest</p>", streakMarkup(38));
+    assert.match(out, /38 wochen/);
+    assert.equal(out.includes("alt"), false);
+    assert.ok(out.endsWith("<p>rest</p>"));
+    assert.ok(out.includes(STREAK_START) && out.includes(STREAK_END));
+  });
+
+  it("is idempotent — a second run writes the same bytes", () => {
+    const once = injectStreak(home("<a>alt</a>"), streakMarkup(38));
+    assert.equal(injectStreak(once, streakMarkup(38)), once);
+  });
+
+  it("refuses a page whose markers are gone rather than leaving a stale number", () => {
+    assert.throws(() => injectStreak("<p>no markers here</p>", streakMarkup(38)), /markers not found/);
+    assert.throws(() => injectStreak(`<p>${STREAK_START}only the start</p>`, streakMarkup(38)), /markers not found/);
+  });
+});
+
 describe("main()", () => {
   const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "bc101-status-"));
 
@@ -115,6 +158,41 @@ describe("main()", () => {
     const data = JSON.parse(fs.readFileSync(out, "utf8"));
     assert.deepEqual(data.events.map((e) => e.id), ["a1"]);
     assert.ok(fs.readFileSync(out, "utf8").endsWith("\n"));
+  });
+
+  it("stamps the given homepage with the streak the archive earns", () => {
+    const dir = tmp();
+    const src = path.join(dir, "events-archive.json");
+    const out = path.join(dir, "status-data.json");
+    const home = path.join(dir, "index.html");
+    // The three Fridays before today, whatever weekday the suite runs on: the
+    // last one is strictly in the past (|| 7 on a Friday), so the run is 3 —
+    // on a Saturday it includes the running week, on a Monday it does not.
+    const days = [];
+    for (let w = 0; w < 3; w++) {
+      const d = new Date();
+      d.setDate(d.getDate() - (((d.getDay() + 2) % 7) || 7) - 7 * w);
+      days.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+    }
+    fs.writeFileSync(src, JSON.stringify(archive(...days.map((d, i) => entry("s" + i, d)))));
+    fs.writeFileSync(home, `<p>${STREAK_START}<a href="status.html">alt</a>${STREAK_END}</p>\n`);
+    const stdout = execFileSync(process.execPath, [SCRIPT, src, out, home], { encoding: "utf8" });
+    assert.match(stdout, /homepage streak 3 week\(s\)/);
+    const html = fs.readFileSync(home, "utf8");
+    assert.match(html, /status: 3 wochen in folge offen/);
+    assert.equal(html.includes("alt"), false);
+    // Same archive, same bytes — the sync must not churn the homepage.
+    execFileSync(process.execPath, [SCRIPT, src, out, home]);
+    assert.equal(fs.readFileSync(home, "utf8"), html);
+  });
+
+  it("leaves the homepage alone when it is not there", () => {
+    const dir = tmp();
+    const src = path.join(dir, "events-archive.json");
+    fs.writeFileSync(src, JSON.stringify(archive(entry("a1", "2026-01-16"))));
+    const res = spawnSync(process.execPath, [SCRIPT, src, path.join(dir, "s.json"), path.join(dir, "nope.html")], { encoding: "utf8" });
+    assert.equal(res.status, 0);
+    assert.match(res.stderr, /homepage line untouched/);
   });
 
   it("warns and writes nothing when the archive is missing — exit 0, the sync must go on", () => {
