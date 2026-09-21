@@ -100,13 +100,14 @@ URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
 END:VEVENT
 BEGIN:VEVENT
-UID:d3a70a41-a602-4960-b0f8-7f19f966d890-20261010@bitcircus101.de
+UID:d3a70a41-a602-4960-b0f8-7f19f966d890-20261009@bitcircus101.de
 DTSTAMP:20260818T163923Z
-DTSTART;VALUE=DATE:20261010
+DTSTART;VALUE=DATE:20261009
 DTEND;VALUE=DATE:20261012
-SUMMARY:Phosh Meetup!
-DESCRIPTION:Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell f
- ür Mobiltelefone.
+SUMMARY:Phosh Meetup
+DESCRIPTION:Das Phosh-Meetup in der Datenburg! Phosh ist eine GTK-basierte 
+ Desktop-Umgebung für Linux-basierte Mobilgeräte\, u.A. Smartphones.\nhtt
+ ps://ev.phosh.mobi/de/blog/hackspace-meetup-bonn-2026-10/
 LOCATION:Datenburg
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:linux,datenburg

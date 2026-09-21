@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-09-21T22:17:22.341Z",
+  "lastSync": "2026-09-21T23:17:24.506Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-21T22:17:21.801Z",
+      "fetchedAt": "2026-09-21T23:17:24.318Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-21T22:17:21.953Z",
+      "fetchedAt": "2026-09-21T23:17:24.480Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -530,6 +530,26 @@
       "firstSeen": "2026-09-10T19:17:13.849Z"
     },
     {
+      "id": "a7ab79e10919",
+      "title": "Phosh Meetup",
+      "subtitle": "",
+      "description": "Das Phosh-Meetup in der Datenburg! Phosh ist eine GTK-basierte Desktop-Umgebung für Linux-basierte Mobilgeräte, u.A. Smartphones.\nhttps://ev.phosh.mobi/de/blog/hackspace-meetup-bonn-2026-10/",
+      "location": "Datenburg",
+      "date": "2026-10-09",
+      "time": "",
+      "endDate": "2026-10-12",
+      "endTime": "",
+      "tags": [
+        "#linux",
+        "#datenburg"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "d3a70a41-a602-4960-b0f8-7f19f966d890",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "firstSeen": "2026-08-18T16:39:23.867Z"
+    },
+    {
       "id": "184ba0f4c433",
       "title": "Casual Linkup@bitcircus101 (2FR)",
       "subtitle": "",
@@ -569,26 +589,6 @@
       "uid": "51FBAB7D-F2D1-49C6-AAC8-F94504DFF459",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "firstSeen": "2026-09-02T08:17:11.734Z"
-    },
-    {
-      "id": "a7ab79e10919",
-      "title": "Phosh Meetup!",
-      "subtitle": "",
-      "description": "Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.",
-      "location": "Datenburg",
-      "date": "2026-10-10",
-      "time": "",
-      "endDate": "2026-10-12",
-      "endTime": "",
-      "tags": [
-        "#linux",
-        "#datenburg"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "d3a70a41-a602-4960-b0f8-7f19f966d890",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-08-18T16:39:23.867Z"
     },
     {
       "id": "930208fa5a93",

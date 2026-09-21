@@ -15,6 +15,17 @@
     <atom:link href="https://bitcircus101.de/feeds/tag/linux.xml" rel="self" type="application/rss+xml"/>
 
     <item>
+      <title>[2026-10-09] Phosh Meetup @ Datenburg</title>
+      <link>https://bitcircus101.de/e/a7ab79e10919/</link>
+      <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine GTK-basierte Desktop-Umgebung für Linux-basierte Mobilgeräte, u.A. Smartphones.
+https://ev.phosh.mobi/de/blog/hackspace-meetup-bonn-2026-10/</description>
+      <content:encoded>&lt;p&gt;Das Phosh-Meetup in der Datenburg! Phosh ist eine GTK-basierte Desktop-Umgebung für Linux-basierte Mobilgeräte, u.A. Smartphones.&lt;br /&gt;&lt;a href=&quot;https://ev.phosh.mobi/de/blog/hackspace-meetup-bonn-2026-10/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://ev.phosh.mobi/de/blog/hackspace-meetup-bonn-2026-10/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a7ab79e10919/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#linux</category>
+      <category>#datenburg</category>
+      <pubDate>Tue, 18 Aug 2026 16:39:23 +0000</pubDate>
+      <guid isPermaLink="false">d3a70a41-a602-4960-b0f8-7f19f966d890-20261009</guid>
+    </item>
+    <item>
       <title>[2026-10-10] Phosh Meetup! @ Bornheimer Straße 25 Bonn</title>
       <link>https://bitcircus101.de/e/fc7b7b7f441a/</link>
       <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
@@ -23,16 +34,6 @@
       <category>#datenburg</category>
       <pubDate>Wed, 02 Sep 2026 08:17:11 +0000</pubDate>
       <guid isPermaLink="false">51FBAB7D-F2D1-49C6-AAC8-F94504DFF459-20261010</guid>
-    </item>
-    <item>
-      <title>[2026-10-10] Phosh Meetup! @ Datenburg</title>
-      <link>https://bitcircus101.de/e/a7ab79e10919/</link>
-      <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
-      <content:encoded>&lt;p&gt;Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a7ab79e10919/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#linux</category>
-      <category>#datenburg</category>
-      <pubDate>Tue, 18 Aug 2026 16:39:23 +0000</pubDate>
-      <guid isPermaLink="false">d3a70a41-a602-4960-b0f8-7f19f966d890-20261010</guid>
     </item>
   </channel>
 </rss>
