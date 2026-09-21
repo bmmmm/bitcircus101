@@ -406,6 +406,56 @@ describe("setPulse", () => {
     for (let i = 0; i < 80; i++) d = setPulse(d, i % 8, DATE);
     assert.equal(d.pulse.levels.length, 64);
   });
+
+  // The time axis for /status: `start` dates levels[0]; every later level is
+  // the next calendar month. It is written once and then travels along.
+  it("takes a start month once and keeps it on later appends", () => {
+    const d = fixture();
+    delete d.pulse;
+    let next = setPulse(d, 4, DATE, "2025-05");
+    assert.equal(next.pulse.start, "2025-05");
+    assert.deepEqual(Object.keys(next.pulse), ["updated", "start", "levels"]);
+    next = setPulse(next, 2, DATE);
+    assert.equal(next.pulse.start, "2025-05");
+    assert.deepEqual(next.pulse.levels, [4, 2]);
+  });
+
+  it("dates an existing track that has no start yet (a backfill's first step)", () => {
+    const next = setPulse(fixture(), 5, DATE, "2025-05");
+    assert.equal(next.pulse.start, "2025-05");
+    assert.deepEqual(next.pulse.levels, [1, 2, 3, 5]);
+  });
+
+  it("refuses to move an existing start month — that would shift every level", () => {
+    const d = fixture();
+    d.pulse.start = "2025-05";
+    assert.throws(() => setPulse(d, 1, DATE, "2025-06"), /2025-05/);
+    assert.equal(setPulse(d, 1, DATE, "2025-05").pulse.start, "2025-05");
+    assert.equal(setPulse(d, 1, DATE).pulse.start, "2025-05");
+  });
+
+  it("rejects a start month that is not YYYY-MM", () => {
+    assert.throws(() => setPulse(fixture(), 1, DATE, "2025-13"), /YYYY-MM/);
+    assert.throws(() => setPulse(fixture(), 1, DATE, "Mai 2025"), /YYYY-MM/);
+    assert.throws(() => setPulse(fixture(), 1, DATE, "2025-05-01"), /YYYY-MM/);
+  });
+});
+
+describe("validate — pulse.start", () => {
+  it("accepts a calendar month and nothing else", () => {
+    const d = fixture();
+    d.pulse.start = "2025-05";
+    assert.equal(validate(d).ok, true, validate(d).errors.join("; "));
+    for (const bad of ["2025-13", "2025-00", "2025-5", "2025-05-01", 202505, null]) {
+      d.pulse.start = bad;
+      const { ok, errors } = validate(d);
+      assert.equal(ok, false, `start ${JSON.stringify(bad)} must be rejected`);
+      assert.ok(
+        errors.some((e) => e.includes("root.pulse.start") && e.includes("YYYY-MM")),
+        errors.join("; ")
+      );
+    }
+  });
 });
 
 describe("read / write (atomic, temp copy)", () => {
