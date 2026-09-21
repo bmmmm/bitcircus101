@@ -65,18 +65,24 @@ function buildEventsArchive() {
 module.exports = async function globalSetup() {
   const file = path.join(os.tmpdir(), `bc101-e2e-archive-${process.pid}.json`);
   fs.writeFileSync(file, JSON.stringify(buildEventsArchive(), null, 2));
+  // build-status-data.mjs also stamps the homepage's streak line. Hand it a
+  // throwaway page: the suite must not leave the tracked index.html dirty, and
+  // the fallback text committed there is what the e2e should see.
+  const home = path.join(os.tmpdir(), `bc101-e2e-home-${process.pid}.html`);
+  fs.writeFileSync(home, "<p><!-- status-streak:start --><a>x</a><!-- status-streak:end --></p>\n");
   try {
     execFileSync(process.execPath, ["scripts/build-event-pages.mjs", file], {
       cwd: ROOT,
       stdio: "inherit",
     });
     // The status page's data from the same archive (live-only otherwise).
-    execFileSync(process.execPath, ["scripts/build-status-data.mjs", file], {
+    execFileSync(process.execPath, ["scripts/build-status-data.mjs", file, path.join(ROOT, "status-data.json"), home], {
       cwd: ROOT,
       stdio: "inherit",
     });
   } finally {
     fs.rmSync(file, { force: true });
+    fs.rmSync(home, { force: true });
   }
 };
 

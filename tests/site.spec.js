@@ -1411,6 +1411,22 @@ test.describe('Status page', () => {
         await expect(page.locator('#status-pulse')).toBeHidden();
     });
 
+    test('is reachable from the events page and from the homepage', async ({ page }) => {
+        // Next to the sync box: freshness is one question, whether the dates
+        // held is the other. Static markup, not part of its 30s re-render.
+        await page.goto('/events.html');
+        const fromEvents = page.locator('.events-status-link a[href="status.html"]');
+        await expect(fromEvents).toBeVisible();
+        await expect(fromEvents).toContainText('verlauf');
+
+        // The homepage brag, stamped by scripts/build-status-data.mjs. A plain
+        // checkout carries the fallback; both read "status: … →".
+        await page.goto('/index.html');
+        const fromHome = page.locator('#next-events a[href="status.html"]');
+        await expect(fromHome).toBeVisible();
+        await expect(fromHome).toHaveText(/^status: .+ →$/);
+    });
+
     test('pulse with data: one bar per month, a tendency word per bar, no figure anywhere', async ({ page }) => {
         // Served through page.route so the assertions cannot pass on an absent
         // element (the pulse is opt-in and the seed has none).
