@@ -39,7 +39,7 @@
   var MONTH_TIER_MONTHS = 24;
   var QUARTER_TIER_MONTHS = 72;
   var FUTURE_WEEKS_CAP = 8;
-  var HEADLINE_DAYS = 90;
+  var HEADLINE_DAYS = 365; // the owner's call: a year, not a 90-day status-page window
   var DAY_MS = 86400000;
   var MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
   var MONTHS_SHORT = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
@@ -277,13 +277,13 @@
     }
     var text;
     if (!total) {
-      text = "keine Termine in den letzten " + HEADLINE_DAYS + " Tagen";
+      text = "keine Termine im letzten Jahr";
     } else if (cancelled) {
       text = cancelled + " von " + total + (total === 1 ? " Termin" : " Terminen") +
-        " abgesagt · letzte " + HEADLINE_DAYS + " Tage";
+        " abgesagt · letztes Jahr";
     } else {
       text = "alles fand statt · " + total + (total === 1 ? " Termin" : " Termine") +
-        " in den letzten " + HEADLINE_DAYS + " Tagen";
+        " im letzten Jahr";
     }
     return { total: total, cancelled: cancelled, state: cancelled ? "degraded" : "ok", text: text };
   }
