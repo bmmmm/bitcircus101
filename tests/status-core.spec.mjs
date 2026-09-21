@@ -231,16 +231,17 @@ describe("assign", () => {
 });
 
 describe("headline", () => {
-  it("counts the last 90 days before today and turns degraded on one cancellation", () => {
-    const ok = Core.headline([ev("2026-09-18"), ev("2026-08-01"), ev("2026-06-01"), ev(TODAY)], TODAY);
-    assert.deepEqual([ok.total, ok.cancelled, ok.state], [2, 0, "ok"]);
-    assert.equal(ok.text, "alles fand statt · 2 Termine in den letzten 90 Tagen");
-    const bad = Core.headline([ev("2026-09-18"), ev("2026-09-11", { cancelled: true })], TODAY);
+  it("counts the last year before today and turns degraded on one cancellation", () => {
+    assert.equal(Core.HEADLINE_DAYS, 365);
+    const ok = Core.headline([ev("2026-09-18"), ev("2026-08-01"), ev("2025-09-22"), ev("2025-09-20"), ev(TODAY)], TODAY);
+    assert.deepEqual([ok.total, ok.cancelled, ok.state], [3, 0, "ok"]);
+    assert.equal(ok.text, "alles fand statt · 3 Termine im letzten Jahr");
+    const bad = Core.headline([ev("2026-09-18"), ev("2026-01-11", { cancelled: true })], TODAY);
     assert.deepEqual([bad.total, bad.cancelled, bad.state], [2, 1, "degraded"]);
-    assert.equal(bad.text, "1 von 2 Terminen abgesagt · letzte 90 Tage");
-    assert.equal(Core.headline([ev("2026-09-18", { cancelled: true })], TODAY).text, "1 von 1 Termin abgesagt · letzte 90 Tage");
-    assert.equal(Core.headline([ev("2026-09-18")], TODAY).text, "alles fand statt · 1 Termin in den letzten 90 Tagen");
-    assert.equal(Core.headline([], TODAY).text, "keine Termine in den letzten 90 Tagen");
+    assert.equal(bad.text, "1 von 2 Terminen abgesagt · letztes Jahr");
+    assert.equal(Core.headline([ev("2026-09-18", { cancelled: true })], TODAY).text, "1 von 1 Termin abgesagt · letztes Jahr");
+    assert.equal(Core.headline([ev("2026-09-18")], TODAY).text, "alles fand statt · 1 Termin im letzten Jahr");
+    assert.equal(Core.headline([], TODAY).text, "keine Termine im letzten Jahr");
   });
 });
 
