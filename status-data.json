@@ -1614,6 +1614,13 @@
       "title": "Linkup@bitcircus101",
       "series": "linkup",
       "cancelled": false
+    },
+    {
+      "id": "5d65abaf699e",
+      "date": "2027-01-19",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
     }
   ]
 }
