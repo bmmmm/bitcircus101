@@ -2797,12 +2797,13 @@ html[data-theme="light"][data-palette="pride"] {
     display: flex;
     align-items: flex-end;
     gap: 2px;
-    min-height: 48px;
-    padding: 6px 0 4px;
+    min-height: 56px;
+    padding: 6px 0 14px; /* room for the ▲ under today's bar */
     overflow-x: auto;
     overscroll-behavior-x: contain;
 }
 .status-bar {
+    position: relative;
     flex: 0 0 auto;
     display: flex;
     align-items: flex-end;
@@ -2832,6 +2833,20 @@ html[data-theme="light"][data-palette="pride"] {
 .status-bar--scheduled { background: transparent; border: 1px dashed var(--line-strong); color: var(--ink-dim); }
 .status-bar--empty { height: 10px; }
 .status-bar--empty .status-bar__glyph { display: none; }
+/* Today: a caret under the bucket that holds the reader's date. The row runs
+   on into the scheduled weeks, so the right edge is "später", never now. */
+.status-bar--today::after {
+    content: "\25B2";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-top: 2px;
+    font-size: 0.55rem;
+    line-height: 1;
+    color: var(--ink-max);
+}
+.status-bars__today { color: var(--ink); }
 .status-bar:hover { outline: 1px solid var(--ink-dim); outline-offset: 1px; }
 .status-bar:focus-visible { outline: 2px solid var(--ink-max); outline-offset: 2px; }
 .status-bar[aria-pressed="true"] { outline: 1px solid var(--ink-max); outline-offset: 1px; }
@@ -2868,7 +2883,8 @@ html[data-theme="light"][data-palette="pride"] {
 .status-incident .status-label { color: var(--ink); }
 
 .status-detail { margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--line); }
-.status-detail__title { margin: 0 0 0.5rem; color: var(--ink-max); font-size: 0.95rem; }
+.status-detail__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1ch; margin: 0 0 0.5rem; }
+.status-detail__title { margin: 0; color: var(--ink-max); font-size: 0.95rem; }
 .status-detail__hint,
 .status-detail__trend { margin: 0.25rem 0; color: var(--ink-dim); font-size: 0.85rem; }
 .status-detail__list,
@@ -2880,7 +2896,6 @@ html[data-theme="light"][data-palette="pride"] {
 .status-detail__item--cancelled .status-detail__state { color: var(--ink-max); }
 .status-detail__empty,
 .status-incidents__empty { color: var(--ink-dim); }
-.status-detail__actions { margin: 0.75rem 0 0; }
 .status-detail__close { min-height: 32px; padding: 0.25em 1ch; font-size: 0.85rem; }
 .status-empty { align-self: center; margin: 0; color: var(--ink-dim); }
 
