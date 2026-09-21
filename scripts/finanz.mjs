@@ -157,7 +157,13 @@ export function boardJson(data, funding) {
       ...pickOptional(m, ["tagline", "icon"]),
       monthly: m.monthly,
     })),
-    pulse: { updated: pulse.updated || null, levels: pulse.levels || [] },
+    // `start` only when set: the seed has no pulse, and consumers key on its
+    // presence (no time axis → nothing to plot on /status).
+    pulse: {
+      updated: pulse.updated || null,
+      ...(typeof pulse.start === "string" ? { start: pulse.start } : {}),
+      levels: pulse.levels || [],
+    },
   };
 }
 
@@ -235,7 +241,9 @@ Befehle:
   finish <id>                Projekt auf erreicht setzen (raised = target)
   add                        neues einmaliges Projekt anlegen (interaktiv)
   monthly                    monatliche Kosten verwalten (interaktiv)
-  pulse <level>              Puls-Level 0..7 anhängen (wertfrei, keine Euro-Angabe)
+  pulse <level> [--start YYYY-MM]
+                             Puls-Level 0..7 anhängen (wertfrei, keine Euro-Angabe);
+                             --start datiert den ersten Eintrag, nur einmal möglich
   percent <n>                Gesamt-% (funding.json) setzen, 0..100
 
 "add" und "monthly" sowie das Menü sind interaktiv: ohne TTY brechen sie mit
@@ -327,7 +335,17 @@ async function runSubcommand(cmd, rawArgs) {
   }
 
   if (cmd === "pulse") {
-    const [levelStr] = args;
+    // --start YYYY-MM dates the first level (the /status time axis); setPulse
+    // keeps it sticky, so a second, different --start fails there.
+    const flagAt = args.indexOf("--start");
+    if (flagAt !== -1 && args.indexOf("--start", flagAt + 1) !== -1) {
+      // Two flags, one track: the second would be dropped in silence, and the
+      // owner would believe the later month had been applied.
+      fail("--start darf nur einmal stehen — der Puls hat genau einen Startmonat");
+    }
+    const startMonth = flagAt === -1 ? undefined : args[flagAt + 1];
+    const positional = args.filter((_, i) => flagAt === -1 || (i !== flagAt && i !== flagAt + 1));
+    const [levelStr] = positional;
     if (levelStr === undefined) {
       fail("pulse braucht <level> 0..7, z.B.: pulse 4 (wertfrei, keine Euro-Angabe)");
     }
@@ -335,9 +353,12 @@ async function runSubcommand(cmd, rawArgs) {
     if (level === null || !Number.isInteger(level) || level < 0 || level > 7) {
       fail(`Level "${levelStr}" muss eine ganze Zahl 0..7 sein`);
     }
+    if (flagAt !== -1 && !/^\d{4}-(0[1-9]|1[0-2])$/.test(startMonth || "")) {
+      fail(`--start braucht einen Monat im Format YYYY-MM (ist ${JSON.stringify(startMonth)})`);
+    }
     let next;
     try {
-      next = setPulse(read(), level, date);
+      next = setPulse(read(), level, date, startMonth);
     } catch (e) {
       fail(e.message);
     }

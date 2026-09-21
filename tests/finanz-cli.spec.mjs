@@ -99,6 +99,47 @@ describe("finanz CLI — amounts are whole euros", () => {
   });
 });
 
+describe("finanz CLI — pulse --start", () => {
+  // Only the refusing paths run through the CLI: a green write would touch
+  // the repo's finanz.json while other spec files read it. The write itself is
+  // covered at the data layer (tests/finanz-data.spec.mjs, setPulse).
+  it("rejects a start month that is not YYYY-MM — wherever the flag sits — and writes nothing", () => {
+    const before = fs.readFileSync(FINANZ, "utf8");
+    for (const args of [
+      ["pulse", "3", "--start", "2025-13"],
+      ["pulse", "3", "--start"],
+      ["pulse", "--start", "Mai", "3"],
+    ]) {
+      const res = run(...args);
+      assert.equal(res.status, 1, args.join(" "));
+      assert.match(res.stderr, /YYYY-MM/, args.join(" "));
+      assert.equal(fs.readFileSync(FINANZ, "utf8"), before);
+    }
+  });
+
+  it("refuses a second --start instead of dropping one in silence", () => {
+    const before = fs.readFileSync(FINANZ, "utf8");
+    const res = run("pulse", "3", "--start", "2025-05", "--start", "2025-06");
+    assert.equal(res.status, 1);
+    assert.match(res.stderr, /nur einmal/);
+    assert.equal(fs.readFileSync(FINANZ, "utf8"), before);
+  });
+
+  it("still wants a level when only the flag is given", () => {
+    const res = run("pulse", "--start", "2025-05");
+    assert.equal(res.status, 1);
+    assert.match(res.stderr, /braucht <level>/);
+  });
+
+  it("names the flag in the usage text, without a euro in sight", () => {
+    const usage = run("--help").stdout;
+    assert.match(usage, /pulse <level> \[--start YYYY-MM\]/);
+    const pulseLines = usage.split("\n").filter((l) => /pulse|--start/.test(l));
+    assert.ok(pulseLines.length >= 2);
+    assert.ok(pulseLines.every((l) => !/Euro|€/.test(l) || /keine Euro-Angabe/.test(l)), pulseLines.join("\n"));
+  });
+});
+
 describe("finanz CLI — --json", () => {
   it("list --json emits parseable JSON and nothing else", () => {
     const res = run("list", "--json");
@@ -208,6 +249,15 @@ describe("boardJson", () => {
       updated: "2026-07-01",
       levels: [1, 4, 7],
     });
+  });
+
+  it("carries the pulse's start month when set, and no start key when not", () => {
+    const dated = boardJson(
+      { ...BOARD, pulse: { updated: "2026-07-01", start: "2025-05", levels: [1, 4] } },
+      {}
+    ).pulse;
+    assert.deepEqual(dated, { updated: "2026-07-01", start: "2025-05", levels: [1, 4] });
+    assert.equal("start" in boardJson(BOARD, {}).pulse, false);
   });
 
   it("survives an empty board and a missing funding.json", () => {
