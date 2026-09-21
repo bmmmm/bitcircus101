@@ -137,11 +137,12 @@ describe("feed autodiscovery (README § Generated files, CLAUDE.md § Adding a p
   ];
 
   it("has a non-empty input set", () => {
-    // Eight today (the seven LAYOUT_PAGES of inject-layout.mjs plus rss.html);
-    // a page that loses the chrome must not silently leave the set.
+    // Nine today (the LAYOUT_PAGES of inject-layout.mjs, rss.html and
+    // status.html among them); a page that loses the chrome must not silently
+    // leave the set — bump this with every page that joins LAYOUT_PAGES.
     assert.ok(
-      chromePages.length >= 8,
-      `expected at least 8 root pages with the shared nav, found ${chromePages.length}`,
+      chromePages.length >= 9,
+      `expected at least 9 root pages with the shared nav, found ${chromePages.length}`,
     );
   });
 
