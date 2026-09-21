@@ -35,6 +35,8 @@ export const FUNDING_PATH = path.join(root, "funding.json");
 const CURRENCIES = ["EUR", "USD", "GBP"];
 const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+// pulse.start — a calendar month, the first of the levels track (/status axis)
+const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
 // A plain decimal: optional sign, digits, and a single "," OR "." separator
 // followed by AT MOST two digits (cents). Rejects what bare Number() is too lax
 // about — "" → 0, "0x10" → 16, "1e3" → 1000 — AND the thousands-grouping trap
@@ -45,7 +47,7 @@ const DECIMAL_RE = /^[+-]?\d+([.,]\d{1,2})?$/;
 // next to the validator so a schema change has one obvious place to follow.
 // Exported so a test can assert they stay in lockstep with finanz.schema.json.
 export const ROOT_KEYS = ["currency", "updated", "pulse", "einmalig", "monatlich"];
-export const PULSE_KEYS = ["updated", "levels"];
+export const PULSE_KEYS = ["updated", "start", "levels"];
 export const EINMALIG_KEYS = [
   "id",
   "title",
@@ -269,6 +271,13 @@ export function validate(data) {
           );
         }
       }
+      if ("start" in pulse) {
+        if (typeof pulse.start !== "string" || !MONTH_RE.test(pulse.start)) {
+          errors.push(
+            `root.pulse.start: ${JSON.stringify(pulse.start)} muss ein Monat im Format YYYY-MM sein`
+          );
+        }
+      }
       if (!("levels" in pulse)) {
         errors.push('root.pulse: Pflichtfeld "levels" fehlt');
       } else if (!Array.isArray(pulse.levels)) {
@@ -465,16 +474,28 @@ export function removeItem(data, id, date) {
 /**
  * Append a value-free pulse level (0..7) to the heartbeat track via
  * Core.pushPulse (clamps + caps). Stamps both the board and the pulse `updated`.
+ * `startMonth` (YYYY-MM) dates the track's first level — the /status axis.
  * DSGVO: only the integer level is ever stored — never a euro amount.
  */
-export function setPulse(data, level, date) {
+export function setPulse(data, level, date, startMonth) {
   const next = clone(data);
   const current = (next.pulse && next.pulse.levels) || [];
   // Cap at 64 to match the schema's maxItems (and the browser editor), NOT the
   // renderer's 24-wide display window — otherwise editing the pulse from the CLI
   // would silently trim a longer track the browser tool is allowed to keep.
   const levels = Core.pushPulse(current, level, 64);
-  next.pulse = { updated: date, levels };
+  // `start` is sticky: moving it would shift every level to another month.
+  // It is set once, on a track that has none; a different value later is
+  // refused rather than applied. A malformed value falls to assertValid.
+  const existing =
+    data.pulse && typeof data.pulse.start === "string" ? data.pulse.start : undefined;
+  if (startMonth !== undefined && existing !== undefined && startMonth !== existing) {
+    throw new Error(
+      `Startmonat ist bereits ${existing} — ein anderer --start würde den ganzen Puls verschieben`
+    );
+  }
+  const start = existing !== undefined ? existing : startMonth;
+  next.pulse = start !== undefined ? { updated: date, start, levels } : { updated: date, levels };
   next.updated = date;
   assertValid(next);
   return next;

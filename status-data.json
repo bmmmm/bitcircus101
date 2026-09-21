@@ -1,0 +1,1619 @@
+{
+  "version": 1,
+  "since": "2025-05-25",
+  "series": [
+    {
+      "key": "linkup",
+      "label": "Linkup",
+      "hint": "freitags ab 20 Uhr, jeden dritten Freitag mit Lightning Talks"
+    },
+    {
+      "key": "workshop",
+      "label": "Workshops",
+      "hint": "angekündigte Workshops"
+    },
+    {
+      "key": "special",
+      "label": "Specials",
+      "hint": "Sonderformate"
+    }
+  ],
+  "events": [
+    {
+      "id": "e955edae5d26",
+      "date": "2025-05-28",
+      "title": "Treffen: Bolle Team",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "5d503d1b2fdd",
+      "date": "2025-06-13",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "c501060c6c76",
+      "date": "2025-06-14",
+      "title": "Eröffnung: Doro101 Ateliers",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "56c2c0158a05",
+      "date": "2025-06-16",
+      "title": "Treffen: FSFE Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "2d905da02cc6",
+      "date": "2025-06-20",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "2a8fc5163dbd",
+      "date": "2025-06-27",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "d078f83d8c43",
+      "date": "2025-06-28",
+      "title": "Treffen: Bolle Team",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "cac940f88688",
+      "date": "2025-07-02",
+      "title": "Treffen: Bolle Team",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ce233311b746",
+      "date": "2025-07-04",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "bb64bd4815e7",
+      "date": "2025-07-11",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "a7510ea8f861",
+      "date": "2025-07-14",
+      "title": "Treffen: FSFE Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "58463df62746",
+      "date": "2025-07-18",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "d25d95a6059f",
+      "date": "2025-07-23",
+      "title": "Bikepacking Stammtisch Bonn - Ride with GPS Club Account Meetup",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ec5b4b39526f",
+      "date": "2025-07-25",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "3e2f5c710f6b",
+      "date": "2025-07-30",
+      "title": "Treffen: Bolle Team",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "9824e6adb4f5",
+      "date": "2025-08-01",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "f373825dc987",
+      "date": "2025-08-08",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "deb8a10919fe",
+      "date": "2025-08-11",
+      "title": "Fsfe Treffen",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ffc7b64af939",
+      "date": "2025-08-15",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "c06ccb08d5e4",
+      "date": "2025-08-16",
+      "title": "Event: FrOSCon 2025",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "dfd4ebe7755c",
+      "date": "2025-08-22",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "5d47ba7d8630",
+      "date": "2025-08-29",
+      "title": "Critical Mass",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "4a2c782a0ae5",
+      "date": "2025-09-08",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "1db9d06fb6dc",
+      "date": "2025-09-09",
+      "title": "Apple Event",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "eaeedd0bf23c",
+      "date": "2025-09-12",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "7e4ad6c79125",
+      "date": "2025-09-19",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "63ccd78ee821",
+      "date": "2025-09-20",
+      "title": "Offene Ateliers",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "f32a9e89618a",
+      "date": "2025-09-24",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "0086fe3a3777",
+      "date": "2025-09-26",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "c9efe617a74a",
+      "date": "2025-09-26",
+      "title": "Critical Mass",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "3c15515c9305",
+      "date": "2025-10-03",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "70f1e9e3e242",
+      "date": "2025-10-10",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "4ebc2f2cc3dd",
+      "date": "2025-10-13",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8380183bd39a",
+      "date": "2025-10-17",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "6896e9128259",
+      "date": "2025-10-24",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "1e95828afef7",
+      "date": "2025-10-27",
+      "title": "Space blockiert - Externe Veranstaltung",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ec5575642fcc",
+      "date": "2025-10-29",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "94cef4cd9101",
+      "date": "2025-10-31",
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "ad76c443a187",
+      "date": "2025-11-04",
+      "title": "GestaltBar",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "79fd583d98c2",
+      "date": "2025-11-07",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "6952db4a13e5",
+      "date": "2025-11-08",
+      "title": "Lötworkshop",
+      "series": "workshop",
+      "cancelled": false
+    },
+    {
+      "id": "6fd1be7770ec",
+      "date": "2025-11-08",
+      "title": "SaarCTF",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "c9ef99102acd",
+      "date": "2025-11-10",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "506a1fe5fa40",
+      "date": "2025-11-12",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "5ce0eb62f802",
+      "date": "2025-11-14",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "d5dbe89f7cc6",
+      "date": "2025-11-21",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "04e97fb099dd",
+      "date": "2025-11-25",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "14cd6df985dd",
+      "date": "2025-11-25",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "7cea6d31cd84",
+      "date": "2025-11-27",
+      "title": "Spieleabend in der Burg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "0e93355babfa",
+      "date": "2025-11-28",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "604473c69277",
+      "date": "2025-11-29",
+      "title": "Cat-Ear-Basteln für 39C3",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "1af4f2899d3c",
+      "date": "2025-12-01",
+      "title": "Der Bonner Schmierling kommt!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "892d11f9c9a6",
+      "date": "2025-12-02",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e520844856e3",
+      "date": "2025-12-02",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "d4da61e4d7d5",
+      "date": "2025-12-05",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "f78091b29d6b",
+      "date": "2025-12-08",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8e2d19d8c2a6",
+      "date": "2025-12-09",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e0207c695de3",
+      "date": "2025-12-09",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e7d0f7af0cef",
+      "date": "2025-12-12",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "9b2aefb8c3a4",
+      "date": "2025-12-16",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "eb22cc5154e5",
+      "date": "2025-12-16",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "50f5f3bf7e23",
+      "date": "2025-12-19",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "15259f98b1a8",
+      "date": "2025-12-30",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e11e3f65e6ea",
+      "date": "2025-12-30",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "309802cc7bd8",
+      "date": "2026-01-02",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "55b3f1302cad",
+      "date": "2026-01-04",
+      "title": "Digital Independence Day (DID)",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "dab02cc4c074",
+      "date": "2026-01-05",
+      "title": "Der Bonner Schmierling kommt!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "9514df152a2c",
+      "date": "2026-01-06",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "9ccce268e108",
+      "date": "2026-01-06",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8c054d0e4a00",
+      "date": "2026-01-09",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "eedc5bf0e86c",
+      "date": "2026-01-12",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "2811f4e72529",
+      "date": "2026-01-13",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "89cf0316e60a",
+      "date": "2026-01-13",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "cff0802b7168",
+      "date": "2026-01-16",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "16c792484f0d",
+      "date": "2026-01-20",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "230fae71b431",
+      "date": "2026-01-20",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "827ed27809ed",
+      "date": "2026-01-22",
+      "title": "Spieleabend in der Burg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "4bedea8cd325",
+      "date": "2026-01-23",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "a2013091879e",
+      "date": "2026-01-23",
+      "title": "Synaplan Deep Dive im bitcircus101 – Demo, Governance & AI-Talk mit Ralf",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "1dc79d4d520d",
+      "date": "2026-01-27",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "240fb004b931",
+      "date": "2026-01-27",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "c0e9b600dca0",
+      "date": "2026-01-28",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8e99fa25d57b",
+      "date": "2026-01-30",
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "ffa9df3f2328",
+      "date": "2026-02-01",
+      "title": "Digital Independence Day (DID)",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "36908db041f8",
+      "date": "2026-02-03",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "505cb7694a15",
+      "date": "2026-02-03",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "30c18ca7deb5",
+      "date": "2026-02-06",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "04c971772eaa",
+      "date": "2026-02-09",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "338e4a603af5",
+      "date": "2026-02-10",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "535efab93117",
+      "date": "2026-02-10",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "d543b2b6ca9e",
+      "date": "2026-02-13",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "545efc4c3617",
+      "date": "2026-02-17",
+      "title": "Offene Datenburg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "595c56a554bb",
+      "date": "2026-02-17",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "23167355282e",
+      "date": "2026-02-20",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "1122dbee842c",
+      "date": "2026-02-21",
+      "title": "FSFE: I love free software day",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e863f387d7b8",
+      "date": "2026-02-24",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "c10b4e4495e4",
+      "date": "2026-02-25",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ec08e76fe8ab",
+      "date": "2026-02-27",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "4219f58f630d",
+      "date": "2026-02-28",
+      "title": "Workshop Grundlagen der Elektrotechnik",
+      "series": "workshop",
+      "cancelled": false
+    },
+    {
+      "id": "48795a459e20",
+      "date": "2026-03-01",
+      "title": "Digital Independence Day (DID)",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8f964165311c",
+      "date": "2026-03-03",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ff5c1a5ead14",
+      "date": "2026-03-06",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "c0aeffce909f",
+      "date": "2026-03-09",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "929884b5381f",
+      "date": "2026-03-10",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "702480ab5fd5",
+      "date": "2026-03-11",
+      "title": "Bikepacking Stammtisch Bonn - Thema des Abends: All eyes on maps!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "bb32aac3a2cd",
+      "date": "2026-03-13",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "8b9879b0351f",
+      "date": "2026-03-17",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "aed26cb0ea49",
+      "date": "2026-03-20",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "1ac75fe4bf7c",
+      "date": "2026-03-21",
+      "title": "Altstadt cleanup",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "61c05c2e48fc",
+      "date": "2026-03-21",
+      "title": "Laserpointer Games mit Georg",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "9c9ad30aa217",
+      "date": "2026-03-24",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "3d9627ad6243",
+      "date": "2026-03-25",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "1b6e5692184c",
+      "date": "2026-03-27",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "1d9ddcb42b1a",
+      "date": "2026-03-31",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "98324306eab9",
+      "date": "2026-04-03",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "485a1d7a91fa",
+      "date": "2026-04-07",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "2508c191632c",
+      "date": "2026-04-10",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "c59bfa92758e",
+      "date": "2026-04-13",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "3957c7468ef7",
+      "date": "2026-04-14",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "092234310a05",
+      "date": "2026-04-17",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "365583f6fbff",
+      "date": "2026-04-21",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "bb86b7b095ef",
+      "date": "2026-04-24",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "3f55922104ff",
+      "date": "2026-04-28",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "17fcecdec32b",
+      "date": "2026-04-29",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "d0e47b216944",
+      "date": "2026-05-01",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "51525d66bc64",
+      "date": "2026-05-02",
+      "title": "Hackers Frühstück",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "d126556ef1bc",
+      "date": "2026-05-02",
+      "title": "Hackertour - OSM cleanup Bonn",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "610c2335ebfd",
+      "date": "2026-05-05",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ab8e2d3d0319",
+      "date": "2026-05-08",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "9b8ca6335b2d",
+      "date": "2026-05-09",
+      "title": "BarCamp Bonn 2026",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ad8af5c58f85",
+      "date": "2026-05-11",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "640e6685f2ff",
+      "date": "2026-05-12",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "f36286122216",
+      "date": "2026-05-15",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "690e6e64ebff",
+      "date": "2026-05-19",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "a4d4b51b4292",
+      "date": "2026-05-22",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "cf8dca7e0355",
+      "date": "2026-05-25",
+      "title": "Geburtstag - bitcircus101 wird 1 Jahr",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ee06f0fe5d02",
+      "date": "2026-05-26",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "025beb211d2e",
+      "date": "2026-05-27",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "7fb472ab92eb",
+      "date": "2026-05-29",
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "e703e01f502a",
+      "date": "2026-06-02",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "81a84a9e1944",
+      "date": "2026-06-05",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "4bb01fb0abc8",
+      "date": "2026-06-08",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "f003ee4a452a",
+      "date": "2026-06-09",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "91f249652ff0",
+      "date": "2026-06-12",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "e10198164a28",
+      "date": "2026-06-16",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "33ac4c153db0",
+      "date": "2026-06-19",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "76093e6a3f25",
+      "date": "2026-06-23",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "9240f49bfd51",
+      "date": "2026-06-24",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "9d7a39e01775",
+      "date": "2026-06-26",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "6f06f4cebc22",
+      "date": "2026-06-30",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "9ecd50790fa3",
+      "date": "2026-07-03",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "eb7d10ad54e7",
+      "date": "2026-07-07",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "77e1417247e7",
+      "date": "2026-07-10",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "d53590154ab6",
+      "date": "2026-07-13",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ee7f53fd63e9",
+      "date": "2026-07-14",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "160fbaeebd2d",
+      "date": "2026-07-17",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "1155de9f1b83",
+      "date": "2026-07-18",
+      "title": "Pride Bonn",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "f181974dcee1",
+      "date": "2026-07-21",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "6a5511637512",
+      "date": "2026-07-24",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "8375b1d3a586",
+      "date": "2026-07-24",
+      "title": "Not my repo",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e8818922d5e1",
+      "date": "2026-07-28",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "c328e705960d",
+      "date": "2026-07-29",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "2747e956ff9a",
+      "date": "2026-07-31",
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "822148fcf8ca",
+      "date": "2026-08-01",
+      "title": "1 August  2026 CSD Beethovens Bunte",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "5de2edebd14b",
+      "date": "2026-08-04",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8ff6f7e60af5",
+      "date": "2026-08-07",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "5ce0adc1d049",
+      "date": "2026-08-11",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e2cfc7c7e5c7",
+      "date": "2026-08-13",
+      "title": "FAU BIT zu Gast in Bonn",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "329c57010745",
+      "date": "2026-08-14",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "53e09f96d749",
+      "date": "2026-08-18",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e90acf9898a8",
+      "date": "2026-08-21",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "50de5c465c50",
+      "date": "2026-08-25",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e33289c31e7c",
+      "date": "2026-08-26",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "a6a5db905208",
+      "date": "2026-08-28",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "b4f2e5e59816",
+      "date": "2026-09-01",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "3b02d3ee716d",
+      "date": "2026-09-04",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "bbf2f0ea8f16",
+      "date": "2026-09-08",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "88db67339972",
+      "date": "2026-09-09",
+      "title": "Apple Event",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "58fd3acbe78e",
+      "date": "2026-09-11",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "c131139aced7",
+      "date": "2026-09-14",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "bcf53114201a",
+      "date": "2026-09-15",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "67d0a07d76fd",
+      "date": "2026-09-18",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "bef4fc45327a",
+      "date": "2026-09-18",
+      "title": "Special: Öffentliche Dateninfrastruktur - Vortrag Markus Drenger",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "2c8a32452fc1",
+      "date": "2026-09-19",
+      "title": "32. Offene Ateliers",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "2d87f541a8c8",
+      "date": "2026-09-20",
+      "title": "32. Offene Ateliers",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "29ed8de6211c",
+      "date": "2026-09-22",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "1d9a350e2120",
+      "date": "2026-09-25",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "30ed98eb1c1c",
+      "date": "2026-09-29",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8797f899c84a",
+      "date": "2026-09-30",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "3309141a8e57",
+      "date": "2026-10-02",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "bb806176eec6",
+      "date": "2026-10-06",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "184ba0f4c433",
+      "date": "2026-10-09",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "fc7b7b7f441a",
+      "date": "2026-10-10",
+      "title": "Phosh Meetup!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "930208fa5a93",
+      "date": "2026-10-12",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "c082a7ecdbc9",
+      "date": "2026-10-13",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8d0fdd318df3",
+      "date": "2026-10-16",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "c984f4ae68c1",
+      "date": "2026-10-20",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "05bfccda9d0f",
+      "date": "2026-10-23",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "cc84f9676fc1",
+      "date": "2026-10-27",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "b14bcce61fed",
+      "date": "2026-10-28",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "1f9a61d121da",
+      "date": "2026-10-30",
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "3eb855200367",
+      "date": "2026-11-03",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "61abb4973c47",
+      "date": "2026-11-06",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "c1d0794b2df4",
+      "date": "2026-11-09",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "3bb611d0fc65",
+      "date": "2026-11-10",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "eaacb806a193",
+      "date": "2026-11-13",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "42b61cd5ff65",
+      "date": "2026-11-17",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e45639019f6b",
+      "date": "2026-11-20",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "51bcf0379262",
+      "date": "2026-11-24",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "0814feb4508e",
+      "date": "2026-11-25",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "c18b498bb7c1",
+      "date": "2026-11-27",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "7247189d4d68",
+      "date": "2026-12-01",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "a4982056db1b",
+      "date": "2026-12-04",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "69470a725468",
+      "date": "2026-12-08",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "4f18d3a378ba",
+      "date": "2026-12-11",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "4a327b5e9b62",
+      "date": "2026-12-14",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "da49faec4d6a",
+      "date": "2026-12-15",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "e2f988a12451",
+      "date": "2026-12-18",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "67428a1ed66e",
+      "date": "2026-12-22",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "905e7c72628f",
+      "date": "2026-12-25",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "5e427bf3d16d",
+      "date": "2026-12-29",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "5c48e8519d9c",
+      "date": "2026-12-30",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "747ef622c7e6",
+      "date": "2027-01-01",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "6567f6dee9a1",
+      "date": "2027-01-05",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "71f5165e840d",
+      "date": "2027-01-08",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "3fecd3cae4eb",
+      "date": "2027-01-11",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "6665b9da5e9e",
+      "date": "2027-01-12",
+      "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8ae01b3568e9",
+      "date": "2027-01-15",
+      "title": "Linkup@bitcircus101",
+      "series": "linkup",
+      "cancelled": false
+    }
+  ]
+}

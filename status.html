@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Status – Terminverlauf des bitcircus101 Hackspace Bonn</title>
+
+        <!-- Primary Meta Tags -->
+        <meta name="title" content="Status – Terminverlauf des bitcircus101 Hackspace Bonn" />
+        <meta
+            name="description"
+            content="Findet statt, was im Kalender steht? Der Verlauf aller Termine von bitcircus101 seit Mai 2025 als Statusseite: Linkups, Workshops, Specials und ein grober Puls der Unterstützung – ohne Zahlen."
+        />
+        <meta name="author" content="bitcircus101" />
+        <meta name="robots" content="index, follow" />
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://bitcircus101.de/status" />
+        <meta property="og:title" content="Status – Terminverlauf des bitcircus101 Hackspace Bonn" />
+        <meta
+            property="og:description"
+            content="Ein Balken pro Woche, weiter zurück pro Monat, Quartal und Jahr: welche Termine von bitcircus101 stattfanden, welche ausfielen – und ein grober Puls der Unterstützung."
+        />
+        <meta property="og:image" content="https://bitcircus101.de/images/og-image.jpg" />
+        <meta property="og:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
+        <meta property="og:locale" content="de_DE" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Status – Terminverlauf des bitcircus101 Hackspace Bonn" />
+        <meta name="twitter:description" content="Welche Termine von bitcircus101 stattfanden, welche ausfielen – als Statusseite, seit Mai 2025." />
+        <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
+        <meta name="twitter:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
+
+        <!-- Theme color -->
+        <meta name="theme-color" content="#0a0a0a" />
+
+        <!-- Canonical URL + feed autodiscovery -->
+        <link rel="canonical" href="https://bitcircus101.de/status" />
+        <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
+        <link rel="alternate" type="text/calendar" title="bitcircus101 Termine (iCal)" href="ical.ics" />
+
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=b0b74e53" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=b0b74e53" />
+        <link rel="manifest" href="site.webmanifest?v=b0b74e53" />
+        <script>
+            // No-flash: apply the persisted light theme before the stylesheet paints.
+            try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="style.css?v=b0b74e53" />
+        <!-- The fetch in status.js names the same bare path, so the preload counts.
+             Live-only: a plain checkout 404s here and the page says so. -->
+        <link rel="preload" href="status-data.json" as="fetch" crossorigin />
+    </head>
+    <body>
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+        <!-- header/footer are injected by scripts/inject-layout.mjs (pnpm run build:layout) -->
+        <header>
+            <nav id="main-nav" aria-label="Hauptnavigation">
+                <a class="nav__brand" href="index.html">
+                    <span class="nav__name">bitcircus101</span>
+                </a>
+                <button
+                    class="menu-toggle"
+                    id="menu-toggle"
+                    aria-controls="main-nav"
+                    aria-expanded="false"
+                >
+                    ≡ menü
+                </button>
+                <ul class="nav__links">
+                    <li><a href="index.html#about">/wir</a></li>
+                    <li><a href="events.html">/termine</a></li>
+                    <li><a href="raum-nutzen.html">/raum</a></li>
+                    <li><a href="support.html">/support</a></li>
+                    <li><a href="pinnwand.html">/pinnwand</a></li>
+                    <li><a href="index.html#contact">/kontakt</a></li>
+                </ul>
+                <div class="nav__utils">
+                    <a href="rss.html" class="nav__util" title="RSS-Feeds: Termine und Pinnwand" aria-label="RSS-Feeds: Termine und Pinnwand">rss</a>
+                    <a href="lite/" class="nav__util nav__util--lite" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="kiosk/" class="nav__util" title="Wandanzeige: Termine groß, ohne Menü, aktualisiert sich selbst">kiosk</a>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Helles Design umschalten" title="Invertieren (hell/dunkel)">◐</button>
+                </div>
+            </nav>
+        </header>
+        <main id="main-content">
+            <div class="container">
+                <section id="status">
+                    <p class="doc-path"><a href="index.html">~</a> /status</p>
+                    <h1>Status<a class="section-anchor" href="#status" aria-label="Link zu: Status">#</a></h1>
+                    <p>
+                        Findet statt, was im Kalender steht? Der Verlauf aller Termine von
+                        bitcircus101 seit Mai 2025: ein Balken pro Woche, weiter zurück pro
+                        Monat, Quartal und Jahr. Ein Klick auf einen Balken zeigt die
+                        Termine dahinter. Abgeleitet aus dem Kalender-Export – ein Termin,
+                        der aus dem Kalender verschwand, bevor er stattfand, zählt als
+                        abgesagt.
+                    </p>
+                    <!-- aria-busy sits in the markup so the reservation holds from the
+                         first paint; status.js clears it (or replaces the text). -->
+                    <p class="status-headline" id="status-headline" aria-live="polite" aria-busy="true">
+                        <span class="status-headline__glyph" aria-hidden="true">●</span>
+                        <span class="status-headline__text">lade Verlauf …</span>
+                    </p>
+                    <ul class="status-legend" aria-label="Legende">
+                        <li><span class="status-swatch status-swatch--happened" aria-hidden="true">▌</span> stattgefunden</li>
+                        <li><span class="status-swatch status-swatch--cancelled" aria-hidden="true">✕</span> abgesagt</li>
+                        <li><span class="status-swatch status-swatch--partial" aria-hidden="true">◪</span> teilweise abgesagt</li>
+                        <li><span class="status-swatch status-swatch--scheduled" aria-hidden="true">◌</span> geplant</li>
+                        <li><span class="status-swatch status-swatch--empty" aria-hidden="true">·</span> kein Termin</li>
+                    </ul>
+                </section>
+
+                <section id="linkup" class="panel status-panel" data-series="linkup">
+                    <h2>linkup<a class="section-anchor" href="#linkup" aria-label="Link zu: Linkup">#</a></h2>
+                    <p class="status-panel__hint">freitags ab 20 Uhr, jeden dritten Freitag mit Lightning Talks</p>
+                    <div class="status-bars" id="status-bars-linkup" role="group" aria-label="Verlauf Linkup" aria-busy="true"></div>
+                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span>heute</span></p>
+                    <p class="status-readout" id="status-readout-linkup" aria-live="polite"></p>
+                    <div class="status-detail" id="status-detail-linkup" hidden></div>
+                </section>
+
+                <section id="workshops" class="panel status-panel" data-series="workshop">
+                    <h2>workshops<a class="section-anchor" href="#workshops" aria-label="Link zu: Workshops">#</a></h2>
+                    <p class="status-panel__hint">angekündigte Workshops</p>
+                    <div class="status-bars" id="status-bars-workshop" role="group" aria-label="Verlauf Workshops" aria-busy="true"></div>
+                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span>heute</span></p>
+                    <p class="status-readout" id="status-readout-workshop" aria-live="polite"></p>
+                    <div class="status-detail" id="status-detail-workshop" hidden></div>
+                </section>
+
+                <section id="specials" class="panel status-panel" data-series="special">
+                    <h2>specials<a class="section-anchor" href="#specials" aria-label="Link zu: Specials">#</a></h2>
+                    <p class="status-panel__hint">Sonderformate</p>
+                    <div class="status-bars" id="status-bars-special" role="group" aria-label="Verlauf Specials" aria-busy="true"></div>
+                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span>heute</span></p>
+                    <p class="status-readout" id="status-readout-special" aria-live="polite"></p>
+                    <div class="status-detail" id="status-detail-special" hidden></div>
+                </section>
+
+                <!-- Opt-in: hidden until finanz.json carries a pulse with a start month.
+                     No digit in here outside .status-label (dates) — the levels are a
+                     value-free 0..7 track, never an amount (gate in tests/site.spec.js). -->
+                <section id="status-pulse" class="panel status-pulse" hidden aria-label="Grober Verlauf der Unterstützung – keine Beträge, nur Tendenz">
+                    <h2>unterstützung<a class="section-anchor" href="#status-pulse" aria-label="Link zu: Unterstützung">#</a></h2>
+                    <p class="status-panel__hint">Tendenz pro Monat, ohne Zahlen – ein grober Puls, kein Kontoauszug.</p>
+                    <div class="status-bars status-bars--pulse" id="status-bars-pulse" role="group" aria-label="Verlauf Unterstützung"></div>
+                    <p class="status-bars__axis" aria-hidden="true"><span>früher</span><span>heute</span></p>
+                    <p class="status-readout" id="status-readout-pulse" aria-live="polite"></p>
+                    <div class="status-detail" id="status-detail-pulse" hidden></div>
+                </section>
+
+                <section id="ausfaelle" class="panel">
+                    <h2>ausfälle<a class="section-anchor" href="#ausfaelle" aria-label="Link zu: Ausfälle">#</a></h2>
+                    <p class="status-panel__hint">Termine, die aus dem Kalender verschwanden, bevor sie stattfanden – neueste zuerst.</p>
+                    <ul class="status-incidents" id="status-incidents">
+                        <li class="status-incidents__empty">keine bekannt</li>
+                    </ul>
+                </section>
+
+                <noscript>
+                    <p>
+                        Ohne JavaScript bleibt der Verlauf leer – die Termine stehen im
+                        <a href="archiv/">Archiv</a> und unter <a href="events.html">Termine</a>.
+                    </p>
+                </noscript>
+
+                <div class="back-link">
+                    <a href="index.html" class="btn">← zurück zur startseite</a>
+                </div>
+            </div>
+        </main>
+        <footer role="contentinfo" class="footer">
+            <div class="footer__grid">
+                <div class="footer__col">
+                    <span class="footer__brand">bitcircus101</span>
+                    <span class="footer__tagline">offener hackspace · dorotheenstraße 101 · 53113 bonn</span>
+                </div>
+                <div class="footer__col footer__col--links">
+                    <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener noreferrer">github ↗</a>
+                    <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">ko-fi ↗</a>
+                    <a href="rss.html">rss</a>
+                    <a href="status.html" title="Terminverlauf: was stattfand, was ausfiel">status</a>
+                    <a href="lite/" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="impressum-datenschutz.html">impressum</a>
+                </div>
+            </div>
+            <div class="footer__bar">
+                <span class="footer__mode" aria-hidden="true">-- OPEN --</span>
+                <span class="footer__sep">│</span>
+                <span>fr ab 20:00</span>
+                <span class="footer__sep">│</span>
+                <span class="footer__year"></span>
+                <span class="footer__status" data-funding="18">lights: on</span>
+            </div>
+        </footer>
+
+        <script defer src="storage.js?v=b0b74e53"></script>
+        <script defer src="main.js?v=b0b74e53"></script>
+        <script defer src="status-core.js?v=b0b74e53"></script>
+        <script defer src="status.js?v=b0b74e53"></script>
+    </body>
+</html>
