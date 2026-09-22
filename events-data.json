@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-09-22T15:17:16.599Z",
+  "lastSync": "2026-09-22T16:17:21.788Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-22T15:17:16.143Z",
+      "fetchedAt": "2026-09-22T16:17:21.525Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-22T15:17:16.255Z",
+      "fetchedAt": "2026-09-22T16:17:21.658Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -158,12 +158,12 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 10
+        "count": 11
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
         "rss": "/feeds/tag/datenburg.xml",
-        "count": 11
+        "count": 10
       },
       "#foss": {
         "ics": "/feeds/tag/foss.ics",
@@ -193,7 +193,7 @@
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
         "rss": "/feeds/tag/offener-abend.xml",
-        "count": 8
+        "count": 7
       },
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
@@ -238,27 +238,6 @@
     "retired": {}
   },
   "events": [
-    {
-      "id": "3a8f0b94ebd5",
-      "title": "Offene Datenburg",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-09-22",
-      "time": "18:00",
-      "endDate": "2026-09-22",
-      "endTime": "22:00",
-      "tags": [
-        "#datenburg",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "recurring": true,
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "id": "29ed8de6211c",
       "title": "Look at my toys!",
@@ -1074,6 +1053,26 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-08-13T18:25:49.154Z"
+    },
+    {
+      "id": "3623b8f2b696",
+      "title": "Plenum mit anschließendem Essen",
+      "subtitle": "",
+      "description": "Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein",
+      "location": "",
+      "date": "2026-11-12",
+      "time": "19:00",
+      "endDate": "2026-11-12",
+      "endTime": "20:30",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "36f59fc2-7422-47d0-bc19-38bed610e3ac",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
+      "firstSeen": "2026-09-10T19:17:13.849Z"
     }
   ]
 }

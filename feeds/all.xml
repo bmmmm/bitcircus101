@@ -15,16 +15,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-09-22 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/3a8f0b94ebd5/</link>
-      <description>Offene Datenburg · 2026-09-22</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3a8f0b94ebd5/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20260922T1800</guid>
-    </item>
-    <item>
       <title>[2026-09-22 19:00] Look at my toys! @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/29ed8de6211c/</link>
       <description>We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.
@@ -420,6 +410,14 @@ We play inclusive and together. There is stim toys and you can grab something to
       <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/ef98796895f9/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
       <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261111T1930</guid>
+    </item>
+    <item>
+      <title>[2026-11-12 19:00] Plenum mit anschließendem Essen</title>
+      <link>https://bitcircus101.de/e/3623b8f2b696/</link>
+      <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
+      <content:encoded>&lt;p&gt;Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3623b8f2b696/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 10 Sep 2026 19:17:13 +0000</pubDate>
+      <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261112T1900</guid>
     </item>
   </channel>
 </rss>
