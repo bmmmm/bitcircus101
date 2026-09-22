@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-22T16:27:05.413Z",
+  "lastSync": "2026-09-22T17:17:14.540Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-22T16:27:05.143Z",
+      "fetchedAt": "2026-09-22T17:17:14.408Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 58,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-22T16:27:05.390Z",
+      "fetchedAt": "2026-09-22T17:17:14.518Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 52,
@@ -158,7 +158,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 11
+        "count": 12
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -198,17 +198,17 @@
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 8
+        "count": 7
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 8
+        "count": 7
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 8
+        "count": 7
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -226,40 +226,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 20
+        "count": 19
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 20
+        "count": 21
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "id": "29ed8de6211c",
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-09-22",
-      "time": "19:00",
-      "endDate": "2026-09-22",
-      "endTime": "22:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "recurring": true,
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
     {
       "id": "2584e7559146",
       "title": "Spieleabend",
@@ -1072,6 +1050,25 @@
       "uid": "36f59fc2-7422-47d0-bc19-38bed610e3ac",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
+      "firstSeen": "2026-09-10T19:17:13.849Z"
+    },
+    {
+      "id": "5b4ac3f9e2de",
+      "title": "Ordentliche Mitgliederversammlung",
+      "subtitle": "",
+      "description": "Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein",
+      "location": "",
+      "date": "2026-11-12",
+      "time": "19:30",
+      "endDate": "2026-11-12",
+      "endTime": "21:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "36f59fc2-7422-47d0-bc19-38bed610e3ac",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-09-10T19:17:13.849Z"
     }
   ]

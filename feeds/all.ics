@@ -23,27 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260922T1900@bitcircus101.de
-DTSTAMP:20260519T185916Z
-DTSTART;TZID=Europe/Berlin:20260922T190000
-DTEND;TZID=Europe/Berlin:20260922T220000
-SUMMARY:Look at my toys!
-DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
- tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
- u're welcome to hang out and continue playing and chatting as you like.\nW
- e play inclusive and together. There is stim toys and you can grab somethi
- ng to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woc
- he treffen wir uns zum Spielen\, Puzzeln und Rätseln. Los geht es mit ein
- em Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und we
- iter gespielt\, gerätselt oder einfach nur gequatscht.\nWir spielen inklu
- siv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kü
- hlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&c
- hill #social
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
-CATEGORIES:relax,social,spieletreff
-END:VEVENT
-BEGIN:VEVENT
 UID:19efb037-b521-4f7b-b508-bd63eb3b292b-20260924T1900@bitcircus101.de
 DTSTAMP:20260616T150902Z
 DTSTART;TZID=Europe/Berlin:20260924T190000
@@ -536,6 +515,16 @@ DTSTAMP:20260910T191713Z
 DTSTART;TZID=Europe/Berlin:20261112T190000
 DTEND;TZID=Europe/Berlin:20261112T203000
 SUMMARY:Plenum mit anschließendem Essen
+DESCRIPTION:Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:community
+END:VEVENT
+BEGIN:VEVENT
+UID:36f59fc2-7422-47d0-bc19-38bed610e3ac-20261112T1930@bitcircus101.de
+DTSTAMP:20260910T191713Z
+DTSTART;TZID=Europe/Berlin:20261112T193000
+DTEND;TZID=Europe/Berlin:20261112T210000
+SUMMARY:Ordentliche Mitgliederversammlung
 DESCRIPTION:Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
