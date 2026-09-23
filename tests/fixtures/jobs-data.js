@@ -68,6 +68,31 @@ function buildJobsData() {
     // Two, so the cycle has somewhere to go; the test advances the clock. The
     // second name sits exactly at the gate's 24-character cap: on a 320 px
     // viewport it only stays one line because the CSS pins the title.
+    // Unter Chiffre: one up on TODAY, one expired in August.
+    chiffre: [
+      {
+        id: "0x2a",
+        headline: "Embedded / Rust, sucht Teilzeit",
+        level: "experienced",
+        location: "Bonn/Köln oder remote",
+        employment: ["part-time"],
+        skills: ["rust", "embedded"],
+        about: "Baut gern Dinge, die blinken.",
+        from: "2026-09-05",
+        months: 1,
+      },
+      {
+        id: "0x07",
+        headline: "Ist schon wieder abgenommen",
+        level: "entry",
+        location: "Bonn",
+        employment: ["internship"],
+        skills: ["python"],
+        about: "Hing im Juli.",
+        from: "2026-07-01",
+        months: 1,
+      },
+    ],
     karussell: [
       { name: "Freund A", url: "https://freund-a.example" },
       { name: "Freund B Langname GmbH x", url: "https://freund-b.example" },
@@ -112,6 +137,14 @@ function buildHostileJobsData() {
     ],
     // The permanent slot gets the same treatment: a javascript: link must not
     // render at all, and markup in a name must land as text.
+    chiffre: [
+      // Not a Chiffre: it would land in a mailto: subject and a DOM id.
+      { id: 'x"><img src=x onerror="window.__pwned = 1">', headline: 'Böse', level: 'entry',
+        location: 'Bonn', employment: ['full-time'], skills: ['x'], about: 'x', ...live },
+      { ...live, id: '0xbe', headline: '<img src=x onerror="window.__pwned = 1">', level: '<i>',
+        location: '</p><svg onload="window.__pwned = 1">', employment: ['full-time'],
+        skills: ['<b>'], about: '</p><script>window.__pwned = 1</script>' },
+    ],
     karussell: [
       { name: 'Böse', url: 'javascript:window.__pwned = 1' },
       { name: '"><img src=x onerror="window.__pwned = 1">', url: 'https://ok.example' },

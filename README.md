@@ -248,6 +248,22 @@ below — never moves. A slot runs for a year and the list is curated by hand:
 remove an entry when its year runs out. The key is optional — without it, or
 when the fetch fails, the note keeps its static title.
 
+The third key, `chiffre`, holds **anonymous notes from people looking for
+work** ("unter Chiffre", section `#chiffre` on the page). A note carries a
+Chiffre id (`0x` + 2–4 hex digits), a headline, a coarse level
+(`entry`/`experienced`/`senior`), location, employment, 1–8 skills, a short
+`about`, and the same `from`/`months` runtime. No name, no contact: the card's
+only action is a `mailto:info@bitcircus101.de` with subject `CHIFFRE <id>`.
+The gate warns (never fails) when a note looks like it carries contact details.
+Chiffre notes stay out of `pinnwand/feed.xml` on purpose — a feed reader keeps
+copies after a note comes down.
+
+Maintainer procedure: a person mails the filled-in snippet → pick a free id,
+commit the entry, and store `id → mail address` **outside the repo** (the
+space's password manager). A mail with subject `CHIFFRE <id>` → forward it
+unchanged to that address. Take a note down on request or when it expires, and
+delete the mapping then.
+
 ```sh
 pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 ```
