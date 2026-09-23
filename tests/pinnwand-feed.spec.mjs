@@ -50,6 +50,8 @@ const posting = (extra = {}) => ({
   id: "acme-2026-09",
   company: "Acme",
   title: "Backend-Entwicklung in Bonn",
+  location: "Bonn",
+  employment: ["full-time", "working-student"],
   url: "https://acme.example/jobs/1",
   from: TODAY,
   months: 1,
@@ -184,7 +186,8 @@ describe("one item", () => {
     const until = JobsCore.formatDay(JobsCore.lastDay(entry.from, entry.months));
     assert.equal(
       desc,
-      "&lt;p&gt;Acme&lt;/p&gt;" +
+      "&lt;p&gt;Acme · Bonn&lt;/p&gt;" +
+        "&lt;p&gt;Vollzeit · Werkstudium&lt;/p&gt;" +
         `&lt;p&gt;hängt seit 01.09.2026 · läuft bis ${until}&lt;/p&gt;` +
         '&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/pinnwand#job-acme-2026-09&quot;&gt;' +
         "zum Zettel an der Pinnwand&lt;/a&gt;&lt;/p&gt;"
@@ -285,6 +288,8 @@ describe("the CLI", () => {
               id: "acme-2026-09",
               company: "Acme",
               title: "Backend-Entwicklung in Bonn",
+              location: "Bonn",
+              employment: ["full-time"],
               url: "https://acme.example/jobs/1",
               from: "2026-09-01",
               months: 12,
