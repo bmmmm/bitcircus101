@@ -34,6 +34,10 @@
   "use strict";
 
   var JSON_URL = "jobs.json";
+  // Where a reply to a Chiffre note goes: the space's mailbox, which forwards
+  // it unread-by-the-page to an address that is never in jobs.json.
+  var CHIFFRE_MAIL = "info@bitcircus101.de";
+  var CHIFFRE_ID_RE = /^0x[0-9a-f]{2,4}$/;
   var Core = window.JobsCore;
 
   function esc(s) {
@@ -94,6 +98,79 @@
     );
   }
 
+  // A Chiffre note: a person, not a vacancy. No link out — its one action is a
+  // mail to the space with the Chiffre in the subject, prefilled so a company
+  // knows what to write. The id is checked again here (defense in depth, like
+  // the https check): it lands in a mailto: subject and a DOM id.
+  function chiffreMarkup(entry) {
+    var until = Core.formatDay(Core.lastDay(entry.from, entry.months));
+    var subject = "CHIFFRE " + entry.id;
+    var body =
+      "Hallo " + entry.id + ",\n\n" +
+      "wir sind: \n" +
+      "wir bieten: \n" +
+      "so erreichst du uns: \n";
+    var href =
+      "mailto:" + CHIFFRE_MAIL +
+      "?subject=" + encodeURIComponent(subject) +
+      "&body=" + encodeURIComponent(body);
+    var skills = entry.skills || [];
+    var skillItems = "";
+    for (var i = 0; i < skills.length; i++) {
+      skillItems += '<li class="event-tag">' + esc(skills[i]) + "</li>";
+    }
+    return (
+      '<article class="job-panel job-panel--chiffre" id="chiffre-' +
+      esc(entry.id) +
+      '">' +
+      '<div class="job-panel__chrome" aria-hidden="true">' +
+      '<span class="job-panel__path">~/pinnwand/chiffre/' +
+      esc(entry.id) +
+      "</span></div>" +
+      '<div class="job-panel__body">' +
+      '<h3 class="job-panel__title">' +
+      esc(entry.headline) +
+      "</h3>" +
+      '<p class="job-panel__company">' +
+      esc(Core.levelLabel(entry.level)) +
+      ' <span class="job-panel__sep" aria-hidden="true">·</span> ' +
+      esc(entry.location) +
+      "</p>" +
+      tagsMarkup(Core.employmentLabels(entry.employment)) +
+      (skillItems
+        ? '<ul class="job-panel__tags job-panel__skills" role="list" aria-label="Skills">' + skillItems + "</ul>"
+        : "") +
+      '<p class="job-panel__about">' +
+      esc(entry.about) +
+      "</p>" +
+      '<p class="job-panel__dates">hängt seit ' +
+      esc(Core.formatDay(entry.from)) +
+      ' <span class="job-panel__sep" aria-hidden="true">·</span> läuft bis ' +
+      esc(until) +
+      "</p>" +
+      '<a class="btn job-panel__action" href="' +
+      esc(href) +
+      '">Zuschrift unter Chiffre ' +
+      esc(entry.id) +
+      " ✉</a>" +
+      "</div></article>"
+    );
+  }
+
+  function renderChiffre(list) {
+    var mount = document.getElementById("chiffre-entries");
+    var region = document.getElementById("chiffre-list");
+    if (!mount || !region) return;
+    var active = Core.activeEntries(list || [], Core.todayString());
+    var html = "";
+    for (var i = 0; i < active.length; i++) {
+      if (!CHIFFRE_ID_RE.test(String(active[i].id))) continue;
+      html += chiffreMarkup(active[i]);
+    }
+    mount.innerHTML = html;
+    region.removeAttribute("aria-busy");
+  }
+
   // The note that is always up: an empty slot on the wall, drawn like a real
   // card so the shape of the offer is visible before anyone has bought one.
   // Dashed frame, no date line, and its action goes to the how-to instead of
@@ -116,6 +193,9 @@
       "<p>Einen Zettel aufhängen geht trotzdem: " +
       '<a href="#aufhaengen">so geht das ↓</a></p></div>';
     list.removeAttribute("aria-busy");
+    // The Chiffre wall keeps its static empty note; it only stops loading.
+    var chiffre = document.getElementById("chiffre-list");
+    if (chiffre) chiffre.removeAttribute("aria-busy");
   }
 
   // ── Init ────────────────────────────────────────────────────────────────
@@ -146,6 +226,7 @@
     if (sample) sample.hidden = html !== "";
     list.removeAttribute("aria-busy");
     renderSlots(list, data && data.karussell);
+    renderChiffre(data && data.chiffre);
   }
 
   // ── Permanent slot (Dauerplatz) ──────────────────────────────────────────
@@ -243,6 +324,14 @@
       var howto = document.querySelector("details.jobs-howto");
       if (howto) howto.open = true;
     });
+    // Same for the empty Chiffre note: its CTA points into a folded how-to.
+    var chiffreAction = document.querySelector("#chiffre-invite .job-panel__action");
+    if (chiffreAction) {
+      chiffreAction.addEventListener("click", function () {
+        var howto = document.getElementById("chiffre-howto");
+        if (howto) howto.open = true;
+      });
+    }
   }
 
   function init() {
@@ -259,6 +348,8 @@
     // aria-busy belongs to the loading state, not to the page: left in the
     // static markup it would flag the <noscript> fallback as forever loading.
     list.setAttribute("aria-busy", "true");
+    var chiffreRegion = document.getElementById("chiffre-list");
+    if (chiffreRegion) chiffreRegion.setAttribute("aria-busy", "true");
     fetch(JSON_URL)
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP " + res.status);
