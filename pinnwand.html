@@ -111,9 +111,13 @@
                                     <span class="job-panel__path">~/pinnwand/b31sp13l</span>
                                 </div>
                                 <div class="job-panel__body">
-                                    <h3 class="job-panel__title">S3n10r L0tk0lb3n-0p3r4t0r (m/w/d)</h3>
-                                    <p class="job-panel__company">h4x0r &amp; söhne gmbh · Bonn oder /dev/remote</p>
-                                    <a class="btn job-panel__action" href="#aufhaengen">b31sp13l · so sieht ein Zettel aus ↓</a>
+                                    <!-- The leetspeak is for the eye only: a screen reader spells
+                                         "S3n10r" digit by digit, so each leet word is aria-hidden and
+                                         a plain twin stands in for it in .sr-only. -->
+                                    <h3 class="job-panel__title"><span aria-hidden="true">S3n10r L0tk0lb3n-0p3r4t0r</span><span class="sr-only">Beispiel: Senior Lötkolben-Operator</span> (m/w/d)</h3>
+                                    <p class="job-panel__company"><span aria-hidden="true">h4x0r</span><span class="sr-only">hacker</span> &amp; söhne gmbh <span class="job-panel__sep" aria-hidden="true">·</span> Bonn oder /dev/remote</p>
+                                    <ul class="job-panel__tags" aria-label="Umfang"><li class="event-tag">Vollzeit</li><li class="event-tag">Teilzeit</li></ul>
+                                    <a class="btn job-panel__action" href="#aufhaengen"><span aria-hidden="true">b31sp13l · </span>so sieht ein Zettel aus ↓</a>
                                 </div>
                             </article>
                             <!-- "jobs-invite", not "job-invite": the job-<id> namespace belongs
@@ -178,11 +182,17 @@
                                         <pre class="jobs-snippet"><code>{
   "id": "acme-2026-09",
   "company": "ACME GmbH",
-  "title": "Embedded-Entwickler:in (m/w/d), Bonn oder remote",
+  "title": "Embedded-Entwickler:in (m/w/d)",
+  "location": "Bonn oder remote",
+  "employment": ["full-time", "part-time"],
   "url": "https://acme.example/jobs/embedded",
   "from": "2026-09-03",
   "months": 3
 }</code></pre>
+                                        Bei <code>employment</code> geht eins oder mehreres davon:
+                                        <code>full-time</code> (Vollzeit), <code>part-time</code> (Teilzeit),
+                                        <code>working-student</code> (Werkstudium), <code>internship</code> (Praktikum),
+                                        <code>apprenticeship</code> (Ausbildung), <code>freelance</code> (freiberuflich).
                                         Für den <strong>Dauerplatz</strong> stattdessen ins
                                         <code>karussell</code>-Array – nur Name und Link, kein Datum:
                                         <pre class="jobs-snippet jobs-snippet--slot"><code>{ "name": "ACME GmbH", "url": "https://acme.example" }</code></pre>

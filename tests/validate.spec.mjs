@@ -69,6 +69,8 @@ describe("one implementation, not two", () => {
                 id: "probe-2026-01",
                 company: "Probe GmbH",
                 title: "Testanzeige",
+                location: "Bonn",
+                employment: ["full-time"],
                 url: "https://example.com/stelle",
                 from: "2026-01-01",
                 months: 1,

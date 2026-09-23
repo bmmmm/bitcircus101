@@ -28,6 +28,8 @@ function buildJobsData() {
         id: "expired-gmbh-2026-08",
         company: "Abgelaufen GmbH",
         title: "Diese Anzeige ist vorgestern ausgelaufen",
+        location: "Bonn",
+        employment: ["full-time"],
         url: "https://expired.example/jobs/old",
         from: "2026-08-14",
         months: 1,
@@ -35,7 +37,9 @@ function buildJobsData() {
       {
         id: "acme-2026-09",
         company: "ACME GmbH",
-        title: "Embedded-Entwickler:in (m/w/d), Bonn oder remote",
+        title: "Embedded-Entwickler:in (m/w/d)",
+        location: "Bonn oder remote",
+        employment: ["full-time", "part-time"],
         url: "https://acme.example/jobs/embedded",
         from: "2026-09-01",
         months: 3,
@@ -43,7 +47,9 @@ function buildJobsData() {
       {
         id: "bytewerk-2026-09",
         company: "Bytewerk eG",
-        title: "Systemadministrator:in (m/w/d), Bonn",
+        title: "Systemadministrator:in (m/w/d)",
+        location: "Bonn",
+        employment: ["full-time"],
         url: "https://bytewerk.example/karriere/sysadmin",
         from: "2026-09-10",
         months: 1,
@@ -52,6 +58,8 @@ function buildJobsData() {
         id: "future-ag-2026-10",
         company: "Später AG",
         title: "Startet erst im nächsten Monat",
+        location: "Bonn",
+        employment: ["full-time"],
         url: "https://future.example/jobs/later",
         from: "2026-10-01",
         months: 1,
@@ -80,7 +88,7 @@ function buildJobsData() {
  * and that card's own text is hostile, so it also proves the escaping.
  */
 function buildHostileJobsData() {
-  const live = { from: '2026-09-01', months: 3 };
+  const live = { from: '2026-09-01', months: 3, location: 'Bonn', employment: ['full-time'] };
   return {
     postings: [
       { id: 'scheme-js', company: 'Böse GmbH', title: 'javascript: URL',
@@ -97,6 +105,9 @@ function buildHostileJobsData() {
         title: '</h3><svg onload="window.__pwned = 1"></svg>',
         url: 'https://ok.example/jobs/real',
         ...live,
+        location: '</p><img src=x onerror="window.__pwned = 1">',
+        // An unknown key has no label, so it renders nothing — never the raw key.
+        employment: ['full-time', '<b onmouseover="window.__pwned = 1">x</b>'],
       },
     ],
     // The permanent slot gets the same treatment: a javascript: link must not

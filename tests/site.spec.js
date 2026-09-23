@@ -918,7 +918,10 @@ test.describe('Pinnwand', () => {
         // it have to sit outside it or the two dates fuse into one token.
         expect(await spokenText(cards.nth(0).locator('.job-panel__dates')))
             .toBe('hängt seit 10.09.2026 läuft bis 09.10.2026');
-        await expect(cards.nth(0).locator('.job-panel__company')).toHaveText('Bytewerk eG');
+        // Company and place on one line, the kind of work as tags below it.
+        await expect(cards.nth(0).locator('.job-panel__company')).toHaveText('Bytewerk eG · Bonn');
+        await expect(cards.nth(1).locator('.job-panel__tags li')).toHaveText(['Vollzeit', 'Teilzeit']);
+        await expect(cards.nth(1).locator('.job-panel__tags')).toHaveAttribute('aria-label', 'Umfang');
 
         // Every real card is a link OUT: https only, new tab, rel-hardened.
         // (The invite note's action stays on the page, so it is not in here.)
@@ -983,6 +986,16 @@ test.describe('Pinnwand', () => {
         await expect(page.locator('#jobs-sample')).toBeVisible();
         await expect(page.locator('#jobs-sample .job-panel__action'))
             .toHaveAttribute('href', '#aufhaengen');
+        // The leetspeak is for the eye: a screen reader gets plain words, not
+        // "S drei n eins null r".
+        const sample = page.locator('#jobs-sample');
+        expect(await spokenText(sample.locator('.job-panel__title')))
+            .toBe('Beispiel: Senior Lötkolben-Operator (m/w/d)');
+        expect(await spokenText(sample.locator('.job-panel__company')))
+            .toBe('hacker & söhne gmbh Bonn oder /dev/remote');
+        expect(await spokenText(sample.locator('.job-panel__action')))
+            .toBe('so sieht ein Zettel aus ↓');
+        await expect(sample.locator('.job-panel__title')).toContainText('S3n10r L0tk0lb3n-0p3r4t0r');
         await expect(page.locator('.job-panel--invite')).toBeVisible();
         // No `karussell` key: the static title stands, and it is plain text.
         await expect(page.locator('.job-panel--invite .job-panel__title')).toHaveText('Frei für Euren Zettel :)');
@@ -1020,7 +1033,9 @@ test.describe('Pinnwand', () => {
         await expect(cards.locator('.job-panel__title'))
             .toHaveText('</h3><svg onload="window.__pwned = 1"></svg>');
         await expect(cards.locator('.job-panel__company'))
-            .toHaveText('"><img src=x onerror="window.__pwned = 1">');
+            .toHaveText('"><img src=x onerror="window.__pwned = 1"> · </p><img src=x onerror="window.__pwned = 1">');
+        // The unknown employment key has no label, so only the known one shows.
+        await expect(cards.locator('.job-panel__tags li')).toHaveText(['Vollzeit']);
         // The id lands in an attribute AND in the chrome line — both escaped.
         await expect(cards.locator('.job-panel__path'))
             .toHaveText('~/pinnwand/markup"><img src=x onerror="window.__pwned = 1">');

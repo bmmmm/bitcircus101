@@ -68,7 +68,8 @@ function itemXml(entry) {
   const from = JobsCore.formatDay(entry.from);
   const until = JobsCore.formatDay(JobsCore.lastDay(entry.from, entry.months));
   const body =
-    `<p>${escXml(entry.company)}</p>` +
+    `<p>${escXml(entry.company)} · ${escXml(entry.location)}</p>` +
+    `<p>${escXml(JobsCore.employmentLabels(entry.employment).join(" · "))}</p>` +
     `<p>hängt seit ${escXml(from)} · läuft bis ${escXml(until)}</p>` +
     `<p><a href="${escXml(`${SITE_URL}/pinnwand#job-${entry.id}`)}">zum Zettel an der Pinnwand</a></p>`;
   return `

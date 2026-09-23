@@ -37,6 +37,29 @@
 
   var ISO_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
+  // What kind of work a posting offers: the data carries the key, the card and
+  // the feed show the German label. Declared once — the schema's enum and the
+  // gate are asserted against these keys, in this order.
+  var EMPLOYMENT = {
+    "full-time": "Vollzeit",
+    "part-time": "Teilzeit",
+    "working-student": "Werkstudium",
+    internship: "Praktikum",
+    apprenticeship: "Ausbildung",
+    freelance: "Freiberuflich",
+  };
+  var EMPLOYMENT_KEYS = Object.keys(EMPLOYMENT);
+
+  /** The labels for a list of employment keys; unknown keys are dropped. */
+  function employmentLabels(keys) {
+    var out = [];
+    if (!keys || !keys.length) return out;
+    for (var i = 0; i < keys.length; i++) {
+      if (Object.prototype.hasOwnProperty.call(EMPLOYMENT, keys[i])) out.push(EMPLOYMENT[keys[i]]);
+    }
+    return out;
+  }
+
   function daysInMonth(y, m) {
     if (m === 2) return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0 ? 29 : 28;
     return m === 4 || m === 6 || m === 9 || m === 11 ? 30 : 31;
@@ -135,6 +158,8 @@
 
   return {
     MONTHS: MONTHS,
+    EMPLOYMENT_KEYS: EMPLOYMENT_KEYS,
+    employmentLabels: employmentLabels,
     lastDay: lastDay,
     todayString: todayString,
     isActive: isActive,
