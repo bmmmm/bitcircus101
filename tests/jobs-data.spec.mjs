@@ -10,6 +10,7 @@ import { strict as assert } from "node:assert";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import {
   validate,
   staleWarnings,
@@ -410,6 +411,18 @@ describe("the copy-paste snippet on pinnwand.html", () => {
     const entry = JSON.parse(json);
     const { ok, errors } = validate({ postings: [entry] });
     assert.equal(ok, true, errors.join(" | "));
+  });
+
+  it("the how-to lists every employment key with the label the card shows", () => {
+    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
+    const listed = [...html.matchAll(/<code>([a-z-]+)<\/code> \(([^)]+)\)/g)]
+      .filter((m) => m[1] !== "entry" && m[1] !== "experienced" && m[1] !== "senior")
+      .map((m) => [m[1], m[2]]);
+    const JobsCore = createRequire(import.meta.url)("../jobs-core.js");
+    assert.deepEqual(
+      listed,
+      EMPLOYMENT_KEYS.map((k) => [k, JobsCore.employmentLabels([k])[0]])
+    );
   });
 
   it("the permanent-slot snippet is an entry the gate accepts, too", () => {

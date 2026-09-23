@@ -53,7 +53,7 @@
     for (var i = 0; i < labels.length; i++) {
       items += '<li class="event-tag">' + esc(labels[i]) + "</li>";
     }
-    return '<ul class="job-panel__tags" aria-label="Umfang">' + items + "</ul>";
+    return '<ul class="job-panel__tags" role="list" aria-label="Anstellungsart">' + items + "</ul>";
   }
 
   function cardMarkup(entry) {
