@@ -921,7 +921,7 @@ test.describe('Pinnwand', () => {
         // Company and place on one line, the kind of work as tags below it.
         await expect(cards.nth(0).locator('.job-panel__company')).toHaveText('Bytewerk eG · Bonn');
         await expect(cards.nth(1).locator('.job-panel__tags li')).toHaveText(['Vollzeit', 'Teilzeit']);
-        await expect(cards.nth(1).locator('.job-panel__tags')).toHaveAttribute('aria-label', 'Umfang');
+        await expect(cards.nth(1).locator('.job-panel__tags')).toHaveAttribute('aria-label', 'Anstellungsart');
 
         // Every real card is a link OUT: https only, new tab, rel-hardened.
         // (The invite note's action stays on the page, so it is not in here.)
