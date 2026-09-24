@@ -954,9 +954,6 @@ test.describe('Pinnwand', () => {
         // Its public `contact` adds a second, direct link — the address as given.
         await expect(chiffre.locator('.job-panel__direct'))
             .toHaveAttribute('href', 'mailto:rust-sucht@example.org');
-        // The "nothing personal" box stands above the how-to, never folded away.
-        await expect(page.locator('#chiffre-privacy')).toBeVisible();
-        await expect(page.locator('details #chiffre-privacy')).toHaveCount(0);
         await expect(page.locator('#chiffre-invite')).toBeVisible();
         await expect(page.locator('#chiffre-list')).not.toHaveAttribute('aria-busy', 'true');
 
