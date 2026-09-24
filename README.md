@@ -228,8 +228,9 @@ The schema accepts optional `url1`/`url2` per item and the CLI offers them, but
 
 ### Job board (Pinnwand)
 
-`jobs.json` feeds `pinnwand.html`: one object per posting, six required fields,
-no optional ones. Companies add theirs by pull request — the how-to, the
+`jobs.json` feeds `pinnwand.html`: one object per posting, eight required fields,
+no optional ones — among them `location` (free text) and `employment` (one or
+more keys; the German labels live in `jobs-core.js`). Companies add theirs by pull request — the how-to, the
 copy-paste snippets and the donation channels live on the page itself, so the
 instructions and the gate cannot drift apart — a unit test parses both snippets
 out of the HTML and validates them. `scripts/build-pinnwand-feed.mjs` renders

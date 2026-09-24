@@ -10,6 +10,7 @@ import { strict as assert } from "node:assert";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createRequire } from "node:module";
 import {
   validate,
   staleWarnings,
@@ -17,6 +18,7 @@ import {
   POSTING_KEYS,
   SLOT_KEYS,
   MONTHS,
+  EMPLOYMENT_KEYS,
   LIMITS,
   ID_RE,
   JOBS_PATH,
@@ -32,7 +34,9 @@ const SCHEMA = JSON.parse(
 const posting = (over = {}) => ({
   id: "acme-2026-09",
   company: "ACME GmbH",
-  title: "Embedded-Entwickler:in (m/w/d), Bonn oder remote",
+  title: "Embedded-Entwickler:in (m/w/d)",
+  location: "Bonn oder remote",
+  employment: ["full-time"],
   url: "https://acme.example/jobs/embedded",
   from: "2026-09-03",
   months: 3,
@@ -62,6 +66,8 @@ describe("validate — the shapes that pass", () => {
             id: "a".repeat(48),
             company: "c".repeat(60),
             title: "t".repeat(100),
+            location: "l".repeat(40),
+            employment: [...EMPLOYMENT_KEYS],
           })
         )
       ).ok,
@@ -135,6 +141,14 @@ describe("validate — one error class per case, each naming its field", () => {
     ["title missing", board(omit(posting(), "title")), 'Pflichtfeld "title" fehlt'],
     ["title too long", board(posting({ title: "t".repeat(101) })), "postings[0].title: zu lang"],
     ["title wrong type", board(posting({ title: 42 })), "postings[0].title: muss ein String sein"],
+    ["location missing", board(omit(posting(), "location")), 'Pflichtfeld "location" fehlt'],
+    ["location too long", board(posting({ location: "l".repeat(41) })), "postings[0].location: zu lang"],
+    ["location blank", board(posting({ location: "  " })), "postings[0].location: zu kurz"],
+    ["employment missing", board(omit(posting(), "employment")), 'Pflichtfeld "employment" fehlt'],
+    ["employment empty", board(posting({ employment: [] })), "postings[0].employment: muss eine Liste"],
+    ["employment a string", board(posting({ employment: "full-time" })), "postings[0].employment: muss eine Liste"],
+    ["employment unknown", board(posting({ employment: ["vollzeit"] })), 'postings[0].employment[0]: "vollzeit" gibt es nicht'],
+    ["employment twice", board(posting({ employment: ["full-time", "full-time"] })), 'postings[0].employment[1]: "full-time" ist doppelt'],
     ["url missing", board(omit(posting(), "url")), 'Pflichtfeld "url" fehlt'],
     ["url not https", board(posting({ url: "http://acme.example/j" })), 'muss mit "https://" beginnen'],
     ["url without host", board(posting({ url: "https://" })), "postings[0].url: keine gültige URL"],
@@ -267,6 +281,13 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.equal(SCHEMA.$defs.slot.properties.url.pattern, "^https://");
   });
 
+  it("EMPLOYMENT_KEYS matches the schema's employment enum", () => {
+    const e = SCHEMA.$defs.posting.properties.employment;
+    assert.deepEqual(EMPLOYMENT_KEYS, e.items.enum);
+    assert.equal(e.minItems, 1);
+    assert.equal(e.uniqueItems, true);
+  });
+
   it("MONTHS matches the schema's months enum — the runtimes are stated once", () => {
     assert.deepEqual(MONTHS, SCHEMA.$defs.posting.properties.months.enum);
   });
@@ -284,6 +305,10 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.deepEqual(LIMITS.title, {
       minLength: props.title.minLength,
       maxLength: props.title.maxLength,
+    });
+    assert.deepEqual(LIMITS.location, {
+      minLength: props.location.minLength,
+      maxLength: props.location.maxLength,
     });
     assert.equal(ID_RE.source, SCHEMA.$defs.id.pattern);
   });
@@ -386,6 +411,18 @@ describe("the copy-paste snippet on pinnwand.html", () => {
     const entry = JSON.parse(json);
     const { ok, errors } = validate({ postings: [entry] });
     assert.equal(ok, true, errors.join(" | "));
+  });
+
+  it("the how-to lists every employment key with the label the card shows", () => {
+    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
+    const listed = [...html.matchAll(/<code>([a-z-]+)<\/code> \(([^)]+)\)/g)]
+      .filter((m) => m[1] !== "entry" && m[1] !== "experienced" && m[1] !== "senior")
+      .map((m) => [m[1], m[2]]);
+    const JobsCore = createRequire(import.meta.url)("../jobs-core.js");
+    assert.deepEqual(
+      listed,
+      EMPLOYMENT_KEYS.map((k) => [k, JobsCore.employmentLabels([k])[0]])
+    );
   });
 
   it("the permanent-slot snippet is an entry the gate accepts, too", () => {

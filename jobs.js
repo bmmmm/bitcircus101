@@ -45,6 +45,17 @@
       .replace(/'/g, "&#39;");
   }
 
+  // The kind of work as a row of small tags. The label comes from
+  // jobs-core.js, never from the data, so an unknown key renders nothing.
+  function tagsMarkup(labels) {
+    if (!labels.length) return "";
+    var items = "";
+    for (var i = 0; i < labels.length; i++) {
+      items += '<li class="event-tag">' + esc(labels[i]) + "</li>";
+    }
+    return '<ul class="job-panel__tags" role="list" aria-label="Anstellungsart">' + items + "</ul>";
+  }
+
   function cardMarkup(entry) {
     var until = Core.formatDay(Core.lastDay(entry.from, entry.months));
     return (
@@ -61,7 +72,10 @@
       "</h3>" +
       '<p class="job-panel__company">' +
       esc(entry.company) +
+      ' <span class="job-panel__sep" aria-hidden="true">·</span> ' +
+      esc(entry.location) +
       "</p>" +
+      tagsMarkup(Core.employmentLabels(entry.employment)) +
       // The spaces live OUTSIDE the aria-hidden span. Inside it they are hidden
       // with the dot, and a screen reader reads "…2026läuft bis…" as one token.
       '<p class="job-panel__dates">hängt seit ' +
