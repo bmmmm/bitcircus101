@@ -255,7 +255,7 @@ Chiffre id (`0x` + 2–4 hex digits), a headline, a coarse level
 `about`, the same `from`/`months` runtime, and an optional `contact`. Notes
 come in **by pull request** like postings (mail to info@ stays open for people
 without git), and **nothing personal goes on a note** — the git history
-forgets nothing, and the page says so in a box above the how-to. The card's
+forgets nothing, and the page says so in a folded note next to the how-to. The card's
 main action is a `mailto:info@bitcircus101.de` with subject `CHIFFRE <id>`;
 with `contact` — a bare `mailto:` to an address the person chose to make
 public, e.g. an alias; gate and page both check it against
@@ -325,8 +325,6 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 - **The page is the wall.** One paragraph names the offer; everything procedural
   (the three steps, the snippet, the donation channels, the house rules) sits in
   collapsed `details.sidenote` blocks, the same idiom `raum-nutzen.html` uses.
-  One deliberate exception: `#chiffre-privacy` ("nothing personal") stays open,
-  and a test asserts it is not inside `details`.
   Companies are addressed as *ihr* — which is why the invite note says "Euer".
   The Chiffre section speaks to job seekers as *du*, like the rest of the site.
   Never write "sich aufhängen" for the person — it reads as "hang oneself"; the
