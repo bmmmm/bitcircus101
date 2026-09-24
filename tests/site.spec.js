@@ -1974,61 +1974,103 @@ test.describe('Kiosk view', () => {
         expect(dayColors).not.toContain(titleColors[0]);
     });
 
+    // ── pinnwand page ────────────────────────────────────────────────────────
+
+    const pin = (page) => page.locator('.kiosk-pin');
+    const readPage = async (page) => {
+        const m = /seite (\d+)\/(\d+)/.exec(await page.locator('#kiosk-status').innerText());
+        return m ? [Number(m[1]), Number(m[2])] : [1, 1];
+    };
+    // Flip until the pinnwand is up; how many event pages come first depends
+    // on the viewport, so the walk is bounded, not counted.
+    const flipToPinnwand = async (page, dwellMs = 5_000, max = 12) => {
+        for (let i = 0; i < max && !(await pin(page).count()); i++) await page.clock.runFor(dwellMs);
+        await expect(pin(page)).toHaveCount(1);
+    };
+    /**
+     * What a QR actually encodes, without a decoder (CI's Linux Chromium has no
+     * BarcodeDetector): build the matrix for `text` with the same library and
+     * compare it module by module with the drawn path, quiet zone included.
+     */
+    const qrEncodes = (svg, text) => svg.evaluate((el, t) => {
+        const qr = window.qrcode(0, 'M');
+        qr.addData(t);
+        qr.make();
+        const n = qr.getModuleCount();
+        const want = [];
+        for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (qr.isDark(r, c)) want.push(`${c + 4},${r + 4}`);
+        const got = [...el.querySelector('.kiosk-qr__fg').getAttribute('d').matchAll(/M(\d+) (\d+)/g)]
+            .map((m) => `${m[1]},${m[2]}`);
+        return {
+            quietZone: el.getAttribute('viewBox') === `0 0 ${n + 8} ${n + 8}`,
+            modules: got.length > 200 && JSON.stringify(got.sort()) === JSON.stringify(want.sort()),
+        };
+    }, text);
+
     test('the pinnwand joins the rotation with a scannable QR per note, and can be switched off', async ({ page }) => {
         // The wall and the web board meet here: after the event pages comes a
-        // page of job-board notes, each with a QR code a phone can scan.
+        // page of job-board notes, each with a QR code a phone can scan. The
+        // wall is the target, so this runs at wall size on both projects.
+        await page.setViewportSize({ width: 1920, height: 1080 });
         await page.clock.install({ time: NOW });
         await useEventsFixture(page, kioskData());
-        // One posting up on DAY, plus two that must NOT show: one expired
-        // (expiry is JobsCore's call, not the kiosk's) and one active with a
-        // non-https url (the same second lock as jobs.js).
+        // One posting and one Chiffre up on DAY. Must NOT show: an expired
+        // posting (expiry is JobsCore's call, not the kiosk's), an active one
+        // with a non-https url (the same second lock as jobs.js), an expired
+        // Chiffre and an active one whose id breaks the 0x… rule.
+        const job = { company: 'ACME GmbH', location: 'Bonn', employment: ['full-time', 'part-time'] };
+        const chi = { level: 'experienced', location: 'Bonn/Köln oder remote', employment: ['part-time'],
+            skills: ['rust'], about: 'Baut gern Dinge, die blinken.' };
         await useJobsFixture(page, {
             postings: [
-                { id: 'acme', company: 'ACME GmbH', title: 'Embedded-Entwickler:in (m/w/d)',
+                { ...job, id: 'acme', title: 'Embedded-Entwickler:in (m/w/d)',
                   url: 'https://acme.example/jobs/embedded', from: DAY, months: 1 },
-                { id: 'old', company: 'Alt GmbH', title: 'Längst vorbei',
+                { ...job, id: 'old', title: 'Längst vorbei',
                   url: 'https://old.example/job', from: '2026-07-01', months: 1 },
-                { id: 'evil', company: 'Böse GmbH', title: 'javascript: URL',
+                { ...job, id: 'evil', title: 'javascript: URL',
                   url: 'javascript:window.__pwned = 1', from: DAY, months: 1 },
+            ],
+            chiffre: [
+                { ...chi, id: '0x2a', headline: 'Embedded / Rust <sucht> Teilzeit', from: DAY, months: 1 },
+                { ...chi, id: '0x07', headline: 'Schon abgenommen', from: '2026-07-01', months: 1 },
+                { ...chi, id: '"><img src=x onerror="window.__pwned = 1">', headline: 'Böse Chiffre',
+                  from: DAY, months: 1 },
             ],
             karussell: [],
         });
 
-        const pin = page.locator('.kiosk-pin');
-        const readPage = async () => {
-            const m = /seite (\d+)\/(\d+)/.exec(await page.locator('#kiosk-status').innerText());
-            return m ? [Number(m[1]), Number(m[2])] : [1, 1];
-        };
-        // Flip until the pinnwand is up — how many event pages come first
-        // depends on the viewport, so the walk is bounded by the reported count.
-        const flipToPinnwand = async () => {
-            for (let i = 0; i < 8 && !(await pin.count()); i++) await page.clock.runFor(5_000);
-            await expect(pin).toHaveCount(1);
-        };
-
         // green palette: the QR must NOT take the phosphor colours
         await page.goto('/kiosk/?rows=8&dwell=5&palette=green');
         await expect(page.locator('.kiosk-ev').first()).toBeVisible();
-        await expect(pin).toHaveCount(0);           // the events come first
-        await expect(page.locator('#kiosk-status')).toContainText(/seite 1\/\d/);
-        await flipToPinnwand();
-        // it is the LAST page of the rotation
-        const [at, of] = await readPage();
+        await expect(pin(page)).toHaveCount(0);           // the events come first
+        await expect(page.locator('#kiosk-status')).toContainText(/seite 1\/\d.*quelle: bitcircus101\.de\/termine/);
+        await flipToPinnwand(page);
+        // it is the LAST page of the rotation, and the status line names its source
+        const [at, of] = await readPage(page);
         expect(at).toBe(of);
+        await expect(page.locator('#kiosk-status')).toContainText('quelle: bitcircus101.de/pinnwand');
 
-        const note = page.locator('.kiosk-note');
-        await expect(note).toHaveCount(1);
-        await expect(note.locator('.kiosk-note__title')).toHaveText('Embedded-Entwickler:in (m/w/d)');
-        await expect(note.locator('.kiosk-note__sub')).toHaveText('ACME GmbH');
-        await expect(note.locator('.kiosk-note__url')).toHaveText('acme.example');
-        const qr = note.locator('svg.kiosk-qr');
+        await expect(page.locator('.kiosk-note')).toHaveCount(2);
+        const jobNote = page.locator('.kiosk-note--job');
+        await expect(jobNote.locator('.kiosk-note__title')).toHaveText('Embedded-Entwickler:in (m/w/d)');
+        await expect(jobNote.locator('.kiosk-note__sub')).toHaveText('ACME GmbH · Bonn');
+        await expect(jobNote.locator('.kiosk-note__facts')).toHaveText('Vollzeit · Teilzeit');
+        await expect(jobNote.locator('.kiosk-note__url')).toHaveText('acme.example');
+        const qr = jobNote.locator('svg.kiosk-qr');
         await expect(qr).toHaveAttribute('role', 'img');
         await expect(qr).toHaveAttribute('aria-label', /Embedded-Entwickler:in.*ACME GmbH.*acme\.example/);
-        // a real matrix, not an empty frame: a version-3+ code has hundreds of
-        // dark modules, each one "M x yh1v1h-1z"
-        const modules = await qr.locator('.kiosk-qr__fg')
-            .evaluate((p) => (p.getAttribute('d').match(/M/g) || []).length);
-        expect(modules).toBeGreaterThan(200);
+        expect(await qrEncodes(qr, 'https://acme.example/jobs/embedded')).toEqual({ quietZone: true, modules: true });
+
+        // The Chiffre note: text escaped, QR onto its card on the web board
+        const chiNote = page.locator('.kiosk-note--chiffre');
+        await expect(chiNote).toHaveCount(1);
+        await expect(chiNote.locator('.kiosk-note__title')).toHaveText('Embedded / Rust <sucht> Teilzeit');
+        await expect(chiNote.locator('.kiosk-note__sub')).toHaveText('Erfahren · Bonn/Köln oder remote');
+        await expect(chiNote.locator('.kiosk-note__facts')).toHaveText('zuschrift unter chiffre 0x2a');
+        await expect(chiNote.locator('svg.kiosk-qr')).toHaveAttribute('aria-label', /Chiffre 0x2a/);
+        expect(await qrEncodes(chiNote.locator('svg.kiosk-qr'), 'https://bitcircus101.de/pinnwand#chiffre-0x2a'))
+            .toEqual({ quietZone: true, modules: true });
+
         // dark on light whatever the palette, and big enough to scan off a wall
         const look = await qr.evaluate((svg) => ({
             bg: getComputedStyle(svg.querySelector('.kiosk-qr__bg')).fill,
@@ -2044,27 +2086,93 @@ test.describe('Kiosk view', () => {
         // The panel switch drops the page on the spot and pins it in the URL
         await page.locator('#kiosk-settings-open').click();
         await page.locator('#kiosk-set-pinnwand').uncheck();
-        await expect(pin).toHaveCount(0);
+        await expect(pin(page)).toHaveCount(0);
         expect(new URL(page.url()).searchParams.get('pinnwand')).toBe('off');
         await page.keyboard.press('Escape');
 
         // Nothing up → one invite note pointing at the board itself
-        await useJobsFixture(page, { postings: [], karussell: [] });
+        await useJobsFixture(page, { postings: [], chiffre: [], karussell: [] });
         await page.goto('/kiosk/?rows=8&dwell=5&pinnwand=on');
-        await flipToPinnwand();
+        await flipToPinnwand(page);
         await expect(page.locator('.kiosk-note')).toHaveCount(1);
-        await expect(page.locator('.kiosk-note--invite .kiosk-note__title')).toHaveText('frei für euren zettel :)');
-        await expect(page.locator('.kiosk-note--invite svg.kiosk-qr'))
-            .toHaveAttribute('aria-label', /bitcircus101\.de\/pinnwand/);
+        const invite = page.locator('.kiosk-note--invite');
+        await expect(invite.locator('.kiosk-note__title')).toHaveText('frei für euren zettel :)');
+        await expect(invite.locator('svg.kiosk-qr')).toHaveAttribute('aria-label', /bitcircus101\.de\/pinnwand/);
+        expect(await qrEncodes(invite.locator('svg.kiosk-qr'), 'https://bitcircus101.de/pinnwand'))
+            .toEqual({ quietZone: true, modules: true });
         await expect(page.locator('.kiosk-pin__more')).toHaveCount(0);
 
-        // Switched off by URL: a full rotation passes without the page
+        // Switched off by URL: jobs.json is not even fetched, and a full
+        // rotation passes without the page
+        let jobsRequests = 0;
+        page.on('request', (req) => { if (/\/jobs\.json/.test(req.url())) jobsRequests++; });
         await page.goto('/kiosk/?rows=8&dwell=5&pinnwand=off');
         await expect(page.locator('.kiosk-ev').first()).toBeVisible();
-        const [, pages] = await readPage();
+        const [, pages] = await readPage(page);
         for (let i = 0; i <= pages; i++) {
-            await expect(pin).toHaveCount(0);
+            await expect(pin(page)).toHaveCount(0);
             await page.clock.runFor(5_000);
+        }
+        expect(jobsRequests).toBe(0);
+    });
+
+    test('the pinnwand survives the refresh and every note fits the screen, landscape or portrait', async ({ page }) => {
+        await page.clock.install({ time: NOW });
+        // Eight single events on eight days: at rows=1 that is eight event
+        // pages, so one trip takes 8 × 60 s — past the 5-min data refresh.
+        // Resetting the rotation on refresh used to mean the pinnwand, the last
+        // page, never came up at all.
+        await useEventsFixture(page, {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: Array.from({ length: 8 }, (_, i) => ({
+                title: `Termin ${i + 1}`, subtitle: '', description: '', location: '',
+                date: `2026-09-${String(10 + i).padStart(2, '0')}`, time: '19:00',
+                endDate: `2026-09-${String(10 + i).padStart(2, '0')}`, endTime: '22:00',
+                tags: [], type: '', source: 'bitcircus101', uid: `pin-${i}`,
+            })),
+        });
+        const titles = Array.from({ length: 6 }, (_, i) => `Stelle ${i + 1}: Entwickler:in für sehr lange Titel (m/w/d)`);
+        await useJobsFixture(page, {
+            postings: titles.map((title, i) => ({
+                id: `p${i}`, title, company: `Firma ${i + 1} GmbH`, location: 'Bonn', employment: ['full-time'],
+                // newest first on the wall — `from` descends with i
+                url: `https://firma${i + 1}.example/jobs/${i}`, from: `2026-08-${String(30 - i).padStart(2, '0')}`, months: 1,
+            })),
+            chiffre: [],
+            karussell: [],
+        });
+
+        await page.setViewportSize({ width: 1920, height: 1080 });
+        await page.goto('/kiosk/?rows=1&dwell=60');
+        await expect(page.locator('#kiosk-status')).toContainText('seite 1/');
+        await flipToPinnwand(page, 60_000, 12);
+
+        // Every note reachable, none clipped: walk the pinnwand pages on a
+        // portrait wall and on a small landscape screen, collecting what shows
+        // and checking that each page fits. A counted split (3 per page)
+        // clipped the third note on both.
+        for (const [width, height] of [[1080, 1920], [1000, 520]]) {
+            await page.setViewportSize({ width, height });
+            await page.goto('/kiosk/?rows=8&dwell=5');
+            await flipToPinnwand(page);
+            const seen = [];
+            for (let i = 0; i < titles.length && (await pin(page).count()); i++) {
+                const fit = await page.locator('.kiosk__list').evaluate((el) => {
+                    const box = el.getBoundingClientRect();
+                    return {
+                        overflow: el.scrollHeight - el.clientHeight,
+                        // the notes themselves, not just the scroll box: each one
+                        // ends above the list's bottom edge
+                        clipped: [...el.querySelectorAll('.kiosk-note')]
+                            .filter((n) => n.getBoundingClientRect().bottom > box.bottom + 1).length,
+                    };
+                });
+                expect(fit, `${width}x${height}`).toEqual({ overflow: 0, clipped: 0 });
+                seen.push(...await page.locator('.kiosk-note__title').allInnerTexts());
+                await page.clock.runFor(5_000);
+            }
+            expect(seen, `${width}x${height}: every note, once, in order`).toEqual(titles);
         }
     });
 
