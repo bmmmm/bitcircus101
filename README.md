@@ -266,11 +266,17 @@ copies after a note comes down.
 
 Maintainer procedure: before merging a Chiffre PR, read it for anything
 personal (name, employer, private address — also in the commit and PR text).
-The person picks the id; the gate catches a collision. For the route through
-us, wait for their separate mail with subject `CHIFFRE <id>` and store
-`id → mail address` **outside the repo** (the space's password manager) — a
-private address in the PR itself means: don't merge, ask them to remove it. A
-mailed-in snippet → commit it for them. A company mail with subject
+The person picks the id; the gate catches a collision. **Never `--no-ff`-merge
+a Chiffre PR** — the web editor's commit carries the person's name and mail:
+commit the entry yourself under your own identity (`git merge --squash`, then a
+plain commit) and close the PR. For the route through us, wait for their
+separate mail with subject `WEITERLEITUNG <id>`, reply with a short code, and
+store `id → mail address` **outside the repo** (the space's password manager)
+only once that code shows up as a comment on their PR — the id is public, so
+the mail alone proves nothing. A private address in the PR itself means: close
+the PR unmerged (a fix-up commit leaves it on GitHub) and ask for a new one. A
+mailed-in snippet → commit it for them; the sender address is the forwarding
+address. A company mail with subject
 `CHIFFRE <id>` → forward it unchanged to that address. Take a note down on
 request or when it expires, and then delete the mapping, the submission mail
 and the forwarded mails — the privacy page promises all three.
@@ -319,6 +325,8 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 - **The page is the wall.** One paragraph names the offer; everything procedural
   (the three steps, the snippet, the donation channels, the house rules) sits in
   collapsed `details.sidenote` blocks, the same idiom `raum-nutzen.html` uses.
+  One deliberate exception: `#chiffre-privacy` ("nothing personal") stays open,
+  and a test asserts it is not inside `details`.
   Companies are addressed as *ihr* — which is why the invite note says "Euer".
   The Chiffre section speaks to job seekers as *du*, like the rest of the site.
   Never write "sich aufhängen" for the person — it reads as "hang oneself"; the
