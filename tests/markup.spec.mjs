@@ -44,13 +44,15 @@ const STYLE_VIA_API = /setAttribute\(\s*["'`]style["'`]|\.style\.cssText\s*=/;
 
 const htmlFiles = tracked("*.html");
 
-// Own browser JS only: confetti.min.js is vendored, playwright.config.js and
-// tests/ are not shipped, and a test may legitimately spell out the pattern it
-// asserts against.
+// Own browser JS only: confetti.min.js and the QR generator are vendored (the
+// latter carries an unused createTableTag with inline styles), playwright.config.js
+// and tests/ are not shipped, and a test may legitimately spell out the pattern
+// it asserts against.
 const jsFiles = tracked("*.js").filter(
   (f) =>
     !f.startsWith("tests/") &&
     f !== "confetti.min.js" &&
+    f !== "qrcode-generator-2.0.4.min.js" &&
     f !== "playwright.config.js",
 );
 
