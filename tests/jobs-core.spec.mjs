@@ -117,6 +117,14 @@ describe("activeEntries", () => {
   });
 });
 
+describe("employmentLabels", () => {
+  it("maps keys to their German labels, in the given order, and drops unknown ones", () => {
+    assert.deepEqual(JobsCore.employmentLabels(["part-time", "full-time"]), ["Teilzeit", "Vollzeit"]);
+    assert.deepEqual(JobsCore.employmentLabels(["full-time", "toString", "<b>"]), ["Vollzeit"]);
+    assert.deepEqual(JobsCore.employmentLabels(undefined), []);
+  });
+});
+
 describe("formatDay", () => {
   it("renders the German day order", () => {
     assert.equal(formatDay("2026-09-30"), "30.09.2026");

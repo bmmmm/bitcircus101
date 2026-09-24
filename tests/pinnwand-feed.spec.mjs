@@ -50,6 +50,8 @@ const posting = (extra = {}) => ({
   id: "acme-2026-09",
   company: "Acme",
   title: "Backend-Entwicklung in Bonn",
+  location: "Bonn",
+  employment: ["full-time", "working-student"],
   url: "https://acme.example/jobs/1",
   from: TODAY,
   months: 1,
@@ -184,7 +186,8 @@ describe("one item", () => {
     const until = JobsCore.formatDay(JobsCore.lastDay(entry.from, entry.months));
     assert.equal(
       desc,
-      "&lt;p&gt;Acme&lt;/p&gt;" +
+      "&lt;p&gt;Acme · Bonn&lt;/p&gt;" +
+        "&lt;p&gt;Vollzeit · Werkstudium&lt;/p&gt;" +
         `&lt;p&gt;hängt seit 01.09.2026 · läuft bis ${until}&lt;/p&gt;` +
         '&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/pinnwand#job-acme-2026-09&quot;&gt;' +
         "zum Zettel an der Pinnwand&lt;/a&gt;&lt;/p&gt;"
@@ -199,6 +202,7 @@ describe("a company's text cannot break the feed", () => {
     id: "x&y<z",
     company: 'Acme & "Söhne" <GmbH>',
     title: 'Hacker*in <script>alert("x")</script> & mehr',
+    location: '<img src=x onerror="alert(1)">',
     url: 'https://acme.example/jobs?a=1&b="2"<3>',
     from: TODAY,
     months: 1,
@@ -220,6 +224,10 @@ describe("a company's text cannot break the feed", () => {
     const desc = field(items(xml)[0], "description");
     assert.ok(desc.includes("&lt;p&gt;"), "description lost its escaped markup");
     assert.ok(!desc.includes("<p>"), "raw <p> in the description");
+    // A company's own text is escaped for the HTML AND for the XML: once
+    // escaped it would unwrap into a live <img> in the reader.
+    assert.ok(desc.includes("&amp;lt;img"), "the location was not escaped for the HTML it sits in");
+    assert.ok(!desc.includes("&lt;img"), "the location reaches the reader as markup");
   });
 
   it("keeps every element balanced", () => {
@@ -285,6 +293,8 @@ describe("the CLI", () => {
               id: "acme-2026-09",
               company: "Acme",
               title: "Backend-Entwicklung in Bonn",
+              location: "Bonn",
+              employment: ["full-time"],
               url: "https://acme.example/jobs/1",
               from: "2026-09-01",
               months: 12,

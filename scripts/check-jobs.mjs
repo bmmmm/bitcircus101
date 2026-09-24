@@ -40,7 +40,7 @@ export const JOBS_PATH = path.join(root, "jobs.json");
 // Schema mirror: which keys each shape allows (additionalProperties:false).
 // Exported so a test can assert they stay in lockstep with jobs.schema.json.
 export const ROOT_KEYS = ["postings", "karussell"];
-export const POSTING_KEYS = ["id", "company", "title", "url", "from", "months"];
+export const POSTING_KEYS = ["id", "company", "title", "location", "employment", "url", "from", "months"];
 // The permanent slot (Dauerplatz): name + https link, no dates — booked per
 // year, curated by hand, so there is nothing for the expiry math to compute.
 export const SLOT_KEYS = ["name", "url"];
@@ -48,6 +48,7 @@ export const SLOT_KEYS = ["name", "url"];
 // Re-exported, not re-typed: the durations we sell are declared once, in
 // jobs-core.js, and the schema's enum is asserted against this in the tests.
 export const MONTHS = JobsCore.MONTHS;
+export const EMPLOYMENT_KEYS = JobsCore.EMPLOYMENT_KEYS;
 
 // Exported so a test can hold them against jobs.schema.json: the schema is what
 // a contributor's editor validates against, this is what CI enforces, and a
@@ -57,6 +58,7 @@ export const LIMITS = {
   id: { minLength: 1, maxLength: 48 },
   company: { minLength: 1, maxLength: 60 },
   title: { minLength: 1, maxLength: 100 },
+  location: { minLength: 1, maxLength: 40 },
   name: { minLength: 1, maxLength: 24 },
 };
 
@@ -191,6 +193,32 @@ function checkMonths(obj, where, errors) {
   }
 }
 
+function checkEmployment(obj, where, errors) {
+  if (!("employment" in obj)) {
+    errors.push(`${where}: Pflichtfeld "employment" fehlt`);
+    return;
+  }
+  const v = obj.employment;
+  if (!Array.isArray(v) || v.length === 0) {
+    errors.push(
+      `${where}.employment: muss eine Liste mit mindestens einem Eintrag sein, z. B. ["full-time"] (ist ${JSON.stringify(v)})`
+    );
+    return;
+  }
+  const seenKinds = new Set();
+  v.forEach((kind, i) => {
+    if (!EMPLOYMENT_KEYS.includes(kind)) {
+      errors.push(
+        `${where}.employment[${i}]: ${JSON.stringify(kind)} gibt es nicht — erlaubt sind: ${EMPLOYMENT_KEYS.join(", ")}`
+      );
+    } else if (seenKinds.has(kind)) {
+      errors.push(`${where}.employment[${i}]: "${kind}" ist doppelt`);
+    } else {
+      seenKinds.add(kind);
+    }
+  });
+}
+
 /**
  * Validate `data` against jobs.schema.json's rules. PURE — no clock, no I/O — so
  * the same call is used by the CLI, by the tests, and by the snippet check that
@@ -228,6 +256,8 @@ export function validate(data) {
     checkId(entry, where, errors, seen);
     checkString(entry, "company", where, errors, LIMITS.company);
     checkString(entry, "title", where, errors, LIMITS.title);
+    checkString(entry, "location", where, errors, LIMITS.location);
+    checkEmployment(entry, where, errors);
     checkHttpsUrl(entry, "url", where, errors);
     checkCalendarDate(entry, "from", where, errors);
     checkMonths(entry, where, errors);

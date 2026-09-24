@@ -29,7 +29,7 @@
     "posting": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "company", "title", "url", "from", "months"],
+      "required": ["id", "company", "title", "location", "employment", "url", "from", "months"],
       "properties": {
         "id": { "$ref": "#/$defs/id" },
         "company": {
@@ -39,10 +39,26 @@
           "maxLength": 60
         },
         "title": {
-          "description": "The vacancy plus its location or remote note, in one sentence.",
+          "description": "The vacancy, in one line. Where it is goes into `location`.",
           "type": "string",
           "minLength": 1,
           "maxLength": 100
+        },
+        "location": {
+          "description": "Where the work happens: a city, a region, remote — or all of it, e.g. \"Bonn oder remote\".",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "employment": {
+          "description": "What kind of work it is, one or more of: full-time, part-time, working-student, internship, apprenticeship, freelance. The card shows the German label.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["full-time", "part-time", "working-student", "internship", "apprenticeship", "freelance"]
+          }
         },
         "url": {
           "description": "Link to the vacancy — https only; we host nothing, we link.",
