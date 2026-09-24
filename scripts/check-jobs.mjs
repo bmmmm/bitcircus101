@@ -83,7 +83,10 @@ export const LIMITS = {
 
 // Warned about on a Chiffre note, never rejected: an address, a link or a
 // phone number on the wall would undo the whole point of the Chiffre.
-const CONTACT_RE = /@|https?:|www\.|\d{5,}/i;
+// Covers the obvious shapes, not every one — the maintainer still reads each
+// note before committing it (the page promises that, not this regex).
+const CONTACT_RE =
+  /@|\(at\)|\[at\]|https?:|www\.|\b[a-z0-9-]+\.(?:com|de|org|net|io|dev|me)\b|linkedin|github|xing|\d{5,}|\+?\d[\d /-]{5,}\d/i;
 
 // A posting dated far in the future is almost always a typo in the year; more
 // than a month of lead time is warned about, never rejected.
@@ -402,8 +405,9 @@ function checkSkills(obj, where, errors) {
 export function contactWarnings(data) {
   const out = [];
   for (const entry of (data && data.chiffre) || []) {
-    for (const key of ["headline", "location", "about"]) {
-      if (typeof entry[key] === "string" && CONTACT_RE.test(entry[key])) {
+    for (const key of ["headline", "location", "about", "skills"]) {
+      const text = Array.isArray(entry[key]) ? entry[key].join(" ") : entry[key];
+      if (typeof text === "string" && CONTACT_RE.test(text)) {
         out.push(
           `${entry.id}.${key}: sieht nach Kontaktdaten aus — die kommen per weitergeleiteter Mail, nicht auf die Wand`
         );
@@ -438,7 +442,10 @@ export function staleWarnings(data, today) {
     const end = JobsCore.lastDay(entry.from, entry.months);
     if (end && end < today) {
       out.push(
-        `${entry.id}: ist seit ${end} abgelaufen — Eintrag aus jobs.json entfernen`
+        `${entry.id}: ist seit ${end} abgelaufen — Eintrag aus jobs.json entfernen` +
+          (Array.isArray(data.chiffre) && data.chiffre.includes(entry)
+            ? ", Zuordnung, Einsendung und weitergeleitete Mails löschen"
+            : "")
       );
     }
     if (daysBetween(today, entry.from) > FUTURE_WARN_DAYS) {

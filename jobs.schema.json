@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://bitcircus101.de/jobs.schema.json",
   "title": "bitcircus101 jobs.json",
-  "description": "Job board behind pinnwand.html: one object per posting, each a LINK to a vacancy hosted elsewhere. Holds no applicant data, no contact details and no amounts — the donation is handled outside this file.",
+  "description": "Job board behind pinnwand.html: postings (each a LINK to a vacancy hosted elsewhere), pseudonymous Chiffre notes from people looking for work, and the permanent slot. Holds no contact details and no amounts.",
   "type": "object",
   "additionalProperties": false,
   "required": ["postings"],
@@ -13,7 +13,7 @@
       "items": { "$ref": "#/$defs/posting" }
     },
     "chiffre": {
-      "description": "Anonymous notes from people looking for work (\"unter Chiffre\"). No name, no contact details: companies write to info@bitcircus101.de with the subject CHIFFRE <id>, and the space forwards the mail to an address that is never in this repo. Optional: a board without the key shows the empty Chiffre slot alone.",
+      "description": "Anonymous notes from people looking for work (\"unter Chiffre\"). No name, no contact details: companies write to info@bitcircus101.de with the subject CHIFFRE <id>, and the space forwards the mail to an address that is never in this repo. Optional: a board without the key shows the empty Chiffre slot alone. Rules this schema cannot express, which scripts/check-jobs.mjs enforces on top: ids are unique, headline/location/about hold at least one non-blank character, and text that looks like contact details is warned about.",
       "type": "array",
       "items": { "$ref": "#/$defs/chiffre" }
     },

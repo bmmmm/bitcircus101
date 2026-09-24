@@ -165,19 +165,26 @@ describe("validate — unter Chiffre", () => {
       chiffre({ id: "0x01", about: "Schreib mir: kim@example.org" }),
       chiffre({ id: "0x02", headline: "Portfolio auf www.kim.example" }),
       chiffre({ id: "0x03", location: "53113 Bonn" }),
-      chiffre({ id: "0x04", about: "Mehr unter https://kim.example" })
+      chiffre({ id: "0x04", about: "Mehr unter https://kim.example" }),
+      chiffre({ id: "0x05", about: "linkedin.com/in/kim-mueller" }),
+      chiffre({ id: "0x06", about: "Ruf an: 0228 / 12 34 56" }),
+      chiffre({ id: "0x07", about: "kim (at) example (dot) org" }),
+      chiffre({ id: "0x08", skills: ["kim.dev"] })
     );
     assert.equal(validate(risky).ok, true);
     assert.deepEqual(
       contactWarnings(risky).map((w) => w.split(":")[0]),
-      ["0x01.about", "0x02.headline", "0x03.location", "0x04.about"]
+      ["0x01.about", "0x02.headline", "0x03.location", "0x04.about",
+        "0x05.about", "0x06.about", "0x07.about", "0x08.skills"]
     );
     assert.deepEqual(contactWarnings(withChiffre(chiffre({ about: "C#, 10 Jahre Linux" }))), []);
   });
 
   it("warns about an expired Chiffre note like about an expired posting", () => {
     const warnings = staleWarnings(withChiffre(chiffre({ from: "2026-01-01", months: 1 })), "2026-09-15");
-    assert.deepEqual(warnings, ["0x2a: ist seit 2026-01-31 abgelaufen — Eintrag aus jobs.json entfernen"]);
+    assert.deepEqual(warnings, [
+      "0x2a: ist seit 2026-01-31 abgelaufen — Eintrag aus jobs.json entfernen, Zuordnung, Einsendung und weitergeleitete Mails löschen",
+    ]);
   });
 });
 

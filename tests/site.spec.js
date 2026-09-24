@@ -1081,6 +1081,16 @@ test.describe('Pinnwand', () => {
         await expect(slot).toHaveAttribute('href', 'https://ok.example');
         await expect(slot).toHaveText('"><img src=x onerror="window.__pwned = 1"> ↗');
         await expect(page.locator('#jobs-list a[href^="javascript:"]')).toHaveCount(0);
+
+        // A failed fetch says so on BOTH walls: the Chiffre wall's empty note
+        // alone would read as "nobody is looking", and neither may stay busy.
+        await page.unroute('**/jobs.json*');
+        await page.route('**/jobs.json*', (route) => route.fulfill({ status: 500, body: '' }));
+        await page.goto('/pinnwand.html');
+        await expect(page.locator('#jobs-postings .jobs-fallback__err')).toHaveText('fehlgeschlagen');
+        await expect(page.locator('#chiffre-entries .jobs-fallback__err')).toHaveText('fehlgeschlagen');
+        await expect(page.locator('#jobs-list')).not.toHaveAttribute('aria-busy', /./);
+        await expect(page.locator('#chiffre-list')).not.toHaveAttribute('aria-busy', /./);
     });
 
     test('the how-to is folded away and opens — by click, and from the wall\'s own CTA', async ({ page }) => {
