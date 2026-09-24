@@ -5063,6 +5063,28 @@
       "recurring": true,
       "firstSeen": "2026-09-21T17:17:13.862Z",
       "lastSeen": "2026-09-24"
+    },
+    "f4efd578368a": {
+      "id": "f4efd578368a",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-22",
+      "time": "20:00",
+      "endDate": "2027-01-22",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-4fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-09-24T18:17:15.895Z",
+      "lastSeen": "2026-09-24"
     }
   }
 }
