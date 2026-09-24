@@ -98,10 +98,12 @@
     );
   }
 
-  // A Chiffre note: a person, not a vacancy. No link out — its one action is a
+  // A Chiffre note: a person, not a vacancy. No link out — its main action is a
   // mail to the space with the Chiffre in the subject, prefilled so a company
   // knows what to write. The id is checked again here (defense in depth, like
-  // the https check): it lands in a mailto: subject and a DOM id.
+  // the https check): it lands in a mailto: subject and a DOM id. A note that
+  // names a public `contact` gets a second, direct link — checked again too,
+  // and dropped rather than rendered when it is anything but a bare mailto:.
   function chiffreMarkup(entry) {
     var until = Core.formatDay(Core.lastDay(entry.from, entry.months));
     var subject = "CHIFFRE " + entry.id;
@@ -153,6 +155,11 @@
       '">Zuschrift unter Chiffre ' +
       esc(entry.id) +
       " ✉</a>" +
+      (typeof entry.contact === "string" && Core.CHIFFRE_CONTACT_RE.test(entry.contact)
+        ? ' <a class="btn job-panel__action job-panel__direct" href="' +
+          esc(entry.contact) +
+          '">direkt schreiben ✉</a>'
+        : "") +
       "</div></article>"
     );
   }

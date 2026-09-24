@@ -60,6 +60,12 @@
   };
   var LEVEL_KEYS = Object.keys(LEVEL);
 
+  // The optional direct contact on a Chiffre note: a bare mailto: with an
+  // address the person chose to make public, no ?subject or other header.
+  // Declared once — the gate enforces it, the page checks it again before it
+  // renders a link, and a unit test holds it against jobs.schema.json.
+  var CHIFFRE_CONTACT_RE = /^mailto:[^\s@?]+@[^\s@?]+\.[^\s@?]+$/;
+
   /** The label for a level key, or "" for an unknown one. */
   function levelLabel(key) {
     return Object.prototype.hasOwnProperty.call(LEVEL, key) ? LEVEL[key] : "";
@@ -176,6 +182,7 @@
     EMPLOYMENT_KEYS: EMPLOYMENT_KEYS,
     employmentLabels: employmentLabels,
     LEVEL_KEYS: LEVEL_KEYS,
+    CHIFFRE_CONTACT_RE: CHIFFRE_CONTACT_RE,
     levelLabel: levelLabel,
     lastDay: lastDay,
     todayString: todayString,

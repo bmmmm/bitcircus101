@@ -250,10 +250,23 @@
                         <p>
                             Hier hängen Menschen aus der Community, die selbst einen Job suchen –
                             anonym, wie früher die Chiffre-Anzeige in der Zeitung. Wer
-                            dahintersteckt, wissen nur wir. Eure Zuschrift geht an uns, mit der Chiffre im
-                            Betreff, und wir leiten sie unverändert weiter. Antworten wird die Person
-                            selbst, wenn sie mag.
+                            dahintersteckt, bleibt offen. Eure Zuschrift geht an uns, mit der Chiffre im
+                            Betreff, und wir leiten sie unverändert weiter – oder direkt an die Adresse
+                            auf dem Zettel, wenn dort eine steht. Antworten wird die Person selbst, wenn
+                            sie mag.
                         </p>
+                        <div class="sidenote jobs-privacy" id="chiffre-privacy">
+                            <div class="sidenote__body">
+                                <p>
+                                    Wie bei einer Mailingliste mit öffentlichem Archiv: Du hängst deinen Zettel
+                                    freiwillig auf, und was du schreibst, bleibt öffentlich lesbar. Die Wand
+                                    liegt in einem Git-Repository, das nichts vergisst. Deshalb
+                                    <strong>keine personenbezogenen Daten</strong> auf den Zettel: kein Name,
+                                    keine aktuelle Firma, keine private Adresse. Als Kontakt geht nur eine Adresse,
+                                    die öffentlich sein darf (z.&nbsp;B. ein Alias), oder der Weg über uns.
+                                </p>
+                            </div>
+                        </div>
                         <div id="chiffre-list" class="jobs-list" aria-live="polite">
                             <!-- jobs.js owns #chiffre-entries; the empty note after it is
                                  static, like #jobs-invite, so nothing shifts when notes land. -->
@@ -286,10 +299,10 @@
                             <div class="sidenote__body">
                                 <ol>
                                     <li>
-                                        <strong>Zettel schreiben.</strong> Füll diesen Schnipsel aus und
-                                        schick ihn uns
-                                        <a href="mailto:info@bitcircus101.de?subject=Chiffre">per E-Mail</a>
-                                        – die Chiffre in <code>id</code> vergeben wir:
+                                        <strong>Zettel per Pull Request.</strong> Häng diesen Schnipsel
+                                        ins <code>chiffre</code>-Array von <code>jobs.json</code> und
+                                        such dir selbst eine Chiffre für <code>id</code> aus –
+                                        <code>0x</code> plus zwei bis vier Hex-Ziffern, noch nicht vergeben:
                                         <pre class="jobs-snippet jobs-snippet--chiffre"><code>{
   "id": "0x2a",
   "headline": "Embedded / Rust, sucht Teilzeit",
@@ -305,17 +318,38 @@
                                         <code>experienced</code> (Erfahren) oder <code>senior</code>
                                         (Sehr erfahren); <code>employment</code> wie bei den Firmen-Zetteln.
                                         Bis zu acht Skills, klein geschrieben.
+                                        <p>
+                                            <a class="btn btn-primary" href="https://github.com/bmmmm/bitcircus101/edit/main/jobs.json" target="_blank" rel="noopener noreferrer">jobs.json auf GitHub bearbeiten&nbsp;↗</a>
+                                        </p>
+                                        <p>
+                                            Achtung: Dein GitHub-Account und die Mailadresse deines Commits
+                                            stehen öffentlich am Pull Request – nimm einen Account, der nichts
+                                            über dich verrät, und schalte bei GitHub „Keep my email addresses
+                                            private“ ein. In unsere Versionsgeschichte übernehmen wir den Zettel
+                                            unter unserem Namen. Kein Git? Schick uns den Schnipsel
+                                            <a href="mailto:info@bitcircus101.de?subject=Chiffre">per E-Mail</a>,
+                                            wir hängen ihn auf und wählen die Chiffre, falls deine schon vergeben ist.
+                                        </p>
                                     </li>
                                     <li>
-                                        <strong>Wir hängen auf.</strong> Du bekommst eine Chiffre wie
-                                        <code>0x2a</code>, der Zettel hängt 1, 3 oder 12 Monate. Deine
-                                        Adresse merken wir uns nur für die Weiterleitung – sie steht
-                                        nirgends öffentlich, und mit dem Zettel löschen wir sie wieder.
+                                        <strong>Kontakt wählen.</strong> Entweder du trägst eine Adresse,
+                                        die öffentlich sein darf, als <code>"contact": "mailto:…"</code>
+                                        in den Zettel ein – dann schreiben Firmen dir direkt. Oder du lässt
+                                        das Feld weg und schickst uns deine Adresse für die Weiterleitung
+                                        <strong>getrennt per E-Mail</strong>, Betreff <code>WEITERLEITUNG 0x2a</code>
+                                        mit deiner Chiffre, nie im Pull Request. Wir antworten mit einem kurzen
+                                        Code, den du als Kommentar in deinen Pull Request schreibst – so wissen
+                                        wir, dass die Adresse wirklich zu deinem Zettel gehört. Per E-Mail
+                                        eingeschickt? Dann nehmen wir einfach deine Absenderadresse. Beides
+                                        zusammen geht auch.
+                                        Die Adresse für die Weiterleitung steht nirgends öffentlich, und mit
+                                        dem Zettel löschen wir sie wieder. Der Zettel hängt 1, 3 oder 12 Monate.
                                     </li>
                                     <li>
-                                        <strong>Post kommt.</strong> Schreibt jemand unter deiner Chiffre,
-                                        leiten wir die Mail unverändert an dich weiter, meist innerhalb
-                                        weniger Tage. Ob und wem du antwortest, entscheidest du.
+                                        <strong>Post kommt.</strong> Direkt an deine öffentliche Adresse,
+                                        oder über uns: Schreibt jemand unter deiner Chiffre, leiten wir die
+                                        Mail unverändert an dich weiter, meist innerhalb weniger Tage. Ob und
+                                        wem du antwortest, entscheidest du.
                                     </li>
                                 </ol>
                             </div>
@@ -329,7 +363,7 @@
                             </summary>
                             <div class="sidenote__body">
                                 <ul>
-                                    <li>Kein Name, keine Mailadresse, keine Telefonnummer, kein Link aufs Profil – wir schauen vor dem Aufhängen drüber.</li>
+                                    <li>Kein Name, keine private Mailadresse, keine Telefonnummer, kein Link aufs Profil – wir schauen vor dem Aufhängen drüber.</li>
                                     <li>Bleib grob: „Bonn/Köln“ statt Stadtteil, keine aktuelle Firma, kein Jahr des Berufsstarts. Die Szene hier ist klein.</li>
                                     <li>Abnehmen geht jederzeit auf Zuruf. Aber: Die Wand ist ein öffentliches Git-Repo – was einmal hing, bleibt in dessen Geschichte lesbar.</li>
                                     <li>Mehr dazu steht in der <a href="impressum-datenschutz.html#pinnwand">Datenschutzerklärung</a>.</li>
