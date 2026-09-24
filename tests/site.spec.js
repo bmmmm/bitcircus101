@@ -1692,8 +1692,9 @@ test.describe('Kiosk view', () => {
     test('pages through the events without splitting a parallel bundle', async ({ page }) => {
         await page.clock.install({ time: NOW });
         await useEventsFixture(page, kioskData());
-        // 3 fits the parallel bundle exactly; the bundle must never be cut
-        await page.goto('/kiosk/?rows=3');
+        // 3 fits the parallel bundle exactly; the bundle must never be cut.
+        // pinnwand=off: this counts event pages only (the pinnwand has its own test)
+        await page.goto('/kiosk/?rows=3&pinnwand=off');
 
         await expect(page.locator('#kiosk-status')).toContainText('seite 1/2');
         await expect(page.locator('.kiosk-par .kiosk-ev')).toHaveCount(3);
@@ -1730,7 +1731,9 @@ test.describe('Kiosk view', () => {
             })),
         });
         await page.setViewportSize({ width: 1000, height: 520 });
-        await page.goto('/kiosk/?rows=4');
+        // pinnwand=off: jobs.json lands on its own schedule and would add a
+        // page mid-count — this test is about the event pages holding still
+        await page.goto('/kiosk/?rows=4&pinnwand=off');
 
         const readPage = async () => {
             const m = /seite (\d+)\/(\d+)/.exec(await page.locator('#kiosk-status').innerText());
@@ -1969,6 +1972,100 @@ test.describe('Kiosk view', () => {
             .evaluateAll((els) => els.map((el) => getComputedStyle(el).color));
         expect(new Set(titleColors).size).toBe(1);
         expect(dayColors).not.toContain(titleColors[0]);
+    });
+
+    test('the pinnwand joins the rotation with a scannable QR per note, and can be switched off', async ({ page }) => {
+        // The wall and the web board meet here: after the event pages comes a
+        // page of job-board notes, each with a QR code a phone can scan.
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, kioskData());
+        // One posting up on DAY, plus two that must NOT show: one expired
+        // (expiry is JobsCore's call, not the kiosk's) and one active with a
+        // non-https url (the same second lock as jobs.js).
+        await useJobsFixture(page, {
+            postings: [
+                { id: 'acme', company: 'ACME GmbH', title: 'Embedded-Entwickler:in (m/w/d)',
+                  url: 'https://acme.example/jobs/embedded', from: DAY, months: 1 },
+                { id: 'old', company: 'Alt GmbH', title: 'Längst vorbei',
+                  url: 'https://old.example/job', from: '2026-07-01', months: 1 },
+                { id: 'evil', company: 'Böse GmbH', title: 'javascript: URL',
+                  url: 'javascript:window.__pwned = 1', from: DAY, months: 1 },
+            ],
+            karussell: [],
+        });
+
+        const pin = page.locator('.kiosk-pin');
+        const readPage = async () => {
+            const m = /seite (\d+)\/(\d+)/.exec(await page.locator('#kiosk-status').innerText());
+            return m ? [Number(m[1]), Number(m[2])] : [1, 1];
+        };
+        // Flip until the pinnwand is up — how many event pages come first
+        // depends on the viewport, so the walk is bounded by the reported count.
+        const flipToPinnwand = async () => {
+            for (let i = 0; i < 8 && !(await pin.count()); i++) await page.clock.runFor(5_000);
+            await expect(pin).toHaveCount(1);
+        };
+
+        // green palette: the QR must NOT take the phosphor colours
+        await page.goto('/kiosk/?rows=8&dwell=5&palette=green');
+        await expect(page.locator('.kiosk-ev').first()).toBeVisible();
+        await expect(pin).toHaveCount(0);           // the events come first
+        await expect(page.locator('#kiosk-status')).toContainText(/seite 1\/\d/);
+        await flipToPinnwand();
+        // it is the LAST page of the rotation
+        const [at, of] = await readPage();
+        expect(at).toBe(of);
+
+        const note = page.locator('.kiosk-note');
+        await expect(note).toHaveCount(1);
+        await expect(note.locator('.kiosk-note__title')).toHaveText('Embedded-Entwickler:in (m/w/d)');
+        await expect(note.locator('.kiosk-note__sub')).toHaveText('ACME GmbH');
+        await expect(note.locator('.kiosk-note__url')).toHaveText('acme.example');
+        const qr = note.locator('svg.kiosk-qr');
+        await expect(qr).toHaveAttribute('role', 'img');
+        await expect(qr).toHaveAttribute('aria-label', /Embedded-Entwickler:in.*ACME GmbH.*acme\.example/);
+        // a real matrix, not an empty frame: a version-3+ code has hundreds of
+        // dark modules, each one "M x yh1v1h-1z"
+        const modules = await qr.locator('.kiosk-qr__fg')
+            .evaluate((p) => (p.getAttribute('d').match(/M/g) || []).length);
+        expect(modules).toBeGreaterThan(200);
+        // dark on light whatever the palette, and big enough to scan off a wall
+        const look = await qr.evaluate((svg) => ({
+            bg: getComputedStyle(svg.querySelector('.kiosk-qr__bg')).fill,
+            fg: getComputedStyle(svg.querySelector('.kiosk-qr__fg')).fill,
+            share: svg.getBoundingClientRect().height / window.innerHeight,
+        }));
+        expect(look.bg).toBe('rgb(255, 255, 255)');
+        expect(look.fg).toBe('rgb(0, 0, 0)');
+        expect(look.share).toBeGreaterThanOrEqual(0.22);
+        await expect(page.locator('.kiosk-pin__more')).toHaveText('alle zettel: bitcircus101.de/pinnwand');
+        expect(await page.evaluate(() => window.__pwned)).toBeUndefined();
+
+        // The panel switch drops the page on the spot and pins it in the URL
+        await page.locator('#kiosk-settings-open').click();
+        await page.locator('#kiosk-set-pinnwand').uncheck();
+        await expect(pin).toHaveCount(0);
+        expect(new URL(page.url()).searchParams.get('pinnwand')).toBe('off');
+        await page.keyboard.press('Escape');
+
+        // Nothing up → one invite note pointing at the board itself
+        await useJobsFixture(page, { postings: [], karussell: [] });
+        await page.goto('/kiosk/?rows=8&dwell=5&pinnwand=on');
+        await flipToPinnwand();
+        await expect(page.locator('.kiosk-note')).toHaveCount(1);
+        await expect(page.locator('.kiosk-note--invite .kiosk-note__title')).toHaveText('frei für euren zettel :)');
+        await expect(page.locator('.kiosk-note--invite svg.kiosk-qr'))
+            .toHaveAttribute('aria-label', /bitcircus101\.de\/pinnwand/);
+        await expect(page.locator('.kiosk-pin__more')).toHaveCount(0);
+
+        // Switched off by URL: a full rotation passes without the page
+        await page.goto('/kiosk/?rows=8&dwell=5&pinnwand=off');
+        await expect(page.locator('.kiosk-ev').first()).toBeVisible();
+        const [, pages] = await readPage();
+        for (let i = 0; i <= pages; i++) {
+            await expect(pin).toHaveCount(0);
+            await page.clock.runFor(5_000);
+        }
     });
 
     test('every control is big enough to tap on a phone', async ({ page }) => {

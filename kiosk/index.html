@@ -33,6 +33,11 @@
             } catch (e) {}
         </script>
         <link rel="stylesheet" href="../style.css?v=7" />
+        <!-- Pinnwand page: expiry math shared with /pinnwand, and
+             qrcode-generator v2.0.4 (Kazuhiko Arase, MIT) — self-hosted, no
+             third-party CDN call; versioned filename, so no ?v= needed. -->
+        <script defer src="../jobs-core.js?v=1"></script>
+        <script defer src="../qrcode-generator-2.0.4.min.js"></script>
         <script defer src="../kiosk.js?v=1"></script>
     </head>
     <body class="kiosk-body">
@@ -128,6 +133,10 @@
                                 max="300"
                                 step="5"
                             />
+                        </label>
+                        <label class="kiosk-set__check">
+                            <input type="checkbox" id="kiosk-set-pinnwand" />
+                            Pinnwand-Seite mit QR-Codes zeigen
                         </label>
                     </fieldset>
 
