@@ -922,6 +922,10 @@ test.describe('Pinnwand', () => {
         await expect(cards.nth(0).locator('.job-panel__company')).toHaveText('Bytewerk eG · Bonn');
         await expect(cards.nth(1).locator('.job-panel__tags li')).toHaveText(['Vollzeit', 'Teilzeit']);
         await expect(cards.nth(1).locator('.job-panel__tags')).toHaveAttribute('aria-label', 'Anstellungsart');
+        // Tags, not bullets: the global `ul > li::before` marker would hang a
+        // "· " outside the card's left edge.
+        expect(await cards.nth(1).locator('.job-panel__tags li').first()
+            .evaluate((li) => getComputedStyle(li, '::before').content)).toBe('none');
 
         // Every real card is a link OUT: https only, new tab, rel-hardened.
         // (The invite note's action stays on the page, so it is not in here.)
