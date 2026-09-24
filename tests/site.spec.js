@@ -1338,7 +1338,10 @@ test.describe('Event details', () => {
         const own = page.locator(`#ev-${data.events[0].date}-hardware-hackingabend .event-action--details`);
         await expect(own).toHaveAttribute('href', `e/${data.events[0].id}/`);
         const foreign = page.locator(`#ev-${data.events[2].date}-offener-abend-datenburg`);
-        await expect(foreign).toBeVisible();
+        // Attached, not visible: the card sits 9 days out, which from the 22nd
+        // on lands in next month's group — folded by default. Visibility is not
+        // what this test is about, and it made the deploy red by calendar.
+        await expect(foreign).toHaveCount(1);
         await expect(foreign.locator('.event-action--details')).toHaveCount(0);
 
         // The page globalSetup generated from the same fixture: full chrome,
