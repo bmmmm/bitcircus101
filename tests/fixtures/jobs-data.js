@@ -80,6 +80,7 @@ function buildJobsData() {
         about: "Baut gern Dinge, die blinken.",
         from: "2026-09-05",
         months: 1,
+        contact: "mailto:rust-sucht@example.org",
       },
       {
         id: "0x07",
@@ -143,7 +144,9 @@ function buildHostileJobsData() {
         location: 'Bonn', employment: ['full-time'], skills: ['x'], about: 'x', ...live },
       { ...live, id: '0xbe', headline: '<img src=x onerror="window.__pwned = 1">', level: '<i>',
         location: '</p><svg onload="window.__pwned = 1">', employment: ['full-time'],
-        skills: ['<b>'], about: '</p><script>window.__pwned = 1</script>' },
+        skills: ['<b>'], about: '</p><script>window.__pwned = 1</script>',
+        // A direct contact that is not a bare mailto: gets no link at all.
+        contact: 'javascript:window.__pwned = 1' },
     ],
     karussell: [
       { name: 'Böse', url: 'javascript:window.__pwned = 1' },

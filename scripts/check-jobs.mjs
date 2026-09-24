@@ -42,7 +42,8 @@ export const JOBS_PATH = path.join(root, "jobs.json");
 export const ROOT_KEYS = ["postings", "chiffre", "karussell"];
 export const POSTING_KEYS = ["id", "company", "title", "location", "employment", "url", "from", "months"];
 // A Chiffre note: a person looking for work, anonymous — the contact runs
-// through the space's mailbox, never through this file.
+// through the space's mailbox, or through a public address the person chose
+// (`contact`, the one optional key); a private address is never in this file.
 export const CHIFFRE_KEYS = [
   "id",
   "headline",
@@ -53,7 +54,10 @@ export const CHIFFRE_KEYS = [
   "about",
   "from",
   "months",
+  "contact",
 ];
+export const CHIFFRE_OPTIONAL_KEYS = ["contact"];
+export const CHIFFRE_CONTACT_RE = JobsCore.CHIFFRE_CONTACT_RE;
 // The permanent slot (Dauerplatz): name + https link, no dates — booked per
 // year, curated by hand, so there is nothing for the expiry math to compute.
 export const SLOT_KEYS = ["name", "url"];
@@ -367,6 +371,11 @@ function checkChiffre(data, errors) {
     checkString(entry, "about", where, errors, LIMITS.about);
     checkCalendarDate(entry, "from", where, errors);
     checkMonths(entry, where, errors);
+    if ("contact" in entry && (typeof entry.contact !== "string" || !CHIFFRE_CONTACT_RE.test(entry.contact))) {
+      errors.push(
+        `${where}.contact: ${JSON.stringify(entry.contact)} — nur "mailto:" plus eine Adresse, die öffentlich sein darf, ohne ?subject, z. B. "mailto:rust-sucht@example.org"`
+      );
+    }
   });
 }
 
@@ -409,7 +418,7 @@ export function contactWarnings(data) {
       const text = Array.isArray(entry[key]) ? entry[key].join(" ") : entry[key];
       if (typeof text === "string" && CONTACT_RE.test(text)) {
         out.push(
-          `${entry.id}.${key}: sieht nach Kontaktdaten aus — die kommen per weitergeleiteter Mail, nicht auf die Wand`
+          `${entry.id}.${key}: sieht nach Kontaktdaten aus — eine öffentliche Adresse gehört in "contact", sonst läuft der Kontakt über uns`
         );
       }
     }
