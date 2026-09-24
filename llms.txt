@@ -13,7 +13,7 @@ bitcircus101 ist ein privat und nicht-kommerziell betriebener Hackspace in Bonn.
 - [Status](https://bitcircus101.de/status): welche Termine stattfanden und welche ausfielen, seit Mai 2025 – ein Balken pro Woche, weiter zurück pro Monat, Quartal und Jahr; dazu ein grober Puls der Unterstützung ohne Zahlen
 - [Raum mieten](https://bitcircus101.de/raum-nutzen): bitcircus101 für Workshops, Meetups, Drehs buchen
 - [Unterstützen](https://bitcircus101.de/support): bitcircus101 finanziell unterstützen
-- [Pinnwand](https://bitcircus101.de/pinnwand): Stellenanzeigen aus der Community an einer echten Wand im Hackspace
+- [Pinnwand](https://bitcircus101.de/pinnwand): Stellenanzeigen aus der Community an einer echten Wand im Hackspace; dazu anonyme Gesuche von Jobsuchenden „unter Chiffre“, Kontakt per Weiterleitung über den Space
 - [Impressum & Datenschutz](https://bitcircus101.de/impressum-datenschutz): Rechtliches
 
 ## Kontakt

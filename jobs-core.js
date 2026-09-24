@@ -16,7 +16,7 @@
  * 01.09." therefore means 01.09.–30.09. inclusive — the reading a buyer expects.
  *
  * Names are deliberately generic (`activeEntries`, not `activePostings`): the
- * second half of the pinnwand (the "biete" notes) reuses this module unchanged.
+ * Chiffre notes (people looking for work) run on the same expiry math.
  *
  * UMD wrapper exposes `module.exports` under Node (tests + CI gate) and a global
  * `JobsCore` in the browser (loaded via <script> before jobs.js). ES5, so the
@@ -49,6 +49,21 @@
     freelance: "Freiberuflich",
   };
   var EMPLOYMENT_KEYS = Object.keys(EMPLOYMENT);
+
+  // How much experience a Chiffre note claims — coarse on purpose: a year count
+  // next to a skill list and a city is enough to recognise someone in a small
+  // scene, three bands are not.
+  var LEVEL = {
+    entry: "Einstieg",
+    experienced: "Erfahren",
+    senior: "Sehr erfahren",
+  };
+  var LEVEL_KEYS = Object.keys(LEVEL);
+
+  /** The label for a level key, or "" for an unknown one. */
+  function levelLabel(key) {
+    return Object.prototype.hasOwnProperty.call(LEVEL, key) ? LEVEL[key] : "";
+  }
 
   /** The labels for a list of employment keys; unknown keys are dropped. */
   function employmentLabels(keys) {
@@ -160,6 +175,8 @@
     MONTHS: MONTHS,
     EMPLOYMENT_KEYS: EMPLOYMENT_KEYS,
     employmentLabels: employmentLabels,
+    LEVEL_KEYS: LEVEL_KEYS,
+    levelLabel: levelLabel,
     lastDay: lastDay,
     todayString: todayString,
     isActive: isActive,

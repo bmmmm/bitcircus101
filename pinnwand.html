@@ -86,6 +86,8 @@
                         Hier hängen Firmen einen Zettel auf: einen Link zu ihrer Stellenanzeige.
                         Die Anzeige selbst liegt bei der Firma – wir hosten nichts, wir verlinken.
                         Kein Werbeplatz, kein Vertrag, kein Funnel: eine Wand, ein Zettel, fertig.
+                        Und wer selbst sucht, hängt einen Zettel <a href="#chiffre">unter Chiffre</a>
+                        auf – ohne Namen, ohne Adresse.
                     </p>
 
                     <section id="zettel" class="panel" aria-labelledby="zettel-heading">
@@ -242,6 +244,98 @@
                             Der Kühlschrank füllt sich nicht von allein – wie man ihm dabei hilft,
                             steht drüben bei <a href="support.html">/support</a> ;)
                         </p>
+                    </section>
+                    <section id="chiffre" class="panel" aria-labelledby="chiffre-heading">
+                        <h2 id="chiffre-heading">unter chiffre<a class="section-anchor" href="#chiffre" aria-label="Link zu: unter Chiffre">#</a></h2>
+                        <p>
+                            Hier hängen Menschen aus der Community, die selbst einen Job suchen –
+                            anonym, wie früher die Chiffre-Anzeige in der Zeitung. Wer
+                            dahintersteckt, wissen nur wir. Eure Zuschrift geht an uns, mit der Chiffre im
+                            Betreff, und wir leiten sie unverändert weiter. Antworten wird die Person
+                            selbst, wenn sie mag.
+                        </p>
+                        <div id="chiffre-list" class="jobs-list" aria-live="polite">
+                            <!-- jobs.js owns #chiffre-entries; the empty note after it is
+                                 static, like #jobs-invite, so nothing shifts when notes land. -->
+                            <div id="chiffre-entries">
+                                <noscript>
+                                    <p>
+                                        Die Chiffre-Zettel werden per JavaScript angezeigt – so nehmen
+                                        sie sich von selbst wieder ab, wenn ihre Laufzeit endet.
+                                    </p>
+                                </noscript>
+                            </div>
+                            <article class="job-panel job-panel--invite" id="chiffre-invite">
+                                <div class="job-panel__chrome" aria-hidden="true">
+                                    <span class="job-panel__path">~/pinnwand/chiffre/0x??</span>
+                                </div>
+                                <div class="job-panel__body">
+                                    <h3 class="job-panel__title">Frei für deine Chiffre :)</h3>
+                                    <p class="job-panel__company">Du suchst was? Häng deinen Zettel hier auf – ohne Namen, ohne Adresse</p>
+                                    <a class="btn job-panel__action" href="#chiffre-howto">Zettel unter Chiffre ↓</a>
+                                </div>
+                            </article>
+                        </div>
+                        <details class="sidenote jobs-howto" id="chiffre-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">so hängst du deinen Zettel unter Chiffre auf</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ol>
+                                    <li>
+                                        <strong>Zettel schreiben.</strong> Füll diesen Schnipsel aus und
+                                        schick ihn uns
+                                        <a href="mailto:info@bitcircus101.de?subject=Chiffre">per E-Mail</a>
+                                        – die Chiffre in <code>id</code> vergeben wir:
+                                        <pre class="jobs-snippet jobs-snippet--chiffre"><code>{
+  "id": "0x2a",
+  "headline": "Embedded / Rust, sucht Teilzeit",
+  "level": "experienced",
+  "location": "Bonn/Köln oder remote",
+  "employment": ["part-time"],
+  "skills": ["rust", "embedded", "linux"],
+  "about": "Baut gern Dinge, die blinken. Sucht ein Team, das Hardware ernst nimmt.",
+  "from": "2026-10-01",
+  "months": 3
+}</code></pre>
+                                        Bei <code>level</code> geht <code>entry</code> (Einstieg),
+                                        <code>experienced</code> (Erfahren) oder <code>senior</code>
+                                        (Sehr erfahren); <code>employment</code> wie bei den Firmen-Zetteln.
+                                        Bis zu acht Skills, klein geschrieben.
+                                    </li>
+                                    <li>
+                                        <strong>Wir hängen auf.</strong> Du bekommst eine Chiffre wie
+                                        <code>0x2a</code>, der Zettel hängt 1, 3 oder 12 Monate. Deine
+                                        Adresse merken wir uns nur für die Weiterleitung – sie steht
+                                        nirgends öffentlich, und mit dem Zettel löschen wir sie wieder.
+                                    </li>
+                                    <li>
+                                        <strong>Post kommt.</strong> Schreibt jemand unter deiner Chiffre,
+                                        leiten wir die Mail unverändert an dich weiter, meist innerhalb
+                                        weniger Tage. Ob und wem du antwortest, entscheidest du.
+                                    </li>
+                                </ol>
+                            </div>
+                        </details>
+                        <details class="sidenote jobs-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">damit dich niemand erkennt</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ul>
+                                    <li>Kein Name, keine Mailadresse, keine Telefonnummer, kein Link aufs Profil – wir schauen vor dem Aufhängen drüber.</li>
+                                    <li>Bleib grob: „Bonn/Köln“ statt Stadtteil, keine aktuelle Firma, kein Jahr des Berufsstarts. Die Szene hier ist klein.</li>
+                                    <li>Abnehmen geht jederzeit auf Zuruf. Aber: Die Wand ist ein öffentliches Git-Repo – was einmal hing, bleibt in dessen Geschichte lesbar.</li>
+                                    <li>Mehr dazu steht in der <a href="impressum-datenschutz.html#pinnwand">Datenschutzerklärung</a>.</li>
+                                </ul>
+                            </div>
+                        </details>
                     </section>
                     <div class="back-link">
                         <a href="index.html" class="btn">← zurück zur startseite</a>

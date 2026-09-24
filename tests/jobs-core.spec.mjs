@@ -125,6 +125,14 @@ describe("employmentLabels", () => {
   });
 });
 
+describe("levelLabel", () => {
+  it("names the three bands and nothing else", () => {
+    assert.deepEqual(JobsCore.LEVEL_KEYS.map(JobsCore.levelLabel), ["Einstieg", "Erfahren", "Sehr erfahren"]);
+    assert.equal(JobsCore.levelLabel("toString"), "");
+    assert.equal(JobsCore.levelLabel(undefined), "");
+  });
+});
+
 describe("formatDay", () => {
   it("renders the German day order", () => {
     assert.equal(formatDay("2026-09-30"), "30.09.2026");
