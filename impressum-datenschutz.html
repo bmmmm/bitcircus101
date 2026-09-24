@@ -41,14 +41,14 @@
         />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=e1e57a12" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=e1e57a12" />
-        <link rel="manifest" href="site.webmanifest?v=e1e57a12" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=c193de67" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=c193de67" />
+        <link rel="manifest" href="site.webmanifest?v=c193de67" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=e1e57a12" />
+        <link rel="stylesheet" href="style.css?v=c193de67" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -142,6 +142,23 @@
                             – sie werden nur über externe Links erreicht (du
                             verlässt dann unsere Seite).
                         </li>
+                        <li id="pinnwand">
+                            Pinnwand „unter Chiffre“: Wer dort einen Zettel aufhängen
+                            lässt, schickt ihn uns per E‑Mail. Der Zettel selbst
+                            (Chiffre, Überschrift, Erfahrungsstufe, grobe Region,
+                            Anstellungsart, Skills, kurzer Text, Laufzeit) ist
+                            öffentlich: Er liegt in der Datei <code>jobs.json</code>
+                            der Website und in deren öffentlichem Git-Repository –
+                            nach dem Abnehmen bleibt er in dessen
+                            Versionsgeschichte lesbar. Name und E‑Mail-Adresse stehen
+                            nie darin; wir speichern sie getrennt und nur, um
+                            Zuschriften unter der Chiffre unverändert an dich
+                            weiterzuleiten. Zuschriften unter einer Chiffre gehen
+                            unverändert an die Person dahinter, samt Absender.
+                            Nach Ende der Laufzeit oder auf Zuruf löschen
+                            wir die Zuordnung, deine Einsendung und die
+                            weitergeleiteten Mails.
+                        </li>
                     </ul>
                     <h3 id="rechtsgrundlage">Rechtsgrundlage<a class="section-anchor" href="#rechtsgrundlage" aria-label="Link zu: Rechtsgrundlage">#</a></h3>
                     <ul>
@@ -154,6 +171,11 @@
                             Karten (OpenStreetMap) werden erst nach deiner
                             ausdrücklichen Handlung (Klick) geladen; PayPal und
                             Ko-fi binden wir gar nicht ein.
+                        </li>
+                        <li>
+                            Pinnwand „unter Chiffre“: deine Einwilligung, die du mit
+                            dem Einsenden deines Zettels gibst und jederzeit
+                            widerrufen kannst.
                         </li>
                     </ul>
                     <h3 id="drittanbieter">Drittanbieter-Dienste<a class="section-anchor" href="#drittanbieter" aria-label="Link zu: Drittanbieter-Dienste">#</a></h3>
@@ -274,8 +296,8 @@
                 <span class="footer__status" data-funding="18">lights: on</span>
             </div>
         </footer>
-        <script defer src="storage.js?v=e1e57a12"></script>
-        <script defer src="main.js?v=e1e57a12"></script>
+        <script defer src="storage.js?v=c193de67"></script>
+        <script defer src="main.js?v=c193de67"></script>
         <script>
             document.getElementById("current-date").textContent =
                 new Date().toLocaleDateString("de-DE", {

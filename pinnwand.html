@@ -37,14 +37,14 @@
         <link rel="canonical" href="https://bitcircus101.de/pinnwand" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=e1e57a12" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=e1e57a12" />
-        <link rel="manifest" href="site.webmanifest?v=e1e57a12" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=c193de67" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=c193de67" />
+        <link rel="manifest" href="site.webmanifest?v=c193de67" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=e1e57a12" />
+        <link rel="stylesheet" href="style.css?v=c193de67" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -86,6 +86,8 @@
                         Hier hängen Firmen einen Zettel auf: einen Link zu ihrer Stellenanzeige.
                         Die Anzeige selbst liegt bei der Firma – wir hosten nichts, wir verlinken.
                         Kein Werbeplatz, kein Vertrag, kein Funnel: eine Wand, ein Zettel, fertig.
+                        Und wer selbst sucht, hängt einen Zettel <a href="#chiffre">unter Chiffre</a>
+                        auf – ohne Namen, ohne Adresse.
                     </p>
 
                     <section id="zettel" class="panel" aria-labelledby="zettel-heading">
@@ -111,9 +113,13 @@
                                     <span class="job-panel__path">~/pinnwand/b31sp13l</span>
                                 </div>
                                 <div class="job-panel__body">
-                                    <h3 class="job-panel__title">S3n10r L0tk0lb3n-0p3r4t0r (m/w/d)</h3>
-                                    <p class="job-panel__company">h4x0r &amp; söhne gmbh · Bonn oder /dev/remote</p>
-                                    <a class="btn job-panel__action" href="#aufhaengen">b31sp13l · so sieht ein Zettel aus ↓</a>
+                                    <!-- The leetspeak is for the eye only: a screen reader spells
+                                         "S3n10r" digit by digit, so each leet word is aria-hidden and
+                                         a plain twin stands in for it in .sr-only. -->
+                                    <h3 class="job-panel__title"><span aria-hidden="true">S3n10r L0tk0lb3n-0p3r4t0r</span><span class="sr-only">Beispiel: Senior Lötkolben-Operator</span> (m/w/d)</h3>
+                                    <p class="job-panel__company"><span aria-hidden="true">h4x0r</span><span class="sr-only">hacker</span> &amp; söhne gmbh <span class="job-panel__sep" aria-hidden="true">·</span> Bonn oder /dev/remote</p>
+                                    <ul class="job-panel__tags" role="list" aria-label="Anstellungsart"><li class="event-tag">Vollzeit</li><li class="event-tag">Teilzeit</li></ul>
+                                    <a class="btn job-panel__action" href="#aufhaengen"><span aria-hidden="true">b31sp13l · </span>so sieht ein Zettel aus ↓</a>
                                 </div>
                             </article>
                             <!-- "jobs-invite", not "job-invite": the job-<id> namespace belongs
@@ -178,11 +184,17 @@
                                         <pre class="jobs-snippet"><code>{
   "id": "acme-2026-09",
   "company": "ACME GmbH",
-  "title": "Embedded-Entwickler:in (m/w/d), Bonn oder remote",
+  "title": "Embedded-Entwickler:in (m/w/d)",
+  "location": "Bonn oder remote",
+  "employment": ["full-time", "part-time"],
   "url": "https://acme.example/jobs/embedded",
   "from": "2026-09-03",
   "months": 3
 }</code></pre>
+                                        Bei <code>employment</code> geht eins oder mehreres davon:
+                                        <code>full-time</code> (Vollzeit), <code>part-time</code> (Teilzeit),
+                                        <code>working-student</code> (Werkstudium), <code>internship</code> (Praktikum),
+                                        <code>apprenticeship</code> (Ausbildung), <code>freelance</code> (Freiberuflich).
                                         Für den <strong>Dauerplatz</strong> stattdessen ins
                                         <code>karussell</code>-Array – nur Name und Link, kein Datum:
                                         <pre class="jobs-snippet jobs-snippet--slot"><code>{ "name": "ACME GmbH", "url": "https://acme.example" }</code></pre>
@@ -233,6 +245,98 @@
                             steht drüben bei <a href="support.html">/support</a> ;)
                         </p>
                     </section>
+                    <section id="chiffre" class="panel" aria-labelledby="chiffre-heading">
+                        <h2 id="chiffre-heading">unter chiffre<a class="section-anchor" href="#chiffre" aria-label="Link zu: unter Chiffre">#</a></h2>
+                        <p>
+                            Hier hängen Menschen aus der Community, die selbst einen Job suchen –
+                            anonym, wie früher die Chiffre-Anzeige in der Zeitung. Wer
+                            dahintersteckt, wissen nur wir. Eure Zuschrift geht an uns, mit der Chiffre im
+                            Betreff, und wir leiten sie unverändert weiter. Antworten wird die Person
+                            selbst, wenn sie mag.
+                        </p>
+                        <div id="chiffre-list" class="jobs-list" aria-live="polite">
+                            <!-- jobs.js owns #chiffre-entries; the empty note after it is
+                                 static, like #jobs-invite, so nothing shifts when notes land. -->
+                            <div id="chiffre-entries">
+                                <noscript>
+                                    <p>
+                                        Die Chiffre-Zettel werden per JavaScript angezeigt – so nehmen
+                                        sie sich von selbst wieder ab, wenn ihre Laufzeit endet.
+                                    </p>
+                                </noscript>
+                            </div>
+                            <article class="job-panel job-panel--invite" id="chiffre-invite">
+                                <div class="job-panel__chrome" aria-hidden="true">
+                                    <span class="job-panel__path">~/pinnwand/chiffre/0x??</span>
+                                </div>
+                                <div class="job-panel__body">
+                                    <h3 class="job-panel__title">Frei für deine Chiffre :)</h3>
+                                    <p class="job-panel__company">Du suchst was? Häng deinen Zettel hier auf – ohne Namen, ohne Adresse</p>
+                                    <a class="btn job-panel__action" href="#chiffre-howto">Zettel unter Chiffre ↓</a>
+                                </div>
+                            </article>
+                        </div>
+                        <details class="sidenote jobs-howto" id="chiffre-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">so hängst du deinen Zettel unter Chiffre auf</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ol>
+                                    <li>
+                                        <strong>Zettel schreiben.</strong> Füll diesen Schnipsel aus und
+                                        schick ihn uns
+                                        <a href="mailto:info@bitcircus101.de?subject=Chiffre">per E-Mail</a>
+                                        – die Chiffre in <code>id</code> vergeben wir:
+                                        <pre class="jobs-snippet jobs-snippet--chiffre"><code>{
+  "id": "0x2a",
+  "headline": "Embedded / Rust, sucht Teilzeit",
+  "level": "experienced",
+  "location": "Bonn/Köln oder remote",
+  "employment": ["part-time"],
+  "skills": ["rust", "embedded", "linux"],
+  "about": "Baut gern Dinge, die blinken. Sucht ein Team, das Hardware ernst nimmt.",
+  "from": "2026-10-01",
+  "months": 3
+}</code></pre>
+                                        Bei <code>level</code> geht <code>entry</code> (Einstieg),
+                                        <code>experienced</code> (Erfahren) oder <code>senior</code>
+                                        (Sehr erfahren); <code>employment</code> wie bei den Firmen-Zetteln.
+                                        Bis zu acht Skills, klein geschrieben.
+                                    </li>
+                                    <li>
+                                        <strong>Wir hängen auf.</strong> Du bekommst eine Chiffre wie
+                                        <code>0x2a</code>, der Zettel hängt 1, 3 oder 12 Monate. Deine
+                                        Adresse merken wir uns nur für die Weiterleitung – sie steht
+                                        nirgends öffentlich, und mit dem Zettel löschen wir sie wieder.
+                                    </li>
+                                    <li>
+                                        <strong>Post kommt.</strong> Schreibt jemand unter deiner Chiffre,
+                                        leiten wir die Mail unverändert an dich weiter, meist innerhalb
+                                        weniger Tage. Ob und wem du antwortest, entscheidest du.
+                                    </li>
+                                </ol>
+                            </div>
+                        </details>
+                        <details class="sidenote jobs-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">damit dich niemand erkennt</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ul>
+                                    <li>Kein Name, keine Mailadresse, keine Telefonnummer, kein Link aufs Profil – wir schauen vor dem Aufhängen drüber.</li>
+                                    <li>Bleib grob: „Bonn/Köln“ statt Stadtteil, keine aktuelle Firma, kein Jahr des Berufsstarts. Die Szene hier ist klein.</li>
+                                    <li>Abnehmen geht jederzeit auf Zuruf. Aber: Die Wand ist ein öffentliches Git-Repo – was einmal hing, bleibt in dessen Geschichte lesbar.</li>
+                                    <li>Mehr dazu steht in der <a href="impressum-datenschutz.html#pinnwand">Datenschutzerklärung</a>.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </section>
                     <div class="back-link">
                         <a href="index.html" class="btn">← zurück zur startseite</a>
                     </div>
@@ -263,9 +367,9 @@
                 <span class="footer__status" data-funding="18">lights: on</span>
             </div>
         </footer>
-        <script defer src="storage.js?v=e1e57a12"></script>
-        <script defer src="jobs-core.js?v=e1e57a12"></script>
-        <script defer src="jobs.js?v=e1e57a12"></script>
-        <script defer src="main.js?v=e1e57a12"></script>
+        <script defer src="storage.js?v=c193de67"></script>
+        <script defer src="jobs-core.js?v=c193de67"></script>
+        <script defer src="jobs.js?v=c193de67"></script>
+        <script defer src="main.js?v=c193de67"></script>
     </body>
 </html>
