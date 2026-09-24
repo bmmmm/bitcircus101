@@ -13,7 +13,7 @@
       "items": { "$ref": "#/$defs/posting" }
     },
     "chiffre": {
-      "description": "Anonymous notes from people looking for work (\"unter Chiffre\"). No name, no contact details: companies write to info@bitcircus101.de with the subject CHIFFRE <id>, and the space forwards the mail to an address that is never in this repo. Optional: a board without the key shows the empty Chiffre slot alone. Rules this schema cannot express, which scripts/check-jobs.mjs enforces on top: ids are unique, headline/location/about hold at least one non-blank character, and text that looks like contact details is warned about.",
+      "description": "Anonymous notes from people looking for work (\"unter Chiffre\"), submitted by pull request. Nothing personal: this file lives in a git history that forgets nothing. Companies write to info@bitcircus101.de with the subject CHIFFRE <id>, and the space forwards the mail to an address the person sent separately and that is never in this repo — or, optionally, straight to the public address in `contact`. Optional: a board without the key shows the empty Chiffre slot alone. Rules this schema cannot express, which scripts/check-jobs.mjs enforces on top: ids are unique, headline/location/about hold at least one non-blank character, and text that looks like contact details is warned about.",
       "type": "array",
       "items": { "$ref": "#/$defs/chiffre" }
     },
@@ -90,7 +90,7 @@
       "required": ["id", "headline", "level", "location", "employment", "skills", "about", "from", "months"],
       "properties": {
         "id": {
-          "description": "The Chiffre number, handed out by the space: 0x plus two to four lowercase hex digits. It is the mail subject (CHIFFRE 0x2a), so it must be unique.",
+          "description": "The Chiffre number, picked by the person in the pull request: 0x plus two to four lowercase hex digits. It is the mail subject (CHIFFRE 0x2a), so it must be unique.",
           "type": "string",
           "pattern": "^0x[0-9a-f]{2,4}$"
         },
@@ -116,10 +116,15 @@
           "items": { "type": "string", "pattern": "^[a-z0-9+#.-]{1,24}$" }
         },
         "about": {
-          "description": "A few sentences, no contact details — those come in the forwarded mail.",
+          "description": "A few sentences, no contact details — those go into `contact` or come in the forwarded mail.",
           "type": "string",
           "minLength": 1,
           "maxLength": 300
+        },
+        "contact": {
+          "description": "Optional: a direct contact the person chose to make public, e.g. an alias — never a private address, it stays in the git history. A bare mailto:, no ?subject. Without it, replies run through the space.",
+          "type": "string",
+          "pattern": "^mailto:[^\\s@?]+@[^\\s@?]+\\.[^\\s@?]+$"
         },
         "from": { "$ref": "#/$defs/posting/properties/from" },
         "months": { "$ref": "#/$defs/posting/properties/months" }

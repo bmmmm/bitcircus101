@@ -946,11 +946,17 @@ test.describe('Pinnwand', () => {
         await expect(chiffre.locator('.job-panel__path')).toHaveText('~/pinnwand/chiffre/0x2a');
         await expect(chiffre.locator('.job-panel__company')).toHaveText('Erfahren · Bonn/Köln oder remote');
         await expect(chiffre.locator('.job-panel__skills li')).toHaveText(['rust', 'embedded']);
-        const mail = new URL(await chiffre.locator('.job-panel__action').getAttribute('href'));
+        const mail = new URL(await chiffre.locator('.job-panel__action').first().getAttribute('href'));
         expect(mail.protocol).toBe('mailto:');
         expect(mail.pathname).toBe('info@bitcircus101.de');
         expect(mail.searchParams.get('subject')).toBe('CHIFFRE 0x2a');
         expect(mail.searchParams.get('body')).toMatch(/^Hallo 0x2a,/);
+        // Its public `contact` adds a second, direct link — the address as given.
+        await expect(chiffre.locator('.job-panel__direct'))
+            .toHaveAttribute('href', 'mailto:rust-sucht@example.org');
+        // The "nothing personal" box stands above the how-to, never folded away.
+        await expect(page.locator('#chiffre-privacy')).toBeVisible();
+        await expect(page.locator('details #chiffre-privacy')).toHaveCount(0);
         await expect(page.locator('#chiffre-invite')).toBeVisible();
         await expect(page.locator('#chiffre-list')).not.toHaveAttribute('aria-busy', 'true');
 
@@ -1065,6 +1071,9 @@ test.describe('Pinnwand', () => {
         await expect(hostileChiffre).toHaveCount(1);
         await expect(hostileChiffre.locator('.job-panel__title')).toHaveText('<img src=x onerror="window.__pwned = 1">');
         await expect(hostileChiffre.locator('.job-panel__skills li')).toHaveText(['<b>']);
+        // A contact that is no bare mailto: gets no link; the way through us stays.
+        await expect(hostileChiffre.locator('.job-panel__direct')).toHaveCount(0);
+        await expect(hostileChiffre.locator('.job-panel__action')).toHaveCount(1);
         await expect(cards.locator('.job-panel__title'))
             .toHaveText('</h3><svg onload="window.__pwned = 1"></svg>');
         await expect(cards.locator('.job-panel__company'))

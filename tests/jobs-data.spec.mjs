@@ -16,7 +16,9 @@ import {
   staleWarnings,
   contactWarnings,
   CHIFFRE_KEYS,
+  CHIFFRE_OPTIONAL_KEYS,
   CHIFFRE_ID_RE,
+  CHIFFRE_CONTACT_RE,
   SKILL_RE,
   LEVEL_KEYS,
   ROOT_KEYS,
@@ -120,7 +122,17 @@ describe("validate — unter Chiffre", () => {
     assert.deepEqual(validate(board()).errors, []);
   });
 
+  it("accepts a public contact as a bare mailto:, and a note without one", () => {
+    assert.deepEqual(errorsFor(withChiffre(chiffre({ contact: "mailto:rust-sucht@example.org" }))), []);
+    assert.deepEqual(errorsFor(withChiffre(chiffre())), []);
+  });
+
   const cases = [
+    ["contact over https", withChiffre(chiffre({ contact: "https://kim.example" })), "chiffre[0].contact:"],
+    ["contact as javascript:", withChiffre(chiffre({ contact: "javascript:alert(1)" })), "chiffre[0].contact:"],
+    ["contact with ?subject", withChiffre(chiffre({ contact: "mailto:kim@example.org?subject=hi" })), "chiffre[0].contact:"],
+    ["contact with a space", withChiffre(chiffre({ contact: "mailto:kim @example.org" })), "chiffre[0].contact:"],
+    ["contact not a string", withChiffre(chiffre({ contact: ["mailto:kim@example.org"] })), "chiffre[0].contact:"],
     ["chiffre not an array", { postings: [], chiffre: {} }, "jobs.json.chiffre: muss ein Array sein"],
     ["a note that is not an object", withChiffre("0x2a"), "chiffre[0]: muss ein Objekt sein"],
     ["an unknown key (a name)", withChiffre(chiffre({ name: "Kim" })), 'unbekannter Schlüssel "name"'],
@@ -178,6 +190,8 @@ describe("validate — unter Chiffre", () => {
         "0x05.about", "0x06.about", "0x07.about", "0x08.skills"]
     );
     assert.deepEqual(contactWarnings(withChiffre(chiffre({ about: "C#, 10 Jahre Linux" }))), []);
+    // The one field meant for an address is not scanned — it is checked, not warned about.
+    assert.deepEqual(contactWarnings(withChiffre(chiffre({ contact: "mailto:kim@example.org" }))), []);
   });
 
   it("warns about an expired Chiffre note like about an expired posting", () => {
@@ -397,7 +411,12 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
   it("CHIFFRE_KEYS, level, skills and id match the schema's chiffre", () => {
     const c = SCHEMA.$defs.chiffre;
     assert.deepEqual(sorted(CHIFFRE_KEYS), sorted(Object.keys(c.properties)));
-    assert.deepEqual(sorted(c.required), sorted(CHIFFRE_KEYS));
+    assert.deepEqual(
+      sorted(c.required),
+      sorted(CHIFFRE_KEYS.filter((k) => !CHIFFRE_OPTIONAL_KEYS.includes(k)))
+    );
+    assert.ok(!c.required.includes("contact"));
+    assert.equal(CHIFFRE_CONTACT_RE.source, c.properties.contact.pattern);
     assert.equal(c.additionalProperties, false);
     assert.deepEqual(LEVEL_KEYS, c.properties.level.enum);
     assert.equal(CHIFFRE_ID_RE.source, c.properties.id.pattern);
