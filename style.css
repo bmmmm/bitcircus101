@@ -1721,6 +1721,9 @@ h3.sidenote__title::before { content: none; }
 .job-panel__title::before { content: none; }
 .job-panel__company { color: var(--ink); font-size: 0.9rem; margin: 0 0 0.25rem; }
 .job-panel__tags { display: flex; gap: 0.75ch; flex-wrap: wrap; list-style: none; margin: 0 0 0.25rem; padding: 0; }
+/* Tags, not a bulleted list: drop the global "· " marker and its hang. */
+.job-panel__tags > li { margin: 0; }
+.job-panel__tags > li::before { content: none; }
 .job-panel__dates { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 0.75rem; }
 .job-panel__action { margin-top: 0.25rem; }
 
