@@ -248,6 +248,23 @@ below — never moves. A slot runs for a year and the list is curated by hand:
 remove an entry when its year runs out. The key is optional — without it, or
 when the fetch fails, the note keeps its static title.
 
+The third key, `chiffre`, holds **anonymous notes from people looking for
+work** ("unter Chiffre", section `#chiffre` on the page). A note carries a
+Chiffre id (`0x` + 2–4 hex digits), a headline, a coarse level
+(`entry`/`experienced`/`senior`), location, employment, 1–8 skills, a short
+`about`, and the same `from`/`months` runtime. No name, no contact: the card's
+only action is a `mailto:info@bitcircus101.de` with subject `CHIFFRE <id>`.
+The gate warns (never fails) when a note looks like it carries contact details.
+Chiffre notes stay out of `pinnwand/feed.xml` on purpose — a feed reader keeps
+copies after a note comes down.
+
+Maintainer procedure: a person mails the filled-in snippet → pick a free id,
+commit the entry, and store `id → mail address` **outside the repo** (the
+space's password manager). A mail with subject `CHIFFRE <id>` → forward it
+unchanged to that address. Take a note down on request or when it expires, and
+then delete the mapping, the submission mail and the forwarded mails — the
+privacy page promises all three.
+
 ```sh
 pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 ```
@@ -281,8 +298,9 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 - The donation is checked by hand before the merge — there is no payment
   webhook, and this is the one deliberately manual step. Verwendungszweck is
   `JOBS-<id>`; contributors name their channel and date in the PR description.
-- No amounts, no contact details and no applicant data ever enter `jobs.json`;
-  every card links to a vacancy hosted by the company.
+- No amounts and no contact details ever enter `jobs.json`. Postings link to a
+  vacancy hosted by the company; Chiffre notes are the one kind of applicant
+  data in the file — pseudonymous, and their only action is the relay mail.
 - `jobs.js` escapes every field and **independently** refuses a non-https `url`,
   even though the gate already rejects one — an E2E test feeds the renderer
   postings the gate would have refused. Don't remove the second guard as
@@ -292,7 +310,9 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
   (the three steps, the snippet, the donation channels, the house rules) sits in
   collapsed `details.sidenote` blocks, the same idiom `raum-nutzen.html` uses.
   Companies are addressed as *ihr* — which is why the invite note says "Euer".
-  The rest of the site is *du*; this page is the exception, on purpose.
+  The Chiffre section speaks to job seekers as *du*, like the rest of the site.
+  Never write "sich aufhängen" for the person — it reads as "hang oneself"; the
+  note is what gets hung up.
 
 ## CI / GitHub Actions
 

@@ -14,6 +14,11 @@ import { createRequire } from "node:module";
 import {
   validate,
   staleWarnings,
+  contactWarnings,
+  CHIFFRE_KEYS,
+  CHIFFRE_ID_RE,
+  SKILL_RE,
+  LEVEL_KEYS,
   ROOT_KEYS,
   POSTING_KEYS,
   SLOT_KEYS,
@@ -79,6 +84,107 @@ describe("validate — the shapes that pass", () => {
     for (const months of MONTHS) {
       assert.equal(validate(board(posting({ months }))).ok, true, `months=${months}`);
     }
+  });
+});
+
+/** A valid Chiffre note; each test breaks exactly one field. */
+const chiffre = (over = {}) => ({
+  id: "0x2a",
+  headline: "Embedded / Rust, sucht Teilzeit",
+  level: "experienced",
+  location: "Bonn/Köln oder remote",
+  employment: ["part-time"],
+  skills: ["rust", "c++", "c#", "node.js"],
+  about: "Baut gern Dinge, die blinken.",
+  from: "2026-09-05",
+  months: 3,
+  ...over,
+});
+const withChiffre = (...notes) => ({ postings: [], chiffre: notes });
+
+describe("validate — unter Chiffre", () => {
+  it("accepts a board with notes, the boundary sizes, and one without the key", () => {
+    assert.deepEqual(validate(withChiffre(chiffre(), chiffre({ id: "0xbeef" }))).errors, []);
+    assert.deepEqual(
+      validate(
+        withChiffre(
+          chiffre({
+            headline: "h".repeat(100),
+            about: "a".repeat(300),
+            skills: Array.from({ length: 8 }, (_, i) => `s${i}`),
+          })
+        )
+      ).errors,
+      []
+    );
+    assert.deepEqual(validate(board()).errors, []);
+  });
+
+  const cases = [
+    ["chiffre not an array", { postings: [], chiffre: {} }, "jobs.json.chiffre: muss ein Array sein"],
+    ["a note that is not an object", withChiffre("0x2a"), "chiffre[0]: muss ein Objekt sein"],
+    ["an unknown key (a name)", withChiffre(chiffre({ name: "Kim" })), 'unbekannter Schlüssel "name"'],
+    ["id missing", withChiffre(omit(chiffre(), "id")), 'chiffre[0]: Pflichtfeld "id" fehlt'],
+    ["id without 0x", withChiffre(chiffre({ id: "2a" })), "chiffre[0].id:"],
+    ["id in upper case", withChiffre(chiffre({ id: "0x2A" })), "chiffre[0].id:"],
+    ["id too long", withChiffre(chiffre({ id: "0x12345" })), "chiffre[0].id:"],
+    ["id twice", withChiffre(chiffre(), chiffre()), 'chiffre[1].id: "0x2a" ist doppelt'],
+    ["headline too long", withChiffre(chiffre({ headline: "h".repeat(101) })), "chiffre[0].headline: zu lang"],
+    ["level unknown", withChiffre(chiffre({ level: "junior" })), 'chiffre[0].level: "junior" gibt es nicht'],
+    ["level missing", withChiffre(omit(chiffre(), "level")), 'chiffre[0]: Pflichtfeld "level" fehlt'],
+    ["location missing", withChiffre(omit(chiffre(), "location")), 'chiffre[0]: Pflichtfeld "location" fehlt'],
+    ["employment unknown", withChiffre(chiffre({ employment: ["job"] })), "chiffre[0].employment[0]"],
+    ["skills empty", withChiffre(chiffre({ skills: [] })), "chiffre[0].skills: muss eine Liste mit 1 bis 8"],
+    ["nine skills", withChiffre(chiffre({ skills: Array.from({ length: 9 }, (_, i) => `s${i}`) })), "chiffre[0].skills: muss eine Liste mit 1 bis 8"],
+    ["a skill in upper case", withChiffre(chiffre({ skills: ["Rust"] })), "chiffre[0].skills[0]"],
+    ["a skill with a space", withChiffre(chiffre({ skills: ["machine learning"] })), "chiffre[0].skills[0]"],
+    ["a skill twice", withChiffre(chiffre({ skills: ["rust", "rust"] })), 'chiffre[0].skills[1]: "rust" ist doppelt'],
+    ["about too long", withChiffre(chiffre({ about: "a".repeat(301) })), "chiffre[0].about: zu lang"],
+    ["about blank", withChiffre(chiffre({ about: "  " })), "chiffre[0].about: zu kurz"],
+    ["from not a day", withChiffre(chiffre({ from: "2026-13-01" })), "chiffre[0].from: kein gültiges Kalenderdatum"],
+    ["months not a runtime", withChiffre(chiffre({ months: 6 })), "chiffre[0].months: muss 1, 3, 12 sein"],
+  ];
+  for (const [name, data, needle] of cases) {
+    it(`rejects: ${name}`, () => {
+      const errors = errorsFor(data);
+      assert.ok(
+        errors.some((e) => e.includes(needle)),
+        `no error mentioned "${needle}" — got: ${errors.join(" | ")}`
+      );
+    });
+  }
+
+  it("reports Chiffre errors even when postings is missing — one red run, not two", () => {
+    const errors = errorsFor({ chiffre: [chiffre({ level: "x" })] });
+    assert.ok(errors.some((e) => /^chiffre\[0\]\.level/.test(e)), errors.join(" | "));
+    assert.ok(errors.some((e) => /"postings" fehlt/.test(e)), errors.join(" | "));
+  });
+
+  it("warns about contact details on the wall, and never fails for them", () => {
+    const risky = withChiffre(
+      chiffre({ id: "0x01", about: "Schreib mir: kim@example.org" }),
+      chiffre({ id: "0x02", headline: "Portfolio auf www.kim.example" }),
+      chiffre({ id: "0x03", location: "53113 Bonn" }),
+      chiffre({ id: "0x04", about: "Mehr unter https://kim.example" }),
+      chiffre({ id: "0x05", about: "linkedin.com/in/kim-mueller" }),
+      chiffre({ id: "0x06", about: "Ruf an: 0228 / 12 34 56" }),
+      chiffre({ id: "0x07", about: "kim (at) example (dot) org" }),
+      chiffre({ id: "0x08", skills: ["kim.dev"] })
+    );
+    assert.equal(validate(risky).ok, true);
+    assert.deepEqual(
+      contactWarnings(risky).map((w) => w.split(":")[0]),
+      ["0x01.about", "0x02.headline", "0x03.location", "0x04.about",
+        "0x05.about", "0x06.about", "0x07.about", "0x08.skills"]
+    );
+    assert.deepEqual(contactWarnings(withChiffre(chiffre({ about: "C#, 10 Jahre Linux" }))), []);
+  });
+
+  it("warns about an expired Chiffre note like about an expired posting", () => {
+    const warnings = staleWarnings(withChiffre(chiffre({ from: "2026-01-01", months: 1 })), "2026-09-15");
+    assert.deepEqual(warnings, [
+      "0x2a: ist seit 2026-01-31 abgelaufen — Eintrag aus jobs.json entfernen, Zuordnung, Einsendung und weitergeleitete Mails löschen",
+    ]);
   });
 });
 
@@ -288,6 +394,26 @@ describe("schema/gate lockstep (the hand-maintained mirror must match jobs.schem
     assert.equal(e.uniqueItems, true);
   });
 
+  it("CHIFFRE_KEYS, level, skills and id match the schema's chiffre", () => {
+    const c = SCHEMA.$defs.chiffre;
+    assert.deepEqual(sorted(CHIFFRE_KEYS), sorted(Object.keys(c.properties)));
+    assert.deepEqual(sorted(c.required), sorted(CHIFFRE_KEYS));
+    assert.equal(c.additionalProperties, false);
+    assert.deepEqual(LEVEL_KEYS, c.properties.level.enum);
+    assert.equal(CHIFFRE_ID_RE.source, c.properties.id.pattern);
+    assert.equal(SKILL_RE.source, c.properties.skills.items.pattern);
+    assert.deepEqual(LIMITS.skills, {
+      minItems: c.properties.skills.minItems,
+      maxItems: c.properties.skills.maxItems,
+    });
+    for (const key of ["headline", "about"]) {
+      assert.deepEqual(LIMITS[key], {
+        minLength: c.properties[key].minLength,
+        maxLength: c.properties[key].maxLength,
+      }, key);
+    }
+  });
+
   it("MONTHS matches the schema's months enum — the runtimes are stated once", () => {
     assert.deepEqual(MONTHS, SCHEMA.$defs.posting.properties.months.enum);
   });
@@ -398,6 +524,16 @@ describe("the committed jobs.json", () => {
 });
 
 describe("the copy-paste snippet on pinnwand.html", () => {
+  it("the Chiffre snippet is a note the gate accepts, without a single contact warning", () => {
+    const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
+    const m = /<pre class="jobs-snippet jobs-snippet--chiffre"><code>([\s\S]*?)<\/code><\/pre>/.exec(html);
+    assert.ok(m, 'no <pre class="jobs-snippet jobs-snippet--chiffre"><code> block found in pinnwand.html');
+    const data = { postings: [], chiffre: [JSON.parse(m[1].replace(/&quot;/g, '"').replace(/&amp;/g, "&"))] };
+    const { ok, errors } = validate(data);
+    assert.equal(ok, true, errors.join(" | "));
+    assert.deepEqual(contactWarnings(data), []);
+  });
+
   it("is a posting the gate accepts — the instructions cannot drift from the rules", () => {
     const html = fs.readFileSync(path.join(root, "pinnwand.html"), "utf8");
     const m = /<pre class="jobs-snippet"><code>([\s\S]*?)<\/code><\/pre>/.exec(html);

@@ -873,7 +873,7 @@ test.describe('Pinnwand', () => {
         // that container counts real cards only.
         const cards = page.locator('#jobs-postings .job-panel');
         await expect(cards).toHaveCount(2);
-        await expect(page.locator('.job-panel--invite')).toHaveCount(1);
+        await expect(page.locator('#jobs-list .job-panel--invite')).toHaveCount(1);
         // Real postings retire the sample note — it is the empty wall's filler,
         // not a card to stand between vacancies.
         await expect(page.locator('#jobs-sample')).toBeHidden();
@@ -894,7 +894,7 @@ test.describe('Pinnwand', () => {
                 accent,
                 posting: border('#jobs-postings .job-panel'),
                 sample: border('#jobs-sample'),
-                invite: border('.job-panel--invite'),
+                invite: border('#jobs-invite'),
             };
         });
         expect(frames.posting, 'a real posting must wear the accent frame').toBe(frames.accent);
@@ -937,14 +937,31 @@ test.describe('Pinnwand', () => {
             expect(await a.getAttribute('rel')).toContain('noopener');
         }
 
+        // Unter Chiffre: one of two notes is up (the other expired). A person,
+        // not a vacancy — no link out; the one action is a mail to the space
+        // with the Chiffre in the subject.
+        const chiffre = page.locator('#chiffre-entries .job-panel');
+        await expect(chiffre).toHaveCount(1);
+        await expect(chiffre).toHaveAttribute('id', 'chiffre-0x2a');
+        await expect(chiffre.locator('.job-panel__path')).toHaveText('~/pinnwand/chiffre/0x2a');
+        await expect(chiffre.locator('.job-panel__company')).toHaveText('Erfahren · Bonn/Köln oder remote');
+        await expect(chiffre.locator('.job-panel__skills li')).toHaveText(['rust', 'embedded']);
+        const mail = new URL(await chiffre.locator('.job-panel__action').getAttribute('href'));
+        expect(mail.protocol).toBe('mailto:');
+        expect(mail.pathname).toBe('info@bitcircus101.de');
+        expect(mail.searchParams.get('subject')).toBe('CHIFFRE 0x2a');
+        expect(mail.searchParams.get('body')).toMatch(/^Hallo 0x2a,/);
+        await expect(page.locator('#chiffre-invite')).toBeVisible();
+        await expect(page.locator('#chiffre-list')).not.toHaveAttribute('aria-busy', 'true');
+
         // The live region stops announcing once the board is rendered.
         await expect(page.locator('#jobs-list')).not.toHaveAttribute('aria-busy', 'true');
         await expect(page.locator('nav a[href="pinnwand.html"]')).toHaveAttribute('aria-current', 'page');
 
         // The invite note hangs last, below the real ones, and points at the
         // how-to rather than out to a vacancy.
-        const invite = page.locator('.job-panel--invite');
-        await expect(page.locator('.job-panel').last()).toHaveClass(/job-panel--invite/);
+        const invite = page.locator('#jobs-invite');
+        await expect(page.locator('#jobs-list .job-panel').last()).toHaveClass(/job-panel--invite/);
         await expect(invite.locator('.job-panel__action')).toHaveAttribute('href', '#aufhaengen');
         await expect(invite.locator('.job-panel__dates')).toHaveCount(0);
         // Its own id namespace: a posting with id "invite" renders #job-invite,
@@ -986,7 +1003,7 @@ test.describe('Pinnwand', () => {
         await page.goto('/pinnwand.html');
         // Two static notes and nothing else: the leetspeak sample showing what a
         // Zettel looks like, and the invite note that IS the empty state.
-        await expect(page.locator('.job-panel')).toHaveCount(2);
+        await expect(page.locator('#jobs-list .job-panel')).toHaveCount(2);
         await expect(page.locator('#jobs-sample')).toBeVisible();
         await expect(page.locator('#jobs-sample .job-panel__action'))
             .toHaveAttribute('href', '#aufhaengen');
@@ -1000,10 +1017,16 @@ test.describe('Pinnwand', () => {
         expect(await spokenText(sample.locator('.job-panel__action')))
             .toBe('so sieht ein Zettel aus ↓');
         await expect(sample.locator('.job-panel__title')).toContainText('S3n10r L0tk0lb3n-0p3r4t0r');
-        await expect(page.locator('.job-panel--invite')).toBeVisible();
+        await expect(page.locator('#jobs-invite')).toBeVisible();
+        // No `chiffre` key either: the Chiffre wall is its empty note alone, and
+        // that note's CTA opens the folded how-to it points at.
+        await expect(page.locator('#chiffre-entries .job-panel')).toHaveCount(0);
+        await expect(page.locator('#chiffre-invite')).toBeVisible();
+        await page.locator('#chiffre-invite .job-panel__action').click();
+        await expect(page.locator('#chiffre-howto')).toHaveAttribute('open', '');
         // No `karussell` key: the static title stands, and it is plain text.
-        await expect(page.locator('.job-panel--invite .job-panel__title')).toHaveText('Frei für Euren Zettel :)');
-        await expect(page.locator('.job-panel--invite .job-panel__title a')).toHaveCount(0);
+        await expect(page.locator('#jobs-invite .job-panel__title')).toHaveText('Frei für Euren Zettel :)');
+        await expect(page.locator('#jobs-invite .job-panel__title a')).toHaveCount(0);
         // The empty wall is the live default — and the case the static note
         // fixes outright: nothing arrives, nothing goes away, nothing moves.
         // With postings the wall grows by exactly their cards; that shift is
@@ -1034,6 +1057,14 @@ test.describe('Pinnwand', () => {
         expect(await page.evaluate(() => window.__pwned)).toBeUndefined();
         await expect(page.locator('#jobs-list img, #jobs-list svg, #jobs-list script'))
             .toHaveCount(0);
+        // The Chiffre wall has the same locks: an id that is no Chiffre never
+        // renders (it would land in a mailto: subject), the rest arrives as text.
+        await expect(page.locator('#chiffre-list img, #chiffre-list svg, #chiffre-list script'))
+            .toHaveCount(0);
+        const hostileChiffre = page.locator('#chiffre-entries .job-panel');
+        await expect(hostileChiffre).toHaveCount(1);
+        await expect(hostileChiffre.locator('.job-panel__title')).toHaveText('<img src=x onerror="window.__pwned = 1">');
+        await expect(hostileChiffre.locator('.job-panel__skills li')).toHaveText(['<b>']);
         await expect(cards.locator('.job-panel__title'))
             .toHaveText('</h3><svg onload="window.__pwned = 1"></svg>');
         await expect(cards.locator('.job-panel__company'))
@@ -1050,6 +1081,16 @@ test.describe('Pinnwand', () => {
         await expect(slot).toHaveAttribute('href', 'https://ok.example');
         await expect(slot).toHaveText('"><img src=x onerror="window.__pwned = 1"> ↗');
         await expect(page.locator('#jobs-list a[href^="javascript:"]')).toHaveCount(0);
+
+        // A failed fetch says so on BOTH walls: the Chiffre wall's empty note
+        // alone would read as "nobody is looking", and neither may stay busy.
+        await page.unroute('**/jobs.json*');
+        await page.route('**/jobs.json*', (route) => route.fulfill({ status: 500, body: '' }));
+        await page.goto('/pinnwand.html');
+        await expect(page.locator('#jobs-postings .jobs-fallback__err')).toHaveText('fehlgeschlagen');
+        await expect(page.locator('#chiffre-entries .jobs-fallback__err')).toHaveText('fehlgeschlagen');
+        await expect(page.locator('#jobs-list')).not.toHaveAttribute('aria-busy', /./);
+        await expect(page.locator('#chiffre-list')).not.toHaveAttribute('aria-busy', /./);
     });
 
     test('the how-to is folded away and opens — by click, and from the wall\'s own CTA', async ({ page }) => {
@@ -1060,7 +1101,7 @@ test.describe('Pinnwand', () => {
         // The offer stays open; everything procedural starts collapsed. That is
         // the point of the section — the page is about the wall, not the how-to.
         await expect(page.locator('.jobs-pitch')).toBeVisible();
-        const folds = page.locator('details.jobs-howto');
+        const folds = page.locator('#aufhaengen details.jobs-howto');
         await expect(folds).toHaveCount(2);
 
         // Both folds must stay in the heading outline while collapsed. Here the
@@ -1108,7 +1149,7 @@ test.describe('Pinnwand', () => {
         // names the section that contains the fold — so jobs.js opens it by
         // hand. The visitor must not land on a shut box.
         await expect(folds.nth(0)).not.toHaveAttribute('open', '');
-        await page.locator('.job-panel--invite .job-panel__action').click();
+        await page.locator('#jobs-invite .job-panel__action').click();
         await expect(folds.nth(0)).toHaveAttribute('open', '');
         await expect(page.locator('.jobs-snippet').first()).toBeVisible();
 
