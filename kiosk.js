@@ -69,13 +69,15 @@
   // Canonical clean URL: this is what a phone opens, not a local file path.
   var PINNWAND_URL = "https://bitcircus101.de/pinnwand";
   var PINNWAND_SHORT = "bitcircus101.de/pinnwand";
-  // Notes per pinnwand page. Counted, not measured like the events: every
-  // note is the same shape (one QR, a few lines), and three QR codes of the
-  // size a phone needs from across the room fill a 16:9 screen.
+  // Upper bound on notes per pinnwand page — like `rows`, a cap, not a target:
+  // the page break itself is MEASURED (a portrait wall fits two, a small
+  // screen may fit one). Three QR codes of scannable size fill a 16:9 wall.
   var NOTES_PER_PAGE = 3;
 
   var lastGood = null;   // { events, lastSync, at } — kept across failed fetches
   var lastJobs = null;   // jobs.json as last fetched; null → no pinnwand page
+  var onPinnwand = false; // is a pinnwand page up right now (for the status line)
+  var qrCache = {};      // url + label → SVG markup; emptied on every jobs load
   var failCount = 0;
   var lastClockText = "";
   var page = 0;
@@ -213,6 +215,8 @@
     syncUrl();
     applyChrome();
     if (name === "dwell") restartFlip();
+    // jobs.json is not fetched while the pinnwand is off — fetch it on switch-on
+    if (name === "pinnwand" && value === "on" && !lastJobs) loadJobs();
     // rows/info/source change what a page holds, so the fit must be re-measured
     page = 0;
     render();
@@ -355,20 +359,22 @@
   }
 
   /**
-   * The whole rotation: the event pages first, then the pinnwand pages. Only
-   * the event pages are measured; `page` indexes the combined list.
+   * The whole rotation: the event pages first, then the pinnwand pages. Both
+   * are measured against the screen; `page` indexes the combined list.
    */
   function render() {
     var el = document.getElementById("kiosk-list");
     if (!el) return;
-    var pins = pinnwandPages();
+    var pins = pinnwandPages(el);
     var eventPages = renderEvents(el);
     pageCount = eventPages + pins.length;
+    onPinnwand = false;
     if (page >= pageCount) {
       page = 0;
       renderEvents(el);
     } else if (page >= eventPages) {
       el.innerHTML = pinnwandHtml(pins[page - eventPages]);
+      onPinnwand = true;
     }
   }
 
@@ -470,9 +476,9 @@
      up. The QR matrix comes from the vendored qrcode-generator; this file only
      draws it as SVG.
 
-     A note is { kind, title, sub, short, url, label } — `kind` is only a class
-     modifier, so a second list (e.g. anonymous job-seeker notes) is one more
-     mapping into this shape, not a second renderer. Any failure on this path —
+     A note is { kind, title, sub, facts, short, url, label } — `kind` is only
+     a class modifier, so postings and Chiffre notes are two mappings into one
+     shape, not two renderers. Any failure on this path —
      jobs.json missing, a library that did not load, a URL too long for a QR
      code — drops the note or the page silently: the wall never shows an error
      for a side feature.
@@ -512,47 +518,88 @@
       '<path class="kiosk-qr__fg" d="' + d + '"/></svg>';
   }
 
-  /** The note with its QR code drawn, or null when no code can be made. */
+  /** The note with its QR code drawn, or null when no code can be made. The
+   *  SVG is cached: render() runs on every flip and resize, the codes only
+   *  change when jobs.json does. */
   function withQr(note) {
-    try { note.qr = qrSvg(note.url, note.label); } catch (e) { return null; }
+    var key = note.url + "\n" + note.label;
+    if (!qrCache[key]) {
+      try { qrCache[key] = qrSvg(note.url, note.label); } catch (e) { return null; }
+    }
+    note.qr = qrCache[key];
     return note;
   }
 
   function noteHtml(note) {
-    // The text block is its own wrapper so further lines (e.g. location and
-    // employment type) slot in under the title without touching the layout.
     return '<article class="kiosk-note kiosk-note--' + note.kind + '">' + note.qr +
       '<div class="kiosk-note__text">' +
       '<h2 class="kiosk-note__title">' + esc(note.title) + "</h2>" +
       (note.sub ? '<p class="kiosk-note__sub">' + esc(note.sub) + "</p>" : "") +
+      (note.facts ? '<p class="kiosk-note__facts">' + esc(note.facts) + "</p>" : "") +
       '<p class="kiosk-note__url">' + esc(note.short) + "</p>" +
       "</div></article>";
   }
 
-  /**
-   * The pinnwand pages for the rotation: [] (no page at all) when the setting
-   * is off or the data or a library is missing; one invite note when nothing
-   * is up; otherwise the active postings, NOTES_PER_PAGE at a time.
-   */
-  function pinnwandPages() {
-    if (settings.pinnwand !== "on" || !lastJobs) return [];
-    if (!window.JobsCore || typeof window.qrcode !== "function") return [];
+  /** "a · b" from the parts that are present. */
+  function joinDot(parts) {
+    return parts.filter(function (p) { return p; }).join(" · ");
+  }
+
+  // Same id rule as jobs.js: the id lands in a URL fragment and a label.
+  var CHIFFRE_ID_RE = /^0x[0-9a-f]{2,4}$/;
+
+  /** Active postings and Chiffre notes as wall notes, postings first. */
+  function pinnwandNotes() {
     var Core = window.JobsCore;
+    var today = Core.todayString();
     var notes = [];
-    Core.activeEntries(lastJobs.postings || [], Core.todayString()).forEach(function (p) {
+    Core.activeEntries(lastJobs.postings || [], today).forEach(function (p) {
       var url = safeUrl(p.url);
       if (!url) return;
       var host = new URL(url).host.replace(/^www\./, "");
       var note = withQr({
         kind: "job",
         title: p.title,
-        sub: p.company,
+        sub: joinDot([p.company, p.location]),
+        facts: Core.employmentLabels(p.employment).join(" · "),
         short: host,
         url: url,
         label: "QR-Code zur Stellenanzeige: " + p.title + " bei " + p.company + " (" + host + ")",
       });
       if (note) notes.push(note);
     });
+    Core.activeEntries(lastJobs.chiffre || [], today).forEach(function (c) {
+      var id = String(c.id);
+      if (!CHIFFRE_ID_RE.test(id)) return;
+      var note = withQr({
+        kind: "chiffre",
+        title: c.headline,
+        sub: joinDot([Core.levelLabel(c.level), c.location]),
+        facts: "zuschrift unter chiffre " + id,
+        short: PINNWAND_SHORT,
+        url: PINNWAND_URL + "#chiffre-" + id,
+        label: "QR-Code zur Chiffre " + id + " auf der Pinnwand: " + PINNWAND_SHORT,
+      });
+      if (note) notes.push(note);
+    });
+    return notes;
+  }
+
+  /**
+   * The pinnwand pages for the rotation: [] (no page at all) when the setting
+   * is off or the data or a library is missing; one invite note when nothing
+   * is up; otherwise the active notes, split where the screen is full.
+   *
+   * The split is MEASURED in `el` the way the event pages are: fill until the
+   * next note would overflow, roll it back, start the next page. A portrait
+   * wall stacks the notes, a landscape one lines them up — a counted split
+   * clipped notes on the one or wasted the other. A note taller than the
+   * screen on its own still gets its page, so every note comes up.
+   */
+  function pinnwandPages(el) {
+    if (settings.pinnwand !== "on" || !lastJobs) return [];
+    if (!window.JobsCore || typeof window.qrcode !== "function") return [];
+    var notes = pinnwandNotes();
     if (!notes.length) {
       var invite = withQr({
         kind: "invite",
@@ -565,8 +612,17 @@
       return invite ? [{ more: false, notes: [invite] }] : [];
     }
     var pages = [];
-    for (var i = 0; i < notes.length; i += NOTES_PER_PAGE) {
-      pages.push({ more: true, notes: notes.slice(i, i + NOTES_PER_PAGE) });
+    var i = 0;
+    while (i < notes.length) {
+      var n = 1;
+      // clientHeight 0 = no layout yet: fall back to the cap, like the events
+      while (n < NOTES_PER_PAGE && i + n < notes.length) {
+        el.innerHTML = pinnwandHtml({ more: true, notes: notes.slice(i, i + n + 1) });
+        if (el.clientHeight > 0 && el.scrollHeight > el.clientHeight) break;
+        n++;
+      }
+      pages.push({ more: true, notes: notes.slice(i, i + n) });
+      i += n;
     }
     return pages;
   }
@@ -599,7 +655,7 @@
     if (failCount >= 3) {
       parts.push("⚠ offline seit " + failCount * (REFRESH_MS / 60000) + " min");
     }
-    parts.push("quelle: bitcircus101.de/termine");
+    parts.push("quelle: bitcircus101.de/" + (onPinnwand ? "pinnwand" : "termine"));
     el.textContent = parts.join(" · ");
   }
 
@@ -771,6 +827,7 @@
    * wall's job, the pinnwand is a guest on it.
    */
   function loadJobs() {
+    if (settings.pinnwand !== "on") return;
     fetch(JOBS_URL + "?t=" + Math.floor(Date.now() / 60000), { cache: "no-store" })
       .then(function (res) {
         if (!res.ok) throw new Error("HTTP " + res.status);
@@ -779,6 +836,7 @@
       .then(function (data) {
         if (!data || !Array.isArray(data.postings)) throw new Error("no postings");
         lastJobs = data;
+        qrCache = {};
         // Before the events have answered, rendering would flash "keine daten"
         // over the loading state — their own render picks the pinnwand up.
         if (!lastGood && !failCount) return;
@@ -806,9 +864,9 @@
           at: Date.now(),
         };
         failCount = 0;
-        // Fresh data can change the page count under us — start over at the top
-        // rather than land the wall on a page that no longer means anything.
-        page = 0;
+        // `page` is kept: resetting it here restarted the rotation on every
+        // 5-min refresh, so with enough pages the last ones — the pinnwand —
+        // never came up. render() clamps a page that no longer exists to 0.
         render();
         status();
       })

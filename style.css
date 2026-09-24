@@ -2497,6 +2497,7 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     overflow-wrap: anywhere;
 }
 .kiosk-note__sub { margin: 0; color: var(--ink); }
+.kiosk-note__facts { margin: 0; font-size: 0.85em; color: var(--ink); }
 .kiosk-note__url { margin: 0; font-size: 0.85em; color: var(--ink-dim); }
 .kiosk-note__url::before { content: "→ "; }
 /* A lone note (the invite, or a single posting) takes the room: a bigger
