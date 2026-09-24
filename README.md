@@ -252,18 +252,28 @@ The third key, `chiffre`, holds **anonymous notes from people looking for
 work** ("unter Chiffre", section `#chiffre` on the page). A note carries a
 Chiffre id (`0x` + 2–4 hex digits), a headline, a coarse level
 (`entry`/`experienced`/`senior`), location, employment, 1–8 skills, a short
-`about`, and the same `from`/`months` runtime. No name, no contact: the card's
-only action is a `mailto:info@bitcircus101.de` with subject `CHIFFRE <id>`.
-The gate warns (never fails) when a note looks like it carries contact details.
+`about`, the same `from`/`months` runtime, and an optional `contact`. Notes
+come in **by pull request** like postings (mail to info@ stays open for people
+without git), and **nothing personal goes on a note** — the git history
+forgets nothing, and the page says so in a box above the how-to. The card's
+main action is a `mailto:info@bitcircus101.de` with subject `CHIFFRE <id>`;
+with `contact` — a bare `mailto:` to an address the person chose to make
+public, e.g. an alias; gate and page both check it against
+`JobsCore.CHIFFRE_CONTACT_RE` — a second "direkt schreiben" link sits next to it.
+The gate warns (never fails) when the other fields look like contact details.
 Chiffre notes stay out of `pinnwand/feed.xml` on purpose — a feed reader keeps
 copies after a note comes down.
 
-Maintainer procedure: a person mails the filled-in snippet → pick a free id,
-commit the entry, and store `id → mail address` **outside the repo** (the
-space's password manager). A mail with subject `CHIFFRE <id>` → forward it
-unchanged to that address. Take a note down on request or when it expires, and
-then delete the mapping, the submission mail and the forwarded mails — the
-privacy page promises all three.
+Maintainer procedure: before merging a Chiffre PR, read it for anything
+personal (name, employer, private address — also in the commit and PR text).
+The person picks the id; the gate catches a collision. For the route through
+us, wait for their separate mail with subject `CHIFFRE <id>` and store
+`id → mail address` **outside the repo** (the space's password manager) — a
+private address in the PR itself means: don't merge, ask them to remove it. A
+mailed-in snippet → commit it for them. A company mail with subject
+`CHIFFRE <id>` → forward it unchanged to that address. Take a note down on
+request or when it expires, and then delete the mapping, the submission mail
+and the forwarded mails — the privacy page promises all three.
 
 ```sh
 pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
