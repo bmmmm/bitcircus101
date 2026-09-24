@@ -2461,6 +2461,59 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 .kiosk-empty,
 .kiosk-offline { color: var(--ink-dim); }
 
+/* ── pinnwand page ───────────────────────────────────────────────────────
+   One page in the rotation after the events: the job board's notes, each
+   with a QR code (kiosk.js draws it as SVG). The code is sized in vh because
+   the screen's height is what bounds it (30vh ≈ 20 cm on a 55-inch TV; a
+   lone note gets 50vh). */
+.kiosk-pin { display: flex; flex-direction: column; gap: 1em; min-height: 0; }
+.kiosk-pin__notes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5em 3vw;
+    align-items: flex-start;
+}
+.kiosk-note {
+    flex: 1 1 0;
+    min-width: 30vh;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+}
+.kiosk-qr { display: block; width: 30vh; height: 30vh; flex: none; }
+/* Fixed, never the palette's tokens: dark modules on a light ground in every
+   palette and in both themes. Many phone scanners do not read an inverted
+   code, and a phosphor-green one on black is exactly that. The light square
+   includes the 4-module quiet zone, so it holds on dark paper too. */
+.kiosk-qr__bg { fill: #ffffff; }
+.kiosk-qr__fg { fill: #000000; }
+.kiosk-note__text { display: flex; flex-direction: column; gap: 0.25em; min-width: 0; }
+.kiosk-note__title {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--ink-max);
+    overflow-wrap: anywhere;
+}
+.kiosk-note__sub { margin: 0; color: var(--ink); }
+.kiosk-note__facts { margin: 0; font-size: 0.85em; color: var(--ink); }
+.kiosk-note__url { margin: 0; font-size: 0.85em; color: var(--ink-dim); }
+.kiosk-note__url::before { content: "→ "; }
+/* A lone note (the invite, or a single posting) takes the room: a bigger
+   code with the text beside it instead of under it. */
+.kiosk-note:only-child {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5em 3vw;
+}
+.kiosk-note:only-child .kiosk-qr { width: 50vh; height: 50vh; }
+.kiosk-note:only-child .kiosk-note__text { flex: 1 1 20ch; }
+.kiosk-note:only-child .kiosk-note__title { font-size: 2em; }
+.kiosk-note:only-child .kiosk-note__sub { font-size: 1.2em; }
+.kiosk-pin__more { margin: 0; color: var(--ink-dim); }
+
 .kiosk__bar {
     position: relative;   /* anchors the settings panel above it */
     display: flex;
