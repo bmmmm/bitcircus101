@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-24T16:17:14.577Z",
+  "lastSync": "2026-09-24T17:17:12.018Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-24T16:17:14.223Z",
+      "fetchedAt": "2026-09-24T17:17:11.957Z",
       "status": "ok",
-      "events": 19,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 58,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-24T16:17:14.556Z",
+      "fetchedAt": "2026-09-24T17:17:11.965Z",
       "status": "ok",
-      "events": 21,
+      "events": 20,
       "added": 0,
       "removed": 0,
       "total": 52,
@@ -173,7 +173,7 @@
       "#gaming": {
         "ics": "/feeds/tag/gaming.ics",
         "rss": "/feeds/tag/gaming.xml",
-        "count": 2
+        "count": 1
       },
       "#lightning-talks": {
         "ics": "/feeds/tag/lightning-talks.ics",
@@ -188,7 +188,7 @@
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
-        "count": 7
+        "count": 8
       },
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
@@ -226,38 +226,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 19
+        "count": 20
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 21
+        "count": 20
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "id": "2584e7559146",
-      "title": "Spieleabend",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-09-24",
-      "time": "19:00",
-      "endDate": "2026-09-24",
-      "endTime": "22:00",
-      "tags": [
-        "#gaming"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "19efb037-b521-4f7b-b508-bd63eb3b292b",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "recurring": true,
-      "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
     {
       "id": "1d9a350e2120",
       "title": "Casual Linkup@bitcircus101 (4FR)",
@@ -1070,6 +1050,27 @@
       "uid": "36f59fc2-7422-47d0-bc19-38bed610e3ac",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-09-10T19:17:13.849Z"
+    },
+    {
+      "id": "eaacb806a193",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-13",
+      "time": "20:00",
+      "endDate": "2026-11-13",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-05-09T10:12:20.662Z"
     }
   ]
 }
