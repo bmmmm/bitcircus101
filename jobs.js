@@ -106,10 +106,10 @@
     var until = Core.formatDay(Core.lastDay(entry.from, entry.months));
     var subject = "CHIFFRE " + entry.id;
     var body =
-      "Hallo " + entry.id + ",\n\n" +
-      "wir sind: \n" +
-      "wir bieten: \n" +
-      "so erreichst du uns: \n";
+      "Hallo " + entry.id + ",\r\n\r\n" +
+      "wir sind: \r\n" +
+      "wir bieten: \r\n" +
+      "so erreichst du uns: \r\n";
     var href =
       "mailto:" + CHIFFRE_MAIL +
       "?subject=" + encodeURIComponent(subject) +
@@ -193,8 +193,16 @@
       "<p>Einen Zettel aufhängen geht trotzdem: " +
       '<a href="#aufhaengen">so geht das ↓</a></p></div>';
     list.removeAttribute("aria-busy");
-    // The Chiffre wall keeps its static empty note; it only stops loading.
+    // The Chiffre wall says so too — its empty note alone would read as "no
+    // notes up" when they merely failed to load.
     var chiffre = document.getElementById("chiffre-list");
+    var chiffreEntries = document.getElementById("chiffre-entries");
+    if (chiffreEntries) {
+      chiffreEntries.innerHTML =
+        '<div class="jobs-fallback">' +
+        '<p class="jobs-fallback__cmd">chiffre laden: ' +
+        '<span class="jobs-fallback__err">fehlgeschlagen</span></p></div>';
+    }
     if (chiffre) chiffre.removeAttribute("aria-busy");
   }
 
