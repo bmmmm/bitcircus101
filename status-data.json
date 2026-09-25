@@ -321,13 +321,6 @@
       "cancelled": false
     },
     {
-      "id": "506a1fe5fa40",
-      "date": "2025-11-12",
-      "title": "Treffen: Bolle-Bonn.de",
-      "series": "special",
-      "cancelled": false
-    },
-    {
       "id": "5ce0eb62f802",
       "date": "2025-11-14",
       "title": "Casual Linkup@bitcircus101 (2FR)",
@@ -1332,6 +1325,13 @@
       "id": "30ed98eb1c1c",
       "date": "2026-09-29",
       "title": "Look at my toys!",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "506a1fe5fa40",
+      "date": "2026-09-29",
+      "title": "Treffen: Bolle-Bonn.de",
       "series": "special",
       "cancelled": false
     },

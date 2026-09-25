@@ -935,27 +935,6 @@
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
-    "506a1fe5fa40": {
-      "id": "506a1fe5fa40",
-      "title": "Treffen: Bolle-Bonn.de",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstraße 101 Bonn",
-      "date": "2025-11-12",
-      "time": "20:00",
-      "endDate": "2025-11-12",
-      "endTime": "22:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
-      "calendarUrl": "https://bolle-bonn.de",
-      "eventUrl": "https://bolle-bonn.de",
-      "firstSeen": "2026-09-13T16:50:55.355Z",
-      "lastSeen": "2026-09-13"
-    },
     "5ce0eb62f802": {
       "id": "5ce0eb62f802",
       "title": "Casual Linkup@bitcircus101 (2FR)",
@@ -4136,6 +4115,27 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
       "recurring": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-25"
+    },
+    "506a1fe5fa40": {
+      "id": "506a1fe5fa40",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-09-29",
+      "time": "20:00",
+      "endDate": "2026-09-29",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-25"
     },

@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-09-25T11:17:12.798Z",
+  "lastSync": "2026-09-25T12:17:12.154Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-25T11:17:12.448Z",
+      "fetchedAt": "2026-09-25T12:17:11.975Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-25T11:17:12.780Z",
+      "fetchedAt": "2026-09-25T12:17:12.069Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -158,7 +158,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 12
+        "count": 13
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -188,7 +188,7 @@
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
-        "count": 8
+        "count": 7
       },
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
@@ -320,6 +320,26 @@
       "uid": "2a828714-52b9-4074-a76e-56790ff4720b",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-08-04T16:26:18.904Z"
+    },
+    {
+      "id": "506a1fe5fa40",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-09-29",
+      "time": "20:00",
+      "endDate": "2026-09-29",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-08-31T14:17:23.283Z"
     },
     {
       "id": "8797f899c84a",
@@ -1050,27 +1070,6 @@
       "uid": "36f59fc2-7422-47d0-bc19-38bed610e3ac",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-09-10T19:17:13.849Z"
-    },
-    {
-      "id": "eaacb806a193",
-      "title": "Casual Linkup@bitcircus101 (2FR)",
-      "subtitle": "",
-      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-11-13",
-      "time": "20:00",
-      "endDate": "2026-11-13",
-      "endTime": "23:00",
-      "tags": [
-        "#meetup"
-      ],
-      "type": "linkup",
-      "source": "bitcircus101",
-      "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
-      "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
-      "firstSeen": "2026-05-09T10:12:20.662Z"
     }
   ]
 }
