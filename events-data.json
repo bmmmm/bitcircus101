@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-09-25T16:17:11.801Z",
+  "lastSync": "2026-09-25T17:17:12.934Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-25T16:17:11.617Z",
+      "fetchedAt": "2026-09-25T17:17:12.886Z",
       "status": "ok",
-      "events": 20,
+      "events": 21,
       "added": 0,
       "removed": 0,
       "total": 58,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-25T16:17:11.779Z",
+      "fetchedAt": "2026-09-25T17:17:12.890Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 52,
@@ -163,7 +163,7 @@
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
         "rss": "/feeds/tag/datenburg.xml",
-        "count": 10
+        "count": 9
       },
       "#foss": {
         "ics": "/feeds/tag/foss.ics",
@@ -188,7 +188,7 @@
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
-        "count": 7
+        "count": 8
       },
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
@@ -214,11 +214,6 @@
         "ics": "/feeds/tag/talk.ics",
         "rss": "/feeds/tag/talk.xml",
         "count": 1
-      },
-      "#workshop": {
-        "ics": "/feeds/tag/workshop.ics",
-        "rss": "/feeds/tag/workshop.xml",
-        "count": 1
       }
     },
     "sources": {
@@ -226,16 +221,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 20
+        "count": 21
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 20
+        "count": 19
       }
     },
-    "retired": {}
+    "retired": {
+      "#workshop": "2026-09-25T17:17:12.934Z"
+    }
   },
   "events": [
     {
@@ -630,27 +627,6 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-08-13T18:25:49.154Z"
-    },
-    {
-      "id": "c92f18d1118c",
-      "title": "Raspberry Pi Workshop",
-      "subtitle": "",
-      "description": "https://datenburg.org/veranstaltungen/raspberrypi/",
-      "location": "",
-      "date": "2026-10-15",
-      "time": "19:00",
-      "endDate": "2026-10-15",
-      "endTime": "22:00",
-      "tags": [
-        "#workshop",
-        "#datenburg"
-      ],
-      "type": "workshop",
-      "source": "Datenburg e.V.",
-      "uid": "dccb0e70-ca58-42f6-892d-55909fd35805",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "recurring": true,
-      "firstSeen": "2026-06-16T15:09:02.297Z"
     },
     {
       "id": "8d0fdd318df3",
@@ -1070,6 +1046,27 @@
       "uid": "36f59fc2-7422-47d0-bc19-38bed610e3ac",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "firstSeen": "2026-09-10T19:17:13.849Z"
+    },
+    {
+      "id": "eaacb806a193",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-13",
+      "time": "20:00",
+      "endDate": "2026-11-13",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-05-09T10:12:20.662Z"
     }
   ]
 }
