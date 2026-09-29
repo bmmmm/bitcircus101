@@ -23,37 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20260929T1900@bitcircus101.de
-DTSTAMP:20260519T185916Z
-DTSTART;TZID=Europe/Berlin:20260929T190000
-DTEND;TZID=Europe/Berlin:20260929T220000
-SUMMARY:Look at my toys!
-DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
- tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
- u're welcome to hang out and continue playing and chatting as you like.\nW
- e play inclusive and together. There is stim toys and you can grab somethi
- ng to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woc
- he treffen wir uns zum Spielen\, Puzzeln und Rätseln. Los geht es mit ein
- em Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und we
- iter gespielt\, gerätselt oder einfach nur gequatscht.\nWir spielen inklu
- siv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kü
- hlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&c
- hill #social
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
-CATEGORIES:relax,social,spieletreff
-END:VEVENT
-BEGIN:VEVENT
-UID:2a828714-52b9-4074-a76e-56790ff4720b-20260929T1900@bitcircus101.de
-DTSTAMP:20260804T162618Z
-DTSTART;TZID=Europe/Berlin:20260929T190000
-DTEND;TZID=Europe/Berlin:20260929T200000
-SUMMARY:Spermüll Rausstellen
-DESCRIPTION:Sperrmüll Rausstellen\nAbholung am 30.09\nHilfe wird gebaucht
-URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
-CATEGORIES:community
-END:VEVENT
-BEGIN:VEVENT
 UID:B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20260929T2000@bitcircus101.de
 DTSTAMP:20260831T141723Z
 DTSTART;TZID=Europe/Berlin:20260929T200000
@@ -540,5 +509,38 @@ DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:19471ECE-D83E-4AA6-B70D-545B3F281B66-20261120T2000@bitcircus101.de
+DTSTAMP:20260515T211510Z
+DTSTART;TZID=Europe/Berlin:20261120T200000
+DTEND;TZID=Europe/Berlin:20261120T223000
+SUMMARY:Linkup@bitcircus101
+DESCRIPTION:Linkup@bitcircus101 is our signature monthly meetup for anyone 
+ in Bonn’s tech scene to come together\, share ideas and unwind. Every th
+ ird Friday of the month starting at 8 PM\, we kick things off with a serie
+ s of lightning talks—short\, punchy presentations (3 slides in 3 minutes
+  each) where people can showcase a project\, demo a tool or pose a new que
+ stion. After the talks\, the formal program wraps up and we transition int
+ o an open\, relaxed hangout: you can grab a drink or snack\, pull up a cha
+ ir and dive into conversations with fellow tech-enthusiasts in a friendly\
+ , low-pressure atmosphere.\n\nOn all the other Fridays\, we host Casual Li
+ nkup at the same time—no talks\, just a laid-back environment to brainst
+ orm\, get feedback\, troubleshoot problems or simply meet others who love 
+ technology. Whether you’re here to present or to listen\, to ask questio
+ ns or to offer advice\, Linkup is all about building real human connection
+ s around shared tech interests
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup,lightning-talks,talk
+END:VEVENT
+BEGIN:VEVENT
+UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261124T1800@bitcircus101.de
+DTSTAMP:20260616T150902Z
+DTSTART;TZID=Europe/Berlin:20261124T180000
+DTEND;TZID=Europe/Berlin:20261124T220000
+SUMMARY:Offene Datenburg
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:datenburg,offener-abend
 END:VEVENT
 END:VCALENDAR
