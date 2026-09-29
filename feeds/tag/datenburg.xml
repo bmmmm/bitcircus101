@@ -11,7 +11,7 @@
       <title>bitcircus101 – Termine: #datenburg</title>
       <link>https://bitcircus101.de/events</link>
     </image>
-    <lastBuildDate>Wed, 02 Sep 2026 08:17:11 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 29 Sep 2026 20:06:45 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/datenburg.xml" rel="self" type="application/rss+xml"/>
 
     <item>
@@ -54,6 +54,17 @@ https://ev.phosh.mobi/de/blog/hackspace-meetup-bonn-2026-10/</description>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
       <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261013T1800</guid>
+    </item>
+    <item>
+      <title>[2026-10-16 17:00] Exkursion zum Hackspace in Andernach (haxko e.V.)?</title>
+      <link>https://bitcircus101.de/e/153a20bcef2f/</link>
+      <description>Details noch nicht klar.
+Der Hackspace öffnet um 18:00 Uhr und ist direkt beim Bahnhof.
+Siehe Matrix: Hackertours@Datenburg.</description>
+      <content:encoded>&lt;p&gt;Details noch nicht klar.&lt;br /&gt;Der Hackspace öffnet um 18:00 Uhr und ist direkt beim Bahnhof.&lt;br /&gt;Siehe Matrix: Hackertours@Datenburg.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/153a20bcef2f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <pubDate>Tue, 29 Sep 2026 20:06:45 +0000</pubDate>
+      <guid isPermaLink="false">8811dfb1-cad2-4236-9daa-30486ef66754-20261016T1700</guid>
     </item>
     <item>
       <title>[2026-10-20 18:00] Offene Datenburg</title>

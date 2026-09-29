@@ -66,6 +66,17 @@ URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:datenburg,offener-abend
 END:VEVENT
 BEGIN:VEVENT
+UID:8811dfb1-cad2-4236-9daa-30486ef66754-20261016T1700@bitcircus101.de
+DTSTAMP:20260929T200645Z
+DTSTART;TZID=Europe/Berlin:20261016T170000
+DTEND;TZID=Europe/Berlin:20261016T230000
+SUMMARY:Exkursion zum Hackspace in Andernach (haxko e.V.)?
+DESCRIPTION:Details noch nicht klar.\nDer Hackspace öffnet um 18:00 Uhr un
+ d ist direkt beim Bahnhof.\nSiehe Matrix: Hackertours@Datenburg.
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:datenburg
+END:VEVENT
+BEGIN:VEVENT
 UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261020T1800@bitcircus101.de
 DTSTAMP:20260616T150902Z
 DTSTART;TZID=Europe/Berlin:20261020T180000
