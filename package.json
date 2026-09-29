@@ -22,7 +22,8 @@
     "test:unit": "node --test tests/*.spec.mjs",
     "test:e2e": "playwright test",
     "test:headed": "playwright test --headed",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "deps:check": "pnpm run test:unit"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1"
