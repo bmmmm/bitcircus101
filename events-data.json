@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-09-29T17:17:15.203Z",
+  "lastSync": "2026-09-29T18:17:14.602Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-29T17:17:14.984Z",
+      "fetchedAt": "2026-09-29T18:17:14.505Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-29T17:17:15.073Z",
+      "fetchedAt": "2026-09-29T18:17:14.579Z",
       "status": "ok",
       "events": 19,
       "added": 0,
@@ -158,7 +158,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 12
+        "count": 11
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -198,17 +198,17 @@
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 7
+        "count": 8
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 7
+        "count": 8
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 7
+        "count": 8
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -235,26 +235,6 @@
     }
   },
   "events": [
-    {
-      "id": "506a1fe5fa40",
-      "title": "Treffen: Bolle-Bonn.de",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstraße 101 Bonn",
-      "date": "2026-09-29",
-      "time": "20:00",
-      "endDate": "2026-09-29",
-      "endTime": "22:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
-      "calendarUrl": "https://bolle-bonn.de",
-      "eventUrl": "https://bolle-bonn.de",
-      "firstSeen": "2026-08-31T14:17:23.283Z"
-    },
     {
       "id": "8797f899c84a",
       "title": "Treffen: Bolle-Bonn.de",
@@ -1071,6 +1051,28 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "id": "51bcf0379262",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-24",
+      "time": "19:00",
+      "endDate": "2026-11-24",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     }
   ]
 }

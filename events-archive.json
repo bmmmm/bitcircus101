@@ -5108,6 +5108,28 @@
       "recurring": true,
       "firstSeen": "2026-09-28T17:17:16.567Z",
       "lastSeen": "2026-09-29"
+    },
+    "5b4f5ac61ac7": {
+      "id": "5b4f5ac61ac7",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2027-01-27",
+      "time": "20:00",
+      "endDate": "2027-01-27",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-09-29T18:17:14.602Z",
+      "lastSeen": "2026-09-29"
     }
   }
 }

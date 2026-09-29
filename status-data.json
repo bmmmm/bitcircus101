@@ -1635,6 +1635,13 @@
       "title": "Look at my toys!",
       "series": "special",
       "cancelled": false
+    },
+    {
+      "id": "5b4f5ac61ac7",
+      "date": "2027-01-27",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
     }
   ]
 }
