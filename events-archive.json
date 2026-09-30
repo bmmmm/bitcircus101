@@ -4318,6 +4318,27 @@
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-30"
     },
+    "a3d56ef0b824": {
+      "id": "a3d56ef0b824",
+      "title": "Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI",
+      "subtitle": "",
+      "description": "https://machdenstaat.de/blog/hack-den-stadtrat/",
+      "location": "Dorotheenstraße 101, 53113 Bonn",
+      "date": "2026-10-17",
+      "time": "11:00",
+      "endDate": "2026-10-17",
+      "endTime": "11:00",
+      "tags": [
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "hack-den-stadtrat@machdenstaat.de",
+      "calendarUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
+      "eventUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
+      "firstSeen": "2026-09-30T21:11:47.441Z",
+      "lastSeen": "2026-09-30"
+    },
     "c984f4ae68c1": {
       "id": "c984f4ae68c1",
       "title": "Look at my toys!",

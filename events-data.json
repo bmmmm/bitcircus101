@@ -1,22 +1,22 @@
 {
-  "lastSync": "2026-09-30T20:17:13.224Z",
+  "lastSync": "2026-09-30T21:11:47.441Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-09-30T20:17:12.959Z",
+      "fetchedAt": "2026-09-30T21:11:47.029Z",
       "status": "ok",
       "events": 20,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 58,
+      "total": 59,
       "past": 3,
-      "upcoming": 55
+      "upcoming": 56
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-09-30T20:17:13.200Z",
+      "fetchedAt": "2026-09-30T21:11:47.287Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -85,7 +85,8 @@
       "A74487C2-42C1-48FF-A2BA-00AB6388CC2B",
       "7F2C9A14-3B6D-4E58-9C1A-0D9E2F6A8B30",
       "51FBAB7D-F2D1-49C6-AAC8-F94504DFF459",
-      "a35f62f7-3be4-4941-a1ac-ea4044eb41b5@bitcircus101.de"
+      "a35f62f7-3be4-4941-a1ac-ea4044eb41b5@bitcircus101.de",
+      "hack-den-stadtrat@machdenstaat.de"
     ],
     "Datenburg e.V.": [
       "a027fbdd-6b08-4f8b-89c4-65fbcd7f2c66",
@@ -194,22 +195,22 @@
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
         "rss": "/feeds/tag/offener-abend.xml",
-        "count": 8
+        "count": 9
       },
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 8
+        "count": 7
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 8
+        "count": 7
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 8
+        "count": 7
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -546,6 +547,26 @@
       "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-15T21:15:10.361Z"
+    },
+    {
+      "id": "a3d56ef0b824",
+      "title": "Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI",
+      "subtitle": "",
+      "description": "https://machdenstaat.de/blog/hack-den-stadtrat/",
+      "location": "Dorotheenstraße 101, 53113 Bonn",
+      "date": "2026-10-17",
+      "time": "11:00",
+      "endDate": "2026-10-17",
+      "endTime": "11:00",
+      "tags": [
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "hack-den-stadtrat@machdenstaat.de",
+      "calendarUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
+      "eventUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
+      "firstSeen": "2026-09-30T21:11:47.428Z"
     },
     {
       "id": "48886128d3e4",
@@ -1050,28 +1071,6 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
-    },
-    {
-      "id": "51bcf0379262",
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-11-24",
-      "time": "19:00",
-      "endDate": "2026-11-24",
-      "endTime": "22:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "recurring": true,
-      "firstSeen": "2026-05-19T18:59:16.839Z"
     }
   ]
 }

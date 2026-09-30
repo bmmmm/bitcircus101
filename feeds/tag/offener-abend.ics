@@ -41,6 +41,17 @@ URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:datenburg,offener-abend
 END:VEVENT
 BEGIN:VEVENT
+UID:hack-den-stadtrat@machdenstaat.de-20261017T1100@bitcircus101.de
+DTSTAMP:20260930T211147Z
+DTSTART;TZID=Europe/Berlin:20261017T110000
+DTEND;TZID=Europe/Berlin:20261017T110000
+SUMMARY:Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI
+DESCRIPTION:https://machdenstaat.de/blog/hack-den-stadtrat/
+LOCATION:Dorotheenstraße 101\, 53113 Bonn
+URL:https://machdenstaat.de/blog/hack-den-stadtrat/
+CATEGORIES:offener-abend
+END:VEVENT
+BEGIN:VEVENT
 UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261020T1800@bitcircus101.de
 DTSTAMP:20260616T150902Z
 DTSTART;TZID=Europe/Berlin:20261020T180000

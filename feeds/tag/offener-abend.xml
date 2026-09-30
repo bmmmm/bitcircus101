@@ -11,7 +11,7 @@
       <title>bitcircus101 – Termine: #offener-abend</title>
       <link>https://bitcircus101.de/events</link>
     </image>
-    <lastBuildDate>Tue, 16 Jun 2026 15:09:02 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 30 Sep 2026 21:11:47 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/offener-abend.xml" rel="self" type="application/rss+xml"/>
 
     <item>
@@ -33,6 +33,15 @@
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
       <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261013T1800</guid>
+    </item>
+    <item>
+      <title>[2026-10-17 11:00] Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI @ Dorotheenstraße 101, 53113 Bonn</title>
+      <link>https://bitcircus101.de/e/a3d56ef0b824/</link>
+      <description>https://machdenstaat.de/blog/hack-den-stadtrat/</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://machdenstaat.de/blog/hack-den-stadtrat/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://machdenstaat.de/blog/hack-den-stadtrat/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a3d56ef0b824/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#offener-abend</category>
+      <pubDate>Wed, 30 Sep 2026 21:11:47 +0000</pubDate>
+      <guid isPermaLink="false">hack-den-stadtrat@machdenstaat.de-20261017T1100</guid>
     </item>
     <item>
       <title>[2026-10-20 18:00] Offene Datenburg</title>
