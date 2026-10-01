@@ -1649,6 +1649,13 @@
       "title": "Treffen: Bolle-Bonn.de",
       "series": "special",
       "cancelled": false
+    },
+    {
+      "id": "58f1419ef19c",
+      "date": "2027-01-29",
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "series": "linkup",
+      "cancelled": false
     }
   ]
 }

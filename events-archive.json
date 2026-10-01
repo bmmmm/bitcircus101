@@ -5151,6 +5151,28 @@
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-29T18:17:14.602Z",
       "lastSeen": "2026-10-01"
+    },
+    "58f1419ef19c": {
+      "id": "58f1419ef19c",
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-29",
+      "time": "20:00",
+      "endDate": "2027-01-29",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "A181B019-30E9-40E0-8250-45DC8DF5B788",
+      "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-10-01T18:17:13.257Z",
+      "lastSeen": "2026-10-01"
     }
   }
 }
