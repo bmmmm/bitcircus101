@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-10-01T07:18:22.829Z",
+  "lastSync": "2026-10-01T08:17:15.081Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-01T07:18:22.690Z",
+      "fetchedAt": "2026-10-01T08:17:14.839Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-01T07:18:22.813Z",
+      "fetchedAt": "2026-10-01T08:17:14.953Z",
       "status": "ok",
       "events": 20,
       "added": 0,
@@ -557,7 +557,7 @@
       "date": "2026-10-17",
       "time": "11:00",
       "endDate": "2026-10-17",
-      "endTime": "11:00",
+      "endTime": "19:00",
       "tags": [
         "#offener-abend"
       ],
