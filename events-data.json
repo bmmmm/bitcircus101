@@ -1,13 +1,13 @@
 {
-  "lastSync": "2026-10-01T15:17:13.866Z",
+  "lastSync": "2026-10-01T16:17:19.261Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-01T15:17:13.701Z",
+      "fetchedAt": "2026-10-01T16:17:19.099Z",
       "status": "ok",
-      "events": 20,
-      "added": 59,
+      "events": 21,
+      "added": 0,
       "removed": 0,
       "total": 59,
       "past": 3,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-01T15:17:13.846Z",
+      "fetchedAt": "2026-10-01T16:17:18.082Z",
       "status": "ok",
-      "events": 20,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 53,
@@ -160,7 +160,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 10
+        "count": 9
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -200,17 +200,17 @@
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 7
+        "count": 8
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 7
+        "count": 8
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 7
+        "count": 8
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -223,13 +223,13 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 20
+        "count": 21
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 20
+        "count": 19
       }
     },
     "retired": {
@@ -237,26 +237,6 @@
     }
   },
   "events": [
-    {
-      "id": "753144bf386d",
-      "title": "Interner Burgabend",
-      "subtitle": "",
-      "description": "",
-      "location": "",
-      "date": "2026-10-01",
-      "time": "18:00",
-      "endDate": "2026-10-01",
-      "endTime": "23:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "88fda39c-f934-44ad-b8e8-67e2cd9a2931",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "recurring": true,
-      "firstSeen": "2026-06-11T18:34:04.184Z"
-    },
     {
       "id": "3309141a8e57",
       "title": "Casual Linkup@bitcircus101 (1FR)",
@@ -1071,6 +1051,28 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "id": "51bcf0379262",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-24",
+      "time": "19:00",
+      "endDate": "2026-11-24",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     }
   ]
 }
