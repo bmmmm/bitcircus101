@@ -24,15 +24,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # Single source of truth for the Playwright image tag: package.json. A
+  # hand-kept tag in this file drifted when Dependabot bumped @playwright/test
+  # (1.63.0 vs image v1.62.0 → no matching chromium → every E2E test failed).
+  playwright-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: v
+        run: echo "version=$(node -p "require('./package.json').devDependencies['@playwright/test']")" >> "$GITHUB_OUTPUT"
+
   test:
+    needs: playwright-version
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # Browsers + OS deps are baked into the image, so there is no fragile
     # `playwright install --with-deps` download step (which hung repeatedly and
     # which caching can't save us from: this site deploys less often than the
     # 7-day cache-eviction window, so the browser cache is always cold). The tag
-    # MUST match the pinned @playwright/test version in package.json.
-    container: mcr.microsoft.com/playwright:v1.63.0-jammy
+    # follows the exact @playwright/test pin in package.json (job above).
+    container: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-jammy
     # Match the calendar's Europe/Berlin floating-local times when generating
     # events-data.json / feed.xml and running the (date-sensitive) unit tests.
     env:
