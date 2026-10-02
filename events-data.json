@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-10-02T18:17:15.705Z",
+  "lastSync": "2026-10-02T19:17:15.919Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-02T18:17:15.681Z",
+      "fetchedAt": "2026-10-02T19:17:15.814Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,14 +16,14 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-02T18:17:14.635Z",
+      "fetchedAt": "2026-10-02T19:17:15.732Z",
       "status": "ok",
       "events": 19,
-      "added": 0,
+      "added": 1,
       "removed": 0,
-      "total": 53,
+      "total": 54,
       "past": 6,
-      "upcoming": 47
+      "upcoming": 48
     }
   ],
   "icsKeys": {
@@ -141,6 +141,7 @@
       "30648a7a-fe00-4aaa-b2fe-63d167941ce5",
       "489ee138-a1e2-484e-8af7-07326db13fb7",
       "616b35a9-4e04-4be3-aa63-199b3bf93e8a",
+      "5c6922eb-0e63-42dc-a525-4f75d38644f1",
       "57633315-cc75-4e91-b65a-ae41aad699c4",
       "d3a70a41-a602-4960-b0f8-7f19f966d890"
     ]
@@ -244,11 +245,11 @@
   },
   "events": [
     {
-      "id": "eeb6e38114ed",
-      "title": "Digital Independence Day (DID)",
+      "id": "85f1fa047ce0",
+      "title": "Digital Independence Day (DID) in der Brotfabrik",
       "subtitle": "",
       "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
-      "location": "Bornheimer Straße 25, Bonn",
+      "location": "Kreuzstraße 16, 53225 Bonn-Beuel",
       "date": "2026-10-04",
       "time": "14:00",
       "endDate": "2026-10-04",
@@ -258,10 +259,10 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
+      "uid": "5c6922eb-0e63-42dc-a525-4f75d38644f1",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
-      "firstSeen": "2026-05-02T13:08:46.350Z"
+      "firstSeen": "2026-10-02T19:17:15.833Z"
     },
     {
       "id": "bdd744ba8e08",
@@ -723,11 +724,11 @@
       "firstSeen": "2026-09-09T17:53:45.441Z"
     },
     {
-      "id": "cdf2a6e36bfd",
-      "title": "Digital Independence Day (DID)",
+      "id": "4d09fb025f2e",
+      "title": "Digital Independence Day (DID) in der Brotfabrik",
       "subtitle": "",
       "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
-      "location": "Bornheimer Straße 25, Bonn",
+      "location": "Kreuzstraße 16, 53225 Bonn-Beuel",
       "date": "2026-11-01",
       "time": "14:00",
       "endDate": "2026-11-01",
@@ -737,10 +738,10 @@
       ],
       "type": "special",
       "source": "Datenburg e.V.",
-      "uid": "aa6c53d5-be01-41d4-8b78-72bda610b0ce",
+      "uid": "5c6922eb-0e63-42dc-a525-4f75d38644f1",
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
-      "firstSeen": "2026-05-02T13:08:46.350Z"
+      "firstSeen": "2026-10-02T19:17:15.833Z"
     },
     {
       "id": "a98115321382",

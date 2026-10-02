@@ -23,14 +23,14 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261004T1400@bitcircus101.de
-DTSTAMP:20260502T130846Z
+UID:5c6922eb-0e63-42dc-a525-4f75d38644f1-20261004T1400@bitcircus101.de
+DTSTAMP:20261002T191715Z
 DTSTART;TZID=Europe/Berlin:20261004T140000
 DTEND;TZID=Europe/Berlin:20261004T160000
-SUMMARY:Digital Independence Day (DID)
+SUMMARY:Digital Independence Day (DID) in der Brotfabrik
 DESCRIPTION:Treffen für Menschen\, die Unterstützung zu Themen rund um de
  n DID suchen und/oder sich austauschen wollen. https://di.day/
-LOCATION:Bornheimer Straße 25\, Bonn
+LOCATION:Kreuzstraße 16\, 53225 Bonn-Beuel
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
 END:VEVENT
@@ -124,14 +124,14 @@ URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:datenburg,offener-abend
 END:VEVENT
 BEGIN:VEVENT
-UID:aa6c53d5-be01-41d4-8b78-72bda610b0ce-20261101T1400@bitcircus101.de
-DTSTAMP:20260502T130846Z
+UID:5c6922eb-0e63-42dc-a525-4f75d38644f1-20261101T1400@bitcircus101.de
+DTSTAMP:20261002T191715Z
 DTSTART;TZID=Europe/Berlin:20261101T140000
 DTEND;TZID=Europe/Berlin:20261101T160000
-SUMMARY:Digital Independence Day (DID)
+SUMMARY:Digital Independence Day (DID) in der Brotfabrik
 DESCRIPTION:Treffen für Menschen\, die Unterstützung zu Themen rund um de
  n DID suchen und/oder sich austauschen wollen. https://di.day/
-LOCATION:Bornheimer Straße 25\, Bonn
+LOCATION:Kreuzstraße 16\, 53225 Bonn-Beuel
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
 END:VEVENT
