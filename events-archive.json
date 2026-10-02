@@ -4183,6 +4183,27 @@
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-02"
     },
+    "bdd744ba8e08": {
+      "id": "bdd744ba8e08",
+      "title": "25. Bonner Dialog für Cybersicherheit (BDCS)",
+      "subtitle": "",
+      "description": "Bonner Dialog für Cybersicherheit (BDCS)\nmit dem aktuellen Thema\n»Digitale Souveränität«\n\nWann?\nDonnerstag, 06. Oktober 2026, 17:30 bis 20:30 Uhr\nWo?\nHörsaal 2, Campus Poppelsdorf, Friedrich-Hirzebruch-Allee 5, 53113 Bonn\n\nWer Sicherheit in der Defensive mit Selbstbestimmung im Aufbau verbindet, bleibt langfristig am Ball. Diese sportliche Weisheit lässt sich auch auf digitale Souveränität, dem zentralen Thema des 25. Bonner Dialogs für Cybersicherheit, anwenden. Zum Jubiläum der Veranstaltungsreihe diskutieren führende Experten unter dem Titel »Selbstbestimmt, sicher, souverän – Deutschlands digitaler Drahtseilakt« über die Frage, wie digitale Souveränität in Deutschland und Europa konkret gestaltet werden kann – von Open-Source-Strategien über resiliente Infrastrukturen bis hin zu praktischen Herausforderungen in Verwaltung und Unternehmen.\n\nIn ihrem Impulsvortrag berichtet Isabell Weiß, CISO des Landes Schleswig-Holstein, von den Erfahrungen und Perspektiven des Landes bezüglich digitaler Souveränität sowie von der Open-Source-Strategie, deren operativer Umsetzung und den damit verbundenen Herausforderungen.\nIm anschließenden Podiumsgespräch kommen verschiedene fachliche Blickwinkel zusammen.\nIsabell Weiß bringt die Perspektive der Verwaltung ein, während Bianca Kastl, Entwicklerin und digitale Erklärbärin, das Thema aus gesellschaftlicher Sicht einordnet. Zudem gewährt Daniel Kästle, CISO bei IONOS, Einblicke aus der unternehmerischen Praxis.\n\nWeitere Informationen und Anmeldung unter:\nhttps://www.fkie.fraunhofer.de/bdcs\n\nDie Veranstaltung ist kostenfrei. Um verbindliche Anmeldung wird gebeten.\nWir freuen uns auf einen anregenden Austausch!\n\nMit freundlichen Grüßen\n\nProf. Dr. Michael Meier\nAbteilungsleiter Cyber Security\nFraunhofer FKIE",
+      "location": "Universität Bonn – Campus Poppelsdorf Friedrich-Hirzebruch-Allee 5, 53115 Bonn",
+      "date": "2026-10-06",
+      "time": "17:30",
+      "endDate": "2026-10-06",
+      "endTime": "20:30",
+      "tags": [
+        "#talk",
+        "#security"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "CC04C129-B0F9-4754-8F2B-E3F6D300AD5B",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "firstSeen": "2026-10-02T16:28:59.450Z",
+      "lastSeen": "2026-10-02"
+    },
     "bb806176eec6": {
       "id": "bb806176eec6",
       "title": "Look at my toys!",
