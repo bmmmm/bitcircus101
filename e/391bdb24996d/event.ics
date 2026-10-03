@@ -3,7 +3,7 @@ VERSION:2.0
 PRODID:-//bitcircus101//events//DE
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:bitcircus101 – Termine: #workshop
+X-WR-CALNAME:bitcircus101 – Termine
 X-WR-TIMEZONE:Europe/Berlin
 BEGIN:VTIMEZONE
 TZID:Europe/Berlin
@@ -23,21 +23,9 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:hack-den-stadtrat@machdenstaat.de-20261017T1100@bitcircus101.de
-DTSTAMP:20260930T211147Z
-DTSTART;TZID=Europe/Berlin:20261017T110000
-DTEND;TZID=Europe/Berlin:20261017T190000
-SUMMARY:Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI
-DESCRIPTION:⁨https://machdenstaat.de/blog/hack-den-stadtrat/⁩\n#worksho
- p
-LOCATION:Dorotheenstraße 101\, 53113 Bonn
-URL:https://machdenstaat.de/blog/hack-den-stadtrat/
-CATEGORIES:workshop,offener-abend
-END:VEVENT
-BEGIN:VEVENT
 UID:hack-den-stadtrat-20261017@machdenstaat.de-20261017T1100@bitcircus101.d
  e
-DTSTAMP:20261003T110748Z
+DTSTAMP:20261003T110749Z
 DTSTART;TZID=Europe/Berlin:20261017T110000
 DTEND;TZID=Europe/Berlin:20261017T190000
 SUMMARY:Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI

@@ -4339,17 +4339,40 @@
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-03"
     },
-    "a3d56ef0b824": {
-      "id": "a3d56ef0b824",
+    "391bdb24996d": {
+      "id": "391bdb24996d",
       "title": "Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI",
       "subtitle": "",
-      "description": "https://machdenstaat.de/blog/hack-den-stadtrat/",
+      "description": "Samstag, 17. Oktober 2026, ab 11 Uhr, Ende offen. Kostenlos und ohne Anmeldung, kein Programmierwissen nötig.\n⁨https://code.paderta.com/hack-den-stadtrat/⁩\n#workshop",
       "location": "Dorotheenstraße 101, 53113 Bonn",
       "date": "2026-10-17",
       "time": "11:00",
       "endDate": "2026-10-17",
       "endTime": "19:00",
       "tags": [
+        "#workshop",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "hack-den-stadtrat-20261017@machdenstaat.de",
+      "calendarUrl": "https://code.paderta.com/hack-den-stadtrat/",
+      "eventUrl": "https://code.paderta.com/hack-den-stadtrat/",
+      "firstSeen": "2026-10-03T11:07:49.039Z",
+      "lastSeen": "2026-10-03"
+    },
+    "a3d56ef0b824": {
+      "id": "a3d56ef0b824",
+      "title": "Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI",
+      "subtitle": "",
+      "description": "⁨https://machdenstaat.de/blog/hack-den-stadtrat/⁩\n#workshop",
+      "location": "Dorotheenstraße 101, 53113 Bonn",
+      "date": "2026-10-17",
+      "time": "11:00",
+      "endDate": "2026-10-17",
+      "endTime": "19:00",
+      "tags": [
+        "#workshop",
         "#offener-abend"
       ],
       "type": "special",

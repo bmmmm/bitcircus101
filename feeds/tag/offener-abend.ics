@@ -46,10 +46,25 @@ DTSTAMP:20260930T211147Z
 DTSTART;TZID=Europe/Berlin:20261017T110000
 DTEND;TZID=Europe/Berlin:20261017T190000
 SUMMARY:Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI
-DESCRIPTION:https://machdenstaat.de/blog/hack-den-stadtrat/
+DESCRIPTION:⁨https://machdenstaat.de/blog/hack-den-stadtrat/⁩\n#worksho
+ p
 LOCATION:Dorotheenstraße 101\, 53113 Bonn
 URL:https://machdenstaat.de/blog/hack-den-stadtrat/
-CATEGORIES:offener-abend
+CATEGORIES:workshop,offener-abend
+END:VEVENT
+BEGIN:VEVENT
+UID:hack-den-stadtrat-20261017@machdenstaat.de-20261017T1100@bitcircus101.d
+ e
+DTSTAMP:20261003T110748Z
+DTSTART;TZID=Europe/Berlin:20261017T110000
+DTEND;TZID=Europe/Berlin:20261017T190000
+SUMMARY:Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI
+DESCRIPTION:Samstag\, 17. Oktober 2026\, ab 11 Uhr\, Ende offen. Kostenlos 
+ und ohne Anmeldung\, kein Programmierwissen nötig.\n⁨https://code.pader
+ ta.com/hack-den-stadtrat/⁩\n#workshop
+LOCATION:Dorotheenstraße 101\, 53113 Bonn
+URL:https://code.paderta.com/hack-den-stadtrat/
+CATEGORIES:workshop,offener-abend
 END:VEVENT
 BEGIN:VEVENT
 UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261020T1800@bitcircus101.de

@@ -166,10 +166,25 @@ DTSTAMP:20260930T211147Z
 DTSTART;TZID=Europe/Berlin:20261017T110000
 DTEND;TZID=Europe/Berlin:20261017T190000
 SUMMARY:Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI
-DESCRIPTION:https://machdenstaat.de/blog/hack-den-stadtrat/
+DESCRIPTION:⁨https://machdenstaat.de/blog/hack-den-stadtrat/⁩\n#worksho
+ p
 LOCATION:Dorotheenstraße 101\, 53113 Bonn
 URL:https://machdenstaat.de/blog/hack-den-stadtrat/
-CATEGORIES:offener-abend
+CATEGORIES:workshop,offener-abend
+END:VEVENT
+BEGIN:VEVENT
+UID:hack-den-stadtrat-20261017@machdenstaat.de-20261017T1100@bitcircus101.d
+ e
+DTSTAMP:20261003T110748Z
+DTSTART;TZID=Europe/Berlin:20261017T110000
+DTEND;TZID=Europe/Berlin:20261017T190000
+SUMMARY:Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI
+DESCRIPTION:Samstag\, 17. Oktober 2026\, ab 11 Uhr\, Ende offen. Kostenlos 
+ und ohne Anmeldung\, kein Programmierwissen nötig.\n⁨https://code.pader
+ ta.com/hack-den-stadtrat/⁩\n#workshop
+LOCATION:Dorotheenstraße 101\, 53113 Bonn
+URL:https://code.paderta.com/hack-den-stadtrat/
+CATEGORIES:workshop,offener-abend
 END:VEVENT
 BEGIN:VEVENT
 UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261020T1900@bitcircus101.de
@@ -371,26 +386,5 @@ DESCRIPTION:Linkup@bitcircus101 is our signature monthly meetup for anyone
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://bitcircus101.de
 CATEGORIES:meetup,lightning-talks,talk
-END:VEVENT
-BEGIN:VEVENT
-UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261124T1900@bitcircus101.de
-DTSTAMP:20260519T185916Z
-DTSTART;TZID=Europe/Berlin:20261124T190000
-DTEND;TZID=Europe/Berlin:20261124T220000
-SUMMARY:Look at my toys!
-DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
- tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
- u're welcome to hang out and continue playing and chatting as you like.\nW
- e play inclusive and together. There is stim toys and you can grab somethi
- ng to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woc
- he treffen wir uns zum Spielen\, Puzzeln und Rätseln. Los geht es mit ein
- em Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und we
- iter gespielt\, gerätselt oder einfach nur gequatscht.\nWir spielen inklu
- siv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kü
- hlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&c
- hill #social
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
-CATEGORIES:relax,social,spieletreff
 END:VEVENT
 END:VCALENDAR

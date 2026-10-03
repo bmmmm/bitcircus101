@@ -3,7 +3,7 @@
   <channel>
     <title>bitcircus101 – Termine: #workshop</title>
     <link>https://bitcircus101.de/events</link>
-    <description>Dieses Schlagwort kommt derzeit in keinem Termin vor.</description>
+    <description>Gefiltert nach #workshop – alle Termine mit diesem Schlagwort.</description>
     <language>de-de</language>
     <ttl>30</ttl>
     <image>
@@ -11,7 +11,29 @@
       <title>bitcircus101 – Termine: #workshop</title>
       <link>https://bitcircus101.de/events</link>
     </image>
+    <lastBuildDate>Sat, 03 Oct 2026 11:07:48 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/workshop.xml" rel="self" type="application/rss+xml"/>
 
+    <item>
+      <title>[2026-10-17 11:00] Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI @ Dorotheenstraße 101, 53113 Bonn</title>
+      <link>https://bitcircus101.de/e/a3d56ef0b824/</link>
+      <description>⁨https://machdenstaat.de/blog/hack-den-stadtrat/⁩</description>
+      <content:encoded>&lt;p&gt;⁨&lt;a href=&quot;https://machdenstaat.de/blog/hack-den-stadtrat/⁩&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://machdenstaat.de/blog/hack-den-stadtrat/⁩&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a3d56ef0b824/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#workshop</category>
+      <category>#offener-abend</category>
+      <pubDate>Wed, 30 Sep 2026 21:11:47 +0000</pubDate>
+      <guid isPermaLink="false">hack-den-stadtrat@machdenstaat.de-20261017T1100</guid>
+    </item>
+    <item>
+      <title>[2026-10-17 11:00] Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI @ Dorotheenstraße 101, 53113 Bonn</title>
+      <link>https://bitcircus101.de/e/391bdb24996d/</link>
+      <description>Samstag, 17. Oktober 2026, ab 11 Uhr, Ende offen. Kostenlos und ohne Anmeldung, kein Programmierwissen nötig.
+⁨https://code.paderta.com/hack-den-stadtrat/⁩</description>
+      <content:encoded>&lt;p&gt;Samstag, 17. Oktober 2026, ab 11 Uhr, Ende offen. Kostenlos und ohne Anmeldung, kein Programmierwissen nötig.&lt;br /&gt;⁨&lt;a href=&quot;https://code.paderta.com/hack-den-stadtrat/⁩&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://code.paderta.com/hack-den-stadtrat/⁩&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/391bdb24996d/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#workshop</category>
+      <category>#offener-abend</category>
+      <pubDate>Sat, 03 Oct 2026 11:07:48 +0000</pubDate>
+      <guid isPermaLink="false">hack-den-stadtrat-20261017@machdenstaat.de-20261017T1100</guid>
+    </item>
   </channel>
 </rss>
