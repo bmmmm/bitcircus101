@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-10-04T06:13:10.458Z",
+  "lastSync": "2026-10-04T06:17:11.574Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-04T06:13:10.331Z",
+      "fetchedAt": "2026-10-04T06:17:11.441Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-04T06:13:10.391Z",
+      "fetchedAt": "2026-10-04T06:17:11.559Z",
       "status": "ok",
       "events": 19,
       "added": 0,
