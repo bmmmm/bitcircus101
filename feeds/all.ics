@@ -23,18 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:5c6922eb-0e63-42dc-a525-4f75d38644f1-20261004T1400@bitcircus101.de
-DTSTAMP:20261002T191715Z
-DTSTART;TZID=Europe/Berlin:20261004T140000
-DTEND;TZID=Europe/Berlin:20261004T160000
-SUMMARY:Digital Independence Day (DID) in der Brotfabrik
-DESCRIPTION:Treffen für Menschen\, die Unterstützung zu Themen rund um de
- n DID suchen und/oder sich austauschen wollen. https://di.day/
-LOCATION:Kreuzstraße 16\, 53225 Bonn-Beuel
-URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
-CATEGORIES:community
-END:VEVENT
-BEGIN:VEVENT
 UID:CC04C129-B0F9-4754-8F2B-E3F6D300AD5B-20261006T1730@bitcircus101.de
 DTSTAMP:20261002T162859Z
 DTSTART;TZID=Europe/Berlin:20261006T173000
@@ -574,5 +562,26 @@ DTEND;TZID=Europe/Berlin:20261124T220000
 SUMMARY:Offene Datenburg
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:datenburg,offener-abend
+END:VEVENT
+BEGIN:VEVENT
+UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261124T1900@bitcircus101.de
+DTSTAMP:20260519T185916Z
+DTSTART;TZID=Europe/Berlin:20261124T190000
+DTEND;TZID=Europe/Berlin:20261124T220000
+SUMMARY:Look at my toys!
+DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
+ tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
+ u're welcome to hang out and continue playing and chatting as you like.\nW
+ e play inclusive and together. There is stim toys and you can grab somethi
+ ng to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woc
+ he treffen wir uns zum Spielen\, Puzzeln und Rätseln. Los geht es mit ein
+ em Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und we
+ iter gespielt\, gerätselt oder einfach nur gequatscht.\nWir spielen inklu
+ siv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kü
+ hlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&c
+ hill #social
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+CATEGORIES:relax,social,spieletreff
 END:VEVENT
 END:VCALENDAR

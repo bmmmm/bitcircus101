@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-10-04T11:17:11.262Z",
+  "lastSync": "2026-10-04T12:17:16.185Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-04T11:17:11.054Z",
+      "fetchedAt": "2026-10-04T12:17:15.843Z",
       "status": "ok",
-      "events": 21,
+      "events": 22,
       "added": 0,
       "removed": 0,
       "total": 60,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-04T11:17:11.239Z",
+      "fetchedAt": "2026-10-04T12:17:16.055Z",
       "status": "ok",
-      "events": 19,
+      "events": 18,
       "added": 0,
       "removed": 0,
       "total": 54,
@@ -162,7 +162,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 9
+        "count": 8
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -202,7 +202,7 @@
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 7
+        "count": 8
       },
       "#security": {
         "ics": "/feeds/tag/security.ics",
@@ -212,12 +212,12 @@
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 7
+        "count": 8
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 7
+        "count": 8
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -235,38 +235,18 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 21
+        "count": 22
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 19
+        "count": 18
       }
     },
     "retired": {}
   },
   "events": [
-    {
-      "id": "85f1fa047ce0",
-      "title": "Digital Independence Day (DID) in der Brotfabrik",
-      "subtitle": "",
-      "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
-      "location": "Kreuzstraße 16, 53225 Bonn-Beuel",
-      "date": "2026-10-04",
-      "time": "14:00",
-      "endDate": "2026-10-04",
-      "endTime": "16:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "5c6922eb-0e63-42dc-a525-4f75d38644f1",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "recurring": true,
-      "firstSeen": "2026-10-02T19:17:15.833Z"
-    },
     {
       "id": "bdd744ba8e08",
       "title": "25. Bonner Dialog für Cybersicherheit (BDCS)",
@@ -1082,6 +1062,28 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "id": "51bcf0379262",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-24",
+      "time": "19:00",
+      "endDate": "2026-11-24",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "recurring": true,
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     }
   ]
 }
