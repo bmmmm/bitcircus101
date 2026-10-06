@@ -103,4 +103,14 @@ DESCRIPTION:Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
 END:VEVENT
+BEGIN:VEVENT
+UID:B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20261125T2000@bitcircus101.de
+DTSTAMP:20260831T141723Z
+DTSTART;TZID=Europe/Berlin:20261125T200000
+DTEND;TZID=Europe/Berlin:20261125T220000
+SUMMARY:Treffen: Bolle-Bonn.de
+LOCATION:Dorotheenstraße 101 Bonn
+URL:https://bolle-bonn.de
+CATEGORIES:community
+END:VEVENT
 END:VCALENDAR

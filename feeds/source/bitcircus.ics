@@ -23,43 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:CC04C129-B0F9-4754-8F2B-E3F6D300AD5B-20261006T1730@bitcircus101.de
-DTSTAMP:20261002T162859Z
-DTSTART;TZID=Europe/Berlin:20261006T173000
-DTEND;TZID=Europe/Berlin:20261006T203000
-SUMMARY:25. Bonner Dialog für Cybersicherheit (BDCS)
-DESCRIPTION:Bonner Dialog für Cybersicherheit (BDCS)\nmit dem aktuellen Th
- ema\n»Digitale Souveränität«\n\nWann?\nDonnerstag\, 06. Oktober 2026\,
-  17:30 bis 20:30 Uhr\nWo?\nHörsaal 2\, Campus Poppelsdorf\, Friedrich-Hir
- zebruch-Allee 5\, 53113 Bonn\n\nWer Sicherheit in der Defensive mit Selbst
- bestimmung im Aufbau verbindet\, bleibt langfristig am Ball. Diese sportli
- che Weisheit lässt sich auch auf digitale Souveränität\, dem zentralen 
- Thema des 25. Bonner Dialogs für Cybersicherheit\, anwenden. Zum Jubiläu
- m der Veranstaltungsreihe diskutieren führende Experten unter dem Titel 
- »Selbstbestimmt\, sicher\, souverän – Deutschlands digitaler Drahtseil
- akt« über die Frage\, wie digitale Souveränität in Deutschland und Eur
- opa konkret gestaltet werden kann – von Open-Source-Strategien über res
- iliente Infrastrukturen bis hin zu praktischen Herausforderungen in Verwal
- tung und Unternehmen.\n\nIn ihrem Impulsvortrag berichtet Isabell Weiß\, 
- CISO des Landes Schleswig-Holstein\, von den Erfahrungen und Perspektiven 
- des Landes bezüglich digitaler Souveränität sowie von der Open-Source-S
- trategie\, deren operativer Umsetzung und den damit verbundenen Herausford
- erungen.\nIm anschließenden Podiumsgespräch kommen verschiedene fachlich
- e Blickwinkel zusammen.\nIsabell Weiß bringt die Perspektive der Verwaltu
- ng ein\, während Bianca Kastl\, Entwicklerin und digitale Erklärbärin\,
-  das Thema aus gesellschaftlicher Sicht einordnet. Zudem gewährt Daniel K
- ästle\, CISO bei IONOS\, Einblicke aus der unternehmerischen Praxis.\n\nW
- eitere Informationen und Anmeldung unter:\nhttps://www.fkie.fraunhofer.de/
- bdcs\n\nDie Veranstaltung ist kostenfrei. Um verbindliche Anmeldung wird g
- ebeten.\nWir freuen uns auf einen anregenden Austausch!\n\nMit freundliche
- n Grüßen\n\nProf. Dr. Michael Meier\nAbteilungsleiter Cyber Security\nFr
- aunhofer FKIE
-LOCATION:Universität Bonn – Campus Poppelsdorf Friedrich-Hirzebruch-Alle
- e 5\, 53115 Bonn
-URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
-CATEGORIES:talk,security
-END:VEVENT
-BEGIN:VEVENT
 UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261006T1900@bitcircus101.de
 DTSTAMP:20260519T185916Z
 DTSTART;TZID=Europe/Berlin:20261006T190000
@@ -407,5 +370,15 @@ DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
 CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20261125T2000@bitcircus101.de
+DTSTAMP:20260831T141723Z
+DTSTART;TZID=Europe/Berlin:20261125T200000
+DTEND;TZID=Europe/Berlin:20261125T220000
+SUMMARY:Treffen: Bolle-Bonn.de
+LOCATION:Dorotheenstraße 101 Bonn
+URL:https://bolle-bonn.de
+CATEGORIES:community
 END:VEVENT
 END:VCALENDAR
