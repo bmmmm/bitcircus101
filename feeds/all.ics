@@ -23,27 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261006T1900@bitcircus101.de
-DTSTAMP:20260519T185916Z
-DTSTART;TZID=Europe/Berlin:20261006T190000
-DTEND;TZID=Europe/Berlin:20261006T220000
-SUMMARY:Look at my toys!
-DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
- tarting with a topic such as a card game or a jigsaw puzzle. Afterwards yo
- u're welcome to hang out and continue playing and chatting as you like.\nW
- e play inclusive and together. There is stim toys and you can grab somethi
- ng to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woc
- he treffen wir uns zum Spielen\, Puzzeln und Rätseln. Los geht es mit ein
- em Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und we
- iter gespielt\, gerätselt oder einfach nur gequatscht.\nWir spielen inklu
- siv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kü
- hlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&c
- hill #social
-LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
-CATEGORIES:relax,social,spieletreff
-END:VEVENT
-BEGIN:VEVENT
 UID:36f59fc2-7422-47d0-bc19-38bed610e3ac-20261008T1900@bitcircus101.de
 DTSTAMP:20260910T191713Z
 DTSTART;TZID=Europe/Berlin:20261008T190000
@@ -556,5 +535,18 @@ DTEND;TZID=Europe/Berlin:20261126T220000
 SUMMARY:Spieleabend
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:gaming
+END:VEVENT
+BEGIN:VEVENT
+UID:casual-linkup-4fr@bitcircus101.de-20261127T2000@bitcircus101.de
+DTSTAMP:20260423T190953Z
+DTSTART;TZID=Europe/Berlin:20261127T200000
+DTEND;TZID=Europe/Berlin:20261127T230000
+SUMMARY:Casual Linkup@bitcircus101 (4FR)
+DESCRIPTION:A relaxed get-together for techies\, creatives\, and curious mi
+ nds in the heart of Bonn. Drop by for a chat\, a drink\, or just to unwind
+ . https://bitcircus101.de
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de
+CATEGORIES:meetup
 END:VEVENT
 END:VCALENDAR

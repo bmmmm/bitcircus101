@@ -1,13 +1,13 @@
 {
-  "lastSync": "2026-10-06T16:17:12.412Z",
+  "lastSync": "2026-10-06T17:17:14.553Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-06T16:17:12.380Z",
+      "fetchedAt": "2026-10-06T17:17:14.302Z",
       "status": "ok",
       "events": 22,
-      "added": 60,
+      "added": 0,
       "removed": 0,
       "total": 60,
       "past": 3,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-06T16:17:12.334Z",
+      "fetchedAt": "2026-10-06T17:17:14.430Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -192,7 +192,7 @@
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
-        "count": 7
+        "count": 8
       },
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
@@ -202,17 +202,17 @@
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 8
+        "count": 7
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 8
+        "count": 7
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 8
+        "count": 7
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -244,28 +244,6 @@
     }
   },
   "events": [
-    {
-      "id": "bb806176eec6",
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-10-06",
-      "time": "19:00",
-      "endDate": "2026-10-06",
-      "endTime": "22:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "recurring": true,
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
     {
       "id": "e60eb1e098f7",
       "title": "Plenum mit anschließendem Essen",
@@ -1081,6 +1059,27 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "id": "c18b498bb7c1",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-27",
+      "time": "20:00",
+      "endDate": "2026-11-27",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-4fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de",
+      "recurring": true,
+      "eventUrl": "https://bitcircus101.de",
+      "firstSeen": "2026-04-23T19:09:53.469Z"
     }
   ]
 }
