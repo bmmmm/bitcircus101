@@ -1677,6 +1677,13 @@
       "title": "Look at my toys!",
       "series": "special",
       "cancelled": false
+    },
+    {
+      "id": "ed8737a59798",
+      "date": "2027-02-05",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "series": "linkup",
+      "cancelled": false
     }
   ]
 }

@@ -128,22 +128,6 @@ Siehe Matrix: Hackertours@Datenburg.</description>
       <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261111T1930</guid>
     </item>
     <item>
-      <title>[2026-11-12 19:00] Plenum mit anschließendem Essen</title>
-      <link>https://bitcircus101.de/e/3623b8f2b696/</link>
-      <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
-      <content:encoded>&lt;p&gt;Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3623b8f2b696/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <pubDate>Thu, 10 Sep 2026 19:17:13 +0000</pubDate>
-      <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261112T1900</guid>
-    </item>
-    <item>
-      <title>[2026-11-12 19:30] Ordentliche Mitgliederversammlung</title>
-      <link>https://bitcircus101.de/e/5b4ac3f9e2de/</link>
-      <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
-      <content:encoded>&lt;p&gt;Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/5b4ac3f9e2de/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <pubDate>Thu, 10 Sep 2026 19:17:13 +0000</pubDate>
-      <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261112T1930</guid>
-    </item>
-    <item>
       <title>[2026-11-17 18:00] Offene Datenburg</title>
       <link>https://bitcircus101.de/e/a57ed04f1780/</link>
       <description>Offene Datenburg · 2026-11-17</description>
@@ -181,6 +165,14 @@ Siehe Matrix: Hackertours@Datenburg.</description>
       <category>#offener-abend</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
       <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261201T1800</guid>
+    </item>
+    <item>
+      <title>[2026-12-03 18:00] Interner Burgabend</title>
+      <link>https://bitcircus101.de/e/a835f2078656/</link>
+      <description>Interner Burgabend · 2026-12-03</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a835f2078656/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
+      <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261203T1800</guid>
     </item>
   </channel>
 </rss>
