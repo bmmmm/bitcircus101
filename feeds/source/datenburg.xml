@@ -15,14 +15,6 @@
     <atom:link href="https://bitcircus101.de/feeds/source/datenburg.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-10-08 19:00] Plenum mit anschließendem Essen</title>
-      <link>https://bitcircus101.de/e/e60eb1e098f7/</link>
-      <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
-      <content:encoded>&lt;p&gt;Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/e60eb1e098f7/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <pubDate>Thu, 10 Sep 2026 19:17:13 +0000</pubDate>
-      <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261008T1900</guid>
-    </item>
-    <item>
       <title>[2026-10-09] Phosh Meetup @ Datenburg</title>
       <link>https://bitcircus101.de/e/a7ab79e10919/</link>
       <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine GTK-basierte Desktop-Umgebung für Linux-basierte Mobilgeräte, u.A. Smartphones.
@@ -179,6 +171,16 @@ Siehe Matrix: Hackertours@Datenburg.</description>
       <category>#gaming</category>
       <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
       <guid isPermaLink="false">19efb037-b521-4f7b-b508-bd63eb3b292b-20261126T1900</guid>
+    </item>
+    <item>
+      <title>[2026-12-01 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/e/ae6bd15f606f/</link>
+      <description>Offene Datenburg · 2026-12-01</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/ae6bd15f606f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261201T1800</guid>
     </item>
   </channel>
 </rss>
