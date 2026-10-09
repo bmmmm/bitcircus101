@@ -23,19 +23,6 @@ RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
 END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
-UID:d3a70a41-a602-4960-b0f8-7f19f966d890-20261009@bitcircus101.de
-DTSTAMP:20260818T163923Z
-DTSTART;VALUE=DATE:20261009
-DTEND;VALUE=DATE:20261012
-SUMMARY:Phosh Meetup
-DESCRIPTION:Das Phosh-Meetup in der Datenburg! Phosh ist eine GTK-basierte 
- Desktop-Umgebung für Linux-basierte Mobilgeräte\, u.A. Smartphones.\nhtt
- ps://ev.phosh.mobi/de/blog/hackspace-meetup-bonn-2026-10/
-LOCATION:Datenburg
-URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
-CATEGORIES:linux,datenburg
-END:VEVENT
-BEGIN:VEVENT
 UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261013T1800@bitcircus101.de
 DTSTAMP:20260616T150902Z
 DTSTART;TZID=Europe/Berlin:20261013T180000
@@ -183,6 +170,18 @@ DTSTAMP:20260611T183404Z
 DTSTART;TZID=Europe/Berlin:20261203T180000
 DTEND;TZID=Europe/Berlin:20261203T230000
 SUMMARY:Interner Burgabend
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:community
+END:VEVENT
+BEGIN:VEVENT
+UID:5c6922eb-0e63-42dc-a525-4f75d38644f1-20261206T1400@bitcircus101.de
+DTSTAMP:20261002T191715Z
+DTSTART;TZID=Europe/Berlin:20261206T140000
+DTEND;TZID=Europe/Berlin:20261206T160000
+SUMMARY:Digital Independence Day (DID) in der Brotfabrik
+DESCRIPTION:Treffen für Menschen\, die Unterstützung zu Themen rund um de
+ n DID suchen und/oder sich austauschen wollen. https://di.day/
+LOCATION:Kreuzstraße 16\, 53225 Bonn-Beuel
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
 END:VEVENT

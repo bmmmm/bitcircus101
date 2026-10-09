@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-10-09T21:17:12.665Z",
+  "lastSync": "2026-10-09T22:17:12.123Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-09T21:17:12.633Z",
+      "fetchedAt": "2026-10-09T22:17:12.056Z",
       "status": "ok",
       "events": 23,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-09T21:17:12.520Z",
+      "fetchedAt": "2026-10-09T22:17:12.095Z",
       "status": "ok",
       "events": 17,
       "added": 0,
@@ -162,12 +162,12 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 7
+        "count": 8
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
         "rss": "/feeds/tag/datenburg.xml",
-        "count": 11
+        "count": 10
       },
       "#foss": {
         "ics": "/feeds/tag/foss.ics",
@@ -187,7 +187,7 @@
       "#linux": {
         "ics": "/feeds/tag/linux.ics",
         "rss": "/feeds/tag/linux.xml",
-        "count": 2
+        "count": 1
       },
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
@@ -244,26 +244,6 @@
     }
   },
   "events": [
-    {
-      "id": "a7ab79e10919",
-      "title": "Phosh Meetup",
-      "subtitle": "",
-      "description": "Das Phosh-Meetup in der Datenburg! Phosh ist eine GTK-basierte Desktop-Umgebung für Linux-basierte Mobilgeräte, u.A. Smartphones.\nhttps://ev.phosh.mobi/de/blog/hackspace-meetup-bonn-2026-10/",
-      "location": "Datenburg",
-      "date": "2026-10-09",
-      "time": "",
-      "endDate": "2026-10-12",
-      "endTime": "",
-      "tags": [
-        "#linux",
-        "#datenburg"
-      ],
-      "type": "special",
-      "source": "Datenburg e.V.",
-      "uid": "d3a70a41-a602-4960-b0f8-7f19f966d890",
-      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
-      "firstSeen": "2026-08-18T16:39:23.867Z"
-    },
     {
       "id": "fc7b7b7f441a",
       "title": "Phosh Meetup!",
@@ -1084,6 +1064,26 @@
       "recurring": true,
       "eventUrl": "https://bitcircus101.de",
       "firstSeen": "2026-05-02T10:51:21.504Z"
+    },
+    {
+      "id": "b52ddf4c0751",
+      "title": "Digital Independence Day (DID) in der Brotfabrik",
+      "subtitle": "",
+      "description": "Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/",
+      "location": "Kreuzstraße 16, 53225 Bonn-Beuel",
+      "date": "2026-12-06",
+      "time": "14:00",
+      "endDate": "2026-12-06",
+      "endTime": "16:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "5c6922eb-0e63-42dc-a525-4f75d38644f1",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
+      "firstSeen": "2026-10-02T19:17:15.833Z"
     }
   ]
 }
