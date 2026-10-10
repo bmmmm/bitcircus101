@@ -185,4 +185,13 @@ LOCATION:Kreuzstraße 16\, 53225 Bonn-Beuel
 URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
 CATEGORIES:community
 END:VEVENT
+BEGIN:VEVENT
+UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261208T1800@bitcircus101.de
+DTSTAMP:20260616T150902Z
+DTSTART;TZID=Europe/Berlin:20261208T180000
+DTEND;TZID=Europe/Berlin:20261208T220000
+SUMMARY:Offene Datenburg
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:datenburg,offener-abend
+END:VEVENT
 END:VCALENDAR

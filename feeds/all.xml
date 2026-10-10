@@ -15,16 +15,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-10-10] Phosh Meetup! @ Bornheimer Straße 25 Bonn</title>
-      <link>https://bitcircus101.de/e/fc7b7b7f441a/</link>
-      <description>Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.</description>
-      <content:encoded>&lt;p&gt;Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/fc7b7b7f441a/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#linux</category>
-      <category>#datenburg</category>
-      <pubDate>Wed, 02 Sep 2026 08:17:11 +0000</pubDate>
-      <guid isPermaLink="false">51FBAB7D-F2D1-49C6-AAC8-F94504DFF459-20261010</guid>
-    </item>
-    <item>
       <title>[2026-10-12 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
       <link>https://bitcircus101.de/e/930208fa5a93/</link>
       <description>Treffen: Bonner FSFE Community · 2026-10-12</description>
@@ -425,6 +415,16 @@ We play inclusive and together. There is stim toys and you can grab something to
       <content:encoded>&lt;p&gt;Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. &lt;a href=&quot;https://di.day/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://di.day/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b52ddf4c0751/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Fri, 02 Oct 2026 19:17:15 +0000</pubDate>
       <guid isPermaLink="false">5c6922eb-0e63-42dc-a525-4f75d38644f1-20261206T1400</guid>
+    </item>
+    <item>
+      <title>[2026-12-08 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/e/b56bdc64676f/</link>
+      <description>Offene Datenburg · 2026-12-08</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b56bdc64676f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261208T1800</guid>
     </item>
   </channel>
 </rss>

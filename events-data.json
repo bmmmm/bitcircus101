@@ -1,12 +1,12 @@
 {
-  "lastSync": "2026-10-10T21:17:15.471Z",
+  "lastSync": "2026-10-10T22:12:56.765Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-10T21:17:15.161Z",
+      "fetchedAt": "2026-10-10T22:12:56.607Z",
       "status": "ok",
-      "events": 23,
+      "events": 22,
       "added": 0,
       "removed": 0,
       "total": 60,
@@ -16,9 +16,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-10T21:17:15.229Z",
+      "fetchedAt": "2026-10-10T22:12:56.701Z",
       "status": "ok",
-      "events": 17,
+      "events": 18,
       "added": 0,
       "removed": 0,
       "total": 54,
@@ -184,11 +184,6 @@
         "rss": "/feeds/tag/lightning-talks.xml",
         "count": 2
       },
-      "#linux": {
-        "ics": "/feeds/tag/linux.ics",
-        "rss": "/feeds/tag/linux.xml",
-        "count": 1
-      },
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
@@ -197,7 +192,7 @@
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
         "rss": "/feeds/tag/offener-abend.xml",
-        "count": 10
+        "count": 11
       },
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
@@ -230,40 +225,21 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 23
+        "count": 22
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 17
+        "count": 18
       }
     },
     "retired": {
+      "#linux": "2026-10-10T22:12:56.765Z",
       "#security": "2026-10-06T16:17:12.412Z"
     }
   },
   "events": [
-    {
-      "id": "fc7b7b7f441a",
-      "title": "Phosh Meetup!",
-      "subtitle": "",
-      "description": "Das Phosh-Meetup in der Datenburg! Phosh ist eine Linux-Shell für Mobiltelefone.",
-      "location": "Bornheimer Straße 25 Bonn",
-      "date": "2026-10-10",
-      "time": "",
-      "endDate": "2026-10-12",
-      "endTime": "",
-      "tags": [
-        "#linux",
-        "#datenburg"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "51FBAB7D-F2D1-49C6-AAC8-F94504DFF459",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
-      "firstSeen": "2026-09-02T08:17:11.734Z"
-    },
     {
       "id": "930208fa5a93",
       "title": "Treffen: Bonner FSFE Community",
@@ -1084,6 +1060,27 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-10-02T19:17:15.833Z"
+    },
+    {
+      "id": "b56bdc64676f",
+      "title": "Offene Datenburg",
+      "subtitle": "",
+      "description": "",
+      "location": "",
+      "date": "2026-12-08",
+      "time": "18:00",
+      "endDate": "2026-12-08",
+      "endTime": "22:00",
+      "tags": [
+        "#datenburg",
+        "#offener-abend"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "c90560a6-876b-4ea8-b8b8-eacb4d12b7b0",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
+      "firstSeen": "2026-06-16T15:09:02.297Z"
     }
   ]
 }
