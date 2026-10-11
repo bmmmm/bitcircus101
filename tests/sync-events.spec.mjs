@@ -414,6 +414,31 @@ describe("parseICS", () => {
     assert.equal(events[0].allDay, false);
   });
 
+  it("ignores the properties of a nested VALARM (Apple writes UID + DESCRIPTION there)", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "UID:event-uid",
+      "DTSTART:20260601T190000",
+      "SUMMARY:Test Event",
+      "DESCRIPTION:The event's own text",
+      "BEGIN:VALARM",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Reminder",
+      "TRIGGER:-PT1H",
+      "UID:alarm-uid",
+      "END:VALARM",
+      "LOCATION:Bonn",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const events = parseICS(ics);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].uid, "event-uid");
+    assert.equal(events[0].description, "The event's own text");
+    assert.equal(events[0].location, "Bonn", "properties after the VALARM still count");
+  });
+
   it("parses all-day event", () => {
     const ics = [
       "BEGIN:VCALENDAR",
