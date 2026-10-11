@@ -144,7 +144,9 @@ describe("expandRRule — MONTHLY with BYSETPOS", () => {
     const rule = "FREQ=MONTHLY;BYDAY=SU;BYSETPOS=1";
     const exdates = [new Date(2026, 1, 1)];
     const dates = expandRRule(dtstart, rule, exdates);
-    const febDates = dates.filter((d) => d.getMonth() === 1);
+    // Year pinned: the horizon is today + 120 days, so from October 2026 on it
+    // reaches February 2027, whose first Sunday is not excluded.
+    const febDates = dates.filter((d) => d.getFullYear() === 2026 && d.getMonth() === 1);
     assert.equal(febDates.length, 0);
   });
 
