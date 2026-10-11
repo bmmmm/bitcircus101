@@ -1684,6 +1684,13 @@
       "title": "Casual Linkup@bitcircus101 (1FR)",
       "series": "linkup",
       "cancelled": false
+    },
+    {
+      "id": "9217428f9ead",
+      "date": "2027-02-08",
+      "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
     }
   ]
 }
