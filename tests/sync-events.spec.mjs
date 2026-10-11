@@ -439,6 +439,25 @@ describe("parseICS", () => {
     assert.equal(events[0].location, "Bonn", "properties after the VALARM still count");
   });
 
+  it("an unclosed nested component does not bleed into the next VEVENT", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART:20260601T190000",
+      "SUMMARY:First",
+      "BEGIN:VALARM",
+      "TRIGGER:-PT1H",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      "DTSTART:20260602T190000",
+      "SUMMARY:Second",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const events = parseICS(ics);
+    assert.deepEqual(events.map((e) => e.summary), ["First", "Second"]);
+  });
+
   it("parses all-day event", () => {
     const ics = [
       "BEGIN:VCALENDAR",
