@@ -254,10 +254,14 @@
     var lines = text.replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
     var events = [];
     var ev = null;
+    // Depth of components nested inside the current VEVENT (VALARM, ...). Their
+    // properties are not the event's: an Apple VALARM carries its own UID and a
+    // DESCRIPTION such as "Reminder", which would overwrite the event's own.
+    var nested = 0;
 
     for (var li = 0; li < lines.length; li++) {
       var line = lines[li];
-      if (line === "BEGIN:VEVENT") { ev = { exdates: [] }; continue; }
+      if (line === "BEGIN:VEVENT") { ev = { exdates: [] }; nested = 0; continue; }
       if (line === "END:VEVENT") {
         if (!ev || !ev.dtstart) { ev = null; continue; }
         var dtstart = parseDate(ev.dtstart);
@@ -307,6 +311,9 @@
         ev = null; continue;
       }
       if (!ev) continue;
+      if (line.indexOf("BEGIN:") === 0) { nested++; continue; }
+      if (line.indexOf("END:") === 0) { if (nested > 0) nested--; continue; }
+      if (nested > 0) continue;
       var ci = line.indexOf(":");
       if (ci === -1) continue;
       var rawKey = line.slice(0, ci);
