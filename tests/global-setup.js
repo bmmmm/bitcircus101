@@ -70,7 +70,15 @@ module.exports = async function globalSetup() {
   // the fallback text committed there is what the e2e should see.
   const home = path.join(os.tmpdir(), `bc101-e2e-home-${process.pid}.html`);
   fs.writeFileSync(home, "<p><!-- status-streak:start --><a>x</a><!-- status-streak:end --></p>\n");
+  // /calendar/ (live-only too) from the fixture's events data — the homepage
+  // and the lite page link it, so the link crawl must find it.
+  const data = path.join(os.tmpdir(), `bc101-e2e-events-${process.pid}.json`);
+  fs.writeFileSync(data, JSON.stringify(buildEventsData()));
   try {
+    execFileSync(process.execPath, ["scripts/build-calendar-page.mjs", data], {
+      cwd: ROOT,
+      stdio: "inherit",
+    });
     execFileSync(process.execPath, ["scripts/build-event-pages.mjs", file], {
       cwd: ROOT,
       stdio: "inherit",
@@ -83,6 +91,7 @@ module.exports = async function globalSetup() {
   } finally {
     fs.rmSync(file, { force: true });
     fs.rmSync(home, { force: true });
+    fs.rmSync(data, { force: true });
   }
 };
 

@@ -124,7 +124,7 @@ Permissions-Policy: geolocation=(), camera=(), microphone=()
   `Strict-Transport-Security` (pins HTTPS for a year). Add a host to `frame-src`
   before embedding any new third party.
 - `img-src data:` covers the logo-slider placeholders; `connect-src` the events
-  page's Nextcloud ICS fallback fetch.
+  page's ICS fallback fetch from the calendar server.
 - `Referrer-Policy` is also a `<meta>` on ten pages — the seven that carry the
   shared chrome plus `/ascii/`, `/chat/` and `404.html` (so it applies even
   without the rule); the header is the authoritative copy and covers all routes. The stubs

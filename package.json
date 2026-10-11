@@ -9,6 +9,7 @@
     "build:logos": "node scripts/build-logo-slider.mjs",
     "build:lite-events": "node scripts/build-lite-events.mjs",
     "build:event-pages": "node scripts/build-event-pages.mjs",
+    "build:calendar-page": "node scripts/build-calendar-page.mjs",
     "build:lite-finanz": "node scripts/build-lite-finanz.mjs",
     "build:pinnwand-feed": "node scripts/build-pinnwand-feed.mjs",
     "build:status-data": "node scripts/build-status-data.mjs",
