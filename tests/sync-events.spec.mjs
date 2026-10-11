@@ -144,7 +144,9 @@ describe("expandRRule — MONTHLY with BYSETPOS", () => {
     const rule = "FREQ=MONTHLY;BYDAY=SU;BYSETPOS=1";
     const exdates = [new Date(2026, 1, 1)];
     const dates = expandRRule(dtstart, rule, exdates);
-    const febDates = dates.filter((d) => d.getMonth() === 1);
+    // Year pinned: the horizon is today + 120 days, so from October 2026 on it
+    // reaches February 2027, whose first Sunday is not excluded.
+    const febDates = dates.filter((d) => d.getFullYear() === 2026 && d.getMonth() === 1);
     assert.equal(febDates.length, 0);
   });
 
@@ -410,6 +412,50 @@ describe("parseICS", () => {
     assert.equal(events[0].description, "A test description");
     assert.equal(events[0].location, "Bonn");
     assert.equal(events[0].allDay, false);
+  });
+
+  it("ignores the properties of a nested VALARM (Apple writes UID + DESCRIPTION there)", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "UID:event-uid",
+      "DTSTART:20260601T190000",
+      "SUMMARY:Test Event",
+      "DESCRIPTION:The event's own text",
+      "BEGIN:VALARM",
+      "ACTION:DISPLAY",
+      "DESCRIPTION:Reminder",
+      "TRIGGER:-PT1H",
+      "UID:alarm-uid",
+      "END:VALARM",
+      "LOCATION:Bonn",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const events = parseICS(ics);
+    assert.equal(events.length, 1);
+    assert.equal(events[0].uid, "event-uid");
+    assert.equal(events[0].description, "The event's own text");
+    assert.equal(events[0].location, "Bonn", "properties after the VALARM still count");
+  });
+
+  it("an unclosed nested component does not bleed into the next VEVENT", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      "DTSTART:20260601T190000",
+      "SUMMARY:First",
+      "BEGIN:VALARM",
+      "TRIGGER:-PT1H",
+      "END:VEVENT",
+      "BEGIN:VEVENT",
+      "DTSTART:20260602T190000",
+      "SUMMARY:Second",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const events = parseICS(ics);
+    assert.deepEqual(events.map((e) => e.summary), ["First", "Second"]);
   });
 
   it("parses all-day event", () => {
