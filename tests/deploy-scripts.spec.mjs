@@ -68,6 +68,7 @@ describe("live-overlay.mjs", () => {
         write(dir, "e/abc123def456/index.html", "generated-event-page");
         write(dir, "e/abc123def456/event.ics", "generated-event-ics");
         write(dir, "archiv/index.html", "generated-archive-index");
+        write(dir, "calendar/index.html", "generated-calendar-page");
         // deliberately NO ical.ics / feed.xml / events/ical.ics → the
         // missing-file case that aborted the old bash loop (d558e5a)
         return dir;
@@ -94,6 +95,7 @@ describe("live-overlay.mjs", () => {
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/index.html"), "utf8"), "generated-event-page");
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/event.ics"), "utf8"), "generated-event-ics");
         assert.equal(fs.readFileSync(path.join(dir, "archiv/index.html"), "utf8"), "generated-archive-index");
+        assert.equal(fs.readFileSync(path.join(dir, "calendar/index.html"), "utf8"), "generated-calendar-page");
         // funding.json is tracked on main and feeds inject-layout's footer
         // percent — main's copy must overwrite whatever live still holds
         assert.equal(fs.readFileSync(path.join(dir, "funding.json"), "utf8"), "seed-funding");
@@ -137,6 +139,9 @@ describe("live-overlay.mjs", () => {
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/index.html"), "utf8"), "generated-event-page");
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/event.ics"), "utf8"), "generated-event-ics");
         assert.equal(fs.readFileSync(path.join(dir, "archiv/index.html"), "utf8"), "generated-archive-index");
+        // /calendar/ is the redirect target of the old Nextcloud view link —
+        // a deploy that pruned it would turn that redirect into a 404
+        assert.equal(fs.readFileSync(path.join(dir, "calendar/index.html"), "utf8"), "generated-calendar-page");
     });
 });
 

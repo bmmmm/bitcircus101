@@ -1544,6 +1544,7 @@ test.describe('No JavaScript errors', () => {
         ['/events.html', 'Events'],
         [`/e/${FIXTURE_EVENT_ID}/`, 'Event detail'],
         ['/archiv/', 'Archiv'],
+        ['/calendar/', 'Calendar'],
         ['/support.html', 'Support'],
         ['/pinnwand.html', 'Pinnwand'],
         ['/raum-nutzen.html', 'Raum nutzen'],
