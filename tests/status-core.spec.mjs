@@ -187,6 +187,16 @@ describe("ladder", () => {
       assert.ok(b.length > at(0).length, `+${y} years must show more history than today`);
       assert.equal(b.some((x) => x.merged), false, `+${y} years must not fold yet`);
     }
+    // The fold edge, pinned: +21 years fills MAX_BARS exactly without folding,
+    // +22 folds the oldest two years into one bar ending on a year boundary.
+    const full = at(21);
+    assert.equal(full.length, Core.MAX_BARS);
+    assert.equal(full.some((x) => x.merged), false);
+    const folded = at(22);
+    assert.equal(folded[0].merged, true);
+    assert.equal(folded[0].label, "vor 2027");
+    assert.equal(folded[0].to, "2026-12-31");
+    assert.equal(folded[1].label, "2027");
     const far = at(200);
     assert.equal(far.length, Core.MAX_BARS);
     assert.equal(far[0].merged, true);
