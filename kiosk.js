@@ -376,6 +376,8 @@
       el.innerHTML = pinnwandHtml(pins[page - eventPages]);
       onPinnwand = true;
     }
+    var path = document.querySelector(".kiosk__path");
+    if (path) path.textContent = onPinnwand ? "/pinnwand" : "/termine";
   }
 
   /**
