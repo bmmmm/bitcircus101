@@ -252,12 +252,24 @@
    * Parse VEVENTs into a flat list. Extracts the full field superset
    * (uid/url/categories/tzid); consumers ignore what they don't need.
    * Recurring events are expanded into one entry per occurrence.
+   *
+   * A VEVENT with RECURRENCE-ID is an override of ONE occurrence of the series
+   * that shares its UID (RFC5545 §3.8.4.4): editing a single instance in
+   * Nextcloud/Apple Calendar — a rename, a moved time — writes one of these next
+   * to the master. It replaces that occurrence: the override is emitted as a
+   * recurring instance (so its card id is uid|date, the same id the plain
+   * occurrence had when it keeps its day), and the master's occurrence on the
+   * RECURRENCE-ID day is dropped. Ignoring RECURRENCE-ID left both — a phantom
+   * duplicate — and made a renamed occurrence a separate one-off.
    */
   function parseICS(text, sourceId) {
     sourceId = sourceId || "?";
     var lines = text.replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
     var events = [];
     var ev = null;
+    // uid + "|" + day of every override seen, to drop the master occurrences they
+    // replace once the whole file is read (an override may precede its master).
+    var overridden = {};
     // Depth of components nested inside the current VEVENT (VALARM, ...). Their
     // properties are not the event's: an Apple VALARM carries its own UID and a
     // DESCRIPTION such as "Reminder", which would overwrite the event's own.
@@ -303,6 +315,7 @@
             // Every occurrence shares the series UID, so the card id has to add the
             // date for these — a one-off keeps a date-free id and survives a move.
             inst.recurring = true;
+            inst.fromRRule = true;
             inst.dtstart = d;
             inst.dtend = durationMs != null ? new Date(d.getTime() + durationMs) : null;
             events.push(inst);
@@ -310,6 +323,11 @@
         } else {
           base.dtstart = dtstart;
           base.dtend = durationMs != null ? new Date(dtstart.getTime() + durationMs) : null;
+          var rid = ev.recurrenceId ? parseDate(ev.recurrenceId) : null;
+          if (rid && base.uid) {
+            base.recurring = true;
+            overridden[base.uid + "|" + rid.toDateString()] = true;
+          }
           events.push(base);
         }
         ev = null; continue;
@@ -339,6 +357,7 @@
         ev.url = u && u.charAt(0) !== "/" && !/^https?:\/\//i.test(u) ? "https://" + u : u;
       }
       else if (key === "RRULE") ev.rrule = val;
+      else if (key === "RECURRENCE-ID") ev.recurrenceId = val.trim();
       else if (key === "EXDATE") {
         val.split(",").forEach(function (v) {
           var d = parseDate(v.trim());
@@ -346,7 +365,16 @@
         });
       }
     }
-    return events;
+    // Drop the master occurrences that an override replaced. Matched by day, like
+    // EXDATE above: RECURRENCE-ID names the occurrence's original DTSTART.
+    var out = [];
+    for (var i = 0; i < events.length; i++) {
+      var e = events[i];
+      var replaced = e.fromRRule && overridden[e.uid + "|" + e.dtstart.toDateString()];
+      delete e.fromRRule;
+      if (!replaced) out.push(e);
+    }
+    return out;
   }
 
   /**
