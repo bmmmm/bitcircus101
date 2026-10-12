@@ -339,9 +339,12 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday()) {
     parts.push(`                <p class="event-page__subtitle">${esc(entry.subtitle)}</p>`);
   }
   if (entry.cancelled) {
-    parts.push(
-      `                <p class="event-page__notice">Dieser Termin ist nicht mehr im Kalender.</p>`
-    );
+    // Two ways into `cancelled` (see mergeArchive): the owner marked the title,
+    // or the entry vanished from the export — say which one the reader sees.
+    const notice = entry.cancelledBy === "title"
+      ? "Dieser Termin ist abgesagt."
+      : "Dieser Termin ist nicht mehr im Kalender.";
+    parts.push(`                <p class="event-page__notice">${notice}</p>`);
   } else if (entry.date < todayStr) {
     parts.push(`                <p class="event-page__past">vergangener Termin</p>`);
   }

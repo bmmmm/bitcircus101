@@ -285,8 +285,13 @@ describe("renderEventPage", () => {
     assert.match(past, /class="event-page__past">vergangener Termin</);
     assert.ok(!past.includes("event-page__notice"), "a past event is not a cancelled one");
 
-    const dead = renderEventPage(entry({ cancelled: true }), CHROME, TODAY);
+    const dead = renderEventPage(entry({ cancelled: true, cancelledBy: "vanished" }), CHROME, TODAY);
     assert.match(dead, /class="event-page__notice">Dieser Termin ist nicht mehr im Kalender\.</);
+    const legacy = renderEventPage(entry({ cancelled: true }), CHROME, TODAY); // archive written before cancelledBy existed
+    assert.match(legacy, /class="event-page__notice">Dieser Termin ist nicht mehr im Kalender\.</);
+    const marked = renderEventPage(entry({ title: "CANCELED: Vortrag", cancelled: true, cancelledBy: "title" }), CHROME, TODAY);
+    assert.match(marked, /class="event-page__notice">Dieser Termin ist abgesagt\.</);
+    assert.ok(!marked.includes("nicht mehr im Kalender"), "a marked title is still in the calendar");
 
     const upcoming = renderEventPage(entry(), CHROME, TODAY);
     assert.ok(!upcoming.includes("event-page__past"), "an upcoming event was called past");
