@@ -413,6 +413,16 @@ describe("expandRRule — long-running series without COUNT", () => {
       assert(upcoming.length > 0, `${rule} from ${dtstart.toISOString()} has nothing upcoming`);
     });
   }
+
+  // Without the cap only a positive step ends the DAILY walk — a malformed
+  // INTERVAL in a third-party feed must not hang the sync.
+  for (const bad of ["0", "-1", "0.5", "abc"]) {
+    it(`DAILY with INTERVAL=${bad} terminates as daily`, () => {
+      const dates = expandRRule(ago(10), `FREQ=DAILY;INTERVAL=${bad}`, []);
+      assert(dates.length > 1);
+      assert.equal(Math.round((dates[1] - dates[0]) / 86400000), 1);
+    });
+  }
 });
 
 // ── parseICS ──────────────────────────────────────────────────────────────

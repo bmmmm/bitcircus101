@@ -65,7 +65,9 @@
     var exSet = {};
     exdates.forEach(function (d) { exSet[d.toDateString()] = true; });
     var out = [];
-    var interval = p.INTERVAL ? +p.INTERVAL : 1; // shared by the WEEKLY, MONTHLY-by-monthday + DAILY branches
+    // Shared by the WEEKLY, MONTHLY-by-monthday + DAILY branches. Clamped to a
+    // positive integer: with no COUNT cap, DAILY;INTERVAL=0 would never advance.
+    var interval = Math.max(1, Math.floor(+p.INTERVAL) || 1);
 
     if (p.FREQ === "WEEKLY") {
       // BYDAY may list several weekdays ("MO,WE,FR") — expand every one, not just
