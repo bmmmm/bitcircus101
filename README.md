@@ -313,9 +313,9 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
 - **Expiry is a warning, never an error:** `check-jobs.mjs` runs in both `ci.yml`
   twins and in `deploy.yml`, and failing on an expired posting would turn every
   deploy red on the day one runs out.
-- The donation is checked by hand before the merge — there is no payment
-  webhook, and this is the one deliberately manual step. Verwendungszweck is
-  `JOBS-<id>`; contributors name their channel and date in the PR description.
+- A merge never waits on a donation, and nothing ties a note to a payment —
+  no payment check, no reference code. The page's closing line points at
+  `support.html` and stands on its own.
 - No amounts and no contact details ever enter `jobs.json`. Postings link to a
   vacancy hosted by the company; Chiffre notes are the one kind of applicant
   data in the file — pseudonymous, and their only action is the relay mail.
