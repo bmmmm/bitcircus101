@@ -180,10 +180,20 @@
     return (fnv1a32(key, 0x811c9dc5) + fnv1a32(key, 0x050c5d1f)).slice(0, 12);
   }
 
+  /**
+   * The "→ kalender" target for a card without an event URL. A Nextcloud
+   * calendar view (…/apps/calendar/…) opens on the event's day; any other
+   * calendar page (bitcircus101.de/calendar/) has no day route and is linked as is.
+   */
+  function calendarHref(url, date) {
+    var base = String(url || "").replace(/\/+$/, "");
+    return /\/apps\/calendar\//.test(base + "/") ? base + "/timeGridDay/" + date : url;
+  }
+
   /** ONE parsed ICS event → ONE card. Pure — no date filtering, no cap, no sort. */
   function toCard(e, cal) {
     // External calendars (ics-single, ics-filtered) link directly to event/program
-    // pages; built-in Nextcloud sources use the timeGridDay day view, so we keep
+    // pages; the other sources link their calendar page (calendarHref), so we keep
     // eventUrl unset.
     var isExternal = cal.type === "ics-filtered" || cal.type === "ics-single";
     // ICS URL > config-level eventUrl > calendar-level url (external only)
@@ -271,6 +281,7 @@
     cleanLocation: cleanLocation,
     truncateDesc: truncateDesc,
     stripTagLines: stripTagLines,
+    calendarHref: calendarHref,
     fnv1a32: fnv1a32,
     eventId: eventId,
     toCard: toCard,

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * sync-events.mjs — Fetches ICS from Nextcloud calendars, generates events-data.json + feed.xml
+ * sync-events.mjs — Fetches the calendars' ICS feeds, generates events-data.json + feed.xml
  * Reads calendar sources via the manifest calendars/config.json. Add new calendars there — no code changes needed.
  * Runs in GitHub Actions (Node 22, no dependencies).
  */

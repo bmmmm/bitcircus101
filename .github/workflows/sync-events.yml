@@ -64,6 +64,11 @@ jobs:
       - name: Build the status page data
         run: node scripts/build-status-data.mjs
 
+      # /calendar/ — the subscribe page, listed from the feeds manifest the
+      # sync just wrote. Same template contract as the event pages.
+      - name: Build the calendar page
+        run: node scripts/build-calendar-page.mjs
+
       - name: Commit and push if changed
         run: |
           git config user.name  "github-actions[bot]"
@@ -80,7 +85,7 @@ jobs:
           # The archive tree only exists once a primary source answered; a
           # pathspec with no match aborts git add (exit 128) and would take
           # the feed commit down with it.
-          for p in events-archive.json e archiv status-data.json; do
+          for p in events-archive.json e archiv status-data.json calendar; do
             [ -e "$p" ] && git add -f -A -- "$p"
           done
           if git diff --cached --quiet; then

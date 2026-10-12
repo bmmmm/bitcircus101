@@ -79,7 +79,8 @@ funding.json                Footer funding percentage (edited via pnpm run finan
                             pnpm run build:layout — the value is stamped into the HTML, not fetched)
 
 scripts/
-  sync-events.mjs           Fetches ICS from Nextcloud, generates events-data.json + feed.xml
+  sync-events.mjs           Fetches the calendars' ICS feeds, generates events-data.json + feed.xml
+  build-calendar-page.mjs   /calendar/ — the subscribe page, listed from the feeds manifest
   rss.mjs                   RSS 2.0 envelope shared by every feed (ttl, image, namespaces)
   html-text.mjs             esc/linkify/paragraphs — description → HTML for pages and feeds
   build-pinnwand-feed.mjs   Renders the active jobs.json postings to pinnwand/feed.xml (live-only)
@@ -139,6 +140,7 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
 | `events-archive.json` | `sync-events.yml` | Every 30 minutes (append-only) |
 | `e/<id>/index.html`, `e/<id>/event.ics` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy (sitemap) |
 | `archiv/index.html` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Every 30 minutes, and on deploy |
+| `calendar/index.html` | `sync-events.yml` and `deploy.yml` → `build-calendar-page.mjs` | Every 30 minutes, and on deploy |
 | `pinnwand/feed.xml` | `sync-events.yml` and `deploy.yml` → `build-pinnwand-feed.mjs` | Every 30 minutes, and on deploy |
 | `status-data.json` | `sync-events.yml` and `deploy.yml` → `build-status-data.mjs` | Every 30 minutes, and on deploy |
 | `index.html` (the streak line only) | `sync-events.yml` and `deploy.yml` → `build-status-data.mjs` | Every 30 minutes, and on deploy |
@@ -450,8 +452,8 @@ add the path to `sources`):
 
 Tags are resolved in priority order:
 
-1. **Explicit `#hashtags`** in the Nextcloud event description (e.g. `#workshop #hardware`)
-2. **ICS CATEGORIES** field (set in Nextcloud calendar UI)
+1. **Explicit `#hashtags`** in the event description (e.g. `#workshop #hardware`)
+2. **ICS CATEGORIES** field (set in the calendar app)
 3. **Keyword auto-detection** from title + description (fallback)
 
 If no tags match, the event gets `#community` as default.
