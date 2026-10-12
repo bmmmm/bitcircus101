@@ -1335,8 +1335,11 @@ test.describe('Event details', () => {
         await expect(card.locator('.event-card__desc--full')).toBeVisible();
     });
 
-    test('only primary-source cards link to their own page, and it exists', async ({ page }) => {
+    test('only cards from sources with pages link to their own page, and it exists', async ({ page }) => {
         const data = buildEventsData();
+        // A partner source flagged `pages` marks its cards; that, not the
+        // source name, earns the pill.
+        data.events[4].page = true;
         await useEventsFixture(page, data);
         await page.goto('/events.html');
         await expect(page.locator('.event-card').first()).toBeVisible();
@@ -1349,6 +1352,8 @@ test.describe('Event details', () => {
         // what this test is about, and it made the deploy red by calendar.
         await expect(foreign).toHaveCount(1);
         await expect(foreign.locator('.event-action--details')).toHaveCount(0);
+        await expect(page.locator(`#ev-${data.events[4].date}-datenburg-werkstatt .event-action--details`))
+            .toHaveAttribute('href', `e/${data.events[4].id}/`);
 
         // The page globalSetup generated from the same fixture: full chrome,
         // rebased asset paths, the description as paragraphs.

@@ -509,10 +509,11 @@
         html += '<button class="event-action event-action--link" ' +
           'data-href="#' + anchor + '" title="Link kopieren">' +
           '\u2190 link</button>';
-        // Own page with the full text \u2014 only the primary (rss:true) sources get
-        // one (sync-events.mjs mergeArchive), which is what isBitcircusEvent
-        // distinguishes. Relative directory href: serves locally and live alike.
-        if (e.id && isBitcircusEvent(e)) {
+        // Own page with the full text \u2014 only the sources with pages get one
+        // (EventsCore.hasPages), marked `page` on the card. isBitcircusEvent covers
+        // cards synced before that flag existed and the browser fallback.
+        // Relative directory href: serves locally and live alike.
+        if (e.id && (e.page || isBitcircusEvent(e))) {
           html += '<a class="event-action event-action--details" href="e/' +
             esc(e.id) + '/" title="Alle Details auf eigener Seite">' +
             '\u2192 details</a>';
