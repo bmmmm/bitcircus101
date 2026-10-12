@@ -102,8 +102,8 @@ scripts/
                             any non-200 breaks the deploy
 
 tests/
-  site.spec.js              Playwright end-to-end tests (~56 tests × 2 browsers)
-  sync-events.spec.mjs      Unit tests for the ICS parser, RRULE expansion and the feeds (225)
+  site.spec.js              Playwright end-to-end tests (Chromium + Mobile Chrome)
+  sync-events.spec.mjs      Unit tests for the ICS parser, RRULE expansion and the feeds
   finanz-cli.spec.mjs       Exit codes, --json contract and amount prompts of the funding CLI
   jobs-core.spec.mjs        Expiry math: month overflow, both boundaries, ordering
   jobs-data.spec.mjs        jobs.json gate: every error class, schema lockstep, page snippet
@@ -301,8 +301,6 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
   vocabulary of buying (Tarif, Preis, Gebühr, Rechnung, Gegenleistung, bezahlen,
   kostet — `kostenlos` stays fine), and no number in the pitch paragraph other
   than the runtimes themselves, so an amount cannot arrive as a bare "Richtwert".
-  Support lives one link away on `support.html` and nothing on the wall depends
-  on it — don't wire the two together.
 - The static **sample note** (`#jobs-sample`) shows what a Zettel looks like on
   an empty wall: leetspeak, an invented company, and its only link points at the
   how-to. `jobs.js` sets `hidden` on it as soon as real postings render, so it
@@ -318,8 +316,9 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
   twins and in `deploy.yml`, and failing on an expired posting would turn every
   deploy red on the day one runs out.
 - A merge never waits on a donation, and nothing ties a note to a payment —
-  no payment check, no reference code. The page's closing line points at
-  `support.html` and stands on its own.
+  no payment check, no reference code. Support lives one link away: the page's
+  closing line points at `support.html` and stands on its own, and nothing on
+  the wall depends on it — don't wire the two together.
 - No amounts and no contact details ever enter `jobs.json`. Postings link to a
   vacancy hosted by the company; Chiffre notes are the one kind of applicant
   data in the file — pseudonymous, and their only action is the relay mail.
@@ -348,7 +347,7 @@ Every push to `main` triggers:
 1. **Layout sync check:** `scripts/inject-layout.mjs` must not change any committed `*.html`
 2. **Unit tests:** ICS parser, RRULE expansion, date parsing (node:test)
 3. **Sync script:** Generates `events-data.json` for E2E tests to use
-4. **E2E tests:** Playwright across 2 browsers (~56 tests × Chromium + Mobile Chrome)
+4. **E2E tests:** Playwright across 2 browsers (Chromium + Mobile Chrome)
 5. **Deploy** (only if all tests pass): Re-runs the generators (layout inject, logo strip, lite
    blocks) before cache-busting, syncs site files from `main` to `live`, prunes files no
    longer tracked on `main`, regenerates `sitemap.xml` with `cicirello/generate-sitemap`, then
@@ -501,8 +500,8 @@ pnpm run test:ui           # Playwright UI mode
 
 ### Test coverage
 
-**Unit tests** (`tests/sync-events.spec.mjs` — 225 tests, ~200ms; the whole
-`pnpm run test:quick` suite is 594 tests across all specs):
+**Unit tests** (`tests/sync-events.spec.mjs`; `pnpm run test:quick` runs every
+spec under `tests/*.spec.mjs`):
 
 | Area | What is tested |
 |------|---------------|
@@ -512,7 +511,7 @@ pnpm run test:ui           # Playwright UI mode
 | `parseICS` | Single events, all-day, TZID params, line folding, recurring BYSETPOS |
 | `clean` | ICS character unescaping (`\n`, `\,`, `\;`) |
 
-**E2E tests** (`tests/site.spec.js` — ~56 tests × 2 browsers):
+**E2E tests** (`tests/site.spec.js`, Chromium + Mobile Chrome):
 
 | Area | Tests | What is tested |
 |------|-------|---------------|
