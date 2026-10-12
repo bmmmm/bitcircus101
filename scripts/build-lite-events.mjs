@@ -62,14 +62,19 @@ export function buildMarkup(events, icsUrl, rssPath) {
   const items = events
     .map((e) => {
       const url = normalizeUrl(e.eventUrl);
-      const label = url
-        ? `<a href="${esc(url)}" rel="noopener noreferrer">${esc(e.title)}</a>`
-        : esc(e.title);
+      // The title leads to the event's own page; an external link stays the
+      // second way. Every event here is ours (selectUpcoming), so a card from a
+      // sync before the `page` flag existed has a page all the same.
+      const ext = url ? `<a href="${esc(url)}" rel="noopener noreferrer">${esc(e.title)}</a>` : esc(e.title);
+      const label = e.id && (e.page || e.source === "bitcircus101")
+        ? `<a href="../e/${esc(e.id)}/">${esc(e.title)}</a>` +
+          (url ? ` · <a href="${esc(url)}" rel="noopener noreferrer">extern</a>` : "")
+        : ext;
       return `<li><time datetime="${esc(toDatetime(e.date, e.time))}" class="dim">${formatDate(e.date, e.time)}</time> — ${label}</li>`;
     })
     .join("\n");
 
-  // The subscribe links stay on the Nextcloud calendar: that is the real,
+  // The subscribe links stay on our calendar (Radicale): that is the real,
   // always-current subscription, while the generated feeds are a snapshot of
   // the sync window.
   const webcal = icsUrl ? icsUrl.replace(/^https?:\/\//, "webcal://") : null;
@@ -126,9 +131,8 @@ function main() {
     icsUrl = cal.ics || null;
   }
 
-  // Default to the primary feed; it is bitcircus-only today (the sole source
-  // with rss:true) but that is a config flag, not a guarantee — flip rss:true
-  // on a second source and this page would advertise a feed listing events it
+  // Default to the primary feed, but it carries every rss:true source (Look at
+  // my toys! as well), so this page would advertise a feed listing events it
   // does not show. The per-source feed is bitcircus by construction, so prefer
   // it whenever the manifest lists it.
   let rssPath = "../feed.xml";

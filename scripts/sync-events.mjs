@@ -13,7 +13,7 @@
 // byte-identical, which aggregators rely on to key the same occurrence.
 const EVENTS_URL = `${SITE_URL}/events`;
 
-// The event-page archive: every card the primary (rss:true) sources ever
+// The event-page archive: every card the sources with pages (`pages`, default `rss`) ever
 // exported since ARCHIVE_MIN_DATE, keyed by card id. Append-only — the pages
 // under /e/<id>/ are built from it (scripts/build-event-pages.mjs), and a
 // shared link must keep resolving after the event has left the calendar.
@@ -43,7 +43,7 @@ const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, even
 // Card shaping (tags, type, toCards) is shared the same way via events-core.js, so
 // the browser's live-ICS fallback renders the same cards as the generated JSON.
 // Re-exported below so tests and check-calendars.mjs keep importing from here.
-const { isInternal, guessType, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId } = EventsCore;
+const { isInternal, guessType, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId, hasPages } = EventsCore;
 
 const CAL_DIR = "calendars";
 const CAL_CONFIG_FILE = "config.json";
@@ -755,9 +755,10 @@ function mergeArchive(prevArchive, results, todayStr, nowISO) {
       }
       seen.add(c.id);
       // lastSeen only moves for upcoming entries: the export re-lists all of
-      // history every run, and bumping ~200 past entries would rewrite the
-      // whole file once a day for nothing (only cancellation reads it, and
-      // only for upcoming dates).
+      // history every run, and bumping every past entry would rewrite the
+      // whole file once a day for nothing (only the cancellation rules read
+      // it — here and in build-status-data.mjs — and a past entry's lastSeen
+      // already says what they need).
       const lastSeen = c.date >= todayStr || !(prev && prev.lastSeen) ? todayStr : prev.lastSeen;
       const entry = { ...c, firstSeen: (prev && prev.firstSeen) || c.firstSeen || nowISO, lastSeen };
       delete entry.cancelled;
@@ -856,8 +857,8 @@ async function processSource(cal, prev) {
     const cards = toCards(icsEvents, cal);
     console.log(`[${cal.id}] ${cards.length} upcoming cards`);
     // Archive pass from the SAME parse (no second fetch): past and future, no
-    // cap — only for the primary sources, which are the ones that get pages.
-    const allCards = cal.rss ? dedupeCards(toAllCards(icsEvents, cal)) : null;
+    // cap — only for the sources that get pages (`pages`, default `rss`).
+    const allCards = hasPages(cal) ? dedupeCards(toAllCards(icsEvents, cal)) : null;
 
     // Diff against previous sync — prefer UID (stable), fall back to date|summary
     // so natural event expiry doesn't count as a "removed" change.
@@ -1086,7 +1087,7 @@ export {
   eventSlot, eventGuid, eventPageUrl,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
   aggregate, dedupeCards, eventAnchor,
-  loadArchive, mergeArchive, serializeArchive,
+  loadArchive, mergeArchive, serializeArchive, processSource,
   ARCHIVE_FILE, ARCHIVE_MIN_DATE, MAX_ARCHIVE_ENTRIES, CANCEL_HORIZON_DAYS, CANCEL_STORM,
   SITE_URL, EVENTS_URL,
 };

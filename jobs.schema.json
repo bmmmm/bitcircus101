@@ -124,7 +124,7 @@
         "contact": {
           "description": "Optional: a direct contact the person chose to make public, e.g. an alias — never a private address, it stays in the git history. A bare mailto:, no ?subject. Without it, replies run through the space.",
           "type": "string",
-          "pattern": "^mailto:[^\\s@?]+@[^\\s@?]+\\.[^\\s@?]+$"
+          "pattern": "^mailto:[^\\s@?%,;<>\"\\x00-\\x1f\\x7f]+@[^\\s@?%,;<>\"\\x00-\\x1f\\x7f]+\\.[^\\s@?%,;<>\"\\x00-\\x1f\\x7f]+$"
         },
         "from": { "$ref": "#/$defs/posting/properties/from" },
         "months": { "$ref": "#/$defs/posting/properties/months" }

@@ -20,7 +20,7 @@ jobs:
     # fails with a log instead of burning the runner. Note it counts from job
     # start, not from queueing: a run that never gets a runner is not covered.
     timeout-minutes: 10
-    # ICS values from Nextcloud are floating-local Europe/Berlin; pin the runner TZ
+    # ICS values from our calendar are floating-local Europe/Berlin; pin the runner TZ
     # so date/time formatting (and UTC→local conversion) matches the calendar, not UTC.
     env:
       TZ: Europe/Berlin
@@ -92,7 +92,7 @@ jobs:
             echo "No changes"
             exit 0
           fi
-          git commit -m "Sync events from Nextcloud calendar"
+          git commit -m "Sync events from calendar sources"
           # Retry loop: pull --rebase + push (handles concurrent pushes)
           for i in 1 2 3; do
             git pull --rebase origin live && git push origin HEAD:live && exit 0

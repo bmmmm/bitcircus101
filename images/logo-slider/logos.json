@@ -32,6 +32,10 @@
     "leihbar.png": {
       "name": "leihbar",
       "url": ""
+    },
+    "look-at-my-toys.png": {
+      "name": "Look at my toys!",
+      "url": "https://my.stim.toys"
     }
   }
 }

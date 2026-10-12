@@ -238,7 +238,10 @@ export function jsonLdBlock(node) {
 /** <head> of an event page (depth 2: /e/<id>/index.html). */
 export function renderHead(entry, { assetVersion }) {
   const text = stripTagLines(entry.description || "").replace(/\s+/g, " ").trim();
-  const fallback = `${entry.title} am ${formatDateLong(entry.date)} im bitcircus101, Hackspace in Bonn.`;
+  // A partner source with its own pages names itself in the fallback text; the
+  // feed links below stay on the site-wide feed.xml.
+  const by = entry.source && entry.source !== "bitcircus101" ? ` (${entry.source})` : "";
+  const fallback = `${entry.title}${by} am ${formatDateLong(entry.date)} im bitcircus101, Hackspace in Bonn.`;
   return headShell({
     depth: 2,
     assetVersion,

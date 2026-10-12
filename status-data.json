@@ -4,18 +4,15 @@
   "series": [
     {
       "key": "linkup",
-      "label": "Linkup",
-      "hint": "freitags ab 20 Uhr, jeden dritten Freitag mit Lightning Talks"
+      "label": "Linkup"
     },
     {
       "key": "workshop",
-      "label": "Workshops",
-      "hint": "angekündigte Workshops"
+      "label": "Workshops"
     },
     {
       "key": "special",
-      "label": "Specials",
-      "hint": "Sonderformate"
+      "label": "Specials"
     }
   ],
   "events": [

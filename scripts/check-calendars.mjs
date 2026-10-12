@@ -30,7 +30,7 @@ const { parseICS } = ICSCore;
 // `_comment` in config.json and `_note` in the external sources). Anything else is a
 // typo — `icsUrl`, `categoryAllowed`, `taggs` — and must not pass silently.
 const KNOWN_KEYS = new Set([
-  "id", "name", "ics", "url", "type", "rss", "tags", "cap", "eventUrl", "filter",
+  "id", "name", "ics", "url", "type", "rss", "pages", "tags", "cap", "eventUrl", "filter",
 ]);
 const KNOWN_TYPES = new Set(["ics-full", "ics-single", "ics-filtered"]);
 const KNOWN_FILTER_KEYS = new Set([
@@ -96,6 +96,9 @@ function validateSource(entry, path, errors, warnings) {
   }
   if (entry.rss !== undefined && typeof entry.rss !== "boolean") {
     errors.push(at('"rss" must be true or false'));
+  }
+  if (entry.pages !== undefined && typeof entry.pages !== "boolean") {
+    errors.push(at('"pages" must be true or false'));
   }
   if (entry.cap !== undefined && (!Number.isInteger(entry.cap) || entry.cap < 1)) {
     errors.push(at('"cap" must be a positive integer'));
