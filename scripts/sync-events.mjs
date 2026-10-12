@@ -43,7 +43,15 @@ const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, even
 // Card shaping (tags, type, toCards) is shared the same way via events-core.js, so
 // the browser's live-ICS fallback renders the same cards as the generated JSON.
 // Re-exported below so tests and check-calendars.mjs keep importing from here.
-const { isInternal, guessType, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId } = EventsCore;
+const { isInternal, guessType, isCancelledTitle, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId } = EventsCore;
+
+/** Cancelled for every consumer: the archive's flag (set by mergeArchive for a
+ *  vanished entry or a marked title) or, for a fresh card that never went
+ *  through the archive (events-data.json, feeds, the events.html JSON-LD), the
+ *  marker in the title itself. */
+function isCancelledCard(c) {
+  return c.cancelled === true || isCancelledTitle(c.title);
+}
 
 const CAL_DIR = "calendars";
 const CAL_CONFIG_FILE = "config.json";
@@ -354,6 +362,8 @@ function generateICS(cards, nowISO, opts = {}) {
     }
 
     lines.push(`SUMMARY:${icsEsc(c.title)}`);
+    // RFC5545 §3.8.1.11 — subscribers see the cancellation, not just a renamed title.
+    if (isCancelledCard(c)) lines.push("STATUS:CANCELLED");
     if (c.description) lines.push(`DESCRIPTION:${icsEsc(c.description)}`);
     if (c.location) lines.push(`LOCATION:${icsEsc(c.location)}`);
     // URL is a URI value (RFC5545 §3.8.4.6), not TEXT — emit raw, no backslash escaping.
@@ -631,7 +641,7 @@ function toJsonLdEvent(c) {
   node.url = eventPageUrl(c);
   const keywords = (c.tags || []).map((t) => t.replace(/^#/, "")).filter(Boolean);
   if (keywords.length) node.keywords = keywords;
-  if (c.cancelled) node.eventStatus = "https://schema.org/EventCancelled";
+  if (isCancelledCard(c)) node.eventStatus = "https://schema.org/EventCancelled";
   return node;
 }
 
@@ -727,9 +737,14 @@ function loadArchive(file = ARCHIVE_FILE) {
  *   - an id already held by a different identity (uid / title key) is a hash
  *     collision: warn, keep the incumbent, skip the newcomer. Never throw here:
  *     the sync runs unattended every 30 minutes and must not freeze on data;
- *   - `cancelled` is set only for an upcoming entry of a source that answered
- *     with a non-empty fresh export and no longer lists it (series occurrences
- *     only inside the expansion horizon); it clears when the card reappears.
+ *   - `cancelled` (with `cancelledBy: "vanished"`) is set only for an upcoming
+ *     entry of a source that answered with a non-empty fresh export and no
+ *     longer lists it (series occurrences only inside the expansion horizon);
+ *     it clears when the card reappears;
+ *   - `cancelled` (with `cancelledBy: "title"`) is set for a card whose title
+ *     carries the owner's marker (isCancelledTitle), past or future — the export
+ *     relists history, so a rename after the date still lands here; it clears
+ *     when the title is renamed back.
  */
 function mergeArchive(prevArchive, results, todayStr, nowISO) {
   const events = {};
@@ -760,7 +775,14 @@ function mergeArchive(prevArchive, results, todayStr, nowISO) {
       // only for upcoming dates).
       const lastSeen = c.date >= todayStr || !(prev && prev.lastSeen) ? todayStr : prev.lastSeen;
       const entry = { ...c, firstSeen: (prev && prev.firstSeen) || c.firstSeen || nowISO, lastSeen };
+      // A fresh card carries no flag, so a vanished-then-reappeared entry clears
+      // here; the title marker is the one flag that comes back with the card.
       delete entry.cancelled;
+      delete entry.cancelledBy;
+      if (isCancelledTitle(c.title)) {
+        entry.cancelled = true;
+        entry.cancelledBy = "title";
+      }
       events[c.id] = entry;
       admitted++;
     }
@@ -772,6 +794,7 @@ function mergeArchive(prevArchive, results, todayStr, nowISO) {
       if (e.date < todayStr) continue;
       if (e.recurring && e.date > horizon) continue;
       e.cancelled = true;
+      e.cancelledBy = "vanished";
       flipped++;
     }
     if (flipped > CANCEL_STORM) {
