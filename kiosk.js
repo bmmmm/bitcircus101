@@ -339,6 +339,14 @@
     var desc = settings.info === "off" ? "" : cleanText(e.description);
     if (desc) html += '<p class="kiosk-ev__desc">' + esc(desc) + "</p>";
 
+    // The short address of the event's own page, as text to type off the screen
+    // (no QR per event). Rides with the description, so info=off drops it too.
+    // A card without `page` from our own source predates the flag (events.js).
+    var hasPage = e.page || !e.source || e.source === "bitcircus101";
+    if (settings.info !== "off" && e.id && hasPage) {
+      html += '<span class="kiosk-ev__url">bitcircus101.de/e/' + esc(e.id) + "</span>";
+    }
+
     var loc = cleanText(e.location);
     if (loc) html += '<p class="kiosk-ev__loc">' + esc(loc) + "</p>";
 

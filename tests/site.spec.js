@@ -1400,6 +1400,24 @@ test.describe('Event details', () => {
         expect(await page.locator('.kiosk-ev__desc').first()
             .evaluate((el) => getComputedStyle(el).webkitLineClamp)).toBe('1');
     });
+
+    test('kiosk names the short address of each event that has a page, unless info=off', async ({ page }) => {
+        const data = buildEventsData();
+        data.events[1].source = 'Datenburg e.V.';   // partner without pages
+        data.events[2].page = true;                  // partner with pages
+        await useEventsFixture(page, data);
+        const url = (title) => page.locator('.kiosk-ev').filter({ hasText: title }).locator('.kiosk-ev__url');
+
+        await page.goto('/kiosk/?info=short&rows=12');
+        await expect(url('Hardware Hackingabend')).toHaveText(`bitcircus101.de/e/${data.events[0].id}`);
+        await expect(url('Offener Abend Datenburg')).toHaveText(`bitcircus101.de/e/${data.events[2].id}`);
+        await expect(page.locator('.kiosk-ev').filter({ hasText: 'Lötworkshop' })).toHaveCount(1);
+        await expect(url('Lötworkshop')).toHaveCount(0);
+
+        await page.goto('/kiosk/?info=off&rows=12');
+        await expect(page.locator('.kiosk-ev').first()).toBeVisible();
+        await expect(page.locator('.kiosk-ev__url')).toHaveCount(0);
+    });
 });
 
 // ─── Status page ─────────────────────────────────────────────────────────────
@@ -2102,6 +2120,8 @@ test.describe('Kiosk view', () => {
         await page.locator('#kiosk-set-pinnwand').uncheck();
         await expect(pin(page)).toHaveCount(0);
         expect(new URL(page.url()).searchParams.get('pinnwand')).toBe('off');
+        // ...and the header finds its way back to the events
+        await expect(page.locator('.kiosk__path')).toHaveText('/termine');
         await page.keyboard.press('Escape');
 
         // Nothing up → one invite note pointing at the board itself
