@@ -17,7 +17,11 @@ import { fileURLToPath } from "node:url";
 import {
   buildStatusData,
   injectStreak,
+  isNoise,
   streakMarkup,
+  visibleDays,
+  CANCEL_TITLE_RE,
+  MIN_VISIBLE_DAYS,
   PRIMARY_SOURCE,
   SERIES,
   STATUS_SINCE,
@@ -102,6 +106,57 @@ describe("buildStatusData", () => {
   it("carries no timestamp: the same archive yields the same bytes", () => {
     assert.equal(JSON.stringify(buildStatusData(a)), JSON.stringify(buildStatusData(a)));
     assert.equal("generatedAt" in out, false);
+  });
+
+  it("counts a title that says CANCELED / cancelled / abgesagt as cancelled — whole word, any case, past or future, flag or not", () => {
+    const out2 = buildStatusData(archive(
+      entry("t1", "2026-01-09", { title: "CANCELED: Linkup" }),
+      entry("t2", "2026-01-23", { title: "Linkup (cancelled)" }),
+      entry("t3", "2026-01-30", { title: "Lötabend – abgesagt", type: "workshop" }),
+      entry("t4", "2099-01-01", { title: "Canceled Linkup", cancelled: false }), // future, flag absent
+      entry("t5", "2026-02-06", { title: "Cancellation Policy Talk" }), // not the whole word
+      entry("t6", "2026-02-13", { title: "Abgesagter Workshop", type: "workshop" }), // not the whole word either
+      entry("t7", "2026-02-20", { title: "Uncancelled Linkup" }) // the leading boundary
+    ));
+    const by = Object.fromEntries(out2.events.map((e) => [e.id, e.cancelled]));
+    assert.deepEqual(by, { t1: true, t2: true, t3: true, t4: true, t5: false, t6: false, t7: false });
+    assert.equal(CANCEL_TITLE_RE.test("x"), false);
+  });
+
+  it("drops a vanished entry that was in the export for less than MIN_VISIBLE_DAYS — a typo, not a cancellation", () => {
+    assert.equal(MIN_VISIBLE_DAYS, 3);
+    const sameDay = { firstSeen: "2026-10-01T08:00:00.000Z", lastSeen: "2026-10-01" }; // 0 days — the common typo
+    const short = { firstSeen: "2026-10-01T10:00:00.000Z", lastSeen: "2026-10-03" }; // 2 days
+    const long = { firstSeen: "2026-10-01T10:00:00.000Z", lastSeen: "2026-10-04" }; // 3 days, by day not by hours
+    // 21:59Z on Oct 1 is Oct 1 in Berlin (23:59 CEST); 22:00Z is already Oct 2 there.
+    const berlinEdge = { firstSeen: "2026-10-01T21:59:00.000Z", lastSeen: "2026-10-04" }; // 3 Berlin days
+    const berlinPastMidnight = { firstSeen: "2026-10-01T22:00:00.000Z", lastSeen: "2026-10-04" }; // 2 Berlin days
+    const out2 = buildStatusData(archive(
+      entry("v0", "2026-10-09", { cancelled: true, ...sameDay }),
+      entry("v1", "2026-10-09", { cancelled: true, ...short }),
+      entry("v2", "2026-10-09", { cancelled: true, ...long }),
+      entry("v3", "2026-10-09", { cancelled: true, title: "CANCELED: Linkup", ...short }), // the marker wins
+      entry("v4", "2026-10-09", { cancelled: true, firstSeen: undefined, ...{ lastSeen: "2026-10-03" } }), // no stamp: keep
+      entry("v5", "2026-10-09", { cancelled: true, firstSeen: "garbage", lastSeen: "2026-10-03" }), // unparsable: keep
+      entry("v6", "2026-10-09", { cancelled: false, ...short }), // not vanished: the rule does not apply
+      entry("v7", "2026-10-09", { cancelled: true, ...berlinEdge }),
+      entry("v8", "2026-10-09", { cancelled: true, ...berlinPastMidnight })
+    ));
+    const by = Object.fromEntries(out2.events.map((e) => [e.id, e.cancelled]));
+    assert.deepEqual(by, { v2: true, v3: true, v4: true, v5: true, v6: false, v7: true });
+    assert.equal(visibleDays(sameDay), 0);
+    assert.equal(visibleDays(short), 2);
+    assert.equal(visibleDays(long), 3);
+    assert.equal(visibleDays(berlinEdge), 3);
+    assert.equal(visibleDays(berlinPastMidnight), 2);
+    assert.equal(visibleDays({ lastSeen: "2026-10-03" }), Infinity);
+    assert.equal(visibleDays({ firstSeen: "2026-10-01T08:00:00.000Z" }), Infinity);
+    assert.equal(visibleDays({ firstSeen: "garbage", lastSeen: "2026-10-03" }), Infinity);
+    assert.equal(visibleDays({ firstSeen: "2026-10-05T00:00:00.000Z", lastSeen: "2026-10-03" }), Infinity); // out of order
+    assert.equal(isNoise({ cancelled: true, title: "x", ...short }), true);
+    assert.equal(isNoise({ cancelled: true, title: "x", ...long }), false);
+    assert.equal(isNoise({ cancelled: true, title: "abgesagt", ...short }), false);
+    assert.equal(isNoise({ title: "x", ...short }), false);
   });
 
   it("stays small: 500 events serialise well under 80 kB", () => {
