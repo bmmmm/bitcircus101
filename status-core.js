@@ -125,9 +125,13 @@
     var m = +b.from.slice(5, 7) - 1;
     var yy = b.from.slice(2, 4);
     if (b.kind === "week") return "KW " + isoWeek(b.from);
-    if (b.kind === "month") return MONTHS_SHORT[m] + " " + yy;
-    if (b.kind === "quarter") return "Q" + (Math.floor(m / 3) + 1) + " " + yy;
-    return b.from.slice(0, 4);
+    var label = b.kind === "month" ? MONTHS_SHORT[m] + " " + yy
+      : b.kind === "quarter" ? "Q" + (Math.floor(m / 3) + 1) + " " + yy
+      : b.from.slice(0, 4);
+    // Where a finer tier takes over mid-period the bar stops early: "Mär 26…"
+    // says so, the tooltip's date range says exactly where.
+    var periodEnd = addDays(periodNext(periodStart(b.from, b.kind), b.kind), -1);
+    return b.to < periodEnd ? label + "…" : label;
   }
   function rangeLabel(b) {
     if (b.from === b.to) return fmtDE(b.from);
