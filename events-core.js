@@ -37,6 +37,19 @@
   }
 
   /**
+   * The owner's cancellation marker: a title that STARTS with CANCELED,
+   * CANCELLED or ABGESAGT (any case, an optional bracket before it), e.g.
+   * "CANCELED: Linkup" or "[Abgesagt] Lötabend". A prefix, not a word search —
+   * "Linkup – nicht abgesagt" must not match. Renaming instead of deleting is
+   * the one signal that survives a deletion after the date: the export relists
+   * history, so the archive, the event page, the feeds and /status all agree.
+   */
+  var CANCEL_TITLE_RE = /^\s*[\[(]?\s*(cancell?ed|abgesagt)\b/i;
+  function isCancelledTitle(summary) {
+    return typeof summary === "string" && CANCEL_TITLE_RE.test(summary);
+  }
+
+  /**
    * Tag resolution — 3 sources, in priority:
    *
    * 1. Explicit #hashtags in the event description  (you control these in the calendar entry)
@@ -287,6 +300,7 @@
   return {
     isInternal: isInternal,
     guessType: guessType,
+    isCancelledTitle: isCancelledTitle,
     extractHashtags: extractHashtags,
     keywordTags: keywordTags,
     buildTags: buildTags,

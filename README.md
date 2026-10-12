@@ -165,15 +165,23 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   exported since `ARCHIVE_MIN_DATE` (see `scripts/sync-events.mjs`), keyed by the
   card `id` — a hash of the calendar UID (plus the date for series occurrences),
   so a shared link survives a reschedule and needs no registry. Entries are never
-  deleted; an upcoming one that vanishes from a healthy export is flagged
-  `cancelled`. `scripts/build-event-pages.mjs` renders the archive into `e/<id>/` (one
+  deleted; two things flag one `cancelled`: an upcoming entry vanishing from a
+  healthy export (`cancelledBy: "vanished"`), or a title that starts with
+  CANCELED / CANCELLED / ABGESAGT (`cancelledBy: "title"`, `isCancelledTitle` in
+  `events-core.js`) — the owner's way to cancel: **rename, don't delete**, it
+  works after the date too and reaches the feeds (`STATUS:CANCELLED`), the
+  JSON-LD (`EventCancelled`), the event page and `/status` alike. Renaming one
+  occurrence of a series works the same way: the calendar writes a
+  `RECURRENCE-ID` override, which `ics-core.js` treats as a replacement of that
+  occurrence (same `uid|date` id), so only that Friday is marked. Entries flagged
+  before the reason existed carry no `cancelledBy` and read as vanished.
+  `scripts/build-event-pages.mjs` renders the archive into `e/<id>/` (one
   page + single-event `.ics` each, the RSS item links and the JSON-LD `url`
   point there) and `archiv/index.html`, using the checkout's `events.html` as
   the header/footer template. Locally: `pnpm run build:event-pages <archive.json>`.
-  `/status` (`scripts/build-status-data.mjs`) additionally counts a title
-  containing CANCELED/CANCELLED/ABGESAGT as cancelled — that marker overrides the
-  flag and the threshold — and leaves out vanished entries that stood in the
-  export for less than three calendar days (typos, not events).
+  `/status` (`scripts/build-status-data.mjs`) leaves out vanished entries that
+  stood in the export for less than three calendar days (typos, not events); a
+  marked title is never noise.
 
 `finanz.json` and `funding.json` are **not** in that list — they are versioned on
 `main` and edited through the maintainer CLI — never by hand, and no longer by a

@@ -20,7 +20,6 @@ import {
   isNoise,
   streakMarkup,
   visibleDays,
-  CANCEL_TITLE_RE,
   MIN_VISIBLE_DAYS,
   PRIMARY_SOURCE,
   SERIES,
@@ -110,19 +109,15 @@ describe("buildStatusData", () => {
     assert.equal("generatedAt" in out, false);
   });
 
-  it("counts a title that says CANCELED / cancelled / abgesagt as cancelled — whole word, any case, past or future, flag or not", () => {
+  it("reads cancelled from the archive alone — a marked title without the sync's flag is not this script's call", () => {
     const out2 = buildStatusData(archive(
-      entry("t1", "2026-01-09", { title: "CANCELED: Linkup" }),
-      entry("t2", "2026-01-23", { title: "Linkup (cancelled)" }),
-      entry("t3", "2026-01-30", { title: "Lötabend – abgesagt", type: "workshop" }),
-      entry("t4", "2099-01-01", { title: "Canceled Linkup", cancelled: false }), // future, flag absent
-      entry("t5", "2026-02-06", { title: "Cancellation Policy Talk" }), // not the whole word
-      entry("t6", "2026-02-13", { title: "Abgesagter Workshop", type: "workshop" }), // not the whole word either
-      entry("t7", "2026-02-20", { title: "Uncancelled Linkup" }) // the leading boundary
+      entry("t1", "2026-01-09", { title: "CANCELED: Linkup", cancelled: true, cancelledBy: "title" }),
+      entry("t2", "2099-01-01", { title: "CANCELED: Linkup", cancelled: true, cancelledBy: "title" }), // future too
+      entry("t3", "2026-01-23", { title: "CANCELED: Linkup" }) // the sync has not flagged it yet
     ));
     const by = Object.fromEntries(out2.events.map((e) => [e.id, e.cancelled]));
-    assert.deepEqual(by, { t1: true, t2: true, t3: true, t4: true, t5: false, t6: false, t7: false });
-    assert.equal(CANCEL_TITLE_RE.test("x"), false);
+    assert.deepEqual(by, { t1: true, t2: true, t3: false });
+    for (const e of out2.events) assert.equal("cancelledBy" in e, false, "the reason must not leak into the page data");
   });
 
   it("drops a vanished entry that was in the export for less than MIN_VISIBLE_DAYS — a typo, not a cancellation", () => {
@@ -137,7 +132,8 @@ describe("buildStatusData", () => {
       entry("v0", "2026-10-09", { cancelled: true, ...sameDay }),
       entry("v1", "2026-10-09", { cancelled: true, ...short }),
       entry("v2", "2026-10-09", { cancelled: true, ...long }),
-      entry("v3", "2026-10-09", { cancelled: true, title: "CANCELED: Linkup", ...short }), // the marker wins
+      entry("v3", "2026-10-09", { cancelled: true, cancelledBy: "title", title: "CANCELED: Linkup", ...short }), // the owner's word wins
+      entry("v3b", "2026-10-09", { cancelled: true, cancelledBy: "vanished", ...short }), // the sync's reason, spelled out
       entry("v4", "2026-10-09", { cancelled: true, firstSeen: undefined, ...{ lastSeen: "2026-10-03" } }), // no stamp: keep
       entry("v5", "2026-10-09", { cancelled: true, firstSeen: "garbage", lastSeen: "2026-10-03" }), // unparsable: keep
       entry("v6", "2026-10-09", { cancelled: false, ...short }), // not vanished: the rule does not apply
@@ -157,7 +153,8 @@ describe("buildStatusData", () => {
     assert.equal(visibleDays({ firstSeen: "2026-10-05T00:00:00.000Z", lastSeen: "2026-10-03" }), Infinity); // out of order
     assert.equal(isNoise({ cancelled: true, title: "x", ...short }), true);
     assert.equal(isNoise({ cancelled: true, title: "x", ...long }), false);
-    assert.equal(isNoise({ cancelled: true, title: "abgesagt", ...short }), false);
+    assert.equal(isNoise({ cancelled: true, cancelledBy: "title", title: "CANCELED: x", ...short }), false);
+    assert.equal(isNoise({ cancelled: true, cancelledBy: "vanished", title: "x", ...short }), true);
     assert.equal(isNoise({ title: "x", ...short }), false);
   });
 
