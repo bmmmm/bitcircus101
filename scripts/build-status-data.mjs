@@ -66,12 +66,13 @@ export const CANCEL_TITLE_RE = /\b(cancell?ed|abgesagt)\b/i;
 /** A vanished entry counts as cancelled only after this many calendar days in the
  *  export (lastSeen day − firstSeen day); shorter-lived ones were typos, not events. */
 export const MIN_VISIBLE_DAYS = 3;
-/** One row per event `type`, in page order. status.html carries the same
- *  labels statically (first paint); these travel along for the incident list. */
+/** One row per event `type`, in page order. status.html carries the labels
+ *  and the one-line descriptions statically (first paint); only the labels
+ *  travel along, for the incident list. */
 export const SERIES = [
-  { key: "linkup", label: "Linkup", hint: "freitags ab 20 Uhr, jeden dritten Freitag mit Lightning Talks" },
-  { key: "workshop", label: "Workshops", hint: "angekündigte Workshops" },
-  { key: "special", label: "Specials", hint: "Sonderformate" },
+  { key: "linkup", label: "Linkup" },
+  { key: "workshop", label: "Workshops" },
+  { key: "special", label: "Specials" },
 ];
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
