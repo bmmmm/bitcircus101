@@ -1528,11 +1528,13 @@ test.describe('Status page', () => {
             data.pulse = { updated: '2026-09-01', start: '2025-05', levels: [1, 3, 3, 5, 4, 6, 5, 7, 2, 2, 4, 5] };
             await route.fulfill({ response: res, json: data });
         });
+        // A fixed today makes the bar count exact: Mai 25 … Sep 26, one per month.
+        await page.clock.install({ time: new Date('2026-09-15T12:00:00') });
         await page.goto('/status.html');
         const pulse = page.locator('#status-pulse');
         await expect(pulse).toBeVisible();
         const bars = pulse.locator('#status-bars-pulse .status-bar');
-        expect(await bars.count()).toBeGreaterThanOrEqual(12);
+        await expect(bars).toHaveCount(17);
         // Every bar says where it points, never how high: a bucket label and a
         // tendency word, nothing else.
         const labels = await bars.evaluateAll((els) => els.map((el) => el.getAttribute('aria-label')));
