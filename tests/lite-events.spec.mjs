@@ -167,6 +167,19 @@ describe("buildMarkup", () => {
     assert.match(out, /<time datetime="2026-09-04T20:00" class="dim">FR 4\. SEP · 20:00<\/time>/);
   });
 
+  it("links a title with an id to its own page, the external URL beside it", () => {
+    const out = buildMarkup(
+      [
+        ev("2026-09-04", { id: "0a1b2c3d4e5f", eventUrl: "https://kurse.example/x" }),
+        ev("2026-09-05", { id: "<x>", title: "Ohne Link" }),
+      ],
+      null,
+      "../feed.xml"
+    );
+    assert.match(out, /— <a href="\.\.\/e\/0a1b2c3d4e5f\/">Linkup<\/a> · <a href="https:\/\/kurse\.example\/x" rel="noopener noreferrer">extern<\/a><\/li>/);
+    assert.match(out, /— <a href="\.\.\/e\/&lt;x&gt;\/">Ohne Link<\/a><\/li>/);
+  });
+
   it("renders a plain title when the URL is unusable", () => {
     const out = buildMarkup([ev("2026-09-04", { eventUrl: "javascript:alert(1)" })], null, "../feed.xml");
     assert.ok(!out.includes("<a href=\"javascript:"), "javascript: URL reached the page");
