@@ -41,14 +41,14 @@
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
         <link rel="alternate" type="text/calendar" title="bitcircus101 Termine (iCal)" href="ical.ics" />
 
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=40bca375" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=40bca375" />
-        <link rel="manifest" href="site.webmanifest?v=40bca375" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=409ca4d9" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=409ca4d9" />
+        <link rel="manifest" href="site.webmanifest?v=409ca4d9" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=40bca375" />
+        <link rel="stylesheet" href="style.css?v=409ca4d9" />
         <!-- The fetch in status.js names the same bare path, so the preload counts.
              Live-only: a plain checkout 404s here and the page says so. -->
         <link rel="preload" href="status-data.json" as="fetch" crossorigin />
@@ -96,8 +96,9 @@
                         Monat, Quartal und Jahr. Ein Klick auf einen Balken zeigt die
                         Termine dahinter, ein zweiter Klick schließt sie wieder. Abgeleitet
                         aus dem Kalender-Export – als abgesagt zählt ein Termin, dessen
-                        Titel CANCELED oder ABGESAGT enthält, oder einer, der an mindestens
-                        drei Kalendertagen im Kalender stand und vor dem Termin verschwand.
+                        Titel mit CANCELED oder ABGESAGT beginnt, oder einer, der an
+                        mindestens drei Kalendertagen im Kalender stand und vor dem Termin
+                        verschwand.
                     </p>
                     <!-- aria-busy sits in the markup so the reservation holds from the
                          first paint; status.js clears it (or replaces the text). -->
@@ -155,7 +156,7 @@
 
                 <section id="ausfaelle" class="panel">
                     <h2>ausfälle<a class="section-anchor" href="#ausfaelle" aria-label="Link zu: Ausfälle">#</a></h2>
-                    <p class="status-panel__hint">Termine, die im Titel als CANCELED oder ABGESAGT markiert sind oder aus dem Kalender verschwanden, bevor sie stattfanden – neueste zuerst.</p>
+                    <p class="status-panel__hint">Termine, deren Titel mit CANCELED oder ABGESAGT beginnt oder die aus dem Kalender verschwanden, bevor sie stattfanden – neueste zuerst.</p>
                     <ul class="status-incidents" id="status-incidents">
                         <li class="status-incidents__empty">keine bekannt</li>
                     </ul>
@@ -198,9 +199,9 @@
             </div>
         </footer>
 
-        <script defer src="storage.js?v=40bca375"></script>
-        <script defer src="main.js?v=40bca375"></script>
-        <script defer src="status-core.js?v=40bca375"></script>
-        <script defer src="status.js?v=40bca375"></script>
+        <script defer src="storage.js?v=409ca4d9"></script>
+        <script defer src="main.js?v=409ca4d9"></script>
+        <script defer src="status-core.js?v=409ca4d9"></script>
+        <script defer src="status.js?v=409ca4d9"></script>
     </body>
 </html>
