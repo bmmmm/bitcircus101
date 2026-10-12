@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-10-12T06:17:14.015Z",
+  "lastSync": "2026-10-12T07:17:14.489Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-12T06:17:13.940Z",
+      "fetchedAt": "2026-10-12T07:17:14.132Z",
       "status": "ok",
       "events": 22,
       "added": 0,
@@ -16,7 +16,7 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-12T06:17:13.996Z",
+      "fetchedAt": "2026-10-12T07:17:14.360Z",
       "status": "ok",
       "events": 18,
       "added": 0,
@@ -300,7 +300,7 @@
       "type": "special",
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
@@ -447,7 +447,7 @@
       "type": "special",
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
@@ -531,7 +531,7 @@
       "type": "special",
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
@@ -636,7 +636,7 @@
       "type": "special",
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
@@ -741,7 +741,7 @@
       "type": "special",
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
@@ -825,7 +825,7 @@
       "type": "special",
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
@@ -891,7 +891,7 @@
       "type": "special",
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },
@@ -996,7 +996,7 @@
       "type": "special",
       "source": "bitcircus101",
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
     },

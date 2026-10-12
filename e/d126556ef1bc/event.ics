@@ -29,7 +29,7 @@ DTSTART;TZID=Europe/Berlin:20260502T121500
 DTEND;TZID=Europe/Berlin:20260502T143000
 SUMMARY:Hackertour - OSM cleanup Bonn
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
-URL:https://nc.6bm.de/apps/calendar/p/DCaFSYECrcTJRJjC
+URL:https://bitcircus101.de/calendar/
 CATEGORIES:community
 END:VEVENT
 END:VCALENDAR
