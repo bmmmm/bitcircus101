@@ -95,9 +95,9 @@
                         bitcircus101 seit Mai 2025: ein Balken pro Woche, weiter zurück pro
                         Monat, Quartal und Jahr. Ein Klick auf einen Balken zeigt die
                         Termine dahinter, ein zweiter Klick schließt sie wieder. Abgeleitet
-                        aus dem Kalender-Export – ein Termin,
-                        der aus dem Kalender verschwand, bevor er stattfand, zählt als
-                        abgesagt.
+                        aus dem Kalender-Export – als abgesagt zählt ein Termin, dessen
+                        Titel CANCELED oder ABGESAGT enthält, oder einer, der an mindestens
+                        drei Kalendertagen im Kalender stand und vor dem Termin verschwand.
                     </p>
                     <!-- aria-busy sits in the markup so the reservation holds from the
                          first paint; status.js clears it (or replaces the text). -->
@@ -155,7 +155,7 @@
 
                 <section id="ausfaelle" class="panel">
                     <h2>ausfälle<a class="section-anchor" href="#ausfaelle" aria-label="Link zu: Ausfälle">#</a></h2>
-                    <p class="status-panel__hint">Termine, die aus dem Kalender verschwanden, bevor sie stattfanden – neueste zuerst.</p>
+                    <p class="status-panel__hint">Termine, die im Titel als CANCELED oder ABGESAGT markiert sind oder aus dem Kalender verschwanden, bevor sie stattfanden – neueste zuerst.</p>
                     <ul class="status-incidents" id="status-incidents">
                         <li class="status-incidents__empty">keine bekannt</li>
                     </ul>

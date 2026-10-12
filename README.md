@@ -166,10 +166,14 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   card `id` — a hash of the calendar UID (plus the date for series occurrences),
   so a shared link survives a reschedule and needs no registry. Entries are never
   deleted; an upcoming one that vanishes from a healthy export is flagged
-  `cancelled`. `scripts/build-event-pages.mjs` renders it into `e/<id>/` (one
+  `cancelled`. `scripts/build-event-pages.mjs` renders the archive into `e/<id>/` (one
   page + single-event `.ics` each, the RSS item links and the JSON-LD `url`
   point there) and `archiv/index.html`, using the checkout's `events.html` as
   the header/footer template. Locally: `pnpm run build:event-pages <archive.json>`.
+  `/status` (`scripts/build-status-data.mjs`) additionally counts a title
+  containing CANCELED/CANCELLED/ABGESAGT as cancelled — that marker overrides the
+  flag and the threshold — and leaves out vanished entries that stood in the
+  export for less than three calendar days (typos, not events).
 
 `finanz.json` and `funding.json` are **not** in that list — they are versioned on
 `main` and edited through the maintainer CLI — never by hand, and no longer by a

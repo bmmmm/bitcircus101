@@ -16,6 +16,15 @@
  * gerade nicht verfügbar". A corrupt archive throws, exactly as loadArchive
  * does for build-event-pages.mjs: never overwrite state with nothing.
  *
+ * Two rules decide `cancelled` here, on top of the archive's own flag (which
+ * means "no longer in the export" and drives the event pages untouched):
+ *   - a title that says so (CANCEL_TITLE_RE) is cancelled whatever the export
+ *     does — the owner's way to mark a drop-out without deleting the entry, and
+ *     the only signal that survives a deletion after the date;
+ *   - a vanished entry counts only after MIN_VISIBLE_DAYS in the export
+ *     (lastSeen day − firstSeen day); a shorter-lived one was a typo, not an
+ *     event, and is left out entirely — neither cancelled nor "happened".
+ *
  * It also stamps the homepage's one-line uptime brag (the streak of weeks that
  * held an event) between the <!-- status-streak:start/end --> markers in
  * index.html — the same idea as the footer's funding percent: a number on the
@@ -52,6 +61,11 @@ export const STREAK_END = "<!-- status-streak:end -->";
 /** First day on the status page — the site's first linkup on record. */
 export const STATUS_SINCE = "2025-05-25";
 export const PRIMARY_SOURCE = "bitcircus101";
+/** A title that says so is cancelled, whatever the export does. Whole word, any case. */
+export const CANCEL_TITLE_RE = /\b(cancell?ed|abgesagt)\b/i;
+/** A vanished entry counts as cancelled only after this many calendar days in the
+ *  export (lastSeen day − firstSeen day); shorter-lived ones were typos, not events. */
+export const MIN_VISIBLE_DAYS = 3;
 /** One row per event `type`, in page order. status.html carries the same
  *  labels statically (first paint); these travel along for the incident list. */
 export const SERIES = [
@@ -67,22 +81,45 @@ function cmp(a, b) {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
+const titleOf = (e) => (typeof e.title === "string" ? e.title : "");
+
+/** Calendar days between the firstSeen day and the lastSeen day, both as Berlin
+ *  dates — lastSeen is written as one (sync-events' todayStr), so firstSeen's
+ *  UTC stamp is read through the same clock (berlinToday). Missing, unparsable
+ *  or out-of-order stamps read as Infinity: a hand-edited archive must never
+ *  swallow a real cancellation, only a measured short life does. */
+export function visibleDays(entry) {
+  const firstStamp = Date.parse(String(entry.firstSeen || ""));
+  const first = Number.isFinite(firstStamp) ? Date.parse(berlinToday(new Date(firstStamp)) + "T00:00:00Z") : NaN;
+  const last = Date.parse(String(entry.lastSeen || "") + "T00:00:00Z");
+  if (!Number.isFinite(first) || !Number.isFinite(last) || last < first) return Infinity;
+  return Math.round((last - first) / 86400000);
+}
+
+/** A vanished entry that was in the export for less than MIN_VISIBLE_DAYS — a
+ *  typo that got deleted, not an event. A title marker still wins. */
+export function isNoise(entry) {
+  return entry.cancelled === true && !CANCEL_TITLE_RE.test(titleOf(entry)) && visibleDays(entry) < MIN_VISIBLE_DAYS;
+}
+
 /**
  * Pure: archive in, status data out. Exactly five fields per event (the size
  * guard — descriptions alone are most of the archive's bytes), `cancelled`
- * always a real boolean (the archive omits the key when false), sorted by date
- * then id so the output is diff-stable and the browser never sorts.
+ * always a real boolean (the archive omits the key when false; a title marker
+ * sets it too), sorted by date then id so the output is diff-stable and the
+ * browser never sorts.
  */
 export function buildStatusData(archive) {
   const events = Object.values((archive && archive.events) || {})
     .filter((e) => e && typeof e.id === "string" && typeof e.date === "string" && DATE_RE.test(e.date))
     .filter((e) => e.source === PRIMARY_SOURCE && KEYS.has(e.type) && e.date >= STATUS_SINCE)
+    .filter((e) => !isNoise(e))
     .map((e) => ({
       id: e.id,
       date: e.date,
-      title: typeof e.title === "string" ? e.title : "",
+      title: titleOf(e),
       series: e.type,
-      cancelled: e.cancelled === true,
+      cancelled: e.cancelled === true || CANCEL_TITLE_RE.test(titleOf(e)),
     }))
     .sort((a, b) => (a.date === b.date ? cmp(a.id, b.id) : cmp(a.date, b.date)));
   return { version: 1, since: STATUS_SINCE, series: SERIES.map((s) => ({ ...s })), events };
