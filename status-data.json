@@ -66,6 +66,13 @@
       "cancelled": false
     },
     {
+      "id": "248d68ac7842",
+      "date": "2025-07-02",
+      "title": "Treffen: Bolle Team",
+      "series": "special",
+      "cancelled": false
+    },
+    {
       "id": "cac940f88688",
       "date": "2025-07-02",
       "title": "Treffen: Bolle Team",
@@ -278,9 +285,9 @@
     {
       "id": "94cef4cd9101",
       "date": "2025-10-31",
-      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "title": "CANCELED - Casual Linkup@bitcircus101 (5FR)",
       "series": "linkup",
-      "cancelled": false
+      "cancelled": true
     },
     {
       "id": "ad76c443a187",
@@ -314,6 +321,13 @@
       "id": "c9ef99102acd",
       "date": "2025-11-10",
       "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "58cb781338df",
+      "date": "2025-11-12",
+      "title": "Treffen: Bolle-Bonn.de",
       "series": "special",
       "cancelled": false
     },
@@ -1327,6 +1341,13 @@
     },
     {
       "id": "506a1fe5fa40",
+      "date": "2026-09-29",
+      "title": "Treffen: Bolle-Bonn.de",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "8a95bebbdb48",
       "date": "2026-09-29",
       "title": "Treffen: Bolle-Bonn.de",
       "series": "special",

@@ -19,6 +19,7 @@
       "uid": "D5CF9E38-1740-4E32-91E0-B862F4DAEC28",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -39,9 +40,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -62,6 +63,7 @@
       "source": "bitcircus101",
       "uid": "2B302164-D726-4E18-BF12-ED60F247C75D",
       "calendarUrl": "http://doro101-ateliers.de/",
+      "page": true,
       "eventUrl": "http://doro101-ateliers.de/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -83,6 +85,7 @@
       "source": "bitcircus101",
       "uid": "3E76E549-640C-47C4-95B2-2F97E34F6560",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -105,9 +108,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -127,9 +130,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -154,6 +157,29 @@
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
+    },
+    "248d68ac7842": {
+      "id": "248d68ac7842",
+      "title": "Treffen: Bolle Team",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2025-07-02",
+      "time": "20:00",
+      "endDate": "2025-07-02",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "D5CF9E38-1740-4E32-91E0-B862F4DAEC28",
+      "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
     },
     "cac940f88688": {
       "id": "cac940f88688",
@@ -192,9 +218,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -214,9 +240,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -237,6 +263,7 @@
       "source": "bitcircus101",
       "uid": "94D172BE-3B85-443C-BB52-960BF03A109C",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -259,9 +286,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -282,6 +309,7 @@
       "source": "bitcircus101",
       "uid": "4AA28EB3-516C-4DFB-B03F-B0F3B5F98923",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -301,9 +329,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -325,6 +353,7 @@
       "uid": "A823FA6F-EB82-4E3A-B4D1-AF0966AB346E",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -345,9 +374,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -367,9 +396,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -390,6 +419,7 @@
       "source": "bitcircus101",
       "uid": "3FA80F6E-3D63-4CB3-AF4B-C0D6AD675CCB",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -411,9 +441,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -434,6 +464,7 @@
       "source": "bitcircus101",
       "uid": "543B3971-F04B-4189-9678-87BABB22CBCA",
       "calendarUrl": "https://froscon.org/",
+      "page": true,
       "eventUrl": "https://froscon.org/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -454,9 +485,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -477,6 +508,7 @@
       "source": "bitcircus101",
       "uid": "80A1A9D3-F52D-4889-989A-FB24FC0353E1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -498,6 +530,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -509,9 +542,9 @@
       "description": "Please join us for a special Apple Event. Watch it online at apple.com.",
       "location": "https://www.apple.com/apple-events/",
       "date": "2025-09-09",
-      "time": "10:00",
+      "time": "19:00",
       "endDate": "2025-09-09",
-      "endTime": "12:00",
+      "endTime": "21:00",
       "tags": [
         "#community"
       ],
@@ -519,6 +552,7 @@
       "source": "bitcircus101",
       "uid": "CF755DE6-65C2-4C1B-8871-EA1D3865B116",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -538,9 +572,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -562,9 +596,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -585,6 +619,7 @@
       "source": "bitcircus101",
       "uid": "808A2AC6-1256-45C2-BD99-A93A0C27CA9A",
       "calendarUrl": "https://offene-ateliers-bonn.de/",
+      "page": true,
       "eventUrl": "https://offene-ateliers-bonn.de/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -607,6 +642,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -628,6 +664,7 @@
       "source": "bitcircus101",
       "uid": "EF05605B-7C43-4FAB-8E08-8A55DCA5465E",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -647,9 +684,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -669,9 +706,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -691,9 +728,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -715,6 +752,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -737,9 +775,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -759,9 +797,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -782,6 +820,7 @@
       "source": "bitcircus101",
       "uid": "DA14F0B4-E6A3-4176-B43D-A689C6C0452F",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -809,7 +848,7 @@
     },
     "94cef4cd9101": {
       "id": "94cef4cd9101",
-      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "title": "CANCELED - Casual Linkup@bitcircus101 (5FR)",
       "subtitle": "",
       "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de",
       "location": "Dorotheenstraße 101",
@@ -823,11 +862,13 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-5fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
-      "lastSeen": "2026-09-13"
+      "lastSeen": "2026-09-13",
+      "cancelled": true,
+      "cancelledBy": "title"
     },
     "ad76c443a187": {
       "id": "ad76c443a187",
@@ -846,6 +887,7 @@
       "source": "bitcircus101",
       "uid": "5436CAED-31FC-47A7-B46D-C730BFBA5DE1",
       "calendarUrl": "https://www.quartier-mackeviertel.de",
+      "page": true,
       "eventUrl": "https://www.quartier-mackeviertel.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -866,9 +908,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -889,6 +931,7 @@
       "source": "bitcircus101",
       "uid": "CA0595C4-DA94-4883-8196-2E9A884A1247",
       "calendarUrl": "https://Datenburg.org",
+      "page": true,
       "eventUrl": "https://Datenburg.org",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -910,6 +953,7 @@
       "source": "bitcircus101",
       "uid": "F0BA3D66-7B58-4021-B4DC-68E238143565",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -931,9 +975,33 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
+    },
+    "58cb781338df": {
+      "id": "58cb781338df",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2025-11-12",
+      "time": "20:00",
+      "endDate": "2025-11-12",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
     },
     "5ce0eb62f802": {
       "id": "5ce0eb62f802",
@@ -951,9 +1019,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -975,9 +1043,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1000,6 +1068,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1021,6 +1090,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1043,6 +1113,7 @@
       "uid": "68360E55-7F2F-4105-BA9A-17DB30370DF5",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1062,9 +1133,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1085,6 +1156,7 @@
       "source": "bitcircus101",
       "uid": "EC9B20FF-F728-453C-8EA1-4CB6480E14B6",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1106,6 +1178,7 @@
       "uid": "9B0C5234-A2D6-47E3-9838-8B6933C12C34",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1127,6 +1200,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1149,6 +1223,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1168,9 +1243,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1192,6 +1267,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -1214,6 +1290,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1236,6 +1313,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1255,9 +1333,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1279,6 +1357,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1301,6 +1380,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1322,9 +1402,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1346,6 +1426,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1368,6 +1449,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1387,9 +1469,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1410,6 +1492,7 @@
       "source": "bitcircus101",
       "uid": "9DCCA151-ECE2-48E2-884E-D1D3DD0725E6",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1431,6 +1514,7 @@
       "uid": "9B0C5234-A2D6-47E3-9838-8B6933C12C34",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1453,6 +1537,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1474,6 +1559,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1493,9 +1579,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1517,6 +1603,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -1540,6 +1627,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1561,6 +1649,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1582,9 +1671,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1606,6 +1695,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1628,6 +1718,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1650,6 +1741,7 @@
       "uid": "68360E55-7F2F-4105-BA9A-17DB30370DF5",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1669,9 +1761,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1693,6 +1785,7 @@
       "source": "bitcircus101",
       "uid": "9BA63915-2D74-46BF-BC4B-E3B09CA32B28",
       "calendarUrl": "https://www.synaplan.com/",
+      "page": true,
       "eventUrl": "https://www.synaplan.com/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -1715,6 +1808,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1737,6 +1831,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1758,6 +1853,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -1778,9 +1874,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-5fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1801,6 +1897,7 @@
       "source": "bitcircus101",
       "uid": "520E27E7-1EAA-4162-8EC6-EBC0641375DB",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1822,6 +1919,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1844,6 +1942,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1863,9 +1962,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1887,6 +1986,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -1909,6 +2009,7 @@
       "uid": "FC0552E4-F4AB-4193-AAC7-2FB4407DCBEE",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1931,6 +2032,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1950,9 +2052,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1975,6 +2077,7 @@
       "uid": "D1A1E26A-2023-4C38-B0DD-BD3E199F91A1",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -1998,6 +2101,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2019,9 +2123,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2046,6 +2150,7 @@
       "source": "bitcircus101",
       "uid": "2DB258DE-50CF-46B1-B8B3-F22D53A1BC2B",
       "calendarUrl": "https://docs.fsfe.org/en/LocalGroups/Active/Bonn/Events/ilovefs",
+      "page": true,
       "eventUrl": "https://docs.fsfe.org/en/LocalGroups/Active/Bonn/Events/ilovefs",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -2070,6 +2175,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2091,6 +2197,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -2111,9 +2218,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2134,6 +2241,7 @@
       "source": "bitcircus101",
       "uid": "57CE48ED-8891-4BC8-B549-135F2B0549E4",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2154,6 +2262,7 @@
       "source": "bitcircus101",
       "uid": "2354158E-FAEC-433D-8AB4-7336A8955A78",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2177,6 +2286,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2196,9 +2306,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2220,6 +2330,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -2244,6 +2355,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2264,6 +2376,7 @@
       "source": "bitcircus101",
       "uid": "A231E8BB-0E6C-4C8C-AA93-A908FEE4B3C4",
       "calendarUrl": "https://message:%3Cba4c25ba5ad4d10f1ea9d4c50c37eaba@posteo.net%3E",
+      "page": true,
       "eventUrl": "https://message:%3Cba4c25ba5ad4d10f1ea9d4c50c37eaba@posteo.net%3E",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -2284,9 +2397,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2310,6 +2423,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2331,9 +2445,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2354,6 +2468,7 @@
       "source": "bitcircus101",
       "uid": "218213DA-12C5-4BFD-A68C-A52321A53D41",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2374,6 +2489,7 @@
       "source": "bitcircus101",
       "uid": "0EAC1863-1CB6-4BC7-BF39-553FA158A427",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2397,6 +2513,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2418,6 +2535,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -2438,9 +2556,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2464,6 +2582,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2483,9 +2602,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2509,6 +2628,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2528,9 +2648,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2552,6 +2672,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -2576,6 +2697,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2597,9 +2719,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2623,6 +2745,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2642,9 +2765,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2668,6 +2791,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2689,6 +2813,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -2709,9 +2834,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2732,6 +2857,7 @@
       "source": "bitcircus101",
       "uid": "FE179D13-58CE-4235-9939-012AD23E73FD",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2752,6 +2878,7 @@
       "source": "bitcircus101",
       "uid": "389605B6-81C2-4B8A-9E0D-845B182C9E9A",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2775,6 +2902,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2794,9 +2922,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2817,6 +2945,7 @@
       "source": "bitcircus101",
       "uid": "EEC2D2D1-3DC4-4237-8934-7CD8403B60A0",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2838,6 +2967,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -2862,6 +2992,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2883,9 +3014,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2909,6 +3040,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2928,9 +3060,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2951,6 +3083,7 @@
       "source": "bitcircus101",
       "uid": "310FC895-5CDB-40AA-BD1A-26AB2C427432",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2974,6 +3107,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -2995,6 +3129,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3015,9 +3150,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-5fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3041,6 +3176,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3060,9 +3196,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3084,6 +3220,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3108,6 +3245,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3127,9 +3265,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3153,6 +3291,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3174,9 +3313,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3200,6 +3339,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3221,6 +3361,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3241,9 +3382,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3267,6 +3408,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3286,9 +3428,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3312,6 +3454,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3331,9 +3474,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3355,6 +3498,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3379,6 +3523,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3400,9 +3545,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3423,6 +3568,7 @@
       "source": "bitcircus101",
       "uid": "B354382B-F062-4757-840F-16C0C77178D9",
       "calendarUrl": "https://pridebonn.org/einfache-sprache/",
+      "page": true,
       "eventUrl": "https://pridebonn.org/einfache-sprache/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3447,6 +3593,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3467,6 +3614,7 @@
       "source": "bitcircus101",
       "uid": "E704D718-5974-48A1-BD1E-32D6272B9572",
       "calendarUrl": "https://bitcircus101.de/events",
+      "page": true,
       "eventUrl": "https://bitcircus101.de/events",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3487,9 +3635,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3513,6 +3661,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3534,6 +3683,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3554,9 +3704,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "A181B019-30E9-40E0-8250-45DC8DF5B788",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3577,6 +3727,7 @@
       "source": "bitcircus101",
       "uid": "7856CDF7-054E-46BC-9EA9-AECA10B0FDF3",
       "calendarUrl": "https://www.rheinqueer-bonn.de/event/1-august-2026-csd-beethovens-bunte/",
+      "page": true,
       "eventUrl": "https://www.rheinqueer-bonn.de/event/1-august-2026-csd-beethovens-bunte/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3601,6 +3752,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3620,9 +3772,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3646,6 +3798,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3666,6 +3819,7 @@
       "source": "bitcircus101",
       "uid": "46D03F17-581F-4E98-9499-E3E9A8319A83",
       "calendarUrl": "https://bit.fau.org/events/fau-bit-zu-gast-in-bonn/",
+      "page": true,
       "eventUrl": "https://bit.fau.org/events/fau-bit-zu-gast-in-bonn/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3686,9 +3840,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3712,6 +3866,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3733,9 +3888,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3759,6 +3914,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3780,6 +3936,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
@@ -3800,11 +3957,32 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
+    },
+    "5f2df3ae5dcc": {
+      "id": "5f2df3ae5dcc",
+      "title": "Writing Systems - wie funktionieren Schriftsysteme?",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-09-01",
+      "time": "19:00",
+      "endDate": "2026-09-01",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "d12abe09-cf40-4ed5-b8a1-973685be678d",
+      "calendarUrl": "https://my.stim.toys",
+      "page": true,
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
     },
     "b4f2e5e59816": {
       "id": "b4f2e5e59816",
@@ -3826,6 +4004,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3845,11 +4024,32 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
+    },
+    "11284c42d78c": {
+      "id": "11284c42d78c",
+      "title": "Colorful nonsense - Farbspielereien",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-09-08",
+      "time": "19:00",
+      "endDate": "2026-09-08",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "40b91a5e-a58c-4268-b69d-7c5e38743027",
+      "calendarUrl": "https://my.stim.toys",
+      "page": true,
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
     },
     "bbf2f0ea8f16": {
       "id": "bbf2f0ea8f16",
@@ -3871,6 +4071,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3881,9 +4082,9 @@
       "description": "Einladung zum Apple Special Event. Online auf apple.com.",
       "location": "https://www.apple.com/de/apple-events/",
       "date": "2026-09-09",
-      "time": "10:00",
+      "time": "19:00",
       "endDate": "2026-09-09",
-      "endTime": "12:00",
+      "endTime": "21:00",
       "tags": [
         "#community"
       ],
@@ -3891,6 +4092,7 @@
       "source": "bitcircus101",
       "uid": "7F2C9A14-3B6D-4E58-9C1A-0D9E2F6A8B30",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3910,9 +4112,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-13"
     },
@@ -3934,9 +4136,31 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-14"
+    },
+    "75e0c0f4a2f4": {
+      "id": "75e0c0f4a2f4",
+      "title": "Bringt mit, woran ihr bastelt, und zeigt es her 🖌️🎨🫟 bring your artworks, participation welcome!",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-09-15",
+      "time": "19:00",
+      "endDate": "2026-09-15",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "51923e1a-0e46-4fdd-87bf-4da6c64695ae",
+      "calendarUrl": "https://my.stim.toys",
+      "page": true,
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
     },
     "bcf53114201a": {
       "id": "bcf53114201a",
@@ -3958,6 +4182,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-15"
     },
@@ -3979,9 +4204,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-18"
     },
@@ -4003,6 +4228,7 @@
       "source": "bitcircus101",
       "uid": "a35f62f7-3be4-4941-a1ac-ea4044eb41b5@bitcircus101.de",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-18"
     },
@@ -4024,6 +4250,7 @@
       "uid": "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
       "calendarUrl": "https://offene-ateliers-bonn.de/",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://offene-ateliers-bonn.de/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-19"
@@ -4046,6 +4273,7 @@
       "uid": "6CA09E3E-5E61-4C65-AA0B-6ACDD9F7AFDA",
       "calendarUrl": "https://offene-ateliers-bonn.de/",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://offene-ateliers-bonn.de/",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-20"
@@ -4070,8 +4298,30 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-22"
+    },
+    "74d76b806e9c": {
+      "id": "74d76b806e9c",
+      "title": "Lustige Literarische Lesungsübung 📖 Practical Reading Practice",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-09-22",
+      "time": "19:00",
+      "endDate": "2026-09-22",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "8446f26c-b22a-4882-aad9-9a7ec17beb8f",
+      "calendarUrl": "https://my.stim.toys",
+      "page": true,
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
     },
     "1d9a350e2120": {
       "id": "1d9a350e2120",
@@ -4089,9 +4339,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-25"
     },
@@ -4139,6 +4389,29 @@
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-09-29"
     },
+    "8a95bebbdb48": {
+      "id": "8a95bebbdb48",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-09-29",
+      "time": "20:00",
+      "endDate": "2026-09-29",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
     "8797f899c84a": {
       "id": "8797f899c84a",
       "title": "Treffen: Bolle-Bonn.de",
@@ -4177,9 +4450,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-02"
     },
@@ -4201,8 +4474,30 @@
       "source": "bitcircus101",
       "uid": "CC04C129-B0F9-4754-8F2B-E3F6D300AD5B",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-10-02T16:28:59.450Z",
       "lastSeen": "2026-10-06"
+    },
+    "44bca13490df": {
+      "id": "44bca13490df",
+      "title": "Punny poetry 📖 Wortwitzige Dichterei",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-10-06",
+      "time": "19:00",
+      "endDate": "2026-10-06",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "18d2559e-f9c9-42cf-ae8f-e285b2678fc4",
+      "calendarUrl": "https://my.stim.toys",
+      "page": true,
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
     },
     "bb806176eec6": {
       "id": "bb806176eec6",
@@ -4224,6 +4519,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-06"
     },
@@ -4243,9 +4539,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-09"
     },
@@ -4267,6 +4563,7 @@
       "source": "bitcircus101",
       "uid": "51FBAB7D-F2D1-49C6-AAC8-F94504DFF459",
       "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-10"
     },
@@ -4288,6 +4585,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-12"
@@ -4312,6 +4610,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4333,9 +4632,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4357,6 +4656,7 @@
       "source": "bitcircus101",
       "uid": "hack-den-stadtrat-20261017@machdenstaat.de",
       "calendarUrl": "https://code.paderta.com/hack-den-stadtrat/",
+      "page": true,
       "eventUrl": "https://code.paderta.com/hack-den-stadtrat/",
       "firstSeen": "2026-10-03T11:07:49.039Z",
       "lastSeen": "2026-10-13"
@@ -4379,6 +4679,7 @@
       "source": "bitcircus101",
       "uid": "hack-den-stadtrat@machdenstaat.de",
       "calendarUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
+      "page": true,
       "eventUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
       "firstSeen": "2026-09-30T21:11:47.441Z",
       "lastSeen": "2026-10-13"
@@ -4403,6 +4704,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4422,9 +4724,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4448,6 +4750,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4469,6 +4772,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
@@ -4489,9 +4793,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "A181B019-30E9-40E0-8250-45DC8DF5B788",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4515,6 +4819,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4534,9 +4839,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4558,6 +4863,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
@@ -4582,6 +4888,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4601,9 +4908,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4627,6 +4934,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4648,9 +4956,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4674,6 +4982,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4695,6 +5004,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
@@ -4715,9 +5025,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4741,6 +5051,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4760,9 +5071,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4786,6 +5097,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4805,9 +5117,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4829,6 +5141,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
@@ -4853,6 +5166,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4874,9 +5188,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4900,6 +5214,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4919,9 +5234,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4945,6 +5260,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -4966,6 +5282,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
@@ -4986,9 +5303,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -5012,6 +5329,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -5031,9 +5349,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-2fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-13"
     },
@@ -5055,6 +5373,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-09-13T17:17:13.336Z",
       "lastSeen": "2026-10-13"
@@ -5079,6 +5398,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-14T17:17:13.479Z",
       "lastSeen": "2026-10-13"
     },
@@ -5100,9 +5420,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-17T18:17:14.667Z",
       "lastSeen": "2026-10-13"
     },
@@ -5126,6 +5446,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-21T17:17:13.862Z",
       "lastSeen": "2026-10-13"
     },
@@ -5145,9 +5466,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-4fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-09-24T18:17:15.895Z",
       "lastSeen": "2026-10-13"
     },
@@ -5171,6 +5492,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-09-28T17:17:16.567Z",
       "lastSeen": "2026-10-13"
     },
@@ -5192,6 +5514,7 @@
       "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "calendarUrl": "https://bolle-bonn.de",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://bolle-bonn.de",
       "firstSeen": "2026-09-29T18:17:14.602Z",
       "lastSeen": "2026-10-13"
@@ -5212,9 +5535,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "A181B019-30E9-40E0-8250-45DC8DF5B788",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-10-01T18:17:13.257Z",
       "lastSeen": "2026-10-13"
     },
@@ -5238,6 +5561,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-10-05T17:17:21.202Z",
       "lastSeen": "2026-10-13"
     },
@@ -5257,9 +5581,9 @@
       "type": "linkup",
       "source": "bitcircus101",
       "uid": "casual-linkup-1fr@bitcircus101.de",
-      "calendarUrl": "https://bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
-      "eventUrl": "https://bitcircus101.de",
+      "page": true,
       "firstSeen": "2026-10-08T18:17:14.620Z",
       "lastSeen": "2026-10-13"
     },
@@ -5281,6 +5605,7 @@
       "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
       "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "recurring": true,
+      "page": true,
       "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
       "firstSeen": "2026-10-11T17:17:16.176Z",
       "lastSeen": "2026-10-13"
@@ -5305,6 +5630,7 @@
       "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
       "calendarUrl": "https://bitcircus101.de/calendar/",
       "recurring": true,
+      "page": true,
       "firstSeen": "2026-10-12T17:17:11.579Z",
       "lastSeen": "2026-10-13"
     }
