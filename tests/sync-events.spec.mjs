@@ -521,6 +521,30 @@ describe("parseICS", () => {
     assert.equal(events[0].dtstart.getHours(), 19);
   });
 
+  it("splits a property at the first colon outside a quoted parameter", () => {
+    const ics = [
+      "BEGIN:VCALENDAR",
+      "BEGIN:VEVENT",
+      'DTSTART;TZID="Europe/Berlin":20260601T190000',
+      'LOCATION;ALTREP="https://x/":Ort',
+      "SUMMARY:Quoted",
+      "END:VEVENT",
+      "END:VCALENDAR",
+    ].join("\r\n");
+    const origWarn = console.warn;
+    const warnings = [];
+    console.warn = (msg) => warnings.push(msg);
+    let events;
+    try {
+      events = parseICS(ics, "test-quoted");
+    } finally {
+      console.warn = origWarn;
+    }
+    assert.equal(events[0].location, "Ort");
+    assert.equal(events[0].dtstart.getHours(), 19);
+    assert.deepEqual(warnings, []);
+  });
+
   it("extracts UID and URL fields", () => {
     const ics = [
       "BEGIN:VCALENDAR",
