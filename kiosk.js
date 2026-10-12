@@ -566,7 +566,8 @@
     Core.activeEntries(lastJobs.postings || [], today).forEach(function (p) {
       var url = safeUrl(p.url);
       if (!url) return;
-      var host = new URL(url).host.replace(/^www\./, "");
+      // Shown and read out in Unicode; the QR payload stays the ASCII url
+      var host = Core.toUnicodeHost(new URL(url).host.replace(/^www\./, ""));
       var note = withQr({
         kind: "job",
         title: p.title,

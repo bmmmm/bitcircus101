@@ -177,8 +177,59 @@
     return m ? m[3] + "." + m[2] + "." + m[1] : String(isoDay == null ? "" : isoDay);
   }
 
+  /**
+   * Decode one Punycode label body (the part after "xn--", RFC 3492 §6.2).
+   * Throws on malformed input; the caller keeps the raw label then.
+   */
+  function punyDecode(input) {
+    var base = 36, tMin = 1, tMax = 26, skew = 38, damp = 700;
+    var n = 128, i = 0, bias = 72, out = [];
+    var b = input.lastIndexOf("-");
+    for (var j = 0; j < Math.max(b, 0); j++) {
+      if (input.charCodeAt(j) >= 0x80) throw new Error("non-basic");
+      out.push(input.charCodeAt(j));
+    }
+    for (var at = b > 0 ? b + 1 : 0; at < input.length;) {
+      var oldi = i, w = 1;
+      for (var k = base; ; k += base) {
+        // Past the end charCodeAt gives NaN, which is no digit: truncation throws too
+        var c = input.charCodeAt(at++);
+        var digit = c >= 48 && c <= 57 ? c - 22 : c >= 65 && c <= 90 ? c - 65 :
+          c >= 97 && c <= 122 ? c - 97 : base;
+        if (digit >= base) throw new Error("bad digit");
+        i += digit * w;
+        var t = k <= bias ? tMin : k >= bias + tMax ? tMax : k - bias;
+        if (digit < t) break;
+        w *= base - t;
+      }
+      var len = out.length + 1, delta = oldi === 0 ? Math.floor((i - oldi) / damp) : (i - oldi) >> 1;
+      delta += Math.floor(delta / len);
+      for (k = 0; delta > ((base - tMin) * tMax) >> 1; k += base) delta = Math.floor(delta / (base - tMin));
+      bias = k + Math.floor((base - tMin + 1) * delta / (delta + skew));
+      n += Math.floor(i / len);
+      if (n > 0x10ffff) throw new Error("overflow");
+      i %= len;
+      out.splice(i++, 0, n);
+    }
+    return String.fromCodePoint.apply(String, out);
+  }
+
+  /**
+   * A host as people read it: every "xn--" label decoded to Unicode
+   * ("xn--mnchen-3ya.example" → "münchen.example"). new URL() hands hosts out
+   * in Punycode; this is for display only — links and QR payloads stay ASCII.
+   * A label that does not decode stays as it was.
+   */
+  function toUnicodeHost(host) {
+    return String(host).split(".").map(function (label) {
+      if (!/^xn--/i.test(label)) return label;
+      try { return punyDecode(label.slice(4).toLowerCase()) || label; } catch (e) { return label; }
+    }).join(".");
+  }
+
   return {
     MONTHS: MONTHS,
+    toUnicodeHost: toUnicodeHost,
     EMPLOYMENT_KEYS: EMPLOYMENT_KEYS,
     employmentLabels: employmentLabels,
     LEVEL_KEYS: LEVEL_KEYS,
