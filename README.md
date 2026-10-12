@@ -233,7 +233,7 @@ The schema accepts optional `url1`/`url2` per item and the CLI offers them, but
 `jobs.json` feeds `pinnwand.html`: one object per posting, eight required fields,
 no optional ones — among them `location` (free text) and `employment` (one or
 more keys; the German labels live in `jobs-core.js`). Companies add theirs by pull request — the how-to, the
-copy-paste snippets and the donation channels live on the page itself, so the
+copy-paste snippets and the house rules live on the page itself, so the
 instructions and the gate cannot drift apart — a unit test parses both snippets
 out of the HTML and validates them. `scripts/build-pinnwand-feed.mjs` renders
 the active postings as RSS (`pinnwand/feed.xml`, live-only — see Generated
@@ -325,7 +325,7 @@ pnpm run check:jobs        # the gate: node scripts/check-jobs.mjs [file]
   "redundant".
 - Removing an expired entry is housekeeping; the warning is the reminder.
 - **The page is the wall.** One paragraph names the offer; everything procedural
-  (the three steps, the snippet, the donation channels, the house rules) sits in
+  (the three steps, the snippet, the house rules, the Chiffre how-to) sits in
   collapsed `details.sidenote` blocks, the same idiom `raum-nutzen.html` uses.
   Companies are addressed as *ihr* — which is why the invite note says "Euer".
   The Chiffre section speaks to job seekers as *du*, like the rest of the site.
