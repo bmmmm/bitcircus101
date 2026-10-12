@@ -390,6 +390,31 @@ describe("expandRRule — DAILY / YEARLY / unsupported", () => {
   });
 });
 
+describe("expandRRule — long-running series without COUNT", () => {
+  // Every branch used to stop after 200 occurrences counted from DTSTART, so a
+  // series older than that expanded to nothing upcoming — silently.
+  const ago = (days) => {
+    const d = new Date();
+    d.setDate(d.getDate() - days);
+    d.setHours(19, 0, 0, 0);
+    return d;
+  };
+  const cases = [
+    ["WEEKLY", ago(5 * 365), "FREQ=WEEKLY"],
+    ["MONTHLY by weekday", ago(20 * 365), "FREQ=MONTHLY;BYDAY=1FR"],
+    ["MONTHLY by monthday", ago(20 * 365), "FREQ=MONTHLY"],
+    ["DAILY", ago(365), "FREQ=DAILY"],
+    ["YEARLY", ago(250 * 365), "FREQ=YEARLY"],
+  ];
+  for (const [label, dtstart, rule] of cases) {
+    it(`${label} still yields upcoming occurrences`, () => {
+      const now = new Date();
+      const upcoming = expandRRule(dtstart, rule, []).filter((d) => d >= now);
+      assert(upcoming.length > 0, `${rule} from ${dtstart.toISOString()} has nothing upcoming`);
+    });
+  }
+});
+
 // ── parseICS ──────────────────────────────────────────────────────────────
 
 describe("parseICS", () => {

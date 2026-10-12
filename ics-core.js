@@ -59,7 +59,9 @@
     // it to end-of-day a timed occurrence on the UNTIL date (19:00 > 00:00) is lost.
     if (end && p.UNTIL.indexOf("T") === -1) end.setHours(23, 59, 59, 999);
     var limit = end && end < horizon ? end : horizon;
-    var max = p.COUNT ? +p.COUNT : 200;
+    // Without COUNT only `limit` bounds the walk. A fixed cap counted from DTSTART
+    // starved every long-running series of its upcoming dates.
+    var max = p.COUNT ? +p.COUNT : Infinity;
     var exSet = {};
     exdates.forEach(function (d) { exSet[d.toDateString()] = true; });
     var out = [];
