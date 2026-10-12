@@ -61,10 +61,12 @@
   var LEVEL_KEYS = Object.keys(LEVEL);
 
   // The optional direct contact on a Chiffre note: a bare mailto: with an
-  // address the person chose to make public, no ?subject or other header.
+  // address the person chose to make public, no ?subject or other header. No
+  // "%" either (an escaped CR/LF smuggles a header back in), no "," or ";"
+  // (a second recipient), no <>" and no control characters.
   // Declared once — the gate enforces it, the page checks it again before it
   // renders a link, and a unit test holds it against jobs.schema.json.
-  var CHIFFRE_CONTACT_RE = /^mailto:[^\s@?]+@[^\s@?]+\.[^\s@?]+$/;
+  var CHIFFRE_CONTACT_RE = /^mailto:[^\s@?%,;<>"\x00-\x1f\x7f]+@[^\s@?%,;<>"\x00-\x1f\x7f]+\.[^\s@?%,;<>"\x00-\x1f\x7f]+$/;
 
   /** The label for a level key, or "" for an unknown one. */
   function levelLabel(key) {
