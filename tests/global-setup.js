@@ -35,15 +35,16 @@ function buildEventsArchive() {
   }
   const past = (n, title, uid, description, extra = {}) => {
     const d = iso(new Date(Date.now() - n * 86400000));
+    const { firstSeen = data.lastSync, ...fields } = extra;
     const card = {
       title, subtitle: "", description, location: "Dorotheenstraße 101",
       date: d, time: "19:00", endDate: d, endTime: "22:00",
       tags: ["#workshop"], type: "workshop", source: "bitcircus101", uid,
       calendarUrl: "https://nc.example.org/apps/calendar/p/abc",
-      ...extra,
+      ...fields,
     };
     card.id = require("../events-core.js").eventId(card, { name: card.source });
-    events[card.id] = { ...card, firstSeen: data.lastSync, lastSeen: day };
+    events[card.id] = { ...card, firstSeen, lastSeen: day };
   };
   past(20, "Vergangener Lötabend", "fixture-past-1", "Erster Absatz.\n\nZweiter Absatz mit https://example.org/link.");
   past(400, "Sehr alter Termin", "fixture-past-2", "");
@@ -56,7 +57,11 @@ function buildEventsArchive() {
   past(27, "Casual Linkup (Fixture)", "fixture-linkup-1", "", linkup);
   past(34, "Casual Linkup (Fixture)", "fixture-linkup-2", "", linkup);
   past(41, "Casual Linkup (Fixture)", "fixture-linkup-3", "", linkup);
-  past(48, "Linkup ausgefallen (Fixture)", "fixture-linkup-4", "", { ...linkup, cancelled: true });
+  // Vanished entries count only after MIN_VISIBLE_DAYS in the export, so this
+  // one was first seen ten days before its date (the default firstSeen is today).
+  past(48, "Linkup ausgefallen (Fixture)", "fixture-linkup-4", "", {
+    ...linkup, cancelled: true, firstSeen: iso(new Date(Date.now() - 58 * 86400000)) + "T12:00:00.000Z",
+  });
   past(62, "Linkup@bitcircus101 (Fixture)", "fixture-linkup-5", "", linkup);
   past(400, "Uralter Linkup (Fixture)", "fixture-linkup-6", "", linkup);
   return { version: 1, events };
