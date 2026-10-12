@@ -243,7 +243,23 @@
   /** Pull TZID parameter out of a property like "DTSTART;TZID=Europe/Berlin" */
   function parseTzid(rawKey) {
     var m = rawKey.match(/TZID=([^;:]+)/i);
-    return m ? m[1] : null;
+    // A parameter value may be quoted (TZID="Europe/Berlin", RFC5545 §3.2).
+    return m ? m[1].replace(/^"|"$/g, "") : null;
+  }
+
+  /**
+   * Index of the colon that ends the property name + parameters. A quoted
+   * parameter value may itself contain colons (ALTREP="https://…"), so the first
+   * colon outside double quotes is the separator, not simply the first colon.
+   */
+  function valueColon(line) {
+    var quoted = false;
+    for (var i = 0; i < line.length; i++) {
+      var c = line.charAt(i);
+      if (c === '"') quoted = !quoted;
+      else if (c === ":" && !quoted) return i;
+    }
+    return -1;
   }
 
   var tzidWarned = {};
@@ -318,7 +334,7 @@
       if (line.indexOf("BEGIN:") === 0) { nested++; continue; }
       if (line.indexOf("END:") === 0) { if (nested > 0) nested--; continue; }
       if (nested > 0) continue;
-      var ci = line.indexOf(":");
+      var ci = valueColon(line);
       if (ci === -1) continue;
       var rawKey = line.slice(0, ci);
       var key = rawKey.split(";")[0].toUpperCase();
