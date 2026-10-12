@@ -39,11 +39,11 @@
   /**
    * Tag resolution — 3 sources, in priority:
    *
-   * 1. Explicit #hashtags in the event description  (you control these in Nextcloud)
-   * 2. ICS CATEGORIES field                         (Nextcloud calendar categories)
+   * 1. Explicit #hashtags in the event description  (you control these in the calendar entry)
+   * 2. ICS CATEGORIES field                         (the calendar entry's categories)
    * 3. Keyword auto-detection from title/description (fallback)
    *
-   * → Write "#workshop #hardware" anywhere in the Nextcloud event description
+   * → Write "#workshop #hardware" anywhere in the calendar entry's description
    *   and those tags appear on the website. No code changes needed.
    */
   function extractHashtags(text) {

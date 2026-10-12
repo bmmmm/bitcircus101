@@ -587,7 +587,7 @@
   // events-core.js (window.EventsCore), both shared with the Node sync script —
   // the fallback renders the same cards (tags, type, truncation) as the JSON path.
 
-  // Source descriptor for the fallback: only the primary Nextcloud calendar is
+  // Source descriptor for the fallback: only our own calendar (Radicale) is
   // reachable from the browser, so cards carry the same source name the sync uses.
   var FALLBACK_CAL = { id: "bitcircus", name: "bitcircus101", url: CALENDAR_URL, cap: 30 };
 
