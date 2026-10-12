@@ -27,7 +27,25 @@ import {
 // entry points eventId/toAllCards are) — imported the same way sync-events.mjs
 // itself imports them.
 import EventsCore from "../events-core.js";
-const { toCard, stripTagLines, MAX_ALL_CARDS } = EventsCore;
+const { toCard, stripTagLines, isCancelledTitle, MAX_ALL_CARDS } = EventsCore;
+
+describe("isCancelledTitle", () => {
+  it("matches the owner's marker at the START of a title, any case, optional bracket", () => {
+    for (const t of ["CANCELED: Linkup", "Cancelled – Lötabend", "ABGESAGT Linkup", "abgesagt: Vortrag",
+      "[CANCELED] Linkup", "(Abgesagt) Workshop", "  CANCELED Linkup", "[ Abgesagt ] Linkup"]) {
+      assert.equal(isCancelledTitle(t), true, t);
+    }
+  });
+
+  it("ignores the words anywhere else, partial words, and non-strings", () => {
+    for (const t of ["Linkup – nicht abgesagt", "Linkup (cancelled)", "Cancellation Policy Talk",
+      "Abgesagter Workshop", "Uncancelled Linkup", "Linkup CANCELED", ""]) {
+      assert.equal(isCancelledTitle(t), false, JSON.stringify(t));
+    }
+    assert.equal(isCancelledTitle(undefined), false);
+    assert.equal(isCancelledTitle(null), false);
+  });
+});
 
 // ── parseDate ─────────────────────────────────────────────────────────────
 
@@ -1293,6 +1311,13 @@ describe("generateICS", () => {
     assert.match(ics, /DTEND;TZID=Europe\/Berlin:20260321T220000/);
   });
 
+  it("emits STATUS:CANCELLED for a cancelled card — archive flag or title marker — and nothing otherwise", () => {
+    assert.ok(!generateICS([baseCard], NOW).includes("STATUS:"), "a plain card carries no STATUS");
+    assert.match(generateICS([{ ...baseCard, cancelled: true }], NOW), /\r\nSTATUS:CANCELLED\r\n/);
+    assert.match(generateICS([{ ...baseCard, title: "CANCELED: Crowd Gaming" }], NOW), /\r\nSTATUS:CANCELLED\r\n/);
+    assert.ok(!generateICS([{ ...baseCard, title: "Crowd Gaming (cancelled)" }], NOW).includes("STATUS:"));
+  });
+
   it("defaults DTEND to +2h when the card carries no end time", () => {
     const ics = generateICS([{ ...baseCard, endDate: "", endTime: "" }], NOW);
     assert.match(ics, /DTEND;TZID=Europe\/Berlin:20260321T220000/);
@@ -2398,13 +2423,74 @@ describe("parseICS — recurring flag", () => {
       "DTSTART:20260105T190000", "RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=3", "SUMMARY:Weekly"
     ));
     assert.equal(events.length, 3);
-    for (const e of events) assert.equal(e.recurring, true);
+    for (const e of events) {
+      assert.equal(e.recurring, true);
+      assert.equal("fromRRule" in e, false, "the parser's own bookkeeping must not leak");
+    }
   });
 
   it("leaves a plain (non-recurring) event without a recurring key at all", () => {
     const events = parseICS(wrap("DTSTART:20260105T190000", "SUMMARY:OneOff"));
     assert.equal(events.length, 1);
     assert.equal(Object.prototype.hasOwnProperty.call(events[0], "recurring"), false);
+    assert.equal("fromRRule" in events[0], false);
+  });
+});
+
+describe("parseICS — RECURRENCE-ID overrides", () => {
+  const cal = (...vevents) =>
+    ["BEGIN:VCALENDAR", ...vevents.map((b) => ["BEGIN:VEVENT", ...b, "END:VEVENT"].join("\r\n")), "END:VCALENDAR"].join("\r\n");
+  const master = ["UID:series@x", "DTSTART:20260105T190000", "DTEND:20260105T210000",
+    "RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=3", "SUMMARY:Weekly"];
+  const byDay = (events) => events.map((e) => `${e.dtstart.toISOString().slice(0, 10)} ${e.summary}${e.recurring ? " *" : ""}`).sort();
+
+  it("a renamed occurrence replaces the master's instance on that day and stays a recurring instance (same card id)", () => {
+    const events = parseICS(cal(master,
+      ["UID:series@x", "RECURRENCE-ID:20260112T190000", "DTSTART:20260112T190000", "DTEND:20260112T210000", "SUMMARY:CANCELED: Weekly"]));
+    assert.deepEqual(byDay(events), ["2026-01-05 Weekly *", "2026-01-12 CANCELED: Weekly *", "2026-01-19 Weekly *"]);
+    const override = events.find((e) => e.summary.startsWith("CANCELED"));
+    assert.equal(override.recurring, true);
+    assert.equal("fromRRule" in override, false);
+    // The id a plain third-party card would carry for that occurrence is the id the override gets.
+    const c = { name: "Cal" };
+    assert.equal(
+      eventId({ uid: "series@x", recurring: true, date: "2026-01-12" }, c),
+      eventId({ uid: override.uid, recurring: override.recurring, date: "2026-01-12" }, c)
+    );
+  });
+
+  it("a moved occurrence leaves its original day empty and shows up on the new one", () => {
+    const events = parseICS(cal(master,
+      ["UID:series@x", "RECURRENCE-ID:20260112T190000", "DTSTART:20260114T190000", "DTEND:20260114T210000", "SUMMARY:Weekly"]));
+    assert.deepEqual(byDay(events), ["2026-01-05 Weekly *", "2026-01-14 Weekly *", "2026-01-19 Weekly *"]);
+  });
+
+  it("handles an override that precedes its master, two overrides in one series, and keeps the total count", () => {
+    const events = parseICS(cal(
+      ["UID:series@x", "RECURRENCE-ID:20260105T190000", "DTSTART:20260105T190000", "SUMMARY:First, renamed"],
+      master,
+      ["UID:series@x", "RECURRENCE-ID:20260119T190000", "DTSTART:20260119T200000", "SUMMARY:Third, an hour later"]));
+    assert.equal(events.length, 3);
+    assert.deepEqual(byDay(events), ["2026-01-05 First, renamed *", "2026-01-12 Weekly *", "2026-01-19 Third, an hour later *"]);
+  });
+
+  it("an override for a day the series never had, a different uid, or no uid at all drops nothing", () => {
+    const stray = parseICS(cal(master,
+      ["UID:series@x", "RECURRENCE-ID:20260107T190000", "DTSTART:20260107T190000", "SUMMARY:Stray"]));
+    assert.equal(stray.length, 4, "the stray override is still an event, the series is intact");
+    const other = parseICS(cal(master,
+      ["UID:other@x", "RECURRENCE-ID:20260112T190000", "DTSTART:20260112T190000", "SUMMARY:Other"]));
+    assert.equal(other.filter((e) => e.summary === "Weekly").length, 3);
+    const noUid = parseICS(cal(master,
+      ["RECURRENCE-ID:20260112T190000", "DTSTART:20260112T190000", "SUMMARY:NoUid"]));
+    assert.equal(noUid.filter((e) => e.summary === "Weekly").length, 3);
+    assert.equal("recurring" in noUid.find((e) => e.summary === "NoUid"), false);
+  });
+
+  it("an override does not touch an EXDATE'd series or a one-off with the same uid", () => {
+    const exdated = parseICS(cal([...master, "EXDATE:20260112T190000"],
+      ["UID:series@x", "RECURRENCE-ID:20260112T190000", "DTSTART:20260112T190000", "SUMMARY:Back"]));
+    assert.deepEqual(byDay(exdated), ["2026-01-05 Weekly *", "2026-01-12 Back *", "2026-01-19 Weekly *"]);
   });
 });
 
@@ -2635,11 +2721,14 @@ describe("eventPageUrl / toJsonLdEvent — url + cancellation", () => {
     assert.equal(itemMatch[1], toJsonLdEvent(card).url);
   });
 
-  it("sets eventStatus to Cancelled only when the card is cancelled", () => {
+  it("sets eventStatus to Cancelled only when the card is cancelled — by flag or by title marker", () => {
     const cancelled = toJsonLdEvent({ ...withId, cancelled: true });
     assert.equal(cancelled.eventStatus, "https://schema.org/EventCancelled");
+    const marked = toJsonLdEvent({ ...withId, title: "CANCELED: Event" }); // a fresh card, never archived
+    assert.equal(marked.eventStatus, "https://schema.org/EventCancelled");
     const notCancelled = toJsonLdEvent(withId);
     assert.equal("eventStatus" in notCancelled, false);
+    assert.equal("eventStatus" in toJsonLdEvent({ ...withId, title: "Event (cancelled)" }), false);
   });
 });
 
@@ -2782,13 +2871,60 @@ describe("mergeArchive", () => {
   it("clears cancelled when the card reappears", () => {
     const prevArchive = {
       version: 1,
-      events: { card1: { ...mkArchiveCard({ date: "2026-08-01" }), firstSeen: "x", lastSeen: "2026-06-01", cancelled: true } },
+      events: { card1: { ...mkArchiveCard({ date: "2026-08-01" }), firstSeen: "x", lastSeen: "2026-06-01", cancelled: true, cancelledBy: "vanished" } },
     };
     const r = mergeArchive(
       prevArchive, [mkArchiveResult([mkArchiveCard({ date: "2026-08-01" })])],
       "2026-07-05", "2026-07-05T00:00:00.000Z"
     );
     assert.equal(r.events.card1.cancelled, undefined);
+    assert.equal(r.events.card1.cancelledBy, undefined);
+    // The archive decides, never the card: a card that somehow carries the flag
+    // (a hand-run sync fed odd input) does not smuggle it in.
+    const smuggled = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ date: "2026-08-01", cancelled: true, cancelledBy: "vanished" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    assert.equal(smuggled.events.card1.cancelled, undefined);
+    assert.equal(smuggled.events.card1.cancelledBy, undefined);
+  });
+
+  it("names the reason: a vanished entry is cancelledBy vanished", () => {
+    const prevArchive = {
+      version: 1,
+      events: { card1: { ...mkArchiveCard({ date: "2026-08-01" }), firstSeen: "x", lastSeen: "2026-06-01" } },
+    };
+    const r = mergeArchive(
+      prevArchive, [mkArchiveResult([mkArchiveCard({ id: "other", date: "2026-08-02" })])],
+      "2026-07-05", "2026-07-05T00:00:00.000Z"
+    );
+    assert.equal(r.events.card1.cancelled, true);
+    assert.equal(r.events.card1.cancelledBy, "vanished");
+  });
+
+  it("flags a card whose title carries the marker as cancelledBy title — past or future, and it clears when renamed back", () => {
+    const today = "2026-07-05", now = "2026-07-05T00:00:00.000Z";
+    const r = mergeArchive(null, [mkArchiveResult([
+      mkArchiveCard({ id: "past1", date: "2026-06-01", title: "CANCELED: Event" }),
+      mkArchiveCard({ id: "next1", date: "2026-08-01", title: "[Abgesagt] Event" }),
+      mkArchiveCard({ id: "plain", date: "2026-08-01", title: "Event (cancelled)" }),
+    ])], today, now);
+    assert.deepEqual(
+      Object.fromEntries(Object.values(r.events).map((e) => [e.id, [e.cancelled, e.cancelledBy]])),
+      { past1: [true, "title"], next1: [true, "title"], plain: [undefined, undefined] }
+    );
+    // The archive in a later pass: the marker is a property of the current card, so a
+    // rename back to a plain title clears it, and a vanished flag never masquerades as a title.
+    const again = mergeArchive(r, [mkArchiveResult([
+      mkArchiveCard({ id: "past1", date: "2026-06-01", title: "Event" }),
+      mkArchiveCard({ id: "plain", date: "2026-08-01", title: "CANCELED: Event" }),
+    ])], today, now);
+    assert.equal(again.events.past1.cancelled, undefined);
+    assert.equal(again.events.past1.cancelledBy, undefined);
+    assert.deepEqual([again.events.plain.cancelled, again.events.plain.cancelledBy], [true, "title"]);
+    // Already cancelled by its title and now missing too: the vanish pass skips
+    // cancelled entries, so the owner's reason stays — it never flips to "vanished".
+    assert.deepEqual([again.events.next1.cancelled, again.events.next1.cancelledBy], [true, "title"]);
   });
 
   it(`marks every flip even past CANCEL_STORM (${CANCEL_STORM}), but warns`, (t) => {
