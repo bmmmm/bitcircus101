@@ -92,9 +92,13 @@ describe("bucketizeRange", () => {
     assert.deepEqual(b.map((x) => x.label), ["KW 36", "KW 37", "KW 38", "KW 39"]);
   });
   it("cuts months, quarters and years", () => {
-    assert.deepEqual(Core.bucketizeRange("2025-11-20", "2026-01-05", "month").map((x) => x.label), ["Nov 25", "Dez 25", "Jan 26"]);
+    // The first bucket starts late, the last stops early: only stopping early is
+    // marked, since the bar then hides part of its period.
+    assert.deepEqual(Core.bucketizeRange("2025-11-20", "2026-01-05", "month").map((x) => x.label), ["Nov 25", "Dez 25", "Jan 26…"]);
+    assert.deepEqual(Core.bucketizeRange("2025-01-01", "2025-08-31", "quarter").map((x) => x.label), ["Q1 25", "Q2 25", "Q3 25…"]);
+    assert.deepEqual(Core.bucketizeRange("2023-03-01", "2025-12-31", "year").map((x) => x.label), ["2023", "2024", "2025"]);
     assert.deepEqual(Core.bucketizeRange("2025-05-25", "2025-12-31", "quarter").map((x) => x.label), ["Q2 25", "Q3 25", "Q4 25"]);
-    assert.deepEqual(Core.bucketizeRange("2024-06-01", "2025-06-01", "year").map((x) => x.label), ["2024", "2025"]);
+    assert.deepEqual(Core.bucketizeRange("2024-06-01", "2025-06-01", "year").map((x) => x.label), ["2024", "2025…"]);
   });
   it("returns nothing for an empty or inverted range", () => {
     assert.deepEqual(Core.bucketizeRange("2026-01-02", "2026-01-01", "week"), []);
@@ -145,9 +149,11 @@ describe("ladder", () => {
     assert.equal(first("month").from, "2024-09-01"); // 24 months back
     assert.equal(first("quarter").from, "2020-07-01"); // 72 months back, quarter start
     assert.equal(b.filter((x) => x.kind === "week")[0].label, "KW 13");
-    assert.equal(b.filter((x) => x.kind === "month").pop().label, "Mär 26");
-    assert.equal(b.filter((x) => x.kind === "quarter").pop().label, "Q3 24");
-    assert.equal(b.filter((x) => x.kind === "year").pop().label, "2020");
+    // each coarser tier stops where the finer one takes over, mid-period
+    assert.equal(b.filter((x) => x.kind === "month").pop().label, "Mär 26…");
+    assert.equal(b.filter((x) => x.kind === "quarter").pop().label, "Q3 24…");
+    assert.equal(b.filter((x) => x.kind === "year").pop().label, "2020…");
+    assert.equal(b.filter((x) => x.kind === "month")[0].label, "Sep 24");
   });
   it("clamps at `since` and skips the tiers the history has not reached", () => {
     const b = Core.ladder(SINCE, TODAY);
