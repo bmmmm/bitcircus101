@@ -2443,6 +2443,12 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
    `short`, see "info density" below. */
 .kiosk-ev__loc { color: var(--ink-dim); }
 .kiosk-ev__loc::before { content: "○ "; }
+.kiosk-ev__url {
+    grid-column: 2 / -1;
+    margin-top: 0.15em;
+    font-size: 0.7em;
+    color: var(--ink-dim);
+}
 
 .kiosk-ev--now .kiosk-ev__time::before { content: "● "; color: var(--accent); }
 
@@ -3036,7 +3042,8 @@ html[data-theme="light"][data-palette="pride"] {
     .kiosk-ev { grid-template-columns: 1fr; }
     .kiosk-ev__side { display: none; }
     .kiosk-ev__desc,
-    .kiosk-ev__loc { grid-column: 1; }
+    .kiosk-ev__loc,
+    .kiosk-ev__url { grid-column: 1; }
     .kiosk-ev__title { white-space: normal; }
 }
 
