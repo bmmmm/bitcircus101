@@ -590,26 +590,73 @@ describe("parseICS", () => {
     assert.equal(parseICS(ics)[0].url, "/events/foo");
   });
 
-  it("warns once per source/zone for non-Europe TZID", () => {
-    const ics = [
-      "BEGIN:VCALENDAR",
-      "BEGIN:VEVENT",
-      "DTSTART;TZID=America/New_York:20260601T190000",
-      "SUMMARY:NY Event",
-      "END:VEVENT",
-      "END:VCALENDAR",
-    ].join("\r\n");
+  // Converts foreign zones to the real instant; asserted in UTC so the result does
+  // not depend on the zone the test process runs in.
+  const zoned = (tz, start, end, extra = []) => [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    `DTSTART;TZID=${tz}:${start}`,
+    ...(end ? [`DTEND;TZID=${tz}:${end}`] : []),
+    ...extra,
+    "SUMMARY:Zoned",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  const quiet = (fn) => {
     const origWarn = console.warn;
     const warnings = [];
     console.warn = (msg) => warnings.push(msg);
     try {
-      parseICS(ics, "test-ny");
-      parseICS(ics, "test-ny"); // second call should NOT warn again
+      return { result: fn(), warnings };
     } finally {
       console.warn = origWarn;
     }
+  };
+
+  it("converts a foreign TZID to the real instant (DTSTART and DTEND)", () => {
+    const { result, warnings } = quiet(() =>
+      parseICS(zoned("America/Los_Angeles", "20260915T100000", "20260915T120000"), "test-la"));
+    // 10:00 PDT (UTC-7) = 17:00 UTC = 19:00 Berlin
+    assert.equal(result[0].dtstart.toISOString(), "2026-09-15T17:00:00.000Z");
+    assert.equal(result[0].dtend.toISOString(), "2026-09-15T19:00:00.000Z");
+    assert.deepEqual(warnings, []);
+  });
+
+  it("reads a zone with Berlin's offsets as the same instant", () => {
+    const { result, warnings } = quiet(() =>
+      parseICS(zoned("Africa/Ceuta", "20260601T190000"), "test-ceuta"));
+    assert.equal(result[0].dtstart.toISOString(), "2026-06-01T17:00:00.000Z");
+    assert.deepEqual(warnings, []);
+  });
+
+  it("takes the zone's offset at the converted instant, not at the guess", () => {
+    // LA leaves DST at 09:00 UTC on 2026-11-01; 05:00 PST that morning is 13:00 UTC.
+    const { result } = quiet(() =>
+      parseICS(zoned("America/Los_Angeles", "20261101T050000"), "test-la-dst"));
+    assert.equal(result[0].dtstart.toISOString(), "2026-11-01T13:00:00.000Z");
+  });
+
+  it("converts a zoned EXDATE so it still removes its occurrence", () => {
+    // Weekly on Tuesday 20:00 LA = Wednesday 03:00 UTC; the EXDATE names the second
+    // week in LA time, a day earlier than its occurrence in Berlin or UTC.
+    const { result } = quiet(() => parseICS(zoned("America/Los_Angeles", "20260901T200000", null, [
+      "RRULE:FREQ=WEEKLY;COUNT=3",
+      "EXDATE;TZID=America/Los_Angeles:20260908T200000",
+    ]), "test-la-ex"));
+    assert.deepEqual(result.map((e) => e.dtstart.toISOString()),
+      ["2026-09-02T03:00:00.000Z", "2026-09-16T03:00:00.000Z"]);
+  });
+
+  it("keeps the local reading for an unknown TZID and warns once per source/zone", () => {
+    const ics = zoned("Mars/Base", "20260601T190000");
+    const { result, warnings } = quiet(() => {
+      const first = parseICS(ics, "test-mars");
+      parseICS(ics, "test-mars"); // second call should NOT warn again
+      return first;
+    });
+    assert.equal(result[0].dtstart.getHours(), 19);
     assert.equal(warnings.length, 1);
-    assert.match(warnings[0], /test-ny.*America\/New_York/);
+    assert.match(warnings[0], /test-mars.*Mars\/Base.*treated as local/);
   });
 
   it("handles line folding (continuation lines)", () => {

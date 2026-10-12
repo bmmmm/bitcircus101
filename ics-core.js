@@ -263,6 +263,47 @@
   }
 
   var tzidWarned = {};
+  var zoneFormats = {};
+
+  /** Offset of `tz` from UTC at instant `ms`, in ms; throws for an unknown zone. */
+  function zoneOffset(ms, tz) {
+    var fmt = zoneFormats[tz] || (zoneFormats[tz] = new Intl.DateTimeFormat("en-US", {
+      timeZone: tz, hourCycle: "h23",
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+    }));
+    var p = {};
+    fmt.formatToParts(new Date(ms)).forEach(function (x) { p[x.type] = +x.value; });
+    var wall = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+    return wall - Math.floor(ms / 1000) * 1000;
+  }
+
+  /**
+   * Read a timed local value ("20260915T100000") as wall time in a foreign zone
+   * and return the real instant. Europe/Berlin, UTC ("Z") and date-only values
+   * keep parseDate's floating reading (the sync runs pinned to Berlin). Returns
+   * false for a zone Intl does not know, so the caller can fall back and warn.
+   *
+   * Only the instant is converted: RRULE expansion still steps in Berlin local
+   * time, so a series in a foreign zone can drift by an hour across a DST edge
+   * that the two zones do not share. Deliberately left unsolved.
+   */
+  function parseZoned(v, tz) {
+    if (!tz || tz === "Europe/Berlin" || v.indexOf("T") === -1 ||
+        v.charAt(v.length - 1) === "Z") return parseDate(v);
+    var guess = Date.UTC(+v.slice(0, 4), +v.slice(4, 6) - 1, +v.slice(6, 8),
+      +v.slice(9, 11), +v.slice(11, 13));
+    try {
+      var off = zoneOffset(guess, tz);
+      var t = guess - off;
+      // Second pass: the offset at the guess can differ from the one at the result
+      // when a DST switch lies between them.
+      var off2 = zoneOffset(t, tz);
+      return new Date(off2 === off ? t : guess - off2);
+    } catch (e) {
+      return false;
+    }
+  }
 
   /**
    * Parse VEVENTs into a flat list. Extracts the full field superset
@@ -279,12 +320,25 @@
     // DESCRIPTION such as "Reminder", which would overwrite the event's own.
     var nested = 0;
 
+    // A value in a zone Intl does not know keeps the floating local reading;
+    // warn once per source/zone so it is debuggable from the CI logs.
+    function readTime(v, tz) {
+      var d = parseZoned(v, tz);
+      if (d !== false) return d;
+      var wkey = sourceId + "|" + tz;
+      if (!tzidWarned[wkey]) {
+        tzidWarned[wkey] = true;
+        console.warn("[" + sourceId + "] unknown TZID (" + tz + "); times treated as local");
+      }
+      return parseDate(v);
+    }
+
     for (var li = 0; li < lines.length; li++) {
       var line = lines[li];
       if (line === "BEGIN:VEVENT") { ev = { exdates: [] }; nested = 0; continue; }
       if (line === "END:VEVENT") {
         if (!ev || !ev.dtstart) { ev = null; continue; }
-        var dtstart = parseDate(ev.dtstart);
+        var dtstart = readTime(ev.dtstart, ev.tzid);
         if (!dtstart) { ev = null; continue; }
         var allDay = ev.dtstart.indexOf("T") === -1;
         // Duration between start and end, reused for every RRULE instance. Prefer an
@@ -292,17 +346,9 @@
         // (consumers then apply their own default). All-day DTEND is the exclusive next
         // day per RFC5545, so its span is a whole number of days.
         var durationMs = null;
-        var dtend = ev.dtend ? parseDate(ev.dtend) : null;
+        var dtend = ev.dtend ? readTime(ev.dtend, ev.dtendTzid) : null;
         if (dtend) durationMs = dtend - dtstart;
         else if (ev.duration) durationMs = parseDuration(ev.duration);
-        // Warn (once per source/zone) for foreign timezones — values stay floating local
-        if (ev.tzid && ev.tzid !== "Europe/Berlin" && ev.dtstart.charAt(ev.dtstart.length - 1) !== "Z") {
-          var wkey = sourceId + "|" + ev.tzid;
-          if (!tzidWarned[wkey]) {
-            tzidWarned[wkey] = true;
-            console.warn("[" + sourceId + "] non-Europe/Berlin TZID seen (" + ev.tzid + "); times treated as local");
-          }
-        }
         var base = {
           uid: ev.uid || "",
           url: ev.url || "",
@@ -340,7 +386,7 @@
       var key = rawKey.split(";")[0].toUpperCase();
       var val = line.slice(ci + 1);
       if (key === "DTSTART") { ev.dtstart = val; ev.tzid = parseTzid(rawKey); }
-      else if (key === "DTEND") ev.dtend = val;
+      else if (key === "DTEND") { ev.dtend = val; ev.dtendTzid = parseTzid(rawKey); }
       else if (key === "DURATION") ev.duration = val;
       else if (key === "SUMMARY") ev.summary = val;
       else if (key === "DESCRIPTION") ev.description = val;
@@ -356,8 +402,9 @@
       }
       else if (key === "RRULE") ev.rrule = val;
       else if (key === "EXDATE") {
+        var exTzid = parseTzid(rawKey);
         val.split(",").forEach(function (v) {
-          var d = parseDate(v.trim());
+          var d = readTime(v.trim(), exTzid);
           if (d) ev.exdates.push(d);
         });
       }
