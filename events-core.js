@@ -204,8 +204,11 @@
     // pages; the other sources link their calendar page (calendarHref), so we keep
     // eventUrl unset.
     var isExternal = cal.type === "ics-filtered" || cal.type === "ics-single";
-    // ICS URL > config-level eventUrl > calendar-level url (external only)
-    var eventLink = e.url || cal.eventUrl || (isExternal ? cal.url : null);
+    // ICS URL > config-level eventUrl > calendar-level url (external only). A URL
+    // that only names our own start page says nothing about the event: a partner
+    // calendar uses it for "takes place at bitcircus101" — drop it.
+    var url = /^https?:\/\/(www\.)?bitcircus101\.de\/?$/i.test(e.url || "") ? "" : e.url;
+    var eventLink = url || cal.eventUrl || (isExternal ? cal.url : null);
     // Carry the parsed end through as local date/time strings so the iCal export
     // can emit a real DTEND. Empty when the source gave neither DTEND nor DURATION.
     var end = e.dtend || null;

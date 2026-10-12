@@ -2,6 +2,7 @@
   "_comment": "Steuert welche Quellen sync-events.mjs verarbeitet und in welcher Reihenfolge. Pfade sind relativ zu diesem Verzeichnis (calendars/). Eintrag rausnehmen = Source deaktivieren ohne die Datei zu löschen.",
   "sources": [
     "bitcircus.json",
+    "look-at-my-toys.json",
     "datenburg.json"
   ]
 }

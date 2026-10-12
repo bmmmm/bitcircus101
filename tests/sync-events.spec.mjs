@@ -865,6 +865,17 @@ describe("toCards", () => {
     assert.equal(r[0].calendarUrl, "https://kult41.de/events/foo");
   });
 
+  it("ignores an ICS URL that only names our start page, but not a deeper one", () => {
+    const cal = { name: "Look at my toys!", url: "https://my.stim.toys", rss: true };
+    for (const url of ["https://bitcircus101.de/", "http://www.bitcircus101.de"]) {
+      const [card] = toCards([mkEvent({ url })], cal);
+      assert.equal(card.eventUrl, undefined, url);
+      assert.equal(card.calendarUrl, "https://my.stim.toys", url);
+    }
+    const [deep] = toCards([mkEvent({ url: "https://bitcircus101.de/kurse.html" })], cal);
+    assert.equal(deep.eventUrl, "https://bitcircus101.de/kurse.html");
+  });
+
   it("uses cal.eventUrl when ICS URL is missing", () => {
     const events = [mkEvent({ url: "" })];
     const r = toCards(events, {
