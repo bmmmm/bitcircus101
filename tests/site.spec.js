@@ -2146,6 +2146,20 @@ test.describe('Kiosk view', () => {
             .toEqual({ quietZone: true, modules: true });
         await expect(page.locator('.kiosk-pin__more')).toHaveCount(0);
 
+        // An IDN host reads in Unicode on the note; the code still carries ASCII
+        await useJobsFixture(page, {
+            postings: [{ ...job, id: 'idn', title: 'Werkstatt München',
+                url: 'https://www.münchen.example/job', from: DAY, months: 1 }],
+            chiffre: [], karussell: [],
+        });
+        await page.goto('/kiosk/?rows=8&dwell=5&pinnwand=on');
+        await flipToPinnwand(page);
+        const idnNote = page.locator('.kiosk-note--job');
+        await expect(idnNote.locator('.kiosk-note__url')).toHaveText('münchen.example');
+        await expect(idnNote.locator('svg.kiosk-qr')).toHaveAttribute('aria-label', /\(münchen\.example\)$/);
+        expect(await qrEncodes(idnNote.locator('svg.kiosk-qr'), 'https://www.xn--mnchen-3ya.example/job'))
+            .toEqual({ quietZone: true, modules: true });
+
         // Switched off by URL: jobs.json is not even fetched, and a full
         // rotation passes without the page
         let jobsRequests = 0;

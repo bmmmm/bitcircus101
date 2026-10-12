@@ -144,3 +144,20 @@ describe("formatDay", () => {
     assert.equal(formatDay(null), "");
   });
 });
+
+describe("toUnicodeHost", () => {
+  const { toUnicodeHost } = JobsCore;
+  it("decodes every xn-- label and leaves the others alone", () => {
+    assert.equal(toUnicodeHost("xn--mnchen-3ya.example"), "münchen.example");
+    assert.equal(toUnicodeHost("jobs.XN--BCHER-KVA.example"), "jobs.bücher.example");
+    assert.equal(toUnicodeHost("xn--fiqs8s"), "中国");
+    assert.equal(toUnicodeHost("xn--ls8h.la"), "💩.la");
+    assert.equal(toUnicodeHost("acme.example"), "acme.example");
+  });
+  it("keeps a label raw when it does not decode", () => {
+    assert.equal(toUnicodeHost("xn--zz9!.example"), "xn--zz9!.example");
+    assert.equal(toUnicodeHost("xn--mnchen-3y.example"), "xn--mnchen-3y.example");
+    assert.equal(toUnicodeHost("xn--.example"), "xn--.example");
+    assert.equal(toUnicodeHost("xn--ü-kva.example"), "xn--ü-kva.example");
+  });
+});
