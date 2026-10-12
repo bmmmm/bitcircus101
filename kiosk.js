@@ -596,6 +596,28 @@
   }
 
   /**
+   * The permanent slot (Dauerplatz) as one note naming everyone in jobs.json's
+   * `karussell`, or null when nobody is. Same gate as jobs.js renderSlots: an
+   * https url and a non-empty name. No QR — the names are the point, and their
+   * links live on the web board.
+   */
+  function slotsNote() {
+    var names = [];
+    (lastJobs.karussell || []).forEach(function (s) {
+      var name = s && String(s.name || "").trim();
+      if (name && String(s.url).indexOf("https://") === 0) names.push(name);
+    });
+    if (!names.length) return null;
+    return {
+      kind: "slots",
+      qr: "",
+      title: "dauerplatz im karussell",
+      sub: names.join(" · "),
+      short: PINNWAND_SHORT,
+    };
+  }
+
+  /**
    * The pinnwand pages for the rotation: [] (no page at all) when the setting
    * is off or the data or a library is missing; one invite note when nothing
    * is up; otherwise the active notes, split where the screen is full.
@@ -610,6 +632,7 @@
     if (settings.pinnwand !== "on" || !lastJobs) return [];
     if (!window.JobsCore || typeof window.qrcode !== "function") return [];
     var notes = pinnwandNotes();
+    var slots = slotsNote();
     if (!notes.length) {
       var invite = withQr({
         kind: "invite",
@@ -619,8 +642,10 @@
         url: PINNWAND_URL,
         label: "QR-Code zur Pinnwand: " + PINNWAND_SHORT,
       });
-      return invite ? [{ more: false, notes: [invite] }] : [];
+      if (!invite) return [];
+      return [{ more: false, notes: slots ? [invite, slots] : [invite] }];
     }
+    if (slots) notes.push(slots);
     var pages = [];
     var i = 0;
     while (i < notes.length) {
