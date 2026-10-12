@@ -94,6 +94,8 @@ describe("buildStatusData", () => {
     assert.deepEqual(out.series, SERIES);
     assert.notEqual(out.series, SERIES);
     assert.notEqual(out.series[0], SERIES[0]);
+    // Only what the page reads: the descriptions live in status.html alone.
+    for (const s of out.series) assert.deepEqual(Object.keys(s), ["key", "label"]);
     assert.deepEqual(out.series.map((s) => s.key), ["linkup", "workshop", "special"]);
   });
 

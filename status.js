@@ -178,7 +178,9 @@
   function wireClose(detail, onClose) {
     var btn = detail.querySelector(".status-detail__close");
     if (btn) btn.addEventListener("click", onClose);
-    detail.addEventListener("keydown", function (e) { if (e.key === "Escape") onClose(); });
+    // A property, not addEventListener: the detail element outlives every
+    // open, so each open would stack one more handler (and one more close).
+    detail.onkeydown = function (e) { if (e.key === "Escape") onClose(); };
   }
 
   // ── series (one panel per event type) ──────────────────────────────────────
@@ -350,12 +352,12 @@
         if (!res.ok) throw new Error("HTTP " + res.status);
         return res.json();
       })
-      .then(function (data) { renderAll(data, today); })
-      .catch(function () { renderUnavailable(); });
+      // Two-argument then: only a failed fetch reads "nicht verfügbar". A bug
+      // in the render path stays an uncaught error instead of posing as an outage.
+      .then(function (data) { renderAll(data, today); }, function () { renderUnavailable(); });
     fetch(FINANZ_URL)
       .then(function (res) { return res.ok ? res.json() : null; })
-      .then(function (finanz) { if (finanz) renderPulse(finanz, today); })
-      .catch(function () {});
+      .then(function (finanz) { if (finanz) renderPulse(finanz, today); }, function () {});
   }
 
   if (document.readyState === "loading") {

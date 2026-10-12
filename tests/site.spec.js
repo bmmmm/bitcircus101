@@ -1491,6 +1491,21 @@ test.describe('Status page', () => {
         await expect(detail).toBeHidden();
         expect(await focusedKey()).toBe(await squashed.getAttribute('data-key'));
 
+        // After all those opens, one Escape still closes exactly once: every
+        // close sets `hidden`, and a stacked keydown handler would set it again.
+        await squashed.click();
+        await expect(detail).toBeVisible();
+        await detail.evaluate((el) => {
+            window.__hiddenSets = 0;
+            new MutationObserver((recs) => {
+                window.__hiddenSets += recs.filter((r) => r.attributeName === 'hidden').length;
+            }).observe(el, { attributes: true });
+        });
+        await detail.locator('.status-detail__close').focus();
+        await page.keyboard.press('Escape');
+        await expect(detail).toBeHidden();
+        expect(await page.evaluate(() => window.__hiddenSets)).toBe(1);
+
         // The row runs on into the scheduled weeks, so "heute" is a marker on
         // the current bucket (▲ + aria-current), not the right edge.
         const today = page.locator('#status-bars-linkup .status-bar--today');
@@ -1517,6 +1532,15 @@ test.describe('Status page', () => {
         const fromHome = page.locator('#next-events a[href="status.html"]');
         await expect(fromHome).toBeVisible();
         await expect(fromHome).toHaveText(/^status: .+ →$/);
+    });
+
+    test('a render bug stays a loud error instead of posing as an outage', async ({ page }) => {
+        const errors = [];
+        page.on('pageerror', (err) => errors.push(err.message));
+        await page.route('**/status-data.json', (route) => route.fulfill({ json: { series: [null], events: [] } }));
+        await page.goto('/status.html');
+        await expect.poll(() => errors.length).toBeGreaterThan(0);
+        await expect(page.locator('#status-headline')).not.toContainText('nicht verfügbar');
     });
 
     test('pulse with data: one bar per month, a tendency word per bar, no figure anywhere', async ({ page }) => {
