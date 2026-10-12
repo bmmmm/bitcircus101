@@ -2507,17 +2507,24 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
 .kiosk-note__url { margin: 0; font-size: 0.85em; color: var(--ink-dim); }
 .kiosk-note__url::before { content: "→ "; }
 /* A lone note (the invite, or a single posting) takes the room: a bigger
-   code with the text beside it instead of under it. */
-.kiosk-note:only-child {
+   code with the text beside it instead of under it. The invite only comes up
+   when nothing else hangs, so it keeps that look even with the Dauerplatz
+   note beside it. */
+.kiosk-note:only-child,
+.kiosk-note--invite {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     gap: 1.5em 3vw;
 }
-.kiosk-note:only-child .kiosk-qr { width: 50vh; height: 50vh; }
-.kiosk-note:only-child .kiosk-note__text { flex: 1 1 20ch; }
-.kiosk-note:only-child .kiosk-note__title { font-size: 2em; }
-.kiosk-note:only-child .kiosk-note__sub { font-size: 1.2em; }
+.kiosk-note:only-child .kiosk-qr,
+.kiosk-note--invite .kiosk-qr { width: 50vh; height: 50vh; }
+.kiosk-note:only-child .kiosk-note__text,
+.kiosk-note--invite .kiosk-note__text { flex: 1 1 20ch; }
+.kiosk-note:only-child .kiosk-note__title,
+.kiosk-note--invite .kiosk-note__title { font-size: 2em; }
+.kiosk-note:only-child .kiosk-note__sub,
+.kiosk-note--invite .kiosk-note__sub { font-size: 1.2em; }
 .kiosk-pin__more { margin: 0; color: var(--ink-dim); }
 
 .kiosk__bar {

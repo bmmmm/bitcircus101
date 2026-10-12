@@ -2172,6 +2172,23 @@ test.describe('Kiosk view', () => {
             .toEqual({ quietZone: true, modules: true });
         await expect(page.locator('.kiosk-pin__more')).toHaveCount(0);
 
+        // Nothing posted but Dauerplatz names (the live state): the invite keeps
+        // its lone-note size, the Dauerplatz note sits below it, both on screen
+        await useJobsFixture(page, { postings: [], chiffre: [],
+            karussell: [{ name: 'Leihbar', url: 'https://leihbar.example' }] });
+        for (const size of [{ width: 1920, height: 1080 }, { width: 1080, height: 1920 }]) {
+            await page.setViewportSize(size);
+            await page.goto('/kiosk/?rows=8&dwell=5&pinnwand=on');
+            await flipToPinnwand(page);
+            await expect(page.locator('.kiosk-note')).toHaveCount(2);
+            const qrShare = await invite.locator('svg.kiosk-qr')
+                .evaluate((svg) => svg.getBoundingClientRect().height / window.innerHeight);
+            expect(qrShare).toBeCloseTo(0.5, 2);
+            await expect(page.locator('.kiosk-note--slots .kiosk-note__sub')).toHaveText('Leihbar');
+            await expect(page.locator('.kiosk-note--slots')).toBeInViewport({ ratio: 1 });
+        }
+        await page.setViewportSize({ width: 1920, height: 1080 });
+
         // An IDN host reads in Unicode on the note; the code still carries ASCII
         await useJobsFixture(page, {
             postings: [{ ...job, id: 'idn', title: 'Werkstatt München',
