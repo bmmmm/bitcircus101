@@ -2124,9 +2124,9 @@
       "description": "Erster Termin einer Workshop-Reihe\n\nZielgruppe: jeder, der die Grundlagen Elektrotechnik lernen möchte.\nVorkenntnisse: keine\nThemen: Steckbrett, Schaltpläne, Grundbausteine (Widerstände, Kondensatoren, LEDs etc.), Ohmsches Gesetz, Schaltungen",
       "location": "Datenburg, Bornheimerstraße 25",
       "date": "2026-02-28",
-      "time": "13:00",
+      "time": "14:00",
       "endDate": "2026-02-28",
-      "endTime": "16:00",
+      "endTime": "17:00",
       "tags": [
         "#workshop"
       ],
