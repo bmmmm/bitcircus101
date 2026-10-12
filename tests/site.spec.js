@@ -2051,11 +2051,13 @@ test.describe('Kiosk view', () => {
         await expect(page.locator('.kiosk-ev').first()).toBeVisible();
         await expect(pin(page)).toHaveCount(0);           // the events come first
         await expect(page.locator('#kiosk-status')).toContainText(/seite 1\/\d.*quelle: bitcircus101\.de\/termine/);
+        await expect(page.locator('.kiosk__path')).toHaveText('/termine');
         await flipToPinnwand(page);
-        // it is the LAST page of the rotation, and the status line names its source
+        // it is the LAST page of the rotation, and the status line and header name its source
         const [at, of] = await readPage(page);
         expect(at).toBe(of);
         await expect(page.locator('#kiosk-status')).toContainText('quelle: bitcircus101.de/pinnwand');
+        await expect(page.locator('.kiosk__path')).toHaveText('/pinnwand');
 
         await expect(page.locator('.kiosk-note')).toHaveCount(2);
         const jobNote = page.locator('.kiosk-note--job');
