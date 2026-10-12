@@ -261,8 +261,8 @@
       .map(function (e) { return toCard(e, cal); });
   }
 
-  /** Runaway guard for the archive pass — a series cap of 200 (ics-core) times a
-   *  handful of series is fine, thousands would mean a broken export. */
+  /** Runaway guard for the archive pass — every series runs to the horizon
+   *  (ics-core), and 500 catches a broken export. */
   var MAX_ALL_CARDS = 500;
 
   /**
