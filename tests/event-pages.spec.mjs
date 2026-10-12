@@ -210,6 +210,10 @@ describe("renderHead", () => {
     const bare = renderHead(entry({ description: "" }), { assetVersion: "v" });
     const fallback = /<meta name="description" content="([^"]*)" \/>/.exec(bare);
     assert.ok(fallback[1].length > 20, `empty fallback description: ${fallback[1]}`);
+    assert.doesNotMatch(fallback[1], /\(/, "our own events name no source");
+    // A partner source with its own pages names itself in the fallback.
+    const partner = renderHead(entry({ description: "", source: "Look at my toys!" }), { assetVersion: "v" });
+    assert.match(partner, /<meta name="description" content="[^"]*\(Look at my toys!\) am /);
   });
 
   it("never lets a '<' out raw inside the JSON-LD block", () => {

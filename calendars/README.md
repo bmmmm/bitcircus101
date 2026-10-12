@@ -24,8 +24,9 @@ so ziemlich alles andere exportieren). Alle 30 Minuten läuft ein Job, der:
 7. **jedem Termin eine eigene Seite gibt** — `/e/<id>/` mit der vollen
    Beschreibung (Absätze und Links bleiben erhalten), plus ein Archiv unter
    `/archiv/`. Die `id` ist ein Hash der Kalender-`UID` (bei Serien plus Datum):
-   ein verschobener Termin behält seinen Link. Seiten und Archiv gibt es nur für
-   Quellen mit `rss: true`; fremde Kalender verlinken weiter auf ihre eigene Seite.
+   ein verschobener Termin behält seinen Link. Seiten und Archiv gibt es für
+   Quellen mit `pages: true` (Standard: wie `rss`); alle anderen verlinken weiter
+   auf ihre eigene Seite.
 
 Das Ergebnis landet auf dem `live`-Branch — nie im Quellcode. Wer einen Kalender
 ändert, ändert damit direkt die Website; niemand muss etwas nachpflegen.
@@ -117,7 +118,8 @@ Prüfung läuft in CI bei jedem Pull Request.
 | `ics` | ja | Der öffentliche ICS-Link. |
 | `url` | — | Menschenlesbare Seite des Kalenders; Fallback-Ziel für Karten ohne eigenen Link. |
 | `type` | — | `ics-full` (Standard), `ics-single`, `ics-filtered`. |
-| `rss` | — | `true` = die Termine dieser Quelle gehen in `/feed.xml` und `/ical.ics`. Aktuell nur der eigene bitcircus-Kalender. |
+| `rss` | — | `true` = die Termine dieser Quelle gehen in `/feed.xml` und `/ical.ics`. |
+| `pages` | — | `true` = jeder Termin bekommt eine eigene Seite `/e/<id>/` und kommt ins Archiv. Fehlt das Feld, gilt der Wert von `rss`. |
 | `tags` | — | Hashtags, die jeder Termin dieser Quelle bekommt, z. B. `["#kult41"]`. |
 | `cap` | — | Maximale Terminzahl aus dieser Quelle (Standard 30). |
 | `eventUrl` | — | Fester Link für Termine, deren ICS kein `URL`-Feld mitbringt. |

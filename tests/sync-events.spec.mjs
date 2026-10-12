@@ -19,7 +19,7 @@ import {
   eventSlot, eventGuid, eventPageUrl,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
   aggregate, dedupeCards, eventAnchor, eventId, toAllCards,
-  loadArchive, mergeArchive, serializeArchive,
+  loadArchive, mergeArchive, serializeArchive, processSource,
   ARCHIVE_MIN_DATE, MAX_ARCHIVE_ENTRIES, CANCEL_HORIZON_DAYS, CANCEL_STORM,
 } from "../scripts/sync-events.mjs";
 // toCard, stripTagLines and MAX_ALL_CARDS are card-shaping internals that live in
@@ -839,6 +839,17 @@ describe("toCards", () => {
     const events = Array.from({ length: 50 }, (_, i) => mkEvent({ uid: `evt-${i}` }));
     const r = toCards(events, { name: "X", url: "https://x.example", cap: 5 });
     assert.equal(r.length, 5);
+  });
+
+  it("marks a card page:true exactly when its source gets pages (pages, default rss)", () => {
+    const page = (cal) => toCards([mkEvent()], { name: "X", url: "https://x.example", ...cal })[0].page;
+    assert.equal(page({ rss: true }), true);
+    assert.equal(page({ pages: true, rss: false }), true);
+    assert.equal(page({ pages: false, rss: true }), undefined);
+    assert.equal(page({}), undefined);
+    assert.equal(EventsCore.hasPages({ pages: true, rss: false }), true);
+    assert.equal(EventsCore.hasPages({ pages: false, rss: true }), false);
+    assert.equal(EventsCore.hasPages({ rss: true }), true);
   });
 
   it("falls back to default cap of 30 when cal.cap missing", () => {
@@ -2729,6 +2740,31 @@ const mkArchiveResult = (allCards, overSource = {}) => ({
 });
 
 describe("mergeArchive", () => {
+  it("archives a source flagged pages:true even with rss:false, and only such sources", async () => {
+    const ics = [
+      "BEGIN:VCALENDAR", "BEGIN:VEVENT", "UID:p1@example.org",
+      "DTSTART:20260701T190000", "SUMMARY:Werkstatt", "END:VEVENT", "END:VCALENDAR",
+    ].join("\r\n");
+    const origFetch = globalThis.fetch;
+    const origLog = console.log;
+    globalThis.fetch = async () => new Response(ics);
+    console.log = () => {};
+    const prev = { sources: [], events: [], icsKeys: {} };
+    const run = (flags) => processSource(
+      { id: "p", name: "P", ics: "https://p.example/x.ics", url: "https://p.example", ...flags }, prev);
+    let withPages, without;
+    try {
+      withPages = await run({ pages: true, rss: false });
+      without = await run({ pages: false, rss: true });
+    } finally {
+      globalThis.fetch = origFetch;
+      console.log = origLog;
+    }
+    const r = mergeArchive(null, [withPages, without], "2026-07-01", "2026-07-01T00:00:00.000Z");
+    assert.deepEqual(Object.values(r.events).map((e) => [e.title, e.source, e.page]), [["Werkstatt", "P", true]]);
+    assert.equal(without.allCards, null);
+  });
+
   it("sets firstSeen from prev (if any), else the card, else nowISO — and lastSeen to today", () => {
     const today = "2026-07-01";
     const now = "2026-07-01T10:00:00.000Z";

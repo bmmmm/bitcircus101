@@ -190,6 +190,14 @@
     return /\/apps\/calendar\//.test(base + "/") ? base + "/timeGridDay/" + date : url;
   }
 
+  /**
+   * Whether a source's events get their own page (/e/<id>/) and the archive:
+   * the `pages` flag, else whatever `rss` says (the primary feed's sources).
+   */
+  function hasPages(cal) {
+    return (cal.pages != null ? cal.pages : cal.rss) === true;
+  }
+
   /** ONE parsed ICS event → ONE card. Pure — no date filtering, no cap, no sort. */
   function toCard(e, cal) {
     // External calendars (ics-single, ics-filtered) link directly to event/program
@@ -219,10 +227,11 @@
       uid: e.uid || "",
       calendarUrl: eventLink || cal.url,
     };
-    // Appended after the literal on purpose: both are optional, and eventUrl must
+    // Appended after the literal on purpose: all three are optional, and eventUrl must
     // stay the LAST key when present (JSON.stringify order in events-data.json);
     // `id` is the FIRST for the same reason — all pinned by the golden test.
     if (e.recurring) card.recurring = true;
+    if (hasPages(cal)) card.page = true;
     if (eventLink) card.eventUrl = eventLink;
     return card;
   }
@@ -284,6 +293,7 @@
     calendarHref: calendarHref,
     fnv1a32: fnv1a32,
     eventId: eventId,
+    hasPages: hasPages,
     toCard: toCard,
     toCards: toCards,
     toAllCards: toAllCards,
