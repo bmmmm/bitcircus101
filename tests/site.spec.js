@@ -2066,7 +2066,13 @@ test.describe('Kiosk view', () => {
                 { ...chi, id: '"><img src=x onerror="window.__pwned = 1">', headline: 'Böse Chiffre',
                   from: DAY, months: 1 },
             ],
-            karussell: [],
+            // Dauerplatz: two pass; a plain-http url and a blank name do not
+            karussell: [
+                { name: 'Leihbar <e.V.>', url: 'https://leihbar.example' },
+                { name: 'Kult 41', url: 'https://kult41.example' },
+                { name: 'Unsicher', url: 'http://plain.example' },
+                { name: '   ', url: 'https://blank.example' },
+            ],
         });
 
         // green palette: the QR must NOT take the phosphor colours
@@ -2082,7 +2088,11 @@ test.describe('Kiosk view', () => {
         await expect(page.locator('#kiosk-status')).toContainText('quelle: bitcircus101.de/pinnwand');
         await expect(page.locator('.kiosk__path')).toHaveText('/pinnwand');
 
-        await expect(page.locator('.kiosk-note')).toHaveCount(2);
+        await expect(page.locator('.kiosk-note')).toHaveCount(3);
+        const slotsNote = page.locator('.kiosk-note--slots');
+        await expect(slotsNote.locator('.kiosk-note__title')).toHaveText('dauerplatz im karussell');
+        await expect(slotsNote.locator('.kiosk-note__sub')).toHaveText('Leihbar <e.V.> · Kult 41');
+        await expect(slotsNote.locator('svg')).toHaveCount(0);
         const jobNote = page.locator('.kiosk-note--job');
         await expect(jobNote.locator('.kiosk-note__title')).toHaveText('Embedded-Entwickler:in (m/w/d)');
         await expect(jobNote.locator('.kiosk-note__sub')).toHaveText('ACME GmbH · Bonn');
