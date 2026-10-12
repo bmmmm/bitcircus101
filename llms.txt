@@ -31,6 +31,7 @@ bitcircus101 ist ein privat und nicht-kommerziell betriebener Hackspace in Bonn.
 - RSS Pinnwand (neue Stellen-Zettel aus der Community): https://bitcircus101.de/pinnwand/feed.xml
 - Übersicht aller Feeds: https://bitcircus101.de/rss
 - ICS Kalender (Quelle, live): https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export
+- Alle Abo-Adressen (kompletter Kalender und Feeds der Website): https://bitcircus101.de/calendar/
 
 ## Regelmäßige Termine
 

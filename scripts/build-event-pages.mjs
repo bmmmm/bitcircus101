@@ -37,14 +37,13 @@ import {
   writeFileAtomic,
 } from "./sync-events.mjs";
 
-const { stripTagLines } = EventsCore;
+const { stripTagLines, calendarHref } = EventsCore;
 
 const TEMPLATE_FILE = "events.html";
 const OG_IMAGE = `${SITE_URL}/images/og-image.jpg`;
 const OG_IMAGE_ALT = "bitcircus101 – Offener Hackspace in Bonn";
-// Nextcloud day view; the same fallback events.js uses when a card carries no
-// calendarUrl of its own.
-const CALENDAR_URL = "https://cloud.bitcircus101.de/apps/calendar";
+// The same fallback events.js uses when a card carries no calendarUrl of its own.
+const CALENDAR_URL = `${SITE_URL}/calendar/`;
 // Meta description length: what search engines actually render.
 const META_DESC_MAX = 160;
 // Path segment guard — ids come from eventId() (12 lowercase hex), but the
@@ -189,7 +188,7 @@ export function rebase(fragment, depth) {
  * (canonical, og:url) — the generated pages are directory indexes, so their
  * own address already is the clean one.
  */
-function headShell({ depth, assetVersion, title, description, canonical, robots, alternates, jsonLd }) {
+export function headShell({ depth, assetVersion, title, description, canonical, robots, alternates, jsonLd }) {
   const p = "../".repeat(depth);
   const v = `?v=${esc(assetVersion)}`;
   const alt = alternates
@@ -231,7 +230,7 @@ ${jsonLd}
 }
 
 /** One schema.org node as a <script> block; "<" never survives raw inside it. */
-function jsonLdBlock(node) {
+export function jsonLdBlock(node) {
   const json = JSON.stringify({ "@context": "https://schema.org", ...node }, null, 1).replace(/</g, "\\u003c");
   return `        <script type="application/ld+json">\n${json}\n        </script>`;
 }
@@ -300,7 +299,7 @@ function osmHref(location) {
  * ?v= is stamped by the deploy like every other page's. Nothing else — a
  * generated page has no list to render and no filter to run.
  */
-function shell({ head, header, footer, body, depth, assetVersion }) {
+export function shell({ head, header, footer, body, depth, assetVersion }) {
   const p = "../".repeat(depth);
   const v = `?v=${esc(assetVersion)}`;
   return `<!doctype html>
@@ -386,7 +385,7 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday()) {
   // gets the day-view suffix, exactly like the card on /events.
   const calHref = entry.eventUrl
     ? httpUrl(entry.eventUrl)
-    : `${httpUrl(entry.calendarUrl || CALENDAR_URL)}/timeGridDay/${entry.date}`;
+    : calendarHref(httpUrl(entry.calendarUrl || CALENDAR_URL), entry.date);
   const calTitle = entry.eventUrl ? "Auf externer Seite öffnen" : "Im Kalender anzeigen";
   parts.push(`                <div class="event-page__actions">`);
   parts.push(

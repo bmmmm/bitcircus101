@@ -239,6 +239,10 @@ jobs:
       - name: Build the status page data
         run: node scripts/build-status-data.mjs
 
+      # /calendar/ — live-only like the pages above, from the feeds manifest.
+      - name: Build the calendar page
+        run: node scripts/build-calendar-page.mjs
+
       - name: Generate sitemap.xml
         # Used to live in its own workflow (sitemap.yml) triggered on `push:
         # branches: [live]` — but the push below uses the default
