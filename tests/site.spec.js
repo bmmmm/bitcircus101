@@ -102,12 +102,36 @@ const FOCUS_SWEEP = () => {
         return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
     };
     const contrast = (a, b) => { const la = lum(a), lb = lum(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
-    const bgBehind = (el) => {
-        for (let n = el.parentElement; n; n = n.parentElement) {
-            const c = parse(getComputedStyle(n).backgroundColor);
-            if (c && c.a > 0) return c;
-        }
-        return { r: 255, g: 255, b: 255, a: 1 };
+    // What the ring is drawn over, read where the ring actually is: the
+    // midpoint of each side, through every layer painted there (not just the
+    // element's ancestors — a button over a photo has the photo behind its
+    // ring, not the container). Translucent layers are composited down to
+    // the first opaque one. A photo or a background image has no single
+    // colour to measure against: that side counts as failed. One measured
+    // side may fail — a nav link's ring crosses into the green marker of its
+    // neighbour — and sides off-screen are the clip rule's business, below.
+    const behindRing = (el, ring) => {
+        const pts = [
+            [ring.left + 1, (ring.top + ring.bottom) / 2], [ring.right - 1, (ring.top + ring.bottom) / 2],
+            [(ring.left + ring.right) / 2, ring.top + 1], [(ring.left + ring.right) / 2, ring.bottom - 1],
+        ].filter(([x, y]) => x >= 0 && y >= 0 && x < innerWidth && y < innerHeight);
+        return pts.map(([x, y]) => {
+            const layers = [];
+            for (const n of document.elementsFromPoint(x, y)) {
+                if (n === el || el.contains(n)) continue;
+                const cs = getComputedStyle(n);
+                if (/^(IMG|VIDEO|CANVAS|IFRAME|PICTURE)$/.test(n.tagName) || cs.backgroundImage !== 'none') return { image: label(n) };
+                const c = parse(cs.backgroundColor);
+                if (c && c.a > 0) { layers.push(c); if (c.a >= 1) break; }
+            }
+            // Below the last layer is the canvas, which takes the body's
+            // background when the root has none (CSS propagation) — the
+            // computed style of <html> still reads transparent then.
+            const canvas = [document.documentElement, document.body].map((n) => parse(getComputedStyle(n).backgroundColor)).find((x) => x && x.a > 0);
+            let c = canvas ? { r: canvas.r, g: canvas.g, b: canvas.b } : { r: 255, g: 255, b: 255 };
+            for (const l of layers.reverse()) c = { r: l.r * l.a + c.r * (1 - l.a), g: l.g * l.a + c.g * (1 - l.a), b: l.b * l.a + c.b * (1 - l.a) };
+            return { colour: c };
+        });
     };
     const clipRects = (el) => {
         const rects = [{ left: 0, top: 0, right: innerWidth, bottom: innerHeight }];
@@ -124,6 +148,9 @@ const FOCUS_SWEEP = () => {
     const bad = [];
     let stops = 0;
     for (const el of candidates) {
+        // The baseline is the unfocused look: the caller's Tab left the focus
+        // on the first stop, and each pass leaves it on the last one.
+        if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
         const s0 = getComputedStyle(el);
         const bg0 = s0.backgroundColor, c0 = s0.color;
         el.focus();
@@ -149,11 +176,17 @@ const FOCUS_SWEEP = () => {
         if (cs.backgroundColor !== bg0 || cs.color !== c0) continue; // reverse video marks it
         const ow = parseFloat(cs.outlineWidth) || 0;
         if (cs.outlineStyle === 'none' || ow < 1) { bad.push(who + ': no outline and no colour change'); continue; }
-        const oc = parse(cs.outlineColor);
-        const ratio = oc ? contrast(oc, bgBehind(el)) : 0;
-        if (ratio < 3) { bad.push(who + ': ring ' + ratio.toFixed(2) + ':1 against its background'); continue; }
         const off = parseFloat(cs.outlineOffset) || 0;
         const ring = { left: r.left - off - ow, top: r.top - off - ow, right: r.right + off + ow, bottom: r.bottom + off + ow };
+        const oc = parse(cs.outlineColor);
+        const behind = behindRing(el, ring);
+        const ratios = behind.map((b) => (oc && b.colour ? contrast(oc, b.colour) : 0)).sort((a, b) => b - a);
+        const ratio = ratios.length ? ratios[Math.max(1, ratios.length - 1) - 1] : 0;
+        if (ratio < 3) {
+            const image = behind.find((b) => b.image);
+            bad.push(who + (image ? ': ring drawn over an image (' + image.image + ')' : ': ring ' + ratio.toFixed(2) + ':1 against its background'));
+            continue;
+        }
         const clips = clipRects(el);
         const sides = [
             clips.every((c) => ring.left >= c.left),
@@ -1917,8 +1950,36 @@ test.describe('No JavaScript errors', () => {
         ['/404.html', '404'],
     ];
 
+    // The sweep's own blind spots, each built as the case that trips it: no
+    // real page has them today, which is exactly why they need a fixture.
+    test('the focus sweep reads the unfocused baseline and refuses a ring over an image', async ({ page }) => {
+        const pixel = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+        await page.setContent(`<style>
+            body { margin: 0; background: #fff; }
+            :focus-visible { outline: 2px solid #000; outline-offset: 2px; }
+            .rv:focus-visible { outline: none; background: #000; color: #fff; }
+            .photo { background: url(${pixel}) center / cover; padding: 20px; }
+            .veil { background: rgba(0, 0, 0, 0.05); padding: 20px; }
+            </style>
+            <button class="rv">first</button>
+            <div class="photo"><button>over a photo</button></div>
+            <div class="veil"><button>over a 5% veil</button></div>`);
+        // A 5% black veil on white is near-white: a black ring holds there,
+        // and only reads as failing if the veil's alpha is ignored.
+        // The real Tab leaves the focus on the first stop — the reverse-video
+        // one, whose only mark is the change a focused baseline cannot see.
+        await page.keyboard.press('Tab');
+        const sweep = await page.evaluate(FOCUS_SWEEP);
+        expect(sweep.stops).toBe(3);
+        expect(sweep.bad).toEqual(['button: ring drawn over an image (div.photo)']);
+    });
+
     for (const [url, name] of pages) {
-        test(`${name} page has no JS errors`, async ({ page }) => {
+        test(`${name} page has no JS errors and every tab stop shows its focus`, async ({ page }) => {
+            // Fixture data: the deploy gate runs this suite against the
+            // live feed, and the sweep's verdict must not hinge on which
+            // events happen to be on the calendar that day.
+            await useEventsFixture(page);
             const errors = [];
             page.on('pageerror', (err) => errors.push(err.message));
             // The footer percent is stamped into the HTML at build time; a
@@ -2910,6 +2971,11 @@ test.describe('Accessibility', () => {
         await expect(fundingBar).toHaveAttribute('aria-expanded', 'true');
         await page.keyboard.press('Tab');
         await expect(fundingInfo.locator('a')).toBeFocused();
+        // The link marks its focus the way it marks its hover: reverse video,
+        // the popover's ink as its background.
+        const ink = await fundingInfo.evaluate((el) => getComputedStyle(el).color);
+        await expect.poll(() => fundingInfo.locator('a').evaluate((el) => getComputedStyle(el).backgroundColor),
+            { message: 'the popover link shows no reverse video on focus' }).toBe(ink);
         await page.keyboard.press('Escape');
         await expect(fundingInfo).toBeHidden();
         await expect(fundingBar).toBeFocused();
