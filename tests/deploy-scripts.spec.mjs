@@ -263,7 +263,10 @@ describe("smoke-live.mjs", () => {
     // so a sync spawn would block the event loop and deadlock the child's
     // HTTP requests against the very server they target.
     const run = promisify(execFile);
-    const smoke = (hash = HASH) => run("node", [path.join(SCRIPTS, "smoke-live.mjs"), base, hash], { env });
+    const smoke = (hash = HASH, e = env) => run("node", [path.join(SCRIPTS, "smoke-live.mjs"), base, hash], { env: e });
+    // The failure cases below wait out the whole deadline before exiting, so
+    // they get a short one; the passing cases keep the roomy 2000 ms above.
+    const failFast = { ...env, SMOKE_TIMEOUT_MS: "300" };
 
     it("passes when hash is live, stylesheet resolves, 404s work and every sitemap URL serves 200", async () => {
         locs = [`${base}/`, `${base}/events`];
@@ -302,7 +305,7 @@ describe("smoke-live.mjs", () => {
         feedDown = true;
         try {
             await assert.rejects(
-                () => smoke(),
+                () => smoke(HASH, failFast),
                 (e) => e.code === 1 && e.stderr.includes("/feeds/all.ics"),
             );
         } finally {
@@ -316,7 +319,7 @@ describe("smoke-live.mjs", () => {
         pinnwandDown = true;
         try {
             await assert.rejects(
-                () => smoke(),
+                () => smoke(HASH, failFast),
                 (e) => e.code === 1 && e.stderr.includes("/pinnwand/feed.xml"),
             );
         } finally {
@@ -326,7 +329,7 @@ describe("smoke-live.mjs", () => {
 
     it("fails when the expected hash never appears", async () => {
         await assert.rejects(
-            () => smoke("ffffffff"),
+            () => smoke("ffffffff", failFast),
             (e) => e.code === 1 && e.stderr.includes("did not appear"),
         );
     });
@@ -342,7 +345,7 @@ describe("smoke-live.mjs", () => {
     it("fails when a sitemap URL is dead", async () => {
         locs = [`${base}/`, `${base}/gone`];
         await assert.rejects(
-            () => smoke(),
+            () => smoke(HASH, failFast),
             (e) => e.code === 1 && e.stderr.includes("not served directly") && e.stderr.includes("→ 404"),
         );
     });
@@ -376,7 +379,7 @@ describe("smoke-live.mjs", () => {
         locs = [...deepPaths, ...shallowPaths].map((p) => `${base}${p}`);
         requestLog = [];
         try {
-            await smoke();
+            await smoke(HASH, failFast);
         } catch {
             // Most of these paths aren't stubbed on the fake server and 404 —
             // irrelevant here, only which paths were REQUESTED is under test.
