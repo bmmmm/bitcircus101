@@ -1,10 +1,10 @@
 {
-  "lastSync": "2026-10-13T16:48:03.614Z",
+  "lastSync": "2026-10-13T17:17:16.643Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-13T16:48:03.155Z",
+      "fetchedAt": "2026-10-13T17:17:16.186Z",
       "status": "ok",
       "events": 21,
       "added": 0,
@@ -16,10 +16,10 @@
     {
       "id": "look-at-my-toys",
       "name": "Look at my toys!",
-      "fetchedAt": "2026-10-13T16:48:03.521Z",
+      "fetchedAt": "2026-10-13T17:17:15.848Z",
       "status": "ok",
-      "events": 1,
-      "added": 1,
+      "events": 0,
+      "added": 0,
       "removed": 0,
       "total": 6,
       "past": 1,
@@ -28,9 +28,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-13T16:48:03.516Z",
+      "fetchedAt": "2026-10-13T17:17:16.598Z",
       "status": "ok",
-      "events": 18,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 54,
@@ -206,7 +206,7 @@
       "#meetup": {
         "ics": "/feeds/tag/meetup.ics",
         "rss": "/feeds/tag/meetup.xml",
-        "count": 8
+        "count": 9
       },
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
@@ -216,17 +216,17 @@
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 9
+        "count": 8
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 9
+        "count": 8
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 9
+        "count": 8
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
@@ -250,13 +250,13 @@
         "name": "Look at my toys!",
         "ics": "/feeds/source/look-at-my-toys.ics",
         "rss": "/feeds/source/look-at-my-toys.xml",
-        "count": 1
+        "count": 0
       },
       "datenburg": {
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 18
+        "count": 19
       }
     },
     "retired": {
@@ -265,49 +265,6 @@
     }
   },
   "events": [
-    {
-      "id": "c082a7ecdbc9",
-      "title": "Look at my toys!",
-      "subtitle": "",
-      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
-      "location": "Dorotheenstraße 101, 53111 Bonn",
-      "date": "2026-10-13",
-      "time": "19:00",
-      "endDate": "2026-10-13",
-      "endTime": "22:00",
-      "tags": [
-        "#relax",
-        "#social",
-        "#spieletreff"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
-      "calendarUrl": "https://bitcircus101.de/calendar/",
-      "recurring": true,
-      "page": true,
-      "firstSeen": "2026-05-19T18:59:16.839Z"
-    },
-    {
-      "id": "ae547059cd1d",
-      "title": "Lustige Lesereise 📖 Reading Exploration",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstr. 101, 53113 Bonn",
-      "date": "2026-10-13",
-      "time": "19:00",
-      "endDate": "2026-10-13",
-      "endTime": "22:00",
-      "tags": [
-        "#community"
-      ],
-      "type": "special",
-      "source": "Look at my toys!",
-      "uid": "6d1d2791-7ca5-4575-bf7e-6927d1995360",
-      "calendarUrl": "https://my.stim.toys",
-      "page": true,
-      "firstSeen": "2026-10-13T16:48:03.522Z"
-    },
     {
       "id": "9546cc9a30f0",
       "title": "Le Sabot Computerspiel-Abend",
@@ -1118,6 +1075,47 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-08-13T18:25:49.154Z"
+    },
+    {
+      "id": "a54db86f65be",
+      "title": "Plenum mit anschließendem Essen",
+      "subtitle": "",
+      "description": "Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein",
+      "location": "",
+      "date": "2026-12-10",
+      "time": "19:00",
+      "endDate": "2026-12-10",
+      "endTime": "20:30",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "36f59fc2-7422-47d0-bc19-38bed610e3ac",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
+      "firstSeen": "2026-10-13T17:17:16.603Z"
+    },
+    {
+      "id": "4f18d3a378ba",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-11",
+      "time": "20:00",
+      "endDate": "2026-12-11",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-05-09T10:12:20.662Z"
     }
   ]
 }
