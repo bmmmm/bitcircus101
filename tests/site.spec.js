@@ -2669,6 +2669,14 @@ test.describe('Accessibility', () => {
         // may swallow the global :focus-visible ring (the ascii editor is the
         // one form control that always exists without CI-generated data)
         await page.goto('/ascii/');
+        // No main.js on the hidden pages, so the skip link has to work on its
+        // own: a focusable target (tabindex="-1") takes the focus natively on
+        // the fragment navigation.
+        const activeId = () => page.evaluate(() => document.activeElement?.id ?? null);
+        await page.locator('.skip-link').focus();
+        await page.keyboard.press('Enter');
+        await expect.poll(activeId, { message: '/ascii/: the skip link did not move focus to the content' })
+            .toBe('main-content');
         const editor = page.locator('#ascii-editor');
         await expect(editor).toBeVisible();
         await editor.focus();
@@ -2691,6 +2699,19 @@ test.describe('Accessibility', () => {
             ['.ascii-playground__foot a[href*="impressum"]', 24, 44],
             ['.ascii-playground__foot a[href*="github"]', 24, 44],
         ]);
+
+        // /chat/: the skip link lands on the content — and does not count as a
+        // click outside the cards, which closes the page. The closing class is
+        // set synchronously in the click handler, so it is read once, at once:
+        // a retrying assertion would wait out the navigation that closing
+        // schedules and pass on the homepage's body.
+        await page.goto('/chat/');
+        await page.locator('.skip-link').focus();
+        await page.keyboard.press('Enter');
+        expect(await page.locator('body').evaluate((b) => b.classList.contains('chat-page--closing')),
+            '/chat/: the skip link counted as a click outside the cards').toBe(false);
+        await expect.poll(activeId, { message: '/chat/: the skip link did not move focus to the content' })
+            .toBe('main-content');
     });
 });
 
