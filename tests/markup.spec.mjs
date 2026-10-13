@@ -205,3 +205,29 @@ describe("lite/ mirrors the style.css tokens (style.css § Tokens, CLAUDE.md § 
     assert.deepEqual(raw, [], `raw colours in lite/index.html's CSS — use var(--…): ${raw.join(", ")}`);
   });
 });
+
+describe("the keyboard hint reads the same everywhere (README § Tests, style.css .footer__a11y)", () => {
+  // "ohne maus bedienbar: …" is a promise the footer makes on the nine layout
+  // pages (via the partial — the drift gate covers those), on /lite/ and on
+  // /ascii/, which carry their own footers. One wording, or the promise reads
+  // differently depending on where you are.
+  const hint = (rel) => {
+    const m = /class="footer__a11y"[^>]*>([\s\S]*?)<\/(?:span|p)>/.exec(read(rel));
+    assert.ok(m, `${rel}: no .footer__a11y element`);
+    return m[1].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  };
+
+  it("is present and identical in the partial, /lite/ and /ascii/", () => {
+    const texts = {
+      "includes/site-footer.html": hint("includes/site-footer.html"),
+      "lite/index.html": hint("lite/index.html"),
+      "ascii/index.html": hint("ascii/index.html"),
+    };
+    const reference = texts["includes/site-footer.html"];
+    assert.ok(reference.length > 20, `the hint is empty or too short: "${reference}"`);
+    const drift = Object.entries(texts)
+      .filter(([, t]) => t !== reference)
+      .map(([f, t]) => `${f}: "${t}" vs partial "${reference}"`);
+    assert.deepEqual(drift, [], `the keyboard hint differs:\n${drift.join("\n")}`);
+  });
+});
