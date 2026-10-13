@@ -535,7 +535,7 @@ spec under `tests/*.spec.mjs`):
 | Home page | 3 | Title + heading, CTAs, carousel (click, arrow keys, holds while hovered or focused) + map toggle, logo reveal on focus |
 | SEO / Meta | 2 | All meta tags on home, subpage descriptions + keywords |
 | Privacy | 1 | No Google Fonts (HTML + network) |
-| Navigation | 6 | Desktop nav + routing, mobile hamburger toggle, utility cluster hittable, section marker (also on clean URLs), wasd nerd mode (walks the page both ways, rows and edges, idle fade, Escape, typing and modifier guards, Enter follows; footer off switch survives a reload, none on touch-only; s never parks on the scroll-top) |
+| Navigation | 6 | Desktop nav + routing, mobile hamburger toggle, utility cluster hittable, section marker (also on clean URLs), wasd nerd mode (walks the page both ways, rows and edges, idle fade, Escape, typing and modifier guards, Enter follows; the ▶ beside the focus — ▲ below in edge-to-edge rows, fixed by the sticky brand, follows Tab and layout shifts, never on another control; footer off switch survives a reload, none on touch-only; s never parks on the scroll-top) |
 | Events page | 1 | Title, list, subscribe, RSS, back link |
 | Events content | 2 | Tags + filtering + month groups, sync status |
 | Donations | 1 | Title, consent banner dismiss |

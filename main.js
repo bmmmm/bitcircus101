@@ -701,7 +701,8 @@
   // w/a/s/d move the focus to the nearest focusable element in that direction.
   // A layer on top: Tab keeps its order, the arrows keep scrolling, Enter still
   // follows the link. The mode shows as the accent focus ring (html[data-spatnav],
-  // style.css) and "-- WASD --" in the footer modeline; it ends after idleMs
+  // style.css), a ▶ beside the focus and "-- WASD --" in the footer modeline;
+  // it ends after idleMs
   // without a key, on Escape or on a pointer — the focus stays where it is.
   // Single-letter shortcuts need an off switch (WCAG 2.1.4): the footer line
   // carries it, stored in BC.storage. Touch-only devices get neither.
@@ -716,6 +717,7 @@
     modeline: null,
     restingText: "",
     enabled: true,
+    cursor: null,
 
     init() {
       // No hover pointer, no keyboard to speak of: no listeners, and the
@@ -742,6 +744,11 @@
         if (e.key === "Escape") this.exit();
       }, true);
       utils.addEventListenerSafe(document, "pointerdown", () => this.exit());
+      // Tab during the mode moves the focus too; a resize moves the target,
+      // and so does content loading in above it (the page grows or shrinks).
+      utils.addEventListenerSafe(document, "focusin", () => this.placeCursor());
+      utils.addEventListenerSafe(window, "resize", () => this.placeCursor());
+      if (window.ResizeObserver) new ResizeObserver(() => this.placeCursor()).observe(document.body);
     },
 
     // A field where w/a/s/d are letters, not directions.
@@ -803,6 +810,14 @@
     // further w/a/s/d would be typed. Tab still reaches it.
     usable(el) {
       return el.tabIndex >= 0 && !el.disabled && !this.isTyping(el);
+    },
+
+    // Whether a viewport rect lies on a stop other than el (or around it).
+    crowds(g, el) {
+      const dx = window.scrollX, dy = window.scrollY;
+      return this.candidates().some(({ el: o, r }) =>
+        o !== el && !o.contains(el) && !el.contains(o) &&
+        r.left - dx < g.right && r.right - dx > g.left && r.top - dy < g.bottom && r.bottom - dy > g.top);
     },
 
     candidates() {
@@ -871,6 +886,13 @@
         if (this.modeline) this.restingText = this.modeline.textContent;
       }
       if (this.modeline) this.modeline.textContent = "-- WASD --";
+      if (!this.cursor) {
+        this.cursor = document.createElement("span");
+        this.cursor.className = "spatnav-cursor";
+        this.cursor.setAttribute("aria-hidden", "true");
+        document.body.appendChild(this.cursor);
+      }
+      this.placeCursor();
       clearTimeout(this.timer);
       this.timer = setTimeout(() => this.exit(), this.config.idleMs);
     },
@@ -879,7 +901,43 @@
       if (!("spatnav" in document.documentElement.dataset)) return;
       delete document.documentElement.dataset.spatnav;
       if (this.modeline) this.modeline.textContent = this.restingText;
+      if (this.cursor) this.cursor.hidden = true;
       clearTimeout(this.timer);
+    },
+
+    // The ▶ left of the focus ring, centred on it; where that would sit on
+    // another stop (a row of links set edge to edge, like the nav) a ◀ on the
+    // right, else a ▲ centred below. Pinned targets get viewport
+    // coordinates (the glyph is fixed too), the rest document ones, so
+    // scrolling needs no re-placing. Never past the viewport's width: a glyph
+    // there would scroll the page sideways.
+    placeCursor() {
+      const c = this.cursor, el = document.activeElement;
+      if (!c || !("spatnav" in document.documentElement.dataset)) return;
+      if (!this.isCandidate(el)) {
+        c.hidden = true;
+        return;
+      }
+      const r = el.getBoundingClientRect();
+      const cs = getComputedStyle(el);
+      const gap = (parseFloat(cs.outlineWidth) || 0) + (parseFloat(cs.outlineOffset) || 0) + 2;
+      c.textContent = "▶";
+      c.hidden = false;
+      const g = c.getBoundingClientRect();
+      const w = g.width, h = g.height, vw = document.documentElement.clientWidth;
+      const spots = [
+        ["▶", r.left - gap - w, r.top + r.height / 2 - h / 2],
+        ["◀", r.right + gap, r.top + r.height / 2 - h / 2],
+        ["▲", r.left + r.width / 2 - w / 2, r.bottom + gap],
+      ];
+      const [glyph, x0, y] = spots.find(([, x, y]) => x >= 0 && x + w <= vw &&
+        !this.crowds({ left: x, right: x + w, top: y, bottom: y + h }, el)) || spots[2];
+      const x = Math.max(0, Math.min(x0, vw - w));
+      c.textContent = glyph;
+      const pinned = this.pinned(el);
+      c.classList.toggle("spatnav-cursor--pinned", pinned);
+      c.style.setProperty("--spatnav-x", (pinned ? x : x + window.scrollX) + "px");
+      c.style.setProperty("--spatnav-y", (pinned ? y : y + window.scrollY) + "px");
     },
   };
 

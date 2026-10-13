@@ -512,16 +512,44 @@ test.describe('Navigation', () => {
         }
         const focused = () => page.evaluate(() => {
             const el = document.activeElement, r = el.getBoundingClientRect();
+            // The ▶ beside the focus (null while hidden) — ◀ on the right or
+            // ▲ below where the left has no room: how far off the focus's
+            // centre line, how far outside its box, which other control it sits on.
+            const c = document.querySelector('.spatnav-cursor');
+            let glyph = null;
+            if (c && !c.hidden) {
+                const g = c.getBoundingClientRect();
+                const hit = (t) => t.width && t.left < g.right && t.right > g.left && t.top < g.bottom && t.bottom > g.top;
+                const covers = [...document.querySelectorAll('a[href], button, summary')]
+                    .filter((o) => o !== el && !o.contains(el) && !el.contains(o) && o.checkVisibility())
+                    .filter((o) => hit(o.getBoundingClientRect()))
+                    .map((o) => o.textContent.trim().slice(0, 30));
+                const below = c.textContent === '▲';
+                glyph = { off: below ? Math.abs((g.left + g.right) / 2 - (r.left + r.right) / 2)
+                                     : Math.abs((g.top + g.bottom) / 2 - (r.top + r.bottom) / 2),
+                          gap: below ? g.top - r.bottom : g.right <= r.left ? r.left - g.right : g.left - r.right,
+                          covers, pinned: c.classList.contains('spatnav-cursor--pinned') };
+            }
             return { id: el.id, href: el.getAttribute('href'), top: r.top + scrollY, bottom: r.bottom + scrollY,
                      nav: !!el.closest('nav'), footer: !!el.closest('footer'),
-                     scrollTop: el.classList.contains('scroll-top') };
+                     scrollTop: el.classList.contains('scroll-top'), glyph };
         });
+        const beside = (f, what) => {
+            expect(f.glyph, `${what}: no ▶ beside the focus`).not.toBeNull();
+            expect(f.glyph.off, `${what}: the ▶ is off the focus's centre line`).toBeLessThanOrEqual(2);
+            expect(f.glyph.gap, `${what}: the ▶ touches the focus`).toBeGreaterThanOrEqual(2);
+            expect(f.glyph.gap, `${what}: the ▶ is far from the focus`).toBeLessThanOrEqual(14);
+            expect(f.glyph.covers, `${what}: the ▶ covers another control`).toEqual([]);
+        };
 
         // Nothing focused: the first key only shows the cursor — on the brand.
         await page.keyboard.press('s');
         await expect(html).toHaveAttribute('data-spatnav', '');
         await expect(page.locator('nav .nav__brand')).toBeFocused();
         await expect(page.locator('.footer__mode')).toHaveText('-- WASD --');
+        const onBrand = await focused();
+        beside(onBrand, 'brand');
+        expect(onBrand.glyph.pinned, 'the ▶ beside the sticky brand is not fixed').toBe(true);
         // The marker is the accent ring, not the ink ring of a Tab stop.
         const [ring, accent] = await page.evaluate(() => {
             const probe = document.createElement('i');
@@ -534,10 +562,14 @@ test.describe('Navigation', () => {
         expect(ring, 'the mode ring is the accent').toBe(accent);
 
         // d walks the nav row.
+        // The nav links sit edge to edge: no room beside them, the glyph goes below.
         await page.keyboard.press('d');
         await expect(page.locator('nav a[href="events.html"]')).toBeFocused();
+        beside(await focused(), 'nav /termine');
         await page.keyboard.press('d');
         await expect(page.locator('nav a[href="index.html#about"]')).toBeFocused();
+        beside(await focused(), 'nav /wir');
+        expect(await page.locator('.spatnav-cursor').textContent(), 'between nav links the glyph is not below').toBe('▲');
         // s walks the whole page down into the footer and w all the way back up
         // into the header, every key a step that way. On the way: the closed
         // months (a closed <details> keeps boxes Chromium will not focus) and
@@ -553,10 +585,24 @@ test.describe('Navigation', () => {
                 await settle();
                 const now = await focused();
                 expect(onward(prev, now), `${key} #${i} stood still or turned`).toBe(true);
+                beside(now, `${key} #${i}`);
                 prev = now;
             }
         };
         await walk('s', (f) => f.footer, (p, n) => n.top >= p.bottom - 1);
+        // Content loading in above the focus moves it down the document: the
+        // ▶ follows instead of staying where the focus was.
+        await page.evaluate(() => {
+            const shift = document.createElement('div');
+            shift.id = 'spat-shift';
+            shift.style.height = '120px';
+            document.querySelector('main').prepend(shift);
+        });
+        await expect.poll(async () => {
+            const g = (await focused()).glyph;
+            return !!g && g.off <= 2 && g.gap >= 2 && g.gap <= 14;
+        }, { message: 'the ▶ stayed behind a layout shift' }).toBe(true);
+        await page.evaluate(() => document.getElementById('spat-shift').remove());
         await walk('w', (f) => f.nav, (p, n) => n.bottom <= p.top + 1);
         const left = await page.evaluate(() => [...document.querySelectorAll('main a[href], main button')]
             .filter((el) => el.checkVisibility() && el.getBoundingClientRect().bottom <= 0).length);
@@ -575,7 +621,9 @@ test.describe('Navigation', () => {
         await page.clock.runFor(5_000);
         await expect(html).not.toHaveAttribute('data-spatnav');
         await expect(page.locator('.footer__mode')).toHaveText('-- OPEN --');
-        expect(await focused()).toEqual(held);
+        const after = await focused();
+        expect(after.glyph, 'the ▶ outlived the mode').toBeNull();
+        expect({ ...after, glyph: held.glyph }).toEqual(held);
         // The end of a row: nothing lies within 45° to the right, so d stays put
         // instead of jumping to the footer far below. Escape ends the mode too.
         await page.locator('#theme-toggle').focus();
@@ -631,6 +679,12 @@ test.describe('Navigation', () => {
         await page.keyboard.press('s');
         await expect(page.locator('nav .nav__brand')).toBeFocused();
         expect(await page.evaluate(() => scrollY), 'focusing the header scrolled the page').toBe(y);
+        // The ▶ stays beside the sticky brand while the page moves under it,
+        // and follows a Tab taken during the mode.
+        await page.evaluate(() => scrollBy(0, 100));
+        beside(await focused(), 'brand, scrolled');
+        await page.keyboard.press('Tab');
+        beside(await focused(), 'after Tab');
         await page.keyboard.press('Escape');
 
         // A row staged below the page, so no fixture decides the geometry:
