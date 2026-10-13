@@ -74,6 +74,94 @@ const PROBE = ([sel, dx, dy, measure, margin, all]) => {
     return el ? one(el) : null;
 };
 
+// ─── Focus sweep ─────────────────────────────────────────────────────────────
+//
+// Every tab stop on a page, focused in turn, has to (a) be something a sighted
+// keyboard user can see and (b) show where the focus is. A real Tab walk costs
+// two round trips per stop and has no upper bound on /events with live data, so
+// the walk happens inside the page: focus() each candidate, read what the
+// browser painted. Serialised like PROBE — everything it uses lives inside.
+//
+// A stop is "marked" when focus changed its background or colour (the site's
+// reverse-video idiom), or when it draws an outline that reaches 3:1 against
+// the background behind it and is not clipped away by an overflow ancestor or
+// the viewport (3 of 4 sides is the floor: a nav link at the top edge keeps
+// three). It is "visible" when checkVisibility says so with opacity counted in —
+// a faded-out button is an invisible tab stop even though it is "rendered".
+// Caller presses one real Tab first, so Chromium applies :focus-visible to
+// scripted focus, and kills transitions, so opacity reads its final value.
+const FOCUS_SWEEP = () => {
+    const parse = (s) => {
+        const m = /rgba?\(([^)]+)\)/.exec(s || '');
+        if (!m) return null;
+        const p = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+        return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+    };
+    const lum = (c) => {
+        const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+        return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+    };
+    const contrast = (a, b) => { const la = lum(a), lb = lum(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
+    const bgBehind = (el) => {
+        for (let n = el.parentElement; n; n = n.parentElement) {
+            const c = parse(getComputedStyle(n).backgroundColor);
+            if (c && c.a > 0) return c;
+        }
+        return { r: 255, g: 255, b: 255, a: 1 };
+    };
+    const clipRects = (el) => {
+        const rects = [{ left: 0, top: 0, right: innerWidth, bottom: innerHeight }];
+        for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
+            const cs = getComputedStyle(n);
+            if (/hidden|clip|scroll|auto/.test(cs.overflowX + ' ' + cs.overflowY)) rects.push(n.getBoundingClientRect());
+        }
+        return rects;
+    };
+    const label = (el) => (el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') +
+        (typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).join('.') : '')).slice(0, 90);
+    const candidates = [...document.querySelectorAll('a[href], button, input, select, textarea, summary, [tabindex]')]
+        .filter((el) => el.tabIndex >= 0 && !el.disabled);
+    const bad = [];
+    let stops = 0;
+    for (const el of candidates) {
+        const s0 = getComputedStyle(el);
+        const bg0 = s0.backgroundColor, c0 = s0.color;
+        el.focus();
+        if (document.activeElement !== el) continue; // not rendered: hidden, closed details, display:none
+        // focus() scrolls "nearest": a stop just below the fold lands flush on
+        // the viewport edge and its ring loses a side to whatever the previous
+        // stop left behind. Centre it; a scroller it cannot leave still clips.
+        el.scrollIntoView({ block: 'center', inline: 'nearest' });
+        stops++;
+        const who = label(el);
+        const cs = getComputedStyle(el);
+        if (!el.matches(':focus-visible')) { bad.push(who + ': focus is not :focus-visible'); continue; }
+        if (!el.checkVisibility({ opacityProperty: true, visibilityProperty: true })) { bad.push(who + ': invisible tab stop'); continue; }
+        const r = el.getBoundingClientRect();
+        const v = { left: Math.max(r.left, 0), top: Math.max(r.top, 0), right: Math.min(r.right, innerWidth), bottom: Math.min(r.bottom, innerHeight) };
+        if (v.right <= v.left || v.bottom <= v.top) { bad.push(who + ': focused but off-screen'); continue; }
+        const hit = document.elementFromPoint((v.left + v.right) / 2, (v.top + v.bottom) / 2);
+        if (!hit || !(hit === el || el.contains(hit) || hit.contains(el))) { bad.push(who + ': covered by ' + (hit ? label(hit) : 'nothing')); continue; }
+        if (cs.backgroundColor !== bg0 || cs.color !== c0) continue; // reverse video marks it
+        const ow = parseFloat(cs.outlineWidth) || 0;
+        if (cs.outlineStyle === 'none' || ow < 1) { bad.push(who + ': no outline and no colour change'); continue; }
+        const oc = parse(cs.outlineColor);
+        const ratio = oc ? contrast(oc, bgBehind(el)) : 0;
+        if (ratio < 3) { bad.push(who + ': ring ' + ratio.toFixed(2) + ':1 against its background'); continue; }
+        const off = parseFloat(cs.outlineOffset) || 0;
+        const ring = { left: r.left - off - ow, top: r.top - off - ow, right: r.right + off + ow, bottom: r.bottom + off + ow };
+        const clips = clipRects(el);
+        const sides = [
+            clips.every((c) => ring.left >= c.left),
+            clips.every((c) => ring.top >= c.top),
+            clips.every((c) => ring.right <= c.right),
+            clips.every((c) => ring.bottom <= c.bottom),
+        ].filter(Boolean).length;
+        if (sides < 3) bad.push(who + ': ring clipped to ' + sides + ' of 4 sides');
+    }
+    return { stops, bad };
+};
+
 const hitsAt = (page, sel, dx, dy) =>
     page.evaluate(PROBE, [sel, dx, dy, false, Math.max(Math.abs(dx), Math.abs(dy)) + 2, false]);
 const hitBox = (page, sel) => page.evaluate(PROBE, [sel, 0, 0, true, REACH_MAX, false]);
@@ -1683,6 +1771,19 @@ test.describe('No JavaScript errors', () => {
             await page.waitForLoadState('networkidle');
             expect(errors).toEqual([]);
             expect(fundingRequests, 'no page fetches funding.json').toEqual([]);
+
+            // Same page, same load: every tab stop is visible and marked (see
+            // FOCUS_SWEEP). One real Tab first — it sets keyboard modality, and
+            // where a skip link exists it has to be the first thing Tab reaches.
+            await page.keyboard.press('Tab');
+            if (await page.locator('.skip-link').count()) {
+                expect(await page.evaluate(() => document.activeElement?.className ?? ''),
+                    `${name}: the first Tab does not land on the skip link`).toContain('skip-link');
+            }
+            await page.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important}' });
+            const sweep = await page.evaluate(FOCUS_SWEEP);
+            expect(sweep.stops, `${name}: no focusable element reached`).toBeGreaterThan(0);
+            expect(sweep.bad, `${name}: tab stops without a visible focus`).toEqual([]);
         });
     }
 });
