@@ -7,6 +7,8 @@
   var KEYS = {
     // "light" switches to the inverted (light) scheme; anything else = dark.
     THEME:        "bc.theme",
+    // "off" switches the w/a/s/d nerd mode off; anything else = on.
+    WASD:         "bc.wasd",
     // ascii/ is a standalone page that does not load storage.js; this entry only
     // reserves the key in the central registry so the namespace stays documented.
     ASCII_DRAFT:  "bc.ascii-draft",

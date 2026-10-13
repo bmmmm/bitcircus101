@@ -2218,6 +2218,20 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
 .footer__a11y kbd,
 .footer__keys kbd { font: inherit; color: var(--ink); }
 
+/* the nerd-mode switch: the line's own type, its state in the [mehr] brackets */
+.footer__keys-toggle {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+.footer__keys-toggle::after { content: " [an]"; color: var(--ink); white-space: pre; }
+.footer__keys-toggle[aria-pressed="false"]::after { content: " [aus]"; }
+.footer__keys-toggle:hover { background: var(--ink); color: var(--paper); }
+.footer__keys-toggle:hover::after { color: inherit; }
+
 .footer__col a { color: var(--ink-dim); text-decoration: none; }
 .footer__col a:hover { background: var(--ink); color: var(--paper); }
 

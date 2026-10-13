@@ -502,6 +502,14 @@ test.describe('Navigation', () => {
         // (install() alone lets the fake time flow at real speed).
         await page.clock.pauseAt(Date.now() + 1_000);
         const html = page.locator('html');
+        // Touch only (mobile-chrome: Pixel 5 reports no hover): no keys to
+        // press, so no mode and no footer line promising one.
+        if (!(await page.evaluate(() => matchMedia('(any-hover: hover)').matches))) {
+            await expect(page.locator('.footer__keys')).toBeHidden();
+            await page.keyboard.press('s');
+            await expect(html).not.toHaveAttribute('data-spatnav');
+            return;
+        }
         const focused = () => page.evaluate(() => {
             const el = document.activeElement, r = el.getBoundingClientRect();
             return { id: el.id, href: el.getAttribute('href'), top: r.top + scrollY, bottom: r.bottom + scrollY,
@@ -648,6 +656,26 @@ test.describe('Navigation', () => {
         await page.keyboard.press('a');
         await expect(page.locator('#spat-row'), 'a left the row or stuck').toBeFocused();
         await page.keyboard.press('Escape');
+
+        // The off switch (WCAG 2.1.4) in the footer line: pressed while on;
+        // off, s is neither the mode nor swallowed, and it stays off across a
+        // reload. Dispatched like the modifier checks above, to see the default.
+        const toggle = page.locator('.footer__keys-toggle');
+        await expect(page.locator('.footer__keys')).toBeVisible();
+        await expect(toggle).toHaveAttribute('aria-pressed', 'true');
+        await toggle.click();
+        await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+        expect(await page.evaluate(() => localStorage.getItem('bc.wasd'))).toBe('off');
+        const sPasses = () => page.evaluate(() => document.body.dispatchEvent(
+            new KeyboardEvent('keydown', { key: 's', bubbles: true, cancelable: true })));
+        expect(await sPasses(), 's was swallowed while off').toBe(true);
+        await expect(html).not.toHaveAttribute('data-spatnav');
+        await page.reload();
+        await expect(toggle, 'the switch forgot "off" on reload').toHaveAttribute('aria-pressed', 'false');
+        expect(await sPasses(), 's was swallowed after the reload').toBe(true);
+        await expect(html).not.toHaveAttribute('data-spatnav');
+        await toggle.click();
+        await expect(toggle).toHaveAttribute('aria-pressed', 'true');
 
         // Between pages: the cursor onto a nav entry, Enter follows it.
         await page.locator('nav a[href="index.html#about"]').focus();
@@ -928,6 +956,8 @@ test.describe('Events page', () => {
         expect(probe.text).toContain('JavaScript wird');
         expect(probe.cards, 'scripting was off, so nothing rendered cards').toBe(0);
         expect(probe.height, 'the no-JS hint must not sit above a screen of reserved space').toBeLessThan(300);
+        // The w/a/s/d line promises a mode only main.js provides.
+        await expect(page.locator('.footer__keys'), 'the nerd-mode line shows without JavaScript').toBeHidden();
         await context.close();
     });
 });
