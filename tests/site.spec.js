@@ -3001,13 +3001,19 @@ test.describe('Accessibility', () => {
             await expect(page.locator('#main-nav')).not.toHaveClass(/active/);
         }
 
-        // At the very end the footer bar scrolls in under the fixed button:
-        // it rises with the bar instead of covering the funding status.
+        // At the very end the footer scrolls in under the fixed button: it
+        // must not cover a control there — on a desktop the funding status
+        // at the bar's right end, on a phone the impressum link above it.
         await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
-        await expect.poll(() => page.evaluate(() =>
-            document.querySelector('.scroll-top').getBoundingClientRect().bottom <=
-            document.querySelector('.footer__bar').getBoundingClientRect().top),
-        { message: 'back-to-top sits over the footer bar at the page end' }).toBe(true);
+        await page.waitForTimeout(100); // the lift is placed on the next frame
+        expect(await page.evaluate(() => {
+            const btn = document.querySelector('.scroll-top');
+            const r = btn.getBoundingClientRect();
+            return [...document.querySelectorAll('a[href], button, input, summary')]
+                .filter((el) => el !== btn && [...el.getClientRects()].some((q) =>
+                    q.left < r.right && q.right > r.left && q.top < r.bottom && q.bottom > r.top))
+                .map((el) => el.className || el.textContent.trim());
+        }), 'back-to-top covers a control at the page end').toEqual([]);
 
         // Back-to-top, now that the footer is in view: it reaches the tab
         // order, and on Enter it jumps (reduced motion: no smooth scroll) and

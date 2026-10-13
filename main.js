@@ -862,6 +862,8 @@
       }
       window.addEventListener("scroll", schedule, { passive: true });
       window.addEventListener("resize", schedule, { passive: true });
+      // A reload restores the scroll position without a scroll event.
+      place();
 
       btn.addEventListener("click", function () {
         window.scrollTo({
