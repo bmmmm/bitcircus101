@@ -2229,6 +2229,16 @@ test.describe('No JavaScript errors', () => {
             await page.evaluate(() => { document.documentElement.dataset.spatnav = ''; });
             const nerd = await page.evaluate(FOCUS_SWEEP);
             expect(nerd.bad, `${name}: tab stops without a visible focus in w/a/s/d mode`).toEqual([]);
+            // The scroll-top button only shows once scrolled (rAF), so the
+            // sweeps above never reach it. At the page end it sits on the
+            // footer bar — on a phone without the lift, where an ink ring
+            // fails 3:1. The sweep is synchronous: no rAF hides it mid-sweep.
+            await page.evaluate(() => { delete document.documentElement.dataset.spatnav; scrollTo(0, document.documentElement.scrollHeight); });
+            if (await page.evaluate(() => !!document.querySelector('.scroll-top') && scrollY > 400)) {
+                await expect(page.locator('.scroll-top.visible')).toHaveCount(1);
+                const end = await page.evaluate(FOCUS_SWEEP);
+                expect(end.bad.filter((b) => b.includes('scroll-top')), `${name}: the scroll-top button shows no focus at the page end`).toEqual([]);
+            }
         });
     }
 });
