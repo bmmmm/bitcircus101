@@ -29,6 +29,8 @@ the user wants to look at something before it goes live. Merge such a PR
 locally: `git merge --no-ff <branch> -m "Merge pull request #N: <title>"`, push
 `main`, delete the branch (a branch pushed via `origin` reached GitHub too). A web-UI or `tea pr merge` merge stamps a
 Forge identity the pre-push leak gate blocks (`~/ops/reference/git-workflow.md`).
+Exception: a Chiffre note PR is squashed under the maintainer identity, never
+`--no-ff` — its web-editor commit carries the person's name and mail.
 
 Commits: [conventional](https://www.conventionalcommits.org/), scope in
 parentheses — `feat(events): add filter`. The release workflow parses them.
