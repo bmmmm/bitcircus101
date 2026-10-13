@@ -385,7 +385,9 @@ function generateICS(cards, nowISO, opts = {}) {
 // Besides the primary feed.xml/ical.ics (rss:true sources, aggregator-facing,
 // untouched), the sync emits one subscribable ICS+RSS pair per tag and per
 // configured source under feeds/, all derived from the SAME aggregated ≤40-card
-// window the events page renders. events-data.json carries a `feeds` manifest
+// window the events page loads — it shows at most 30 of them at once (the cap
+// in events.js visibleEvents()), so never promise "what /termine shows" for a
+// feed. events-data.json carries a `feeds` manifest
 // mapping tags and sources to those files, so the frontend never re-derives a
 // slug and never advertises a feed that does not exist.
 
@@ -413,8 +415,9 @@ function slugifyTag(tag) {
  * Plan the whole feeds/ tree — which files exist and what they contain — plus
  * the manifest embedded into events-data.json. Pure; I/O lives in syncFeedsDir().
  *
- * `cards` is aggregate()'s output: the page's ≤40 window, so a tag feed can
- * never contain more than the page shows — that IS the "filter = feed" contract.
+ * `cards` is aggregate()'s output: the ≤40 window the page loads, so a tag feed
+ * holds exactly what that filter can reach on the page (which then shows at
+ * most 30 at once) — that IS the "filter = feed" contract.
  * `prevFeeds` is the previous run's manifest (or null); it carries the
  * retirement ledger (see FEED_RETENTION_DAYS above).
  *
