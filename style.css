@@ -36,7 +36,7 @@
        GREEN: hyperlinks and primary CTAs (incl. the frame of a pinnwand note
        that is actually taken) · the current selection (nav marker, active
        event filter, funding progress/donate, the w/a/s/d cursor's focus
-       ring) · the structure markers: the
+       ring and its ▶) · the structure markers: the
        "[ ]" of panel and month titles, the "── " before an h3, the h1 double
        rule, and the date before an event (list day+month, homepage preview,
        archive row, event page "wann", kiosk day label) · state on /status
@@ -134,6 +134,20 @@ body {
    loses to every component ring with its own colour (the paper ring on the
    footer funding bar, the ink rings of the /status bars). */
 :where(html[data-spatnav]) :focus-visible { outline-color: var(--accent); }
+/* ...and a ▶ beside the focus, placed by main.js through the two properties:
+   the ring alone is easy to lose on a long page. Fixed when the focus is in
+   the sticky header or on a fixed button, so it stays beside it. */
+.spatnav-cursor {
+    position: absolute;
+    left: var(--spatnav-x);
+    top: var(--spatnav-y);
+    color: var(--accent);
+    font-size: var(--fs-label);
+    line-height: 1;
+    pointer-events: none;
+    z-index: calc(var(--z-nav) + 1);
+}
+.spatnav-cursor--pinned { position: fixed; }
 
 /* =============================================================================
    Typography
@@ -3284,7 +3298,8 @@ html[data-theme="light"][data-palette="pride"] {
         --accent: #15803d; /* the screen green prints ~2:1 on white */
     }
     header, .footer__bar, .scroll-top, .menu-toggle, .nav__utils,
-    .carousel-button, .carousel-toggle, .back-link, .skip-link { display: none !important; }
+    .carousel-button, .carousel-toggle, .back-link, .skip-link,
+    .spatnav-cursor { display: none !important; }
     body { background: #ffffff; color: #000000; }
     a { color: #000000; }
     .panel > h2:first-child,
