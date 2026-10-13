@@ -434,14 +434,22 @@
       html += '<details class="events-month"' + isOpen + '>';
       html +=
         '<summary class="events-month__label">' +
-        '<span class="events-month__title">[ ' + monthName + " " + parts[0] +
-        " ]</span>" +
+        // the "[ ]" are CSS (::before/::after): the panel's green marker
+        '<span class="events-month__title">' + monthName + " " + parts[0] +
+        "</span>" +
         '<span class="events-month__chevron" aria-hidden="true"></span>' +
         "</summary>";
 
       groupMap[k].forEach(function (e) {
         var d = new Date(e.date + "T00:00:00");
-        var typeClass = e.type ? " event-card--" + e.type : "";
+        var core = window.EventsCore;
+        // Cancelled — rename, don't delete (events-core isCancelledTitle): the
+        // card shows the title without the marker, struck through, labelled.
+        // e.title itself stays raw: eventAnchor and the RSS deep links read it.
+        var cancelled = !!(core && core.isCancelledTitle(e.title));
+        var shown = cancelled ? core.stripCancelMarker(e.title) : e.title;
+        var typeClass = (e.type ? " event-card--" + e.type : "") +
+          (cancelled ? " event-card--cancelled" : "");
         // Shared with the RSS feed's deep-link (ics-core.js) so anchors stay in sync.
         var anchor = ICSCore.eventAnchor(e);
 
@@ -458,7 +466,10 @@
         // Content column
         html += '<div class="event-card__content">';
         html += '<div class="event-card__header">';
-        html += '<h3 class="event-card__title">' + esc(e.title) + "</h3>";
+        // the badge sits inside the h3, so the outline reads "Lötabend abgesagt"
+        html += '<h3 class="event-card__title">' + esc(shown) +
+          (cancelled ? ' <span class="event-card__cancelled"><span aria-hidden="true">✕ </span>abgesagt</span>' : "") +
+          "</h3>";
         if (e.source && e.source !== "bitcircus101") {
           html += '<span class="event-card__source">' +
             esc("Externer Kalender: " + e.source) + "</span>";
@@ -471,7 +482,6 @@
         // a teaser and folds the rest into a native <details> (no state to keep,
         // a #ev-… deep link opens it, see the hash block below). Trailing
         // hashtag-only lines are the tag source, not prose — hidden here.
-        var core = window.EventsCore;
         var text = core ? core.stripTagLines(e.description) : (e.description || "");
         if (text) {
           var teaser = core ? core.truncateDesc(text, 200) : text;

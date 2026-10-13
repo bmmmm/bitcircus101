@@ -27,23 +27,46 @@ import {
 // entry points eventId/toAllCards are) — imported the same way sync-events.mjs
 // itself imports them.
 import EventsCore from "../events-core.js";
-const { toCard, stripTagLines, isCancelledTitle, MAX_ALL_CARDS } = EventsCore;
+const { toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS } = EventsCore;
+
+// The owner's marker and what is left once it is stripped; the second list
+// must not match at all. Both describes below read the same two lists, so a
+// title that one function flags and the other leaves alone cannot slip by.
+const MARKED = [
+  ["CANCELED: Linkup", "Linkup"], ["Cancelled – Lötabend", "Lötabend"], ["ABGESAGT Linkup", "Linkup"],
+  ["abgesagt: Vortrag", "Vortrag"], ["[CANCELED] Linkup", "Linkup"], ["(Abgesagt) Workshop", "Workshop"],
+  ["  CANCELED Linkup", "Linkup"], ["[ Abgesagt ] Linkup", "Linkup"],
+];
+const UNMARKED = ["Linkup – nicht abgesagt", "Linkup (cancelled)", "Cancellation Policy Talk",
+  "Abgesagter Workshop", "Uncancelled Linkup", "Linkup CANCELED", ""];
 
 describe("isCancelledTitle", () => {
   it("matches the owner's marker at the START of a title, any case, optional bracket", () => {
-    for (const t of ["CANCELED: Linkup", "Cancelled – Lötabend", "ABGESAGT Linkup", "abgesagt: Vortrag",
-      "[CANCELED] Linkup", "(Abgesagt) Workshop", "  CANCELED Linkup", "[ Abgesagt ] Linkup"]) {
-      assert.equal(isCancelledTitle(t), true, t);
-    }
+    for (const [t] of MARKED) assert.equal(isCancelledTitle(t), true, t);
   });
 
   it("ignores the words anywhere else, partial words, and non-strings", () => {
-    for (const t of ["Linkup – nicht abgesagt", "Linkup (cancelled)", "Cancellation Policy Talk",
-      "Abgesagter Workshop", "Uncancelled Linkup", "Linkup CANCELED", ""]) {
-      assert.equal(isCancelledTitle(t), false, JSON.stringify(t));
-    }
+    for (const t of UNMARKED) assert.equal(isCancelledTitle(t), false, JSON.stringify(t));
     assert.equal(isCancelledTitle(undefined), false);
     assert.equal(isCancelledTitle(null), false);
+  });
+});
+
+describe("stripCancelMarker", () => {
+  it("drops the marker, its bracket and the separator — the title stays", () => {
+    for (const [t, want] of MARKED) assert.equal(stripCancelMarker(t), want, t);
+  });
+
+  it("leaves unmarked titles, a bare marker and non-strings as they are", () => {
+    for (const t of [...UNMARKED, "CANCELED", "[Abgesagt]"]) assert.equal(stripCancelMarker(t), t, JSON.stringify(t));
+    assert.equal(stripCancelMarker(undefined), undefined);
+    assert.equal(stripCancelMarker(null), null);
+  });
+
+  it("strips exactly the titles isCancelledTitle flags", () => {
+    for (const t of [...MARKED.map(([t]) => t), ...UNMARKED]) {
+      assert.equal(isCancelledTitle(t), stripCancelMarker(t) !== t, JSON.stringify(t));
+    }
   });
 });
 

@@ -70,7 +70,7 @@ export function buildMarkup(events, icsUrl, rssPath) {
         ? `<a href="../e/${esc(e.id)}/">${esc(e.title)}</a>` +
           (url ? ` · <a href="${esc(url)}" rel="noopener noreferrer">extern</a>` : "")
         : ext;
-      return `<li><time datetime="${esc(toDatetime(e.date, e.time))}" class="dim">${formatDate(e.date, e.time)}</time> — ${label}</li>`;
+      return `<li><time datetime="${esc(toDatetime(e.date, e.time))}" class="when">${formatDate(e.date, e.time)}</time> — ${label}</li>`;
     })
     .join("\n");
 

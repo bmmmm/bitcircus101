@@ -45,11 +45,11 @@ includes/
   site-skip.html            Shared skip link; inlined into pages by build:layout
   site-header.html          Shared <header> (nav); inlined into pages by build:layout
   site-footer.html          Shared <footer>; inlined into pages by build:layout
-scripts/inject-layout.mjs   Writes header/footer into the seven layout HTML files and stamps
+scripts/inject-layout.mjs   Writes header/footer into the nine layout HTML files and stamps
                             the footer percent from funding.json (data-funding) — so no page
                             fetches funding.json
 
-style.css                   Global styles (monochrome plain-text/man-page theme, dark default + light toggle)
+style.css                   Global styles (ink + one green accent, plain-text/man-page theme, dark default + light toggle)
 main.js                     Frontend: nav, carousel, map, events preview, footer
 storage.js                  Central localStorage wrapper — all keys in one place, exception-safe
 
@@ -170,7 +170,10 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   CANCELED / CANCELLED / ABGESAGT (`cancelledBy: "title"`, `isCancelledTitle` in
   `events-core.js`) — the owner's way to cancel: **rename, don't delete**, it
   works after the date too and reaches the feeds (`STATUS:CANCELLED`), the
-  JSON-LD (`EventCancelled`), the event page and `/status` alike. Renaming one
+  JSON-LD (`EventCancelled`), the event page and `/status` alike — and the
+  lists: `/events`, the homepage preview and `/kiosk/` show the title without
+  the marker, struck through, labelled „abgesagt" (`stripCancelMarker`; the
+  data keeps the raw title). Renaming one
   occurrence of a series works the same way: the calendar writes a
   `RECURRENCE-ID` override, which `ics-core.js` treats as a replacement of that
   occurrence (same `uid|date` id), so only that Friday is marked. Entries flagged
@@ -533,7 +536,7 @@ spec under `tests/*.spec.mjs`):
 | Raum nutzen | 1 | Title, CTA, structured data |
 | Impressum | 1 | Title + back link |
 | Danke page | 1 | Title, noindex, content, back link |
-| Monochrome theme | 1 | Dark bg, monospace, no inline styles |
+| Theme: ink text, green markers | 1 | Dark bg, monospace, no inline styles; panel/month brackets, h1 rule and event dates wear the accent, heading and card text stay ink (colours read from the tokens) |
 | Light theme toggle | 1 | data-theme flip, localStorage persistence, painted background inverts |
 | Pinnwand | 3 | Job board: active postings, the permanent slot's cycle, escaping, the how-to |
 | JS errors + focus sweep | 17 | Every page in the `pages` array (incl. /ascii/, /chat/, /lite/, /kiosk/, /404.html) free of console errors; on the same load every tab stop is visible and marked (reverse video, or a ring ≥ 3:1 not clipped away) and the first Tab lands on the skip link |
