@@ -302,6 +302,9 @@
       const { container, dots } = this.elements;
       utils.addEventListenerSafe(container, "keydown", (e) => {
         if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        // A modifier makes it someone else's shortcut — Alt+Left is "back",
+        // Shift+Arrow selects — so it passes through untouched.
+        if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
         e.preventDefault();
         if (e.key === "ArrowLeft") this.prevSlide();
         else this.nextSlide();
@@ -462,7 +465,9 @@
     toggleAutoRotate() {
       this.state.isAutoRotateEnabled = !this.state.isAutoRotateEnabled;
       this.syncToggleUI();
-      if (this.state.isAutoRotateEnabled) this.startAutoRotate();
+      // Back on goes through resume(): pressing play by keyboard happens with
+      // the focus inside the region, and that focus still holds the strip.
+      if (this.state.isAutoRotateEnabled) this.resume();
       else this.stopAutoRotate();
     },
 
