@@ -217,12 +217,80 @@
     return /\/apps\/calendar\//.test(base + "/") ? base + "/timeGridDay/" + date : url;
   }
 
+  // ── Relation of a source to the space ─────────────────────────────────────
+  // One field in calendars/<source>.json says what a calendar is to us:
+  //   own    — our calendar (exactly one; check-calendars.mjs gates it)
+  //   home   — someone else's calendar whose events take place at bitcircus101
+  //   friend — a befriended space elsewhere: opt-in on /termine, never in the
+  //            primary feed, the homepage teaser, /status or lite
+  // Missing or unknown → friend, so a new source never lands in the default
+  // view by accident. The sync copies it onto events-data.json `sources[]`;
+  // cards keep only the source NAME, so consumers join through relationMap().
+  var RELATIONS = ["own", "home", "friend"];
+
+  function relationOf(cal) {
+    var r = cal && cal.relation;
+    return r === "own" || r === "home" ? r : "friend";
+  }
+
+  /** At bitcircus101: our own calendar and the home sources. */
+  function isHome(cal) {
+    return relationOf(cal) !== "friend";
+  }
+
+  /**
+   * Whether a source feeds feed.xml / ical.ics / the events.html JSON-LD: the
+   * `rss` override when set, else the home set.
+   */
+  function inPrimaryFeed(cal) {
+    return cal.rss != null ? cal.rss === true : isHome(cal);
+  }
+
   /**
    * Whether a source's events get their own page (/e/<id>/) and the archive:
-   * the `pages` flag, else whatever `rss` says (the primary feed's sources).
+   * the `pages` flag, else whatever the primary feed carries.
    */
   function hasPages(cal) {
-    return (cal.pages != null ? cal.pages : cal.rss) === true;
+    return (cal.pages != null ? cal.pages : inPrimaryFeed(cal)) === true;
+  }
+
+  /**
+   * { sourceName: relation } from a list of sources — events-data.json
+   * `sources[]` or loadCalendars() output, both carry `name` + `relation`.
+   * null when no entry carries `relation` at all: data written before the
+   * field existed, where sourceRelation() treats everything as home so a page
+   * degrades to the old "show everything" view until the next sync.
+   */
+  function relationMap(sources) {
+    if (!Array.isArray(sources) || !sources.length) return null;
+    var map = Object.create(null);
+    var any = false;
+    for (var i = 0; i < sources.length; i++) {
+      var s = sources[i];
+      if (!s || typeof s.name !== "string") continue;
+      if (s.relation != null) any = true;
+      map[s.name] = relationOf(s);
+    }
+    return any ? map : null;
+  }
+
+  /** A card's relation by its source name: no name → own, no map → home, unknown → friend. */
+  function sourceRelation(map, name) {
+    if (!name) return "own";
+    if (!map) return "home";
+    return Object.prototype.hasOwnProperty.call(map, name) ? map[name] : "friend";
+  }
+
+  /**
+   * The card's source line: "" for our own calendar (and for pre-field data,
+   * where no line beats a wrong one), "Kalender: X" for a home source,
+   * "Externer Kalender: X" for a friend.
+   */
+  function sourceBadge(map, name) {
+    if (!map) return "";
+    var rel = sourceRelation(map, name);
+    if (rel === "own") return "";
+    return (rel === "home" ? "Kalender: " : "Externer Kalender: ") + name;
   }
 
   /** ONE parsed ICS event → ONE card. Pure — no date filtering, no cap, no sort. */
@@ -326,6 +394,13 @@
     fnv1a32: fnv1a32,
     eventId: eventId,
     hasPages: hasPages,
+    RELATIONS: RELATIONS,
+    relationOf: relationOf,
+    isHome: isHome,
+    inPrimaryFeed: inPrimaryFeed,
+    relationMap: relationMap,
+    sourceRelation: sourceRelation,
+    sourceBadge: sourceBadge,
     toCard: toCard,
     toCards: toCards,
     toAllCards: toAllCards,

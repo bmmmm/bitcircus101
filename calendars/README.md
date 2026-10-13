@@ -20,13 +20,15 @@ so ziemlich alles andere exportieren). Etwa stündlich läuft ein Job, der:
 5. **Tags vergibt** — aus `#hashtags` in der Terminbeschreibung, aus den Kategorien
    des Kalenders, sonst automatisch aus Stichworten im Titel;
 6. **alles chronologisch sortiert** und daraus die Events-Seite, den RSS-Feed
-   (`/feed.xml`) und einen iCal-Feed zum Abonnieren (`/ical.ics`) schreibt;
+   (`/feed.xml`) und einen iCal-Feed zum Abonnieren (`/ical.ics`) schreibt — beide
+   mit dem, was im bitcircus101 stattfindet (`relation` `own` + `home`, siehe
+   unten; `rss` kann das je Quelle übersteuern);
 7. **jedem Termin eine eigene Seite gibt** — `/e/<id>/` mit der vollen
    Beschreibung (Absätze und Links bleiben erhalten), plus ein Archiv unter
    `/archiv/`. Die `id` ist ein Hash der Kalender-`UID` (bei Serien plus Datum):
    ein verschobener Termin behält seinen Link. Seiten und Archiv gibt es für
-   Quellen mit `pages: true` (Standard: wie `rss`); alle anderen verlinken weiter
-   auf ihre eigene Seite.
+   Quellen mit `pages: true` (Standard: wie der Haupt-Feed); alle anderen
+   verlinken weiter auf ihre eigene Seite.
 
 Das Ergebnis landet auf dem `live`-Branch — nie im Quellcode. Wer einen Kalender
 ändert, ändert damit direkt die Website; niemand muss etwas nachpflegen.
@@ -36,7 +38,10 @@ Das Ergebnis landet auf dem `live`-Branch — nie im Quellcode. Wer einen Kalend
 Zusätzlich zu den Haupt-Feeds schreibt der Job unter `/feeds/` für **jedes
 Schlagwort** und **jede Quelle** ein eigenes abonnierbares ICS+RSS-Paar
 (`/feeds/tag/<slug>.ics`, `/feeds/source/<id>.ics`, dazu `/feeds/all.*` mit
-allem). Die `id` aus deiner Quelldatei ist dabei der Dateiname deines Feeds.
+allem). Schlagwort-Feeds enthalten nur Termine im bitcircus101 — so wie die
+Standardansicht auf `/termine`; die Termine befreundeter Spaces stehen in
+ihrem Quell-Feed und in `/feeds/all.*`. Die `id` aus deiner Quelldatei ist
+dabei der Dateiname deines Feeds.
 Alle Feeds speisen sich aus demselben Fenster von maximal 40 kommenden
 Terminen, das auch die Events-Seite zeigt — ein Tag-Feed kann nie mehr
 enthalten als die Seite. Verschwindet ein Schlagwort, bleibt sein Feed noch
@@ -74,7 +79,7 @@ einen fertigen JSON-Schnipsel zum Kopieren.
 
 ### 2. Die Quelldatei anlegen
 
-Eine JSON-Datei pro Quelle. Kuratierte Fremdquellen kommen nach `external/`:
+Eine JSON-Datei pro Quelle (der Probe-Lauf oben druckt sie fertig aus):
 
 ```json
 {
@@ -82,7 +87,7 @@ Eine JSON-Datei pro Quelle. Kuratierte Fremdquellen kommen nach `external/`:
   "name": "Repair Café Bonn",
   "ics": "https://beispiel.org/kalender.ics",
   "url": "https://beispiel.org/termine",
-  "rss": false
+  "relation": "friend"
 }
 ```
 
@@ -109,17 +114,49 @@ ist der Grund, warum es das Skript gibt: **Datei anlegen und Manifest vergessen 
 vorher aus wie „funktioniert nicht", ohne eine einzige Fehlermeldung.** Dieselbe
 Prüfung läuft in CI bei jedem Pull Request.
 
+## Freund*innen verwalten
+
+Das Feld `relation` in der Quelldatei sagt, was ein Kalender für uns ist — und
+daran hängt alles Weitere, ohne eine zweite Stelle:
+
+- **`friend`** (Standard, wenn das Feld fehlt): ein befreundeter Space oder ein
+  Veranstaltungsort anderswo. Auf `/termine` bekommt die Quelle ein Kästchen
+  unter „weitere kalender" und ist erst nach dem Anhaken zu sehen; sie hat ihren
+  Feed unter `/feeds/source/<id>.*`, steht in `/feeds/all.*` und auf `/calendar/`
+  — und bleibt aus `feed.xml`/`ical.ics`, den Schlagwort-Feeds, dem
+  Startseiten-Teaser, `/status`, der Kiosk-Ansicht „nur im bitcircus101" und
+  der Lite-Seite heraus.
+- **`home`**: ein fremder Kalender, dessen Termine im bitcircus101 stattfinden
+  (stim.toys „Look at my toys!"). Zählt überall als „bei uns": Standardansicht,
+  Haupt-Feeds, eigene Seiten, Verlauf. Die Karte trägt „Kalender: <name>".
+- **`own`**: unser eigener Kalender, genau einer (`check:calendars` besteht darauf).
+
+Alltag:
+
+- **Freund*in dazu:** `--probe` → Datei (der Schnipsel trägt schon
+  `"relation": "friend"`) → Zeile in `config.json` → `pnpm run check:calendars`.
+  Der nächste Sync-Lauf bringt Kästchen, Quell-Feed und Kalenderseite mit;
+  Code wird nicht angefasst.
+- **Pausieren:** die Zeile aus `config.json` nehmen, die Datei bleibt (nur eine
+  Warnung am Gate). Der Quell-Feed verschwindet beim nächsten Sync.
+- **Wird „bei uns":** `relation` auf `home` setzen.
+
+Der Sync schreibt die `relation` jeder Quelle in `events-data.json` (`sources[]`
+und `feeds.sources`); Seiten und Skripte lesen sie dort bzw. aus `calendars/`,
+niemals aus dem Quellnamen.
+
 ## Felder
 
 | Feld | Pflicht | Bedeutung |
 |------|---------|-----------|
 | `id` | ja | Kleinbuchstaben-Kebab-Case. Taucht in Log-Ausgaben auf. |
 | `name` | ja | Anzeigename auf der Karte. **Muss eindeutig sein** — der Name ist intern der Schlüssel für Feed-Auswahl und Ausfall-Cache. |
-| `ics` | ja | Der öffentliche ICS-Link. Den liest der Sync; bei `bitcircus.json` ist es auch die Abo-Adresse, die `/calendar/` und die Lite-Ansicht zeigen. |
+| `ics` | ja | Der öffentliche ICS-Link. Den liest der Sync; bei der `own`-Quelle ist es auch die Abo-Adresse, die `/calendar/` und die Lite-Ansicht zeigen. |
 | `url` | — | Menschenlesbare Seite des Kalenders; Fallback-Ziel für Karten ohne eigenen Link. |
 | `type` | — | `ics-full` (Standard), `ics-single`, `ics-filtered`. |
-| `rss` | — | `true` = die Termine dieser Quelle gehen in `/feed.xml` und `/ical.ics`. |
-| `pages` | — | `true` = jeder Termin bekommt eine eigene Seite `/e/<id>/` und kommt ins Archiv. Fehlt das Feld, gilt der Wert von `rss`. |
+| `relation` | — | `own` (unser Kalender, genau einer), `home` (findet im bitcircus101 statt) oder `friend` (Standard: zuschaltbar auf `/termine`). Siehe „Freund*innen verwalten". |
+| `rss` | — | Override für den Haupt-Feed: `true`/`false` = diese Quelle geht in `/feed.xml` und `/ical.ics` oder nicht. Fehlt das Feld, gilt `true` für `own` und `home`. |
+| `pages` | — | `true` = jeder Termin bekommt eine eigene Seite `/e/<id>/` und kommt ins Archiv. Fehlt das Feld, gilt: wie der Haupt-Feed. |
 | `tags` | — | Hashtags, die jeder Termin dieser Quelle bekommt, z. B. `["#kult41"]`. |
 | `cap` | — | Maximale Terminzahl aus dieser Quelle (Standard 30). |
 | `eventUrl` | — | Fester Link für Termine, deren ICS kein `URL`-Feld mitbringt. |

@@ -3,7 +3,7 @@
   <channel>
     <title>bitcircus101 – Termine: #datenburg</title>
     <link>https://bitcircus101.de/events</link>
-    <description>Gefiltert nach #datenburg – alle Termine mit diesem Schlagwort.</description>
+    <description>Dieses Schlagwort kommt derzeit in keinem Termin vor.</description>
     <language>de-de</language>
     <ttl>30</ttl>
     <image>
@@ -11,99 +11,7 @@
       <title>bitcircus101 – Termine: #datenburg</title>
       <link>https://bitcircus101.de/events</link>
     </image>
-    <lastBuildDate>Tue, 29 Sep 2026 20:06:45 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/datenburg.xml" rel="self" type="application/rss+xml"/>
 
-    <item>
-      <title>[2026-10-16 17:00] Exkursion zum Hackspace in Andernach (haxko e.V.)?</title>
-      <link>https://bitcircus101.de/e/153a20bcef2f/</link>
-      <description>Details noch nicht klar.
-Der Hackspace öffnet um 18:00 Uhr und ist direkt beim Bahnhof.
-Siehe Matrix: Hackertours@Datenburg.</description>
-      <content:encoded>&lt;p&gt;Details noch nicht klar.&lt;br /&gt;Der Hackspace öffnet um 18:00 Uhr und ist direkt beim Bahnhof.&lt;br /&gt;Siehe Matrix: Hackertours@Datenburg.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/153a20bcef2f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <pubDate>Tue, 29 Sep 2026 20:06:45 +0000</pubDate>
-      <guid isPermaLink="false">8811dfb1-cad2-4236-9daa-30486ef66754-20261016T1700</guid>
-    </item>
-    <item>
-      <title>[2026-10-20 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/48886128d3e4/</link>
-      <description>Offene Datenburg · 2026-10-20</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/48886128d3e4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261020T1800</guid>
-    </item>
-    <item>
-      <title>[2026-10-27 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/4f886c2dd6e4/</link>
-      <description>Offene Datenburg · 2026-10-27</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4f886c2dd6e4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261027T1800</guid>
-    </item>
-    <item>
-      <title>[2026-11-03 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/a98115321382/</link>
-      <description>Offene Datenburg · 2026-11-03</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a98115321382/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261103T1800</guid>
-    </item>
-    <item>
-      <title>[2026-11-10 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/a27ecb961080/</link>
-      <description>Offene Datenburg · 2026-11-10</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a27ecb961080/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261110T1800</guid>
-    </item>
-    <item>
-      <title>[2026-11-17 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/a57ed04f1780/</link>
-      <description>Offene Datenburg · 2026-11-17</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a57ed04f1780/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261117T1800</guid>
-    </item>
-    <item>
-      <title>[2026-11-24 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/b87cafa18688/</link>
-      <description>Offene Datenburg · 2026-11-24</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b87cafa18688/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261124T1800</guid>
-    </item>
-    <item>
-      <title>[2026-12-01 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/ae6bd15f606f/</link>
-      <description>Offene Datenburg · 2026-12-01</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/ae6bd15f606f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261201T1800</guid>
-    </item>
-    <item>
-      <title>[2026-12-08 18:00] Offene Datenburg</title>
-      <link>https://bitcircus101.de/e/b56bdc64676f/</link>
-      <description>Offene Datenburg · 2026-12-08</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/b56bdc64676f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <category>#offener-abend</category>
-      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
-      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261208T1800</guid>
-    </item>
   </channel>
 </rss>

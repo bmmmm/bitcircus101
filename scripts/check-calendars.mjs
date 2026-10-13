@@ -22,15 +22,17 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import ICSCore from "../ics-core.js";
+import EventsCore from "../events-core.js";
 import { CAL_DIR, CAL_CONFIG_FILE, toCards } from "./sync-events.mjs";
 
 const { parseICS } = ICSCore;
+const { RELATIONS } = EventsCore;
 
 // Keys sync-events.mjs actually reads, plus `_`-prefixed comment keys (see the
 // `_comment` in config.json and `_note` in the external sources). Anything else is a
 // typo — `icsUrl`, `categoryAllowed`, `taggs` — and must not pass silently.
 const KNOWN_KEYS = new Set([
-  "id", "name", "ics", "url", "type", "rss", "pages", "tags", "cap", "eventUrl", "filter",
+  "id", "name", "ics", "url", "type", "relation", "rss", "pages", "tags", "cap", "eventUrl", "filter",
 ]);
 const KNOWN_TYPES = new Set(["ics-full", "ics-single", "ics-filtered"]);
 const KNOWN_FILTER_KEYS = new Set([
@@ -99,6 +101,11 @@ function validateSource(entry, path, errors, warnings) {
   }
   if (entry.pages !== undefined && typeof entry.pages !== "boolean") {
     errors.push(at('"pages" must be true or false'));
+  }
+  if (entry.relation !== undefined && !RELATIONS.includes(entry.relation)) {
+    errors.push(
+      at(`unknown "relation": ${JSON.stringify(entry.relation)} — expected one of ${RELATIONS.join(", ")}`)
+    );
   }
   if (entry.cap !== undefined && (!Number.isInteger(entry.cap) || entry.cap < 1)) {
     errors.push(at('"cap" must be a positive integer'));
@@ -196,6 +203,19 @@ export function validateCalendars(dir = CAL_DIR) {
       if (typeof v !== "string" || !v.trim()) continue;
       if (seen.has(v)) errors.push(`duplicate "${key}": ${JSON.stringify(v)} in ${seen.get(v)} and ${s.rel}`);
       else seen.set(v, s.rel);
+    }
+  }
+
+  // Exactly one own calendar: every "ours first" view (/termine's default,
+  // /calendar/'s first panel, lite) hangs on it. Only listed sources count —
+  // a parked file keeps its relation without claiming the slot.
+  if (sources.length) {
+    const own = sources.filter((s) => s.entry?.relation === "own").map((s) => s.rel);
+    if (own.length !== 1) {
+      errors.push(
+        `${configPath}: exactly one source must have "relation": "own", found ${own.length}` +
+          (own.length ? ` (${own.join(", ")})` : "")
+      );
     }
   }
 
@@ -316,7 +336,7 @@ function printSnippet(url) {
     name: "TODO: display name shown on the card",
     ics: url,
     url: "TODO: human-facing page for this calendar",
-    rss: false,
+    relation: "friend",
   };
   console.log(`\nPaste into calendars/${id}.json:\n`);
   console.log(JSON.stringify(snippet, null, 2));

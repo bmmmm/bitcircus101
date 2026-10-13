@@ -42,13 +42,14 @@ import { createRequire } from "node:module";
 // Importing these modules is inert (their main() is guarded). writeFileAtomic is
 // tmp + rename, so a reader never fetches a half-written file; berlinToday is
 // the one clock reader the event pages use, so "today" means the same day here.
-import { loadArchive, writeFileAtomic } from "./sync-events.mjs";
+import { loadArchive, loadCalendars, writeFileAtomic } from "./sync-events.mjs";
 import { berlinToday } from "./build-event-pages.mjs";
 
 // UMD/CommonJS, like the other *-core.js modules: the streak the page brags
 // about is the same function the timeline is built from, never a second count.
 const require = createRequire(import.meta.url);
 const StatusCore = require("../status-core.js");
+const EventsCore = require("../events-core.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -60,7 +61,8 @@ export const STREAK_START = "<!-- status-streak:start -->";
 export const STREAK_END = "<!-- status-streak:end -->";
 /** First day on the status page — the site's first linkup on record. */
 export const STATUS_SINCE = "2025-05-25";
-export const PRIMARY_SOURCE = "bitcircus101";
+/** The relation of each source (own / home / friend) comes from here. */
+export const CALENDARS_DIR = path.join(root, "calendars");
 /** A vanished entry counts as cancelled only after this many calendar days in the
  *  export (lastSeen day − firstSeen day); shorter-lived ones were typos, not events. */
 export const MIN_VISIBLE_DAYS = 3;
@@ -106,11 +108,14 @@ export function isNoise(entry) {
  * guard — descriptions alone are most of the archive's bytes), `cancelled`
  * always a real boolean (the archive omits the key when false), sorted by date
  * then id so the output is diff-stable and the browser never sorts.
+ *
+ * `relations` (source name → own/home/friend, events-core relationMap) decides
+ * whose events count: everything at bitcircus101, never a friend's calendar.
  */
-export function buildStatusData(archive) {
+export function buildStatusData(archive, relations = null) {
   const events = Object.values((archive && archive.events) || {})
     .filter((e) => e && typeof e.id === "string" && typeof e.date === "string" && DATE_RE.test(e.date))
-    .filter((e) => e.source === PRIMARY_SOURCE && KEYS.has(e.type) && e.date >= STATUS_SINCE)
+    .filter((e) => EventsCore.sourceRelation(relations, e.source) !== "friend" && KEYS.has(e.type) && e.date >= STATUS_SINCE)
     .filter((e) => !isNoise(e))
     .map((e) => ({
       id: e.id,
@@ -153,7 +158,13 @@ export function main(argv = process.argv.slice(2)) {
     console.warn(`::warning::status-data: ${src} not found — nothing written (no primary source archived yet?)`);
     return;
   }
-  const data = buildStatusData(loadArchive(src));
+  let relations = null;
+  try {
+    relations = EventsCore.relationMap(loadCalendars(CALENDARS_DIR));
+  } catch (err) {
+    console.warn(`::warning::status-data: ${CALENDARS_DIR} unreadable (${err.message}) — every source counts`);
+  }
+  const data = buildStatusData(loadArchive(src), relations);
   fs.mkdirSync(path.dirname(out), { recursive: true });
   writeFileAtomic(out, JSON.stringify(data, null, 2) + "\n");
   console.log(`status-data: wrote ${out} (${data.events.length} event(s))`);

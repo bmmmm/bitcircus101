@@ -1242,6 +1242,13 @@
       "cancelled": false
     },
     {
+      "id": "5f2df3ae5dcc",
+      "date": "2026-09-01",
+      "title": "Writing Systems - wie funktionieren Schriftsysteme?",
+      "series": "special",
+      "cancelled": false
+    },
+    {
       "id": "b4f2e5e59816",
       "date": "2026-09-01",
       "title": "Look at my toys!",
@@ -1253,6 +1260,13 @@
       "date": "2026-09-04",
       "title": "Casual Linkup@bitcircus101 (1FR)",
       "series": "linkup",
+      "cancelled": false
+    },
+    {
+      "id": "11284c42d78c",
+      "date": "2026-09-08",
+      "title": "Colorful nonsense - Farbspielereien",
+      "series": "special",
       "cancelled": false
     },
     {
@@ -1280,6 +1294,13 @@
       "id": "c131139aced7",
       "date": "2026-09-14",
       "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "75e0c0f4a2f4",
+      "date": "2026-09-15",
+      "title": "Bringt mit, woran ihr bastelt, und zeigt es her 🖌️🎨🫟 bring your artworks, participation welcome!",
       "series": "special",
       "cancelled": false
     },
@@ -1326,6 +1347,13 @@
       "cancelled": false
     },
     {
+      "id": "74d76b806e9c",
+      "date": "2026-09-22",
+      "title": "Lustige Literarische Lesungsübung 📖 Practical Reading Practice",
+      "series": "special",
+      "cancelled": false
+    },
+    {
       "id": "1d9a350e2120",
       "date": "2026-09-25",
       "title": "Casual Linkup@bitcircus101 (4FR)",
@@ -1368,6 +1396,13 @@
       "cancelled": false
     },
     {
+      "id": "44bca13490df",
+      "date": "2026-10-06",
+      "title": "Punny poetry 📖 Wortwitzige Dichterei",
+      "series": "special",
+      "cancelled": false
+    },
+    {
       "id": "bb806176eec6",
       "date": "2026-10-06",
       "title": "Look at my toys!",
@@ -1399,6 +1434,13 @@
       "id": "930208fa5a93",
       "date": "2026-10-12",
       "title": "Treffen: Bonner FSFE Community",
+      "series": "special",
+      "cancelled": false
+    },
+    {
+      "id": "ae547059cd1d",
+      "date": "2026-10-13",
+      "title": "Lustige Lesereise 📖 Reading Exploration",
       "series": "special",
       "cancelled": false
     },

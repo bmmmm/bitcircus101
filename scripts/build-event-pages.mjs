@@ -31,13 +31,14 @@ import {
   SITE_URL,
   generateICS,
   loadArchive,
+  loadCalendars,
   syncFeedsDir,
   toJsonLdEvent,
   truncateDesc,
   writeFileAtomic,
 } from "./sync-events.mjs";
 
-const { stripTagLines, calendarHref } = EventsCore;
+const { stripTagLines, calendarHref, relationMap, sourceBadge } = EventsCore;
 
 const TEMPLATE_FILE = "events.html";
 const OG_IMAGE = `${SITE_URL}/images/og-image.jpg`;
@@ -236,11 +237,12 @@ export function jsonLdBlock(node) {
 }
 
 /** <head> of an event page (depth 2: /e/<id>/index.html). */
-export function renderHead(entry, { assetVersion }) {
+export function renderHead(entry, { assetVersion, relations = null }) {
   const text = stripTagLines(entry.description || "").replace(/\s+/g, " ").trim();
-  // A partner source with its own pages names itself in the fallback text; the
+  // Another calendar's event names its source in the fallback text (relations:
+  // source name → relation, events-core relationMap; ours stays unnamed); the
   // feed links below stay on the site-wide feed.xml.
-  const by = entry.source && entry.source !== "bitcircus101" ? ` (${entry.source})` : "";
+  const by = sourceBadge(relations, entry.source) ? ` (${entry.source})` : "";
   const fallback = `${entry.title}${by} am ${formatDateLong(entry.date)} im bitcircus101, Hackspace in Bonn.`;
   return headShell({
     depth: 2,
@@ -329,7 +331,7 @@ ${footer}
  * "vergangener Termin" note and is injectable so the output is testable without
  * mocking the clock.
  */
-export function renderEventPage(entry, chrome, todayStr = berlinToday()) {
+export function renderEventPage(entry, chrome, todayStr = berlinToday(), relations = null) {
   const { assetVersion } = chrome;
   const parts = [];
   parts.push(`            <article class="event-page">`);
@@ -360,10 +362,11 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday()) {
         `target="_blank" rel="noopener noreferrer" title="Auf Karte anzeigen">○ ${esc(entry.location)}</a>`
     );
   }
-  if (entry.source && entry.source !== "bitcircus101") {
-    parts.push(
-      `                    <p class="event-page__source">${esc("Externer Kalender: " + entry.source)}</p>`
-    );
+  // "Kalender: X" for a home source, "Externer Kalender: X" for a friend's,
+  // nothing for ours — the same line the card on /termine carries.
+  const badge = sourceBadge(relations, entry.source);
+  if (badge) {
+    parts.push(`                    <p class="event-page__source">${esc(badge)}</p>`);
   }
   parts.push(`                </div>`);
 
@@ -410,7 +413,7 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday()) {
   parts.push(`            </article>`);
 
   return shell({
-    head: renderHead(entry, { assetVersion }),
+    head: renderHead(entry, { assetVersion, relations }),
     header: rebase(chrome.header, 2),
     footer: rebase(chrome.footer, 2),
     body: parts.join("\n"),
@@ -510,7 +513,7 @@ export function isRenderable(entry) {
   return !!entry && ID_RE.test(String(entry.id || "")) && /^\d{4}-\d{2}-\d{2}$/.test(String(entry.date || ""));
 }
 
-export function planPages(archive, chrome, todayStr = berlinToday()) {
+export function planPages(archive, chrome, todayStr = berlinToday(), relations = null) {
   const entries = Object.values((archive && archive.events) || {});
   const files = [];
   for (const entry of entries) {
@@ -518,7 +521,7 @@ export function planPages(archive, chrome, todayStr = berlinToday()) {
       console.warn(`::warning::event-pages: skipping entry with unusable id/date ${JSON.stringify(entry && [entry.id, entry.date])}`);
       continue;
     }
-    files.push({ path: `e/${entry.id}/index.html`, data: renderEventPage(entry, chrome, todayStr) });
+    files.push({ path: `e/${entry.id}/index.html`, data: renderEventPage(entry, chrome, todayStr, relations) });
     // DTSTAMP from firstSeen, not from now: a rebuild must not rewrite every
     // ics on every run (syncFeedsDir only writes what changed). A missing or
     // unparsable firstSeen (hand-edited archive) falls back to now instead of
@@ -559,7 +562,15 @@ function main() {
     return;
   }
 
-  const files = planPages(archive, chrome, todayStr);
+  // Who is at home and who is a friend: the archive carries source names only,
+  // calendars/ (checked out from main next to these scripts) says the rest.
+  let relations = null;
+  try {
+    relations = relationMap(loadCalendars());
+  } catch (err) {
+    console.warn(`::warning::event-pages: calendars/ unreadable (${err.message}) — no source lines on the pages`);
+  }
+  const files = planPages(archive, chrome, todayStr, relations);
   const stats = syncFeedsDir("e", files);
   fs.mkdirSync("archiv", { recursive: true });
   const index = renderArchiveIndex(Object.values(archive.events), chrome, todayStr);

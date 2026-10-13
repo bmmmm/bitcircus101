@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /**
- * Inject upcoming bitcircus101 events into lite/index.html between
+ * Inject the upcoming events at bitcircus101 (own + home sources, like the
+ * events page's default view) into lite/index.html between
  * <!-- lite-events:start --> and <!-- lite-events:end --> markers.
  * Run after syncing events-data.json: pnpm run build:lite-events
  *
@@ -12,6 +13,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import EventsCore from "../events-core.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -55,7 +57,7 @@ export function normalizeUrl(u) {
   return null;
 }
 
-export function buildMarkup(events, icsUrl, rssPath) {
+export function buildMarkup(events, icsUrl, rssPath, relations = null) {
   if (!events.length) {
     return `<p class="dim">Keine Termine eingetragen — <a href="../events.html">Veranstaltungen</a></p>`;
   }
@@ -63,10 +65,10 @@ export function buildMarkup(events, icsUrl, rssPath) {
     .map((e) => {
       const url = normalizeUrl(e.eventUrl);
       // The title leads to the event's own page; an external link stays the
-      // second way. Every event here is ours (selectUpcoming), so a card from a
-      // sync before the `page` flag existed has a page all the same.
+      // second way. A card of our own calendar from a sync before the `page`
+      // flag existed has a page all the same (relations: events-core relationMap).
       const ext = url ? `<a href="${esc(url)}" rel="noopener noreferrer">${esc(e.title)}</a>` : esc(e.title);
-      const label = e.id && (e.page || e.source === "bitcircus101")
+      const label = e.id && (e.page || EventsCore.sourceRelation(relations, e.source) === "own")
         ? `<a href="../e/${esc(e.id)}/">${esc(e.title)}</a>` +
           (url ? ` · <a href="${esc(url)}" rel="noopener noreferrer">extern</a>` : "")
         : ext;
@@ -86,29 +88,28 @@ export function buildMarkup(events, icsUrl, rssPath) {
 }
 
 /**
- * Which RSS feed the lite page should advertise. The manifest is keyed by
- * calendar id, so the source is resolved by its card-facing `name`, exactly as
- * the events page does (events.js feedScope). Falls back to `fallback` when the
- * manifest has no bitcircus feed — see the comment at the call site for why the
- * per-source feed is preferred over the primary one.
+ * Which RSS feed the lite page should advertise: the primary feed, which
+ * carries exactly the sources this list shows (own + home — feed.xml follows
+ * inPrimaryFeed, the list follows relationOf, both default to the home set).
+ * The manifest names its path; `fallback` when there is no manifest.
  */
 export function resolveRssPath(data, fallback = "../feed.xml") {
-  const sources = (data && data.feeds && data.feeds.sources) || {};
-  for (const id of Object.keys(sources)) {
-    if (sources[id].name === "bitcircus101" && sources[id].rss) return sources[id].rss;
-  }
-  return fallback;
+  const primary = data && data.feeds && data.feeds.primary;
+  return (primary && primary.rss) || fallback;
 }
 
 /**
- * The bitcircus101 events from `todayStr` onwards, chronological, capped at
- * MAX_EVENTS. Pure: the caller passes today in, so the selection is testable
- * without mocking the clock.
+ * The events at bitcircus101 from `todayStr` onwards, chronological, capped at
+ * MAX_EVENTS: our own calendar and the home sources, never a friend's (the
+ * data's sources list says which is which; pre-field data has no friends).
+ * Pure: the caller passes today in, so the selection is testable without
+ * mocking the clock.
  */
 export function selectUpcoming(data, todayStr) {
   const all = (data && data.events) || [];
+  const relations = EventsCore.relationMap(data && data.sources);
   return all
-    .filter((e) => e.source === "bitcircus101" && e.date >= todayStr)
+    .filter((e) => EventsCore.sourceRelation(relations, e.source) !== "friend" && e.date >= todayStr)
     .sort((a, b) => {
       const ka = a.date + (a.time || "");
       const kb = b.date + (b.time || "");
@@ -131,20 +132,20 @@ function main() {
     icsUrl = cal.ics || null;
   }
 
-  // Default to the primary feed, but it carries every rss:true source (Look at
-  // my toys! as well), so this page would advertise a feed listing events it
-  // does not show. The per-source feed is bitcircus by construction, so prefer
-  // it whenever the manifest lists it.
+  // The primary feed: it carries the same sources this list shows (see
+  // resolveRssPath), so the page never advertises events it does not list.
   let rssPath = "../feed.xml";
 
   let upcoming = [];
+  let relations = null;
   if (fs.existsSync(EVENTS_JSON)) {
     const data = JSON.parse(fs.readFileSync(EVENTS_JSON, "utf8"));
     rssPath = resolveRssPath(data, rssPath);
     upcoming = selectUpcoming(data, todayStr);
+    relations = EventsCore.relationMap(data.sources);
   }
 
-  const markup = buildMarkup(upcoming, icsUrl, rssPath);
+  const markup = buildMarkup(upcoming, icsUrl, rssPath, relations);
   let html = fs.readFileSync(LITE, "utf8");
 
   const si = html.indexOf(START);
