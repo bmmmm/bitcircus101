@@ -772,7 +772,10 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 }
 .carousel-button.prev::after { left: 0; }
 .carousel-button.next::after { right: 0; }
-.carousel-button:hover { background: var(--ink); color: var(--paper); opacity: 1; }
+/* The focus twin is not decoration: the ring would sit on the photo, where no
+   colour holds 3:1 against every picture — reverse video marks it instead. */
+.carousel-button:hover,
+.carousel-button:focus-visible { background: var(--ink); color: var(--paper); opacity: 1; }
 .carousel-button.prev { left: 0; border-left: none; }
 .carousel-button.next { right: 0; border-right: none; }
 
