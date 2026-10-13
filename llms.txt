@@ -19,6 +19,7 @@ bitcircus101 ist ein privat und nicht-kommerziell betriebener Hackspace in Bonn.
 ## Kontakt
 
 - E-Mail: info@bitcircus101.de
+- Matrix: https://matrix.to/#/#bitcircus101:stim.toys
 - Adresse: Dorotheenstraße 101, 53113 Bonn
 - GitHub: https://github.com/bmmmm/bitcircus101
 
