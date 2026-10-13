@@ -7,7 +7,7 @@ und wie ein neuer Kalender dazukommt.
 
 Wir hosten keine Termine, wir **abonnieren** sie. Jede Quelle ist ein öffentlicher
 `.ics`-Link (das Format, das Nextcloud, Google Calendar, WordPress-Event-Plugins und
-so ziemlich alles andere exportieren). Alle 30 Minuten läuft ein Job, der:
+so ziemlich alles andere exportieren). Etwa stündlich läuft ein Job, der:
 
 1. **jeden Kalender parallel abholt** — fällt einer aus, laufen die anderen weiter
    und die letzten bekannten Termine der toten Quelle bleiben stehen (`status: stale`);
@@ -47,7 +47,7 @@ steht maschinenlesbar im `feeds`-Block von `events-data.json`.
 ### Was das für dich heißt, wenn du uns deinen Kalender gibst
 
 - **Du behältst die Kontrolle.** Wir kopieren nichts ab, wir lesen deinen Link.
-  Du änderst einen Termin in deinem Kalender → spätestens 30 Minuten später steht es
+  Du änderst einen Termin in deinem Kalender → in der Regel binnen einer Stunde steht es
   bei uns richtig. Du löschst ihn → er verschwindet.
 - **Wir brauchen nur den öffentlichen ICS-Link.** In Nextcloud: Kalender teilen →
   „Link teilen" → die Adresse mit `?export`. Kein Zugang, kein Passwort, keine

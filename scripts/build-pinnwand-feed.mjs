@@ -6,7 +6,7 @@
  * Live-only, like the event feeds: a company's posting arrives as a PR against
  * jobs.json on main and must not need a build commit, and a note whose `from`
  * is today has to appear without waiting for the next deploy. So this runs in
- * BOTH pipelines — the deploy job and the 30-minute calendar sync — and writes
+ * BOTH pipelines — the deploy job and the hourly calendar sync — and writes
  * into pinnwand/, which is gitignored on main and force-added on live.
  *
  * The runtime math is NOT recomputed here: which notes are up, how long they

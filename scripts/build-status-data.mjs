@@ -6,7 +6,7 @@
  * growing — the page must never load that directly.
  *
  * Live-only, like the event pages: the archive exists on the live branch only,
- * so this runs in BOTH pipelines (the 30-minute sync and the deploy) and its
+ * so this runs in BOTH pipelines (the hourly sync and the deploy) and its
  * output is gitignored on main and force-added on live. No timestamp in the
  * output on purpose: same archive → same bytes → the sync's "No changes" path
  * still fires when nothing happened.

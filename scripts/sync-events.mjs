@@ -153,7 +153,7 @@ function eventPageUrl(c) {
 /**
  * RSS lastBuildDate derived from content: the newest firstSeen among the cards,
  * null when there is none. Combined with the write-if-changed logic this keeps
- * a no-op sync from rewriting every feed every 30 minutes — same bytes, same
+ * a no-op sync from rewriting every feed every hour — same bytes, same
  * ETag, so readers get a 304 instead of a re-download. Shared by the primary
  * feed and the filtered feeds (buildFeedPlan).
  */
@@ -432,7 +432,7 @@ function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
 
   // lastBuildDate is content-derived (feedBuildDate) — combined with
   // writeIfChanged in syncFeedsDir this keeps a no-op sync from rewriting ~90
-  // files every 30 minutes (repo bloat on live).
+  // files every hour (repo bloat on live).
   const emitPair = (base, list, { title, description }) => {
     files.push({ path: `${base}.ics`, data: generateICS(list, nowISO, { calName: title }) });
     files.push({
@@ -736,10 +736,10 @@ function loadArchive(file = ARCHIVE_FILE) {
  *     replaced, `firstSeen` is kept; nothing is ever deleted;
  *   - cards before ARCHIVE_MIN_DATE are not admitted;
  *   - `lastSeen` is a day, not a timestamp — a no-change sync must not rewrite
- *     the file 48 times a day;
+ *     the file 24 times a day;
  *   - an id already held by a different identity (uid / title key) is a hash
  *     collision: warn, keep the incumbent, skip the newcomer. Never throw here:
- *     the sync runs unattended every 30 minutes and must not freeze on data;
+ *     the sync runs unattended every hour and must not freeze on data;
  *   - `cancelled` (with `cancelledBy: "vanished"`) is set only for an upcoming
  *     entry of a source that answered with a non-empty fresh export and no
  *     longer lists it (series occurrences only inside the expansion horizon);

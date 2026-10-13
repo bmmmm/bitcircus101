@@ -15,7 +15,7 @@ export const SITE_URL = "https://bitcircus101.de";
 /** Channel image readers show next to the feed title (icon-192 is the PWA icon). */
 export const FEED_IMAGE_URL = `${SITE_URL}/images/icon-192.png`;
 
-/** Minutes a reader may cache the feed — the sync cron runs every 30 minutes. */
+/** Minutes a reader may cache the feed — the sync runs hourly, so a reader lags it by half a run at most. */
 export const FEED_TTL_MINUTES = 30;
 
 export function escXml(s) {
