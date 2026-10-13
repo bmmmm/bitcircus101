@@ -49,14 +49,14 @@
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
 
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=409ca4d9" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=409ca4d9" />
-        <link rel="manifest" href="site.webmanifest?v=409ca4d9" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=e4243853" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=e4243853" />
+        <link rel="manifest" href="site.webmanifest?v=e4243853" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=409ca4d9" />
+        <link rel="stylesheet" href="style.css?v=e4243853" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -152,7 +152,7 @@
                                 <p class="location-card__coords">50.74042° N · 7.08942° E</p>
                             </div>
                         </div>
-                        <button id="show-map-btn" class="location-card__map-btn" aria-label="OpenStreetMap-Karte laden und anzeigen">
+                        <button id="show-map-btn" class="location-card__map-btn" aria-expanded="false" aria-controls="osm-map-container">
                             [ karte laden ]
                         </button>
                         <div id="osm-map-container" class="hidden">
@@ -243,7 +243,7 @@
             </div>
         </footer>
 
-        <script defer src="storage.js?v=409ca4d9"></script>
-        <script defer src="main.js?v=409ca4d9"></script>
+        <script defer src="storage.js?v=e4243853"></script>
+        <script defer src="main.js?v=e4243853"></script>
     </body>
 </html>

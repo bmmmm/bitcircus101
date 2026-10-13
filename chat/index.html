@@ -24,20 +24,20 @@
         <meta name="twitter:description" content="Tritt der Signal-INFO-Gruppe des bitcircus101 bei – Ankündigungen und wann offen ist. Zugang zur TALK-Gruppe auf Anfrage." />
         <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
         <link rel="canonical" href="https://bitcircus101.de/chat/" />
-        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg?v=409ca4d9" />
-        <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=409ca4d9" />
-        <link rel="manifest" href="../site.webmanifest?v=409ca4d9" />
+        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg?v=e4243853" />
+        <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=e4243853" />
+        <link rel="manifest" href="../site.webmanifest?v=e4243853" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="../style.css?v=409ca4d9" />
+        <link rel="stylesheet" href="../style.css?v=e4243853" />
     </head>
     <body class="chat-page">
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
         <a class="chat-close" href="../index.html">Zurück zur Startseite [ESC]</a>
 
-        <main id="main-content" class="chat-main">
+        <main id="main-content" class="chat-main" tabindex="-1">
             <h1 class="sr-only">Signal-Gruppen – bitcircus101</h1>
 
             <div class="chat-cards">
@@ -127,8 +127,10 @@
                 if (e.key === 'Escape') doClose();
             });
 
-            // Click outside cards
+            // Click outside cards — a link or button outside them (the skip
+            // link, reached by Enter) is not "outside", it is its own action
             document.body.addEventListener('click', function (e) {
+                if (e.target.closest('a, button')) return;
                 var cards = document.querySelector('.chat-cards');
                 if (cards && !cards.contains(e.target)) doClose();
             });
