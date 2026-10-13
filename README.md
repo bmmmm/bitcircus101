@@ -374,8 +374,8 @@ Nothing reaches production without passing all tests first.
 ### Sync calendar events (`sync-events.yml`)
 
 - **Trigger:** hourly at :17 via `workflow_dispatch` from a cron on our own server, plus manual. The
-  `*/30` schedule in the workflow is only a fallback: GitHub drops most scheduled runs (measured
-  every 2–3 h), so the real cadence comes from the dispatch
+  `*/30` schedule in the workflow is only a fallback: GitHub drops most scheduled runs (gaps of
+  2.5–10 h, median ~5 h, measured October 2026), so the real cadence comes from the dispatch
 - **Branch:** Checks out `live`, pulls scripts/config from `main`
 - **What it does:**
   1. Runs `scripts/sync-events.mjs` (Node 22, zero dependencies)

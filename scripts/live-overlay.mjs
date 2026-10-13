@@ -36,7 +36,7 @@ const FEEDS = [
     "sitemap.xml",
     "events/feed.xml",
     "events/ical.ics",
-    // Job-board feed: built on live by the deploy and the 30-min sync, gitignored on main.
+    // Job-board feed: built on live by the deploy and the hourly sync, gitignored on main.
     "pinnwand/feed.xml",
 ];
 

@@ -48,11 +48,11 @@
   // protection, not decoration — a wall that changes hue every minute is a
   // distraction, one that changes every 20 min is barely noticed.
   var CYCLE_MS = 1200000;
-  // lastSync older than this → "daten alt". Not 3 h: the sync runs hourly, but
-  // only while our own host dispatches it — without that, GitHub's */30 schedule
-  // really fires every 2-3 h and never catches up (measured 2026-08-06, largest
-  // observed gap ~3 h 10 min), so a 3 h threshold cries wolf on a healthy feed. 5 h clears that jitter and still warns an
-  // hour before the external Uptime Kuma monitor (6 h) escalates.
+  // lastSync older than this → "daten alt". The sync runs hourly (our own host
+  // dispatches it at :17), so 5 h means four missed runs: the dispatcher is down
+  // and only GitHub's */30 schedule is left, which really fires every 2.5–10 h
+  // (median ~5 h, measured 2026-10). That is worth flagging on the wall, and it
+  // still warns an hour before the external Uptime Kuma monitor (6 h) escalates.
   var STALE_AFTER_MS = 5 * 3600000;
   // Fallback window for the "läuft" marker when a source gave no end at all.
   // Only that case — endTime is present on 39 of 40 events in the real feed
