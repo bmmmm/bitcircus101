@@ -14,6 +14,8 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import EventsCore from "../events-core.js";
+import { esc } from "./html-text.mjs";
+export { esc }; // tests import it from here
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -27,14 +29,6 @@ const MAX_EVENTS = 8;
 
 const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
 const MONTHS = ["JAN", "FEB", "MÄR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ"];
-
-export function esc(s) {
-  return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 export function formatDate(dateStr, timeStr) {
   const [y, m, d] = dateStr.split("-").map(Number);

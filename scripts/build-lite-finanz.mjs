@@ -22,6 +22,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import { esc } from "./html-text.mjs";
 
 const require = createRequire(import.meta.url);
 const Core = require("../finanz-core.js");
@@ -37,14 +38,6 @@ const STAND_START = "<!-- lite-stand-date -->";
 const STAND_END = "<!-- /lite-stand-date -->";
 
 const NBSP = " ";
-
-function esc(s) {
-  return String(s == null ? "" : s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
-}
 
 /**
  * Tighten the gap between a number and its unit into a non-breaking space, so a
