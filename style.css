@@ -2231,7 +2231,8 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
    ============================================================================= */
 .scroll-top {
     position: fixed;
-    bottom: 1.25rem;
+    /* --footer-overlap (main.js): lifted clear of the footer bar at the page end */
+    bottom: calc(1.25rem + var(--footer-overlap, 0px));
     right: 1.25rem;
     width: 44px;
     height: 44px;
