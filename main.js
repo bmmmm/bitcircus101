@@ -170,6 +170,19 @@
         a.classList.remove("nav__link--current");
       });
 
+      // A hash naming a homepage teaser (#raum → data-nav="raum-nutzen.html")
+      // belongs to the entry the scroll-spy lights there, not to /wir. Only the
+      // visual class: that link leads to another page, so it is not "current".
+      if (hereFile === "index.html" && hereHash.length > 1) {
+        const section = document.getElementById(hereHash.slice(1));
+        const page = section && section.getAttribute("data-nav");
+        const teased = page && mainNav.querySelector(`ul li a[href="${page}"]`);
+        if (teased) {
+          teased.classList.add("nav__link--current");
+          return;
+        }
+      }
+
       for (let i = 0; i < links.length; i++) {
         const a = links[i];
         const raw = a.getAttribute("href");
@@ -610,6 +623,14 @@
       });
       const observed = document.querySelectorAll("section[id]");
       if (!observed.length) return;
+      // A homepage teaser whose nav entry leads to its own page (/termine →
+      // events.html) names that page in data-nav: the entry lights up while the
+      // teaser is read, and the click still goes to the full page.
+      observed.forEach(s => {
+        const page = s.getAttribute("data-nav");
+        const link = page && mainNav && mainNav.querySelector(`ul li a[href="${page}"]`);
+        if (link) navLinks["#" + s.id] = link;
+      });
 
       // Links the spy manages (those mapping to an observed section).
       const spied = [];
@@ -619,9 +640,9 @@
       });
       if (!spied.length) return;
 
-      // EVERY section is observed, not just the two the nav points at. The spy
-      // has to know it has left "wir" even when the section it entered — next
-      // events, keep-the-lights-on, Freund*innen — has no nav entry of its own.
+      // EVERY section is observed, not just the ones the nav points at. The spy
+      // has to know it has left "kontakt" even when the section it entered —
+      // the hero, Freund*innen — has no nav entry of its own.
       // While only the mapped ones were watched, the "nothing in view" branch ran
       // for the whole 1400px between #about and #contact and re-ran
       // markCurrentPage, which on the homepage always resolves to /wir: the

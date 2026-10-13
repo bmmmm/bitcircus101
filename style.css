@@ -856,6 +856,9 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .event-preview__cancelled { font-size: 0.7rem; justify-self: end; }
 
 .events-more-link { font-size: var(--fs-small); margin: 0.75rem 0 0.25rem; }
+/* the side doors of the events panel: ink text, only the keywords are links —
+   five fully green sentences read as one wall of accent */
+.events-meta { font-size: var(--fs-small); margin: 0.25rem 0; color: var(--ink-dim); }
 
 /* =============================================================================
    Events page
