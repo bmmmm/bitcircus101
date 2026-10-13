@@ -655,14 +655,34 @@ test.describe('Events content', () => {
         await expect(page).toHaveURL(/[?&]q=/);
         expect(await page.locator('.event-card').count()).toBeGreaterThan(0);
 
+        // The search × hides itself with the query: the keyboard goes back
+        // to the field, not to <body>
+        await page.locator('.events-search__clear').focus();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('#events-search')).toBeFocused();
+        await expect(page.locator('#events-search')).toHaveValue('');
+        await expect(page).not.toHaveURL(/[?&]q=/);
+
         // Nonsense query shows the search empty state
         await page.locator('#events-search').fill('zzzqqqxyz');
         await expect(page.locator('.events-empty')).toBeVisible();
 
-        // Reset clears tags + search and the URL query
-        await page.locator('.events-filter__clear').click();
+        // Its reset clears tags + search and the URL query, and lands the
+        // keyboard on the first chip — the list it sat in is gone
+        await page.locator('.events-empty__reset').focus();
+        await page.keyboard.press('Enter');
         await expect(page).toHaveURL(/\/events\.html(#.*)?$/);
         expect(await page.locator('.event-card').count()).toBe(countBefore);
+        await expect(page.locator('.events-filter__tag').first()).toBeFocused();
+
+        // The filter bar's own reset, the same way — it hides itself on use
+        await page.locator('#events-search').fill(token);
+        await expect(page).toHaveURL(/[?&]q=/);
+        await page.locator('.events-filter__clear').focus();
+        await page.keyboard.press('Enter');
+        await expect(page).toHaveURL(/\/events\.html(#.*)?$/);
+        expect(await page.locator('.event-card').count()).toBe(countBefore);
+        await expect(page.locator('.events-filter__tag').first()).toBeFocused();
 
         // Regression: the source toggle must not wipe an active tag filter
         // (removeFilterBar used to clear the filters as a side effect)
