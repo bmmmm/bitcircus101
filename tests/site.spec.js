@@ -2455,7 +2455,12 @@ test.describe('Kiosk view', () => {
         });
         return {
             lastSync: NOW.toISOString(),
-            sources: [],
+            // who is a friend comes from here (events-core relationMap), not
+            // from the source name — without it the wall would show everything
+            sources: [
+                { id: 'bitcircus', name: 'bitcircus101', relation: 'own' },
+                { id: 'datenburg', name: 'Datenburg e.V.', relation: 'friend' },
+            ],
             events: [
                 // runs 15:00–22:00 → started 4.5 h ago, still running.
                 // The 3 h heuristic called this over.
@@ -2670,7 +2675,7 @@ test.describe('Kiosk view', () => {
         await expect(page.locator('#kiosk-settings')).toBeVisible();
         await expect(page.locator('#kiosk-set-palette .kiosk-set__opt--on')).toHaveText('bernstein');
         await expect(page.locator('#kiosk-set-info .kiosk-set__opt--on')).toHaveText('aus');
-        await expect(page.locator('#kiosk-set-source .kiosk-set__opt--on')).toHaveText('nur bitcircus101');
+        await expect(page.locator('#kiosk-set-source .kiosk-set__opt--on')).toHaveText('nur im bitcircus101');
         await expect(page.locator('#kiosk-set-dwell')).toHaveValue('45');
         await expect(page.locator('#kiosk-set-rows')).toHaveValue('6');
 

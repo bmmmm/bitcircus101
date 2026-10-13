@@ -75,7 +75,7 @@
   // screen may fit one). Three QR codes of scannable size fill a 16:9 wall.
   var NOTES_PER_PAGE = 3;
 
-  var lastGood = null;   // { events, lastSync, at } — kept across failed fetches
+  var lastGood = null;   // { events, relations, lastSync, at } — kept across failed fetches
   var lastJobs = null;   // jobs.json as last fetched; null → no pinnwand page
   var onPinnwand = false; // is a pinnwand page up right now (for the status line)
   var qrCache = {};      // url + label → SVG markup; emptied on every jobs load
@@ -336,8 +336,10 @@
       (cancelled ? '<span class="kiosk-ev__cancelled"><span aria-hidden="true">✕ </span>abgesagt</span> ' : "") +
       esc(shown) + "</h2>";
 
+    // Another calendar's event names its source (home or friend alike,
+    // events-core sourceBadge decides); ours shows its tags instead.
     var side = "";
-    if (e.source && e.source !== "bitcircus101") {
+    if (core && core.sourceBadge(lastGood.relations, e.source)) {
       side = esc(e.source);
     } else if (e.tags && e.tags.length) {
       side = esc(e.tags.join(" "));
@@ -353,7 +355,7 @@
     // The short address of the event's own page, as text to type off the screen
     // (no QR per event). Rides with the description, so info=off drops it too.
     // A card without `page` from our own source predates the flag (events.js).
-    var hasPage = e.page || !e.source || e.source === "bitcircus101";
+    var hasPage = e.page || (core && core.sourceRelation(lastGood.relations, e.source) === "own");
     if (settings.info !== "off" && e.id && hasPage) {
       html += '<span class="kiosk-ev__url">bitcircus101.de/e/' + esc(e.id) + "</span>";
     }
@@ -419,9 +421,11 @@
     var rows = lastGood.events
       .filter(function (e) {
         if (new Date(e.date + "T23:59:59") < startOfToday) return false;
-        // "nur bitcircus101" hides the friendly spaces' calendars, the same
-        // distinction the events page offers.
-        return settings.source === "all" || e.source === "bitcircus101";
+        // "nur im bitcircus101" hides the friends' calendars — the events
+        // page's default view (events-core relationOf: own + home stay).
+        var core = window.EventsCore;
+        return settings.source === "all" ||
+          !core || core.sourceRelation(lastGood.relations, e.source) !== "friend";
       })
       .sort(function (a, b) {
         return (a.date + (a.time || "")).localeCompare(b.date + (b.time || ""));
@@ -753,7 +757,7 @@
   var PANEL_LABELS = {
     palette: { standard: "standard", green: "grün", amber: "bernstein", mono: "weiß", pride: "rainbow" },
     info: { full: "lang", short: "kurz", off: "aus" },
-    source: { all: "alle kalender", bitcircus101: "nur bitcircus101" },
+    source: { all: "alle kalender", bitcircus101: "nur im bitcircus101" },
   };
 
   function choiceRow(el, name) {
@@ -920,8 +924,11 @@
       .then(function (data) {
         var events = Array.isArray(data) ? data : data.events;
         if (!events) throw new Error("no events");
+        var core = window.EventsCore;
         lastGood = {
           events: events,
+          // source name → relation; null on pre-field data (then nothing is a friend)
+          relations: core && core.relationMap ? core.relationMap(Array.isArray(data) ? null : data.sources) : null,
           lastSync: Array.isArray(data) ? null : data.lastSync,
           at: Date.now(),
         };
