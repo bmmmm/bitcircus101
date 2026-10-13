@@ -164,7 +164,7 @@ describe("buildMarkup", () => {
       "../feed.xml"
     );
     assert.match(out, /<a href="https:\/\/bitcircus101\.de" rel="noopener noreferrer">Linkup<\/a>/);
-    assert.match(out, /<time datetime="2026-09-04T20:00" class="dim">FR 4\. SEP · 20:00<\/time>/);
+    assert.match(out, /<time datetime="2026-09-04T20:00" class="when">FR 4\. SEP · 20:00<\/time>/);
   });
 
   it("links a title with an id to its own page, the external URL beside it", () => {
