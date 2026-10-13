@@ -228,6 +228,11 @@
       current: 0,
       autoRotateInterval: null,
       isAutoRotateEnabled: true,
+      // Two reasons to hold still, each its own flag: the pointer is over the
+      // photos, or the keyboard focus is inside the controls (a slide must not
+      // change under a focused dot). A resume from one never overrides the other.
+      hoverHeld: false,
+      focusHeld: false,
       startX: 0,
     },
 
@@ -286,7 +291,25 @@
       this.bindButtonEvents();
       this.bindDotEvents();
       this.bindTouchEvents();
+      this.bindKeyboardEvents();
       this.bindVisibilityEvents();
+    },
+
+    // Arrow keys step the slides from anywhere inside the region — a focused
+    // dot follows the slide it now stands for, so the ring does not sit on
+    // the dot of a photo that is no longer showing.
+    bindKeyboardEvents() {
+      const { container, dots } = this.elements;
+      utils.addEventListenerSafe(container, "keydown", (e) => {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        e.preventDefault();
+        if (e.key === "ArrowLeft") this.prevSlide();
+        else this.nextSlide();
+        this.resetAutoRotateIfEnabled();
+        if (document.activeElement && document.activeElement.classList.contains("dot")) {
+          dots[this.state.current].focus();
+        }
+      });
     },
 
     bindButtonEvents() {
@@ -344,30 +367,35 @@
     },
 
     bindVisibilityEvents() {
-      const { carousel } = this.elements;
+      const { carousel, container } = this.elements;
 
       // Pause on hover
       utils.addEventListenerSafe(carousel, "mouseenter", () => {
-        if (this.state.isAutoRotateEnabled) {
-          this.stopAutoRotate();
-        }
+        this.state.hoverHeld = true;
+        this.stopAutoRotate();
+      });
+      utils.addEventListenerSafe(carousel, "mouseleave", () => {
+        this.state.hoverHeld = false;
+        this.resume();
       });
 
-      utils.addEventListenerSafe(carousel, "mouseleave", () => {
-        if (this.state.isAutoRotateEnabled) {
-          this.startAutoRotate();
-        }
+      // Pause while the keyboard focus is inside the region; moves between
+      // its own controls (relatedTarget inside) are not an arrival or a leave.
+      utils.addEventListenerSafe(container, "focusin", (e) => {
+        if (container.contains(e.relatedTarget)) return;
+        this.state.focusHeld = true;
+        this.stopAutoRotate();
+      });
+      utils.addEventListenerSafe(container, "focusout", (e) => {
+        if (container.contains(e.relatedTarget)) return;
+        this.state.focusHeld = false;
+        this.resume();
       });
 
       // Pause when tab is not visible
       utils.addEventListenerSafe(document, "visibilitychange", () => {
-        if (this.state.isAutoRotateEnabled) {
-          if (document.hidden) {
-            this.stopAutoRotate();
-          } else {
-            this.startAutoRotate();
-          }
-        }
+        if (document.hidden) this.stopAutoRotate();
+        else this.resume();
       });
     },
 
@@ -412,10 +440,19 @@
       }
     },
 
+    // Start the rotation only when nothing holds it — and not when it is
+    // already running, which would reset its phase.
+    resume() {
+      const s = this.state;
+      if (!s.isAutoRotateEnabled || s.hoverHeld || s.focusHeld || document.hidden) return;
+      if (s.autoRotateInterval) return;
+      this.startAutoRotate();
+    },
+
     resetAutoRotateIfEnabled() {
       if (this.state.isAutoRotateEnabled) {
         this.stopAutoRotate();
-        setTimeout(() => this.startAutoRotate(), this.config.resetDelay);
+        setTimeout(() => this.resume(), this.config.resetDelay);
       }
     },
 

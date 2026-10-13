@@ -125,15 +125,46 @@ test.describe('Home page', () => {
     });
 
     test('carousel works and map loads on click', async ({ page }) => {
+        // Fake timers: the auto-rotate (5 s) and its reset (8 s) run only when
+        // the test says so, so "it did not turn" is a statement, not a race.
+        await page.clock.install();
         await page.goto('/');
         await expect(page.locator('.carousel-container')).toBeVisible();
         await expect(page.locator('.carousel-item.active img')).toBeVisible();
 
         // Carousel navigation
-        const activeDotBefore = await page.locator('.dot.active').getAttribute('aria-label');
+        const activeDot = () => page.locator('.dot.active').getAttribute('aria-label');
+        const activeDotBefore = await activeDot();
         await page.locator('.carousel-button.next').click();
         // Wait for the actual state change, not a fixed sleep — race-free on slow CI.
-        await expect.poll(() => page.locator('.dot.active').getAttribute('aria-label')).not.toBe(activeDotBefore);
+        await expect.poll(activeDot).not.toBe(activeDotBefore);
+
+        // Keyboard: the region holds still while the focus is inside it (a
+        // slide must not change under a focused dot), the arrow keys step it,
+        // a focused dot follows the slide, and a hover hold survives the focus
+        // leaving — the rotation resumes only when nothing holds it.
+        const prev = page.locator('.carousel-button.prev');
+        await page.mouse.move(0, 0);
+        await prev.focus();
+        const held = await activeDot();
+        await page.clock.runFor(15_000);
+        expect(await activeDot(), 'the carousel turned under the keyboard focus').toBe(held);
+        await page.keyboard.press('ArrowRight');
+        expect(await activeDot()).not.toBe(held);
+        await page.keyboard.press('ArrowLeft');
+        expect(await activeDot()).toBe(held);
+        await page.locator('.dot').first().focus();
+        await page.keyboard.press('ArrowRight');
+        await expect(page.locator('.dot.active')).toBeFocused();
+        await page.locator('.carousel').hover({ position: { x: 20, y: 20 } });
+        await page.locator('.carousel-button.next').focus();
+        await page.locator('#show-map-btn').focus();
+        const hovered = await activeDot();
+        await page.clock.runFor(6_000);
+        expect(await activeDot(), 'the focus leaving overrode the hover hold').toBe(hovered);
+        await page.mouse.move(0, 0);
+        await page.clock.runFor(6_000);
+        expect(await activeDot(), 'the rotation did not resume after the hover left').not.toBe(hovered);
 
         // The controls are 17-26px boxes on purpose; what has to clear the WCAG
         // 2.2 target-size floor is the zone a finger gets, widened by CSS.
