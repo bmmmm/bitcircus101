@@ -161,7 +161,7 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   (`feeds/source/<id>.*`) and `feeds/all.*`, in the same ≤40-event window as the
   page. The `feeds` manifest inside `events-data.json` maps them — the frontend
   never derives slugs.
-- `events-archive.json` keeps every card the primary (`rss: true`) sources ever
+- `events-archive.json` keeps every card the primary sources (`relation` own/home, or `rss: true`) ever
   exported since `ARCHIVE_MIN_DATE` (see `scripts/sync-events.mjs`), keyed by the
   card `id` — a hash of the calendar UID (plus the date for series occurrences),
   so a shared link survives a reschedule and needs no registry. Entries are never
@@ -426,19 +426,20 @@ Every source has its own JSON file. `calendars/config.json` is the manifest that
 calendars/
   README.md                                         the full guide
   config.json                                       manifest
-  bitcircus.json                                    stable primary feed
-  datenburg.json
-  external/                                         curated externals (only when one is listed)
+  bitcircus.json                                    our calendar (relation: own)
+  look-at-my-toys.json                              at bitcircus101 (relation: home)
+  datenburg.json                                    a friend's space (relation: friend)
 ```
 
 Active sources right now (`calendars/config.json`):
 
-| ID | Name | Type | Primary | In RSS |
-|----|------|------|---------|--------|
-| `bitcircus` | bitcircus101 | ics-full | yes | yes |
-| `datenburg` | Datenburg e.V. | ics-full | no | no |
+| ID | Name | Type | Relation | Primary feed + pages |
+|----|------|------|----------|----------------------|
+| `bitcircus` | bitcircus101 | ics-full | own | yes |
+| `look-at-my-toys` | Look at my toys! | ics-full | home | yes |
+| `datenburg` | Datenburg e.V. | ics-full | friend | no |
 
-To add a calendar: create the source JSON in `calendars/` (or `calendars/external/`) and add its path to `sources` in `config.json`. Order in `sources` is dedupe priority. To temporarily disable: remove the path from `sources` — the file stays put; an unlisted source file is only a warning at the gate, because parking one is intentional. A source's `name` must be unique — it keys `icsKeys`, the RSS filter and the stale-cache.
+To add a calendar: create the source JSON in `calendars/` (or a subdirectory) and add its path to `sources` in `config.json`. Order in `sources` is dedupe priority. `relation` says what the calendar is to the space — `own` (exactly one), `home` (its events take place at bitcircus101) or `friend` (the default: opt-in on `/termine`, its own source feed, never in the primary feed, the homepage, `/status` or lite); every page and script reads it from the data, never from the source name. To temporarily disable: remove the path from `sources` — the file stays put; an unlisted source file is only a warning at the gate, because parking one is intentional. A source's `name` must be unique — it keys `icsKeys`, the relation map, the RSS filter and the stale-cache.
 
 #### Source `type`s
 
