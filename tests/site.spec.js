@@ -232,17 +232,35 @@ test.describe('Home page', () => {
         // a focused dot follows the slide, and a hover hold survives the focus
         // leaving — the rotation resumes only when nothing holds it.
         const prev = page.locator('.carousel-button.prev');
+        // The click above focused "next" as well (Chromium does, on click
+        // and on tap): that is not a keyboard hold — the strip resumes after
+        // its usual 8 s reset.
         await page.mouse.move(0, 0);
+        const clicked = await activeDot();
+        await page.clock.runFor(15_000);
+        expect(await activeDot(), 'a pointer click froze the strip').not.toBe(clicked);
+        // From here the keyboard. One real key press first: Chromium applies
+        // :focus-visible to the scripted focus() calls below only after a
+        // keyboard event, and the hold reads exactly that.
+        await page.keyboard.press('Tab');
         await prev.focus();
         const held = await activeDot();
-        await page.clock.runFor(15_000);
-        expect(await activeDot(), 'the carousel turned under the keyboard focus').toBe(held);
+        // Checked every 5 s, not once after 15: three slides make three
+        // unwanted steps a full cycle, which a single read would miss.
+        for (let i = 0; i < 3; i++) {
+            await page.clock.runFor(5_000);
+            expect(await activeDot(), 'the carousel turned under the keyboard focus').toBe(held);
+        }
         await page.keyboard.press('ArrowRight');
         expect(await activeDot()).not.toBe(held);
         await page.keyboard.press('ArrowLeft');
         expect(await activeDot()).toBe(held);
-        await page.locator('.dot').first().focus();
+        // Whichever dot is active now (the phase above is not pinned): after
+        // a step the newly active dot is the focused one.
+        await page.locator('.dot.active').focus();
+        const dotBefore = await activeDot();
         await page.keyboard.press('ArrowRight');
+        expect(await activeDot()).not.toBe(dotBefore);
         await expect(page.locator('.dot.active')).toBeFocused();
         await page.locator('.carousel').hover({ position: { x: 20, y: 20 } });
         await page.locator('.carousel-button.next').focus();

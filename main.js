@@ -379,10 +379,13 @@
         this.resume();
       });
 
-      // Pause while the keyboard focus is inside the region; moves between
-      // its own controls (relatedTarget inside) are not an arrival or a leave.
+      // Pause while the keyboard focus is inside the region. Only a visible
+      // focus holds: Chromium focuses a button on click and on tap too, and a
+      // pointer user who clicked "next" must not freeze the strip. Checked on
+      // every focus move inside, so a Tab after a click starts the hold; a
+      // leave (relatedTarget outside) ends it.
       utils.addEventListenerSafe(container, "focusin", (e) => {
-        if (container.contains(e.relatedTarget)) return;
+        if (this.state.focusHeld || !e.target.matches(":focus-visible")) return;
         this.state.focusHeld = true;
         this.stopAutoRotate();
       });
