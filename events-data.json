@@ -1,25 +1,25 @@
 {
-  "lastSync": "2026-10-12T23:56:56.985Z",
+  "lastSync": "2026-10-13T00:17:12.778Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
-      "fetchedAt": "2026-10-12T23:56:56.526Z",
+      "fetchedAt": "2026-10-13T00:17:12.348Z",
       "status": "ok",
-      "events": 22,
+      "events": 21,
       "added": 0,
-      "removed": 0,
-      "total": 60,
+      "removed": 1,
+      "total": 59,
       "past": 3,
-      "upcoming": 57
+      "upcoming": 56
     },
     {
       "id": "look-at-my-toys",
       "name": "Look at my toys!",
-      "fetchedAt": "2026-10-12T23:56:56.509Z",
+      "fetchedAt": "2026-10-13T00:17:12.685Z",
       "status": "ok",
       "events": 0,
-      "added": 5,
+      "added": 0,
       "removed": 0,
       "total": 5,
       "past": 1,
@@ -28,9 +28,9 @@
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
-      "fetchedAt": "2026-10-12T23:56:56.969Z",
+      "fetchedAt": "2026-10-13T00:17:12.686Z",
       "status": "ok",
-      "events": 18,
+      "events": 19,
       "added": 0,
       "removed": 0,
       "total": 54,
@@ -80,7 +80,6 @@
       "68360E55-7F2F-4105-BA9A-17DB30370DF5",
       "94D172BE-3B85-443C-BB52-960BF03A109C",
       "A823FA6F-EB82-4E3A-B4D1-AF0966AB346E",
-      "hack-den-stadtrat-20261017@machdenstaat.de",
       "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
       "6345ABAB-C2BC-48AA-81E0-ABB5FFACF575",
       "2354158E-FAEC-433D-8AB4-7336A8955A78",
@@ -181,7 +180,7 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 8
+        "count": 9
       },
       "#datenburg": {
         "ics": "/feeds/tag/datenburg.ics",
@@ -211,7 +210,7 @@
       "#offener-abend": {
         "ics": "/feeds/tag/offener-abend.ics",
         "rss": "/feeds/tag/offener-abend.xml",
-        "count": 11
+        "count": 10
       },
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
@@ -236,7 +235,7 @@
       "#workshop": {
         "ics": "/feeds/tag/workshop.ics",
         "rss": "/feeds/tag/workshop.xml",
-        "count": 2
+        "count": 1
       }
     },
     "sources": {
@@ -244,7 +243,7 @@
         "name": "bitcircus101",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 22
+        "count": 21
       },
       "look-at-my-toys": {
         "name": "Look at my toys!",
@@ -256,7 +255,7 @@
         "name": "Datenburg e.V.",
         "ics": "/feeds/source/datenburg.ics",
         "rss": "/feeds/source/datenburg.xml",
-        "count": 18
+        "count": 19
       }
     },
     "retired": {
@@ -392,28 +391,6 @@
       "page": true,
       "eventUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
       "firstSeen": "2026-09-30T21:11:47.428Z"
-    },
-    {
-      "id": "391bdb24996d",
-      "title": "Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI",
-      "subtitle": "",
-      "description": "Samstag, 17. Oktober 2026, ab 11 Uhr, Ende offen. Kostenlos und ohne Anmeldung, kein Programmierwissen nötig.\n⁨https://code.paderta.com/hack-den-stadtrat/⁩\n#workshop",
-      "location": "Dorotheenstraße 101, 53113 Bonn",
-      "date": "2026-10-17",
-      "time": "11:00",
-      "endDate": "2026-10-17",
-      "endTime": "19:00",
-      "tags": [
-        "#workshop",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "hack-den-stadtrat-20261017@machdenstaat.de",
-      "calendarUrl": "https://code.paderta.com/hack-den-stadtrat/",
-      "page": true,
-      "eventUrl": "https://code.paderta.com/hack-den-stadtrat/",
-      "firstSeen": "2026-10-03T11:07:48.894Z"
     },
     {
       "id": "48886128d3e4",
@@ -1121,6 +1098,26 @@
       "recurring": true,
       "page": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "id": "5dbeded6e723",
+      "title": "Le Sabot Computerspiel-Abend",
+      "subtitle": "",
+      "description": "",
+      "location": "Breite Str. 76",
+      "date": "2026-12-09",
+      "time": "19:30",
+      "endDate": "2026-12-09",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Datenburg e.V.",
+      "uid": "4f3eb937-ebc8-4dda-bec7-9f3547ca6240",
+      "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
+      "recurring": true,
+      "firstSeen": "2026-08-13T18:25:49.154Z"
     }
   ]
 }

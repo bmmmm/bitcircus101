@@ -4659,7 +4659,9 @@
       "page": true,
       "eventUrl": "https://code.paderta.com/hack-den-stadtrat/",
       "firstSeen": "2026-10-03T11:07:49.039Z",
-      "lastSeen": "2026-10-13"
+      "lastSeen": "2026-10-13",
+      "cancelled": true,
+      "cancelledBy": "vanished"
     },
     "a3d56ef0b824": {
       "id": "a3d56ef0b824",

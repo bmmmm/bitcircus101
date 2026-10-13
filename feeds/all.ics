@@ -110,20 +110,6 @@ URL:https://machdenstaat.de/blog/hack-den-stadtrat/
 CATEGORIES:workshop,offener-abend
 END:VEVENT
 BEGIN:VEVENT
-UID:hack-den-stadtrat-20261017@machdenstaat.de-20261017T1100@bitcircus101.d
- e
-DTSTAMP:20261003T110748Z
-DTSTART;TZID=Europe/Berlin:20261017T110000
-DTEND;TZID=Europe/Berlin:20261017T190000
-SUMMARY:Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI
-DESCRIPTION:Samstag\, 17. Oktober 2026\, ab 11 Uhr\, Ende offen. Kostenlos 
- und ohne Anmeldung\, kein Programmierwissen nötig.\n⁨https://code.pader
- ta.com/hack-den-stadtrat/⁩\n#workshop
-LOCATION:Dorotheenstraße 101\, 53113 Bonn
-URL:https://code.paderta.com/hack-den-stadtrat/
-CATEGORIES:workshop,offener-abend
-END:VEVENT
-BEGIN:VEVENT
 UID:c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261020T1800@bitcircus101.de
 DTSTAMP:20260616T150902Z
 DTSTART;TZID=Europe/Berlin:20261020T180000
@@ -564,5 +550,15 @@ DESCRIPTION:We meet up once a week for games\, puzzles and brain teasers. S
 LOCATION:Dorotheenstraße 101\, 53111 Bonn
 URL:https://bitcircus101.de/calendar/
 CATEGORIES:relax,social,spieletreff
+END:VEVENT
+BEGIN:VEVENT
+UID:4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261209T1930@bitcircus101.de
+DTSTAMP:20260813T182549Z
+DTSTART;TZID=Europe/Berlin:20261209T193000
+DTEND;TZID=Europe/Berlin:20261209T220000
+SUMMARY:Le Sabot Computerspiel-Abend
+LOCATION:Breite Str. 76
+URL:https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt
+CATEGORIES:community
 END:VEVENT
 END:VCALENDAR
