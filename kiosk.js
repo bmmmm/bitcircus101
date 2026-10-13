@@ -6,7 +6,8 @@
  * wall-display behavior is to hold the last good data and say so, not to grow
  * an ICS fallback. Loads neither ics-core.js nor events.js; the few shared
  * lines (pad, esc, day/month names) are re-declared locally, the same way
- * main.js does for the homepage preview.
+ * main.js does for the homepage preview. events-core.js is loaded for the
+ * cancel marker only (isCancelledTitle / stripCancelMarker).
  *
  * The wall shows what the events actually carry — description, location, the
  * full time window, all tags — not just a title line. Two shapes follow from
@@ -320,10 +321,20 @@
   }
 
   function eventHtml(e, now) {
-    var running = isRunning(e, now);
-    var html = '<article class="kiosk-ev' + (running ? " kiosk-ev--now" : "") + '">';
+    // Cancelled — rename, don't delete (events-core isCancelledTitle): title
+    // without the marker, struck through, badge FIRST in the h2 (the side
+    // column is gone below 600px and the title ellipsises at its end), and
+    // no green "running" dot on something that is not happening.
+    var core = window.EventsCore;
+    var cancelled = !!(core && core.isCancelledTitle(e.title));
+    var shown = cancelled ? core.stripCancelMarker(e.title) : e.title;
+    var running = !cancelled && isRunning(e, now);
+    var html = '<article class="kiosk-ev' + (running ? " kiosk-ev--now" : "") +
+      (cancelled ? " kiosk-ev--cancelled" : "") + '">';
     html += '<span class="kiosk-ev__time">' + esc(timeLabel(e)) + "</span>";
-    html += '<h2 class="kiosk-ev__title">' + esc(e.title) + "</h2>";
+    html += '<h2 class="kiosk-ev__title">' +
+      (cancelled ? '<span class="kiosk-ev__cancelled"><span aria-hidden="true">✕ </span>abgesagt</span> ' : "") +
+      esc(shown) + "</h2>";
 
     var side = "";
     if (e.source && e.source !== "bitcircus101") {

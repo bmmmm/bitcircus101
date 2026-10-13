@@ -170,7 +170,10 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   CANCELED / CANCELLED / ABGESAGT (`cancelledBy: "title"`, `isCancelledTitle` in
   `events-core.js`) — the owner's way to cancel: **rename, don't delete**, it
   works after the date too and reaches the feeds (`STATUS:CANCELLED`), the
-  JSON-LD (`EventCancelled`), the event page and `/status` alike. Renaming one
+  JSON-LD (`EventCancelled`), the event page and `/status` alike — and the
+  lists: `/events`, the homepage preview and `/kiosk/` show the title without
+  the marker, struck through, labelled „abgesagt" (`stripCancelMarker`; the
+  data keeps the raw title). Renaming one
   occurrence of a series works the same way: the calendar writes a
   `RECURRENCE-ID` override, which `ics-core.js` treats as a replacement of that
   occurrence (same `uid|date` id), so only that Friday is marked. Entries flagged
