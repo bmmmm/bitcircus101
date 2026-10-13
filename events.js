@@ -405,15 +405,24 @@
     // Anchor-wins: a permalink must always land. If the #ev-\u2026 target got
     // filtered away by URL state — or sits in a friend's calendar that is off —
     // drop the filters and switch every calendar on once, then re-render; the
-    // scroll happens in renderFilteredCards.
+    // scroll happens in renderFilteredCards. Only for an anchor some loaded
+    // card carries: a dead permalink (the event is over) changes nothing.
     var h = window.location.hash;
-    if (h && h.indexOf("#ev-") === 0 && !document.getElementById(h.slice(1)) &&
+    var target = h && h.indexOf("#ev-") === 0 ? h.slice(1) : null;
+    if (target && !document.getElementById(target) && knownAnchor(target) &&
         (state.tags.length || state.q || state.friends.length < friendList.length)) {
       state.tags = [];
       state.q = "";
       state.friends = friendList.map(function (f) { return f.id; });
       refresh({ rebuildChips: true });
     }
+  }
+
+  function knownAnchor(id) {
+    for (var i = 0; i < allFutureSorted.length; i++) {
+      if (ICSCore.eventAnchor(allFutureSorted[i]) === id) return true;
+    }
+    return false;
   }
 
   function buildFilterBar(tags, el) {
@@ -473,8 +482,12 @@
       var unknown = unknownTags();
       var msg;
       if (unknown.length && !state.q) {
+        // a tag only a friend's calendar carries looks unknown while that
+        // calendar is off — say so before guessing the event is over
         msg = "Unbekanntes Schlagwort: " + esc(unknown.join(", ")) +
-          " \u2014 vielleicht ist der Termin schon vorbei.";
+          (state.friends.length < friendList.length
+            ? " \u2014 im bitcircus101 gerade nicht; vielleicht in einem der weiteren Kalender, oder der Termin ist vorbei."
+            : " \u2014 vielleicht ist der Termin schon vorbei.");
       } else if (state.q && state.tags.length) {
         msg = "Keine Treffer f\u00fcr Filter + Suche.";
       } else if (state.q) {

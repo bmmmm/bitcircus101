@@ -1076,6 +1076,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .events-toolbar__row + .events-toolbar__row { margin-top: 0.5rem; }
 /* No global [hidden] rule, and the row is a flex box: say it explicitly. */
 .events-toolbar__row[hidden] { display: none; }
+.events-toolbar__row[hidden] + .events-toolbar__row { margin-top: 0; }
 /* "weitere kalender:" before the friends' checkboxes; wrapped boxes keep the
    20px the labels' hit strips reach beyond their own line (14 up, 6 down). */
 .events-toolbar__legend { color: var(--ink-dim); font-size: var(--fs-small); }
