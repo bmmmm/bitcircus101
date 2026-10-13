@@ -247,7 +247,7 @@ test.describe('Home page', () => {
         await page.goto('/');
         await expect(page.locator('#support')).toBeVisible();
         await expect(page.locator('#support a[href="support.html"]')).toBeVisible();
-        await expect(page.locator('#support a[href="raum-nutzen.html"]')).toBeVisible();
+        await expect(page.locator('#raum a[href="raum-nutzen.html"]')).toBeVisible();
         await expect(page.locator('#contact a[href^="mailto:"]')).toBeVisible();
     });
 
@@ -595,6 +595,9 @@ test.describe('Navigation', () => {
         // #contact, so everything between them fell through to "no section in
         // view" and re-lit /wir — the marker claimed "wir" while the reader was
         // at "nächste termine" or "keep the lights on", two screens further down.
+        // Since the homepage carries a teaser for every nav entry, each section
+        // lights its own entry — the teasers via data-nav, though the link they
+        // light leads to a page of its own.
         const parkAt = async (id) => {
             await page.evaluate((sid) => {
                 const top = document.getElementById(sid).getBoundingClientRect().top + scrollY;
@@ -605,12 +608,26 @@ test.describe('Navigation', () => {
             return marker();
         };
 
+        // In the page's order, so every step is a hand-over from the entry before.
+        expect(await parkAt('next-events'), '#next-events teases /termine').toBe('/termine');
         expect(await parkAt('about'), '#about is what /wir points at').toBe('/wir');
-        // Sections the nav has no entry for clear the marker rather than borrowing
-        // someone else's. The claim under test is the negative one: not /wir.
-        expect(await parkAt('next-events'), 'no nav entry owns #next-events').not.toBe('/wir');
-        expect(await parkAt('support'), 'no nav entry owns #support on the homepage').not.toBe('/wir');
+        expect(await parkAt('raum'), '#raum teases /raum').toBe('/raum');
+        expect(await parkAt('support'), '#support teases /support').toBe('/support');
+        expect(await parkAt('pinnwand'), '#pinnwand teases /pinnwand').toBe('/pinnwand');
         expect(await parkAt('contact'), '#contact is what /kontakt points at').toBe('/kontakt');
+        // A section the nav has no entry for clears the marker rather than
+        // borrowing someone else's. The hero is the one that can reach the band;
+        // Freund*innen sits too close to the page end to be scrolled up into it.
+        expect(await parkAt('home'), 'no nav entry owns the hero').toBe('');
+
+        // A hash change (a section's own "#", back/forward) re-runs the page
+        // marker, which on the homepage used to resolve every hash but #contact
+        // to /wir — and with the band already settled, the spy never corrected it.
+        await parkAt('raum');
+        await page.evaluate(() => { location.hash = '#raum'; });
+        await expect.poll(marker, { message: '#raum hash re-lit someone else' }).toBe('/raum');
+        await page.waitForTimeout(150);
+        expect(await marker(), 'and it stays on /raum').toBe('/raum');
 
         // Anchor jumps land instead of panning. Measured with no wait at all after
         // the click: `scroll-behavior: smooth` needed ~900ms for this distance and
