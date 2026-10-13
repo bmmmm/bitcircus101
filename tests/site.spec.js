@@ -783,7 +783,7 @@ test.describe('Events content', () => {
         ]);
     });
 
-    test('URL state and search round-trip, and survive the bitcircus toggle', async ({ page }) => {
+    test('URL state and search round-trip, and survive the bitcircus toggle', async ({ page, isMobile }) => {
         await page.goto('/events.html');
         await expect(page.locator('.event-card').first()).toBeVisible();
 
@@ -816,6 +816,27 @@ test.describe('Events content', () => {
         await expect(page.locator('#events-search')).toBeFocused();
         await expect(page.locator('#events-search')).toHaveValue('');
         await expect(page).not.toHaveURL(/[?&]q=/);
+        // On a touch screen the × clears without the hand-back: focusing the
+        // field there would pop the on-screen keyboard straight back up. A
+        // mouse click hands back like the keyboard, and so does a key press
+        // after a tap — the tap is not remembered.
+        const clearSearch = async (how) => {
+            await page.locator('#events-search').fill(token);
+            await expect(page).toHaveURL(/[?&]q=/);
+            const x = page.locator('.events-search__clear');
+            if (how === 'tap') await x.tap();
+            else if (how === 'click') await x.click();
+            else { await x.focus(); await page.keyboard.press('Enter'); }
+            await expect(page.locator('#events-search')).toHaveValue('');
+        };
+        if (isMobile) {
+            await clearSearch('tap');
+            await expect(page.locator('#events-search')).not.toBeFocused();
+            await clearSearch('key');
+        } else {
+            await clearSearch('click');
+        }
+        await expect(page.locator('#events-search')).toBeFocused();
 
         // Nonsense query shows the search empty state
         await page.locator('#events-search').fill('zzzqqqxyz');
