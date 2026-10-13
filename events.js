@@ -253,15 +253,22 @@
         refresh();
       }, 150);
     });
-    eventsToolbar.querySelector(".events-search__clear").addEventListener(
-      "click",
-      function () {
-        state.q = "";
-        refresh();
-        // The × hides itself once the query is gone: back to the field.
-        searchInput.focus();
-      }
-    );
+    var searchClear = eventsToolbar.querySelector(".events-search__clear");
+    // A keyboard press has no pointerdown, so it reads as "" and keeps the
+    // hand-back; only a finger is told apart.
+    var clearPointer = "";
+    searchClear.addEventListener("pointerdown", function (e) {
+      clearPointer = e.pointerType;
+    });
+    searchClear.addEventListener("click", function () {
+      state.q = "";
+      refresh();
+      // The × hides itself once the query is gone: back to the field. Not
+      // after a tap — there focusing the field pops the on-screen keyboard
+      // straight back up.
+      if (clearPointer !== "touch") searchInput.focus();
+      clearPointer = "";
+    });
   }
 
   // A reset hides the button that was just pressed, or replaces the list it
