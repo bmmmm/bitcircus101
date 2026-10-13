@@ -11,9 +11,15 @@
  *    calendars/ — every event, past and far ahead;
  *  - the feeds this site generates itself (/ical.ics, /feeds/…), from the `feeds`
  *    manifest in events-data.json. Their URLs never change, but they are a
- *    window: only the next ≤40 upcoming events, nothing past — which is why the
- *    complete calendar is listed first and the window is spelled out.
+ *    window: only the next ≤40 upcoming events, nothing past.
  * The old Nextcloud view link redirects here.
+ *
+ * Layout: two axes, so feeds that look alike can be told apart. A box per scope
+ * — whose events — and in it a line per span: "↔ komplett" (the source's own
+ * calendar) or "→ demnächst" (this site's window). Our own scopes come first,
+ * in one panel: bitcircus101 alone, then the primary feed (/ical.ics), titled
+ * by the rss:true sources it carries. Every other source and the all-in-one feed
+ * follow in a second panel. Each line shows its address as text to copy.
  *
  * Same contract as build-event-pages.mjs: live-only (calendar/ is gitignored on
  * main), chrome lifted from the checkout's events.html, never fails the sync.
@@ -32,6 +38,8 @@ const TEMPLATE_FILE = "events.html";
 const DATA_FILE = "events-data.json";
 const OUT_FILE = path.join("calendar", "index.html");
 const CANONICAL = `${SITE_URL}/calendar/`;
+// The source the first panel is about — the card-facing name, as in events.js.
+const OWN = "bitcircus101";
 
 // What the sync writes today; used when events-data.json is missing or carries
 // no manifest, so the page always offers at least these.
@@ -41,33 +49,16 @@ const FALLBACK_FEEDS = {
   sources: {},
 };
 
+// The two spans a line can have — the symbol leads, the legend explains it.
+const SPANS = {
+  complete: { mark: "↔", label: "komplett", hint: "alle Termine, auch vergangene und weit im Voraus geplante" },
+  window: { mark: "→", label: "demnächst", hint: "nur kommende Termine – höchstens die nächsten 40" },
+};
+
 /** A URL or root-absolute path → the absolute https URL and its webcal twin. */
 export function feedUrls(p) {
   const https = new URL(p, SITE_URL).href;
   return { https, webcal: https.replace(/^https?:\/\//, "webcal://") };
-}
-
-/** One subscribe row: title, then webcal / ics / rss buttons (as on /rss). */
-function row(title, entry) {
-  if (!entry || !entry.ics) return "";
-  const ics = feedUrls(entry.ics);
-  const rss = entry.rss ? feedUrls(entry.rss).https : null;
-  return [
-    `                <div class="events-subscribe">`,
-    `                    <div class="events-subscribe__row">`,
-    `                        <h3 class="events-subscribe__title">${esc(title)}</h3>`,
-    `                        <div class="events-subscribe__actions">`,
-    `                            <a class="events-subscribe__btn" href="${esc(ics.webcal)}" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>`,
-    `                            <a class="events-subscribe__btn" href="${esc(ics.https)}" title="iCal-Adresse – zum Kopieren in eine Kalender-App">ics</a>`,
-    rss
-      ? `                            <a class="events-subscribe__btn" href="${esc(rss)}" title="RSS-Feed">rss</a>`
-      : "",
-    `                        </div>`,
-    `                    </div>`,
-    `                </div>`,
-  ]
-    .filter(Boolean)
-    .join("\n");
 }
 
 /** The manifest from events-data.json, or the fallback when it has none. */
@@ -84,63 +75,145 @@ export function completeCalendars(calendars) {
     .map((c) => ({ name: c.name || c.id, ics: c.ics }));
 }
 
-export function renderCalendarPage(feeds, chrome, complete = []) {
-  const sources = Object.entries(feeds.sources || {}).filter(([, s]) => s && s.ics);
-  const parts = [];
-  parts.push(`            <section id="calendar">`);
-  parts.push(`                <p class="doc-path"><a href="../index.html">~</a> /calendar</p>`);
-  parts.push(
-    `                <h1>Kalender abonnieren<a class="section-anchor" href="#calendar" aria-label="Link zu: Kalender abonnieren">#</a></h1>`
-  );
-  parts.push(`                <p>`);
-  parts.push(`                    Unser Kalender läuft nicht mehr über Nextcloud. Bestehende Abos`);
-  parts.push(`                    funktionieren weiter. Die aktuellen Abo-Adressen stehen immer hier –`);
-  parts.push(`                    ändert sich etwas, steht es zuerst auf dieser Seite.`);
-  parts.push(`                </p>`);
-  parts.push(`            </section>`);
+/**
+ * What the page lists, before any markup: { own, others }, each a list of boxes
+ * { title, note?, lines: [{ span, ics, rss?, primary? }] }. Exactly one line is
+ * primary — our complete calendar, the button most visitors want (without one,
+ * the first line of our panel).
+ */
+export function planCalendarPage(feeds, calendars = []) {
+  const cals = (calendars || []).filter((c) => c && c.name);
+  const complete = new Map(completeCalendars(cals).map((c) => [c.name, c.ics]));
+  const sources = Object.values(feeds.sources || {}).filter((s) => s && s.ics && s.name);
+  const windowOf = (name) => sources.find((s) => s.name === name);
+  const box = (name) => {
+    const w = windowOf(name);
+    return {
+      title: name,
+      lines: [
+        complete.has(name) && { span: "complete", ics: complete.get(name) },
+        w && { span: "window", ics: w.ics, rss: w.rss },
+      ].filter(Boolean),
+    };
+  };
 
-  if (complete.length) {
-    parts.push(``);
-    parts.push(`            <section id="komplett" class="panel">`);
-    parts.push(
-      `                <h2>kompletter kalender<a class="section-anchor" href="#komplett" aria-label="Link zu: kompletter Kalender">#</a></h2>`
-    );
-    parts.push(`                <p>Alle Termine, auch vergangene und weit im Voraus geplante.</p>`);
-    for (const c of complete) parts.push(row(c.name, { ics: c.ics }));
-    parts.push(`            </section>`);
+  const primaryLine = { span: "window", ics: feeds.primary.ics, rss: feeds.primary.rss };
+  const primaryNames = cals.filter((c) => c.rss === true).map((c) => c.name);
+  const own = [];
+  const ownBox = box(OWN);
+  if (primaryNames.length === 1 && primaryNames[0] === OWN) {
+    // The primary feed carries nothing but ours — same events as our source
+    // feed, so it takes that line instead of a second box titled alike.
+    ownBox.lines = ownBox.lines.filter((l) => l.span !== "window").concat(primaryLine);
+    own.push(ownBox);
+  } else {
+    if (ownBox.lines.length) own.push(ownBox);
+    own.push({ title: primaryNames.length ? primaryNames.join(" + ") : OWN, lines: [primaryLine] });
   }
 
-  parts.push(``);
-  parts.push(`            <section id="feeds" class="panel">`);
-  parts.push(
-    `                <h2>feeds dieser website<a class="section-anchor" href="#feeds" aria-label="Link zu: Feeds dieser Website">#</a></h2>`
-  );
-  parts.push(`                <p>`);
-  parts.push(`                    Erzeugt die Website alle 30 Minuten selbst, mit Adressen, die sich nie`);
-  parts.push(`                    ändern – aber als Ausschnitt: nur die nächsten anstehenden Termine`);
-  parts.push(`                    (höchstens 40), keine vergangenen.`);
-  parts.push(`                </p>`);
-  parts.push(row("bitcircus101", feeds.primary));
-  parts.push(row("alle termine inkl. befreundeter spaces", feeds.all));
-  if (sources.length) {
-    parts.push(`                <p>Einzeln je Quelle:</p>`);
-    for (const [, s] of sources) parts.push(row(s.name, s));
+  // Config order first, then whatever only the manifest knows.
+  const names = [...new Set([...cals.map((c) => c.name), ...sources.map((s) => s.name)])];
+  const others = names.filter((n) => n !== OWN).map(box).filter((b) => b.lines.length);
+  if (feeds.all && feeds.all.ics) {
+    const inAll = sources.length ? sources.map((s) => s.name) : names;
+    others.push({
+      title: "alle zusammen",
+      note: inAll.length ? inAll.join(" + ") : null,
+      lines: [{ span: "window", ics: feeds.all.ics, rss: feeds.all.rss }],
+    });
   }
-  parts.push(`            </section>`);
 
-  parts.push(``);
-  parts.push(`            <section id="wie" class="panel">`);
-  parts.push(
-    `                <h2>wie abonnieren<a class="section-anchor" href="#wie" aria-label="Link zu: Wie abonnieren">#</a></h2>`
-  );
-  parts.push(`                <p>`);
-  parts.push(`                    „abonnieren" öffnet die Kalender-App auf deinem Gerät (Apple Kalender,`);
-  parts.push(`                    Thunderbird, Outlook). Für Google Kalender oder Nextcloud die`);
-  parts.push(`                    ics-Adresse kopieren und dort als Abo („per URL") hinzufügen. Nach`);
-  parts.push(`                    Schlagwort filtern: auf <a href="../events.html#kalender">/termine</a>,`);
-  parts.push(`                    RSS für alles andere: <a href="../rss.html">/rss</a>.`);
-  parts.push(`                </p>`);
-  parts.push(`            </section>`);
+  const first = own.flatMap((b) => b.lines);
+  (first.find((l) => l.span === "complete") || first[0]).primary = true;
+  return { own, others };
+}
+
+/** An address as text, breakable before each path slash rather than mid-word. */
+function urlText(https) {
+  const m = https.match(/^(https?:\/\/[^/]*)(.*)$/);
+  if (!m) return esc(https);
+  return esc(m[1]) + esc(m[2]).replace(/\//g, "<wbr>/");
+}
+
+/** One line: span label, the address to copy, then rss and webcal buttons. */
+function lineHtml(title, l) {
+  const span = SPANS[l.span];
+  const ics = feedUrls(l.ics);
+  const rss = l.rss ? feedUrls(l.rss).https : null;
+  const name = esc(`${title} – ${span.label}`);
+  const cta = l.primary ? " events-subscribe__btn--primary" : "";
+  return [
+    `                    <div class="calendar-feed__line">`,
+    `                        <span class="calendar-feed__span" title="${esc(span.hint)}"><span aria-hidden="true">${span.mark}</span> ${span.label}</span>`,
+    `                        <code class="calendar-feed__url">${urlText(ics.https)}</code>`,
+    `                        <span class="events-subscribe__actions">`,
+    rss ? `                            <a class="events-subscribe__btn" href="${esc(rss)}" aria-label="RSS-Feed: ${name}">rss</a>` : "",
+    `                            <a class="events-subscribe__btn${cta}" href="${esc(ics.webcal)}" aria-label="${name} abonnieren">&#8595; abonnieren</a>`,
+    `                        </span>`,
+    `                    </div>`,
+  ].filter(Boolean);
+}
+
+function boxHtml(b) {
+  return [
+    `                <div class="events-subscribe calendar-feed">`,
+    `                    <h3 class="events-subscribe__title">${esc(b.title)}</h3>`,
+    b.note ? `                    <p class="calendar-feed__note">${esc(b.note)}</p>` : "",
+    ...b.lines.flatMap((l) => lineHtml(b.title, l)),
+    `                </div>`,
+  ].filter(Boolean);
+}
+
+function panelHtml(id, title, label, boxes) {
+  return [
+    ``,
+    `            <section id="${id}" class="panel">`,
+    `                <h2>${esc(title)}<a class="section-anchor" href="#${id}" aria-label="Link zu: ${esc(label)}">#</a></h2>`,
+    ...boxes.flatMap(boxHtml),
+    `            </section>`,
+  ];
+}
+
+export function renderCalendarPage(feeds, chrome, calendars = []) {
+  const { own, others } = planCalendarPage(feeds, calendars);
+  const legend = (key) => `<span aria-hidden="true">${SPANS[key].mark}</span> ${SPANS[key].label}`;
+  const parts = [
+    `            <section id="calendar">`,
+    `                <p class="doc-path"><a href="../index.html">~</a> /calendar</p>`,
+    `                <h1>Kalender abonnieren<a class="section-anchor" href="#calendar" aria-label="Link zu: Kalender abonnieren">#</a></h1>`,
+    `                <p>`,
+    `                    Ein Abo holt die Termine in deine Kalender-App und hält sie von allein`,
+    `                    aktuell – für die meisten reicht der hervorgehobene Knopf. Noch die alte`,
+    `                    Nextcloud-Adresse abonniert? Einmal hier neu abonnieren. Ändert sich`,
+    `                    eine Adresse, steht es zuerst auf dieser Seite.`,
+    `                </p>`,
+    `            </section>`,
+    ...panelHtml("bitcircus101", "bitcircus101", "bitcircus101", own),
+    ...(others.length ? panelHtml("weitere", "weitere kalender", "Weitere Kalender", others) : []),
+    ``,
+    `            <section id="wie" class="panel">`,
+    `                <h2>wie abonnieren<a class="section-anchor" href="#wie" aria-label="Link zu: Wie abonnieren">#</a></h2>`,
+    `                <dl class="man">`,
+    `                    <dt>${legend("complete")}</dt>`,
+    `                    <dd>Alle Termine, auch vergangene und weit im Voraus geplante – direkt aus dem Originalkalender.</dd>`,
+    `                    <dt>${legend("window")}</dt>`,
+    `                    <dd>`,
+    `                        Nur kommende Termine – höchstens die nächsten 40, über alle Kalender gezählt.`,
+    `                        Die Website erzeugt das alle 30 Minuten neu.`,
+    `                    </dd>`,
+    `                    <dt><span aria-hidden="true">&#8595;</span> abonnieren</dt>`,
+    `                    <dd>Öffnet die Kalender-App auf deinem Gerät (Apple Kalender, Thunderbird, Outlook).</dd>`,
+    `                    <dt>https://…</dt>`,
+    `                    <dd>Die Adresse zum Kopieren – in Google Kalender oder Nextcloud als Abo „per URL“ hinzufügen.</dd>`,
+    `                    <dt>rss</dt>`,
+    `                    <dd>Dieselben Termine für den Feed-Reader, alle Feeds auf <a href="../rss.html">/rss</a>.</dd>`,
+    `                </dl>`,
+    `                <p>`,
+    `                    Nur ein Schlagwort? Auf <a href="../events.html#kalender">/termine</a> filtern –`,
+    `                    die Abo-Knöpfe dort folgen dem Filter.`,
+    `                </p>`,
+    `            </section>`,
+  ];
 
   const assetVersion = chrome.assetVersion;
   return shell({
@@ -187,14 +260,14 @@ function main() {
   } catch (err) {
     console.warn(`::warning::calendar-page: ${dataFile} unreadable (${err.message}) — listing the primary feeds only`);
   }
-  let complete = [];
+  let calendars = [];
   try {
-    complete = completeCalendars(loadCalendars());
+    calendars = loadCalendars();
   } catch (err) {
     console.warn(`::warning::calendar-page: calendars/ unreadable (${err.message}) — no complete-calendar links`);
   }
   const feeds = manifestOf(data);
-  const html = renderCalendarPage(feeds, chrome, complete);
+  const html = renderCalendarPage(feeds, chrome, calendars);
 
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
   let existing = null;
@@ -203,7 +276,7 @@ function main() {
   } catch { /* new file */ }
   if (existing !== html) writeFileAtomic(OUT_FILE, html);
   console.log(
-    `calendar-page: ${OUT_FILE} with ${complete.length} complete calendar(s), ` +
+    `calendar-page: ${OUT_FILE} with ${completeCalendars(calendars).length} complete calendar(s), ` +
       `${Object.keys(feeds.sources || {}).length} source feed(s)`
   );
 }

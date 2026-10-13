@@ -964,6 +964,40 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     font-size: var(--fs-label);
     margin: 0.6rem 0 0;
 }
+/* the one button most visitors want — a primary CTA, pre-inverted like .btn-primary */
+.events-subscribe__btn--primary { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.events-subscribe__btn--primary:hover { background: transparent; color: var(--accent); }
+
+/* /calendar/ — a box per scope (whose events), a line per span ("↔ komplett",
+   "→ demnächst"): label, the address to copy, buttons. Fixed label column so
+   the addresses line up box to box; on a phone the address drops below. */
+.calendar-feed__note { font-size: var(--fs-meta); color: var(--ink-dim); margin: 0.15rem 0 0; }
+.calendar-feed__line {
+    display: grid;
+    grid-template-columns: 12ch minmax(0, 1fr) auto;
+    grid-template-areas: "span url actions";
+    align-items: center;
+    gap: 0.4rem 1.5ch;
+    margin-top: 0.7rem;
+}
+.calendar-feed__span { grid-area: span; font-size: var(--fs-small); white-space: nowrap; }
+/* one tap selects the whole address — it is there to be copied */
+.calendar-feed__url {
+    grid-area: url;
+    justify-self: start;
+    font-size: var(--fs-label);
+    color: var(--ink-dim);
+    overflow-wrap: anywhere;
+    -webkit-user-select: all; /* Safari only knows the prefixed form */
+    user-select: all;
+}
+.calendar-feed__line > .events-subscribe__actions { grid-area: actions; justify-content: flex-end; }
+@media (max-width: 700px) {
+    .calendar-feed__line {
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas: "span actions" "url url";
+    }
+}
 
 .events-info-panel {
     border-top: 1px solid var(--line);
