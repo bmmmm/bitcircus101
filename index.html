@@ -58,14 +58,14 @@
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
 
         <!-- Icons & Manifest -->
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=23c2bf02" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=23c2bf02" />
-        <link rel="manifest" href="site.webmanifest?v=23c2bf02" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=319519de" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=319519de" />
+        <link rel="manifest" href="site.webmanifest?v=319519de" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=23c2bf02" />
+        <link rel="stylesheet" href="style.css?v=319519de" />
 
         <!-- Structured Data -->
         <script type="application/ld+json">
@@ -115,8 +115,8 @@
                     ≡ menü
                 </button>
                 <ul class="nav__links">
-                    <li><a href="index.html#about">/wir</a></li>
                     <li><a href="events.html">/termine</a></li>
+                    <li><a href="index.html#about">/wir</a></li>
                     <li><a href="raum-nutzen.html">/raum</a></li>
                     <li><a href="support.html">/support</a></li>
                     <li><a href="pinnwand.html">/pinnwand</a></li>
@@ -239,6 +239,22 @@
                             Textversion: kein JavaScript, kein Tracking, lädt überall.
                         </dd>
                     </dl>
+                </section>
+
+                <section id="next-events" class="panel" data-nav="events.html">
+                    <h2>nächste termine<a class="section-anchor" href="#next-events" aria-label="Link zu: nächste termine">#</a></h2>
+                    <div id="next-events-list" aria-live="polite" aria-busy="true">
+                        <noscript><p><a href="lite/">Termine ansehen – Lite-Version, ohne JavaScript →</a></p></noscript>
+                    </div>
+                    <p class="events-more-link"><a href="events.html">alle termine →</a></p>
+                    <p class="events-meta">
+                        abonnieren: <a href="calendar/">kalender</a> · <a href="rss.html">rss</a>
+                        · wandanzeige: <a href="kiosk/" title="Wandanzeige: Termine groß, ohne Menü, aktualisiert sich selbst">kiosk</a>
+                    </p>
+                    <!-- The line below is stamped with the live streak by
+                         scripts/build-status-data.mjs (sync + deploy); the text
+                         committed here is the no-archive fallback. -->
+                    <p class="events-meta"><!-- status-streak:start --><a href="status.html">status: 42 wochen in folge offen &#8594;</a><!-- status-streak:end --></p>
                 </section>
 
                 <section id="about" class="panel">
@@ -364,22 +380,17 @@
                     <p class="ascii-caption">fig. 1–3 — der raum · farbe auf hover</p>
                 </section>
 
-                <section id="next-events" class="panel">
-                    <h2>nächste termine<a class="section-anchor" href="#next-events" aria-label="Link zu: nächste termine">#</a></h2>
-                    <div id="next-events-list" aria-live="polite" aria-busy="true">
-                        <noscript><p><a href="lite/">Termine ansehen – Lite-Version, ohne JavaScript →</a></p></noscript>
-                    </div>
-                    <p class="events-more-link"><a href="events.html">alle Termine →</a></p>
-                    <p class="events-more-link"><a href="calendar/">kalender abonnieren – alle abo-adressen, der kalender läuft nicht mehr über nextcloud →</a></p>
-                    <p class="events-more-link"><a href="rss.html">termine &amp; pinnwand als rss abonnieren →</a></p>
-                    <p class="events-more-link"><a href="kiosk/" title="Wandanzeige: Termine groß, ohne Menü, aktualisiert sich selbst">kiosk-modus: termine als wandanzeige für den space →</a></p>
-                    <!-- The line below is stamped with the live streak by
-                         scripts/build-status-data.mjs (sync + deploy); the text
-                         committed here is the no-archive fallback. -->
-                    <p class="events-more-link"><!-- status-streak:start --><a href="status.html">status: 42 wochen in folge offen &#8594;</a><!-- status-streak:end --></p>
+                <section id="raum" class="panel" data-nav="raum-nutzen.html">
+                    <h2>mitmachen &amp; raum nutzen<a class="section-anchor" href="#raum" aria-label="Link zu: mitmachen &amp; raum nutzen">#</a></h2>
+                    <p>
+                        Der Raum lebt von Leuten, die vorbeikommen und mitmachen.
+                        Für Workshops, Meetups oder Projekte kannst du ihn auch reservieren –
+                        jede Nutzung deckt einen Teil der Kosten und hält ihn offen für alle.
+                    </p>
+                    <p class="events-more-link"><a href="raum-nutzen.html">mitmachen &amp; raum nutzen →</a></p>
                 </section>
 
-                <section id="support" class="panel">
+                <section id="support" class="panel" data-nav="support.html">
                     <h2>keep the lights on<a class="section-anchor" href="#support" aria-label="Link zu: keep the lights on">#</a></h2>
                     <p>
                         Miete, Strom, Internet – der Raum hat laufende Kosten.
@@ -388,46 +399,44 @@
                         keine Fördermittel, kein Verein, kein Backup.
                         Der Balken unten in der Statusleiste zeigt den Live-Stand.
                     </p>
-                    <p>
-                        Du kannst bitcircus101 für Workshops, Meetups oder Projekte
-                        reservieren – jede Nutzung deckt einen Teil der Kosten
-                        und hält den Raum offen für alle.
-                    </p>
                     <p class="text-center">
                         <a href="support.html" class="btn btn-primary btn-large">
                             unterstützen
                         </a>
-                        &nbsp;
-                        <a href="raum-nutzen.html" class="btn btn-large">
-                            raum nutzen
-                        </a>
                     </p>
                 </section>
 
-                <aside class="pinnwand-teaser" aria-label="Hinweis für Unternehmen">
-                    <p class="pinnwand-teaser__label">[ anzeige in eigener sache ]</p>
-                    <p class="pinnwand-teaser__slogan">ihr auf unserer pinnwand?</p>
-                    <a class="pinnwand-teaser__cta" href="pinnwand.html#aufhaengen">*click* →</a>
-                </aside>
-                <script>
-                    // One of these lines per page view. Inline, like the theme
-                    // script in <head>: running right after the markup, the swap
-                    // lands before the first paint, so the contact section below
-                    // never moves — main.js is deferred and would be too late.
-                    // The markup above is the no-JS default and the first entry.
-                    (function () {
-                        var lines = [
-                            ["ihr auf unserer pinnwand?", "*click* →"],
-                            ["not linkedin.", "pinnwand →"],
-                            ["ihr seid cool? wir auch.", "pinnwand →"],
-                            ["linkedin hat eine milliarde. wir haben die richtigen dreißig.", "zettel aufhängen →"],
-                            ["euer job. unsere wand. freitags jemand davor.", "*click* →"],
-                        ];
-                        var pick = lines[Math.floor(Math.random() * lines.length)];
-                        document.querySelector(".pinnwand-teaser__slogan").textContent = pick[0];
-                        document.querySelector(".pinnwand-teaser__cta").textContent = pick[1];
-                    })();
-                </script>
+                <section id="pinnwand" class="panel" data-nav="pinnwand.html">
+                    <h2>pinnwand<a class="section-anchor" href="#pinnwand" aria-label="Link zu: pinnwand">#</a></h2>
+                    <p>
+                        Firmen hängen hier einen Zettel mit dem Link zu ihrer Stellenanzeige auf –
+                        und wer selbst sucht, hängt einen unter Chiffre auf, ohne Namen.
+                    </p>
+                    <aside class="pinnwand-teaser" aria-label="Hinweis für Unternehmen">
+                        <p class="pinnwand-teaser__label">[ anzeige in eigener sache ]</p>
+                        <p class="pinnwand-teaser__slogan">ihr auf unserer pinnwand?</p>
+                        <a class="pinnwand-teaser__cta" href="pinnwand.html#aufhaengen">*click* →</a>
+                    </aside>
+                    <script>
+                        // One of these lines per page view. Inline, like the theme
+                        // script in <head>: running right after the markup, the swap
+                        // lands before the first paint, so the contact section below
+                        // never moves — main.js is deferred and would be too late.
+                        // The markup above is the no-JS default and the first entry.
+                        (function () {
+                            var lines = [
+                                ["ihr auf unserer pinnwand?", "*click* →"],
+                                ["not linkedin.", "pinnwand →"],
+                                ["ihr seid cool? wir auch.", "pinnwand →"],
+                                ["linkedin hat eine milliarde. wir haben die richtigen dreißig.", "zettel aufhängen →"],
+                                ["euer job. unsere wand. freitags jemand davor.", "*click* →"],
+                            ];
+                            var pick = lines[Math.floor(Math.random() * lines.length)];
+                            document.querySelector(".pinnwand-teaser__slogan").textContent = pick[0];
+                            document.querySelector(".pinnwand-teaser__cta").textContent = pick[1];
+                        })();
+                    </script>
+                </section>
 
                 <section id="contact" class="panel">
                     <h2>kontakt<a class="section-anchor" href="#contact" aria-label="Link zu: kontakt">#</a></h2>
@@ -578,8 +587,8 @@
             </div>
         </footer>
 
-        <script defer src="storage.js?v=23c2bf02"></script>
-        <script defer src="events-core.js?v=23c2bf02"></script>
-        <script defer src="main.js?v=23c2bf02"></script>
+        <script defer src="storage.js?v=319519de"></script>
+        <script defer src="events-core.js?v=319519de"></script>
+        <script defer src="main.js?v=319519de"></script>
     </body>
 </html>
