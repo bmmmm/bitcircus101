@@ -42,14 +42,14 @@
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Alle Termine" href="feeds/all.xml" />
         <link rel="alternate" type="text/calendar" title="bitcircus101 Termine (iCal)" href="ical.ics" />
 
-        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=dca2e6ed" />
-        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=dca2e6ed" />
-        <link rel="manifest" href="site.webmanifest?v=dca2e6ed" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=138d61ca" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=138d61ca" />
+        <link rel="manifest" href="site.webmanifest?v=138d61ca" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="style.css?v=dca2e6ed" />
+        <link rel="stylesheet" href="style.css?v=138d61ca" />
     </head>
     <body>
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
@@ -105,8 +105,9 @@
                     <!-- Same subscribe block as on /events (shared classes, no data-feed
                          attributes: events.js does not run here). The feeds are live-only
                          artifacts built by CI, so the hrefs 404 in a plain checkout. Each box is
-                         one scope in every format; the title names the rss:true sources of
-                         ical.ics, as on /calendar (tests/calendar-page.spec.mjs holds them equal). -->
+                         one scope in every format; the title names the primary sources (own +
+                         home, calendars/ `relation`) of ical.ics, as on /calendar
+                         (tests/calendar-page.spec.mjs holds them equal). -->
                     <div class="events-subscribe">
                         <div class="events-subscribe__row">
                             <h3 class="events-subscribe__title">bitcircus101 + Look at my toys!</h3>
@@ -130,8 +131,8 @@
                         Beide zeigen nur kommende Termine. Den kompletten Kalender, auch mit
                         vergangenen Terminen, und jeden Kalender einzeln gibt es auf
                         <a href="calendar/">/calendar</a>.
-                        Pro Schlagwort oder Quelle: auf <a href="events.html#kalender">/termine</a>
-                        filtern – die Abonnieren-Buttons dort folgen dem Filter. Jede
+                        Pro Schlagwort oder befreundetem Kalender: auf <a href="events.html#kalender">/termine</a>
+                        filtern bzw. zuschalten – die Abonnieren-Buttons dort folgen der Ansicht. Jede
                         Termin-Seite bringt außerdem ihren eigenen Kalendereintrag mit,
                         auch im <a href="archiv/">Archiv</a>.
                     </p>
@@ -201,7 +202,7 @@
             </div>
         </footer>
 
-        <script defer src="storage.js?v=dca2e6ed"></script>
-        <script defer src="main.js?v=dca2e6ed"></script>
+        <script defer src="storage.js?v=138d61ca"></script>
+        <script defer src="main.js?v=138d61ca"></script>
     </body>
 </html>
