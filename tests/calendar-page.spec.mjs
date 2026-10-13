@@ -15,6 +15,8 @@ import { strict as assert } from "node:assert";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { extractChrome } from "../scripts/build-event-pages.mjs";
+import { loadCalendars } from "../scripts/sync-events.mjs";
+import { esc } from "../scripts/html-text.mjs";
 import {
   completeCalendars,
   feedUrls,
@@ -152,6 +154,19 @@ describe("calendar page", () => {
       webcal: "webcal://bitcircus101.de/ical.ics",
     });
     assert.equal(feedUrls("https://cal.example.org/x?export").webcal, "webcal://cal.example.org/x?export");
+  });
+
+  it("/rss titles the primary feed by the sources it carries, as /calendar does", () => {
+    const names = loadCalendars(`${ROOT}calendars`).filter((c) => c.rss === true).map((c) => c.name);
+    assert.ok(names.length, "calendars/ lists no rss:true source");
+    const rss = fs.readFileSync(`${ROOT}rss.html`, "utf8");
+    const ics = rss.indexOf(`href="ical.ics" download=`);
+    assert.ok(ics > 0, "rss.html lost its ical.ics button");
+    const box = rss.slice(rss.lastIndexOf(`<h3 `, ics), ics);
+    assert.ok(box.includes(`<h3 class="events-subscribe__title">${esc(names.join(" + "))}</h3>`),
+      `rss.html's ical.ics box must be titled "${names.join(" + ")}" — calendars/ changed, update the title`);
+    assert.match(rss, /href="ical\.ics" download="bitcircus101-termine\.ics"/,
+      "ical.ics must not download as bitcircus101.ics — that is the complete calendar's name");
   });
 
   it("completeCalendars keeps only primary sources with an http(s) ics", () => {

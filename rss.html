@@ -99,19 +99,21 @@
                 <section id="termine" class="panel">
                     <h2>termine<a class="section-anchor" href="#termine" aria-label="Link zu: Termine">#</a></h2>
                     <p>
-                        Alle anstehenden Termine von bitcircus101 – jeder Eintrag mit
-                        Beschreibung, Ort und Link zur Termin-Seite samt Kalendereintrag.
+                        Die anstehenden Termine – jeder Eintrag mit Beschreibung, Ort und
+                        Link zur Termin-Seite samt Kalendereintrag.
                     </p>
                     <!-- Same subscribe block as on /events (shared classes, no data-feed
                          attributes: events.js does not run here). The feeds are live-only
-                         artifacts built by CI, so the hrefs 404 in a plain checkout. -->
+                         artifacts built by CI, so the hrefs 404 in a plain checkout. Each box is
+                         one scope in every format; the title names the rss:true sources of
+                         ical.ics, as on /calendar (tests/calendar-page.spec.mjs holds them equal). -->
                     <div class="events-subscribe">
                         <div class="events-subscribe__row">
-                            <h3 class="events-subscribe__title">bitcircus101 kalender</h3>
+                            <h3 class="events-subscribe__title">bitcircus101 + Look at my toys!</h3>
                             <div class="events-subscribe__actions">
                                 <a class="events-subscribe__btn" href="feed.xml" title="RSS-Feed der Termine" aria-label="RSS-Feed der Termine">rss</a>
-                                <a class="events-subscribe__btn" href="ical.ics" download="bitcircus101.ics" title="iCal-Datei der Termine">&#8595; ics</a>
-                                <a class="events-subscribe__btn" href="webcal://kalender.bitcircus101.de/bitcircus101.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
+                                <a class="events-subscribe__btn" href="ical.ics" download="bitcircus101-termine.ics" title="iCal-Datei der Termine">&#8595; ics</a>
+                                <a class="events-subscribe__btn" href="webcal://bitcircus101.de/ical.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
                             </div>
                         </div>
                     </div>
@@ -125,6 +127,9 @@
                         </div>
                     </div>
                     <p>
+                        Beide zeigen nur kommende Termine. Den kompletten Kalender, auch mit
+                        vergangenen Terminen, und jeden Kalender einzeln gibt es auf
+                        <a href="calendar/">/calendar</a>.
                         Pro Schlagwort oder Quelle: auf <a href="events.html#kalender">/termine</a>
                         filtern – die Abonnieren-Buttons dort folgen dem Filter. Jede
                         Termin-Seite bringt außerdem ihren eigenen Kalendereintrag mit,
@@ -158,9 +163,9 @@
                         jeder Seite von selbst.
                     </p>
                     <p>
-                        Der Kalender lässt sich per „abonnieren" direkt in Nextcloud, Apple
-                        Kalender, Google Kalender oder Thunderbird einhängen und hält sich
-                        dann von allein aktuell.
+                        Als Kalender-Abo in Apple Kalender, Google Kalender, Nextcloud oder
+                        Thunderbird hält sich der Kalender von allein aktuell – alle Adressen
+                        dafür stehen auf <a href="calendar/">/calendar</a>.
                     </p>
                 </section>
 
