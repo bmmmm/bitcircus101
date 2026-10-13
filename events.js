@@ -260,6 +260,11 @@
     searchClear.addEventListener("pointerdown", function (e) {
       clearPointer = e.pointerType;
     });
+    // A touch that slid off fires no click, so the click's reset never ran:
+    // a key press starts clean on its own.
+    searchClear.addEventListener("keydown", function () {
+      clearPointer = "";
+    });
     searchClear.addEventListener("click", function () {
       state.q = "";
       refresh();
