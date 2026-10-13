@@ -2860,7 +2860,7 @@ test.describe('Internal links', () => {
 // ─── Accessibility ───────────────────────────────────────────────────────────
 
 test.describe('Accessibility', () => {
-    test('aria-labels, alt texts and landmark roles', async ({ page }) => {
+    test('aria-labels, alt texts and landmark roles', async ({ page, isMobile }) => {
         await page.goto('/');
 
         // Back-to-top at the top of the page: out of the tab order, not merely
@@ -2918,6 +2918,22 @@ test.describe('Accessibility', () => {
         await expect(fundingInfo).toBeInViewport();
         await page.keyboard.press('Shift+Tab');
         await expect(fundingInfo).toBeHidden();
+        // Escape belongs to the innermost thing open. With the phone menu open
+        // as well, the popover's Escape stops there — it must not also reach
+        // the menu's handler, which would close the menu and pull the focus
+        // up to the hamburger.
+        if (isMobile) {
+            await page.locator('#menu-toggle').click();
+            await expect(page.locator('#main-nav')).toHaveClass(/active/);
+            await fundingBar.focus();
+            await page.keyboard.press('Enter');
+            await page.keyboard.press('Escape');
+            await expect(fundingInfo).toBeHidden();
+            await expect(fundingBar).toBeFocused();
+            await expect(page.locator('#main-nav')).toHaveClass(/active/);
+            await page.keyboard.press('Escape');
+            await expect(page.locator('#main-nav')).not.toHaveClass(/active/);
+        }
 
         // At the very end the footer bar scrolls in under the fixed button:
         // it rises with the bar instead of covering the funding status.
