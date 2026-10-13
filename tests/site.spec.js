@@ -865,6 +865,9 @@ test.describe('Events content', () => {
         if (isMobile) {
             await clearSearch('tap');
             await expect(page.locator('#events-search')).not.toBeFocused();
+            // A finger that touched the × and slid off: no click follows.
+            await page.locator('#events-search').fill(token);
+            await page.locator('.events-search__clear').dispatchEvent('pointerdown', { pointerType: 'touch' });
             await clearSearch('key');
         } else {
             await clearSearch('click');
