@@ -1923,9 +1923,12 @@ test.describe('Kiosk view', () => {
         await expect(page.locator('#kiosk-set-dwell')).toHaveValue('45');
         await expect(page.locator('#kiosk-set-rows')).toHaveValue('6');
 
-        // Escape closes it — a wall must not sit on an open settings panel
+        // Escape closes it — a wall must not sit on an open settings panel —
+        // and hands the keyboard back to the ⚙ instead of dropping it on <body>
+        await page.locator('#kiosk-set-dwell').focus();
         await page.keyboard.press('Escape');
         await expect(page.locator('#kiosk-settings')).toBeHidden();
+        await expect(page.locator('#kiosk-settings-open')).toBeFocused();
 
         // The promise only means something on a screen someone already fiddled
         // with — with an empty store, URL-first and storage-first look
@@ -1934,7 +1937,13 @@ test.describe('Kiosk view', () => {
         // choice) and only then check that a URL still overrules it.
         await page.locator('#kiosk-settings-open').click();
         await page.locator('#kiosk-set-palette .kiosk-set__opt', { hasText: 'weiß' }).click();
-        await page.locator('#kiosk-set-info .kiosk-set__opt', { hasText: 'kurz' }).click();
+        // A pick by keyboard keeps the keyboard: the panel repaints on every
+        // pick, and a rebuilt button is a button the focus has fallen off.
+        const kurz = page.locator('#kiosk-set-info .kiosk-set__opt', { hasText: 'kurz' });
+        await kurz.focus();
+        await page.keyboard.press('Enter');
+        await expect(kurz).toHaveAttribute('aria-pressed', 'true');
+        await expect(kurz).toBeFocused();
         expect(await page.evaluate(() => localStorage.getItem('bc.kiosk.palette'))).toBe('mono');
 
         await page.goto('/kiosk/?palette=green&theme=dark&info=full&source=all');
@@ -1964,6 +1973,13 @@ test.describe('Kiosk view', () => {
 
         await expect(page.locator('html')).toHaveAttribute('data-palette', 'pride');
         await expect(page.locator('.kiosk__list')).toHaveClass(/kiosk__list--info-short/);
+
+        // The idle timeout closes the panel under the keyboard — the focus
+        // goes to the ⚙, not to <body>
+        await page.locator('#kiosk-set-palette .kiosk-set__opt', { hasText: 'rainbow' }).focus();
+        await page.clock.fastForward(91_000);
+        await expect(page.locator('#kiosk-settings')).toBeHidden();
+        await expect(page.locator('#kiosk-settings-open')).toBeFocused();
 
         // and it survives a reload without the URL, through storage
         await page.goto('/kiosk/');
