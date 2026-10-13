@@ -8,7 +8,8 @@
  */
 import { describe, it, before, after } from "node:test";
 import { strict as assert } from "node:assert";
-import { execFile, execFileSync, spawnSync } from "node:child_process";
+import { execFile, execFileSync, spawn, spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { promisify } from "node:util";
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -437,5 +438,42 @@ describe("minify list (deploy.yml) ↔ cache-bust ASSETS ↔ scripts the pages l
         assert.ok(loaded.size >= 5, `expected the pages to load several scripts, saw ${[...loaded].join(", ")}`);
         assert.deepEqual([...minifyList()].sort(), [...loaded].sort(), "deploy.yml minify list ≠ scripts the pages load");
         assert.deepEqual([...hashedScripts()].sort(), [...loaded].sort(), "cache-bust ASSETS ≠ scripts the pages load");
+    });
+});
+
+describe("e2e server guard (tests/serve.mjs + global-setup)", () => {
+    const REPO = new URL("..", import.meta.url).pathname.replace(/\/$/, "");
+    const { assertServesCheckout } = createRequire(import.meta.url)("./global-setup.js");
+
+    /** Start serve.mjs on a free port with `cwd` as its root; resolves to
+     *  { url, stop }. */
+    function serve(cwd) {
+        const child = spawn(process.execPath, [path.join(REPO, "tests/serve.mjs"), "0"], { cwd });
+        return new Promise((resolve, reject) => {
+            child.on("error", reject);
+            child.stdout.on("data", (buf) => {
+                const m = /http:\/\/localhost:(\d+)/.exec(String(buf));
+                if (m) resolve({ url: `http://localhost:${m[1]}`, stop: () => child.kill() });
+            });
+        });
+    }
+
+    it("refuses a server that serves another checkout", async () => {
+        const srv = await serve(tmpdir("serve-other-"));
+        try {
+            await assert.rejects(assertServesCheckout(srv.url, REPO), /not this checkout/);
+        } finally {
+            srv.stop();
+        }
+    });
+
+    it("accepts this checkout's own server, and an empty port", async () => {
+        const srv = await serve(REPO);
+        try {
+            await assertServesCheckout(srv.url, REPO);
+        } finally {
+            srv.stop();
+        }
+        await assertServesCheckout("http://127.0.0.1:9", REPO);
     });
 });

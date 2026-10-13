@@ -67,7 +67,26 @@ function buildEventsArchive() {
   return { version: 1, events };
 }
 
-module.exports = async function globalSetup() {
+/** Throws when baseURL is served by anything but this checkout's
+ *  tests/serve.mjs — with reuseExistingServer a server another checkout left
+ *  on the port would otherwise run the suite against that checkout's files.
+ *  Nothing listening yet: nothing to check. */
+async function assertServesCheckout(baseURL, root = ROOT) {
+  let res;
+  try {
+    res = await fetch(baseURL);
+  } catch {
+    return;
+  }
+  const served = res.headers.get("x-serve-root");
+  const real = (p) => { try { return fs.realpathSync(p); } catch { return p; } };
+  if (!served || real(served) !== real(root)) {
+    throw new Error(`${baseURL} serves ${served || "an unknown server"}, not this checkout — stop it`);
+  }
+}
+
+module.exports = async function globalSetup(config) {
+  await assertServesCheckout(config.projects[0].use.baseURL);
   const file = path.join(os.tmpdir(), `bc101-e2e-archive-${process.pid}.json`);
   fs.writeFileSync(file, JSON.stringify(buildEventsArchive(), null, 2));
   // build-status-data.mjs also stamps the homepage's streak line. Hand it a
@@ -101,3 +120,4 @@ module.exports = async function globalSetup() {
 };
 
 module.exports.buildEventsArchive = buildEventsArchive;
+module.exports.assertServesCheckout = assertServesCheckout;
