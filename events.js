@@ -7,6 +7,10 @@
   "use strict";
 
   var JSON_URL = "events-data.json";
+  // Still the old backend path: the live CSP (Cloudflare rule, CONTRIBUTING.md
+  // § Security headers) names this old host as connect-src's only external one. Same feed as the
+  // `ics` in calendars/bitcircus.json — switch to it once the rule names
+  // kalender.bitcircus101.de.
   var ICS_URL =
     "https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export";
   var CALENDAR_URL = "https://bitcircus101.de/calendar/";
