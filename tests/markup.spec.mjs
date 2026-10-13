@@ -206,6 +206,17 @@ describe("lite/ mirrors the style.css tokens (style.css § Tokens, CLAUDE.md § 
   });
 });
 
+describe("small text sizes are tokens (style.css § Tokens)", () => {
+  // 0.8 / 0.85 / 0.9rem are --fs-label / --fs-meta / --fs-small. A bare number
+  // outside :root is a size that escaped the vocabulary; lite keeps its own
+  // small sheet and is not held to this.
+  it("style.css names no bare 0.8/0.85/0.9rem font-size outside :root", () => {
+    const css = read("style.css").replace(/\/\*[\s\S]*?\*\//g, "").replace(/^:root\s*\{[^}]*\}/m, "");
+    const bare = [...css.matchAll(/font-size:\s*0\.(?:8|85|9)rem\b/g)].map((m) => m[0]);
+    assert.deepEqual(bare, [], `use var(--fs-label|--fs-meta|--fs-small): ${bare.length} bare declaration(s)`);
+  });
+});
+
 describe("the keyboard hint reads the same everywhere (README § Tests, style.css .footer__a11y)", () => {
   // "ohne maus bedienbar: …" is a promise the footer makes on the nine layout
   // pages (via the partial — the drift gate covers those), on /lite/ and on

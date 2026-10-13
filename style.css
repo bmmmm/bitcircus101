@@ -60,6 +60,11 @@
        bitcircus101 werden" has to fit the border line, and a clipped title
        clips its focusable # anchor), growing to 1.05rem from ~800px up */
     --fs-panel-title: clamp(0.95rem, 0.85rem + 0.4vw, 1.05rem);
+    /* the small text, named by role — the values are the ones the sheet
+       has always used; tests/markup.spec.mjs refuses the bare numbers */
+    --fs-label: 0.8rem;   /* labels, chips, footer lines    */
+    --fs-meta:  0.85rem;  /* meta lines under a title       */
+    --fs-small: 0.9rem;   /* secondary prose                */
 
     --gutter: clamp(0.75rem, 3.5vw, 1.5rem);
     --measure: 94ch;          /* content column, in characters */
@@ -198,7 +203,7 @@ section { margin: 0 0 2.5rem; }
 /* breadcrumb line above each page title: ~ /termine */
 .doc-path {
     color: var(--ink-dim);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     letter-spacing: 0.04em;
     margin: 0 0 1.25rem;
     user-select: none;
@@ -323,7 +328,7 @@ nav li a {
     text-decoration: none;
     padding: 0 1ch;
     height: var(--nav-row);
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     white-space: nowrap;
 }
 nav li a:hover { background: var(--ink); color: var(--paper); }
@@ -352,7 +357,7 @@ nav li a.nav__link--current:hover { background: var(--accent); color: var(--pape
     border: 1px solid var(--line);
     color: var(--ink-dim);
     font-family: var(--font);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     line-height: 1;
     padding: 0.35em 0.8ch;
     min-width: 2.2rem;
@@ -402,7 +407,7 @@ nav li a.nav__link--current:hover { background: var(--accent); color: var(--pape
     border: 1px solid var(--line);
     color: var(--ink);
     font-family: var(--font);
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     line-height: 1;
     padding: 0.45em 1ch;
     cursor: pointer;
@@ -600,7 +605,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .ascii-caption {
     text-align: center;
     color: var(--ink-dim);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     margin-top: 0.5rem;
     user-select: none;
 }
@@ -643,7 +648,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     margin: 0;
 }
 .hx404__sub { color: var(--ink); max-width: 56ch; margin: 0.5rem 0 0; }
-.hx404__log { color: var(--ink-dim); font-size: 0.85rem; margin: 0.75rem 0 0; }
+.hx404__log { color: var(--ink-dim); font-size: var(--fs-meta); margin: 0.75rem 0 0; }
 .hx404__dim { color: var(--line-strong); }
 .hx404__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 1.5rem; }
 
@@ -661,11 +666,11 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .pinnwand-teaser__label {
     margin: 0 0 0.35rem;
     color: var(--ink-dim);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     letter-spacing: 0.03em;
 }
 .pinnwand-teaser__slogan { margin: 0 0 0.5rem; color: var(--ink-max); }
-.pinnwand-teaser__cta { font-size: 0.9rem; }
+.pinnwand-teaser__cta { font-size: var(--fs-small); }
 
 /* =============================================================================
    Filmstrip / carousel — grayscale stills, color on demand
@@ -708,7 +713,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     border: none;
     color: var(--ink-dim);
     font-family: var(--font);
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     line-height: 1;
     padding: 0.2em 0.5ch;
     cursor: pointer;
@@ -818,16 +823,16 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .event-preview:hover span { color: inherit; }
 
 /* the date is the row's green marker (the hover reset above takes it back) */
-.event-preview__dow { color: var(--accent); font-size: 0.8rem; }
-.event-preview__date { color: var(--accent); font-size: 0.9rem; }
+.event-preview__dow { color: var(--accent); font-size: var(--fs-label); }
+.event-preview__date { color: var(--accent); font-size: var(--fs-small); }
 .event-preview__title {
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     color: var(--ink-max);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.event-preview__time { font-size: 0.85rem; color: var(--ink-dim); text-align: right; }
+.event-preview__time { font-size: var(--fs-meta); color: var(--ink-dim); text-align: right; }
 /* cancelled row: struck title, dim date, the badge in the time cell (see the
    .event-card--cancelled block for the shared badge look) */
 .event-preview--cancelled .event-preview__title { text-decoration: line-through; }
@@ -846,7 +851,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     text-decoration-color: var(--line-strong);
 }
 
-.events-more-link { font-size: 0.9rem; margin: 0.75rem 0 0.25rem; }
+.events-more-link { font-size: var(--fs-small); margin: 0.75rem 0 0.25rem; }
 
 /* =============================================================================
    Events page
@@ -887,7 +892,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 /* One look whatever the level: an h2 on /events, an h3 on /rss, /pinnwand and
    the calendar page — small, bold, ink-max, without the h3's "── " prefix. */
 .events-subscribe__title {
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     font-weight: 700;
     color: var(--ink-max);
     margin: 0;
@@ -898,7 +903,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 
 .events-subscribe__btn {
     font-family: var(--font);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     color: var(--ink);
     text-decoration: none;
     border: 1px solid var(--line);
@@ -912,14 +917,14 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
    Accent is in scope here: the token rule names the active event filter as a
    current-selection marker; the buttons themselves stay reverse-video ink. */
 .events-subscribe__scope {
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     color: var(--ink-dim);
     margin: 0.6rem 0 0;
 }
 .events-subscribe__scope-tag { color: var(--accent); font-weight: 700; }
 /* archive pointer — a plain hyperlink, so accent is in scope */
 .events-subscribe__archive {
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     margin: 0.6rem 0 0;
 }
 
@@ -927,7 +932,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     border-top: 1px solid var(--line);
     margin-top: 0.8rem;
     padding-top: 0.8rem;
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     color: var(--ink-dim);
 }
 .events-info-panel p { margin: 0 0 0.5rem; }
@@ -940,7 +945,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     align-items: center;
     gap: 1ch;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     color: var(--ink-dim);
     user-select: none;
 }
@@ -975,10 +980,10 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .events-toolbar__row + .events-toolbar__row { margin-top: 0.5rem; }
 
 /* search — a form control, so focus stays reverse-video ink, not accent */
-.events-search__label { color: var(--ink-dim); font-size: 0.9rem; }
+.events-search__label { color: var(--ink-dim); font-size: var(--fs-small); }
 .events-search__input {
     font-family: var(--font);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     color: var(--ink);
     background: transparent;
     border: 1px solid var(--line);
@@ -997,11 +1002,11 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     color: var(--ink-dim);
     padding: 0.2em 1ch;
     font-family: var(--font);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     cursor: pointer;
 }
 .events-search__clear:hover { background: var(--ink); color: var(--paper); }
-.events-search__count { color: var(--ink-dim); font-size: 0.8rem; }
+.events-search__count { color: var(--ink-dim); font-size: var(--fs-label); }
 
 .events-filter {
     display: flex;
@@ -1009,7 +1014,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     gap: 0.5ch;
     flex-wrap: wrap;
     margin-bottom: 1.5rem;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
 }
 .events-filter__label { color: var(--ink-dim); margin-right: 0.5ch; }
 
@@ -1021,7 +1026,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     color: var(--ink-dim);
     padding: 0.2em 1ch;
     font-family: var(--font);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     cursor: pointer;
 }
 /* 22px tall, and the rows they wrap into are only 4px apart — so ±2px is the
@@ -1057,7 +1062,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     display: flex;
     align-items: center;
     gap: 1ch;
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     color: var(--ink-max);
     letter-spacing: 0.12em;
     margin: 0 0 0.75rem;
@@ -1164,8 +1169,8 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     flex-shrink: 0;
 }
 
-.event-card__subtitle { font-size: 0.85rem; color: var(--ink-dim); margin: 0 0 0.4rem; }
-.event-card__desc { font-size: 0.85rem; color: var(--ink-dim); margin: 0 0 0.6rem; line-height: 1.6; }
+.event-card__subtitle { font-size: var(--fs-meta); color: var(--ink-dim); margin: 0 0 0.4rem; }
+.event-card__desc { font-size: var(--fs-meta); color: var(--ink-dim); margin: 0 0 0.6rem; line-height: 1.6; }
 /* Full text keeps its paragraphs (the data carries "\n\n"); the teaser is a
    single line of prose and never contains one. */
 .event-card__desc--full { white-space: pre-line; }
@@ -1195,7 +1200,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .event-card__more[open] > summary { margin-bottom: 0; }
 .event-card__more[open] > .event-card__desc--full { margin-top: 0; }
 .event-card__location {
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     color: var(--ink-dim);
     margin: 0.2rem 0 0.4rem;
     text-decoration: none;
@@ -1217,7 +1222,7 @@ a.event-card__location::after {
 a.event-card__location:hover { background: var(--ink); color: var(--paper); }
 
 .event-card__meta { display: flex; align-items: center; gap: 1.5ch; flex-wrap: wrap; }
-.event-card__time { color: var(--ink-max); font-size: 0.85rem; font-weight: 700; }
+.event-card__time { color: var(--ink-max); font-size: var(--fs-meta); font-weight: 700; }
 
 .event-card__tags { display: flex; gap: 0.75ch; flex-wrap: wrap; }
 .event-tag {
@@ -1288,7 +1293,7 @@ a.event-card__location:hover { background: var(--ink); color: var(--paper); }
     padding: 0.4rem 0 0.4rem 1.5ch;
     margin: 0 0 1.2rem;
     color: var(--ink-max);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
 }
 .event-page__past {
     margin: 0 0 1.2rem;
@@ -1318,7 +1323,7 @@ a.event-card__location:hover { background: var(--ink); color: var(--paper); }
 .event-page__when time { color: inherit; }
 a.event-page__location {
     color: var(--ink-dim);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     text-decoration: none;
 }
 a.event-page__location:hover { background: var(--ink); color: var(--paper); }
@@ -1332,7 +1337,7 @@ a.event-page__location:hover { background: var(--ink); color: var(--paper); }
 
 /* The reason the page exists: the full text, with its paragraphs intact. */
 .event-page__body {
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     line-height: 1.7;
     color: var(--ink);
 }
@@ -1359,7 +1364,7 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
 /* ── Archive ───────────────────────────────────────────────────────────────
    A dated index, not a card list: one line per event, grouped year → month,
    newest first. */
-.archive__intro { color: var(--ink-dim); font-size: 0.85rem; }
+.archive__intro { color: var(--ink-dim); font-size: var(--fs-meta); }
 .archive__empty { color: var(--ink-dim); }
 
 .archive__year {
@@ -1396,7 +1401,7 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
 .archive__date {
     flex: 0 0 auto;
     color: var(--accent); /* the date is the row's green marker */
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     font-variant-numeric: tabular-nums;
 }
 .archive__title { flex: 1 1 24ch; }
@@ -1407,14 +1412,14 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
 }
 
 /* loading / error / empty states */
-.events-loading { color: var(--ink-dim); font-size: 0.9rem; padding: 1rem 0; }
+.events-loading { color: var(--ink-dim); font-size: var(--fs-small); padding: 1rem 0; }
 .events-loading__cmd { color: var(--ink); }
 .events-cursor {
     display: inline-block;
     margin-left: 0.25ch;
     color: var(--ink-dim);
 }
-.events-fallback { padding: 1rem 0; font-size: 0.9rem; }
+.events-fallback { padding: 1rem 0; font-size: var(--fs-small); }
 .events-fallback__cmd { color: var(--ink-dim); margin-bottom: 0.5rem; }
 .events-fallback__err {
     background: var(--ink-max);
@@ -1423,10 +1428,10 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
 }
 .events-empty { color: var(--ink-dim); }
 
-.events-privacy { color: var(--ink-dim); font-size: 0.85rem; }
+.events-privacy { color: var(--ink-dim); font-size: var(--fs-meta); }
 /* Static companion of the sync box: freshness is one question, whether the
    dates held is the other. Not part of the box's own 30s re-render. */
-.events-status-link { margin: 0.5rem 0 0; font-size: 0.85rem; }
+.events-status-link { margin: 0.5rem 0 0; font-size: var(--fs-meta); }
 
 /* sync freshness */
 .events-last-sync {
@@ -1434,7 +1439,7 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
     gap: 1ch;
     flex-wrap: wrap;
     margin-top: 0.75rem;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
 }
 .sync-source {
     display: flex;
@@ -1477,7 +1482,7 @@ ul.ways > li::before { content: none; }
 .way:hover .key, .way:hover .lbl, .way:hover .ico { color: inherit; }
 .way .ico { color: var(--ink-dim); user-select: none; }
 .way .key { color: var(--ink-max); font-weight: 700; }
-.way .lbl { color: var(--ink-dim); font-size: 0.9rem; }
+.way .lbl { color: var(--ink-dim); font-size: var(--fs-small); }
 
 /* =============================================================================
    Location block — ascii map + address + on-demand OSM iframe
@@ -1485,7 +1490,7 @@ ul.ways > li::before { content: none; }
 .location-card {
     border: 1px solid var(--line);
     margin: 1.5rem 0 1rem;
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
 }
 
 h3.location-card__header {
@@ -1493,7 +1498,7 @@ h3.location-card__header {
     padding: 0.4em 1ch;
     border-bottom: 1px solid var(--line);
     color: var(--ink-dim);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     font-weight: 700;
     letter-spacing: 0.1em;
 }
@@ -1522,7 +1527,7 @@ h3.location-card__header::before { content: none; }
 .location-card__body p { margin: 0 0 0.5em; }
 .location-card__name { color: var(--ink-max); font-weight: 700; }
 .location-card__address { line-height: 1.6; }
-.location-card__coords { color: var(--ink-dim); font-size: 0.8rem; letter-spacing: 0.04em; }
+.location-card__coords { color: var(--ink-dim); font-size: var(--fs-label); letter-spacing: 0.04em; }
 
 .location-card__map-btn {
     display: block;
@@ -1535,7 +1540,7 @@ h3.location-card__header::before { content: none; }
     text-align: left;
     cursor: pointer;
     font-family: var(--font);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
 }
 .location-card__map-btn:hover { background: var(--ink); color: var(--paper); }
 
@@ -1554,7 +1559,7 @@ h3.location-card__header::before { content: none; }
     display: block;
     padding: 0.4em 1.5ch;
     border-top: 1px solid var(--line);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     color: var(--ink-dim);
     text-decoration: none;
 }
@@ -1641,7 +1646,7 @@ h3.sidenote__title::before { content: none; }
     padding: 0.3em 1ch;
     border-bottom: 1px solid var(--line);
     color: var(--ink-dim);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     user-select: none;
 }
 .projekt-panel__dot { display: none; }
@@ -1656,8 +1661,8 @@ h3.sidenote__title::before { content: none; }
 }
 .projekt-panel__title::before { content: none; }
 .projekt-panel__icon { display: none; }
-.projekt-panel__tagline { color: var(--ink-dim); font-size: 0.9rem; margin: 0 0 0.75rem; }
-.projekt-panel__desc { color: var(--ink); font-size: 0.9rem; margin: 0 0 0.75rem; }
+.projekt-panel__tagline { color: var(--ink-dim); font-size: var(--fs-small); margin: 0 0 0.75rem; }
+.projekt-panel__desc { color: var(--ink); font-size: var(--fs-small); margin: 0 0 0.75rem; }
 
 .projekt-bar {
     font-size: 0.95rem;
@@ -1674,7 +1679,7 @@ h3.sidenote__title::before { content: none; }
     display: flex;
     gap: 1.5ch;
     flex-wrap: wrap;
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     color: var(--ink-dim);
     margin: 0.25rem 0 0.5rem;
 }
@@ -1687,7 +1692,7 @@ h3.sidenote__title::before { content: none; }
     background: var(--ink-max);
     color: var(--paper);
     padding: 0 0.75ch;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
 }
 
 .projekt-panel__actions { display: flex; gap: 1ch; margin-top: 0.6rem; flex-wrap: wrap; }
@@ -1695,7 +1700,7 @@ h3.sidenote__title::before { content: none; }
     display: inline-flex;
     align-items: center;
     font-family: var(--font);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     padding: 0.25em 1ch;
     border: 1px solid var(--line);
     color: var(--ink);
@@ -1709,7 +1714,7 @@ h3.sidenote__title::before { content: none; }
 .projekt-action--donate:hover { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 
 .projekte-fallback, .projekte-empty { color: var(--ink-dim); padding: 0.5rem 0; }
-.projekte-updated { color: var(--ink-dim); font-size: 0.8rem; margin-top: 0.75rem; }
+.projekte-updated { color: var(--ink-dim); font-size: var(--fs-label); margin-top: 0.75rem; }
 
 /* Funding pulse — cryptic sparkline under the board. Mirrors .projekt-bar
    above (same nowrap, same accent glyphs) so it reads as part of the same
@@ -1733,7 +1738,7 @@ h3.sidenote__title::before { content: none; }
 }
 .pulse-sparkline__glyphs { color: var(--accent); }
 
-.pulse-caption { margin: 4px 0 0; color: var(--ink-dim); font-size: 0.8rem; }
+.pulse-caption { margin: 4px 0 0; color: var(--ink-dim); font-size: var(--fs-label); }
 
 /* One calm reveal, added by finanz.js only when motion is welcome. */
 .pulse--reveal { animation: pulse-fadein 0.6s ease both; }
@@ -1766,7 +1771,7 @@ h3.sidenote__title::before { content: none; }
     padding: 0.3em 1ch;
     border-bottom: 1px solid var(--accent-soft);
     color: var(--ink-dim);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     user-select: none;
 }
 .job-panel__path { letter-spacing: 0.03em; }
@@ -1779,13 +1784,13 @@ h3.sidenote__title::before { content: none; }
     color: var(--ink-max);
 }
 .job-panel__title::before { content: none; }
-.job-panel__company { color: var(--ink); font-size: 0.9rem; margin: 0 0 0.25rem; }
+.job-panel__company { color: var(--ink); font-size: var(--fs-small); margin: 0 0 0.25rem; }
 .job-panel__tags { display: flex; gap: 0.75ch; flex-wrap: wrap; list-style: none; margin: 0 0 0.25rem; padding: 0; }
 /* Tags, not a bulleted list: drop the global "· " marker and its hang. */
 .job-panel__tags > li { margin: 0; }
 .job-panel__tags > li::before { content: none; }
-.job-panel__about { color: var(--ink); font-size: 0.9rem; margin: 0.25rem 0 0.5rem; }
-.job-panel__dates { color: var(--ink-dim); font-size: 0.85rem; margin: 0 0 0.75rem; }
+.job-panel__about { color: var(--ink); font-size: var(--fs-small); margin: 0.25rem 0 0.5rem; }
+.job-panel__dates { color: var(--ink-dim); font-size: var(--fs-meta); margin: 0 0 0.75rem; }
 .job-panel__action { margin-top: 0.25rem; }
 
 /* The permanent slot, always the last card: a dashed frame is the plain-text
@@ -1837,7 +1842,7 @@ h3.sidenote__title::before { content: none; }
     padding: 0.75rem 1.1rem;
     margin: 0.75rem 0;
     overflow-x: auto;
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     line-height: 1.5;
 }
 .jobs-snippet code {
@@ -1864,7 +1869,7 @@ h3.sidenote__title::before { content: none; }
     padding: 1rem 1.1rem;
 }
 .tuwat-group__title {
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
     margin: 0 0 0.75rem;
     color: var(--ink-max);
 }
@@ -1876,12 +1881,12 @@ h3.sidenote__title::before { content: none; }
     gap: 1ch;
     align-items: baseline;
     margin-bottom: 0.5rem;
-    font-size: 0.9rem;
+    font-size: var(--fs-small);
 }
 .tuwat-list > li::before { content: none; }
 .todo-box { color: var(--ink-dim); flex-shrink: 0; user-select: none; }
 
-.tuwat-group p { font-size: 0.9rem; color: var(--ink-dim); }
+.tuwat-group p { font-size: var(--fs-small); color: var(--ink-dim); }
 .tuwat-info { margin-bottom: 0; }
 .tuwat-contact { color: var(--ink-dim); }
 
@@ -1907,10 +1912,10 @@ h3.sidenote__title::before { content: none; }
 }
 .donation-item__title { margin: 0; font-size: 0.95rem; }
 .donation-item__title::before { content: none; }
-.donation-item__text { margin: 0; font-size: 0.9rem; color: var(--ink-dim); }
-.donation-item__action { margin-top: auto; align-self: stretch; font-size: 0.9rem; }
+.donation-item__text { margin: 0; font-size: var(--fs-small); color: var(--ink-dim); }
+.donation-item__action { margin-top: auto; align-self: stretch; font-size: var(--fs-small); }
 
-.dauerhaft-note { color: var(--ink-dim); font-size: 0.85rem; margin-top: 0.75rem; }
+.dauerhaft-note { color: var(--ink-dim); font-size: var(--fs-meta); margin-top: 0.75rem; }
 
 /* =============================================================================
    Logo strip (Freund*innen) — a static, quiet row; monochrome at rest.
@@ -1996,7 +2001,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     border: 1px solid var(--line-strong);
     color: var(--ink);
     font-family: var(--font);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     letter-spacing: 0.1em;
     text-decoration: none;
     background: var(--paper);
@@ -2078,7 +2083,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     max-width: 80%;
     border: 4px solid #fff; /* quiet zone so scanners lock on against dark paper */
 }
-.chat-card__desc { font-size: 0.8rem; color: var(--ink-dim); text-align: center; line-height: 1.5; }
+.chat-card__desc { font-size: var(--fs-label); color: var(--ink-dim); text-align: center; line-height: 1.5; }
 
 .chat-card__url {
     position: absolute;
@@ -2097,7 +2102,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     line-height: 1.6;
 }
 
-.signal-hint { font-size: 0.8rem; color: var(--ink-dim); margin-top: 1rem; letter-spacing: 0.04em; }
+.signal-hint { font-size: var(--fs-label); color: var(--ink-dim); margin-top: 1rem; letter-spacing: 0.04em; }
 
 /* =============================================================================
    Footer — a status line, inverted like tmux/vim
@@ -2105,7 +2110,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
 .footer {
     margin-top: 3rem;
     border-top: 1px solid var(--line);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     color: var(--ink-dim);
 }
 
@@ -2125,7 +2130,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
 
 .footer__brand { color: var(--ink-max); font-weight: 700; letter-spacing: 0.04em; }
 .footer__tagline,
-.footer__a11y { color: var(--ink-dim); font-size: 0.8rem; }
+.footer__a11y { color: var(--ink-dim); font-size: var(--fs-label); }
 /* the keyboard promise: the key names read as text, a shade up from the line */
 .footer__a11y kbd { font: inherit; color: var(--ink); }
 
@@ -2140,7 +2145,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     gap: 1.5ch;
     align-items: center;
     flex-wrap: wrap;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     padding: 0.35em var(--gutter);
 }
 .footer__sep { opacity: 0.5; }
@@ -2177,7 +2182,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     color: var(--ink);
     border: 1px solid var(--line-strong);
     padding: 0.9em 1.5ch;
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     line-height: 1.8;
     white-space: nowrap;
     display: none;
@@ -2272,8 +2277,8 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
 .ascii-playground__masthead h1 { border: none; margin: 0; padding: 0; font-size: 1.1rem; }
 /* The tag carries the margin, not the home link: with `margin-left: auto` on the
    first child both were shoved against the right edge and the tag ran off it. */
-.ascii-playground__tag { color: var(--ink-dim); font-size: 0.85rem; margin-left: auto; }
-.ascii-playground__home { font-size: 0.85rem; position: relative; }
+.ascii-playground__tag { color: var(--ink-dim); font-size: var(--fs-meta); margin-left: auto; }
+.ascii-playground__home { font-size: var(--fs-meta); position: relative; }
 /* 23px of ink, and nothing else interactive shares its row or column. The zone
    hangs DOWNWARDS from the link's own top edge rather than being centred on it:
    this masthead sits at the very top of the document, so a centred zone would
@@ -2289,7 +2294,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     height: 44px;
 }
 
-.ascii-playground__intro { color: var(--ink-dim); font-size: 0.9rem; }
+.ascii-playground__intro { color: var(--ink-dim); font-size: var(--fs-small); }
 
 .ascii-playground__grid {
     display: grid;
@@ -2315,7 +2320,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     padding: 0.3em 1ch;
     border-bottom: 1px solid var(--line);
     color: var(--ink-dim);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
     user-select: none;
 }
 
@@ -2331,7 +2336,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     background: var(--paper);
     color: var(--ink);
     font-family: var(--font);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
     line-height: 1.3;
     white-space: pre;
     overflow: auto;
@@ -2359,8 +2364,8 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     flex-wrap: wrap;
     margin-top: 1rem;
 }
-.ascii-playground__btn { font-size: 0.85rem; min-height: 36px; }
-.ascii-playground__savehint { color: var(--ink-dim); font-size: 0.8rem; margin-top: 0.75rem; }
+.ascii-playground__btn { font-size: var(--fs-meta); min-height: 36px; }
+.ascii-playground__savehint { color: var(--ink-dim); font-size: var(--fs-label); margin-top: 0.75rem; }
 .ascii-playground__sep { color: var(--line-strong); }
 .ascii-playground__foot {
     max-width: var(--measure);
@@ -2368,7 +2373,7 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     padding: 0.75rem var(--gutter) 1.5rem;
     border-top: 1px solid var(--line);
     color: var(--ink-dim);
-    font-size: 0.8rem;
+    font-size: var(--fs-label);
 }
 /* The two footer links are 15px of ink at 0.8rem. They sit 23px apart
    horizontally and have 937px of empty page above them, so the zone grows
@@ -2924,7 +2929,7 @@ html[data-theme="light"][data-palette="pride"] {
     padding: 0;
     list-style: none;
     color: var(--ink-dim);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
 }
 .status-legend > li { display: inline-flex; align-items: center; gap: 0.5ch; }
 .status-legend > li::before { content: none; } /* the swatch is the marker */
@@ -2945,7 +2950,7 @@ html[data-theme="light"][data-palette="pride"] {
 .status-swatch--scheduled { background: transparent; border: 1px dashed var(--line-strong); color: var(--ink-dim); }
 .status-swatch--empty { height: 6px; font-size: 0; }
 
-.status-panel__hint { margin: 0 0 0.75rem; color: var(--ink-dim); font-size: 0.85rem; }
+.status-panel__hint { margin: 0 0 0.75rem; color: var(--ink-dim); font-size: var(--fs-meta); }
 
 /* The row: thin bars with 2px of surface between them, bottom-aligned. It
    overflows sideways on narrow screens; status.js opens it scrolled to
@@ -3033,7 +3038,7 @@ html[data-theme="light"][data-palette="pride"] {
     margin: 0.25rem 0 0;
     min-height: calc(var(--line-height) * 0.85rem);
     color: var(--ink-dim);
-    font-size: 0.85rem;
+    font-size: var(--fs-meta);
 }
 .status-readout .status-label,
 .status-detail__item .status-label,
@@ -3043,7 +3048,7 @@ html[data-theme="light"][data-palette="pride"] {
 .status-detail__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.25rem 1ch; margin: 0 0 0.5rem; }
 .status-detail__title { margin: 0; color: var(--ink-max); font-size: 0.95rem; }
 .status-detail__hint,
-.status-detail__trend { margin: 0.25rem 0; color: var(--ink-dim); font-size: 0.85rem; }
+.status-detail__trend { margin: 0.25rem 0; color: var(--ink-dim); font-size: var(--fs-meta); }
 .status-detail__list,
 .status-incidents { margin: 0.5rem 0 0; padding: 0; list-style: none; }
 .status-detail__item,
@@ -3053,7 +3058,7 @@ html[data-theme="light"][data-palette="pride"] {
 .status-detail__item--cancelled .status-detail__state { color: var(--ink-max); }
 .status-detail__empty,
 .status-incidents__empty { color: var(--ink-dim); }
-.status-detail__close { min-height: 32px; padding: 0.25em 1ch; font-size: 0.85rem; }
+.status-detail__close { min-height: 32px; padding: 0.25em 1ch; font-size: var(--fs-meta); }
 .status-empty { align-self: center; margin: 0; color: var(--ink-dim); }
 
 /* =============================================================================
