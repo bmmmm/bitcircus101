@@ -1507,9 +1507,11 @@ test.describe('Event details', () => {
             lastSync: NOW.toISOString(),
             sources: [],
             events: [
-                // both are on at NOW (19:30): only the real one may show as running
-                ev({ title: 'CANCELED: Lötabend', date: DAY, time: '19:00', endTime: '22:00', type: 'workshop' }),
-                ev({ title: 'Linkup', date: DAY, time: '18:00', endTime: '21:00', type: 'linkup' }),
+                // both are on at NOW (19:30): only the real one may show as running.
+                // The cancelled one is a linkup: that type underlines its title,
+                // and the strike-through has to win that cascade (it lost once).
+                ev({ title: 'CANCELED: Lötabend', date: DAY, time: '19:00', endTime: '22:00', type: 'linkup' }),
+                ev({ title: 'Linkup', date: DAY, time: '18:00', endTime: '21:00', type: 'workshop' }),
             ],
         };
         await page.clock.install({ time: NOW });

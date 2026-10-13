@@ -833,12 +833,6 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     text-overflow: ellipsis;
 }
 .event-preview__time { font-size: var(--fs-meta); color: var(--ink-dim); text-align: right; }
-/* cancelled row: struck title, dim date, the badge in the time cell (see the
-   .event-card--cancelled block for the shared badge look) */
-.event-preview--cancelled .event-preview__title { text-decoration: line-through; }
-.event-preview--cancelled .event-preview__dow,
-.event-preview--cancelled .event-preview__date { color: var(--ink-dim); }
-.event-preview__cancelled { font-size: 0.7rem; justify-self: end; }
 .event-preview__source {
     font-size: 0.7rem;
     color: var(--ink-dim);
@@ -850,6 +844,13 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     text-decoration: underline;
     text-decoration-color: var(--line-strong);
 }
+/* cancelled row: struck title, dim date, the badge in the time cell (see the
+   .event-card--cancelled block for the shared badge look). After the linkup
+   underline on purpose — same specificity, and the strike has to win. */
+.event-preview--cancelled .event-preview__title { text-decoration: line-through; }
+.event-preview--cancelled .event-preview__dow,
+.event-preview--cancelled .event-preview__date { color: var(--ink-dim); }
+.event-preview__cancelled { font-size: 0.7rem; justify-self: end; }
 
 .events-more-link { font-size: var(--fs-small); margin: 0.75rem 0 0.25rem; }
 
@@ -1115,7 +1116,9 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 
 /* Cancelled — rename, don't delete (events-core isCancelledTitle). Reads like
    the /status cancelled bar: ink-max and ✕, never accent; the date gives up
-   its green. The badge is inline-block so the strike-through stops at it. */
+   its green. The badge is inline-block so the strike-through stops at it.
+   After the type rules (the linkup underline) on purpose: same specificity,
+   and the strike has to win. */
 .event-card--cancelled { border-left: 2px solid var(--ink-max); }
 .event-card--cancelled .event-card__title { text-decoration: line-through; }
 .event-card--cancelled .event-card__day,
