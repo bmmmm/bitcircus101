@@ -24,12 +24,17 @@
   ];
   var DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
 
-  // State — shareable via the URL query (?tags=…&nur=bc&q=…). The hash stays
-  // reserved for event anchors (#ev-…), so permalinks and filters compose.
-  var PARAM = { TAGS: "tags", ONLY: "nur", Q: "q" };
-  var state = { tags: [], onlyBitcircus: false, q: "" };
+  // State — shareable via the URL query (?tags=…&mit=datenburg&q=…). The hash
+  // stays reserved for event anchors (#ev-…), so permalinks and filters compose.
+  // `mit` lists the friends' calendars switched on, by source id; the events at
+  // bitcircus101 (own + home, see events-core relationOf) are always on. The
+  // old `nur=bc` is read and dropped: it asked for what is now the default.
+  var PARAM = { TAGS: "tags", WITH: "mit", Q: "q" };
+  var state = { tags: [], friends: [], q: "" };
   var allFutureSorted = [];
   var feeds = null; // feeds manifest from events-data.json; null on old JSON / ICS fallback
+  var relMap = null; // source name → relation (events-core relationMap); null on pre-field data
+  var friendList = []; // the friends' calendars the toolbar offers, {id, name} in config order
   var eventsContainer = null;
   var filterBar = null;
   var eventsToolbar = null;
@@ -59,8 +64,43 @@
     return "https://" + u;
   }
 
-  function isBitcircusEvent(e) {
-    return !e.source || e.source === "bitcircus101";
+  function relOf(e) {
+    return EventsCore.sourceRelation(relMap, e.source);
+  }
+
+  function friendOn(name) {
+    for (var i = 0; i < friendList.length; i++) {
+      if (friendList[i].name === name) return state.friends.indexOf(friendList[i].id) > -1;
+    }
+    return false;
+  }
+
+  // The default view — everything at bitcircus101 — plus the friends' calendars
+  // the toolbar switched on.
+  function shown(e) {
+    return relOf(e) !== "friend" || friendOn(e.source);
+  }
+
+  // The data's sources list decides who is a friend (a checkbox) and who is at
+  // home. Pre-field data (no relation anywhere) has no friends: everything shows.
+  function setSources(sources) {
+    relMap = EventsCore.relationMap(sources);
+    friendList = [];
+    if (relMap && sources) {
+      for (var i = 0; i < sources.length; i++) {
+        var s = sources[i];
+        if (s && s.id && s.name && EventsCore.relationOf(s) === "friend") {
+          friendList.push({ id: String(s.id).toLowerCase(), name: s.name });
+        }
+      }
+    }
+    // Known ids only, in config order, so identical views serialize to one
+    // URL — a stale or mistyped `mit` drops out.
+    var wanted = state.friends;
+    state.friends = [];
+    friendList.forEach(function (f) {
+      if (wanted.indexOf(f.id) > -1) state.friends.push(f.id);
+    });
   }
 
   // ── URL state ─────────────────────────────────────────────────────────────
@@ -75,7 +115,12 @@
       if (t.charAt(0) !== "#") t = "#" + t;
       if (state.tags.indexOf(t) === -1) state.tags.push(t);
     }
-    state.onlyBitcircus = params.get(PARAM.ONLY) === "bc";
+    var ids = (params.get(PARAM.WITH) || "").split(",");
+    state.friends = [];
+    for (var j = 0; j < ids.length; j++) {
+      var id = ids[j].trim().toLowerCase();
+      if (id && state.friends.indexOf(id) === -1) state.friends.push(id);
+    }
     state.q = (params.get(PARAM.Q) || "").trim();
   }
 
@@ -87,7 +132,9 @@
         return encodeURIComponent(t.replace(/^#/, ""));
       }).join(","));
     }
-    if (state.onlyBitcircus) parts.push(PARAM.ONLY + "=bc");
+    if (state.friends.length) {
+      parts.push(PARAM.WITH + "=" + state.friends.map(encodeURIComponent).join(","));
+    }
     if (state.q) parts.push(PARAM.Q + "=" + encodeURIComponent(state.q));
     return parts.length ? "?" + parts.join("&") : "";
   }
@@ -135,11 +182,9 @@
     return true;
   }
 
-  // Source toggle applied, no cap — the chip source and the count denominator.
+  // Friends' calendars applied, no cap — the chip source and the count denominator.
   function pool() {
-    return state.onlyBitcircus
-      ? allFutureSorted.filter(isBitcircusEvent)
-      : allFutureSorted;
+    return allFutureSorted.filter(shown);
   }
 
   // Filter BEFORE the 30-cap so tags/search can reach events 31–40 of the
@@ -171,8 +216,10 @@
 
   // Mirror `state` into every control — checkbox, search input, chips, resets.
   function applyStateToControls() {
-    var cb = document.getElementById("events-only-bitcircus");
-    if (cb) cb.checked = state.onlyBitcircus;
+    var boxes = document.querySelectorAll("[data-source]");
+    for (var i = 0; i < boxes.length; i++) {
+      boxes[i].checked = state.friends.indexOf(boxes[i].getAttribute("data-source")) > -1;
+    }
     var input = document.getElementById("events-search");
     if (input && input.value !== state.q && document.activeElement !== input) {
       input.value = state.q;
@@ -223,11 +270,12 @@
     // inserted after the data it pushed the loading list down by its own
     // height, a layout shift on every visit. When the data fails or is empty,
     // removeToolbar() takes it away again.
+    // The friends' row carries its legend from the start and gets its boxes
+    // once the data names the friends (buildSourceToggles) — inline, on the
+    // legend's line, so the list below does not move.
     eventsToolbar.innerHTML =
-      '<div class="events-toolbar__row">' +
-      '<label class="events-toolbar__label" for="events-only-bitcircus">' +
-      '<input type="checkbox" id="events-only-bitcircus" class="events-toolbar__checkbox" />' +
-      "<span>Nur Events im bitcircus101 anzeigen</span></label>" +
+      '<div class="events-toolbar__row events-toolbar__sources" role="group" aria-labelledby="events-sources-label">' +
+      '<span class="events-toolbar__legend" id="events-sources-label">weitere kalender:</span>' +
       "</div>" +
       '<div class="events-toolbar__row events-search">' +
       '<label class="events-search__label" for="events-search">suche:</label>' +
@@ -237,14 +285,6 @@
       '<span class="events-search__count"></span>' +
       "</div>";
     parent.insertBefore(eventsToolbar, insertBeforeNode);
-
-    document.getElementById("events-only-bitcircus").addEventListener(
-      "change",
-      function () {
-        state.onlyBitcircus = this.checked;
-        refresh({ rebuildChips: true }); // pool changed \u2192 chip set changes
-      }
-    );
 
     // One debounce for render AND URL \u2014 also caps replaceState frequency.
     var searchInput = document.getElementById("events-search");
@@ -280,6 +320,37 @@
     });
   }
 
+  // One checkbox per friend's calendar, into the row the toolbar reserved.
+  // Idempotent: a re-render replaces the boxes. No friends → the row goes.
+  function buildSourceToggles() {
+    var row = eventsToolbar && eventsToolbar.querySelector(".events-toolbar__sources");
+    if (!row) return;
+    row.querySelectorAll(".events-toolbar__source").forEach(function (l) {
+      row.removeChild(l);
+    });
+    row.hidden = !friendList.length;
+    friendList.forEach(function (f) {
+      var label = document.createElement("label");
+      label.className = "events-toolbar__label events-toolbar__source";
+      label.setAttribute("for", "events-src-" + f.id);
+      label.innerHTML =
+        '<input type="checkbox" id="events-src-' + esc(f.id) + '" class="events-toolbar__checkbox" ' +
+        'data-source="' + esc(f.id) + '" />' +
+        "<span>" + esc(f.name) + "</span>";
+      row.appendChild(label);
+    });
+    row.querySelectorAll("[data-source]").forEach(function (cb) {
+      cb.addEventListener("change", function () {
+        // Read all boxes, in their (config) order — never append the toggled one.
+        state.friends = [];
+        row.querySelectorAll("[data-source]").forEach(function (b) {
+          if (b.checked) state.friends.push(b.getAttribute("data-source"));
+        });
+        refresh({ rebuildChips: true }); // pool changed \u2192 chip set changes
+      });
+    });
+  }
+
   // A reset hides the button that was just pressed, or replaces the list it
   // sat in: hand the keyboard on instead of dropping it on <body>.
   function focusFilterStart() {
@@ -301,8 +372,9 @@
 
   // ── Card Renderer ─────────────────────────────────────────────────────────
 
-  function renderCards(events, el) {
+  function renderCards(events, el, sources) {
     eventsContainer = el;
+    setSources(sources);
     var now = new Date();
     now.setHours(0, 0, 0, 0);
 
@@ -327,17 +399,19 @@
     }
 
     ensureEventsToolbar(el);
+    buildSourceToggles();
     refresh({ rebuildChips: true });
 
     // Anchor-wins: a permalink must always land. If the #ev-\u2026 target got
-    // filtered away by URL state, drop the filters once and re-render \u2014 the
+    // filtered away by URL state — or sits in a friend's calendar that is off —
+    // drop the filters and switch every calendar on once, then re-render; the
     // scroll happens in renderFilteredCards.
     var h = window.location.hash;
     if (h && h.indexOf("#ev-") === 0 && !document.getElementById(h.slice(1)) &&
-        (state.tags.length || state.q || state.onlyBitcircus)) {
+        (state.tags.length || state.q || state.friends.length < friendList.length)) {
       state.tags = [];
       state.q = "";
-      state.onlyBitcircus = false;
+      state.friends = friendList.map(function (f) { return f.id; });
       refresh({ rebuildChips: true });
     }
   }
@@ -405,8 +479,10 @@
         msg = "Keine Treffer f\u00fcr Filter + Suche.";
       } else if (state.q) {
         msg = "Keine Treffer f\u00fcr \u201e" + esc(state.q) + "\u201c.";
-      } else if (state.onlyBitcircus && !state.tags.length) {
-        msg = "Keine bevorstehenden Termine nur im bitcircus101-Kalender in diesem Ausschnitt.";
+      } else if (!state.tags.length) {
+        msg = state.friends.length
+          ? "Keine bevorstehenden Termine in diesem Ausschnitt."
+          : "Keine bevorstehenden Termine im bitcircus101 in diesem Ausschnitt.";
       } else {
         msg = "Keine Treffer f\u00fcr diesen Filter.";
       }
@@ -486,9 +562,11 @@
         html += '<h3 class="event-card__title">' + esc(shown) +
           (cancelled ? ' <span class="event-card__cancelled"><span aria-hidden="true">✕ </span>abgesagt</span>' : "") +
           "</h3>";
-        if (e.source && e.source !== "bitcircus101") {
-          html += '<span class="event-card__source">' +
-            esc("Externer Kalender: " + e.source) + "</span>";
+        // "Kalender: X" for a home source, "Externer Kalender: X" for a
+        // friend's, nothing for ours (events-core sourceBadge).
+        var badge = core ? core.sourceBadge(relMap, e.source) : "";
+        if (badge) {
+          html += '<span class="event-card__source">' + esc(badge) + "</span>";
         }
         html += "</div>";
         if (e.subtitle) {
@@ -548,10 +626,10 @@
           'data-href="#' + anchor + '" title="Link kopieren">' +
           '\u2190 link</button>';
         // Own page with the full text \u2014 only the sources with pages get one
-        // (EventsCore.hasPages), marked `page` on the card. isBitcircusEvent covers
-        // cards synced before that flag existed and the browser fallback.
-        // Relative directory href: serves locally and live alike.
-        if (e.id && (e.page || isBitcircusEvent(e))) {
+        // (EventsCore.hasPages), marked `page` on the card. The own-calendar
+        // check covers cards synced before that flag existed and the browser
+        // fallback. Relative directory href: serves locally and live alike.
+        if (e.id && (e.page || relOf(e) === "own")) {
           html += '<a class="event-action event-action--details" href="e/' +
             esc(e.id) + '/" title="Alle Details auf eigener Seite">' +
             '\u2192 details</a>';
@@ -629,7 +707,7 @@
 
   // Source descriptor for the fallback: only our own calendar (Radicale) is
   // reachable from the browser, so cards carry the same source name the sync uses.
-  var FALLBACK_CAL = { id: "bitcircus", name: "bitcircus101", url: CALENDAR_URL, cap: 30 };
+  var FALLBACK_CAL = { id: "bitcircus", name: "bitcircus101", url: CALENDAR_URL, cap: 30, relation: "own" };
 
   // ── Subscribe box follows the filter ("Filter = Feed") ───────────────────
   // The sync publishes per-tag/per-source feeds and lists them in the `feeds`
@@ -651,43 +729,51 @@
     }
   }
 
-  // Exactly one scope, or none: one tag (and nothing else) → that tag's feed;
-  // the source toggle alone → the bitcircus source feed.
+  // Exactly one scope, or none: one tag with no friend's calendar on → that
+  // tag's feed (tag feeds hold the events at bitcircus101, like the default
+  // view); every friend's calendar on and no tag → the all-in-one feed.
   function feedScope() {
     if (!feeds || state.q) return null;
-    if (state.tags.length === 1 && !state.onlyBitcircus) {
+    if (state.tags.length === 1 && !state.friends.length) {
       var key = state.tags[0].toLowerCase(); // manifest tag keys are lowercased
       var entry = feeds.tags && feeds.tags[key];
       return entry ? { entry: entry, label: key } : null;
     }
-    if (state.onlyBitcircus && !state.tags.length) {
-      // Manifest sources are keyed by cal.id — resolve via the card-facing name.
-      var sources = feeds.sources || {};
-      for (var id in sources) {
-        if (sources[id].name === "bitcircus101") {
-          return { entry: sources[id], label: "nur bitcircus101" };
-        }
-      }
+    var allOn = friendList.length && state.friends.length === friendList.length;
+    if (allOn && !state.tags.length && feeds.all && feeds.all.rss) {
+      return { entry: feeds.all, label: "alle kalender" };
     }
     return null;
   }
 
-  // Several tags at once have no feed of their own — a static site cannot
-  // combine them on demand, and pre-building every combination is not a thing.
-  // Rather than let the buttons quietly hand out the unfiltered feed, list the
-  // per-tag feeds the manifest does have. Only for a pure multi-tag filter:
-  // with the source toggle or a search on top, a tag feed would be wider than
-  // what the page shows, and advertising it would be a lie.
+  // No feed of its own: several tags at once, or some but not all of the
+  // friends' calendars. A static site cannot combine feeds on demand, and
+  // pre-building every combination is not a thing. Rather than let the
+  // buttons quietly hand out a feed wider or narrower than the page, list the
+  // exact parts the manifest has. Only for a pure case: with a search on top,
+  // or tags AND a friend's calendar, every feed would be a lie.
   function splitScopes() {
-    if (!feeds || state.q || state.onlyBitcircus) return null;
-    if (state.tags.length < 2) return null;
+    if (!feeds || state.q) return null;
     var out = [];
-    for (var i = 0; i < state.tags.length; i++) {
-      var key = state.tags[i].toLowerCase();
-      var entry = feeds.tags && feeds.tags[key];
-      if (entry && entry.rss) out.push({ tag: key, rss: entry.rss });
+    if (state.friends.length && !state.tags.length && state.friends.length < friendList.length) {
+      if (!(feeds.primary && feeds.primary.rss)) return null;
+      out.push({ label: "im bitcircus101", rss: feeds.primary.rss });
+      var sources = feeds.sources || {};
+      for (var i = 0; i < state.friends.length; i++) {
+        var s = sources[state.friends[i]]; // manifest sources are keyed by cal.id
+        if (s && s.rss) out.push({ label: s.name || state.friends[i], rss: s.rss });
+      }
+      return out.length > 1 ? out : null;
     }
-    return out.length ? out : null;
+    if (state.tags.length >= 2 && !state.friends.length) {
+      for (var j = 0; j < state.tags.length; j++) {
+        var key = state.tags[j].toLowerCase();
+        var entry = feeds.tags && feeds.tags[key];
+        if (entry && entry.rss) out.push({ label: key, rss: entry.rss });
+      }
+      return out.length ? out : null;
+    }
+    return null;
   }
 
   function updateFeedSplit() {
@@ -704,7 +790,7 @@
       if (i) list.appendChild(document.createTextNode(" · "));
       var a = document.createElement("a");
       a.setAttribute("href", new URL(scopes[i].rss, window.location.href).pathname);
-      a.textContent = scopes[i].tag;
+      a.textContent = scopes[i].label;
       list.appendChild(a);
     }
     box.hidden = false;
@@ -878,7 +964,8 @@
 
     // A missing shared module (404, stale cache skew) would otherwise surface as
     // a ReferenceError inside the fetch chain — fail visibly instead.
-    if (typeof ICSCore === "undefined" || typeof EventsCore === "undefined") {
+    if (typeof ICSCore === "undefined" || typeof EventsCore === "undefined" ||
+        typeof EventsCore.sourceRelation !== "function") {
       renderError(el);
       return;
     }
@@ -908,7 +995,7 @@
         var sources = Array.isArray(data) ? null : data.sources;
         feeds = (!Array.isArray(data) && data.feeds) || null;
         if (!events || !events.length) throw new Error("empty");
-        renderCards(events, el);
+        renderCards(events, el, sources);
         if (sources) showLastSync(sources);
       })
       .catch(function () {
@@ -918,7 +1005,7 @@
             return res.text();
           })
           .then(function (text) {
-            renderCards(EventsCore.toCards(ICSCore.parseICS(text, "fallback"), FALLBACK_CAL), el);
+            renderCards(EventsCore.toCards(ICSCore.parseICS(text, "fallback"), FALLBACK_CAL), el, [FALLBACK_CAL]);
           })
           .catch(function () {
             renderError(el);
