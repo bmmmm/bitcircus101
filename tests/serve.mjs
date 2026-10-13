@@ -6,13 +6,16 @@
  * Playwright Docker image used by CI); python3 is NOT in that image, so the
  * webServer can't rely on `python3 -m http.server`. Serves the repo root.
  *
- *   node tests/serve.mjs [port]   # default 8080
+ *   node tests/serve.mjs [port]   # default 8080, 0 picks a free one
+ *
+ * Every response names the served root in X-Serve-Root, so the e2e setup can
+ * tell this checkout's server from another one on the same port.
  */
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { join, extname, normalize } from "node:path";
 
-const port = Number(process.argv[2]) || 8080;
+const port = process.argv[2] === undefined ? 8080 : Number(process.argv[2]);
 const root = process.cwd();
 
 const TYPES = {
@@ -34,7 +37,8 @@ const TYPES = {
   ".webmanifest": "application/manifest+json",
 };
 
-createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
+  res.setHeader("X-Serve-Root", root);
   try {
     let path = decodeURIComponent(req.url.split("?")[0]);
     if (path.endsWith("/")) path += "index.html";
@@ -52,4 +56,5 @@ createServer(async (req, res) => {
   } catch {
     res.writeHead(404, { "Content-Type": "text/plain" }).end("Not found");
   }
-}).listen(port, () => console.log(`static server on http://localhost:${port}`));
+});
+server.listen(port, () => console.log(`static server on http://localhost:${server.address().port}`));

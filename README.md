@@ -511,6 +511,10 @@ pnpm run test:headed       # E2E with browser window
 pnpm run test:ui           # Playwright UI mode
 ```
 
+Playwright serves the checkout on `:8080`; a linked git worktree gets its own
+port derived from its path, and the global setup stops the run when the port
+answers with another checkout's files (`X-Serve-Root` from `tests/serve.mjs`).
+
 ### Test coverage
 
 **Unit tests** (`tests/sync-events.spec.mjs`; `pnpm run test:quick` runs every
