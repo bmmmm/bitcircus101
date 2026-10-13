@@ -24,14 +24,14 @@
         <link rel="canonical" href="https://bitcircus101.de/calendar/" />
         <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="../feed.xml" />
         <link rel="alternate" type="text/calendar" title="bitcircus101 Termine (iCal)" href="../ical.ics" />
-        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg?v=89149f0f" />
-        <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=89149f0f" />
-        <link rel="manifest" href="../site.webmanifest?v=89149f0f" />
+        <link rel="icon" type="image/svg+xml" href="../images/favicon.svg?v=bae105d4" />
+        <link rel="apple-touch-icon" href="../images/apple-touch-icon.png?v=bae105d4" />
+        <link rel="manifest" href="../site.webmanifest?v=bae105d4" />
         <script>
             // No-flash: apply the persisted light theme before the stylesheet paints.
             try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
         </script>
-        <link rel="stylesheet" href="../style.css?v=89149f0f" />
+        <link rel="stylesheet" href="../style.css?v=bae105d4" />
         <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -78,103 +78,111 @@
                 <p class="doc-path"><a href="../index.html">~</a> /calendar</p>
                 <h1>Kalender abonnieren<a class="section-anchor" href="#calendar" aria-label="Link zu: Kalender abonnieren">#</a></h1>
                 <p>
-                    Unser Kalender läuft nicht mehr über Nextcloud. Bestehende Abos
-                    funktionieren weiter. Die aktuellen Abo-Adressen stehen immer hier –
-                    ändert sich etwas, steht es zuerst auf dieser Seite.
+                    Ein Abo holt die Termine in deine Kalender-App und hält sie von allein
+                    aktuell – für die meisten reicht der hervorgehobene Knopf. Noch die alte
+                    Nextcloud-Adresse abonniert? Einmal hier neu abonnieren. Ändert sich
+                    eine Adresse, steht es zuerst auf dieser Seite.
                 </p>
             </section>
 
-            <section id="komplett" class="panel">
-                <h2>kompletter kalender<a class="section-anchor" href="#komplett" aria-label="Link zu: kompletter Kalender">#</a></h2>
-                <p>Alle Termine, auch vergangene und weit im Voraus geplante.</p>
-                <div class="events-subscribe">
-                    <div class="events-subscribe__row">
-                        <h3 class="events-subscribe__title">bitcircus101</h3>
-                        <div class="events-subscribe__actions">
-                            <a class="events-subscribe__btn" href="webcal://kalender.bitcircus101.de/bitcircus101.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
-                            <a class="events-subscribe__btn" href="https://kalender.bitcircus101.de/bitcircus101.ics" title="iCal-Adresse – zum Kopieren in eine Kalender-App">ics</a>
-                        </div>
+            <section id="bitcircus101" class="panel">
+                <h2>bitcircus101<a class="section-anchor" href="#bitcircus101" aria-label="Link zu: bitcircus101">#</a></h2>
+                <div class="events-subscribe calendar-feed">
+                    <h3 class="events-subscribe__title">bitcircus101</h3>
+                    <div class="calendar-feed__line">
+                        <span class="calendar-feed__span" title="alle Termine, auch vergangene und weit im Voraus geplante"><span aria-hidden="true">↔</span> komplett</span>
+                        <code class="calendar-feed__url">https://kalender.bitcircus101.de<wbr>/bitcircus101.ics</code>
+                        <span class="events-subscribe__actions">
+                            <a class="events-subscribe__btn events-subscribe__btn--primary" href="webcal://kalender.bitcircus101.de/bitcircus101.ics" aria-label="bitcircus101 – komplett abonnieren">&#8595; abonnieren</a>
+                        </span>
+                    </div>
+                    <div class="calendar-feed__line">
+                        <span class="calendar-feed__span" title="nur kommende Termine – höchstens die nächsten 40"><span aria-hidden="true">→</span> demnächst</span>
+                        <code class="calendar-feed__url">https://bitcircus101.de<wbr>/feeds<wbr>/source<wbr>/bitcircus.ics</code>
+                        <span class="events-subscribe__actions">
+                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/bitcircus.xml" aria-label="RSS-Feed: bitcircus101 – demnächst">rss</a>
+                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/feeds/source/bitcircus.ics" aria-label="bitcircus101 – demnächst abonnieren">&#8595; abonnieren</a>
+                        </span>
                     </div>
                 </div>
-                <div class="events-subscribe">
-                    <div class="events-subscribe__row">
-                        <h3 class="events-subscribe__title">Look at my toys!</h3>
-                        <div class="events-subscribe__actions">
-                            <a class="events-subscribe__btn" href="webcal://my.stim.toys/workshops/events.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
-                            <a class="events-subscribe__btn" href="https://my.stim.toys/workshops/events.ics" title="iCal-Adresse – zum Kopieren in eine Kalender-App">ics</a>
-                        </div>
+                <div class="events-subscribe calendar-feed">
+                    <h3 class="events-subscribe__title">bitcircus101 + Look at my toys!</h3>
+                    <div class="calendar-feed__line">
+                        <span class="calendar-feed__span" title="nur kommende Termine – höchstens die nächsten 40"><span aria-hidden="true">→</span> demnächst</span>
+                        <code class="calendar-feed__url">https://bitcircus101.de<wbr>/ical.ics</code>
+                        <span class="events-subscribe__actions">
+                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feed.xml" aria-label="RSS-Feed: bitcircus101 + Look at my toys! – demnächst">rss</a>
+                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/ical.ics" aria-label="bitcircus101 + Look at my toys! – demnächst abonnieren">&#8595; abonnieren</a>
+                        </span>
                     </div>
                 </div>
             </section>
 
-            <section id="feeds" class="panel">
-                <h2>feeds dieser website<a class="section-anchor" href="#feeds" aria-label="Link zu: Feeds dieser Website">#</a></h2>
-                <p>
-                    Erzeugt die Website alle 30 Minuten selbst, mit Adressen, die sich nie
-                    ändern – aber als Ausschnitt: nur die nächsten anstehenden Termine
-                    (höchstens 40), keine vergangenen.
-                </p>
-                <div class="events-subscribe">
-                    <div class="events-subscribe__row">
-                        <h3 class="events-subscribe__title">bitcircus101</h3>
-                        <div class="events-subscribe__actions">
-                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/ical.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/ical.ics" title="iCal-Adresse – zum Kopieren in eine Kalender-App">ics</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feed.xml" title="RSS-Feed">rss</a>
-                        </div>
+            <section id="weitere" class="panel">
+                <h2>weitere kalender<a class="section-anchor" href="#weitere" aria-label="Link zu: Weitere Kalender">#</a></h2>
+                <div class="events-subscribe calendar-feed">
+                    <h3 class="events-subscribe__title">Look at my toys!</h3>
+                    <div class="calendar-feed__line">
+                        <span class="calendar-feed__span" title="alle Termine, auch vergangene und weit im Voraus geplante"><span aria-hidden="true">↔</span> komplett</span>
+                        <code class="calendar-feed__url">https://my.stim.toys<wbr>/workshops<wbr>/events.ics</code>
+                        <span class="events-subscribe__actions">
+                            <a class="events-subscribe__btn" href="webcal://my.stim.toys/workshops/events.ics" aria-label="Look at my toys! – komplett abonnieren">&#8595; abonnieren</a>
+                        </span>
+                    </div>
+                    <div class="calendar-feed__line">
+                        <span class="calendar-feed__span" title="nur kommende Termine – höchstens die nächsten 40"><span aria-hidden="true">→</span> demnächst</span>
+                        <code class="calendar-feed__url">https://bitcircus101.de<wbr>/feeds<wbr>/source<wbr>/look-at-my-toys.ics</code>
+                        <span class="events-subscribe__actions">
+                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/look-at-my-toys.xml" aria-label="RSS-Feed: Look at my toys! – demnächst">rss</a>
+                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/feeds/source/look-at-my-toys.ics" aria-label="Look at my toys! – demnächst abonnieren">&#8595; abonnieren</a>
+                        </span>
                     </div>
                 </div>
-                <div class="events-subscribe">
-                    <div class="events-subscribe__row">
-                        <h3 class="events-subscribe__title">alle termine inkl. befreundeter spaces</h3>
-                        <div class="events-subscribe__actions">
-                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/feeds/all.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/all.ics" title="iCal-Adresse – zum Kopieren in eine Kalender-App">ics</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/all.xml" title="RSS-Feed">rss</a>
-                        </div>
+                <div class="events-subscribe calendar-feed">
+                    <h3 class="events-subscribe__title">Datenburg e.V.</h3>
+                    <div class="calendar-feed__line">
+                        <span class="calendar-feed__span" title="nur kommende Termine – höchstens die nächsten 40"><span aria-hidden="true">→</span> demnächst</span>
+                        <code class="calendar-feed__url">https://bitcircus101.de<wbr>/feeds<wbr>/source<wbr>/datenburg.ics</code>
+                        <span class="events-subscribe__actions">
+                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/datenburg.xml" aria-label="RSS-Feed: Datenburg e.V. – demnächst">rss</a>
+                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/feeds/source/datenburg.ics" aria-label="Datenburg e.V. – demnächst abonnieren">&#8595; abonnieren</a>
+                        </span>
                     </div>
                 </div>
-                <p>Einzeln je Quelle:</p>
-                <div class="events-subscribe">
-                    <div class="events-subscribe__row">
-                        <h3 class="events-subscribe__title">bitcircus101</h3>
-                        <div class="events-subscribe__actions">
-                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/feeds/source/bitcircus.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/bitcircus.ics" title="iCal-Adresse – zum Kopieren in eine Kalender-App">ics</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/bitcircus.xml" title="RSS-Feed">rss</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="events-subscribe">
-                    <div class="events-subscribe__row">
-                        <h3 class="events-subscribe__title">Look at my toys!</h3>
-                        <div class="events-subscribe__actions">
-                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/feeds/source/look-at-my-toys.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/look-at-my-toys.ics" title="iCal-Adresse – zum Kopieren in eine Kalender-App">ics</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/look-at-my-toys.xml" title="RSS-Feed">rss</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="events-subscribe">
-                    <div class="events-subscribe__row">
-                        <h3 class="events-subscribe__title">Datenburg e.V.</h3>
-                        <div class="events-subscribe__actions">
-                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/feeds/source/datenburg.ics" title="Kalender abonnieren (webcal)">&#8595; abonnieren</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/datenburg.ics" title="iCal-Adresse – zum Kopieren in eine Kalender-App">ics</a>
-                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/source/datenburg.xml" title="RSS-Feed">rss</a>
-                        </div>
+                <div class="events-subscribe calendar-feed">
+                    <h3 class="events-subscribe__title">alle zusammen</h3>
+                    <p class="calendar-feed__note">bitcircus101 + Look at my toys! + Datenburg e.V.</p>
+                    <div class="calendar-feed__line">
+                        <span class="calendar-feed__span" title="nur kommende Termine – höchstens die nächsten 40"><span aria-hidden="true">→</span> demnächst</span>
+                        <code class="calendar-feed__url">https://bitcircus101.de<wbr>/feeds<wbr>/all.ics</code>
+                        <span class="events-subscribe__actions">
+                            <a class="events-subscribe__btn" href="https://bitcircus101.de/feeds/all.xml" aria-label="RSS-Feed: alle zusammen – demnächst">rss</a>
+                            <a class="events-subscribe__btn" href="webcal://bitcircus101.de/feeds/all.ics" aria-label="alle zusammen – demnächst abonnieren">&#8595; abonnieren</a>
+                        </span>
                     </div>
                 </div>
             </section>
 
             <section id="wie" class="panel">
                 <h2>wie abonnieren<a class="section-anchor" href="#wie" aria-label="Link zu: Wie abonnieren">#</a></h2>
+                <dl class="man">
+                    <dt><span aria-hidden="true">↔</span> komplett</dt>
+                    <dd>Alle Termine, auch vergangene und weit im Voraus geplante – direkt aus dem Originalkalender.</dd>
+                    <dt><span aria-hidden="true">→</span> demnächst</dt>
+                    <dd>
+                        Nur kommende Termine – höchstens die nächsten 40, über alle Kalender gezählt.
+                        Die Website erzeugt das alle 30 Minuten neu.
+                    </dd>
+                    <dt><span aria-hidden="true">&#8595;</span> abonnieren</dt>
+                    <dd>Öffnet die Kalender-App auf deinem Gerät (Apple Kalender, Thunderbird, Outlook).</dd>
+                    <dt>https://…</dt>
+                    <dd>Die Adresse zum Kopieren – in Google Kalender oder Nextcloud als Abo „per URL“ hinzufügen.</dd>
+                    <dt>rss</dt>
+                    <dd>Dieselben Termine für den Feed-Reader, alle Feeds auf <a href="../rss.html">/rss</a>.</dd>
+                </dl>
                 <p>
-                    „abonnieren" öffnet die Kalender-App auf deinem Gerät (Apple Kalender,
-                    Thunderbird, Outlook). Für Google Kalender oder Nextcloud die
-                    ics-Adresse kopieren und dort als Abo („per URL") hinzufügen. Nach
-                    Schlagwort filtern: auf <a href="../events.html#kalender">/termine</a>,
-                    RSS für alles andere: <a href="../rss.html">/rss</a>.
+                    Nur ein Schlagwort? Auf <a href="../events.html#kalender">/termine</a> filtern –
+                    die Abo-Knöpfe dort folgen dem Filter.
                 </p>
             </section>
         </div>
@@ -204,7 +212,7 @@
                 <span class="footer__status" data-funding="18">lights: on</span>
             </div>
         </footer>
-        <script defer src="../storage.js?v=89149f0f"></script>
-        <script defer src="../main.js?v=89149f0f"></script>
+        <script defer src="../storage.js?v=bae105d4"></script>
+        <script defer src="../main.js?v=bae105d4"></script>
     </body>
 </html>
