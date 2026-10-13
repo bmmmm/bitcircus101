@@ -1,1 +1,246 @@
-!function(r,t){"object"==typeof module&&module.exports?module.exports=t():r.JobsCore=t()}("undefined"!=typeof self?self:this,function(){"use strict";var r=[1,3,12],t=/^(\d{4})-(\d{2})-(\d{2})$/,e={"full-time":"Vollzeit","part-time":"Teilzeit","working-student":"Werkstudium",internship:"Praktikum",apprenticeship:"Ausbildung",freelance:"Freiberuflich"},n=Object.keys(e),o={entry:"Einstieg",experienced:"Erfahren",senior:"Sehr erfahren"},i=Object.keys(o);function f(r,t){return 2===t?r%4==0&&r%100!=0||r%400==0?29:28:4===t||6===t||9===t||11===t?30:31}function u(r){return r<10?"0"+r:String(r)}function a(r,t,e){return r+"-"+u(t)+"-"+u(e)}function l(e,n){var o=function(r){var e=t.exec("string"==typeof r?r:"");if(!e)return null;var n=+e[1],o=+e[2],i=+e[3];return o<1||o>12||i<1||i>f(n,o)?null:{y:n,m:o,d:i}}(e);if(!o)return null;if(-1===r.indexOf(n))return null;var i,u,l,c=o.m-1+n,s=o.y+Math.floor(c/12),h=c%12+1,d=f(s,h);return o.d>d?a(s,h,d):(i=s,u=h,(l=o.d)>1?a(i,u,l-1):u>1?a(i,u-1,f(i,u-1)):a(i-1,12,31))}function c(r,t){if(!r||"string"!=typeof t)return!1;var e=l(r.from,r.months);return!!e&&(r.from<=t&&t<=e)}return{MONTHS:r,toUnicodeHost:function(r){return String(r).split(".").map(function(r){if(!/^xn--/i.test(r))return r;try{return function(r){for(var t=36,e=128,n=0,o=72,i=[],f=r.lastIndexOf("-"),u=0;u<Math.max(f,0);u++){if(r.charCodeAt(u)>=128)throw new Error("non-basic");i.push(r.charCodeAt(u))}for(var a=f>0?f+1:0;a<r.length;){for(var l=n,c=1,s=t;;s+=t){var h=r.charCodeAt(a++),d=h>=48&&h<=57?h-22:h>=65&&h<=90?h-65:h>=97&&h<=122?h-97:t;if(d>=t)throw new Error("bad digit");n+=d*c;var p=s<=o?1:s>=o+26?26:s-o;if(d<p)break;c*=t-p}var g=i.length+1,m=0===l?Math.floor((n-l)/700):n-l>>1;for(m+=Math.floor(m/g),s=0;m>455;s+=t)m=Math.floor(m/35);if(o=s+Math.floor(36*m/(m+38)),(e+=Math.floor(n/g))>1114111)throw new Error("overflow");n%=g,i.splice(n++,0,e)}return String.fromCodePoint.apply(String,i)}(r.slice(4).toLowerCase())||r}catch(t){return r}}).join(".")},EMPLOYMENT_KEYS:n,employmentLabels:function(r){var t=[];if(!r||!r.length)return t;for(var n=0;n<r.length;n++)Object.prototype.hasOwnProperty.call(e,r[n])&&t.push(e[r[n]]);return t},LEVEL_KEYS:i,CHIFFRE_CONTACT_RE:/^mailto:[^\s@?%,;<>"\x00-\x1f\x7f]+@[^\s@?%,;<>"\x00-\x1f\x7f]+\.[^\s@?%,;<>"\x00-\x1f\x7f]+$/,levelLabel:function(r){return Object.prototype.hasOwnProperty.call(o,r)?o[r]:""},lastDay:l,todayString:function(r){return a((r=r||new Date).getFullYear(),r.getMonth()+1,r.getDate())},isActive:c,activeEntries:function(r,t){var e=[];if(!r||!r.length)return e;for(var n=0;n<r.length;n++)c(r[n],t)&&e.push(r[n]);return e.sort(function(r,t){if(r.from!==t.from)return r.from<t.from?1:-1;var e=String(null==r.id?"":r.id),n=String(null==t.id?"":t.id);return e<n?-1:e>n?1:0})},formatDay:function(r){var e=t.exec("string"==typeof r?r:"");return e?e[3]+"."+e[2]+"."+e[1]:String(null==r?"":r)}}});
+/**
+ * jobs-core.js — shared expiry math for the job board ("Pinnwand", pinnwand.html),
+ * used by the browser renderer (jobs.js) and by the CI gate
+ * (scripts/check-jobs.mjs), which pulls it in through createRequire so both
+ * sides compute the same last day for a posting.
+ *
+ * Why the math lives here and not in a Date subtraction: a posting is bought for
+ * 1, 3 or 12 MONTHS, and the visitor's browser decides whether it is still up.
+ * Doing that with Date objects would make the answer depend on the reader's
+ * timezone; instead every value is a {y,m,d} integer triple compared as an ISO
+ * string ("2026-09-30" < "2026-10-01"), so the only clock read in the whole
+ * module is todayString().
+ *
+ * Half-open runtime: a posting is visible from `from` through `lastDay`, where
+ * lastDay is the day BEFORE the same day-of-month `months` later. "1 month from
+ * 01.09." therefore means 01.09.–30.09. inclusive — the reading a buyer expects.
+ *
+ * Names are deliberately generic (`activeEntries`, not `activePostings`): the
+ * Chiffre notes (people looking for work) run on the same expiry math.
+ *
+ * UMD wrapper exposes `module.exports` under Node (tests + CI gate) and a global
+ * `JobsCore` in the browser (loaded via <script> before jobs.js). ES5, so the
+ * browser needs no transpilation. Pure functions only — no DOM, no I/O.
+ */
+(function (root, factory) {
+  if (typeof module === "object" && module.exports) {
+    module.exports = factory();
+  } else {
+    root.JobsCore = factory();
+  }
+})(typeof self !== "undefined" ? self : this, function () {
+  "use strict";
+
+  // The price list, machine-enforced: jobs.schema.json and check-jobs.mjs name
+  // the same three durations, and a unit test asserts all three stay in step.
+  var MONTHS = [1, 3, 12];
+
+  var ISO_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+  // What kind of work a posting offers: the data carries the key, the card and
+  // the feed show the German label. Declared once — the schema's enum and the
+  // gate are asserted against these keys, in this order.
+  var EMPLOYMENT = {
+    "full-time": "Vollzeit",
+    "part-time": "Teilzeit",
+    "working-student": "Werkstudium",
+    internship: "Praktikum",
+    apprenticeship: "Ausbildung",
+    freelance: "Freiberuflich",
+  };
+  var EMPLOYMENT_KEYS = Object.keys(EMPLOYMENT);
+
+  // How much experience a Chiffre note claims — coarse on purpose: a year count
+  // next to a skill list and a city is enough to recognise someone in a small
+  // scene, three bands are not.
+  var LEVEL = {
+    entry: "Einstieg",
+    experienced: "Erfahren",
+    senior: "Sehr erfahren",
+  };
+  var LEVEL_KEYS = Object.keys(LEVEL);
+
+  // The optional direct contact on a Chiffre note: a bare mailto: with an
+  // address the person chose to make public, no ?subject or other header. No
+  // "%" either (an escaped CR/LF smuggles a header back in), no "," or ";"
+  // (a second recipient), no <>" and no control characters.
+  // Declared once — the gate enforces it, the page checks it again before it
+  // renders a link, and a unit test holds it against jobs.schema.json.
+  var CHIFFRE_CONTACT_RE = /^mailto:[^\s@?%,;<>"\x00-\x1f\x7f]+@[^\s@?%,;<>"\x00-\x1f\x7f]+\.[^\s@?%,;<>"\x00-\x1f\x7f]+$/;
+
+  /** The label for a level key, or "" for an unknown one. */
+  function levelLabel(key) {
+    return Object.prototype.hasOwnProperty.call(LEVEL, key) ? LEVEL[key] : "";
+  }
+
+  /** The labels for a list of employment keys; unknown keys are dropped. */
+  function employmentLabels(keys) {
+    var out = [];
+    if (!keys || !keys.length) return out;
+    for (var i = 0; i < keys.length; i++) {
+      if (Object.prototype.hasOwnProperty.call(EMPLOYMENT, keys[i])) out.push(EMPLOYMENT[keys[i]]);
+    }
+    return out;
+  }
+
+  function daysInMonth(y, m) {
+    if (m === 2) return (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0 ? 29 : 28;
+    return m === 4 || m === 6 || m === 9 || m === 11 ? 30 : 31;
+  }
+
+  function pad2(n) {
+    return n < 10 ? "0" + n : String(n);
+  }
+
+  function iso(y, m, d) {
+    return y + "-" + pad2(m) + "-" + pad2(d);
+  }
+
+  /** "2026-09-01" → {y,m,d}, or null if it is not a real calendar day. */
+  function parseIso(s) {
+    var m = ISO_RE.exec(typeof s === "string" ? s : "");
+    if (!m) return null;
+    var y = +m[1],
+      mo = +m[2],
+      d = +m[3];
+    if (mo < 1 || mo > 12) return null;
+    if (d < 1 || d > daysInMonth(y, mo)) return null;
+    return { y: y, m: mo, d: d };
+  }
+
+  /** The calendar day before {y,m,d} — pure integer math, no Date. */
+  function minusOneDay(y, m, d) {
+    if (d > 1) return iso(y, m, d - 1);
+    if (m > 1) return iso(y, m - 1, daysInMonth(y, m - 1));
+    return iso(y - 1, 12, 31);
+  }
+
+  /**
+   * Last day a posting is visible, as an ISO string — null for a bad date or an
+   * unsold duration.
+   *
+   * The one visible asymmetry: if the anniversary day does not exist in the
+   * target month (31.01. + 1 month → there is no 31.02.), the run ends on that
+   * month's LAST day — 28.02., or 29.02. in a leap year. Every other case is
+   * "the day before the same day-of-month".
+   */
+  function lastDay(from, months) {
+    var p = parseIso(from);
+    if (!p) return null;
+    if (MONTHS.indexOf(months) === -1) return null;
+    var total = p.m - 1 + months;
+    var y2 = p.y + Math.floor(total / 12);
+    var m2 = (total % 12) + 1;
+    var dim = daysInMonth(y2, m2);
+    if (p.d > dim) return iso(y2, m2, dim);
+    return minusOneDay(y2, m2, p.d);
+  }
+
+  /**
+   * Today as an ISO string, from LOCAL date components — Berlin at 00:30 on
+   * 1 October has to see the 1 October board, which getUTC* would not give it.
+   * `now` is injectable so tests never touch the wall clock.
+   */
+  function todayString(now) {
+    now = now || new Date();
+    return iso(now.getFullYear(), now.getMonth() + 1, now.getDate());
+  }
+
+  /** Is this entry up on the wall on `today` (both ends inclusive)? */
+  function isActive(entry, today) {
+    if (!entry || typeof today !== "string") return false;
+    var end = lastDay(entry.from, entry.months);
+    if (!end) return false;
+    return entry.from <= today && today <= end;
+  }
+
+  /**
+   * The entries visible on `today`: newest first (`from` DESC), ties broken by
+   * `id` ASC so the order is stable across reloads. Returns a NEW array — the
+   * caller's list is never sorted in place.
+   */
+  function activeEntries(list, today) {
+    var out = [];
+    if (!list || !list.length) return out;
+    for (var i = 0; i < list.length; i++) {
+      if (isActive(list[i], today)) out.push(list[i]);
+    }
+    return out.sort(function (a, b) {
+      if (a.from !== b.from) return a.from < b.from ? 1 : -1;
+      var ai = String(a.id == null ? "" : a.id),
+        bi = String(b.id == null ? "" : b.id);
+      return ai < bi ? -1 : ai > bi ? 1 : 0;
+    });
+  }
+
+  /** "2026-09-30" → "30.09.2026". Anything else passes through untouched. */
+  function formatDay(isoDay) {
+    var m = ISO_RE.exec(typeof isoDay === "string" ? isoDay : "");
+    return m ? m[3] + "." + m[2] + "." + m[1] : String(isoDay == null ? "" : isoDay);
+  }
+
+  /**
+   * Decode one Punycode label body (the part after "xn--", RFC 3492 §6.2).
+   * Throws on malformed input; the caller keeps the raw label then.
+   */
+  function punyDecode(input) {
+    var base = 36, tMin = 1, tMax = 26, skew = 38, damp = 700;
+    var n = 128, i = 0, bias = 72, out = [];
+    var b = input.lastIndexOf("-");
+    for (var j = 0; j < Math.max(b, 0); j++) {
+      if (input.charCodeAt(j) >= 0x80) throw new Error("non-basic");
+      out.push(input.charCodeAt(j));
+    }
+    for (var at = b > 0 ? b + 1 : 0; at < input.length;) {
+      var oldi = i, w = 1;
+      for (var k = base; ; k += base) {
+        // Past the end charCodeAt gives NaN, which is no digit: truncation throws too
+        var c = input.charCodeAt(at++);
+        var digit = c >= 48 && c <= 57 ? c - 22 : c >= 65 && c <= 90 ? c - 65 :
+          c >= 97 && c <= 122 ? c - 97 : base;
+        if (digit >= base) throw new Error("bad digit");
+        i += digit * w;
+        var t = k <= bias ? tMin : k >= bias + tMax ? tMax : k - bias;
+        if (digit < t) break;
+        w *= base - t;
+      }
+      var len = out.length + 1, delta = oldi === 0 ? Math.floor((i - oldi) / damp) : (i - oldi) >> 1;
+      delta += Math.floor(delta / len);
+      for (k = 0; delta > ((base - tMin) * tMax) >> 1; k += base) delta = Math.floor(delta / (base - tMin));
+      bias = k + Math.floor((base - tMin + 1) * delta / (delta + skew));
+      n += Math.floor(i / len);
+      if (n > 0x10ffff) throw new Error("overflow");
+      i %= len;
+      out.splice(i++, 0, n);
+    }
+    return String.fromCodePoint.apply(String, out);
+  }
+
+  /**
+   * A host as people read it: every "xn--" label decoded to Unicode
+   * ("xn--mnchen-3ya.example" → "münchen.example"). new URL() hands hosts out
+   * in Punycode; this is for display only — links and QR payloads stay ASCII.
+   * A label that does not decode stays as it was.
+   */
+  function toUnicodeHost(host) {
+    return String(host).split(".").map(function (label) {
+      if (!/^xn--/i.test(label)) return label;
+      try { return punyDecode(label.slice(4).toLowerCase()) || label; } catch (e) { return label; }
+    }).join(".");
+  }
+
+  return {
+    MONTHS: MONTHS,
+    toUnicodeHost: toUnicodeHost,
+    EMPLOYMENT_KEYS: EMPLOYMENT_KEYS,
+    employmentLabels: employmentLabels,
+    LEVEL_KEYS: LEVEL_KEYS,
+    CHIFFRE_CONTACT_RE: CHIFFRE_CONTACT_RE,
+    levelLabel: levelLabel,
+    lastDay: lastDay,
+    todayString: todayString,
+    isActive: isActive,
+    activeEntries: activeEntries,
+    formatDay: formatDay,
+  };
+});
