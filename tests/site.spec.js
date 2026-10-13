@@ -309,12 +309,14 @@ test.describe('Home page', () => {
             ['.dot',                  24, 44],
         ]);
 
-        // Map — the toggle's visible text is its name; aria-expanded says
-        // which state that text describes.
-        await expect(page.locator('#show-map-btn')).toHaveAttribute('aria-expanded', 'false');
-        await page.locator('#show-map-btn').click();
+        // Map — the toggle's visible text says the state, so it carries no
+        // aria-expanded as well: a screen reader would say it twice.
+        const mapBtn = page.locator('#show-map-btn');
+        await expect(mapBtn).toHaveText('[ karte laden ]');
+        await mapBtn.click();
         await expect(page.locator('#osm-map-container')).toBeVisible();
-        await expect(page.locator('#show-map-btn')).toHaveAttribute('aria-expanded', 'true');
+        await expect(mapBtn).toHaveText('[ karte schließen ]');
+        await expect(mapBtn).not.toHaveAttribute('aria-expanded');
         const frame = page.locator('#osm-map');
         expect(await frame.getAttribute('src')).toContain('openstreetmap.org');
         // The embed needs allow-scripts and allow-same-origin to draw tiles at
@@ -325,6 +327,19 @@ test.describe('Home page', () => {
         // measured against the live OSM host; CI stays offline on purpose.)
         expect(await frame.getAttribute('sandbox')).toBe('allow-scripts allow-same-origin');
         expect(await frame.getAttribute('referrerpolicy')).toBe('no-referrer');
+        // The colour-in on hover has a keyboard twin: Tab from the toggle
+        // lands in the frame, and that focus colours the map in as well. The
+        // pointer is parked first, so a hover cannot pass this for the focus.
+        await page.mouse.move(0, 0);
+        await mapBtn.focus();
+        await page.keyboard.press('Tab');
+        await expect(frame).toBeFocused();
+        expect(await frame.evaluate((el) => getComputedStyle(el).filter),
+            'focus on the map does not colour it in').toBe('grayscale(0)');
+        await page.keyboard.press('Shift+Tab');
+        await expect(mapBtn).toBeFocused();
+        expect(await frame.evaluate((el) => getComputedStyle(el).filter),
+            'the map stays coloured after the focus left it').toBe('grayscale(1)');
 
         await expect(page.locator('#freundinnen')).toBeVisible();
         await expect(page.locator('#logo-slider-heading')).toContainText('Freund*innen');
