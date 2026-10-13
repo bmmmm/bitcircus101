@@ -258,8 +258,18 @@
       function () {
         state.q = "";
         refresh();
+        // The × hides itself once the query is gone: back to the field.
+        searchInput.focus();
       }
     );
+  }
+
+  // A reset hides the button that was just pressed, or replaces the list it
+  // sat in: hand the keyboard on instead of dropping it on <body>.
+  function focusFilterStart() {
+    var first = document.querySelector(".events-filter__tag") ||
+      document.getElementById("events-search");
+    if (first) first.focus();
   }
 
   // Chip source is pool() (pre-cap, post-toggle): stable while typing, changes
@@ -351,6 +361,7 @@
       state.tags = [];
       state.q = "";
       refresh();
+      focusFilterStart();
     });
   }
 
@@ -396,6 +407,7 @@
           state.tags = [];
           state.q = "";
           refresh();
+          focusFilterStart();
         });
       }
       el.removeAttribute("aria-busy");
@@ -578,7 +590,8 @@
         }
         var fold = target.querySelector(".event-card__more");
         if (fold) fold.open = true;
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        target.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
       }
     }
   }

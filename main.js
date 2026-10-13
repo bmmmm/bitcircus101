@@ -40,6 +40,15 @@
     );
   }
 
+  // Move the keyboard focus to something that is not a tab stop by itself (a
+  // landmark, a section): tabindex="-1" once, then focus. preventScroll when
+  // the caller already runs the scroll it wants.
+  function focusTarget(el, preventScroll) {
+    if (!el) return;
+    if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+    el.focus({ preventScroll: !!preventScroll });
+  }
+
   // =============================================================================
   // Navigation Module
   // =============================================================================
@@ -219,6 +228,11 @@
       current: 0,
       autoRotateInterval: null,
       isAutoRotateEnabled: true,
+      // Two reasons to hold still, each its own flag: the pointer is over the
+      // photos, or the keyboard focus is inside the controls (a slide must not
+      // change under a focused dot). A resume from one never overrides the other.
+      hoverHeld: false,
+      focusHeld: false,
       startX: 0,
     },
 
@@ -277,7 +291,25 @@
       this.bindButtonEvents();
       this.bindDotEvents();
       this.bindTouchEvents();
+      this.bindKeyboardEvents();
       this.bindVisibilityEvents();
+    },
+
+    // Arrow keys step the slides from anywhere inside the region — a focused
+    // dot follows the slide it now stands for, so the ring does not sit on
+    // the dot of a photo that is no longer showing.
+    bindKeyboardEvents() {
+      const { container, dots } = this.elements;
+      utils.addEventListenerSafe(container, "keydown", (e) => {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        e.preventDefault();
+        if (e.key === "ArrowLeft") this.prevSlide();
+        else this.nextSlide();
+        this.resetAutoRotateIfEnabled();
+        if (document.activeElement && document.activeElement.classList.contains("dot")) {
+          dots[this.state.current].focus();
+        }
+      });
     },
 
     bindButtonEvents() {
@@ -335,30 +367,38 @@
     },
 
     bindVisibilityEvents() {
-      const { carousel } = this.elements;
+      const { carousel, container } = this.elements;
 
       // Pause on hover
       utils.addEventListenerSafe(carousel, "mouseenter", () => {
-        if (this.state.isAutoRotateEnabled) {
-          this.stopAutoRotate();
-        }
+        this.state.hoverHeld = true;
+        this.stopAutoRotate();
+      });
+      utils.addEventListenerSafe(carousel, "mouseleave", () => {
+        this.state.hoverHeld = false;
+        this.resume();
       });
 
-      utils.addEventListenerSafe(carousel, "mouseleave", () => {
-        if (this.state.isAutoRotateEnabled) {
-          this.startAutoRotate();
-        }
+      // Pause while the keyboard focus is inside the region. Only a visible
+      // focus holds: Chromium focuses a button on click and on tap too, and a
+      // pointer user who clicked "next" must not freeze the strip. Checked on
+      // every focus move inside, so a Tab after a click starts the hold; a
+      // leave (relatedTarget outside) ends it.
+      utils.addEventListenerSafe(container, "focusin", (e) => {
+        if (this.state.focusHeld || !e.target.matches(":focus-visible")) return;
+        this.state.focusHeld = true;
+        this.stopAutoRotate();
+      });
+      utils.addEventListenerSafe(container, "focusout", (e) => {
+        if (container.contains(e.relatedTarget)) return;
+        this.state.focusHeld = false;
+        this.resume();
       });
 
       // Pause when tab is not visible
       utils.addEventListenerSafe(document, "visibilitychange", () => {
-        if (this.state.isAutoRotateEnabled) {
-          if (document.hidden) {
-            this.stopAutoRotate();
-          } else {
-            this.startAutoRotate();
-          }
-        }
+        if (document.hidden) this.stopAutoRotate();
+        else this.resume();
       });
     },
 
@@ -403,10 +443,19 @@
       }
     },
 
+    // Start the rotation only when nothing holds it — and not when it is
+    // already running, which would reset its phase.
+    resume() {
+      const s = this.state;
+      if (!s.isAutoRotateEnabled || s.hoverHeld || s.focusHeld || document.hidden) return;
+      if (s.autoRotateInterval) return;
+      this.startAutoRotate();
+    },
+
     resetAutoRotateIfEnabled() {
       if (this.state.isAutoRotateEnabled) {
         this.stopAutoRotate();
-        setTimeout(() => this.startAutoRotate(), this.config.resetDelay);
+        setTimeout(() => this.resume(), this.config.resetDelay);
       }
     },
 
@@ -467,11 +516,17 @@
 
       const isVisible = !container.classList.contains("hidden");
       container.classList.toggle("hidden");
+      // The visible text is the button's name; aria-expanded says what state
+      // that name describes.
       button.textContent = isVisible ? "[ karte laden ]" : "[ karte schließen ]";
+      button.setAttribute("aria-expanded", isVisible ? "false" : "true");
 
       if (!isVisible) {
         setTimeout(() => {
-          container.scrollIntoView({ behavior: "smooth", block: "center" });
+          container.scrollIntoView({
+            behavior: prefersReducedMotion() ? "auto" : "smooth",
+            block: "center",
+          });
         }, 100);
       }
     },
@@ -510,11 +565,7 @@
           // A fragment navigation moves the sequential-focus starting point but
           // does not focus the target, so the next Tab would stay in the nav —
           // which is the one thing a skip link exists to prevent.
-          const target = document.querySelector(href);
-          if (target) {
-            if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-            target.focus();
-          }
+          focusTarget(document.querySelector(href));
         }
         // Section anchor: share or copy URL
         if (anchor.classList.contains("section-anchor")) {
@@ -694,20 +745,18 @@
       else if (p >= 33) level = "amber";
 
       el.classList.add("footer__status--" + level);
-      el.setAttribute("tabindex", "0");
-      el.setAttribute("role", "status");
-      el.setAttribute(
-        "aria-label",
-        "Funding: " + p + "% der monatlichen Kosten gedeckt",
-      );
 
+      // A disclosure button, not a span with a tabindex: Enter and Space work
+      // for free, aria-expanded says what it does, and the visible text
+      // "lights: 18%" is its name (the block glyphs are decoration).
       el.innerHTML =
-        '<span class="footer__funding-bar">lights: ' +
+        '<button type="button" class="footer__funding-bar" aria-expanded="false" aria-controls="footer-funding-info">lights: ' +
+        '<span aria-hidden="true">' +
         bar +
-        " " +
+        "</span> " +
         p +
-        "%</span>" +
-        '<div class="footer__funding-info">' +
+        "%</button>" +
+        '<div class="footer__funding-info" id="footer-funding-info">' +
         '<h3 class="footer__funding-info-head">[ LIGHTS ON? ]</h3>' +
         "<p>Miete, Strom, Internet &mdash; der Space kostet Geld.</p>" +
         "<p>" +
@@ -719,16 +768,38 @@
         '<a href="support.html#dauerhaft">unterst\u00fctzen \u2192</a>' +
         "</div>";
 
-      // Click to toggle info panel
-      el.addEventListener("click", function (e) {
+      var btn = el.querySelector(".footer__funding-bar");
+      var info = el.querySelector(".footer__funding-info");
+      function setOpen(open) {
+        info.classList.toggle("active", open);
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+
+      // The button toggles; a click inside the popover is not a click
+      // outside it; any other click on the page closes it.
+      btn.addEventListener("click", function (e) {
         e.stopPropagation();
-        var info = el.querySelector(".footer__funding-info");
-        if (info) info.classList.toggle("active");
+        setOpen(!info.classList.contains("active"));
+      });
+      info.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+      document.addEventListener("click", function () {
+        setOpen(false);
       });
 
-      document.addEventListener("click", function () {
-        var info = el.querySelector(".footer__funding-info");
-        if (info) info.classList.remove("active");
+      // Keyboard: Escape closes and hands the focus back to the button (it
+      // stops here — the same key would otherwise reach the mobile menu's
+      // handler too); tabbing out of the popover in either direction closes
+      // it, so no open panel is left behind off-screen.
+      el.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape" || !info.classList.contains("active")) return;
+        e.stopPropagation();
+        setOpen(false);
+        btn.focus();
+      });
+      el.addEventListener("focusout", function (e) {
+        if (e.relatedTarget && !el.contains(e.relatedTarget)) setOpen(false);
       });
     },
   };
@@ -758,7 +829,13 @@
       }, { passive: true });
 
       btn.addEventListener("click", function () {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+        });
+        // The button is about to fade out under the focus: hand it to the
+        // content instead of leaving it on a tab stop that stops existing.
+        focusTarget(document.getElementById("main-content"), true);
       });
     },
   };

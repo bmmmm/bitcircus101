@@ -37,7 +37,7 @@
         <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
         <a class="chat-close" href="../index.html">Zurück zur Startseite [ESC]</a>
 
-        <main id="main-content" class="chat-main">
+        <main id="main-content" class="chat-main" tabindex="-1">
             <h1 class="sr-only">Signal-Gruppen – bitcircus101</h1>
 
             <div class="chat-cards">
@@ -127,8 +127,10 @@
                 if (e.key === 'Escape') doClose();
             });
 
-            // Click outside cards
+            // Click outside cards — a link or button outside them (the skip
+            // link, reached by Enter) is not "outside", it is its own action
             document.body.addEventListener('click', function (e) {
+                if (e.target.closest('a, button')) return;
                 var cards = document.querySelector('.chat-cards');
                 if (cards && !cards.contains(e.target)) doClose();
             });

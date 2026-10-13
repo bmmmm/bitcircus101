@@ -74,6 +74,94 @@ const PROBE = ([sel, dx, dy, measure, margin, all]) => {
     return el ? one(el) : null;
 };
 
+// ─── Focus sweep ─────────────────────────────────────────────────────────────
+//
+// Every tab stop on a page, focused in turn, has to (a) be something a sighted
+// keyboard user can see and (b) show where the focus is. A real Tab walk costs
+// two round trips per stop and has no upper bound on /events with live data, so
+// the walk happens inside the page: focus() each candidate, read what the
+// browser painted. Serialised like PROBE — everything it uses lives inside.
+//
+// A stop is "marked" when focus changed its background or colour (the site's
+// reverse-video idiom), or when it draws an outline that reaches 3:1 against
+// the background behind it and is not clipped away by an overflow ancestor or
+// the viewport (3 of 4 sides is the floor: a nav link at the top edge keeps
+// three). It is "visible" when checkVisibility says so with opacity counted in —
+// a faded-out button is an invisible tab stop even though it is "rendered".
+// Caller presses one real Tab first, so Chromium applies :focus-visible to
+// scripted focus, and kills transitions, so opacity reads its final value.
+const FOCUS_SWEEP = () => {
+    const parse = (s) => {
+        const m = /rgba?\(([^)]+)\)/.exec(s || '');
+        if (!m) return null;
+        const p = m[1].split(/[\s,/]+/).filter(Boolean).map(Number);
+        return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+    };
+    const lum = (c) => {
+        const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; };
+        return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+    };
+    const contrast = (a, b) => { const la = lum(a), lb = lum(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
+    const bgBehind = (el) => {
+        for (let n = el.parentElement; n; n = n.parentElement) {
+            const c = parse(getComputedStyle(n).backgroundColor);
+            if (c && c.a > 0) return c;
+        }
+        return { r: 255, g: 255, b: 255, a: 1 };
+    };
+    const clipRects = (el) => {
+        const rects = [{ left: 0, top: 0, right: innerWidth, bottom: innerHeight }];
+        for (let n = el.parentElement; n && n !== document.body; n = n.parentElement) {
+            const cs = getComputedStyle(n);
+            if (/hidden|clip|scroll|auto/.test(cs.overflowX + ' ' + cs.overflowY)) rects.push(n.getBoundingClientRect());
+        }
+        return rects;
+    };
+    const label = (el) => (el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') +
+        (typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/).join('.') : '')).slice(0, 90);
+    const candidates = [...document.querySelectorAll('a[href], button, input, select, textarea, summary, [tabindex]')]
+        .filter((el) => el.tabIndex >= 0 && !el.disabled);
+    const bad = [];
+    let stops = 0;
+    for (const el of candidates) {
+        const s0 = getComputedStyle(el);
+        const bg0 = s0.backgroundColor, c0 = s0.color;
+        el.focus();
+        if (document.activeElement !== el) continue; // not rendered: hidden, closed details, display:none
+        // focus() scrolls "nearest": a stop just below the fold lands flush on
+        // the viewport edge and its ring loses a side to whatever the previous
+        // stop left behind. Centre it; a scroller it cannot leave still clips.
+        el.scrollIntoView({ block: 'center', inline: 'nearest' });
+        stops++;
+        const who = label(el);
+        const cs = getComputedStyle(el);
+        if (!el.matches(':focus-visible')) { bad.push(who + ': focus is not :focus-visible'); continue; }
+        if (!el.checkVisibility({ opacityProperty: true, visibilityProperty: true })) { bad.push(who + ': invisible tab stop'); continue; }
+        const r = el.getBoundingClientRect();
+        const v = { left: Math.max(r.left, 0), top: Math.max(r.top, 0), right: Math.min(r.right, innerWidth), bottom: Math.min(r.bottom, innerHeight) };
+        if (v.right <= v.left || v.bottom <= v.top) { bad.push(who + ': focused but off-screen'); continue; }
+        const hit = document.elementFromPoint((v.left + v.right) / 2, (v.top + v.bottom) / 2);
+        if (!hit || !(hit === el || el.contains(hit) || hit.contains(el))) { bad.push(who + ': covered by ' + (hit ? label(hit) : 'nothing')); continue; }
+        if (cs.backgroundColor !== bg0 || cs.color !== c0) continue; // reverse video marks it
+        const ow = parseFloat(cs.outlineWidth) || 0;
+        if (cs.outlineStyle === 'none' || ow < 1) { bad.push(who + ': no outline and no colour change'); continue; }
+        const oc = parse(cs.outlineColor);
+        const ratio = oc ? contrast(oc, bgBehind(el)) : 0;
+        if (ratio < 3) { bad.push(who + ': ring ' + ratio.toFixed(2) + ':1 against its background'); continue; }
+        const off = parseFloat(cs.outlineOffset) || 0;
+        const ring = { left: r.left - off - ow, top: r.top - off - ow, right: r.right + off + ow, bottom: r.bottom + off + ow };
+        const clips = clipRects(el);
+        const sides = [
+            clips.every((c) => ring.left >= c.left),
+            clips.every((c) => ring.top >= c.top),
+            clips.every((c) => ring.right <= c.right),
+            clips.every((c) => ring.bottom <= c.bottom),
+        ].filter(Boolean).length;
+        if (sides < 3) bad.push(who + ': ring clipped to ' + sides + ' of 4 sides');
+    }
+    return { stops, bad };
+};
+
 const hitsAt = (page, sel, dx, dy) =>
     page.evaluate(PROBE, [sel, dx, dy, false, Math.max(Math.abs(dx), Math.abs(dy)) + 2, false]);
 const hitBox = (page, sel) => page.evaluate(PROBE, [sel, 0, 0, true, REACH_MAX, false]);
@@ -125,15 +213,68 @@ test.describe('Home page', () => {
     });
 
     test('carousel works and map loads on click', async ({ page }) => {
+        // Fake timers: the auto-rotate (5 s) and its reset (8 s) run only when
+        // the test says so, so "it did not turn" is a statement, not a race.
+        await page.clock.install();
         await page.goto('/');
         await expect(page.locator('.carousel-container')).toBeVisible();
         await expect(page.locator('.carousel-item.active img')).toBeVisible();
 
         // Carousel navigation
-        const activeDotBefore = await page.locator('.dot.active').getAttribute('aria-label');
+        const activeDot = () => page.locator('.dot.active').getAttribute('aria-label');
+        const activeDotBefore = await activeDot();
         await page.locator('.carousel-button.next').click();
         // Wait for the actual state change, not a fixed sleep — race-free on slow CI.
-        await expect.poll(() => page.locator('.dot.active').getAttribute('aria-label')).not.toBe(activeDotBefore);
+        await expect.poll(activeDot).not.toBe(activeDotBefore);
+
+        // Keyboard: the region holds still while the focus is inside it (a
+        // slide must not change under a focused dot), the arrow keys step it,
+        // a focused dot follows the slide, and a hover hold survives the focus
+        // leaving — the rotation resumes only when nothing holds it.
+        const prev = page.locator('.carousel-button.prev');
+        // The click above focused "next" as well (Chromium does, on click
+        // and on tap): that is not a keyboard hold — the strip resumes after
+        // its usual 8 s reset.
+        await page.mouse.move(0, 0);
+        const clicked = await activeDot();
+        await page.clock.runFor(15_000);
+        expect(await activeDot(), 'a pointer click froze the strip').not.toBe(clicked);
+        // From here the keyboard. One real key press first: Chromium applies
+        // :focus-visible to the scripted focus() calls below only after a
+        // keyboard event, and the hold reads exactly that.
+        await page.keyboard.press('Tab');
+        await prev.focus();
+        const held = await activeDot();
+        // Checked every 5 s, not once after 15: three slides make three
+        // unwanted steps a full cycle, which a single read would miss.
+        for (let i = 0; i < 3; i++) {
+            await page.clock.runFor(5_000);
+            expect(await activeDot(), 'the carousel turned under the keyboard focus').toBe(held);
+        }
+        await page.keyboard.press('ArrowRight');
+        expect(await activeDot()).not.toBe(held);
+        await page.keyboard.press('ArrowLeft');
+        expect(await activeDot()).toBe(held);
+        // Whichever dot is active now (the phase above is not pinned): after
+        // a step the newly active dot is the focused one.
+        await page.locator('.dot.active').focus();
+        const dotBefore = await activeDot();
+        await page.keyboard.press('ArrowRight');
+        expect(await activeDot()).not.toBe(dotBefore);
+        await expect(page.locator('.dot.active')).toBeFocused();
+        await page.locator('.carousel').hover({ position: { x: 20, y: 20 } });
+        await page.locator('.carousel-button.next').focus();
+        // Leave by keyboard without scrolling: a locator focus() scrolls the
+        // map button into view, the strip slides out from under the pointer,
+        // and Chromium's deferred hover update fires a mouseleave — the hold
+        // would then be lost by the test, not by the code.
+        await page.evaluate(() => document.getElementById('show-map-btn').focus({ preventScroll: true }));
+        const hovered = await activeDot();
+        await page.clock.runFor(6_000);
+        expect(await activeDot(), 'the focus leaving overrode the hover hold').toBe(hovered);
+        await page.mouse.move(0, 0);
+        await page.clock.runFor(6_000);
+        expect(await activeDot(), 'the rotation did not resume after the hover left').not.toBe(hovered);
 
         // The controls are 17-26px boxes on purpose; what has to clear the WCAG
         // 2.2 target-size floor is the zone a finger gets, widened by CSS.
@@ -145,9 +286,12 @@ test.describe('Home page', () => {
             ['.dot',                  24, 44],
         ]);
 
-        // Map
+        // Map — the toggle's visible text is its name; aria-expanded says
+        // which state that text describes.
+        await expect(page.locator('#show-map-btn')).toHaveAttribute('aria-expanded', 'false');
         await page.locator('#show-map-btn').click();
         await expect(page.locator('#osm-map-container')).toBeVisible();
+        await expect(page.locator('#show-map-btn')).toHaveAttribute('aria-expanded', 'true');
         const frame = page.locator('#osm-map');
         expect(await frame.getAttribute('src')).toContain('openstreetmap.org');
         // The embed needs allow-scripts and allow-same-origin to draw tiles at
@@ -165,6 +309,12 @@ test.describe('Home page', () => {
         const firstLogo = page.locator('#freundinnen .logo-slider__item img.logo-slider__img').first();
         await expect(firstLogo).toBeVisible();
         await expect(firstLogo).toHaveAttribute('src', /images\/logo-slider\//);
+
+        // The hover reveal (colour in) has a keyboard twin: the focus ring
+        // alone would sit on a grey logo.
+        await page.locator('#freundinnen .logo-slider__item a.logo-slider__link').first().focus();
+        await expect.poll(() => firstLogo.evaluate((el) => getComputedStyle(el).filter),
+            { message: 'focus on the logo link does not reveal the logo' }).toBe('grayscale(0)');
     });
 });
 
@@ -621,14 +771,34 @@ test.describe('Events content', () => {
         await expect(page).toHaveURL(/[?&]q=/);
         expect(await page.locator('.event-card').count()).toBeGreaterThan(0);
 
+        // The search × hides itself with the query: the keyboard goes back
+        // to the field, not to <body>
+        await page.locator('.events-search__clear').focus();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('#events-search')).toBeFocused();
+        await expect(page.locator('#events-search')).toHaveValue('');
+        await expect(page).not.toHaveURL(/[?&]q=/);
+
         // Nonsense query shows the search empty state
         await page.locator('#events-search').fill('zzzqqqxyz');
         await expect(page.locator('.events-empty')).toBeVisible();
 
-        // Reset clears tags + search and the URL query
-        await page.locator('.events-filter__clear').click();
+        // Its reset clears tags + search and the URL query, and lands the
+        // keyboard on the first chip — the list it sat in is gone
+        await page.locator('.events-empty__reset').focus();
+        await page.keyboard.press('Enter');
         await expect(page).toHaveURL(/\/events\.html(#.*)?$/);
         expect(await page.locator('.event-card').count()).toBe(countBefore);
+        await expect(page.locator('.events-filter__tag').first()).toBeFocused();
+
+        // The filter bar's own reset, the same way — it hides itself on use
+        await page.locator('#events-search').fill(token);
+        await expect(page).toHaveURL(/[?&]q=/);
+        await page.locator('.events-filter__clear').focus();
+        await page.keyboard.press('Enter');
+        await expect(page).toHaveURL(/\/events\.html(#.*)?$/);
+        expect(await page.locator('.event-card').count()).toBe(countBefore);
+        await expect(page.locator('.events-filter__tag').first()).toBeFocused();
 
         // Regression: the source toggle must not wipe an active tag filter
         // (removeFilterBar used to clear the filters as a side effect)
@@ -1623,6 +1793,19 @@ test.describe('No JavaScript errors', () => {
             await page.waitForLoadState('networkidle');
             expect(errors).toEqual([]);
             expect(fundingRequests, 'no page fetches funding.json').toEqual([]);
+
+            // Same page, same load: every tab stop is visible and marked (see
+            // FOCUS_SWEEP). One real Tab first — it sets keyboard modality, and
+            // where a skip link exists it has to be the first thing Tab reaches.
+            await page.keyboard.press('Tab');
+            if (await page.locator('.skip-link').count()) {
+                expect(await page.evaluate(() => document.activeElement?.className ?? ''),
+                    `${name}: the first Tab does not land on the skip link`).toContain('skip-link');
+            }
+            await page.addStyleTag({ content: '*,*::before,*::after{transition:none!important;animation:none!important}' });
+            const sweep = await page.evaluate(FOCUS_SWEEP);
+            expect(sweep.stops, `${name}: no focusable element reached`).toBeGreaterThan(0);
+            expect(sweep.bad, `${name}: tab stops without a visible focus`).toEqual([]);
         });
     }
 });
@@ -1889,9 +2072,12 @@ test.describe('Kiosk view', () => {
         await expect(page.locator('#kiosk-set-dwell')).toHaveValue('45');
         await expect(page.locator('#kiosk-set-rows')).toHaveValue('6');
 
-        // Escape closes it — a wall must not sit on an open settings panel
+        // Escape closes it — a wall must not sit on an open settings panel —
+        // and hands the keyboard back to the ⚙ instead of dropping it on <body>
+        await page.locator('#kiosk-set-dwell').focus();
         await page.keyboard.press('Escape');
         await expect(page.locator('#kiosk-settings')).toBeHidden();
+        await expect(page.locator('#kiosk-settings-open')).toBeFocused();
 
         // The promise only means something on a screen someone already fiddled
         // with — with an empty store, URL-first and storage-first look
@@ -1900,7 +2086,13 @@ test.describe('Kiosk view', () => {
         // choice) and only then check that a URL still overrules it.
         await page.locator('#kiosk-settings-open').click();
         await page.locator('#kiosk-set-palette .kiosk-set__opt', { hasText: 'weiß' }).click();
-        await page.locator('#kiosk-set-info .kiosk-set__opt', { hasText: 'kurz' }).click();
+        // A pick by keyboard keeps the keyboard: the panel repaints on every
+        // pick, and a rebuilt button is a button the focus has fallen off.
+        const kurz = page.locator('#kiosk-set-info .kiosk-set__opt', { hasText: 'kurz' });
+        await kurz.focus();
+        await page.keyboard.press('Enter');
+        await expect(kurz).toHaveAttribute('aria-pressed', 'true');
+        await expect(kurz).toBeFocused();
         expect(await page.evaluate(() => localStorage.getItem('bc.kiosk.palette'))).toBe('mono');
 
         await page.goto('/kiosk/?palette=green&theme=dark&info=full&source=all');
@@ -1930,6 +2122,13 @@ test.describe('Kiosk view', () => {
 
         await expect(page.locator('html')).toHaveAttribute('data-palette', 'pride');
         await expect(page.locator('.kiosk__list')).toHaveClass(/kiosk__list--info-short/);
+
+        // The idle timeout closes the panel under the keyboard — the focus
+        // goes to the ⚙, not to <body>
+        await page.locator('#kiosk-set-palette .kiosk-set__opt', { hasText: 'rainbow' }).focus();
+        await page.clock.fastForward(91_000);
+        await expect(page.locator('#kiosk-settings')).toBeHidden();
+        await expect(page.locator('#kiosk-settings-open')).toBeFocused();
 
         // and it survives a reload without the URL, through storage
         await page.goto('/kiosk/');
@@ -2525,6 +2724,11 @@ test.describe('Accessibility', () => {
     test('aria-labels, alt texts and landmark roles', async ({ page }) => {
         await page.goto('/');
 
+        // Back-to-top at the top of the page: out of the tab order, not merely
+        // transparent — an opacity-0 button is still a tab stop.
+        const scrollTop = page.locator('.scroll-top');
+        expect(await scrollTop.evaluate((el) => getComputedStyle(el).visibility)).toBe('hidden');
+
         // Carousel buttons
         await expect(page.locator('.carousel-button.prev')).toHaveAttribute('aria-label');
         await expect(page.locator('.carousel-button.next')).toHaveAttribute('aria-label');
@@ -2555,10 +2759,53 @@ test.describe('Accessibility', () => {
         // Footer landmark
         await expect(page.locator('[role="contentinfo"]')).toBeVisible();
 
+        // The funding status is a disclosure the keyboard can work: Enter
+        // opens the popover above the bar and says so, Tab walks into it,
+        // Escape closes it and hands the focus back, and leaving it backwards
+        // closes it too — no open panel left behind off-screen.
+        const fundingBar = page.locator('.footer__funding-bar');
+        const fundingInfo = page.locator('#footer-funding-info');
+        await fundingBar.focus();
+        await page.keyboard.press('Enter');
+        await expect(fundingInfo).toBeInViewport();
+        await expect(fundingBar).toHaveAttribute('aria-expanded', 'true');
+        await page.keyboard.press('Tab');
+        await expect(fundingInfo.locator('a')).toBeFocused();
+        await page.keyboard.press('Escape');
+        await expect(fundingInfo).toBeHidden();
+        await expect(fundingBar).toBeFocused();
+        await expect(fundingBar).toHaveAttribute('aria-expanded', 'false');
+        await page.keyboard.press('Enter');
+        await expect(fundingInfo).toBeInViewport();
+        await page.keyboard.press('Shift+Tab');
+        await expect(fundingInfo).toBeHidden();
+
+        // Back-to-top, now that the footer is in view: it reaches the tab
+        // order, and on Enter it jumps (reduced motion: no smooth scroll) and
+        // hands the focus to the content — the button fades out under it.
+        await expect(scrollTop).toHaveClass(/visible/);
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await scrollTop.focus();
+        await page.keyboard.press('Enter');
+        expect(await page.evaluate(() => window.scrollY), 'reduced motion still scrolled smoothly').toBe(0);
+        await expect.poll(
+            () => page.evaluate(() => document.activeElement?.id ?? null),
+            { message: 'back-to-top left the focus on the fading button' }
+        ).toBe('main-content');
+        await page.emulateMedia({ reducedMotion: null });
+
         // Keyboard focus must stay visible on form controls: no outline:none
         // may swallow the global :focus-visible ring (the ascii editor is the
         // one form control that always exists without CI-generated data)
         await page.goto('/ascii/');
+        // No main.js on the hidden pages, so the skip link has to work on its
+        // own: a focusable target (tabindex="-1") takes the focus natively on
+        // the fragment navigation.
+        const activeId = () => page.evaluate(() => document.activeElement?.id ?? null);
+        await page.locator('.skip-link').focus();
+        await page.keyboard.press('Enter');
+        await expect.poll(activeId, { message: '/ascii/: the skip link did not move focus to the content' })
+            .toBe('main-content');
         const editor = page.locator('#ascii-editor');
         await expect(editor).toBeVisible();
         await editor.focus();
@@ -2581,6 +2828,19 @@ test.describe('Accessibility', () => {
             ['.ascii-playground__foot a[href*="impressum"]', 24, 44],
             ['.ascii-playground__foot a[href*="github"]', 24, 44],
         ]);
+
+        // /chat/: the skip link lands on the content — and does not count as a
+        // click outside the cards, which closes the page. The closing class is
+        // set synchronously in the click handler, so it is read once, at once:
+        // a retrying assertion would wait out the navigation that closing
+        // schedules and pass on the homepage's body.
+        await page.goto('/chat/');
+        await page.locator('.skip-link').focus();
+        await page.keyboard.press('Enter');
+        expect(await page.locator('body').evaluate((b) => b.classList.contains('chat-page--closing')),
+            '/chat/: the skip link counted as a click outside the cards').toBe(false);
+        await expect.poll(activeId, { message: '/chat/: the skip link did not move focus to the content' })
+            .toBe('main-content');
     });
 });
 
