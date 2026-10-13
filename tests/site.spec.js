@@ -243,6 +243,17 @@ test.describe('Home page', () => {
         await expectHitZones(page, [['.ascii-art-link', 44, 44]]);
     });
 
+    test('the next-events teaser lists what happens at bitcircus101, not the friends\' calendars', async ({ page }) => {
+        await useEventsFixture(page);
+        await page.goto('/');
+        const list = page.locator('#next-events-list');
+        await expect(list.locator('.event-preview')).toHaveCount(3);
+        // +9d is Datenburg (a friend): skipped for the home source's +12d card
+        await expect(list).not.toContainText('Datenburg');
+        await expect(list).toContainText('Spieleabend mit Toys');
+        await expect(list.locator('.event-preview__source')).toHaveText(['Look at my toys!']);
+    });
+
     test('shows support and contact CTAs', async ({ page }) => {
         await page.goto('/');
         await expect(page.locator('#support')).toBeVisible();

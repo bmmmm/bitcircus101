@@ -953,20 +953,27 @@
         .then((res) => (res.ok ? res.json() : Promise.reject()))
         .then((data) => {
           var events = Array.isArray(data) ? data : data.events;
-          if (events && events.length) this.render(events, el);
+          if (events && events.length) this.render(events, el, Array.isArray(data) ? null : data.sources);
         })
         .catch(() => {});
     },
 
-    render(events, el) {
+    render(events, el, sources) {
       const now = new Date();
       now.setHours(0, 0, 0, 0);
       const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
       const pad = (n) => (n < 10 ? "0" + n : "" + n);
       const escHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+      // What happens at bitcircus101 — ours and the home sources, like the
+      // events page's default view; the friends' calendars stay on /termine.
+      // Without events-core.js (or pre-field data) nothing is a friend.
+      const core = window.EventsCore;
+      const relations = core && core.relationMap ? core.relationMap(sources) : null;
+      const isFriend = (e) => !!core && core.sourceRelation(relations, e.source) === "friend";
+
       const upcoming = events
-        .filter((e) => new Date(e.date + "T23:59:59") >= now)
+        .filter((e) => !isFriend(e) && new Date(e.date + "T23:59:59") >= now)
         .sort((a, b) => new Date(a.date) - new Date(b.date))
         .slice(0, 3);
 
@@ -976,7 +983,6 @@
       // row shows the title without the marker, struck through, and the
       // badge takes the time cell (auto column, never clipped like the title).
       // Without events-core.js the raw title stands, nothing breaks.
-      const core = window.EventsCore;
       let html = "";
       upcoming.forEach((e) => {
         const d = new Date(e.date + "T00:00:00");
@@ -992,7 +998,8 @@
         html +=
           '<span class="event-preview__title">' +
           escHtml(shown);
-        if (e.source && e.source !== "bitcircus101") {
+        // another calendar's event names its source (events-core sourceBadge)
+        if (core && core.sourceBadge(relations, e.source)) {
           html += ' <span class="event-preview__source">' +
             escHtml(e.source) + "</span>";
         }
