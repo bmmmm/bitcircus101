@@ -2525,6 +2525,11 @@ test.describe('Accessibility', () => {
     test('aria-labels, alt texts and landmark roles', async ({ page }) => {
         await page.goto('/');
 
+        // Back-to-top at the top of the page: out of the tab order, not merely
+        // transparent — an opacity-0 button is still a tab stop.
+        const scrollTop = page.locator('.scroll-top');
+        expect(await scrollTop.evaluate((el) => getComputedStyle(el).visibility)).toBe('hidden');
+
         // Carousel buttons
         await expect(page.locator('.carousel-button.prev')).toHaveAttribute('aria-label');
         await expect(page.locator('.carousel-button.next')).toHaveAttribute('aria-label');
@@ -2575,6 +2580,20 @@ test.describe('Accessibility', () => {
         await expect(fundingInfo).toBeInViewport();
         await page.keyboard.press('Shift+Tab');
         await expect(fundingInfo).toBeHidden();
+
+        // Back-to-top, now that the footer is in view: it reaches the tab
+        // order, and on Enter it jumps (reduced motion: no smooth scroll) and
+        // hands the focus to the content — the button fades out under it.
+        await expect(scrollTop).toHaveClass(/visible/);
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        await scrollTop.focus();
+        await page.keyboard.press('Enter');
+        expect(await page.evaluate(() => window.scrollY), 'reduced motion still scrolled smoothly').toBe(0);
+        await expect.poll(
+            () => page.evaluate(() => document.activeElement?.id ?? null),
+            { message: 'back-to-top left the focus on the fading button' }
+        ).toBe('main-content');
+        await page.emulateMedia({ reducedMotion: null });
 
         // Keyboard focus must stay visible on form controls: no outline:none
         // may swallow the global :focus-visible ring (the ascii editor is the

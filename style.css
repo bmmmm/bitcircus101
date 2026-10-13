@@ -2175,12 +2175,16 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     font-family: var(--font);
     font-size: 1rem;
     cursor: pointer;
+    /* Faded out it leaves the tab order too: opacity alone keeps an invisible
+       tab stop on every page. visibility is discrete, so transitioning it
+       alongside opacity keeps the fade both ways. */
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity var(--transition);
+    transition: opacity var(--transition), visibility var(--transition);
     z-index: var(--z-nav);
 }
-.scroll-top.visible { opacity: 1; pointer-events: auto; }
+.scroll-top.visible { opacity: 1; visibility: visible; pointer-events: auto; }
 .scroll-top:hover { background: var(--ink); color: var(--paper); }
 
 /* =============================================================================

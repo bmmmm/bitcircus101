@@ -40,6 +40,15 @@
     );
   }
 
+  // Move the keyboard focus to something that is not a tab stop by itself (a
+  // landmark, a section): tabindex="-1" once, then focus. preventScroll when
+  // the caller already runs the scroll it wants.
+  function focusTarget(el, preventScroll) {
+    if (!el) return;
+    if (!el.hasAttribute("tabindex")) el.setAttribute("tabindex", "-1");
+    el.focus({ preventScroll: !!preventScroll });
+  }
+
   // =============================================================================
   // Navigation Module
   // =============================================================================
@@ -510,11 +519,7 @@
           // A fragment navigation moves the sequential-focus starting point but
           // does not focus the target, so the next Tab would stay in the nav —
           // which is the one thing a skip link exists to prevent.
-          const target = document.querySelector(href);
-          if (target) {
-            if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
-            target.focus();
-          }
+          focusTarget(document.querySelector(href));
         }
         // Section anchor: share or copy URL
         if (anchor.classList.contains("section-anchor")) {
@@ -778,7 +783,13 @@
       }, { passive: true });
 
       btn.addEventListener("click", function () {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+        });
+        // The button is about to fade out under the focus: hand it to the
+        // content instead of leaving it on a tab stop that stops existing.
+        focusTarget(document.getElementById("main-content"), true);
       });
     },
   };
