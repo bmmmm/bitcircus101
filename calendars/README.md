@@ -115,7 +115,7 @@ Prüfung läuft in CI bei jedem Pull Request.
 |------|---------|-----------|
 | `id` | ja | Kleinbuchstaben-Kebab-Case. Taucht in Log-Ausgaben auf. |
 | `name` | ja | Anzeigename auf der Karte. **Muss eindeutig sein** — der Name ist intern der Schlüssel für Feed-Auswahl und Ausfall-Cache. |
-| `ics` | ja | Der öffentliche ICS-Link. |
+| `ics` | ja | Der öffentliche ICS-Link. Den liest der Sync; bei `bitcircus.json` ist es auch die Abo-Adresse, die `/calendar/` und die Lite-Ansicht zeigen. |
 | `url` | — | Menschenlesbare Seite des Kalenders; Fallback-Ziel für Karten ohne eigenen Link. |
 | `type` | — | `ics-full` (Standard), `ics-single`, `ics-filtered`. |
 | `rss` | — | `true` = die Termine dieser Quelle gehen in `/feed.xml` und `/ical.ics`. |

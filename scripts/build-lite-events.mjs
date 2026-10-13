@@ -74,7 +74,7 @@ export function buildMarkup(events, icsUrl, rssPath) {
     })
     .join("\n");
 
-  // The subscribe links stay on our calendar (Radicale): that is the real,
+  // The subscribe links stay on our calendar (the `ics` of calendars/bitcircus.json): that is the real,
   // always-current subscription, while the generated feeds are a snapshot of
   // the sync window.
   const webcal = icsUrl ? icsUrl.replace(/^https?:\/\//, "webcal://") : null;
