@@ -199,6 +199,12 @@ test.describe('Home page', () => {
         const firstLogo = page.locator('#freundinnen .logo-slider__item img.logo-slider__img').first();
         await expect(firstLogo).toBeVisible();
         await expect(firstLogo).toHaveAttribute('src', /images\/logo-slider\//);
+
+        // The hover reveal (colour in) has a keyboard twin: the focus ring
+        // alone would sit on a grey logo.
+        await page.locator('#freundinnen .logo-slider__item a.logo-slider__link').first().focus();
+        await expect.poll(() => firstLogo.evaluate((el) => getComputedStyle(el).filter),
+            { message: 'focus on the logo link does not reveal the logo' }).toBe('grayscale(0)');
     });
 });
 
