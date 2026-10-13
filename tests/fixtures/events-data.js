@@ -35,12 +35,17 @@ function inDays(n) {
 }
 
 /**
+ * Three sources, one per relation (events-core relationOf): bitcircus101 is
+ * own, "Look at my toys!" is home (at bitcircus101, in the default view),
+ * Datenburg is a friend — hidden until its toolbar box is ticked, so the
+ * default view holds 5 of the 7 cards.
+ *
  * Tags are alphabetical in the filter bar (events.js sorts them), so the
  * FIRST chip is always "#hardware" — and it sits only on bitcircus101 events.
  * Both of those are load-bearing:
- *   - filtering by it must shrink the list (2 of 6), not keep it whole
- *   - it must survive the "nur bitcircus101" toggle, which is the regression
- *     the source-toggle assertion guards
+ *   - filtering by it must shrink the list (2 of 5), not keep it whole
+ *   - it must survive switching a friend's calendar on, which is the
+ *     regression the source-toggle assertion guards
  */
 function buildEventsData() {
   const now = new Date().toISOString();
@@ -131,6 +136,24 @@ function buildEventsData() {
       source: "bitcircus101",
       uid: "fixture-6",
     },
+    // Appended, so the indices above stay what the tests name. A home source's
+    // card: in the default view, badged "Kalender: …", with a page (the sync
+    // flags the primary sources' cards `page`).
+    {
+      title: "Spieleabend mit Toys",
+      subtitle: "",
+      description: "",
+      location: "Dorotheenstraße 101",
+      date: inDays(12),
+      time: "19:00",
+      endDate: inDays(12),
+      endTime: "22:00",
+      tags: ["#spieletreff"],
+      type: "special",
+      source: "Look at my toys!",
+      uid: "fixture-7",
+      page: true,
+    },
   ];
 
   for (const e of events) e.id = EventsCore.eventId(e, { name: e.source });
@@ -141,6 +164,7 @@ function buildEventsData() {
       {
         id: "bitcircus",
         name: "bitcircus101",
+        relation: "own",
         fetchedAt: now,
         status: "ok",
         events: 4,
@@ -151,8 +175,22 @@ function buildEventsData() {
         upcoming: 4,
       },
       {
+        id: "look-at-my-toys",
+        name: "Look at my toys!",
+        relation: "home",
+        fetchedAt: now,
+        status: "ok",
+        events: 1,
+        added: 0,
+        removed: 0,
+        total: 1,
+        past: 0,
+        upcoming: 1,
+      },
+      {
         id: "datenburg",
         name: "Datenburg e.V.",
+        relation: "friend",
         fetchedAt: now,
         status: "ok",
         events: 2,
@@ -167,20 +205,31 @@ function buildEventsData() {
     feeds: {
       all: { ics: "/feeds/all.ics", rss: "/feeds/all.xml", count: events.length },
       primary: { ics: "/ical.ics", rss: "/feed.xml", title: "bitcircus101 – Termine" },
+      // tag feeds hold the events at bitcircus101 only (own + home)
       tags: {
         "#hardware": { ics: "/feeds/tag/hardware.ics", rss: "/feeds/tag/hardware.xml", count: 2 },
-        "#linux": { ics: "/feeds/tag/linux.ics", rss: "/feeds/tag/linux.xml", count: 3 },
-        "#workshop": { ics: "/feeds/tag/workshop.ics", rss: "/feeds/tag/workshop.xml", count: 3 },
+        "#linux": { ics: "/feeds/tag/linux.ics", rss: "/feeds/tag/linux.xml", count: 1 },
+        "#spieletreff": { ics: "/feeds/tag/spieletreff.ics", rss: "/feeds/tag/spieletreff.xml", count: 1 },
+        "#workshop": { ics: "/feeds/tag/workshop.ics", rss: "/feeds/tag/workshop.xml", count: 2 },
       },
       sources: {
         bitcircus: {
           name: "bitcircus101",
+          relation: "own",
           ics: "/feeds/source/bitcircus.ics",
           rss: "/feeds/source/bitcircus.xml",
           count: 4,
         },
+        "look-at-my-toys": {
+          name: "Look at my toys!",
+          relation: "home",
+          ics: "/feeds/source/look-at-my-toys.ics",
+          rss: "/feeds/source/look-at-my-toys.xml",
+          count: 1,
+        },
         datenburg: {
           name: "Datenburg e.V.",
+          relation: "friend",
           ics: "/feeds/source/datenburg.ics",
           rss: "/feeds/source/datenburg.xml",
           count: 2,

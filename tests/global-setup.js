@@ -12,6 +12,7 @@ const os = require("node:os");
 const path = require("node:path");
 const { execFileSync } = require("node:child_process");
 const { buildEventsData } = require("./fixtures/events-data");
+const EventsCore = require("../events-core.js");
 
 const ROOT = path.resolve(__dirname, "..");
 
@@ -29,8 +30,9 @@ function buildEventsArchive() {
   const data = buildEventsData();
   const day = iso(new Date());
   const events = {};
+  const relations = EventsCore.relationMap(data.sources);
   for (const card of data.events) {
-    if (card.source !== "bitcircus101") continue; // only primary sources get pages
+    if (EventsCore.sourceRelation(relations, card.source) === "friend") continue; // friends get no pages
     events[card.id] = { ...card, firstSeen: data.lastSync, lastSeen: day };
   }
   const past = (n, title, uid, description, extra = {}) => {
@@ -43,7 +45,7 @@ function buildEventsArchive() {
       calendarUrl: "https://nc.example.org/apps/calendar/p/abc",
       ...fields,
     };
-    card.id = require("../events-core.js").eventId(card, { name: card.source });
+    card.id = EventsCore.eventId(card, { name: card.source });
     events[card.id] = { ...card, firstSeen, lastSeen: day };
   };
   past(20, "Vergangener Lötabend", "fixture-past-1", "Erster Absatz.\n\nZweiter Absatz mit https://example.org/link.");

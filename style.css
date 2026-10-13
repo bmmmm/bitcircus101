@@ -1074,6 +1074,12 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     flex-wrap: wrap;
 }
 .events-toolbar__row + .events-toolbar__row { margin-top: 0.5rem; }
+/* No global [hidden] rule, and the row is a flex box: say it explicitly. */
+.events-toolbar__row[hidden] { display: none; }
+/* "weitere kalender:" before the friends' checkboxes; wrapped boxes keep the
+   20px the labels' hit strips reach beyond their own line (14 up, 6 down). */
+.events-toolbar__legend { color: var(--ink-dim); font-size: var(--fs-small); }
+.events-toolbar__sources { row-gap: 20px; }
 
 /* search — a form control, so focus stays reverse-video ink, not accent */
 .events-search__label { color: var(--ink-dim); font-size: var(--fs-small); }

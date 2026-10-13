@@ -615,7 +615,7 @@ test.describe('Navigation', () => {
         expect(left, 'w entered the header with content still above the screen').toBe(0);
         // The search field is no target: a cursor that landed in it would type
         // every further key. From the checkbox above it, d is where it would.
-        await page.locator('#events-only-bitcircus').focus();
+        await page.locator('#events-src-datenburg').focus();
         for (const k of ['d', 's', 'w', 'a']) {
             await page.keyboard.press(k);
             await expect(page.locator('#events-search'), `${k} landed in the search field`).not.toBeFocused();
@@ -1066,7 +1066,19 @@ test.describe('Events content', () => {
         expect(await page.locator('.events-month').count()).toBeGreaterThan(0);
 
         await expect(page.locator('.events-toolbar')).toBeVisible();
-        await expect(page.locator('#events-only-bitcircus')).toBeVisible();
+        await expect(page.locator('#events-src-datenburg')).toBeVisible();
+
+        // The default view is what happens at bitcircus101: ours and the home
+        // source (badged by calendar), a friend's cards only once its box is
+        // ticked — and they read as external.
+        await expect(page.locator('.event-card')).toHaveCount(5);
+        await expect(page.locator('.event-card__source')).toHaveCount(1);
+        await expect(page.locator('.event-card__source')).toHaveText('Kalender: Look at my toys!');
+        await page.locator('#events-src-datenburg').check();
+        await expect(page.locator('.event-card')).toHaveCount(7);
+        await expect(page.locator('.event-card__source').filter({ hasText: 'Externer Kalender: Datenburg e.V.' })).toHaveCount(2);
+        await page.locator('#events-src-datenburg').uncheck();
+        await expect(page.locator('.event-card')).toHaveCount(5);
 
         // Filter bar
         await expect(page.locator('.events-filter')).toBeVisible();
@@ -1109,7 +1121,7 @@ test.describe('Events content', () => {
         ]);
     });
 
-    test('URL state and search round-trip, and survive the bitcircus toggle', async ({ page, isMobile }) => {
+    test('URL state and search round-trip, and survive a friend\'s calendar switching on', async ({ page, isMobile }) => {
         await page.goto('/events.html');
         await expect(page.locator('.event-card').first()).toBeVisible();
 
@@ -1188,19 +1200,35 @@ test.describe('Events content', () => {
         expect(await page.locator('.event-card').count()).toBe(countBefore);
         await expect(page.locator('.events-filter__tag').first()).toBeFocused();
 
-        // Regression: the source toggle must not wipe an active tag filter
-        // (removeFilterBar used to clear the filters as a side effect)
+        // Regression: switching a friend's calendar on must not wipe an active
+        // tag filter (removeFilterBar used to clear the filters as a side effect)
         await page.locator(`.events-filter__tag[data-tag="${tagName}"]`).click();
-        await page.locator('#events-only-bitcircus').check();
+        await page.locator('#events-src-datenburg').check();
         const survivor = page.locator(`.events-filter__tag[data-tag="${tagName}"]`);
         if (await survivor.count()) {
             await expect(survivor).toHaveClass(/active/);
         }
         await expect(page).toHaveURL(/[?&]tags=/);
-        await expect(page).toHaveURL(/[?&]nur=bc/);
+        await expect(page).toHaveURL(/[?&]mit=datenburg/);
+        // Reloading the shared URL restores the box
+        await page.goto(page.url());
+        await expect(page.locator('#events-src-datenburg')).toBeChecked();
+        // The old nur=bc asked for what is the default now: read, honoured, dropped
+        await page.goto('/events.html?nur=bc');
+        await expect(page.locator('.event-card').first()).toBeVisible();
+        await expect(page.locator('#events-src-datenburg')).not.toBeChecked();
+        await expect(page).toHaveURL(/\/events\.html$/);
     });
 
     test('subscribe buttons follow the filter, and say so when no feed matches', async ({ page }) => {
+        const data = buildEventsData();
+        // A second friend, so "some but not all" has a case. No cards needed:
+        // a configured source has a feed even at zero events.
+        data.sources.push({ id: 'kult', name: 'Kult 41', relation: 'friend', fetchedAt: data.lastSync,
+            status: 'ok', events: 0, added: 0, removed: 0, total: 0, past: 0, upcoming: 0 });
+        data.feeds.sources.kult = { name: 'Kult 41', relation: 'friend',
+            ics: '/feeds/source/kult.ics', rss: '/feeds/source/kult.xml', count: 0 };
+        await useEventsFixture(page, data);
         await page.goto('/events.html');
         await expect(page.locator('.event-card').first()).toBeVisible();
 
@@ -1225,12 +1253,31 @@ test.describe('Events content', () => {
         await expect(links).toHaveCount(2);
         await expect(links.first()).toHaveAttribute('href', '/feeds/tag/hardware.xml');
 
-        // The source toggle alone resolves to that source's feed
+        // One friend's calendar on: ours plus theirs is no single feed — the
+        // box names both parts instead of handing out either alone
         await page.locator('.events-filter__clear').click();
-        await page.locator('#events-only-bitcircus').check();
+        await page.locator('#events-src-datenburg').check();
+        await expect(note).toBeHidden();
+        expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
+        await expect(split).toBeVisible();
+        await expect(links).toHaveCount(2);
+        await expect(links.nth(0)).toHaveAttribute('href', '/feed.xml');
+        await expect(links.nth(0)).toHaveText('im bitcircus101');
+        await expect(links.nth(1)).toHaveAttribute('href', '/feeds/source/datenburg.xml');
+        await expect(links.nth(1)).toHaveText('Datenburg e.V.');
+
+        // Every friend's calendar on: that is the all-in-one feed
+        await page.locator('#events-src-kult').check();
         await expect(note).toBeVisible();
-        expect(await rssBtn.getAttribute('href')).toBe('/feeds/source/bitcircus.xml');
+        await expect(note.locator('.events-subscribe__scope-tag')).toHaveText('alle kalender');
+        expect(await rssBtn.getAttribute('href')).toBe('/feeds/all.xml');
         await expect(split).toBeHidden();
+
+        // A tag on top of a friend's calendar: no feed is exact — defaults, no note
+        await page.locator('.events-filter__tag[data-tag="#hardware"]').click();
+        await expect(note).toBeHidden();
+        await expect(split).toBeHidden();
+        expect(await rssBtn.getAttribute('href')).toBe(rssDefault);
     });
 
     test('sync status labels are shown when data is available', async ({ page }) => {
@@ -1973,13 +2020,25 @@ test.describe('Event details', () => {
         await expect(card.locator('.event-card__desc--full')).toBeVisible();
     });
 
+    test('a permalink into a friend\'s calendar switches it on and drops the filters', async ({ page }) => {
+        const data = buildEventsData();
+        const target = data.events[2]; // Datenburg: off by default
+        await useEventsFixture(page, data);
+        const anchor = `ev-${target.date}-offener-abend-datenburg`;
+        await page.goto(`/events.html?tags=hardware#${anchor}`);
+        await expect(page.locator(`#${anchor}`)).toHaveCount(1);
+        await expect(page.locator('#events-src-datenburg')).toBeChecked();
+        await expect(page).toHaveURL(/[?&]mit=datenburg/);
+        await expect(page).not.toHaveURL(/[?&]tags=/);
+    });
+
     test('only cards from sources with pages link to their own page, and it exists', async ({ page }) => {
         const data = buildEventsData();
         // A partner source flagged `pages` marks its cards; that, not the
         // source name, earns the pill.
         data.events[4].page = true;
         await useEventsFixture(page, data);
-        await page.goto('/events.html');
+        await page.goto('/events.html?mit=datenburg');
         await expect(page.locator('.event-card').first()).toBeVisible();
 
         const own = page.locator(`#ev-${data.events[0].date}-hardware-hackingabend .event-action--details`);
