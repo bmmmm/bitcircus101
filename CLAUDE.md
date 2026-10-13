@@ -53,7 +53,9 @@ logic. CI runs the full suite after the merge to `main`.
   the `hidden` attribute or a class, never `style="display:…"` in a template
   string.
 - The `--accent` scope rule (what may be green, what stays ink) sits at the
-  token definition in `style.css`.
+  token definition in `style.css`. In short: links and structure markers
+  green, text ink. `lite/index.html` repeats the tokens inline;
+  `tests/markup.spec.mjs` holds them equal, so a token change is two edits.
 - **Clean URLs are canonical, in-page links keep `.html`.** Production
   308-redirects `/events.html` → `/events`, so everything a crawler consumes
   names the extension-less form: `canonical`, `og:url`, JSON-LD `url`, the RSS

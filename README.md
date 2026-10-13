@@ -45,11 +45,11 @@ includes/
   site-skip.html            Shared skip link; inlined into pages by build:layout
   site-header.html          Shared <header> (nav); inlined into pages by build:layout
   site-footer.html          Shared <footer>; inlined into pages by build:layout
-scripts/inject-layout.mjs   Writes header/footer into the seven layout HTML files and stamps
+scripts/inject-layout.mjs   Writes header/footer into the nine layout HTML files and stamps
                             the footer percent from funding.json (data-funding) — so no page
                             fetches funding.json
 
-style.css                   Global styles (monochrome plain-text/man-page theme, dark default + light toggle)
+style.css                   Global styles (ink + one green accent, plain-text/man-page theme, dark default + light toggle)
 main.js                     Frontend: nav, carousel, map, events preview, footer
 storage.js                  Central localStorage wrapper — all keys in one place, exception-safe
 
