@@ -43,7 +43,7 @@ const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, even
 // Card shaping (tags, type, toCards) is shared the same way via events-core.js, so
 // the browser's live-ICS fallback renders the same cards as the generated JSON.
 // Re-exported below so tests and check-calendars.mjs keep importing from here.
-const { isInternal, guessType, isCancelledTitle, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId, hasPages, relationOf, inPrimaryFeed } = EventsCore;
+const { isInternal, guessType, isCancelledTitle, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId, hasPages, relationOf, inPrimaryFeed, relationMap, sourceRelation } = EventsCore;
 
 /** Cancelled for every consumer: the archive's flag (set by mergeArchive for a
  *  vanished entry or a marked title) or, for a fresh card that never went
@@ -467,9 +467,14 @@ function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
   // tags — keyed lowercased (collapses #KULT41 vs #kult41), selected by
   // (count desc, key asc), capped. Slug collisions: the first claim wins, the
   // loser is skipped entirely (no file, no manifest entry) — skipping keeps
-  // every emitted feed's semantics exact.
+  // every emitted feed's semantics exact. Tag feeds carry the events AT
+  // bitcircus101 only (own + home), like /termine's default view, so "one tag,
+  // no friend's calendar switched on" is exactly one feed; a friend's events
+  // stay reachable through feeds/all and their source feed.
+  const relations = relationMap(calendars);
   const byTag = new Map();
   for (const c of cards) {
+    if (sourceRelation(relations, c.source) === "friend") continue;
     for (const t of c.tags || []) {
       const k = t.toLowerCase();
       if (!byTag.has(k)) byTag.set(k, []);
@@ -494,7 +499,7 @@ function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
     usedSlugs.add(slug);
     const meta = emitPair(`feeds/tag/${slug}`, list, {
       title: `bitcircus101 – Termine: ${tag}`,
-      description: `Gefiltert nach ${tag} – alle Termine mit diesem Schlagwort.`,
+      description: `Gefiltert nach ${tag} – alle Termine im bitcircus101 mit diesem Schlagwort.`,
     });
     tagEntries.push([tag, { ...meta, count: list.length }]);
   }

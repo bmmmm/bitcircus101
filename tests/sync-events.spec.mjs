@@ -2389,13 +2389,13 @@ describe("buildFeedPlan", () => {
   it("puts exactly the matching cards into a tag feed and a source feed", () => {
     const cards = [
       feedCard({ uid: "a", title: "Linkup Abend", tags: ["#linkup"] }),
-      feedCard({ uid: "b", title: "Fremdes Event", source: "Datenburg e.V.", tags: ["#datenburg"] }),
+      feedCard({ uid: "b", title: "Fremdes Event", source: "Datenburg e.V.", tags: ["#linkup"] }),
     ];
     const { files } = buildFeedPlan(cards, FEED_CALS, null, FEED_NOW);
     const data = (p) => files.find((f) => f.path === p).data;
 
     assert.equal(data("feeds/tag/linkup.ics").includes("SUMMARY:Linkup Abend"), true);
-    assert.equal(data("feeds/tag/linkup.ics").includes("Fremdes Event"), false);
+    assert.equal(data("feeds/tag/linkup.ics").includes("Fremdes Event"), false, "a friend's event is not in a tag feed");
     assert.equal(data("feeds/source/datenburg.ics").includes("SUMMARY:Fremdes Event"), true);
     assert.equal(data("feeds/source/datenburg.ics").includes("Linkup Abend"), false);
     // a configured source with zero cards still gets a valid empty calendar
@@ -2403,6 +2403,35 @@ describe("buildFeedPlan", () => {
     const empty = bitOnly.files.find((f) => f.path === "feeds/source/bitcircus.ics").data;
     assert.equal(empty.startsWith("BEGIN:VCALENDAR"), true);
     assert.equal(empty.includes("BEGIN:VEVENT"), false);
+  });
+
+  it("tag feeds hold the events at bitcircus101 only — own and home, never a friend's", () => {
+    const cals = [
+      ...FEED_CALS,
+      { id: "toys", name: "Toys", relation: "home" },
+    ];
+    const cards = [
+      feedCard({ uid: "a", title: "Unser Abend", tags: ["#meetup"] }),
+      feedCard({ uid: "b", title: "Toys Abend", source: "Toys", tags: ["#meetup"] }),
+      feedCard({ uid: "c", title: "Fremder Abend", source: "Datenburg e.V.", tags: ["#meetup", "#datenburg"] }),
+    ];
+    const { manifest, files } = buildFeedPlan(cards, cals, null, FEED_NOW);
+    const data = (p) => files.find((f) => f.path === p).data;
+
+    assert.deepEqual(Object.keys(manifest.tags), ["#meetup"], "a tag only friends carry gets no feed");
+    assert.equal(manifest.tags["#meetup"].count, 2);
+    assert.equal(data("feeds/tag/meetup.ics").includes("SUMMARY:Unser Abend"), true);
+    assert.equal(data("feeds/tag/meetup.ics").includes("SUMMARY:Toys Abend"), true);
+    assert.equal(data("feeds/tag/meetup.ics").includes("Fremder Abend"), false);
+    assert.equal(data("feeds/tag/meetup.xml").includes("alle Termine im bitcircus101 mit diesem Schlagwort"), true);
+    // the friend's events stay reachable: all and their own source feed
+    assert.equal(manifest.all.count, 3);
+    assert.equal(data("feeds/all.ics").includes("SUMMARY:Fremder Abend"), true);
+    assert.equal(data("feeds/source/datenburg.ics").includes("SUMMARY:Fremder Abend"), true);
+    // pre-field calendars (no relation anywhere): everything counts, as before
+    const legacy = buildFeedPlan(cards, cals.map(({ relation, ...c }) => c), null, FEED_NOW);
+    assert.equal(legacy.manifest.tags["#meetup"].count, 3);
+    assert.ok(legacy.manifest.tags["#datenburg"]);
   });
 
   it("caps tag feeds at MAX_TAG_FEEDS deterministically (count desc, key asc)", () => {
