@@ -55,7 +55,7 @@ const valid = (over = {}) => ({
   name: "Example Space",
   ics: "https://example.org/cal.ics",
   url: "https://example.org/",
-  rss: false,
+  relation: "own",
   ...over,
 });
 
@@ -132,6 +132,7 @@ describe("validateCalendars — accepts valid setups", () => {
           ics: "https://example.org/b.ics",
           url: "https://example.org/b",
           eventUrl: "https://example.org/b/programm",
+          relation: "home",
           rss: true,
           pages: false,
           cap: 5,
@@ -209,6 +210,30 @@ describe("validateCalendars — manifest problems", () => {
     const dir = fixture({}, []);
     assertWarning(validateCalendars(dir), "no events");
   });
+
+  it("errors when no listed source is our own calendar — a parked own file does not count", () => {
+    const dir = fixture(
+      { "a.json": valid({ id: "a", name: "A", relation: "friend" }), "parked.json": valid({ id: "p", name: "P" }) },
+      ["a.json"]
+    );
+    assertError(validateCalendars(dir), 'exactly one source must have "relation": "own", found 0');
+  });
+
+  it("errors when two listed sources claim to be our own calendar, naming both", () => {
+    const dir = fixture(
+      { "a.json": valid({ id: "a", name: "A" }), "b.json": valid({ id: "b", name: "B" }) },
+      ["a.json", "b.json"]
+    );
+    assertError(validateCalendars(dir), 'found 2 (a.json, b.json)');
+  });
+
+  it("accepts a friend without the field — missing means friend", () => {
+    const dir = fixture(
+      { "a.json": valid({ id: "a", name: "A" }), "b.json": { id: "b", name: "B", ics: "https://example.org/b.ics" } },
+      ["a.json", "b.json"]
+    );
+    assert.deepEqual(validateCalendars(dir).errors, []);
+  });
 });
 
 describe("validateCalendars — source field problems", () => {
@@ -222,6 +247,7 @@ describe("validateCalendars — source field problems", () => {
     ["non-URL ics", valid({ ics: "example.org/cal.ics" }), '"ics" must be an http(s) URL'],
     ["non-URL eventUrl", valid({ eventUrl: "nope" }), '"eventUrl" must be an http(s) URL'],
     ["unknown type", valid({ type: "ics-filter" }), 'unknown "type"'],
+    ["unknown relation", valid({ relation: "partner" }), 'unknown "relation": "partner"'],
     ["non-boolean rss", valid({ rss: "true" }), '"rss" must be true or false'],
     ["non-boolean pages", valid({ pages: 1 }), '"pages" must be true or false'],
     ["zero cap", valid({ cap: 0 }), '"cap" must be a positive integer'],

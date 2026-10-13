@@ -159,8 +159,8 @@ describe("calendar page", () => {
   });
 
   it("/rss titles the primary feed by the sources it carries, as /calendar does", () => {
-    const names = loadCalendars(`${ROOT}calendars`).filter((c) => c.rss === true).map((c) => c.name);
-    assert.ok(names.length, "calendars/ lists no rss:true source");
+    const names = loadCalendars(`${ROOT}calendars`).filter(EventsCore.inPrimaryFeed).map((c) => c.name);
+    assert.ok(names.length, "calendars/ lists no primary source");
     const rss = fs.readFileSync(`${ROOT}rss.html`, "utf8");
     const ics = rss.indexOf(`href="ical.ics" download=`);
     assert.ok(ics > 0, "rss.html lost its ical.ics button");
@@ -171,6 +171,25 @@ describe("calendar page", () => {
       "the box subscribes to what it downloads — not to the complete calendar");
     assert.match(rss, /href="ical\.ics" download="bitcircus101-termine\.ics"/,
       "ical.ics must not download as bitcircus101.ics — that is the complete calendar's name");
+  });
+
+  it("relation alone — no rss field — decides the own panel, the primary names and the raw calendars", () => {
+    const feeds = {
+      ...FEEDS,
+      sources: { ...FEEDS.sources, hq: { name: "Hackspace HQ", ics: "/feeds/source/hq.ics", rss: "/feeds/source/hq.xml" } },
+    };
+    const cals = [
+      { id: "hq", name: "Hackspace HQ", ics: OWN_ICS, relation: "own" },
+      { id: "toys", name: "Toys", ics: "https://toys.example.org/cal.ics", relation: "home" },
+      { id: "other", name: "Space <b>&</b> Co", ics: "https://friends.example.org/cal.ics", relation: "friend" },
+    ];
+    const { own, others } = planCalendarPage(feeds, cals);
+    assert.equal(own[0].title, "Hackspace HQ");
+    assert.deepEqual(own[0].lines[0], { span: "complete", ics: OWN_ICS, primary: true });
+    assert.equal(own[1].title, "Hackspace HQ + Toys");
+    assert.ok(others.some((b) => b.title === "Toys" && b.lines.some((l) => l.span === "complete")), "a home source lists its raw calendar");
+    assert.ok(!others.some((b) => b.title === "Space <b>&</b> Co" && b.lines.some((l) => l.span === "complete")), "a friend does not");
+    assert.deepEqual(completeCalendars(cals).map((c) => c.name), ["Hackspace HQ", "Toys"]);
   });
 
   it("completeCalendars keeps only primary sources with an http(s) ics", () => {
