@@ -3,5 +3,5 @@
   "name": "bitcircus101",
   "ics": "https://kalender.bitcircus101.de/bitcircus101.ics",
   "url": "https://bitcircus101.de/calendar/",
-  "rss": true
+  "relation": "own"
 }

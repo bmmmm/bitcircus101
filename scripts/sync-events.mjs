@@ -13,7 +13,7 @@
 // byte-identical, which aggregators rely on to key the same occurrence.
 const EVENTS_URL = `${SITE_URL}/events`;
 
-// The event-page archive: every card the sources with pages (`pages`, default `rss`) ever
+// The event-page archive: every card the sources with pages (`pages`, default: in the primary feed) ever
 // exported since ARCHIVE_MIN_DATE, keyed by card id. Append-only — the pages
 // under /e/<id>/ are built from it (scripts/build-event-pages.mjs), and a
 // shared link must keep resolving after the event has left the calendar.
@@ -43,7 +43,7 @@ const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, even
 // Card shaping (tags, type, toCards) is shared the same way via events-core.js, so
 // the browser's live-ICS fallback renders the same cards as the generated JSON.
 // Re-exported below so tests and check-calendars.mjs keep importing from here.
-const { isInternal, guessType, isCancelledTitle, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId, hasPages } = EventsCore;
+const { isInternal, guessType, isCancelledTitle, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId, hasPages, relationOf, inPrimaryFeed } = EventsCore;
 
 /** Cancelled for every consumer: the archive's flag (set by mergeArchive for a
  *  vanished entry or a marked title) or, for a fresh card that never went
@@ -382,8 +382,8 @@ function generateICS(cards, nowISO, opts = {}) {
 
 // ── Filtered feeds ("the filter you see is the feed you get") ───────────────
 //
-// Besides the primary feed.xml/ical.ics (rss:true sources, aggregator-facing,
-// untouched), the sync emits one subscribable ICS+RSS pair per tag and per
+// Besides the primary feed.xml/ical.ics (the primary sources — own + home
+// unless `rss` overrides — aggregator-facing, untouched), the sync emits one subscribable ICS+RSS pair per tag and per
 // configured source under feeds/, all derived from the SAME aggregated ≤40-card
 // window the events page loads — it shows at most 30 of them at once (the cap
 // in events.js visibleEvents()), so never promise "what /termine shows" for a
@@ -424,7 +424,7 @@ function slugifyTag(tag) {
  * Manifest contract for the frontend: may be absent entirely (old JSON, local
  * dev); tag keys are lowercased; paths are root-absolute; `retired` is
  * machinery, never rendered; sources are keyed by cal.id (entry.name carries
- * the card-facing source name).
+ * the card-facing source name, entry.relation its relation to the space).
  */
 function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
   const files = [];
@@ -456,7 +456,7 @@ function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
   };
 
   // all — the unfiltered page as a feed (NOT a copy of feed.xml: that one stays
-  // rss:true-sources-only and capped at 15, exactly as before).
+  // primary-sources-only, see inPrimaryFeed).
   const allTitle = "bitcircus101 – Alle Termine";
   const allMeta = emitPair("feeds/all", cards, {
     title: allTitle,
@@ -511,7 +511,7 @@ function buildFeedPlan(cards, calendars, prevFeeds, nowISO) {
       title: `bitcircus101 – Termine: ${cal.name}`,
       description: `Alle Termine der Quelle ${cal.name}.`,
     });
-    manifest.sources[cal.id] = { name: cal.name, ...meta, count: list.length };
+    manifest.sources[cal.id] = { name: cal.name, relation: relationOf(cal), ...meta, count: list.length };
   }
 
   // Retirement: a tag known from the previous run but absent from the window
@@ -854,7 +854,7 @@ async function processSource(cal, prev) {
       cards: cached,
       allCards: null, // no fresh export → the archive leaves this source untouched
       source: {
-        id: cal.id, name: cal.name,
+        id: cal.id, name: cal.name, relation: relationOf(cal),
         fetchedAt: prevSource?.fetchedAt || null,
         status: "stale", error: reason,
         events: cached.length, added: 0, removed: 0,
@@ -883,7 +883,7 @@ async function processSource(cal, prev) {
     const cards = toCards(icsEvents, cal);
     console.log(`[${cal.id}] ${cards.length} upcoming cards`);
     // Archive pass from the SAME parse (no second fetch): past and future, no
-    // cap — only for the sources that get pages (`pages`, default `rss`).
+    // cap — only for the sources that get pages (`pages`, default: in the primary feed).
     const allCards = hasPages(cal) ? dedupeCards(toAllCards(icsEvents, cal)) : null;
 
     // Diff against previous sync — prefer UID (stable), fall back to date|summary
@@ -909,7 +909,7 @@ async function processSource(cal, prev) {
       cards,
       allCards,
       source: {
-        id: cal.id, name: cal.name, fetchedAt, status: "ok",
+        id: cal.id, name: cal.name, relation: relationOf(cal), fetchedAt, status: "ok",
         events: cards.length, added, removed,
         total: allIcsKeys.size, past, upcoming,
       },
@@ -1045,9 +1045,9 @@ async function main() {
   writeFileAtomic("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
-  // RSS + iCal only from calendars flagged rss:true (the primary feed).
+  // RSS + iCal only from the primary sources (own + home, or `rss` says so).
   const primaryCards = events.filter((c) =>
-    calendars.find((cal) => cal.name === c.source && cal.rss)
+    calendars.find((cal) => cal.name === c.source && inPrimaryFeed(cal))
   );
 
   const rss = generateRSS(primaryCards);

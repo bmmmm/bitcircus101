@@ -3,5 +3,5 @@
   "name": "Look at my toys!",
   "ics": "https://my.stim.toys/workshops/events.ics",
   "url": "https://my.stim.toys",
-  "rss": true
+  "relation": "home"
 }

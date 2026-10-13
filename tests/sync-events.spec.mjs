@@ -27,7 +27,10 @@ import {
 // entry points eventId/toAllCards are) — imported the same way sync-events.mjs
 // itself imports them.
 import EventsCore from "../events-core.js";
-const { toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS } = EventsCore;
+const {
+  toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS,
+  RELATIONS, relationOf, isHome, inPrimaryFeed, relationMap, sourceRelation, sourceBadge,
+} = EventsCore;
 
 // The owner's marker and what is left once it is stripped; the second list
 // must not match at all. Both describes below read the same two lists, so a
@@ -882,12 +885,18 @@ describe("toCards", () => {
     assert.equal(r.length, 5);
   });
 
-  it("marks a card page:true exactly when its source gets pages (pages, default rss)", () => {
+  it("marks a card page:true exactly when its source gets pages (pages, default: the primary feed)", () => {
     const page = (cal) => toCards([mkEvent()], { name: "X", url: "https://x.example", ...cal })[0].page;
     assert.equal(page({ rss: true }), true);
     assert.equal(page({ pages: true, rss: false }), true);
     assert.equal(page({ pages: false, rss: true }), undefined);
     assert.equal(page({}), undefined);
+    // relation decides when rss is silent; rss stays the override either way
+    assert.equal(page({ relation: "own" }), true);
+    assert.equal(page({ relation: "home" }), true);
+    assert.equal(page({ relation: "friend" }), undefined);
+    assert.equal(page({ relation: "home", rss: false }), undefined);
+    assert.equal(page({ relation: "friend", rss: true }), true);
     assert.equal(EventsCore.hasPages({ pages: true, rss: false }), true);
     assert.equal(EventsCore.hasPages({ pages: false, rss: true }), false);
     assert.equal(EventsCore.hasPages({ rss: true }), true);
@@ -2245,12 +2254,73 @@ describe("slugifyTag", () => {
   });
 });
 
+// ── relation: what a source is to the space ─────────────────────────────────
+
+describe("relation helpers", () => {
+  it("relationOf: own and home pass, everything else — missing, unknown, no source — is a friend", () => {
+    assert.deepEqual(RELATIONS, ["own", "home", "friend"]);
+    assert.equal(relationOf({ relation: "own" }), "own");
+    assert.equal(relationOf({ relation: "home" }), "home");
+    assert.equal(relationOf({ relation: "friend" }), "friend");
+    assert.equal(relationOf({}), "friend");
+    assert.equal(relationOf({ relation: "partner" }), "friend");
+    assert.equal(relationOf(null), "friend");
+  });
+
+  it("isHome / inPrimaryFeed: the home set unless rss overrides", () => {
+    assert.equal(isHome({ relation: "own" }), true);
+    assert.equal(isHome({ relation: "home" }), true);
+    assert.equal(isHome({ relation: "friend" }), false);
+    assert.equal(inPrimaryFeed({ relation: "home" }), true);
+    assert.equal(inPrimaryFeed({ relation: "friend" }), false);
+    assert.equal(inPrimaryFeed({ relation: "home", rss: false }), false);
+    assert.equal(inPrimaryFeed({ relation: "friend", rss: true }), true);
+    assert.equal(inPrimaryFeed({}), false, "no relation, no rss: not primary");
+  });
+
+  it("relationMap keys by name; null for pre-field data or no sources", () => {
+    const map = relationMap([
+      { id: "a", name: "A", relation: "own" },
+      { id: "b", name: "B", relation: "home" },
+      { id: "c", name: "C" },
+      { id: "x" },
+      null,
+    ]);
+    assert.deepEqual({ ...map }, { A: "own", B: "home", C: "friend" });
+    assert.equal(Object.getPrototypeOf(map), null, "no prototype — a source named 'constructor' must not resolve");
+    assert.equal(relationMap([{ id: "a", name: "A" }, { id: "b", name: "B" }]), null);
+    assert.equal(relationMap([]), null);
+    assert.equal(relationMap(undefined), null);
+  });
+
+  it("sourceRelation: no name → own, no map → home, unknown → friend", () => {
+    const map = relationMap([{ name: "A", relation: "own" }, { name: "B", relation: "home" }, { name: "C", relation: "friend" }]);
+    assert.equal(sourceRelation(map, "A"), "own");
+    assert.equal(sourceRelation(map, "B"), "home");
+    assert.equal(sourceRelation(map, "C"), "friend");
+    assert.equal(sourceRelation(map, "Nobody"), "friend");
+    assert.equal(sourceRelation(map, "constructor"), "friend");
+    assert.equal(sourceRelation(map, ""), "own");
+    assert.equal(sourceRelation(map, undefined), "own");
+    assert.equal(sourceRelation(null, "C"), "home");
+  });
+
+  it("sourceBadge: nothing for ours and for pre-field data, Kalender for home, Externer Kalender for friends", () => {
+    const map = relationMap([{ name: "A", relation: "own" }, { name: "B", relation: "home" }, { name: "C", relation: "friend" }]);
+    assert.equal(sourceBadge(map, "A"), "");
+    assert.equal(sourceBadge(map, "B"), "Kalender: B");
+    assert.equal(sourceBadge(map, "C"), "Externer Kalender: C");
+    assert.equal(sourceBadge(map, "Nobody"), "Externer Kalender: Nobody");
+    assert.equal(sourceBadge(null, "C"), "");
+  });
+});
+
 // Shared fixtures for the feed-plan tests. buildFeedPlan never mutates cards,
 // so sharing the builders is safe.
 const FEED_NOW = "2026-01-15T11:00:00.000Z";
 const FEED_CALS = [
-  { id: "bitcircus", name: "bitcircus101" },
-  { id: "datenburg", name: "Datenburg e.V." },
+  { id: "bitcircus", name: "bitcircus101", relation: "own" },
+  { id: "datenburg", name: "Datenburg e.V.", relation: "friend" },
 ];
 const feedCard = (over = {}) => ({
   title: "Ev",
@@ -2291,6 +2361,8 @@ describe("buildFeedPlan", () => {
     assert.equal(manifest.sources.bitcircus.name, "bitcircus101");
     assert.equal(manifest.sources.bitcircus.count, 2);
     assert.equal(manifest.sources.datenburg.count, 0);
+    assert.equal(manifest.sources.bitcircus.relation, "own");
+    assert.equal(manifest.sources.datenburg.relation, "friend");
     assert.deepEqual(manifest.retired, {});
 
     const paths = files.map((f) => f.path);

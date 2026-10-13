@@ -7,7 +7,7 @@
  * Why the page exists: subscription links pointed straight at the calendar
  * backend, so a backend change meant hunting links down page by page. This page
  * is built from configuration instead, so it follows a change on the next sync:
- *  - the complete calendar of each primary (rss:true) source, from its `ics` in
+ *  - the complete calendar of each primary source (own + home, or `rss: true`), from its `ics` in
  *    calendars/ — every event, past and far ahead;
  *  - the feeds this site generates itself (/ical.ics, /feeds/…), from the `feeds`
  *    manifest in events-data.json. Their URLs never change, but they are a
@@ -18,7 +18,7 @@
  * — whose events — and in it a line per span: "↔ komplett" (the source's own
  * calendar) or "→ demnächst" (this site's window). Our own scopes come first,
  * in one panel: bitcircus101 alone, then the primary feed (/ical.ics), titled
- * by the rss:true sources it carries. Every other source and the all-in-one feed
+ * by the primary sources it carries. Every other source and the all-in-one feed
  * follow in a second panel. Each line shows its address as text to copy.
  *
  * Same contract as build-event-pages.mjs: live-only (calendar/ is gitignored on
@@ -33,13 +33,18 @@ import { fileURLToPath } from "node:url";
 import { SITE_URL, loadCalendars, writeFileAtomic } from "./sync-events.mjs";
 import { extractChrome, headShell, jsonLdBlock, rebase, shell } from "./build-event-pages.mjs";
 import { esc } from "./html-text.mjs";
+import EventsCore from "../events-core.js";
 
 const TEMPLATE_FILE = "events.html";
 const DATA_FILE = "events-data.json";
 const OUT_FILE = path.join("calendar", "index.html");
 const CANONICAL = `${SITE_URL}/calendar/`;
-// The source the first panel is about — the card-facing name, as in events.js.
-const OWN = "bitcircus101";
+// The source the first panel is about — the own calendar (relation: own) by its
+// card-facing name; the literal keeps the page meaningful without calendars/.
+function ownName(cals) {
+  const own = (cals || []).find((c) => c && EventsCore.relationOf(c) === "own");
+  return own && own.name ? own.name : "bitcircus101";
+}
 
 // What the sync writes today; used when events-data.json is missing or carries
 // no manifest, so the page always offers at least these.
@@ -68,10 +73,10 @@ export function manifestOf(data) {
   return feeds;
 }
 
-/** The complete calendars to list: the primary (rss:true) sources' own ICS. */
+/** The complete calendars to list: the primary sources' own ICS (own + home, or `rss`). */
 export function completeCalendars(calendars) {
   return (calendars || [])
-    .filter((c) => c && c.rss === true && typeof c.ics === "string" && /^https?:\/\//i.test(c.ics))
+    .filter((c) => c && EventsCore.inPrimaryFeed(c) && typeof c.ics === "string" && /^https?:\/\//i.test(c.ics))
     .map((c) => ({ name: c.name || c.id, ics: c.ics }));
 }
 
@@ -83,6 +88,7 @@ export function completeCalendars(calendars) {
  */
 export function planCalendarPage(feeds, calendars = []) {
   const cals = (calendars || []).filter((c) => c && c.name);
+  const OWN = ownName(cals);
   const complete = new Map(completeCalendars(cals).map((c) => [c.name, c.ics]));
   const sources = Object.values(feeds.sources || {}).filter((s) => s && s.ics && s.name);
   const windowOf = (name) => sources.find((s) => s.name === name);
@@ -98,7 +104,7 @@ export function planCalendarPage(feeds, calendars = []) {
   };
 
   const primaryLine = { span: "window", ics: feeds.primary.ics, rss: feeds.primary.rss };
-  const primaryNames = cals.filter((c) => c.rss === true).map((c) => c.name);
+  const primaryNames = cals.filter(EventsCore.inPrimaryFeed).map((c) => c.name);
   const own = [];
   const ownBox = box(OWN);
   if (primaryNames.length === 1 && primaryNames[0] === OWN) {
