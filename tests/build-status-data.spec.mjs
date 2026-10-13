@@ -21,7 +21,6 @@ import {
   streakMarkup,
   visibleDays,
   MIN_VISIBLE_DAYS,
-  PRIMARY_SOURCE,
   SERIES,
   STATUS_SINCE,
   STREAK_END,
@@ -31,6 +30,10 @@ import {
 const SCRIPT = fileURLToPath(new URL("../scripts/build-status-data.mjs", import.meta.url));
 
 /** An archive entry as the sync writes it — everything the page must NOT carry. */
+const OWN = "bitcircus101";
+// source name → relation, as events-core relationMap builds it from calendars/
+const REL = { [OWN]: "own", "Look at my toys!": "home", "Datenburg e.V.": "friend" };
+
 const entry = (id, date, extra = {}) => ({
   id,
   title: "Linkup " + date,
@@ -43,7 +46,7 @@ const entry = (id, date, extra = {}) => ({
   endTime: "23:00",
   tags: ["#meetup"],
   type: "linkup",
-  source: PRIMARY_SOURCE,
+  source: OWN,
   uid: "uid-" + id,
   calendarUrl: "https://bitcircus101.de",
   recurring: true,
@@ -63,15 +66,19 @@ describe("buildStatusData", () => {
     entry("fff", "2026-02-06", { source: "Datenburg e.V." }), // a friend's calendar
     entry("ggg", "2026-02-13", { type: "party" }), // unknown type
     entry("hhh", "not-a-date"),
-    entry("iii", "2026-04-03", { type: "workshop", cancelled: "yes" }) // a truthy non-boolean
+    entry("iii", "2026-04-03", { type: "workshop", cancelled: "yes" }), // a truthy non-boolean
+    entry("jjj", "2026-02-20", { source: "Look at my toys!", type: "special" }), // a home calendar: at bitcircus101
+    entry("kkk", "2026-02-27", { source: "Nobody knows" }) // not in calendars/ any more: a friend by default
   );
-  const out = buildStatusData(a);
+  const out = buildStatusData(a, REL);
 
-  it("keeps primary-source events of a known type since STATUS_SINCE, sorted by date then id", () => {
+  it("keeps the events at bitcircus101 (own + home) of a known type since STATUS_SINCE, sorted by date then id", () => {
     assert.deepEqual(
       out.events.map((e) => e.id),
-      ["ccc", "aaa", "bbb", "ddd", "iii"]
+      ["ccc", "aaa", "bbb", "jjj", "ddd", "iii"]
     );
+    // without calendars/ there is no telling friends apart: everyone counts
+    assert.ok(buildStatusData(a).events.some((e) => e.id === "fff"));
     assert.equal(out.since, STATUS_SINCE);
     assert.equal(out.version, 1);
   });
@@ -86,7 +93,7 @@ describe("buildStatusData", () => {
 
   it("normalises cancelled to a real boolean (absent, false, truthy junk)", () => {
     const by = Object.fromEntries(out.events.map((e) => [e.id, e.cancelled]));
-    assert.deepEqual(by, { ccc: true, aaa: false, bbb: false, ddd: false, iii: false });
+    assert.deepEqual(by, { ccc: true, aaa: false, bbb: false, jjj: false, ddd: false, iii: false });
   });
 
   it("lists the series in page order, as a copy", () => {
@@ -105,7 +112,7 @@ describe("buildStatusData", () => {
   });
 
   it("carries no timestamp: the same archive yields the same bytes", () => {
-    assert.equal(JSON.stringify(buildStatusData(a)), JSON.stringify(buildStatusData(a)));
+    assert.equal(JSON.stringify(buildStatusData(a, REL)), JSON.stringify(buildStatusData(a, REL)));
     assert.equal("generatedAt" in out, false);
   });
 
