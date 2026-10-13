@@ -981,10 +981,11 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     margin-top: 0.7rem;
 }
 .calendar-feed__span { grid-area: span; font-size: var(--fs-small); white-space: nowrap; }
+/* the address and its "⧉" copy button (main.js unhides it) share one cell */
+.calendar-feed__addr { grid-area: url; display: flex; align-items: center; gap: 0.5ch; min-width: 0; }
 /* one tap selects the whole address — it is there to be copied */
 .calendar-feed__url {
-    grid-area: url;
-    justify-self: start;
+    min-width: 0;
     font-size: var(--fs-label);
     color: var(--ink-dim);
     overflow-wrap: anywhere;

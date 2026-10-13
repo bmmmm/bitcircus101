@@ -1784,6 +1784,26 @@ test.describe('Event details', () => {
     });
 });
 
+// ─── Calendar page ───────────────────────────────────────────────────────────
+
+test.describe('Calendar page', () => {
+    test('the ⧉ button appears with JavaScript and copies the address beside it', async ({ page, context }) => {
+        // globalSetup built /calendar/ from the fixture and the real calendars/.
+        await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+        await page.goto('/calendar/');
+        const line = page.locator('.calendar-feed__line').first();
+        const btn = line.locator('button[data-copy]');
+        await expect(btn).toBeVisible();
+        const shown = (await line.locator('.calendar-feed__url').textContent()).trim();
+        // Two clicks: the second lands while "✓" shows and must not make it the label.
+        await btn.dblclick();
+        await expect(btn).toHaveText('✓');
+        await expect(page.locator('#copy-status')).toHaveText('Adresse kopiert');
+        expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(shown);
+        await expect(btn).toHaveText('⧉', { timeout: 3000 });
+    });
+});
+
 // ─── Status page ─────────────────────────────────────────────────────────────
 
 test.describe('Status page', () => {
