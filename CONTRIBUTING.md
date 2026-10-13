@@ -94,7 +94,7 @@ Nothing reaches production without passing all tests. But that's CI's job, not y
 - No Google Fonts and no external font loading of any kind (privacy)
 - No inline styles — use `style.css`
 - Plain-text aesthetic: ink-on-paper, monospace, dark default, light via the `◐` toggle
-- One accent (`--accent`, terminal green): hyperlinks, primary CTAs and current-selection markers. Form controls and UI toggles stay reverse-video ink — the full scope rule sits at the token definition in `style.css`
+- One accent (`--accent`, terminal green): hyperlinks, primary CTAs, current-selection markers and structure markers (heading brackets and rules, the date before an event). Text stays ink, form controls and UI toggles stay reverse-video ink — the full scope rule sits at the token definition in `style.css`
 
 ## Security headers (Cloudflare)
 
