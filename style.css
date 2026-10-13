@@ -828,6 +828,12 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     text-overflow: ellipsis;
 }
 .event-preview__time { font-size: 0.85rem; color: var(--ink-dim); text-align: right; }
+/* cancelled row: struck title, dim date, the badge in the time cell (see the
+   .event-card--cancelled block for the shared badge look) */
+.event-preview--cancelled .event-preview__title { text-decoration: line-through; }
+.event-preview--cancelled .event-preview__dow,
+.event-preview--cancelled .event-preview__date { color: var(--ink-dim); }
+.event-preview__cancelled { font-size: 0.7rem; justify-self: end; }
 .event-preview__source {
     font-size: 0.7rem;
     color: var(--ink-dim);
@@ -1101,6 +1107,26 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     text-decoration-color: var(--line-strong);
     text-underline-offset: 0.25em;
 }
+
+/* Cancelled — rename, don't delete (events-core isCancelledTitle). Reads like
+   the /status cancelled bar: ink-max and ✕, never accent; the date gives up
+   its green. The badge is inline-block so the strike-through stops at it. */
+.event-card--cancelled { border-left: 2px solid var(--ink-max); }
+.event-card--cancelled .event-card__title { text-decoration: line-through; }
+.event-card--cancelled .event-card__day,
+.event-card--cancelled .event-card__month { color: var(--ink-dim); }
+.event-card__cancelled,
+.event-preview__cancelled,
+.kiosk-ev__cancelled {
+    display: inline-block;
+    border: 1px solid currentColor;
+    color: var(--ink-max);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    padding: 0 0.6ch;
+    white-space: nowrap;
+}
+.event-card__cancelled { font-size: 0.7rem; margin-left: 1ch; }
 
 .event-card__date {
     display: flex;
@@ -2473,6 +2499,10 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+/* cancelled: struck title behind the badge (shared look, see the
+   .event-card--cancelled block); no running dot — kiosk.js withholds it */
+.kiosk-ev--cancelled .kiosk-ev__title { text-decoration: line-through; }
+.kiosk-ev__cancelled { font-size: 0.75em; }
 .kiosk-ev__side {
     color: var(--ink-dim);
     font-size: 0.75em;

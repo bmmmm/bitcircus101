@@ -1493,6 +1493,51 @@ test.describe('Event details', () => {
         + 'so wie es die echten Beschreibungen aus dem Kalender tun.\n\n'
         + 'Zweiter Absatz: Vortrag 20:30 bis 21:15, danach Fragen.\n\n#talk #hardware';
 
+    test('a cancelled event reads as cancelled on /events, the homepage and the wall', async ({ page }) => {
+        // The owner cancels by renaming ("CANCELED: …" — see events-core). The
+        // lists show the title WITHOUT the marker, struck through and labelled;
+        // the kiosk must not mark it as running even while its slot is on.
+        const NOW = new Date('2026-09-01T19:30:00');
+        const DAY = '2026-09-01';
+        const ev = (o) => ({
+            subtitle: '', description: '', location: '', endDate: o.date,
+            tags: [], type: '', source: 'bitcircus101', uid: o.title, ...o,
+        });
+        const data = {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: [
+                // both are on at NOW (19:30): only the real one may show as running
+                ev({ title: 'CANCELED: Lötabend', date: DAY, time: '19:00', endTime: '22:00', type: 'workshop' }),
+                ev({ title: 'Linkup', date: DAY, time: '18:00', endTime: '21:00', type: 'linkup' }),
+            ],
+        };
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, data);
+
+        for (const [url, cancelled, title] of [
+            ['/events.html', '.event-card--cancelled', '.event-card__title'],
+            ['/', '.event-preview--cancelled', '.event-preview__title'],
+            ['/kiosk/?rows=12', '.kiosk-ev--cancelled', '.kiosk-ev__title'],
+        ]) {
+            await page.goto(url);
+            const card = page.locator(cancelled);
+            await expect(card, `${url}: exactly one cancelled entry`).toHaveCount(1);
+            const t = card.locator(title);
+            await expect(t).toContainText('Lötabend');
+            await expect(t).not.toContainText(/CANCELED/i);
+            // the badge sits in the title on /events and the wall, in the time
+            // cell on the homepage row — the entry carries it either way
+            await expect(card).toContainText('abgesagt');
+            expect(await t.evaluate((el) => getComputedStyle(el).textDecorationLine), `${url}: struck through`)
+                .toContain('line-through');
+            // the other entry is untouched
+            await expect(page.locator(title).filter({ hasText: 'Linkup' })).not.toContainText('abgesagt');
+        }
+        await expect(page.locator('.kiosk-ev--cancelled.kiosk-ev--now'), 'no running dot on a cancelled event').toHaveCount(0);
+        await expect(page.locator('.kiosk-ev--now'), 'the real one still runs').toHaveCount(1);
+    });
+
     test('a long description folds behind [mehr] and unfolds in place', async ({ page }) => {
         const data = buildEventsData();
         data.events[0].description = LONG;
