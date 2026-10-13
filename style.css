@@ -136,7 +136,9 @@ body {
 :where(html[data-spatnav]) :focus-visible { outline-color: var(--accent); }
 /* ...and a ▶ beside the focus, placed by main.js through the two properties:
    the ring alone is easy to lose on a long page. Fixed when the focus is in
-   the sticky header or on a fixed button, so it stays beside it. */
+   the sticky header or on a fixed button, so it stays beside it — and only
+   then above the header: a ▶ scrolling with the page slides under it, like
+   the focus it marks. */
 .spatnav-cursor {
     position: absolute;
     left: var(--spatnav-x);
@@ -145,9 +147,9 @@ body {
     font-size: var(--fs-label);
     line-height: 1;
     pointer-events: none;
-    z-index: calc(var(--z-nav) + 1);
+    z-index: calc(var(--z-nav) - 1);
 }
-.spatnav-cursor--pinned { position: fixed; }
+.spatnav-cursor--pinned { position: fixed; z-index: calc(var(--z-nav) + 1); }
 
 /* =============================================================================
    Typography

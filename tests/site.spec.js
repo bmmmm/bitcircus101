@@ -603,6 +603,12 @@ test.describe('Navigation', () => {
             return !!g && g.off <= 2 && g.gap >= 2 && g.gap <= 14;
         }, { message: 'the ▶ stayed behind a layout shift' }).toBe(true);
         await page.evaluate(() => document.getElementById('spat-shift').remove());
+        // A ▶ that scrolls with the page passes under the sticky header, as its
+        // focus does — scrolled during the mode, it must not float over the nav.
+        const [under, header] = await page.evaluate(() => [
+            getComputedStyle(document.querySelector('.spatnav-cursor')).zIndex,
+            getComputedStyle(document.querySelector('header')).zIndex].map(Number));
+        expect(under, 'the scrolling ▶ paints over the sticky header').toBeLessThan(header);
         await walk('w', (f) => f.nav, (p, n) => n.bottom <= p.top + 1);
         const left = await page.evaluate(() => [...document.querySelectorAll('main a[href], main button')]
             .filter((el) => el.checkVisibility() && el.getBoundingClientRect().bottom <= 0).length);
