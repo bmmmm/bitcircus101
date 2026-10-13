@@ -10,7 +10,7 @@
  *    and linkify are a security boundary, not cosmetics;
  *  - the chrome is cut out of the tracked events.html at build time, so a
  *    template change that breaks the cut has to fail THIS pull request rather
- *    than the 30-minute sync on live;
+ *    than the hourly sync on live;
  *  - every link in that chrome was written for a page at the site root, so the
  *    rebase is what keeps navigation working two levels down.
  */

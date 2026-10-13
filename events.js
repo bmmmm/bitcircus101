@@ -769,9 +769,9 @@
 
   // ── Last Sync Display ────────────────────────────────────────────────────
 
-  var SYNC_BAR_FILL = 60;   // minutes until bar is full (2 cycles)
-  var SYNC_WARN = 120;      // minutes until "stale" warning (4 cycles)
-  var SYNC_OVERDUE = 180;   // minutes until "überfällig" (6 cycles)
+  var SYNC_BAR_FILL = 60;   // minutes until bar is full (1 hourly run)
+  var SYNC_WARN = 120;      // minutes until "stale" warning (1 run missed)
+  var SYNC_OVERDUE = 180;   // minutes until "überfällig" (2 runs missed)
 
   function syncBar(pct) {
     var total = 10;

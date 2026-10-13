@@ -736,7 +736,7 @@ function loadArchive(file = ARCHIVE_FILE) {
  *     replaced, `firstSeen` is kept; nothing is ever deleted;
  *   - cards before ARCHIVE_MIN_DATE are not admitted;
  *   - `lastSeen` is a day, not a timestamp — a no-change sync must not rewrite
- *     the file 48 times a day;
+ *     the file 24 times a day;
  *   - an id already held by a different identity (uid / title key) is a hash
  *     collision: warn, keep the incumbent, skip the newcomer. Never throw here:
  *     the sync runs unattended every hour and must not freeze on data;
