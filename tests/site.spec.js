@@ -103,9 +103,11 @@ const FOCUS_SWEEP = () => {
     };
     const contrast = (a, b) => { const la = lum(a), lb = lum(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); };
     // What the ring is drawn over, read where the ring actually is: the
-    // midpoint of each side, through every layer painted there (not just the
-    // element's ancestors — a button over a photo has the photo behind its
-    // ring, not the container). Translucent layers are composited down to
+    // midpoint of each side, through every layer hit-tested there, not just
+    // the element's ancestors: a button over a photo has the photo behind its
+    // ring, not the container. Pseudo-elements and pointer-events:none layers
+    // are invisible to elementsFromPoint, so what lies below them is what
+    // gets measured. Translucent layers are composited down to
     // the first opaque one. A photo or a background image has no single
     // colour to measure against: that side counts as failed. One measured
     // side may fail — a nav link's ring crosses into the green marker of its
@@ -1963,18 +1965,26 @@ test.describe('No JavaScript errors', () => {
             .rv:focus-visible { outline: none; background: #000; color: #fff; }
             .photo { background: url(${pixel}) center / cover; padding: 20px; }
             .veil { background: rgba(0, 0, 0, 0.05); padding: 20px; }
+            .pinch { display: flex; margin: 20px; }
+            .pinch i { width: 20px; background: #000; }
             </style>
             <button class="rv">first</button>
             <div class="photo"><button>over a photo</button></div>
-            <div class="veil"><button>over a 5% veil</button></div>`);
+            <div class="veil"><button>over a 5% veil</button></div>
+            <div class="pinch"><i></i><button>between two black blocks</button><i></i></div>`);
+        // One failed side is tolerated (a neighbour's marker), two are not:
+        // the button pinched between black blocks loses left and right.
         // A 5% black veil on white is near-white: a black ring holds there,
         // and only reads as failing if the veil's alpha is ignored.
         // The real Tab leaves the focus on the first stop — the reverse-video
         // one, whose only mark is the change a focused baseline cannot see.
         await page.keyboard.press('Tab');
         const sweep = await page.evaluate(FOCUS_SWEEP);
-        expect(sweep.stops).toBe(3);
-        expect(sweep.bad).toEqual(['button: ring drawn over an image (div.photo)']);
+        expect(sweep.stops).toBe(4);
+        expect(sweep.bad).toEqual([
+            'button: ring drawn over an image (div.photo)',
+            'button: ring 1.00:1 against its background',
+        ]);
     });
 
     for (const [url, name] of pages) {
