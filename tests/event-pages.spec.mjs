@@ -73,6 +73,8 @@ const entry = (extra = {}) => ({
   lastSeen: "2026-09-12",
   ...extra,
 });
+// source name → relation, as events-core relationMap builds it from calendars/
+const REL = { bitcircus101: "own", "Look at my toys!": "home", datenburg: "friend" };
 
 /**
  * cache-bust.mjs stamps ?v= on exactly the assets it lists — a script a page
@@ -207,13 +209,16 @@ describe("renderHead", () => {
     assert.ok(desc[1].endsWith("…"), "a truncated description must say so");
     // An event without a description still needs one — the link preview is the
     // whole point of these pages.
-    const bare = renderHead(entry({ description: "" }), { assetVersion: "v" });
+    const bare = renderHead(entry({ description: "" }), { assetVersion: "v", relations: REL });
     const fallback = /<meta name="description" content="([^"]*)" \/>/.exec(bare);
     assert.ok(fallback[1].length > 20, `empty fallback description: ${fallback[1]}`);
     assert.doesNotMatch(fallback[1], /\(/, "our own events name no source");
-    // A partner source with its own pages names itself in the fallback.
-    const partner = renderHead(entry({ description: "", source: "Look at my toys!" }), { assetVersion: "v" });
+    // Another calendar with its own pages names itself in the fallback.
+    const partner = renderHead(entry({ description: "", source: "Look at my toys!" }), { assetVersion: "v", relations: REL });
     assert.match(partner, /<meta name="description" content="[^"]*\(Look at my toys!\) am /);
+    // Without calendars/ (no relations) nothing is named rather than something wrong.
+    const blind = renderHead(entry({ description: "", source: "Look at my toys!" }), { assetVersion: "v" });
+    assert.doesNotMatch(blind, /\(Look at my toys!\)/);
   });
 
   it("never lets a '<' out raw inside the JSON-LD block", () => {
@@ -323,10 +328,15 @@ describe("renderEventPage", () => {
     assert.equal([...out.matchAll(/<script\b/g)].length, 4, "unexpected number of <script> elements");
   });
 
-  it("labels an external source and stays quiet for our own", () => {
-    const ext = renderEventPage(entry({ source: "datenburg" }), CHROME, TODAY);
-    assert.match(ext, /Externer Kalender: datenburg/);
-    assert.ok(!html.includes("Externer Kalender"), "our own calendar was labelled external");
+  it("labels a friend's calendar external, a home calendar by name, and stays quiet for our own", () => {
+    const ext = renderEventPage(entry({ source: "datenburg" }), CHROME, TODAY, REL);
+    assert.match(ext, /<p class="event-page__source">Externer Kalender: datenburg<\/p>/);
+    const home = renderEventPage(entry({ source: "Look at my toys!" }), CHROME, TODAY, REL);
+    assert.match(home, /<p class="event-page__source">Kalender: Look at my toys!<\/p>/);
+    assert.ok(!home.includes("Externer Kalender"), "a home calendar was labelled external");
+    const own = renderEventPage(entry(), CHROME, TODAY, REL);
+    assert.ok(!own.includes("event-page__source"), "our own calendar got a source line");
+    assert.ok(!html.includes("event-page__source"), "without relations, nothing is labelled");
   });
 });
 
