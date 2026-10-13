@@ -533,7 +533,7 @@ spec under `tests/*.spec.mjs`):
 | Raum nutzen | 1 | Title, CTA, structured data |
 | Impressum | 1 | Title + back link |
 | Danke page | 1 | Title, noindex, content, back link |
-| Monochrome theme | 1 | Dark bg, monospace, no inline styles |
+| Theme: ink text, green markers | 1 | Dark bg, monospace, no inline styles; panel/month brackets, h1 rule and event dates wear the accent, heading and card text stay ink (colours read from the tokens) |
 | Light theme toggle | 1 | data-theme flip, localStorage persistence, painted background inverts |
 | Pinnwand | 3 | Job board: active postings, the permanent slot's cycle, escaping, the how-to |
 | JS errors + focus sweep | 17 | Every page in the `pages` array (incl. /ascii/, /chat/, /lite/, /kiosk/, /404.html) free of console errors; on the same load every tab stop is visible and marked (reverse video, or a ring ≥ 3:1 not clipped away) and the first Tab lands on the skip link |

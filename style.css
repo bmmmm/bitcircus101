@@ -2,17 +2,20 @@
    bitcircus101 — stylesheet
 
    Design statement: the whole site is ONE plain-text document, typeset with
-   care — half man page, half well-kept README. Monochrome ink on paper
-   (dark by default, invertible), a character grid, and structure doing the
-   work that decoration usually fakes:
+   care — half man page, half well-kept README. Ink on paper (dark by
+   default, invertible), a character grid, and structure doing the work that
+   decoration usually fakes:
 
      - headings underline themselves like setext / man page sections
      - sections are TUI panels: the title sits in the border line
      - interaction is reverse video (ink and paper swap), not color
      - ASCII is functional (bars, maps, markers), never wallpaper
 
-   No accent color. No glow. No matrix rain. If it looks like text, it
-   behaves like text.
+   One accent, terminal green, only ever a signpost: links and CTAs, the
+   current selection, state on /status, and the structure markers — the
+   brackets and rules of headings, the date before an event. Text is never
+   green. No glow. No matrix rain. If it looks like text, it behaves like
+   text.
    ============================================================================= */
 
 /* =============================================================================
@@ -29,15 +32,22 @@
     --ink-dim:     #8a8a8a;  /* secondary text (>=4.5:1)    */
     --line:        #333333;  /* hairlines, panel borders    */
     --line-strong: #666666;  /* structural rules            */
-    /* accent = hyperlinks, primary CTAs, current-selection markers in content
-       navigation (current nav item, active event filter, project funding
-       progress/donate), and the frame of a pinnwand note that is actually
-       taken — a real posting or the sample; form controls and UI toggles
-       (theme toggle, carousel dots, checkboxes, focus rings) stay
-       reverse-video ink, and so does the empty permanent slot, whose dashed
-       ink frame is what makes the taken ones stand out. On /status the bars
-       that happened and the pulse levels wear it too (state markers in
-       content); the bar buttons' focus rings and selection outlines stay ink. */
+    /* The accent's scope — what may be green, what stays ink.
+       GREEN: hyperlinks and primary CTAs (incl. the frame of a pinnwand note
+       that is actually taken) · the current selection (nav marker, active
+       event filter, funding progress/donate) · the structure markers: the
+       "[ ]" of panel and month titles, the "── " before an h3, the h1 double
+       rule, and the date before an event (list day+month, homepage preview,
+       archive row, event page "wann", kiosk day label) · state on /status
+       (bars that happened, pulse levels).
+       INK: every heading and body text · form controls and UI toggles (theme
+       toggle, carousel dots, checkboxes), focus rings and selection outlines ·
+       the brackets of controls (.btn, [+], [mehr]), list bullets, .doc-path,
+       the type rules of cards · the empty permanent slot (its dashed ink frame
+       is what makes the taken ones stand out) · everything cancelled (ink-max
+       and ✕) · meta lines like "hängt seit".
+       lite/index.html copies these tokens verbatim — tests/markup.spec.mjs
+       holds them equal. */
     --accent:      #3ecf5c;  /* terminal green */
     --accent-soft: color-mix(in srgb, var(--accent) 45%, transparent);
 
@@ -123,7 +133,7 @@ h1, h2, h3, h4 {
 h1 {
     font-size: clamp(1.15rem, 2.4vw + 0.6rem, 1.5rem);
     letter-spacing: 0.02em;
-    border-bottom: 3px double var(--line-strong);
+    border-bottom: 3px double var(--accent);
     padding-bottom: 0.35em;
 }
 
@@ -133,8 +143,9 @@ h3 {
     font-size: 1rem;
     color: var(--ink);
 }
-/* sub-sub headings carry a text marker instead of size */
-h3::before { content: "── "; color: var(--ink-dim); font-weight: 400; }
+/* sub-sub headings carry a text marker instead of size — the marker is the
+   green, the words stay ink */
+h3::before { content: "── "; color: var(--accent); font-weight: 400; }
 
 a {
     color: var(--accent);
@@ -205,7 +216,10 @@ section { margin: 0 0 2.5rem; }
     margin: 2.25rem 0;
 }
 
-.panel > h2:first-child {
+/* The logo strip (section.logo-slider, markup generated) is a panel without
+   the .panel class — it shares this rule rather than carrying a copy. */
+.panel > h2:first-child,
+section.logo-slider > h2:first-child {
     position: absolute;
     top: 0;
     left: 1rem;
@@ -221,8 +235,11 @@ section { margin: 0 0 2.5rem; }
     text-overflow: ellipsis;
 }
 
-.panel > h2:first-child::before { content: "[ "; color: var(--ink-dim); font-weight: 400; }
-.panel > h2:first-child::after  { content: " ]"; color: var(--ink-dim); font-weight: 400; }
+/* the brackets are the panel's green marker; the title text stays ink */
+.panel > h2:first-child::before,
+section.logo-slider > h2:first-child::before { content: "[ "; color: var(--accent); font-weight: 400; }
+.panel > h2:first-child::after,
+section.logo-slider > h2:first-child::after  { content: " ]"; color: var(--accent); font-weight: 400; }
 
 /* heading anchor links — visible on hover, always focusable */
 /* Deliberately NOT given a widened hit area like the other 24px controls. It is
@@ -799,8 +816,9 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .event-preview:hover { background: var(--ink); color: var(--paper); }
 .event-preview:hover span { color: inherit; }
 
-.event-preview__dow { color: var(--ink-dim); font-size: 0.8rem; }
-.event-preview__date { font-size: 0.9rem; }
+/* the date is the row's green marker (the hover reset above takes it back) */
+.event-preview__dow { color: var(--accent); font-size: 0.8rem; }
+.event-preview__date { color: var(--accent); font-size: 0.9rem; }
 .event-preview__title {
     font-size: 0.9rem;
     color: var(--ink-max);
@@ -1039,6 +1057,12 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 }
 .events-month__label::-webkit-details-marker { display: none; }
 .events-month__title { flex: 1; min-width: 0; }
+/* the month's brackets are its green marker, like a panel title's; on the
+   reverse-video hover they go back to ink (green on ink measures ~2:1) */
+.events-month__title::before { content: "[ "; color: var(--accent); }
+.events-month__title::after { content: " ]"; color: var(--accent); }
+.events-month__label:hover .events-month__title::before,
+.events-month__label:hover .events-month__title::after { color: inherit; }
 .events-month__chevron { flex-shrink: 0; color: var(--ink-dim); }
 .events-month__chevron::before { content: "[+]"; font-size: 0.85em; }
 .events-month[open] > .events-month__label .events-month__chevron::before { content: "[-]"; }
@@ -1056,9 +1080,10 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .event-card:hover { background: var(--paper-2); }
 
 /* type marker — structural, not chromatic: the left rule varies by kind.
-   Accent stays out of it (see the token scope rule): a card's type is neither
-   a link, a CTA, nor a current selection. events.js emits the classes on both
-   the JSON path and the ICS fallback. */
+   The date is the card's green marker (below); the type rule stays ink, since
+   a card's type is neither a link, a CTA, nor a current selection (see the
+   token scope rule). events.js emits the classes on both the JSON path and
+   the ICS fallback. */
 .event-card { border-left: 2px solid transparent; padding-left: 0.75ch; }
 .event-card--linkup   { border-left-color: var(--line-strong); }
 .event-card--workshop { border-left-style: dashed; border-left-color: var(--line); }
@@ -1081,10 +1106,10 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .event-card__day {
     font-size: 1.3rem;
     font-weight: 700;
-    color: var(--ink-max);
+    color: var(--accent);
     line-height: 1.1;
 }
-.event-card__month { font-size: 0.7rem; color: var(--ink-dim); letter-spacing: 0.1em; }
+.event-card__month { font-size: 0.7rem; color: var(--accent); letter-spacing: 0.1em; }
 .event-card__dow { font-size: 0.7rem; color: var(--ink-dim); }
 
 .event-card__content { min-width: 0; }
@@ -1254,7 +1279,7 @@ a.event-card__location:hover { background: var(--ink); color: var(--paper); }
 }
 .event-page__when {
     margin: 0;
-    color: var(--ink-max);
+    color: var(--accent); /* the date is the page's green marker */
     font-weight: 700;
     font-size: 0.95rem;
 }
@@ -1339,7 +1364,7 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
 .archive__row:hover { background: var(--paper-2); }
 .archive__date {
     flex: 0 0 auto;
-    color: var(--ink-dim);
+    color: var(--accent); /* the date is the row's green marker */
     font-size: 0.8rem;
     font-variant-numeric: tabular-nums;
 }
@@ -1871,23 +1896,8 @@ section.logo-slider {
     margin: 2.25rem 0;
 }
 
-section.logo-slider > h2:first-child {
-    position: absolute;
-    top: 0;
-    left: 1rem;
-    transform: translateY(-50%);
-    margin: 0;
-    background: var(--paper);
-    padding: 0 0.75ch;
-    font-size: 0.95rem;
-    letter-spacing: 0.04em;
-    max-width: calc(100% - 2rem);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-section.logo-slider > h2:first-child::before { content: "[ "; color: var(--ink-dim); font-weight: 400; }
-section.logo-slider > h2:first-child::after  { content: " ]"; color: var(--ink-dim); font-weight: 400; }
+/* section.logo-slider > h2:first-child: styled with .panel > h2:first-child
+   up in the Panels section — one rule, not a twin. */
 
 .logo-slider__viewport { overflow: hidden; }
 
@@ -2355,8 +2365,8 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
 
    Today is marked on the day LABEL, reverse video like the rest of the site's
    state markers — not on the whole block, which at this type size would be a
-   half-screen slab. The running-now dot is the one accent use (a current-state
-   marker, per the token rule).
+   half-screen slab. Green here, per the token rule: the day label (the date
+   marker) and the running-now dot (a current-state marker); the text is ink.
    ============================================================================= */
 .kiosk-body { margin: 0; }
 
@@ -2417,8 +2427,10 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
     font-size: 0.85em;
     font-weight: 700;
     letter-spacing: 0.08em;
-    color: var(--ink-dim);
+    color: var(--accent); /* the day is the wall's date marker, like a card's */
     text-transform: uppercase;
+    /* an <h1>: keep the page-title double rule in ink, not in green */
+    border-bottom-color: var(--line-strong);
 }
 .kiosk-day__label::after {
     content: "";
@@ -2575,8 +2587,8 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
 /* ── palettes ─────────────────────────────────────────────────────────────
    Wall-only colour. The kiosk is its own world (no chrome, no nav), so unlike
    the rest of the site it may tint the ink itself — that is the whole point of
-   a phosphor mode. `standard` is the site's own monochrome look and stays the
-   default: the colour is opt-in, not a redecoration.
+   a phosphor mode. `standard` is the site's own ink-and-one-accent look and
+   stays the default: the colour is opt-in, not a redecoration.
 
    Every value is set for BOTH schemes. A phosphor hue that reads on near-black
    paper is unreadable on near-white, so light gets its own darker set rather
@@ -2753,6 +2765,7 @@ html[data-theme="light"][data-palette="pride"] {
     font-weight: 700;
     color: var(--ink-max);
     letter-spacing: 0.04em;
+    border-bottom-color: var(--line-strong); /* an <h1>: ink rule, not green */
 }
 /* One line, clipped: the point is that the URL IS the setting, copyable
    from the address bar — spelling it out over three wrapped lines only pushed
@@ -3117,10 +3130,12 @@ html[data-theme="light"][data-palette="pride"] {
         --ink-dim: #444444;
         --line: #999999;
         --line-strong: #555555;
+        --accent: #15803d; /* the screen green prints ~2:1 on white */
     }
     header, .footer__bar, .scroll-top, .menu-toggle, .nav__utils,
     .carousel-button, .carousel-toggle, .back-link, .skip-link { display: none !important; }
     body { background: #ffffff; color: #000000; }
     a { color: #000000; }
-    .panel > h2:first-child { background: #ffffff; }
+    .panel > h2:first-child,
+    section.logo-slider > h2:first-child { background: #ffffff; }
 }
