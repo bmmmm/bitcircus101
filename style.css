@@ -1556,7 +1556,7 @@ h3.location-card__header::before { content: none; }
     filter: grayscale(1);
 }
 .location-card__map-frame:hover,
-.location-card__map-frame:focus { filter: grayscale(0); }
+.location-card__map-frame.focused { filter: grayscale(0); }
 
 .location-card__osm-link {
     display: block;

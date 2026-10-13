@@ -502,6 +502,15 @@
         this.toggleMap(showMapBtn, mapContainer, osmMap);
       });
 
+      // The keyboard twin of the hover colour-in. CSS cannot carry it: a Tab
+      // into the frame puts the focus inside the embedded document, and the
+      // <iframe> then matches neither :focus nor :focus-within. What the
+      // page does see is its own window losing the focus to the frame.
+      window.addEventListener("blur", () => {
+        osmMap.classList.toggle("focused", document.activeElement === osmMap);
+      });
+      window.addEventListener("focus", () => osmMap.classList.remove("focused"));
+
       // Clicking anywhere on the card (outside the open map area) triggers the button
       const card = showMapBtn.closest(".location-card");
       if (card) {
@@ -521,10 +530,9 @@
 
       const isVisible = !container.classList.contains("hidden");
       container.classList.toggle("hidden");
-      // The visible text is the button's name; aria-expanded says what state
-      // that name describes.
+      // The visible text says the state (laden / schließen), so there is no
+      // aria-expanded on top: a screen reader would announce it twice.
       button.textContent = isVisible ? "[ karte laden ]" : "[ karte schließen ]";
-      button.setAttribute("aria-expanded", isVisible ? "false" : "true");
 
       if (!isVisible) {
         setTimeout(() => {
