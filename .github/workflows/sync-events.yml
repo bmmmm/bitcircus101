@@ -36,6 +36,8 @@ jobs:
           git fetch origin main
           # jobs-core.js: build-pinnwand-feed.mjs needs it in step with the script,
           # not live's copy from the last deploy (a deploy can lag this cron).
+          # A pathspec checkout also stages the files — the commit step below
+          # resets them, or live would get main's unminified core scripts back.
           git checkout origin/main -- scripts/ calendars/ ics-core.js events-core.js jobs-core.js
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -74,6 +76,14 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Hand main's build inputs back: live keeps the deploy's copies (the
+          # core scripts minified there), and the sync commit carries data only.
+          # clean drops files new on main, so a rebase onto a deploy that adds
+          # them cannot trip over untracked copies.
+          inputs="scripts calendars ics-core.js events-core.js jobs-core.js"
+          git reset -q -- $inputs
+          git checkout -- $inputs
+          git clean -fdq -- $inputs
           # -f: the feeds are .gitignored on main (rebuilt here); force-add so the
           # first run can track them on live. ical.ics + events/ copies are new (issue #1).
           # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5),
