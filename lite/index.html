@@ -7,6 +7,7 @@
 <meta name="theme-color" content="#0a0a0a">
 <meta name="description" content="bitcircus101 — Hackspace in Bonn. Dorotheenstraße 101, freitags ab 20 Uhr. Alle Infos auf einer Seite: Ort, Fotos, Termine, Unterstützen, Projekte, Raum nutzen.">
 <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="/feeds/source/bitcircus.xml">
+<link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="/pinnwand/feed.xml">
 <link rel="canonical" href="https://bitcircus101.de/lite/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://bitcircus101.de/lite/">
@@ -20,18 +21,41 @@
 <title>bitcircus101 — lite</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230a0a0a'/%3E%3Ctext x='2' y='23' font-family='monospace' font-size='16' font-weight='bold' fill='%23ffffff'%3E101%3C/text%3E%3C/svg%3E">
 <style>
-:root { color-scheme: dark }
+/* The main site's tokens, verbatim (style.css :root) — tests/markup.spec.mjs
+   holds the two equal, so a token change is two edits. No raw colour below. */
+:root {
+  color-scheme: dark;
+  --paper: #0a0a0a; --paper-2: #111111; --ink: #c9c9c9; --ink-max: #ececec;
+  --ink-dim: #8a8a8a; --line: #333333; --line-strong: #666666; --accent: #3ecf5c;
+  --accent-soft: color-mix(in srgb, var(--accent) 45%, transparent);
+  --font: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  --fs-panel-title: clamp(0.95rem, 0.85rem + 0.4vw, 1.05rem);
+}
 *, *::before, *::after { box-sizing: border-box }
 body {
   margin: 0 auto;
   max-width: 42rem;
   padding: 2rem 1.25rem 4rem;
-  background: #0a0a0a;
-  color: #d8d8d8;
-  font: 1rem/1.7 ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  background: var(--paper);
+  color: var(--ink);
+  font: 1rem/1.7 var(--font);
 }
-a { color: #fff; text-underline-offset: .2em; text-decoration-color: #666; position: relative }
-a:hover, a:focus { background: #d8d8d8; color: #0a0a0a; text-decoration: none }
+/* Skip link: off-screen until focused, then a reverse-video tab above the
+   page (the main site's rule, inlined). Restated after a:focus below would
+   paint it green. */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1.25rem;
+  background: var(--ink-max);
+  color: var(--paper);
+  padding: .5em 1.5ch;
+  z-index: 1;
+  text-decoration: none;
+}
+.skip-link:focus { top: .5rem; background: var(--ink-max); color: var(--paper) }
+a { color: var(--accent); text-underline-offset: .2em; text-decoration-color: var(--accent-soft); position: relative }
+a:hover, a:focus { background: var(--accent); color: var(--paper); text-decoration: none }
 /* Tap targets: a link here is one line of a 27px line box but only ~19px of
    ink, so growing the zone by 4px each way uses space the layout already
    reserves — nothing moves, and 27px clears the 24px WCAG 2.2 floor. 4 is half
@@ -45,39 +69,44 @@ a::after {
   top: -4px;
   bottom: -4px;
 }
-a:focus-visible { outline: 2px solid #fff; outline-offset: 2px }
-::selection { background: #d8d8d8; color: #0a0a0a }
-h1 { margin: 0 0 .3rem; font-size: 1.5rem; color: #fff }
-h1 .prompt { color: #8f8f8f }
-.lede { margin: 0 0 1.4rem; color: #8f8f8f }
+a:focus-visible { outline: 2px solid var(--ink-max); outline-offset: 2px }
+::selection { background: var(--ink); color: var(--paper) }
+/* Headings as on the main site: the h1 over a green double rule, h2 as a
+   panel title in green brackets; the words themselves stay ink. */
+h1 { margin: 0 0 .3rem; font-size: 1.5rem; color: var(--ink-max); border-bottom: 3px double var(--accent); padding-bottom: .35em }
+h1 .prompt { color: var(--ink-dim) }
+.lede { margin: 0 0 1.4rem; color: var(--ink-dim) }
 h2 {
   margin: 2.4rem 0 .6rem;
-  font-size: .72rem;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: #fff;
-  border-bottom: 1px solid #333;
+  font-size: var(--fs-panel-title);
+  letter-spacing: .04em;
+  color: var(--ink-max);
+  border-bottom: 1px solid var(--line);
   padding-bottom: .3rem;
 }
+h2::before { content: "[ "; color: var(--accent); font-weight: 400 }
+h2::after { content: " ]"; color: var(--accent); font-weight: 400 }
 p { margin: 0 0 .9rem }
 ul { margin: 0 0 .9rem; padding-left: 1.1rem }
 li { margin: .25rem 0 }
 dl { margin: 0 0 .9rem }
-dt { color: #8f8f8f; margin-top: .6rem }
-dt::before { content: "— " }
+dt { color: var(--ink-dim); margin-top: .6rem }
+dt::before { content: "— "; color: var(--accent) }
 dd { margin: 0 0 0 1rem }
-.dim { color: #8f8f8f }
-/* ASCII hero — the tent logo from the homepage, fixed 21ch wide */
+.dim { color: var(--ink-dim) }
+.when { color: var(--accent) } /* the date before an event: the green marker */
+/* ASCII hero — lite's own small tent (the homepage carries the detailed one);
+   fixed width, never wraps */
 .hero { margin: 0 0 1.6rem }
 .hero pre {
   margin: 0;
   font-family: inherit;
   font-size: clamp(.75rem, 3.5vw, 1rem);
   line-height: 1.05;
-  color: #d8d8d8;
+  color: var(--ink);
   white-space: pre;
 }
-.hero pre b { color: #fff }
+.hero pre b { color: var(--ink-max) }
 /* Room photos — minimal lazy thumbnails, monochrome at rest */
 .shots { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: 0 0 .9rem }
 .shots img {
@@ -86,33 +115,35 @@ dd { margin: 0 0 0 1rem }
   height: auto;
   aspect-ratio: 4 / 3;
   object-fit: cover;
-  border: 1px solid #333;
+  border: 1px solid var(--line);
   filter: grayscale(1);
 }
 .shots img:hover { filter: none }
 @media (max-width: 30rem) { .shots { grid-template-columns: repeat(2, 1fr) } }
-/* Funding / Kosten — static snapshot bars */
+/* Funding / Kosten — static snapshot bars, the main site's colours */
 .projekt { margin: 0 0 1rem }
-.projekt__t { margin: 0 0 .15rem; color: #d8d8d8 }
+.projekt__t { margin: 0 0 .15rem; color: var(--ink) }
 .bar { margin: 0 0 .15rem; font-family: inherit; letter-spacing: .02em; word-break: break-all }
-.bar__f { color: #fff }
-.bar__e { color: #666 }
-.bar__pct { color: #8f8f8f }
-.projekt__done { color: #fff }
-.projekt__amt { margin: 0; color: #8f8f8f; font-size: .9rem }
+.bar__f { color: var(--accent) }
+.bar__e { color: var(--line-strong) }
+.bar__pct { color: var(--ink) }
+.projekt__done { color: var(--ink-max) }
+.projekt__amt { margin: 0; color: var(--ink-dim); font-size: .9rem }
 footer {
   margin-top: 3rem;
   padding-top: 1rem;
-  border-top: 1px solid #333;
-  color: #8f8f8f;
+  border-top: 1px solid var(--line);
+  color: var(--ink-dim);
   font-size: .85rem;
 }
-footer a { color: #8f8f8f }
-footer a:hover, footer a:focus { background: #d8d8d8; color: #0a0a0a }
+footer a { color: var(--ink-dim) }
+footer a:hover, footer a:focus { background: var(--ink); color: var(--paper) }
+footer kbd { font: inherit; color: var(--ink) }
 </style>
 </head>
 <body>
-<main>
+<a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+<main id="main-content">
 
 <h1><span class="prompt" aria-hidden="true">&gt;_ </span>bitcircus101</h1>
 <p class="lede">Hackspace in Bonn · Dorotheenstraße 101 · freitags ab 20&nbsp;Uhr</p>
@@ -155,14 +186,14 @@ footer a:hover, footer a:focus { background: #d8d8d8; color: #0a0a0a }
 <h2>Nächste Termine</h2>
 <!-- lite-events:start -->
 <ul>
-<li><time datetime="2026-06-19T20:00" class="dim">FR 19. JUN · 20:00</time> — <a href="https://bitcircus101.de" rel="noopener noreferrer">Linkup@bitcircus101</a></li>
-<li><time datetime="2026-06-23T19:00" class="dim">DI 23. JUN · 19:00</time> — Look at my toys!</li>
-<li><time datetime="2026-06-26T20:00" class="dim">FR 26. JUN · 20:00</time> — <a href="https://bitcircus101.de" rel="noopener noreferrer">Casual Linkup@bitcircus101 (4FR)</a></li>
-<li><time datetime="2026-06-30T19:00" class="dim">DI 30. JUN · 19:00</time> — Look at my toys!</li>
-<li><time datetime="2026-07-03T20:00" class="dim">FR 3. JUL · 20:00</time> — <a href="https://bitcircus101.de" rel="noopener noreferrer">Casual Linkup@bitcircus101 (1FR)</a></li>
-<li><time datetime="2026-07-07T19:00" class="dim">DI 7. JUL · 19:00</time> — Look at my toys!</li>
-<li><time datetime="2026-07-10T20:00" class="dim">FR 10. JUL · 20:00</time> — <a href="https://bitcircus101.de" rel="noopener noreferrer">Casual Linkup@bitcircus101 (2FR)</a></li>
-<li><time datetime="2026-07-13T19:00" class="dim">MO 13. JUL · 19:00</time> — <a href="https://wiki.fsfe.org/LocalGroups/Bonn" rel="noopener noreferrer">Treffen: Bonner FSFE Community</a></li>
+<li><time datetime="2026-06-19T20:00" class="when">FR 19. JUN · 20:00</time> — <a href="https://bitcircus101.de" rel="noopener noreferrer">Linkup@bitcircus101</a></li>
+<li><time datetime="2026-06-23T19:00" class="when">DI 23. JUN · 19:00</time> — Look at my toys!</li>
+<li><time datetime="2026-06-26T20:00" class="when">FR 26. JUN · 20:00</time> — <a href="https://bitcircus101.de" rel="noopener noreferrer">Casual Linkup@bitcircus101 (4FR)</a></li>
+<li><time datetime="2026-06-30T19:00" class="when">DI 30. JUN · 19:00</time> — Look at my toys!</li>
+<li><time datetime="2026-07-03T20:00" class="when">FR 3. JUL · 20:00</time> — <a href="https://bitcircus101.de" rel="noopener noreferrer">Casual Linkup@bitcircus101 (1FR)</a></li>
+<li><time datetime="2026-07-07T19:00" class="when">DI 7. JUL · 19:00</time> — Look at my toys!</li>
+<li><time datetime="2026-07-10T20:00" class="when">FR 10. JUL · 20:00</time> — <a href="https://bitcircus101.de" rel="noopener noreferrer">Casual Linkup@bitcircus101 (2FR)</a></li>
+<li><time datetime="2026-07-13T19:00" class="when">MO 13. JUL · 19:00</time> — <a href="https://wiki.fsfe.org/LocalGroups/Bonn" rel="noopener noreferrer">Treffen: Bonner FSFE Community</a></li>
 </ul>
 <p class="dim">→ <a href="webcal://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export" rel="noopener noreferrer">Kalender-Abo ↗</a> · <a href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export" rel="noopener noreferrer">ICS ↗</a> · <a href="/feeds/source/bitcircus.xml">RSS-Feed</a> · <a href="../events.html">Alle Termine</a></p>
 <!-- lite-events:end -->
@@ -216,6 +247,10 @@ footer a:hover, footer a:focus { background: #d8d8d8; color: #0a0a0a }
 <li><a href="webcal://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export" rel="noopener noreferrer">Kalender-Abo (webcal) ↗</a></li>
 <li><a href="https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export" rel="noopener noreferrer">Kalender-Abo (ICS) ↗</a></li>
 <li><a href="../calendar/">Alle Abo-Adressen</a> <span class="dim">— der Kalender läuft nicht mehr über Nextcloud</span></li>
+<li><a href="../status.html">Status</a> <span class="dim">— was stattfand, was ausfiel</span></li>
+<li><a href="../rss.html">Alle Feeds</a></li>
+<li><a href="../archiv/">Archiv vergangener Termine</a></li>
+<li><a href="/pinnwand/feed.xml">Pinnwand-Feed (RSS)</a></li>
 </ul>
 </main>
 
@@ -223,6 +258,7 @@ footer a:hover, footer a:focus { background: #d8d8d8; color: #0a0a0a }
 <p>Ultraleichte Textversion — kein JavaScript, kein Tracking, keine Web-Fonts. Bilder klein gehalten und erst beim Scrollen geladen.</p>
 <p><a href="../index.html">→ Vollständige Seite</a> (große Grafik, Karte, Live-Termine) ·
 <a href="../impressum-datenschutz.html">Impressum &amp; Datenschutz</a></p>
+<p class="footer__a11y">ohne maus bedienbar: <kbd>tab</kbd>, <kbd>enter</kbd>, <kbd>esc</kbd> — darauf achten wir</p>
 </footer>
 
 </body>

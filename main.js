@@ -693,24 +693,34 @@
 
       if (!upcoming.length) return;
 
+      // Cancelled — rename, don't delete (events-core isCancelledTitle): the
+      // row shows the title without the marker, struck through, and the
+      // badge takes the time cell (auto column, never clipped like the title).
+      // Without events-core.js the raw title stands, nothing breaks.
+      const core = window.EventsCore;
       let html = "";
       upcoming.forEach((e) => {
         const d = new Date(e.date + "T00:00:00");
         const dow = DAYS[d.getDay()];
         const date = pad(d.getDate()) + "." + pad(d.getMonth() + 1) + ".";
-        const typeClass = e.type ? " event-preview--" + e.type : "";
+        const cancelled = !!(core && core.isCancelledTitle(e.title));
+        const shown = cancelled ? core.stripCancelMarker(e.title) : e.title;
+        const typeClass = (e.type ? " event-preview--" + e.type : "") +
+          (cancelled ? " event-preview--cancelled" : "");
         html += '<a class="event-preview' + typeClass + '" href="events.html">';
         html += '<span class="event-preview__dow">' + dow + "</span>";
         html += '<span class="event-preview__date">' + date + "</span>";
         html +=
           '<span class="event-preview__title">' +
-          escHtml(e.title);
+          escHtml(shown);
         if (e.source && e.source !== "bitcircus101") {
           html += ' <span class="event-preview__source">' +
             escHtml(e.source) + "</span>";
         }
         html += "</span>";
-        if (e.time)
+        if (cancelled)
+          html += '<span class="event-preview__cancelled"><span aria-hidden="true">✕ </span>abgesagt</span>';
+        else if (e.time)
           html +=
             '<span class="event-preview__time">' + escHtml(e.time) + "</span>";
         html += "</a>";

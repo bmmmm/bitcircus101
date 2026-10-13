@@ -1423,8 +1423,41 @@ test.describe('Danke page', () => {
 
 // ─── Design – monochrome plain-text theme ────────────────────────────────────
 
-test.describe('Monochrome theme', () => {
-    test('dark background, monospace font, no inline styles', async ({ page }) => {
+test.describe('Theme: ink text, green markers', () => {
+    test('dark background, monospace font, no inline styles, green markers on ink text', async ({ page }) => {
+        // The fixture puts an event preview on the homepage and cards on
+        // /events.html — the dates are the markers under test.
+        await useEventsFixture(page);
+        await page.goto('/');
+
+        // Markers are green, text is ink. The colours are read out of the
+        // tokens, never written down here, so repainting a token repaints
+        // the assertion with it.
+        const tokenColor = (name) => page.evaluate((n) => {
+            const probe = document.createElement('span');
+            probe.style.color = `var(${n})`;
+            document.body.appendChild(probe);
+            const c = getComputedStyle(probe).color;
+            probe.remove();
+            return c;
+        }, name);
+        const colorOf = (sel, pseudo = null) => page.evaluate(([s, p]) =>
+            getComputedStyle(document.querySelector(s), p).color, [sel, pseudo]);
+        const accent = await tokenColor('--accent');
+        const inkMax = await tokenColor('--ink-max');
+        expect(accent).not.toBe(inkMax);
+        await expect(page.locator('.event-preview__date').first()).toBeVisible();
+        expect(await colorOf('.panel > h2:first-child', '::before'), 'panel bracket').toBe(accent);
+        expect(await colorOf('.panel > h2:first-child'), 'panel title text').toBe(inkMax);
+        expect(await colorOf('.event-preview__date'), 'preview date').toBe(accent);
+
+        await page.goto('/events.html');
+        await expect(page.locator('.event-card').first()).toBeVisible();
+        expect(await page.evaluate(() => getComputedStyle(document.querySelector('h1')).borderBottomColor), 'h1 rule').toBe(accent);
+        expect(await colorOf('.events-month__title', '::before'), 'month bracket').toBe(accent);
+        expect(await colorOf('.event-card__day'), 'card day').toBe(accent);
+        expect(await colorOf('.event-card__title'), 'card title text').toBe(inkMax);
+
         await page.goto('/');
 
         // Dark background
@@ -1459,6 +1492,53 @@ test.describe('Event details', () => {
         + 'abgeschnitten werden muss und der Rest hinter dem Aufklapper verschwindet, '
         + 'so wie es die echten Beschreibungen aus dem Kalender tun.\n\n'
         + 'Zweiter Absatz: Vortrag 20:30 bis 21:15, danach Fragen.\n\n#talk #hardware';
+
+    test('a cancelled event reads as cancelled on /events, the homepage and the wall', async ({ page }) => {
+        // The owner cancels by renaming ("CANCELED: …" — see events-core). The
+        // lists show the title WITHOUT the marker, struck through and labelled;
+        // the kiosk must not mark it as running even while its slot is on.
+        const NOW = new Date('2026-09-01T19:30:00');
+        const DAY = '2026-09-01';
+        const ev = (o) => ({
+            subtitle: '', description: '', location: '', endDate: o.date,
+            tags: [], type: '', source: 'bitcircus101', uid: o.title, ...o,
+        });
+        const data = {
+            lastSync: NOW.toISOString(),
+            sources: [],
+            events: [
+                // both are on at NOW (19:30): only the real one may show as running.
+                // The cancelled one is a linkup: that type underlines its title,
+                // and the strike-through has to win that cascade (it lost once).
+                ev({ title: 'CANCELED: Lötabend', date: DAY, time: '19:00', endTime: '22:00', type: 'linkup' }),
+                ev({ title: 'Linkup', date: DAY, time: '18:00', endTime: '21:00', type: 'workshop' }),
+            ],
+        };
+        await page.clock.install({ time: NOW });
+        await useEventsFixture(page, data);
+
+        for (const [url, cancelled, title] of [
+            ['/events.html', '.event-card--cancelled', '.event-card__title'],
+            ['/', '.event-preview--cancelled', '.event-preview__title'],
+            ['/kiosk/?rows=12', '.kiosk-ev--cancelled', '.kiosk-ev__title'],
+        ]) {
+            await page.goto(url);
+            const card = page.locator(cancelled);
+            await expect(card, `${url}: exactly one cancelled entry`).toHaveCount(1);
+            const t = card.locator(title);
+            await expect(t).toContainText('Lötabend');
+            await expect(t).not.toContainText(/CANCELED/i);
+            // the badge sits in the title on /events and the wall, in the time
+            // cell on the homepage row — the entry carries it either way
+            await expect(card).toContainText('abgesagt');
+            expect(await t.evaluate((el) => getComputedStyle(el).textDecorationLine), `${url}: struck through`)
+                .toContain('line-through');
+            // the other entry is untouched
+            await expect(page.locator(title).filter({ hasText: 'Linkup' })).not.toContainText('abgesagt');
+        }
+        await expect(page.locator('.kiosk-ev--cancelled.kiosk-ev--now'), 'no running dot on a cancelled event').toHaveCount(0);
+        await expect(page.locator('.kiosk-ev--now'), 'the real one still runs').toHaveCount(1);
+    });
 
     test('a long description folds behind [mehr] and unfolds in place', async ({ page }) => {
         const data = buildEventsData();

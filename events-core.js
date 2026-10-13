@@ -50,6 +50,20 @@
   }
 
   /**
+   * The title without the owner's marker — for display only. The data keeps
+   * the raw title: the ids of UID-less sources, mergeArchive, the RSS titles
+   * and eventAnchor all read it. The marker, its bracket and one separator
+   * (":", "-", "–", "—", "|") go; a title that is nothing but the marker
+   * stays as it is rather than turning into an empty string.
+   */
+  var CANCEL_PREFIX_RE = /^\s*[\[(]?\s*(cancell?ed|abgesagt)\b\s*[\])]?\s*[:\-–—|]?\s*/i;
+  function stripCancelMarker(summary) {
+    if (typeof summary !== "string") return summary;
+    var out = summary.replace(CANCEL_PREFIX_RE, "");
+    return out || summary;
+  }
+
+  /**
    * Tag resolution — 3 sources, in priority:
    *
    * 1. Explicit #hashtags in the event description  (you control these in the calendar entry)
@@ -301,6 +315,7 @@
     isInternal: isInternal,
     guessType: guessType,
     isCancelledTitle: isCancelledTitle,
+    stripCancelMarker: stripCancelMarker,
     extractHashtags: extractHashtags,
     keywordTags: keywordTags,
     buildTags: buildTags,

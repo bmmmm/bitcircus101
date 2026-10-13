@@ -160,3 +160,85 @@ describe("feed autodiscovery (README § Generated files, CLAUDE.md § Adding a p
     );
   });
 });
+
+describe("lite/ mirrors the style.css tokens (style.css § Tokens, CLAUDE.md § Conventions)", () => {
+  // lite/index.html loads no stylesheet, so it repeats the design tokens
+  // inline. Two gates keep that copy honest: every token in lite equals the
+  // one in style.css's first :root (the palette/print/contrast :roots are
+  // indented or carry a selector suffix, so `^:root\s*{` skips them), and the
+  // rest of lite's CSS names no raw colour — a hex or rgb() there is a value
+  // that escaped the tokens. A hex-looking id selector such as `#add` would be
+  // a false positive here; it would fail loudly, not silently.
+  const noComments = (css) => css.replace(/\/\*[\s\S]*?\*\//g, "");
+  const norm = (v) => v.replace(/\s+/g, " ").trim().toLowerCase();
+  const rootBlock = (css) => {
+    const m = /^:root\s*\{([^}]*)\}/m.exec(css);
+    assert.ok(m, "no top-level :root block");
+    return m[1];
+  };
+  const tokens = (block) =>
+    Object.fromEntries(
+      [...block.matchAll(/--([\w-]+)\s*:\s*([^;]+);/g)].map((m) => [m[1], norm(m[2])]),
+    );
+  const liteCss = () => {
+    const m = /<style>([\s\S]*?)<\/style>/i.exec(read("lite/index.html"));
+    assert.ok(m, "lite/index.html has no <style> block");
+    return noComments(m[1]);
+  };
+  const REQUIRED = ["paper", "paper-2", "ink", "ink-max", "ink-dim", "line", "line-strong", "accent", "accent-soft", "font"];
+
+  it("declares every token the site has, with the same value as style.css", () => {
+    const site = tokens(rootBlock(noComments(read("style.css"))));
+    const lite = tokens(rootBlock(liteCss()));
+    assert.ok(Object.keys(lite).length >= REQUIRED.length, "lite declares fewer tokens than required");
+    const missing = REQUIRED.filter((t) => !(t in lite));
+    assert.deepEqual(missing, [], `lite/index.html lacks tokens: ${missing.join(", ")}`);
+    const drift = Object.entries(lite)
+      .filter(([name, value]) => site[name] !== value)
+      .map(([name, value]) => `--${name}: lite "${value}" vs style.css "${site[name] ?? "(absent)"}"`);
+    assert.deepEqual(drift, [], `tokens drifted — change both files:\n${drift.join("\n")}`);
+  });
+
+  it("names no raw colour outside the token block", () => {
+    const css = liteCss().replace(/^:root\s*\{[^}]*\}/m, "");
+    const raw = css.match(/#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?)\(/gi) || [];
+    assert.deepEqual(raw, [], `raw colours in lite/index.html's CSS — use var(--…): ${raw.join(", ")}`);
+  });
+});
+
+describe("small text sizes are tokens (style.css § Tokens)", () => {
+  // 0.8 / 0.85 / 0.9rem are --fs-label / --fs-meta / --fs-small. A bare number
+  // outside :root is a size that escaped the vocabulary; lite keeps its own
+  // small sheet and is not held to this.
+  it("style.css names no bare 0.8/0.85/0.9rem font-size outside :root", () => {
+    const css = read("style.css").replace(/\/\*[\s\S]*?\*\//g, "").replace(/^:root\s*\{[^}]*\}/m, "");
+    const bare = [...css.matchAll(/font-size:\s*0\.(?:8|85|9)rem\b/g)].map((m) => m[0]);
+    assert.deepEqual(bare, [], `use var(--fs-label|--fs-meta|--fs-small): ${bare.length} bare declaration(s)`);
+  });
+});
+
+describe("the keyboard hint reads the same everywhere (README § Tests, style.css .footer__a11y)", () => {
+  // "ohne maus bedienbar: …" is a promise the footer makes on the nine layout
+  // pages (via the partial — the drift gate covers those), on /lite/ and on
+  // /ascii/, which carry their own footers. One wording, or the promise reads
+  // differently depending on where you are.
+  const hint = (rel) => {
+    const m = /class="footer__a11y"[^>]*>([\s\S]*?)<\/(?:span|p)>/.exec(read(rel));
+    assert.ok(m, `${rel}: no .footer__a11y element`);
+    return m[1].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  };
+
+  it("is present and identical in the partial, /lite/ and /ascii/", () => {
+    const texts = {
+      "includes/site-footer.html": hint("includes/site-footer.html"),
+      "lite/index.html": hint("lite/index.html"),
+      "ascii/index.html": hint("ascii/index.html"),
+    };
+    const reference = texts["includes/site-footer.html"];
+    assert.ok(reference.length > 20, `the hint is empty or too short: "${reference}"`);
+    const drift = Object.entries(texts)
+      .filter(([, t]) => t !== reference)
+      .map(([f, t]) => `${f}: "${t}" vs partial "${reference}"`);
+    assert.deepEqual(drift, [], `the keyboard hint differs:\n${drift.join("\n")}`);
+  });
+});
