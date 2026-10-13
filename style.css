@@ -56,6 +56,10 @@
             "DejaVu Sans Mono", monospace;
     --font-size: 1rem;
     --line-height: 1.7;
+    /* panel titles: 0.95rem on a phone (a long title like "teil von
+       bitcircus101 werden" has to fit the border line, and a clipped title
+       clips its focusable # anchor), growing to 1.05rem from ~800px up */
+    --fs-panel-title: clamp(0.95rem, 0.85rem + 0.4vw, 1.05rem);
 
     --gutter: clamp(0.75rem, 3.5vw, 1.5rem);
     --measure: 94ch;          /* content column, in characters */
@@ -137,12 +141,9 @@ h1 {
     padding-bottom: 0.35em;
 }
 
-h2 { font-size: 1.05rem; }
+h2 { font-size: 1.2rem; }
 
-h3 {
-    font-size: 1rem;
-    color: var(--ink);
-}
+h3 { font-size: 1rem; } /* ink-max like every heading: it was body-ink before */
 /* sub-sub headings carry a text marker instead of size — the marker is the
    green, the words stay ink */
 h3::before { content: "── "; color: var(--accent); font-weight: 400; }
@@ -227,7 +228,7 @@ section.logo-slider > h2:first-child {
     margin: 0;
     background: var(--paper);
     padding: 0 0.75ch;
-    font-size: 0.95rem;
+    font-size: var(--fs-panel-title);
     letter-spacing: 0.04em;
     max-width: calc(100% - 2rem);
     white-space: nowrap;
@@ -877,11 +878,16 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     flex-wrap: wrap;
     gap: 0.5rem 1.5ch;
 }
+/* One look whatever the level: an h2 on /events, an h3 on /rss, /pinnwand and
+   the calendar page — small, bold, ink-max, without the h3's "── " prefix. */
 .events-subscribe__title {
     font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink-max);
     margin: 0;
     letter-spacing: 0.04em;
 }
+.events-subscribe__title::before { content: none; }
 .events-subscribe__actions { display: flex; gap: 0.5ch; flex-wrap: wrap; }
 
 .events-subscribe__btn {
@@ -1333,7 +1339,6 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
 .archive__year {
     margin: 2rem 0 0.2rem;
     padding-bottom: 0.2rem;
-    font-size: 1.05rem;
     color: var(--ink-max);
     border-bottom: 1px solid var(--line-strong);
 }
