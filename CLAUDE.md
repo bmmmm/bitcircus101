@@ -14,8 +14,11 @@ edit source, rebuild, commit both — a forgotten rebuild fails the PR.
 ## Branches
 
 Own work goes **straight to `main`**: one conventional commit per unit,
-`git fetch` first, tests below, then push to **both** remotes (`origin` =
-Forgejo, `github` = the mirror; without the second push no deploy runs). The
+`git fetch` first, tests below, then `git push origin main`. This checkout's
+`origin` carries two push URLs, Forgejo then GitHub (only the GitHub push
+deploys); the leak gate checks the GitHub leg by URL. A fresh clone lacks
+them — add with `git remote set-url --add --push origin <url>` (first the
+Forgejo URL itself, then GitHub), or push `origin` and `github` by hand. The
 real gate is the deploy workflow: it runs the full suite in CI and deploys only
 on green, so a red run leaves the old version live — fix it as the next commit.
 
@@ -24,7 +27,7 @@ A branch and PR only when: an outside contribution (Pinnwand notes, `jobs.json`
 checkout (worktree, then `git push origin HEAD:main` as a fast-forward), or
 the user wants to look at something before it goes live. Merge such a PR
 locally: `git merge --no-ff <branch> -m "Merge pull request #N: <title>"`, push
-both remotes, delete the branch. A web-UI or `tea pr merge` merge stamps a
+`main`, delete the branch (a branch pushed via `origin` reached GitHub too). A web-UI or `tea pr merge` merge stamps a
 Forge identity the pre-push leak gate blocks (`~/ops/reference/git-workflow.md`).
 
 Commits: [conventional](https://www.conventionalcommits.org/), scope in
