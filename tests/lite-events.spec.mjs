@@ -36,21 +36,27 @@ describe("selectUpcoming", () => {
     assert.equal(out.length, 1);
   });
 
-  it("drops past events and foreign sources", () => {
-    const out = selectUpcoming(
-      {
-        events: [
-          ev("2026-08-31"),
-          ev("2026-09-02"),
-          { source: "datenburg", title: "Fremd", date: "2026-09-03" },
-        ],
-      },
-      TODAY
-    );
+  it("drops past events and the friends' calendars, keeps a home calendar's", () => {
+    const sources = [
+      { id: "bitcircus", name: "bitcircus101", relation: "own" },
+      { id: "toys", name: "Toys", relation: "home" },
+      { id: "datenburg", name: "datenburg", relation: "friend" },
+    ];
+    const events = [
+      ev("2026-08-31"),
+      ev("2026-09-02"),
+      { source: "datenburg", title: "Fremd", date: "2026-09-03" },
+      { source: "Toys", title: "Bei uns", date: "2026-09-04" },
+      { source: "Nobody", title: "Unbekannt", date: "2026-09-05" }, // not in the list: a friend by default
+    ];
+    const out = selectUpcoming({ sources, events }, TODAY);
     assert.deepEqual(
       out.map((e) => e.date),
-      ["2026-09-02"]
+      ["2026-09-02", "2026-09-04"]
     );
+    // pre-field data (no relation anywhere) has no friends: everything upcoming shows
+    const legacy = selectUpcoming({ events }, TODAY);
+    assert.deepEqual(legacy.map((e) => e.date), ["2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05"]);
   });
 
   it("sorts chronologically, using the time as the tiebreaker within a day", () => {
@@ -96,28 +102,25 @@ describe("selectUpcoming", () => {
 });
 
 describe("resolveRssPath", () => {
-  it("prefers the bitcircus per-source feed, resolved by card-facing name", () => {
+  it("advertises the primary feed from the manifest — the one that carries what the list shows", () => {
     const data = {
       feeds: {
-        sources: {
-          "cal-7": { name: "bitcircus101", rss: "/feeds/source/bitcircus.xml" },
-        },
+        primary: { ics: "/ical.ics", rss: "/feed.xml" },
+        sources: { "cal-7": { name: "bitcircus101", rss: "/feeds/source/bitcircus.xml" } },
       },
     };
-    assert.equal(resolveRssPath(data), "/feeds/source/bitcircus.xml");
+    assert.equal(resolveRssPath(data), "/feed.xml");
   });
 
-  it("ignores a foreign source that also carries an rss feed", () => {
-    // The primary feed is bitcircus-only today, but that is a config flag, not
-    // a guarantee — this page must never advertise someone else's feed.
+  it("never picks a per-source feed, however it is named", () => {
     const data = {
-      feeds: { sources: { d: { name: "datenburg", rss: "/feeds/source/datenburg.xml" } } },
+      feeds: { sources: { b: { name: "bitcircus101", rss: "/feeds/source/bitcircus.xml" } } },
     };
     assert.equal(resolveRssPath(data), "../feed.xml");
   });
 
-  it("falls back when the source exists but has no feed", () => {
-    const data = { feeds: { sources: { b: { name: "bitcircus101" } } } };
+  it("falls back when the manifest names no primary rss", () => {
+    const data = { feeds: { primary: { ics: "/ical.ics" } } };
     assert.equal(resolveRssPath(data), "../feed.xml");
   });
 
@@ -174,10 +177,18 @@ describe("buildMarkup", () => {
         ev("2026-09-05", { id: "<x>", title: "Ohne Link" }),
       ],
       null,
-      "../feed.xml"
+      "../feed.xml",
+      { bitcircus101: "own" }
     );
     assert.match(out, /— <a href="\.\.\/e\/0a1b2c3d4e5f\/">Linkup<\/a> · <a href="https:\/\/kurse\.example\/x" rel="noopener noreferrer">extern<\/a><\/li>/);
     assert.match(out, /— <a href="\.\.\/e\/&lt;x&gt;\/">Ohne Link<\/a><\/li>/);
+    // a home calendar's card links its page only when the sync flagged it
+    const home = buildMarkup(
+      [ev("2026-09-04", { id: "0a1b2c3d4e5f", source: "Toys" }), ev("2026-09-05", { id: "ffffffffffff", source: "Toys", page: true })],
+      null, "../feed.xml", { bitcircus101: "own", Toys: "home" }
+    );
+    assert.ok(!home.includes("/e/0a1b2c3d4e5f/"), "an unflagged home card got a page link");
+    assert.ok(home.includes('<a href="../e/ffffffffffff/">'), "a flagged home card lost its page link");
   });
 
   it("renders a plain title when the URL is unusable", () => {
