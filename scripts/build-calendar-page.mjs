@@ -199,7 +199,7 @@ export function renderCalendarPage(feeds, chrome, calendars = []) {
     `                    <dt>${legend("window")}</dt>`,
     `                    <dd>`,
     `                        Nur kommende Termine – höchstens die nächsten 40, über alle Kalender gezählt.`,
-    `                        Die Website erzeugt das alle 30 Minuten neu.`,
+    `                        Die Website erzeugt das etwa stündlich neu.`,
     `                    </dd>`,
     `                    <dt><span aria-hidden="true">&#8595;</span> abonnieren</dt>`,
     `                    <dd>Öffnet die Kalender-App auf deinem Gerät (Apple Kalender, Thunderbird, Outlook).</dd>`,
