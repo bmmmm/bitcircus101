@@ -2977,6 +2977,34 @@ const mkArchiveResult = (allCards, overSource = {}) => ({
   source: { id: "a", name: "A", status: "ok", ...overSource },
 });
 
+describe("processSource", () => {
+  it("stamps each source's relation on its status entry — ok and stale alike, missing means friend", async () => {
+    const ics = [
+      "BEGIN:VCALENDAR", "BEGIN:VEVENT", "UID:r1@example.org",
+      "DTSTART:20990101T190000", "SUMMARY:Werkstatt", "END:VEVENT", "END:VCALENDAR",
+    ].join("\r\n");
+    const origFetch = globalThis.fetch;
+    const origLog = console.log;
+    console.log = () => {};
+    const prev = { sources: [], events: [], icsKeys: {} };
+    const cal = (flags) => ({ id: "p", name: "P", ics: "https://p.example/x.ics", url: "https://p.example", ...flags });
+    try {
+      globalThis.fetch = async () => new Response(ics);
+      const home = await processSource(cal({ relation: "home" }), prev);
+      assert.equal(home.source.status, "ok");
+      assert.equal(home.source.relation, "home");
+      assert.equal((await processSource(cal({}), prev)).source.relation, "friend");
+      globalThis.fetch = async () => { throw new Error("down"); };
+      const stale = await processSource(cal({ relation: "own" }), prev);
+      assert.equal(stale.source.status, "stale");
+      assert.equal(stale.source.relation, "own");
+    } finally {
+      globalThis.fetch = origFetch;
+      console.log = origLog;
+    }
+  });
+});
+
 describe("mergeArchive", () => {
   it("archives a source flagged pages:true even with rss:false, and only such sources", async () => {
     const ics = [
