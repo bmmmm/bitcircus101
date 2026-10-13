@@ -222,7 +222,7 @@ jobs:
         run: |
           # ical.ics and feeds/all.ics are in the guard too so the first deploy
           # after each feed feature lands generates the new files immediately
-          # instead of 404ing until the next sync-events cron run (~30 min).
+          # instead of 404ing until the next sync-events run (up to an hour).
           if [ ! -f events-data.json ] || [ ! -f ical.ics ] || [ ! -f feeds/all.ics ]; then
             echo "events-data.json, ical.ics or feeds/all.ics missing — regenerating"
             node scripts/sync-events.mjs
