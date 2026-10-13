@@ -13,15 +13,19 @@ edit source, rebuild, commit both — a forgotten rebuild fails the PR.
 
 ## Branches
 
-Branch **`feat/<kebab>`** or **`fix/<kebab>`** from current `main`, commit there,
-open a PR. Never commit on `main` without an explicit exception — a one-line
-docs fix isn't too small for a PR.
+Own work goes **straight to `main`**: one conventional commit per unit,
+`git fetch` first, tests below, then push to **both** remotes (`origin` =
+Forgejo, `github` = the mirror; without the second push no deploy runs). The
+real gate is the deploy workflow: it runs the full suite in CI and deploys only
+on green, so a red run leaves the old version live — fix it as the next commit.
 
-**Merge the PR locally:** `git merge --no-ff <branch> -m "Merge pull request #N:
-<title>"`, then push to **both** remotes (`origin` = Forgejo, `github` = the
-mirror; without the second push no deploy runs). Delete the branch afterwards.
-A web-UI or `tea pr merge` merge stamps a Forge identity the pre-push leak gate
-blocks (`~/ops/reference/git-workflow.md`).
+A branch and PR only when: an outside contribution (Pinnwand notes, `jobs.json`
+— the Forgejo gate below exists for these), a second session works in this
+checkout (worktree, then `git push origin HEAD:main` as a fast-forward), or
+the user wants to look at something before it goes live. Merge such a PR
+locally: `git merge --no-ff <branch> -m "Merge pull request #N: <title>"`, push
+both remotes, delete the branch. A web-UI or `tea pr merge` merge stamps a
+Forge identity the pre-push leak gate blocks (`~/ops/reference/git-workflow.md`).
 
 Commits: [conventional](https://www.conventionalcommits.org/), scope in
 parentheses — `feat(events): add filter`. The release workflow parses them.
@@ -31,9 +35,11 @@ parentheses — `feat(events): add filter`. The release workflow parses them.
 The PR gate is **`.forgejo/workflows/ci.yml`** — PRs live on Forgejo, and once
 that directory exists Forgejo ignores `.github/workflows/` entirely.
 `.github/workflows/ci.yml` is its twin on the mirror; keep both in lockstep.
+It runs no Playwright; `deploy.yml` on the mirror does.
 
-`pnpm run test:quick` before a PR, `pnpm run test:e2e` only if you changed JS
-logic. CI runs the full suite after the merge to `main`.
+Before every push: `pnpm run test:quick` and `pnpm run test:e2e --reporter=dot`
+(~20 s). Call Playwright bare — a redirect, pipe or `cd &&` in front breaks
+the sandbox exclusion and Chromium dies at its Mach check-in.
 
 ## Tests
 
