@@ -490,6 +490,170 @@ test.describe('Navigation', () => {
         await expect(page).toHaveURL(/events\.html/);
     });
 
+    test('wasd moves a cursor across the page, Enter follows it, the mode fades', async ({ page }) => {
+        // 1280×800 in both projects: the desktop nav row, whose order brand →
+        // termine → wir → raum is set by the flex row, not by font metrics.
+        await page.setViewportSize({ width: 1280, height: 800 });
+        await page.clock.install();
+        await useEventsFixture(page);         // the toolbar is the collision: checkbox and search field
+        await page.goto('/events.html');
+        await expect(page.locator('#events-search')).toBeVisible();
+        // Paused from here: the idle timeout runs only when the test says so
+        // (install() alone lets the fake time flow at real speed).
+        await page.clock.pauseAt(Date.now() + 1_000);
+        const html = page.locator('html');
+        const focused = () => page.evaluate(() => {
+            const el = document.activeElement, r = el.getBoundingClientRect();
+            return { id: el.id, href: el.getAttribute('href'), top: r.top + scrollY, bottom: r.bottom + scrollY,
+                     nav: !!el.closest('nav'), footer: !!el.closest('footer') };
+        });
+
+        // Nothing focused: the first key only shows the cursor — on the brand.
+        await page.keyboard.press('s');
+        await expect(html).toHaveAttribute('data-spatnav', '');
+        await expect(page.locator('nav .nav__brand')).toBeFocused();
+        await expect(page.locator('.footer__mode')).toHaveText('-- WASD --');
+        // The marker is the accent ring, not the ink ring of a Tab stop.
+        const [ring, accent] = await page.evaluate(() => {
+            const probe = document.createElement('i');
+            probe.style.color = 'var(--accent)';
+            document.body.append(probe);
+            const out = [getComputedStyle(document.activeElement).outlineColor, getComputedStyle(probe).color];
+            probe.remove();
+            return out;
+        });
+        expect(ring, 'the mode ring is the accent').toBe(accent);
+
+        // d walks the nav row.
+        await page.keyboard.press('d');
+        await expect(page.locator('nav a[href="events.html"]')).toBeFocused();
+        await page.keyboard.press('d');
+        await expect(page.locator('nav a[href="index.html#about"]')).toBeFocused();
+        // s walks the whole page down into the footer and w all the way back up
+        // into the header, every key a step that way. On the way: the closed
+        // months (a closed <details> keeps boxes Chromium will not focus), and
+        // the sticky header and the fixed scroll-top, in document space always
+        // just above and below the screen. Directions, not targets — the list
+        // is fixture-shaped.
+        const walk = async (key, arrived, onward) => {
+            let prev = await focused();
+            for (let i = 1; !arrived(prev); i++) {
+                expect(i, `${key} never arrived`).toBeLessThan(120);
+                await page.keyboard.press(key);
+                const now = await focused();
+                expect(onward(prev, now), `${key} #${i} stood still or turned`).toBe(true);
+                prev = now;
+            }
+        };
+        await walk('s', (f) => f.footer, (p, n) => n.top >= p.bottom - 1);
+        await walk('w', (f) => f.nav, (p, n) => n.bottom <= p.top + 1);
+        const left = await page.evaluate(() => [...document.querySelectorAll('main a[href], main button')]
+            .filter((el) => el.checkVisibility() && el.getBoundingClientRect().bottom <= 0).length);
+        expect(left, 'w entered the header with content still above the screen').toBe(0);
+        // The search field is no target: a cursor that landed in it would type
+        // every further key. From the checkbox above it, d is where it would.
+        await page.locator('#events-only-bitcircus').focus();
+        for (const k of ['d', 's', 'w', 'a']) {
+            await page.keyboard.press(k);
+            await expect(page.locator('#events-search'), `${k} landed in the search field`).not.toBeFocused();
+        }
+        await expect(page.locator('#events-search')).toHaveValue('');
+
+        // Idle: the mode ends, the focus stays where it was.
+        const held = await focused();
+        await page.clock.runFor(5_000);
+        await expect(html).not.toHaveAttribute('data-spatnav');
+        await expect(page.locator('.footer__mode')).toHaveText('-- OPEN --');
+        expect(await focused()).toEqual(held);
+        // The end of a row: nothing lies within 45° to the right, so d stays put
+        // instead of jumping to the footer far below. Escape ends the mode too.
+        await page.locator('#theme-toggle').focus();
+        await page.keyboard.press('d');
+        await expect(html).toHaveAttribute('data-spatnav', '');
+        await expect(page.locator('#theme-toggle')).toBeFocused();
+        await page.keyboard.press('Escape');
+        await expect(html).not.toHaveAttribute('data-spatnav');
+        // Even where a component keeps the key to itself: the open funding
+        // popover stops its Escape from bubbling.
+        await page.locator('.footer__funding-bar').focus();
+        await page.keyboard.press('d');                  // nothing to its right: the mode is on, the cursor stays
+        await page.keyboard.press('Enter');
+        await expect(page.locator('.footer__funding-info')).toHaveClass(/\bactive\b/);
+        await expect(html).toHaveAttribute('data-spatnav', '');
+        await page.keyboard.press('Escape');
+        await expect(page.locator('.footer__funding-info')).not.toHaveClass(/\bactive\b/);
+        await expect(html, 'Escape in the popover kept the mode').not.toHaveAttribute('data-spatnav');
+
+        // Typing is typing: the search field keeps every letter.
+        await page.locator('#events-search').focus();
+        await page.keyboard.type('wasd');
+        await expect(page.locator('#events-search')).toHaveValue('wasd');
+        await expect(html).not.toHaveAttribute('data-spatnav');
+        // A modified key is someone else's shortcut (Ctrl+S, Cmd+W), a held one
+        // would race through the page, a composing one belongs to the IME: each
+        // passes through. Dispatched, not pressed — a real Cmd+W closes the tab.
+        for (const flag of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'repeat', 'isComposing']) {
+            const swallowed = await page.evaluate((f) => !document.body.dispatchEvent(
+                new KeyboardEvent('keydown', { key: 's', bubbles: true, cancelable: true, [f]: true })), flag);
+            expect(swallowed, `${flag} s was swallowed`).toBe(false);
+        }
+        // A key another handler already took is theirs.
+        await page.evaluate(() => {
+            document.body.addEventListener('keydown', (e) => e.preventDefault(), { once: true });
+            document.body.dispatchEvent(new KeyboardEvent('keydown', { key: 's', bubbles: true, cancelable: true }));
+        });
+        await expect(html).not.toHaveAttribute('data-spatnav');
+
+        // After the skip link the focus sits on <main> (tabindex -1, no stop):
+        // the cursor appears inside it, not back up on the brand.
+        await page.locator('.skip-link').focus();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('#main-content')).toBeFocused();
+        await page.keyboard.press('s');
+        expect(await page.evaluate(() => !!document.activeElement.closest('main')), 's undid the skip link').toBe(true);
+        await page.keyboard.press('Escape');
+
+        // Deep in the page with nothing focused, the cursor appears on the
+        // brand in the sticky header — and the page stays where it is.
+        const y = await page.evaluate(() => { document.activeElement.blur(); scrollTo(0, 400); return scrollY; });
+        expect(y, 'the page is too short to scroll').toBeGreaterThan(0);
+        await page.keyboard.press('s');
+        await expect(page.locator('nav .nav__brand')).toBeFocused();
+        expect(await page.evaluate(() => scrollY), 'focusing the header scrolled the page').toBe(y);
+        await page.keyboard.press('Escape');
+
+        // A row staged below the page, so no fixture decides the geometry:
+        // sideways, the own row beats a link diagonally closer on the line below,
+        // and an invisible button (the faded scroll-top's case) is no stop —
+        // focus() refuses it and the cursor would stick.
+        await page.evaluate(() => {
+            const stage = document.createElement('div');
+            stage.style.cssText = `position:absolute; left:0; top:${document.documentElement.scrollHeight + 200}px; width:800px; height:60px`;
+            const put = (id, x, y, extra = '') => {
+                const b = document.createElement('button');
+                b.id = id;
+                b.style.cssText = `position:absolute; left:${x}px; top:${y}px; width:40px; height:20px; ${extra}`;
+                stage.append(b);
+            };
+            put('spat-from', 600, 0);
+            put('spat-hidden', 520, 0, 'visibility:hidden');  // level, nearest — invisible
+            put('spat-diag', 530, 25);                         // closer, but the line below
+            put('spat-row', 300, 0);                           // level, farther — the answer
+            document.body.append(stage);
+        });
+        await page.locator('#spat-from').focus();
+        await page.keyboard.press('a');
+        await expect(page.locator('#spat-row'), 'a left the row or stuck').toBeFocused();
+        await page.keyboard.press('Escape');
+
+        // Between pages: the cursor onto a nav entry, Enter follows it.
+        await page.locator('nav a[href="index.html#about"]').focus();
+        await page.keyboard.press('d');
+        await expect(page.locator('nav a[href="raum-nutzen.html"]')).toBeFocused();
+        await page.keyboard.press('Enter');
+        await expect(page).toHaveURL(/raum-nutzen\.html/);
+    });
+
     test('mobile menu toggles, closes after a pick, and the anchor clears the header', async ({ page }) => {
         await page.setViewportSize({ width: 400, height: 800 });
         // /index.html, not / — from "/" the href "index.html#about" is a path
@@ -2056,6 +2220,15 @@ test.describe('No JavaScript errors', () => {
             const sweep = await page.evaluate(FOCUS_SWEEP);
             expect(sweep.stops, `${name}: no focusable element reached`).toBeGreaterThan(0);
             expect(sweep.bad, `${name}: tab stops without a visible focus`).toEqual([]);
+            // The w/a/s/d mode recolours the ring (main.js SpatialNav): every
+            // stop has to stay marked under it too. From the same place as the
+            // first sweep — that one ended at the page bottom, where the
+            // scroll-top button has faded in.
+            await page.evaluate(() => scrollTo(0, 0));
+            await expect(page.locator('.scroll-top.visible')).toHaveCount(0);
+            await page.evaluate(() => { document.documentElement.dataset.spatnav = ''; });
+            const nerd = await page.evaluate(FOCUS_SWEEP);
+            expect(nerd.bad, `${name}: tab stops without a visible focus in w/a/s/d mode`).toEqual([]);
         });
     }
 });

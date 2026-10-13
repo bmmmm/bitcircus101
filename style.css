@@ -35,13 +35,15 @@
     /* The accent's scope — what may be green, what stays ink.
        GREEN: hyperlinks and primary CTAs (incl. the frame of a pinnwand note
        that is actually taken) · the current selection (nav marker, active
-       event filter, funding progress/donate) · the structure markers: the
+       event filter, funding progress/donate, the w/a/s/d cursor's focus
+       ring) · the structure markers: the
        "[ ]" of panel and month titles, the "── " before an h3, the h1 double
        rule, and the date before an event (list day+month, homepage preview,
        archive row, event page "wann", kiosk day label) · state on /status
        (bars that happened, pulse levels).
        INK: every heading and body text · form controls and UI toggles (theme
-       toggle, carousel dots, checkboxes), focus rings and selection outlines ·
+       toggle, carousel dots, checkboxes), focus rings (but the w/a/s/d
+       cursor's) and selection outlines ·
        the brackets of controls (.btn, [+], [mehr]), list bullets, .doc-path,
        the type rules of cards · the empty permanent slot (its dashed ink frame
        is what makes the taken ones stand out) · everything cancelled (ink-max
@@ -126,6 +128,12 @@ body {
     outline: 2px solid var(--ink-max);
     outline-offset: 2px;
 }
+/* nerd mode (main.js SpatialNav): while w/a/s/d move the focus, the ring is
+   the accent — "the current selection" in the accent scope rule above. :where()
+   keeps it at the global ring's weight, so it wins by order over that one and
+   loses to every component ring with its own colour (the paper ring on the
+   footer funding bar, the ink rings of the /status bars). */
+:where(html[data-spatnav]) :focus-visible { outline-color: var(--accent); }
 
 /* =============================================================================
    Typography
@@ -2204,9 +2212,11 @@ html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { fil
 
 .footer__brand { color: var(--ink-max); font-weight: 700; letter-spacing: 0.04em; }
 .footer__tagline,
-.footer__a11y { color: var(--ink-dim); font-size: var(--fs-label); }
+.footer__a11y,
+.footer__keys { color: var(--ink-dim); font-size: var(--fs-label); }
 /* the keyboard promise: the key names read as text, a shade up from the line */
-.footer__a11y kbd { font: inherit; color: var(--ink); }
+.footer__a11y kbd,
+.footer__keys kbd { font: inherit; color: var(--ink); }
 
 .footer__col a { color: var(--ink-dim); text-decoration: none; }
 .footer__col a:hover { background: var(--ink); color: var(--paper); }
