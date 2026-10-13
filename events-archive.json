@@ -4590,6 +4590,27 @@
       "firstSeen": "2026-09-13T16:50:55.355Z",
       "lastSeen": "2026-10-12"
     },
+    "ae547059cd1d": {
+      "id": "ae547059cd1d",
+      "title": "Lustige Lesereise 📖 Reading Exploration",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-10-13",
+      "time": "19:00",
+      "endDate": "2026-10-13",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "6d1d2791-7ca5-4575-bf7e-6927d1995360",
+      "calendarUrl": "https://my.stim.toys",
+      "page": true,
+      "firstSeen": "2026-10-13T16:48:03.614Z",
+      "lastSeen": "2026-10-13"
+    },
     "c082a7ecdbc9": {
       "id": "c082a7ecdbc9",
       "title": "Look at my toys!",

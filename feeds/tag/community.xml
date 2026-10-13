@@ -11,9 +11,17 @@
       <title>bitcircus101 – Termine: #community</title>
       <link>https://bitcircus101.de/events</link>
     </image>
-    <lastBuildDate>Tue, 13 Oct 2026 16:17:14 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 13 Oct 2026 16:48:03 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/tag/community.xml" rel="self" type="application/rss+xml"/>
 
+    <item>
+      <title>[2026-10-13 19:00] Lustige Lesereise 📖 Reading Exploration @ Dorotheenstr. 101, 53113 Bonn</title>
+      <link>https://bitcircus101.de/e/ae547059cd1d/</link>
+      <description>Lustige Lesereise 📖 Reading Exploration · 2026-10-13</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/ae547059cd1d/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Tue, 13 Oct 2026 16:48:03 +0000</pubDate>
+      <guid isPermaLink="false">6d1d2791-7ca5-4575-bf7e-6927d1995360-20261013T1900</guid>
+    </item>
     <item>
       <title>[2026-10-14 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
       <link>https://bitcircus101.de/e/9546cc9a30f0/</link>
@@ -85,14 +93,6 @@
       <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/5dbeded6e723/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
       <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
       <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261209T1930</guid>
-    </item>
-    <item>
-      <title>[2026-12-10 19:00] Plenum mit anschließendem Essen</title>
-      <link>https://bitcircus101.de/e/a54db86f65be/</link>
-      <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
-      <content:encoded>&lt;p&gt;Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a54db86f65be/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <pubDate>Tue, 13 Oct 2026 16:17:14 +0000</pubDate>
-      <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261210T1900</guid>
     </item>
   </channel>
 </rss>
