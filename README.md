@@ -535,7 +535,7 @@ spec under `tests/*.spec.mjs`):
 | Home page | 3 | Title + heading, CTAs, carousel (click, arrow keys, holds while hovered or focused) + map toggle, logo reveal on focus |
 | SEO / Meta | 2 | All meta tags on home, subpage descriptions + keywords |
 | Privacy | 1 | No Google Fonts (HTML + network) |
-| Navigation | 6 | Desktop nav + routing, mobile hamburger toggle, utility cluster hittable, section marker (also on clean URLs), wasd nerd mode (walks the page both ways, rows and edges, idle fade, Escape, typing and modifier guards, Enter follows) |
+| Navigation | 6 | Desktop nav + routing, mobile hamburger toggle, utility cluster hittable, section marker (also on clean URLs), wasd nerd mode (walks the page both ways, rows and edges, idle fade, Escape, typing and modifier guards, Enter follows; footer off switch survives a reload, none on touch-only; s never parks on the scroll-top) |
 | Events page | 1 | Title, list, subscribe, RSS, back link |
 | Events content | 2 | Tags + filtering + month groups, sync status |
 | Donations | 1 | Title, consent banner dismiss |
@@ -545,7 +545,7 @@ spec under `tests/*.spec.mjs`):
 | Theme: ink text, green markers | 1 | Dark bg, monospace, no inline styles; panel/month brackets, h1 rule and event dates wear the accent, heading and card text stay ink (colours read from the tokens) |
 | Light theme toggle | 1 | data-theme flip, localStorage persistence, painted background inverts |
 | Pinnwand | 3 | Job board: active postings, the permanent slot's cycle, escaping, the how-to |
-| JS errors + focus sweep | 17 | Every page in the `pages` array (incl. /ascii/, /chat/, /lite/, /kiosk/, /404.html) free of console errors; on the same load every tab stop is visible and marked (reverse video, or a ring ≥ 3:1 not clipped away) and the first Tab lands on the skip link; a second sweep holds the same in w/a/s/d mode |
+| JS errors + focus sweep | 17 | Every page in the `pages` array (incl. /ascii/, /chat/, /lite/, /kiosk/, /404.html) free of console errors; on the same load every tab stop is visible and marked (reverse video, or a ring ≥ 3:1 not clipped away) and the first Tab lands on the skip link; a second sweep holds the same in w/a/s/d mode, a third the scroll-top button at the page end |
 | Internal links | 1 | Crawls all pages, verifies every internal link resolves |
 | Accessibility | 1 | Aria-labels, alt texts, landmark roles; keyboard: skip links on /, /ascii/ and /chat/, the footer funding popover, back-to-top |
 

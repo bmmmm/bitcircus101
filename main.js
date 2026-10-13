@@ -703,6 +703,8 @@
   // follows the link. The mode shows as the accent focus ring (html[data-spatnav],
   // style.css) and "-- WASD --" in the footer modeline; it ends after idleMs
   // without a key, on Escape or on a pointer — the focus stays where it is.
+  // Single-letter shortcuts need an off switch (WCAG 2.1.4): the footer line
+  // carries it, stored in BC.storage. Touch-only devices get neither.
   // =============================================================================
   const SpatialNav = {
     config: { idleMs: 5000 },
@@ -713,8 +715,26 @@
     timer: null,
     modeline: null,
     restingText: "",
+    enabled: true,
 
     init() {
+      // No hover pointer, no keyboard to speak of: no listeners, and the
+      // footer line stays hidden — no shortcut live without its switch.
+      if (!window.matchMedia || !window.matchMedia("(any-hover: hover)").matches) return;
+      const KEY = BC.storage.KEYS.WASD;
+      this.enabled = BC.storage.get(KEY) !== "off";
+      const hint = document.querySelector(".footer__keys");
+      if (hint) {
+        hint.hidden = false;
+        const toggle = hint.querySelector(".footer__keys-toggle");
+        toggle.setAttribute("aria-pressed", String(this.enabled));
+        utils.addEventListenerSafe(toggle, "click", () => {
+          this.enabled = !this.enabled;
+          BC.storage.set(KEY, this.enabled ? "on" : "off");
+          toggle.setAttribute("aria-pressed", String(this.enabled));
+          if (!this.enabled) this.exit();
+        });
+      }
       utils.addEventListenerSafe(document, "keydown", (e) => this.onKey(e));
       // Escape in the capture phase: a component that keeps the key to itself
       // (the open funding popover stops it) must not keep the mode alive.
@@ -732,6 +752,7 @@
     },
 
     onKey(e) {
+      if (!this.enabled) return;
       const dir = this.DIRS[String(e.key).toLowerCase()];
       if (!dir) return;
       // A modifier makes it someone else's shortcut (Ctrl+S, Cmd+W); a held key
