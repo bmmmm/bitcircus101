@@ -266,6 +266,25 @@ test.describe('Home page', () => {
         await page.keyboard.press('ArrowRight');
         expect(await activeDot()).not.toBe(dotBefore);
         await expect(page.locator('.dot.active')).toBeFocused();
+        // A modified arrow is someone else's shortcut (Alt+Left is "back"): it
+        // passes through. Dispatched rather than pressed — a real Alt+Left
+        // would navigate the test away.
+        for (const mod of ['altKey', 'ctrlKey', 'metaKey', 'shiftKey']) {
+            const before = await activeDot();
+            const swallowed = await page.locator('.dot.active').evaluate((el, m) =>
+                !el.dispatchEvent(new KeyboardEvent('keydown',
+                    { key: 'ArrowRight', bubbles: true, cancelable: true, [m]: true })), mod);
+            expect(swallowed, `${mod}+ArrowRight was swallowed`).toBe(false);
+            expect(await activeDot(), `${mod}+ArrowRight stepped the slide`).toBe(before);
+        }
+        // Pause and play by keyboard: play does not override the focus hold —
+        // the focus is still inside, so the strip still holds.
+        await page.locator('.carousel-toggle').focus();
+        await page.keyboard.press('Enter');
+        await page.keyboard.press('Enter');
+        const played = await activeDot();
+        await page.clock.runFor(6_000);
+        expect(await activeDot(), 'play by keyboard overrode the focus hold').toBe(played);
         await page.locator('.carousel').hover({ position: { x: 20, y: 20 } });
         await page.locator('.carousel-button.next').focus();
         // Leave by keyboard without scrolling: a locator focus() scrolls the
