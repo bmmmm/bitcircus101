@@ -840,16 +840,28 @@
       document.body.appendChild(btn);
 
       // Show/hide on scroll
+      // At the page end the footer bar scrolls in under the fixed button,
+      // which then covered a corner of the funding status. Publish how far
+      // the bar reaches into the viewport; the CSS lifts the button by that.
+      var bar = document.querySelector(".footer__bar");
+      function place() {
+        btn.classList.toggle("visible", window.scrollY > 400);
+        if (!bar) return;
+        var overlap = Math.max(0, Math.ceil(window.innerHeight - bar.getBoundingClientRect().top));
+        document.documentElement.style.setProperty("--footer-overlap", overlap + "px");
+      }
       var ticking = false;
-      window.addEventListener("scroll", function () {
+      function schedule() {
         if (!ticking) {
           requestAnimationFrame(function () {
-            btn.classList.toggle("visible", window.scrollY > 400);
+            place();
             ticking = false;
           });
           ticking = true;
         }
-      }, { passive: true });
+      }
+      window.addEventListener("scroll", schedule, { passive: true });
+      window.addEventListener("resize", schedule, { passive: true });
 
       btn.addEventListener("click", function () {
         window.scrollTo({

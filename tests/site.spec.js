@@ -2919,6 +2919,14 @@ test.describe('Accessibility', () => {
         await page.keyboard.press('Shift+Tab');
         await expect(fundingInfo).toBeHidden();
 
+        // At the very end the footer bar scrolls in under the fixed button:
+        // it rises with the bar instead of covering the funding status.
+        await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+        await expect.poll(() => page.evaluate(() =>
+            document.querySelector('.scroll-top').getBoundingClientRect().bottom <=
+            document.querySelector('.footer__bar').getBoundingClientRect().top),
+        { message: 'back-to-top sits over the footer bar at the page end' }).toBe(true);
+
         // Back-to-top, now that the footer is in view: it reaches the tab
         // order, and on Enter it jumps (reduced motion: no smooth scroll) and
         // hands the focus to the content — the button fades out under it.
