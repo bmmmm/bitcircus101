@@ -26,7 +26,7 @@ import path from "node:path";
 // stale for the CDN's TTL. (storage.js and the finanz pair were that case.)
 // Do NOT add the generated feeds (feed.xml, ical.ics, feeds/**): they change on
 // every calendar sync, and hashing them would invalidate the browser cache for
-// CSS/JS every 30 minutes. Calendar clients fetch feeds at stable URLs, no ?v=.
+// CSS/JS every hour. Calendar clients fetch feeds at stable URLs, no ?v=.
 const ASSETS = [
     "style.css",
     "main.js",

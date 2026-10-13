@@ -5,7 +5,8 @@ permissions:
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # every 30 minutes
+    - cron: "*/30 * * * *" # fallback only — GitHub drops most of these; an hourly
+                            # workflow_dispatch from our own server sets the cadence
   workflow_dispatch:
 
 concurrency:
