@@ -242,6 +242,9 @@ h1:hover .section-anchor,
 h2:hover .section-anchor,
 .section-anchor:focus-visible,
 .section-anchor:hover { opacity: 1; }
+/* Focus gets the reverse video too: inside the overflow:hidden panel title
+   the ring is clipped to its side bars, so colour has to carry the mark. */
+.section-anchor:focus-visible,
 .section-anchor:hover { background: var(--ink); color: var(--paper); }
 
 /* target flash: mark the heading like a search hit */
@@ -1488,7 +1491,8 @@ h3.location-card__header::before { content: none; }
     display: block;
     filter: grayscale(1);
 }
-.location-card__map-frame:hover { filter: grayscale(0); }
+.location-card__map-frame:hover,
+.location-card__map-frame:focus { filter: grayscale(0); }
 
 .location-card__osm-link {
     display: block;
@@ -1749,6 +1753,13 @@ h3.sidenote__title::before { content: none; }
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* The one-line clip cuts the focus ring of the name link to a stub on three
+   sides: the keyboard gets the link's hover reverse video instead. */
+.job-panel--invite .job-panel__title a:focus-visible {
+    background: var(--accent);
+    color: var(--paper);
+    text-decoration: none;
+}
 .job-panel--invite .job-panel__company { color: var(--ink-dim); }
 
 .jobs-fallback { color: var(--ink-dim); padding: 0.5rem 0; }
@@ -1908,9 +1919,12 @@ section.logo-slider > h2:first-child::after  { content: " ]"; color: var(--ink-d
     opacity: 0.8;
     transition: filter var(--transition), opacity var(--transition);
 }
-.logo-slider__item:hover .logo-slider__img { filter: grayscale(0); opacity: 1; }
+/* The hover reveal has a keyboard twin: the ring alone sits on a grey logo. */
+.logo-slider__item:hover .logo-slider__img,
+.logo-slider__item:focus-within .logo-slider__img { filter: grayscale(0); opacity: 1; }
 html[data-theme="light"] .logo-slider__img { filter: grayscale(1); }
-html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: grayscale(0); }
+html[data-theme="light"] .logo-slider__item:hover .logo-slider__img,
+html[data-theme="light"] .logo-slider__item:focus-within .logo-slider__img { filter: grayscale(0); }
 
 /* =============================================================================
    Chat page (Signal groups) — standalone, no chrome
@@ -2092,10 +2106,23 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     position: relative;
     margin-left: auto;
     letter-spacing: 0.04em;
+}
+/* The status is a disclosure button set in the bar's own type: UA button
+   reset, nothing else. Its focus ring is the one place the global ring fails —
+   --ink-max on the --ink bar measures 1.4:1 (light theme 1.3:1), so the ring
+   takes --paper, the colour that inverts with the bar in both themes. */
+.footer__funding-bar {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    letter-spacing: 0.02em;
     cursor: pointer;
 }
-.footer__status:hover { text-decoration: underline; }
-.footer__funding-bar { letter-spacing: 0.02em; }
+.footer__funding-bar:hover,
+.footer__funding-bar:focus-visible { text-decoration: underline; }
+.footer__funding-bar:focus-visible { outline-color: var(--paper); }
 
 /* funding info popover — opens above the status line */
 .footer__funding-info {
@@ -2135,7 +2162,8 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     border-top: 1px solid var(--line);
     text-decoration: none;
 }
-.footer__funding-info a:hover { background: var(--ink); color: var(--paper); }
+.footer__funding-info a:hover,
+.footer__funding-info a:focus-visible { background: var(--ink); color: var(--paper); }
 
 @media (max-width: 600px) {
     .footer__funding-info { right: auto; left: 0; white-space: normal; min-width: 240px; }
@@ -2161,12 +2189,16 @@ html[data-theme="light"] .logo-slider__item:hover .logo-slider__img { filter: gr
     font-family: var(--font);
     font-size: 1rem;
     cursor: pointer;
+    /* Faded out it leaves the tab order too: opacity alone keeps an invisible
+       tab stop on every page. visibility is discrete, so transitioning it
+       alongside opacity keeps the fade both ways. */
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity var(--transition);
+    transition: opacity var(--transition), visibility var(--transition);
     z-index: var(--z-nav);
 }
-.scroll-top.visible { opacity: 1; pointer-events: auto; }
+.scroll-top.visible { opacity: 1; visibility: visible; pointer-events: auto; }
 .scroll-top:hover { background: var(--ink); color: var(--paper); }
 
 /* =============================================================================

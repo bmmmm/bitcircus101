@@ -523,7 +523,7 @@ spec under `tests/*.spec.mjs`):
 
 | Area | Tests | What is tested |
 |------|-------|---------------|
-| Home page | 3 | Title + heading, CTAs, carousel + map interaction |
+| Home page | 3 | Title + heading, CTAs, carousel (click, arrow keys, holds while hovered or focused) + map toggle, logo reveal on focus |
 | SEO / Meta | 2 | All meta tags on home, subpage descriptions + keywords |
 | Privacy | 1 | No Google Fonts (HTML + network) |
 | Navigation | 2 | Desktop nav + routing, mobile hamburger toggle |
@@ -536,9 +536,9 @@ spec under `tests/*.spec.mjs`):
 | Monochrome theme | 1 | Dark bg, monospace, no inline styles |
 | Light theme toggle | 1 | data-theme flip, localStorage persistence, painted background inverts |
 | Pinnwand | 3 | Job board: active postings, the permanent slot's cycle, escaping, the how-to |
-| JS errors | 12 | Every page in the `pages` array (incl. /ascii/, /chat/, /lite/, /kiosk/, /404.html) free of console errors |
+| JS errors + focus sweep | 17 | Every page in the `pages` array (incl. /ascii/, /chat/, /lite/, /kiosk/, /404.html) free of console errors; on the same load every tab stop is visible and marked (reverse video, or a ring ≥ 3:1 not clipped away) and the first Tab lands on the skip link |
 | Internal links | 1 | Crawls all pages, verifies every internal link resolves |
-| Accessibility | 1 | Aria-labels, alt texts, landmark roles |
+| Accessibility | 1 | Aria-labels, alt texts, landmark roles; keyboard: skip links on /, /ascii/ and /chat/, the footer funding popover, back-to-top |
 
 Browsers: Chromium, Mobile Chrome (Pixel 5).
 

@@ -747,15 +747,24 @@
 
   function choiceRow(el, name) {
     if (!el) return;
-    var html = "";
-    SETTINGS[name].values.forEach(function (v) {
-      html += '<button type="button" class="kiosk-set__opt' +
-        (settings[name] === v ? " kiosk-set__opt--on" : "") +
-        '" data-set="' + name + '" data-value="' + v + '"' +
-        (settings[name] === v ? ' aria-pressed="true"' : ' aria-pressed="false"') +
-        ">" + esc(PANEL_LABELS[name][v]) + "</button>";
-    });
-    el.innerHTML = html;
+    // Built once, then updated in place: every pick and every cycle step
+    // repaints the panel, and a rebuild would destroy the button the keyboard
+    // is on and drop the focus to <body>.
+    if (!el.querySelector("[data-set]")) {
+      var html = "";
+      SETTINGS[name].values.forEach(function (v) {
+        html += '<button type="button" class="kiosk-set__opt" data-set="' + name +
+          '" data-value="' + v + '" aria-pressed="false">' +
+          esc(PANEL_LABELS[name][v]) + "</button>";
+      });
+      el.innerHTML = html;
+    }
+    var opts = el.querySelectorAll("[data-set]");
+    for (var i = 0; i < opts.length; i++) {
+      var on = opts[i].getAttribute("data-value") === settings[name];
+      opts[i].classList.toggle("kiosk-set__opt--on", on);
+      opts[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
   }
 
   /** Re-render the panel from the settings, so it never drifts from reality. */
@@ -793,10 +802,16 @@
   function closePanel() {
     var panel = document.getElementById("kiosk-settings");
     if (!panel) return;
+    // Read before hiding — hiding drops the focus to <body>. Whoever closed
+    // it from inside (Escape, "schließen", the idle timeout) lands on the ⚙.
+    var hadFocus = panel.contains(document.activeElement);
     panel.hidden = true;
     document.body.classList.remove("kiosk-body--settings");
     var btn = document.getElementById("kiosk-settings-open");
-    if (btn) btn.setAttribute("aria-expanded", "false");
+    if (btn) {
+      btn.setAttribute("aria-expanded", "false");
+      if (hadFocus) btn.focus();
+    }
     if (panelTimer) clearTimeout(panelTimer);
   }
 
