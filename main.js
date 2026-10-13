@@ -694,20 +694,18 @@
       else if (p >= 33) level = "amber";
 
       el.classList.add("footer__status--" + level);
-      el.setAttribute("tabindex", "0");
-      el.setAttribute("role", "status");
-      el.setAttribute(
-        "aria-label",
-        "Funding: " + p + "% der monatlichen Kosten gedeckt",
-      );
 
+      // A disclosure button, not a span with a tabindex: Enter and Space work
+      // for free, aria-expanded says what it does, and the visible text
+      // "lights: 18%" is its name (the block glyphs are decoration).
       el.innerHTML =
-        '<span class="footer__funding-bar">lights: ' +
+        '<button type="button" class="footer__funding-bar" aria-expanded="false" aria-controls="footer-funding-info">lights: ' +
+        '<span aria-hidden="true">' +
         bar +
-        " " +
+        "</span> " +
         p +
-        "%</span>" +
-        '<div class="footer__funding-info">' +
+        "%</button>" +
+        '<div class="footer__funding-info" id="footer-funding-info">' +
         '<h3 class="footer__funding-info-head">[ LIGHTS ON? ]</h3>' +
         "<p>Miete, Strom, Internet &mdash; der Space kostet Geld.</p>" +
         "<p>" +
@@ -719,16 +717,38 @@
         '<a href="support.html#dauerhaft">unterst\u00fctzen \u2192</a>' +
         "</div>";
 
-      // Click to toggle info panel
-      el.addEventListener("click", function (e) {
+      var btn = el.querySelector(".footer__funding-bar");
+      var info = el.querySelector(".footer__funding-info");
+      function setOpen(open) {
+        info.classList.toggle("active", open);
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+
+      // The button toggles; a click inside the popover is not a click
+      // outside it; any other click on the page closes it.
+      btn.addEventListener("click", function (e) {
         e.stopPropagation();
-        var info = el.querySelector(".footer__funding-info");
-        if (info) info.classList.toggle("active");
+        setOpen(!info.classList.contains("active"));
+      });
+      info.addEventListener("click", function (e) {
+        e.stopPropagation();
+      });
+      document.addEventListener("click", function () {
+        setOpen(false);
       });
 
-      document.addEventListener("click", function () {
-        var info = el.querySelector(".footer__funding-info");
-        if (info) info.classList.remove("active");
+      // Keyboard: Escape closes and hands the focus back to the button (it
+      // stops here — the same key would otherwise reach the mobile menu's
+      // handler too); tabbing out of the popover in either direction closes
+      // it, so no open panel is left behind off-screen.
+      el.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape" || !info.classList.contains("active")) return;
+        e.stopPropagation();
+        setOpen(false);
+        btn.focus();
+      });
+      el.addEventListener("focusout", function (e) {
+        if (e.relatedTarget && !el.contains(e.relatedTarget)) setOpen(false);
       });
     },
   };

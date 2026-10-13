@@ -2555,6 +2555,27 @@ test.describe('Accessibility', () => {
         // Footer landmark
         await expect(page.locator('[role="contentinfo"]')).toBeVisible();
 
+        // The funding status is a disclosure the keyboard can work: Enter
+        // opens the popover above the bar and says so, Tab walks into it,
+        // Escape closes it and hands the focus back, and leaving it backwards
+        // closes it too — no open panel left behind off-screen.
+        const fundingBar = page.locator('.footer__funding-bar');
+        const fundingInfo = page.locator('#footer-funding-info');
+        await fundingBar.focus();
+        await page.keyboard.press('Enter');
+        await expect(fundingInfo).toBeInViewport();
+        await expect(fundingBar).toHaveAttribute('aria-expanded', 'true');
+        await page.keyboard.press('Tab');
+        await expect(fundingInfo.locator('a')).toBeFocused();
+        await page.keyboard.press('Escape');
+        await expect(fundingInfo).toBeHidden();
+        await expect(fundingBar).toBeFocused();
+        await expect(fundingBar).toHaveAttribute('aria-expanded', 'false');
+        await page.keyboard.press('Enter');
+        await expect(fundingInfo).toBeInViewport();
+        await page.keyboard.press('Shift+Tab');
+        await expect(fundingInfo).toBeHidden();
+
         // Keyboard focus must stay visible on form controls: no outline:none
         // may swallow the global :focus-visible ring (the ascii editor is the
         // one form control that always exists without CI-generated data)
