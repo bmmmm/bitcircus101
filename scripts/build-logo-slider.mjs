@@ -6,6 +6,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { esc } from "./html-text.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -43,26 +44,19 @@ function buildItem(filename, meta, emptyAlt) {
   const entry = meta[filename] || {};
   const displayName = entry.name || altFromFilename(filename);
   const alt = emptyAlt ? "" : displayName;
-  const altAttr = alt === "" ? 'alt=""' : `alt="${escapeHtml(alt)}"`;
-  const img = `<img class="logo-slider__img" src="${PLACEHOLDER_SRC}" data-src="${escapeHtml(rel)}" ${altAttr} decoding="async" />`;
+  const altAttr = alt === "" ? 'alt=""' : `alt="${esc(alt)}"`;
+  const img = `<img class="logo-slider__img" src="${PLACEHOLDER_SRC}" data-src="${esc(rel)}" ${altAttr} decoding="async" />`;
   // Second (aria-hidden) slider set is just a visual duplicate for seamless scrolling —
   // skip from tab order to avoid double focus stops
   const tabAttr = emptyAlt ? ' tabindex="-1" aria-hidden="true"' : "";
   const inner = entry.url
-    ? `<a class="logo-slider__link" href="${escapeHtml(entry.url)}" target="_blank" rel="noopener noreferrer"${tabAttr} aria-label="${escapeHtml(displayName)} (externer Link)">${img}</a>`
+    ? `<a class="logo-slider__link" href="${esc(entry.url)}" target="_blank" rel="noopener noreferrer"${tabAttr} aria-label="${esc(displayName)} (externer Link)">${img}</a>`
     : img;
   return [
     "                                <div class=\"logo-slider__item\">",
     `                                    ${inner}`,
     "                                </div>",
   ].join("\n");
-}
-
-function escapeHtml(s) {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/</g, "&lt;");
 }
 
 function buildMarkup(files, meta) {
