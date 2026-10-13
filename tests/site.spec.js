@@ -246,7 +246,11 @@ test.describe('Home page', () => {
         await expect(page.locator('.dot.active')).toBeFocused();
         await page.locator('.carousel').hover({ position: { x: 20, y: 20 } });
         await page.locator('.carousel-button.next').focus();
-        await page.locator('#show-map-btn').focus();
+        // Leave by keyboard without scrolling: a locator focus() scrolls the
+        // map button into view, the strip slides out from under the pointer,
+        // and Chromium's deferred hover update fires a mouseleave — the hold
+        // would then be lost by the test, not by the code.
+        await page.evaluate(() => document.getElementById('show-map-btn').focus({ preventScroll: true }));
         const hovered = await activeDot();
         await page.clock.runFor(6_000);
         expect(await activeDot(), 'the focus leaving overrode the hover hold').toBe(hovered);
