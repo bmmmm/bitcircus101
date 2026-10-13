@@ -434,8 +434,9 @@
       html += '<details class="events-month"' + isOpen + '>';
       html +=
         '<summary class="events-month__label">' +
-        '<span class="events-month__title">[ ' + monthName + " " + parts[0] +
-        " ]</span>" +
+        // the "[ ]" are CSS (::before/::after): the panel's green marker
+        '<span class="events-month__title">' + monthName + " " + parts[0] +
+        "</span>" +
         '<span class="events-month__chevron" aria-hidden="true"></span>' +
         "</summary>";
 

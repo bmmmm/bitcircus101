@@ -1423,8 +1423,41 @@ test.describe('Danke page', () => {
 
 // ─── Design – monochrome plain-text theme ────────────────────────────────────
 
-test.describe('Monochrome theme', () => {
-    test('dark background, monospace font, no inline styles', async ({ page }) => {
+test.describe('Theme: ink text, green markers', () => {
+    test('dark background, monospace font, no inline styles, green markers on ink text', async ({ page }) => {
+        // The fixture puts an event preview on the homepage and cards on
+        // /events.html — the dates are the markers under test.
+        await useEventsFixture(page);
+        await page.goto('/');
+
+        // Markers are green, text is ink. The colours are read out of the
+        // tokens, never written down here, so repainting a token repaints
+        // the assertion with it.
+        const tokenColor = (name) => page.evaluate((n) => {
+            const probe = document.createElement('span');
+            probe.style.color = `var(${n})`;
+            document.body.appendChild(probe);
+            const c = getComputedStyle(probe).color;
+            probe.remove();
+            return c;
+        }, name);
+        const colorOf = (sel, pseudo = null) => page.evaluate(([s, p]) =>
+            getComputedStyle(document.querySelector(s), p).color, [sel, pseudo]);
+        const accent = await tokenColor('--accent');
+        const inkMax = await tokenColor('--ink-max');
+        expect(accent).not.toBe(inkMax);
+        await expect(page.locator('.event-preview__date').first()).toBeVisible();
+        expect(await colorOf('.panel > h2:first-child', '::before'), 'panel bracket').toBe(accent);
+        expect(await colorOf('.panel > h2:first-child'), 'panel title text').toBe(inkMax);
+        expect(await colorOf('.event-preview__date'), 'preview date').toBe(accent);
+
+        await page.goto('/events.html');
+        await expect(page.locator('.event-card').first()).toBeVisible();
+        expect(await page.evaluate(() => getComputedStyle(document.querySelector('h1')).borderBottomColor), 'h1 rule').toBe(accent);
+        expect(await colorOf('.events-month__title', '::before'), 'month bracket').toBe(accent);
+        expect(await colorOf('.event-card__day'), 'card day').toBe(accent);
+        expect(await colorOf('.event-card__title'), 'card title text').toBe(inkMax);
+
         await page.goto('/');
 
         // Dark background
