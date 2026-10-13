@@ -451,8 +451,8 @@ To add a calendar: create the source JSON in `calendars/` (or a subdirectory) an
 
 External sources also accept `tags` (always-added hashtags), `cap` (per-source slot override), and `eventUrl` (overrides the per-event link when ICS has no `URL` field).
 
-Example of an external single-event source (`calendars/external/<id>.json`, and
-add the path to `sources`):
+Example of an external single-event source (`calendars/<id>.json`, and add the
+path to `sources`; no `relation` means friend):
 
 ```json
 {
@@ -486,7 +486,8 @@ If no tags match, the event gets `#community` as default.
 - Loads `events-data.json`, falls back to live ICS fetch if JSON unavailable
 - Renders event cards grouped by month
 - Dynamic tag filter bar (OR logic: any matching tag shows event)
-- Source badge for non-primary calendar events
+- A row of checkboxes for the friends' calendars (`?mit=<id>`); the events at bitcircus101 are always on
+- Source line for other calendars' events — home: „Kalender: …", friend: „Externer Kalender: …"
 - Permalink anchors with smooth scroll
 
 ## Local development

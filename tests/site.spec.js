@@ -1229,6 +1229,15 @@ test.describe('Events content', () => {
         await expect(page.locator('.event-card').first()).toBeVisible();
         await expect(page.locator('#events-src-datenburg')).not.toBeChecked();
         await expect(page).toHaveURL(/\/events\.html$/);
+        // mit= keeps known ids only, lowercased, in config order — a stale or
+        // mistyped one drops out and must not count as "every calendar on"
+        await page.goto('/events.html?mit=bogus,DATENBURG');
+        await expect(page.locator('#events-src-datenburg')).toBeChecked();
+        await expect(page).toHaveURL(/[?&]mit=datenburg$/);
+        await page.goto('/events.html?mit=bogus');
+        await expect(page.locator('.event-card').first()).toBeVisible();
+        await expect(page).toHaveURL(/\/events\.html$/);
+        await expect(page.locator('#events-feed-scope')).toBeHidden();
     });
 
     test('subscribe buttons follow the filter, and say so when no feed matches', async ({ page }) => {
@@ -2031,16 +2040,38 @@ test.describe('Event details', () => {
         await expect(card.locator('.event-card__desc--full')).toBeVisible();
     });
 
-    test('a permalink into a friend\'s calendar switches it on and drops the filters', async ({ page }) => {
+    test('a permalink into a friend\'s calendar switches it on and drops the filters; a dead one changes nothing', async ({ page }) => {
         const data = buildEventsData();
         const target = data.events[2]; // Datenburg: off by default
         await useEventsFixture(page, data);
         const anchor = `ev-${target.date}-offener-abend-datenburg`;
-        await page.goto(`/events.html?tags=hardware#${anchor}`);
+        // The common case: the "← link" button copies a query-free permalink
+        await page.goto(`/events.html#${anchor}`);
         await expect(page.locator(`#${anchor}`)).toHaveCount(1);
         await expect(page.locator('#events-src-datenburg')).toBeChecked();
         await expect(page).toHaveURL(/[?&]mit=datenburg/);
+        // With a filter in the URL both go: the anchor wins over everything
+        await page.goto(`/events.html?tags=hardware#${anchor}`);
+        await expect(page.locator(`#${anchor}`)).toHaveCount(1);
+        await expect(page.locator('#events-src-datenburg')).toBeChecked();
         await expect(page).not.toHaveURL(/[?&]tags=/);
+        // An expired permalink has nothing to land on: the default view stays
+        await page.goto('/events.html#ev-2020-01-01-laengst-vorbei');
+        await expect(page.locator('.event-card')).toHaveCount(5);
+        await expect(page.locator('#events-src-datenburg')).not.toBeChecked();
+        await expect(page).not.toHaveURL(/[?&]mit=/);
+    });
+
+    test('data from before the relation field shows everything — no friends row, no badges', async ({ page }) => {
+        const data = buildEventsData();
+        for (const s of data.sources) delete s.relation;
+        for (const s of Object.values(data.feeds.sources)) delete s.relation;
+        await useEventsFixture(page, data);
+        await page.goto('/events.html?mit=datenburg');
+        await expect(page.locator('.event-card')).toHaveCount(7);
+        await expect(page.locator('.events-toolbar__sources')).toBeHidden();
+        await expect(page.locator('.event-card__source')).toHaveCount(0);
+        await expect(page).toHaveURL(/\/events\.html$/);
     });
 
     test('only cards from sources with pages link to their own page, and it exists', async ({ page }) => {
@@ -2667,7 +2698,14 @@ test.describe('Kiosk view', () => {
         // The URL is how a wall gets pinned — hand a screen this link and it
         // must come up that way whatever anyone clicked on it before.
         await page.clock.install({ time: NOW });
-        await useEventsFixture(page, kioskData());
+        const data = kioskData();
+        // a home calendar's event: at bitcircus101, so the narrow view keeps it
+        data.sources.push({ id: 'toys', name: 'Look at my toys!', relation: 'home' });
+        data.events.push({
+            title: 'Bei uns zu Gast', date: NEXT, time: '18:00', endDate: NEXT, endTime: '20:00',
+            subtitle: '', description: '', location: '', tags: [], type: '', source: 'Look at my toys!', uid: 'guest',
+        });
+        await useEventsFixture(page, data);
         await page.goto('/kiosk/?palette=amber&theme=light&info=off&source=bitcircus101&dwell=45&rows=6');
 
         const root = page.locator('html');
@@ -2680,6 +2718,7 @@ test.describe('Kiosk view', () => {
         // not on the source label: narrow screens drop the side column by
         // design, so a label check would pass for the wrong reason there.
         await expect(page.locator('.kiosk-ev').filter({ hasText: 'Parallel dazu' })).toHaveCount(0);
+        await expect(page.locator('.kiosk-ev').filter({ hasText: 'Bei uns zu Gast' })).toHaveCount(1);
 
         // the panel opens from the ⚙ and shows the live values, not defaults
         await page.locator('#kiosk-settings-open').click();

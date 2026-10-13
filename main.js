@@ -969,8 +969,9 @@
       // events page's default view; the friends' calendars stay on /termine.
       // Without events-core.js (or pre-field data) nothing is a friend.
       const core = window.EventsCore;
-      const relations = core && core.relationMap ? core.relationMap(sources) : null;
-      const isFriend = (e) => !!core && core.sourceRelation(relations, e.source) === "friend";
+      const rel = core && core.relationMap && core.sourceRelation && core.sourceBadge ? core : null;
+      const relations = rel ? rel.relationMap(sources) : null;
+      const isFriend = (e) => !!rel && rel.sourceRelation(relations, e.source) === "friend";
 
       const upcoming = events
         .filter((e) => !isFriend(e) && new Date(e.date + "T23:59:59") >= now)
@@ -999,7 +1000,7 @@
           '<span class="event-preview__title">' +
           escHtml(shown);
         // another calendar's event names its source (events-core sourceBadge)
-        if (core && core.sourceBadge(relations, e.source)) {
+        if (rel && rel.sourceBadge(relations, e.source)) {
           html += ' <span class="event-preview__source">' +
             escHtml(e.source) + "</span>";
         }
