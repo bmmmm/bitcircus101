@@ -697,6 +697,172 @@
   };
 
   // =============================================================================
+  // Spatial Navigation — "nerd mode"
+  // w/a/s/d move the focus to the nearest focusable element in that direction.
+  // A layer on top: Tab keeps its order, the arrows keep scrolling, Enter still
+  // follows the link. The mode shows as the accent focus ring (html[data-spatnav],
+  // style.css) and "-- WASD --" in the footer modeline; it ends after idleMs
+  // without a key, on Escape or on a pointer — the focus stays where it is.
+  // =============================================================================
+  const SpatialNav = {
+    config: { idleMs: 5000 },
+    DIRS: { w: "up", a: "left", s: "down", d: "right" },
+    SELECTOR: "a[href], button, input, select, textarea, summary, [tabindex]",
+    // Inputs that take no letters: a cursor may land on them and move on.
+    KEYLESS: /^(checkbox|radio|button|submit|reset|image|file|range|color)$/,
+    timer: null,
+    modeline: null,
+    restingText: "",
+
+    init() {
+      utils.addEventListenerSafe(document, "keydown", (e) => this.onKey(e));
+      // Escape in the capture phase: a component that keeps the key to itself
+      // (the open funding popover stops it) must not keep the mode alive.
+      utils.addEventListenerSafe(document, "keydown", (e) => {
+        if (e.key === "Escape") this.exit();
+      }, true);
+      utils.addEventListenerSafe(document, "pointerdown", () => this.exit());
+    },
+
+    // A field where w/a/s/d are letters, not directions.
+    isTyping(el) {
+      if (!el || !el.matches) return false;
+      if (el.isContentEditable || el.matches("textarea, select")) return true;
+      return el.matches("input") && !this.KEYLESS.test(el.type);
+    },
+
+    onKey(e) {
+      const dir = this.DIRS[String(e.key).toLowerCase()];
+      if (!dir) return;
+      // A modifier makes it someone else's shortcut (Ctrl+S, Cmd+W); a held key
+      // would race through the page; a field is for typing.
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (e.repeat || e.isComposing || e.defaultPrevented) return;
+      if (this.isTyping(e.target)) return;
+      e.preventDefault();
+      const active = document.activeElement;
+      const from = this.isCandidate(active) ? active : null;
+      const next = from ? this.nearest(from, dir) : this.start(active);
+      // A pinned target is on screen already: focus() would scroll the page to
+      // where the sticky header would sit unstuck.
+      if (next) next.focus(this.pinned(next) ? { preventScroll: true } : undefined);
+      this.arm();
+    },
+
+    // Document-space box, or null for anything not really on the page:
+    // display:none (0×0), .sr-only (1×1), the skip link parked at top:-100px.
+    box(el) {
+      const r = el.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) return null;
+      const top = r.top + window.scrollY, left = r.left + window.scrollX;
+      if (top + r.height <= 0 || left + r.width <= 0) return null;
+      if (!this.shown(el)) return null;
+      return { top, left, bottom: top + r.height, right: left + r.width };
+    },
+
+    // Boxed but refusing the focus, so the cursor would stick on it: the
+    // content of a closed <details> (Chromium keeps its box, checkVisibility
+    // says no) and the faded-out scroll-top button (visibility:hidden).
+    shown(el) {
+      if (el.checkVisibility) return el.checkVisibility({ visibilityProperty: true });
+      return getComputedStyle(el).visibility !== "hidden";
+    },
+
+    // Inside the sticky header or a fixed button: on screen wherever the page
+    // is, so in document space always just above or below the content.
+    pinned(el) {
+      for (let n = el; n && n !== document.body; n = n.parentElement) {
+        const p = getComputedStyle(n).position;
+        if (p === "sticky" || p === "fixed") return true;
+      }
+      return false;
+    },
+
+    // A text field is never a target: the cursor would land in it and every
+    // further w/a/s/d would be typed. Tab still reaches it.
+    usable(el) {
+      return el.tabIndex >= 0 && !el.disabled && !this.isTyping(el);
+    },
+
+    candidates() {
+      const out = [];
+      document.querySelectorAll(this.SELECTOR).forEach((el) => {
+        if (!this.usable(el)) return;
+        const r = this.box(el);
+        if (r) out.push({ el, r });
+      });
+      return out;
+    },
+
+    isCandidate(el) {
+      return !!el && el !== document.body && el !== document.documentElement &&
+        el.matches(this.SELECTOR) && this.usable(el) && !!this.box(el);
+    },
+
+    // Where the cursor appears when the focus is on no stop: the first one on
+    // screen inside the focused element (<main> after the skip link), else the
+    // first on screen at all — with the sticky header, the brand.
+    start(scope) {
+      const sy = window.scrollY, vh = window.innerHeight;
+      const shown = this.candidates().filter(({ r }) => r.bottom > sy && r.top < sy + vh);
+      const hit = (scope && shown.find(({ el }) => scope.contains(el))) || shown[0];
+      return hit ? hit.el : null;
+    },
+
+    nearest(from, dir) {
+      const c = this.box(from);
+      if (!c) return null;
+      // Gap between two intervals, 0 when they overlap.
+      const gap = (a1, a2, b1, b2) => Math.max(0, b1 - a2, a1 - b2);
+      const vertical = dir === "up" || dir === "down";
+      const fromPinned = this.pinned(from);
+      let best = null, bestRank = Infinity, bestScore = Infinity;
+      this.candidates().forEach(({ el, r }) => {
+        if (el === from) return;
+        let along, side;
+        if (dir === "down")       { along = r.top - c.bottom;  side = gap(r.left, r.right, c.left, c.right); }
+        else if (dir === "up")    { along = c.top - r.bottom;  side = gap(r.left, r.right, c.left, c.right); }
+        else if (dir === "right") { along = r.left - c.right;  side = gap(r.top, r.bottom, c.top, c.bottom); }
+        else                      { along = c.left - r.right;  side = gap(r.top, r.bottom, c.top, c.bottom); }
+        if (along < -1) return; // not in that direction
+        // Only within 45° of it: d at the end of a row stays put instead of
+        // jumping to whatever lies far below.
+        if (side > Math.max(along, 0)) return;
+        // Sideways, the own row comes first: a link level with the cursor beats
+        // one diagonally closer on the line below. Up and down walk the page:
+        // the header and the scroll-top come last, so w enters the header only
+        // at the top and s never parks on the scroll-top.
+        let rank = !vertical && side > 0 ? 1 : 0;
+        if (vertical && !fromPinned && this.pinned(el)) rank = 2;
+        // Alignment weighs more than distance: a two-column layout walks its own column.
+        const score = Math.max(along, 0) + side * 3;
+        if (rank < bestRank || (rank === bestRank && score < bestScore)) {
+          bestRank = rank; bestScore = score; best = el;
+        }
+      });
+      return best;
+    },
+
+    arm() {
+      document.documentElement.dataset.spatnav = "";
+      if (!this.modeline) {
+        this.modeline = document.querySelector(".footer__mode");
+        if (this.modeline) this.restingText = this.modeline.textContent;
+      }
+      if (this.modeline) this.modeline.textContent = "-- WASD --";
+      clearTimeout(this.timer);
+      this.timer = setTimeout(() => this.exit(), this.config.idleMs);
+    },
+
+    exit() {
+      if (!("spatnav" in document.documentElement.dataset)) return;
+      delete document.documentElement.dataset.spatnav;
+      if (this.modeline) this.modeline.textContent = this.restingText;
+      clearTimeout(this.timer);
+    },
+  };
+
+  // =============================================================================
   // Events Preview (homepage)
   // =============================================================================
   const EventsPreview = {
@@ -1011,6 +1177,7 @@
       Carousel.init();
       MapHandler.init();
       Accessibility.init();
+      SpatialNav.init();
       EventsPreview.init();
       FundingStatus.init();
       ScrollTop.init();
