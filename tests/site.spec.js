@@ -176,9 +176,12 @@ test.describe('Home page', () => {
             ['.dot',                  24, 44],
         ]);
 
-        // Map
+        // Map — the toggle's visible text is its name; aria-expanded says
+        // which state that text describes.
+        await expect(page.locator('#show-map-btn')).toHaveAttribute('aria-expanded', 'false');
         await page.locator('#show-map-btn').click();
         await expect(page.locator('#osm-map-container')).toBeVisible();
+        await expect(page.locator('#show-map-btn')).toHaveAttribute('aria-expanded', 'true');
         const frame = page.locator('#osm-map');
         expect(await frame.getAttribute('src')).toContain('openstreetmap.org');
         // The embed needs allow-scripts and allow-same-origin to draw tiles at

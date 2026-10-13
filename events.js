@@ -578,7 +578,8 @@
         }
         var fold = target.querySelector(".event-card__more");
         if (fold) fold.open = true;
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        target.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
       }
     }
   }

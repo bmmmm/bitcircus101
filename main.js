@@ -513,11 +513,17 @@
 
       const isVisible = !container.classList.contains("hidden");
       container.classList.toggle("hidden");
+      // The visible text is the button's name; aria-expanded says what state
+      // that name describes.
       button.textContent = isVisible ? "[ karte laden ]" : "[ karte schließen ]";
+      button.setAttribute("aria-expanded", isVisible ? "false" : "true");
 
       if (!isVisible) {
         setTimeout(() => {
-          container.scrollIntoView({ behavior: "smooth", block: "center" });
+          container.scrollIntoView({
+            behavior: prefersReducedMotion() ? "auto" : "smooth",
+            block: "center",
+          });
         }, 100);
       }
     },
