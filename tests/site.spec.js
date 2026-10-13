@@ -505,7 +505,8 @@ test.describe('Navigation', () => {
         const focused = () => page.evaluate(() => {
             const el = document.activeElement, r = el.getBoundingClientRect();
             return { id: el.id, href: el.getAttribute('href'), top: r.top + scrollY, bottom: r.bottom + scrollY,
-                     nav: !!el.closest('nav'), footer: !!el.closest('footer') };
+                     nav: !!el.closest('nav'), footer: !!el.closest('footer'),
+                     scrollTop: el.classList.contains('scroll-top') };
         });
 
         // Nothing focused: the first key only shows the cursor — on the brand.
@@ -531,15 +532,17 @@ test.describe('Navigation', () => {
         await expect(page.locator('nav a[href="index.html#about"]')).toBeFocused();
         // s walks the whole page down into the footer and w all the way back up
         // into the header, every key a step that way. On the way: the closed
-        // months (a closed <details> keeps boxes Chromium will not focus), and
-        // the sticky header and the fixed scroll-top, in document space always
-        // just above and below the screen. Directions, not targets — the list
-        // is fixture-shaped.
-        const walk = async (key, arrived, onward) => {
+        // months (a closed <details> keeps boxes Chromium will not focus) and
+        // the sticky header, in document space always just above the screen.
+        // The fixed scroll-top never shows here — the paused clock freezes the
+        // rAF that fades it in; the phone walk at the end meets it. Directions,
+        // not targets — the list is fixture-shaped.
+        const walk = async (key, arrived, onward, settle = async () => {}) => {
             let prev = await focused();
             for (let i = 1; !arrived(prev); i++) {
                 expect(i, `${key} never arrived`).toBeLessThan(120);
                 await page.keyboard.press(key);
+                await settle();
                 const now = await focused();
                 expect(onward(prev, now), `${key} #${i} stood still or turned`).toBe(true);
                 prev = now;
@@ -652,6 +655,23 @@ test.describe('Navigation', () => {
         await expect(page.locator('nav a[href="raum-nutzen.html"]')).toBeFocused();
         await page.keyboard.press('Enter');
         await expect(page).toHaveURL(/raum-nutzen\.html/);
+
+        // The fixed scroll-top, live: with the clock running its rAF fades it
+        // in, and on a phone it sits over the content s walks through. It
+        // ranks last, so s never parks on it on the way to the footer. Each
+        // step waits two frames: the scroll the step caused has to reach the
+        // button before the next s, or the walk outruns it.
+        await page.clock.resume();
+        await page.setViewportSize({ width: 400, height: 800 });
+        await page.goto('/index.html');
+        await page.keyboard.press('s');
+        await expect(page.locator('nav .nav__brand')).toBeFocused();
+        await walk('s', (f) => f.footer, (p, n) => {
+            expect(n.scrollTop, 's parked on the scroll-top').toBe(false);
+            return n.top >= p.bottom - 1;
+        },
+            () => page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))));
+        await expect(page.locator('.scroll-top.visible'), 'the walk never met the scroll-top').toHaveCount(1);
     });
 
     test('mobile menu toggles, closes after a pick, and the anchor clears the header', async ({ page }) => {
