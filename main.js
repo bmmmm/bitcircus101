@@ -970,6 +970,39 @@
   };
 
   // =============================================================================
+  // Copy buttons (/calendar/: "⧉" next to each feed address)
+  // =============================================================================
+  // The markup ships them hidden, so without JavaScript or without the Clipboard
+  // API (plain http) there is no dead control — the address stays selectable.
+  const CopyButtons = {
+    init() {
+      if (!navigator.clipboard || !navigator.clipboard.writeText) return;
+      // The aria-label hides the button's "✓", so the outcome is also spoken
+      // through the page's polite live region (#copy-status, sr-only).
+      const status = utils.getElementById("copy-status");
+      const say = (msg) => { if (status) status.textContent = msg; };
+      utils.querySelectorAll("button[data-copy]").forEach((btn) => {
+        // Read once: a second click while "✓" shows must not take it for the label.
+        const label = btn.textContent;
+        let timer = 0;
+        const show = (mark, msg) => {
+          btn.textContent = mark;
+          say(msg);
+          clearTimeout(timer);
+          timer = setTimeout(() => { btn.textContent = label; say(""); }, 1200);
+        };
+        btn.hidden = false;
+        utils.addEventListenerSafe(btn, "click", () => {
+          navigator.clipboard.writeText(btn.dataset.copy).then(
+            () => show("✓", "Adresse kopiert"),
+            () => show("✕", "Kopieren nicht möglich – die Adresse lässt sich markieren"),
+          );
+        });
+      });
+    },
+  };
+
+  // =============================================================================
   // Main Application
   // =============================================================================
   const App = {
@@ -984,6 +1017,7 @@
       FooterYear.init();
       LogoSliderLazy.init();
       Theme.init();
+      CopyButtons.init();
     },
   };
 

@@ -98,12 +98,14 @@ describe("calendar page", () => {
     assert.deepEqual(primary, ["webcal://cal.example.org/pub/abc?export"]);
   });
 
-  it("shows each line's address as the text to copy — the same URL it subscribes to", () => {
+  it("shows each line's address as the text to copy — the same URL its copy button and webcal carry", () => {
     const html = renderCalendarPage(FEEDS, chrome, CALENDARS);
-    const lines = [...html.matchAll(/<code class="calendar-feed__url">(.*?)<\/code>[\s\S]*?href="(webcal:[^"]+)"[^>]*>&#8595; abonnieren/g)];
-    assert.equal(lines.length, 7, "one address per line");
-    for (const [, shown, webcal] of lines) {
-      assert.equal(shown.replaceAll("<wbr>", "").replaceAll("&amp;", "&"), webcal.replace("webcal://", "https://"));
+    const lines = [...html.matchAll(/<code class="calendar-feed__url">(.*?)<\/code>\s*<button [^>]*data-copy="([^"]+)"[^>]*hidden>⧉<\/button>[\s\S]*?href="(webcal:[^"]+)"[^>]*>&#8595; abonnieren/g)];
+    assert.equal(lines.length, 7, "one address and one hidden copy button per line");
+    for (const [, shown, copied, webcal] of lines) {
+      const https = webcal.replace("webcal://", "https://");
+      assert.equal(shown.replaceAll("<wbr>", "").replaceAll("&amp;", "&"), https);
+      assert.equal(copied.replaceAll("&amp;", "&"), https);
     }
   });
 
@@ -165,6 +167,8 @@ describe("calendar page", () => {
     const box = rss.slice(rss.lastIndexOf(`<h3 `, ics), ics);
     assert.ok(box.includes(`<h3 class="events-subscribe__title">${esc(names.join(" + "))}</h3>`),
       `rss.html's ical.ics box must be titled "${names.join(" + ")}" — calendars/ changed, update the title`);
+    assert.ok(rss.slice(ics, rss.indexOf("</div>", ics)).includes(`href="webcal://bitcircus101.de/ical.ics"`),
+      "the box subscribes to what it downloads — not to the complete calendar");
     assert.match(rss, /href="ical\.ics" download="bitcircus101-termine\.ics"/,
       "ical.ics must not download as bitcircus101.ics — that is the complete calendar's name");
   });

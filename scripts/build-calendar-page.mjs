@@ -135,7 +135,7 @@ function urlText(https) {
   return esc(m[1]) + esc(m[2]).replace(/\//g, "<wbr>/");
 }
 
-/** One line: span label, the address to copy, then rss and webcal buttons. */
+/** One line: span label, the address with its copy button, then rss and webcal buttons. */
 function lineHtml(title, l) {
   const span = SPANS[l.span];
   const ics = feedUrls(l.ics);
@@ -145,7 +145,10 @@ function lineHtml(title, l) {
   return [
     `                    <div class="calendar-feed__line">`,
     `                        <span class="calendar-feed__span" title="${esc(span.hint)}"><span aria-hidden="true">${span.mark}</span> ${span.label}</span>`,
-    `                        <code class="calendar-feed__url">${urlText(ics.https)}</code>`,
+    `                        <span class="calendar-feed__addr">`,
+    `                            <code class="calendar-feed__url">${urlText(ics.https)}</code>`,
+    `                            <button type="button" class="events-subscribe__btn" data-copy="${esc(ics.https)}" title="Adresse kopieren" aria-label="Adresse kopieren: ${name}" hidden>⧉</button>`,
+    `                        </span>`,
     `                        <span class="events-subscribe__actions">`,
     rss ? `                            <a class="events-subscribe__btn" href="${esc(rss)}" aria-label="RSS-Feed: ${name}">rss</a>` : "",
     `                            <a class="events-subscribe__btn${cta}" href="${esc(ics.webcal)}" aria-label="${name} abonnieren">&#8595; abonnieren</a>`,
@@ -187,6 +190,7 @@ export function renderCalendarPage(feeds, chrome, calendars = []) {
     `                    Nextcloud-Adresse abonniert? Einmal hier neu abonnieren. Ändert sich`,
     `                    eine Adresse, steht es zuerst auf dieser Seite.`,
     `                </p>`,
+    `                <p id="copy-status" class="sr-only" aria-live="polite"></p>`,
     `            </section>`,
     ...panelHtml("bitcircus101", "bitcircus101", "bitcircus101", own),
     ...(others.length ? panelHtml("weitere", "weitere kalender", "Weitere Kalender", others) : []),
@@ -195,7 +199,10 @@ export function renderCalendarPage(feeds, chrome, calendars = []) {
     `                <h2>wie abonnieren<a class="section-anchor" href="#wie" aria-label="Link zu: Wie abonnieren">#</a></h2>`,
     `                <dl class="man">`,
     `                    <dt>${legend("complete")}</dt>`,
-    `                    <dd>Alle Termine, auch vergangene und weit im Voraus geplante – direkt aus dem Originalkalender.</dd>`,
+    `                    <dd>`,
+    `                        Alle Termine, auch vergangene und weit im Voraus geplante – direkt aus dem`,
+    `                        Originalkalender, im bitcircus101-Kalender also auch interne Raum-Blocker.`,
+    `                    </dd>`,
     `                    <dt>${legend("window")}</dt>`,
     `                    <dd>`,
     `                        Nur kommende Termine – höchstens die nächsten 40, über alle Kalender gezählt.`,
@@ -203,7 +210,7 @@ export function renderCalendarPage(feeds, chrome, calendars = []) {
     `                    </dd>`,
     `                    <dt><span aria-hidden="true">&#8595;</span> abonnieren</dt>`,
     `                    <dd>Öffnet die Kalender-App auf deinem Gerät (Apple Kalender, Thunderbird, Outlook).</dd>`,
-    `                    <dt>https://…</dt>`,
+    `                    <dt>https://… <span aria-hidden="true">⧉</span></dt>`,
     `                    <dd>Die Adresse zum Kopieren – in Google Kalender oder Nextcloud als Abo „per URL“ hinzufügen.</dd>`,
     `                    <dt>rss</dt>`,
     `                    <dd>Dieselben Termine für den Feed-Reader, alle Feeds auf <a href="../rss.html">/rss</a>.</dd>`,
