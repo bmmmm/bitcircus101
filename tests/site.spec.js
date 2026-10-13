@@ -137,7 +137,11 @@ const FOCUS_SWEEP = () => {
         const cs = getComputedStyle(el);
         if (!el.matches(':focus-visible')) { bad.push(who + ': focus is not :focus-visible'); continue; }
         if (!el.checkVisibility({ opacityProperty: true, visibilityProperty: true })) { bad.push(who + ': invisible tab stop'); continue; }
-        const r = el.getBoundingClientRect();
+        // The first line box, not the bounding box: an inline link wrapped
+        // over two lines has its bounding-box centre on neither line (CI's
+        // fonts wrap /lite/ links that local fonts do not), and that point
+        // hits whatever link sits there instead.
+        const r = el.getClientRects()[0] || el.getBoundingClientRect();
         const v = { left: Math.max(r.left, 0), top: Math.max(r.top, 0), right: Math.min(r.right, innerWidth), bottom: Math.min(r.bottom, innerHeight) };
         if (v.right <= v.left || v.bottom <= v.top) { bad.push(who + ': focused but off-screen'); continue; }
         const hit = document.elementFromPoint((v.left + v.right) / 2, (v.top + v.bottom) / 2);
