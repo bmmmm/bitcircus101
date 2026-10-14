@@ -1204,8 +1204,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 /* type marker — structural, not chromatic: the left rule varies by kind.
    The date is the card's green marker (below); the type rule stays ink, since
    a card's type is neither a link, a CTA, nor a current selection (see the
-   token scope rule). events.js emits the classes on both the JSON path and
-   the ICS fallback. */
+   token scope rule). events.js emits the classes. */
 .event-card { border-left: 2px solid transparent; padding-left: 0.75ch; }
 .event-card--linkup   { border-left-color: var(--line-strong); }
 .event-card--workshop { border-left-style: dashed; border-left-color: var(--line); }

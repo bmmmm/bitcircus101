@@ -1,6 +1,6 @@
 /**
  * ics-core.js — shared ICS parser used by BOTH the Node sync script
- * (scripts/sync-events.mjs) and the browser fallback (events.js).
+ * (scripts/sync-events.mjs) and the browser (events.js: eventAnchor).
  *
  * Single source of truth: edit the parser here and both consumers update. UMD
  * wrapper exposes `module.exports` under Node (imported by the .mjs sync script)
@@ -417,7 +417,7 @@
         var u = val.trim();
         // Leave a root- or protocol-relative path ("/x", "//x") alone; only prefix a
         // bare host, so the result never becomes "https:///x". Matches httpUrl() in
-        // events.js so the sync output and the browser fallback agree.
+        // events.js.
         ev.url = u && u.charAt(0) !== "/" && !/^https?:\/\//i.test(u) ? "https://" + u : u;
       }
       else if (key === "RRULE") ev.rrule = val;

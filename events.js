@@ -7,12 +7,6 @@
   "use strict";
 
   var JSON_URL = "events-data.json";
-  // Still the old backend path: the live CSP (Cloudflare rule, CONTRIBUTING.md
-  // § Security headers) names this old host as connect-src's only external one. Same feed as the
-  // `ics` in calendars/bitcircus.json — switch to it once the rule names
-  // kalender.bitcircus101.de.
-  var ICS_URL =
-    "https://nc.6bm.de/remote.php/dav/public-calendars/DCaFSYECrcTJRJjC?export";
   var CALENDAR_URL = "https://bitcircus101.de/calendar/";
   var MONTHS = [
     "JAN", "FEB", "M\u00c4R", "APR", "MAI", "JUN",
@@ -32,7 +26,7 @@
   var PARAM = { TAGS: "tags", WITH: "mit", Q: "q" };
   var state = { tags: [], friends: [], q: "" };
   var allFutureSorted = [];
-  var feeds = null; // feeds manifest from events-data.json; null on old JSON / ICS fallback
+  var feeds = null; // feeds manifest from events-data.json; null until the JSON has loaded
   var relMap = null; // source name → relation (events-core relationMap); null on pre-field data
   var friendList = []; // the friends' calendars the toolbar offers, {id, name} in config order
   var eventsContainer = null;
@@ -639,10 +633,9 @@
           'data-href="#' + anchor + '" title="Link kopieren">' +
           '\u2190 link</button>';
         // Own page with the full text \u2014 only the sources with pages get one
-        // (EventsCore.hasPages), marked `page` on the card. The own-calendar
-        // check covers cards synced before that flag existed and the browser
-        // fallback. Relative directory href: serves locally and live alike.
-        if (e.id && (e.page || relOf(e) === "own")) {
+        // (EventsCore.hasPages), marked `page` on the card. Relative directory
+        // href: serves locally and live alike.
+        if (e.id && e.page) {
           html += '<a class="event-action event-action--details" href="e/' +
             esc(e.id) + '/" title="Alle Details auf eigener Seite">' +
             '\u2192 details</a>';
@@ -712,15 +705,6 @@
       }
     }
   }
-
-  // ── ICS fallback ──────────────────────────────────────────────────────────
-  // The parser lives in ics-core.js (window.ICSCore) and the card shaping in
-  // events-core.js (window.EventsCore), both shared with the Node sync script —
-  // the fallback renders the same cards (tags, type, truncation) as the JSON path.
-
-  // Source descriptor for the fallback: only our own calendar (Radicale) is
-  // reachable from the browser, so cards carry the same source name the sync uses.
-  var FALLBACK_CAL = { id: "bitcircus", name: "bitcircus101", url: CALENDAR_URL, cap: 30, relation: "own" };
 
   // ── Subscribe box follows the filter ("Filter = Feed") ───────────────────
   // The sync publishes per-tag/per-source feeds and lists them in the `feeds`
@@ -1000,22 +984,12 @@
         var events = data.events;
         var sources = data.sources || null;
         feeds = data.feeds || null;
-        if (!events || !events.length) throw new Error("empty");
+        if (!events) throw new Error("no events");
         renderCards(events, el, sources);
         if (sources) showLastSync(sources);
       })
       .catch(function () {
-        fetch(ICS_URL, { mode: "cors" })
-          .then(function (res) {
-            if (!res.ok) throw new Error("HTTP " + res.status);
-            return res.text();
-          })
-          .then(function (text) {
-            renderCards(EventsCore.toCards(ICSCore.parseICS(text, "fallback"), FALLBACK_CAL), el, [FALLBACK_CAL]);
-          })
-          .catch(function () {
-            renderError(el);
-          });
+        renderError(el);
       });
   }
 

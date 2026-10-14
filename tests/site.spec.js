@@ -2150,6 +2150,7 @@ test.describe('Event details', () => {
     test('kiosk names the short address of each event that has a page, unless info=off', async ({ page }) => {
         const data = buildEventsData();
         data.events[1].source = 'Datenburg e.V.';   // partner without pages
+        delete data.events[1].page;
         data.events[2].page = true;                  // partner with pages
         await useEventsFixture(page, data);
         const url = (title) => page.locator('.kiosk-ev').filter({ hasText: title }).locator('.kiosk-ev__url');

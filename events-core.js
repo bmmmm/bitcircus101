@@ -1,10 +1,9 @@
 /**
  * events-core.js — shared card-shaping logic used by BOTH the Node sync script
- * (scripts/sync-events.mjs) and the browser fallback (events.js).
+ * (scripts/sync-events.mjs) and the browser pages (events.js, main.js, kiosk.js).
  *
  * Single source of truth for tags, event type and the card object itself: edit
- * here and both consumers update — the live-ICS fallback renders the same cards
- * as the generated events-data.json. Parsing stays in ics-core.js; this module
+ * here and every consumer updates. Parsing stays in ics-core.js; this module
  * only maps parsed ICS events onto card objects.
  *
  * Written in ES5 so the browser build needs no transpilation. The key insertion

@@ -156,7 +156,11 @@ function buildEventsData() {
     },
   ];
 
-  for (const e of events) e.id = EventsCore.eventId(e, { name: e.source });
+  for (const e of events) {
+    e.id = EventsCore.eventId(e, { name: e.source });
+    // The sync flags every card of a primary source (own + home) `page`.
+    if (e.source === "bitcircus101") e.page = true;
+  }
 
   return {
     lastSync: now,
