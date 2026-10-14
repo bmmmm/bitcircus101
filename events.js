@@ -997,10 +997,9 @@
         return res.json();
       })
       .then(function (data) {
-        // Support both { lastSync, sources, events } wrapper and plain array
-        var events = Array.isArray(data) ? data : data.events;
-        var sources = Array.isArray(data) ? null : data.sources;
-        feeds = (!Array.isArray(data) && data.feeds) || null;
+        var events = data.events;
+        var sources = data.sources || null;
+        feeds = data.feeds || null;
         if (!events || !events.length) throw new Error("empty");
         renderCards(events, el, sources);
         if (sources) showLastSync(sources);
