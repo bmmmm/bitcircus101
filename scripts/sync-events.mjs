@@ -38,11 +38,10 @@ import EventsCore from "../events-core.js";
 import { SITE_URL, escXml, toRFC822, rssDocument } from "./rss.mjs";
 import { paragraphs } from "./html-text.mjs";
 
-// ICS parsing primitives are shared with the browser fallback (events.js) via the
-// UMD module ics-core.js — single source of truth, no drift between the two parsers.
+// ICS parsing primitives live in the UMD module ics-core.js (the browser loads it
+// for eventAnchor) — single source of truth.
 const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, eventAnchor } = ICSCore;
-// Card shaping (tags, type, toCards) is shared the same way via events-core.js, so
-// the browser's live-ICS fallback renders the same cards as the generated JSON.
+// Card shaping (tags, type, toCards) is shared the same way via events-core.js.
 // Re-exported below so tests and check-calendars.mjs keep importing from here.
 const { isInternal, guessType, isCancelledTitle, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId, hasPages, relationOf, inPrimaryFeed, relationMap, sourceRelation } = EventsCore;
 
@@ -121,7 +120,7 @@ function applyFilter(icsEvents, filter) {
 }
 
 // Card shaping — guessType, buildTags, cleanLocation, toCards & co — lives in
-// events-core.js (shared with the browser fallback). Imported at the top.
+// events-core.js (shared with the browser pages). Imported at the top.
 
 // ── Generate RSS feed ───────────────────────────────────────────────────────
 
@@ -142,13 +141,13 @@ function eventGuid(c) {
 }
 
 /**
- * Canonical outward-facing URL of one occurrence: its own page when the card
- * carries an id (every card from events-core does), the /events anchor for
- * legacy cards. ONE function for the RSS item <link> and the JSON-LD url —
+ * Canonical outward-facing URL of one occurrence: its own page when the sync
+ * builds one (`page`, events-core hasPages), else its /events anchor — a
+ * friend's card has an id but no page. ONE function for the RSS item <link> and the JSON-LD url —
  * aggregators key the same occurrence on both, so they must stay byte-identical.
  */
 function eventPageUrl(c) {
-  return c.id ? `${SITE_URL}/e/${c.id}/` : `${EVENTS_URL}#${eventAnchor(c)}`;
+  return c.page && c.id ? `${SITE_URL}/e/${c.id}/` : `${EVENTS_URL}#${eventAnchor(c)}`;
 }
 
 /**
@@ -588,7 +587,7 @@ function syncFeedsDir(dir, files) {
 
 // ── Generate schema.org JSON-LD (embedded in events.html) ──────────────────
 //
-// The RSS feed's item links point at /events#ev-…, and calendar
+// The RSS feed's item links point at /e/<id>/ or /events#ev-…, and calendar
 // aggregators following the feed (e.g. scalendarii's RSS path) fetch each
 // item page and read its schema.org JSON-LD — without this block the feed
 // resolves to zero events. Each node's `url` is byte-identical to the RSS

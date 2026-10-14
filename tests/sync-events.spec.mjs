@@ -1063,7 +1063,7 @@ describe("generateRSS", () => {
   it("declares the content namespace and renders the description as HTML in content:encoded", () => {
     const card = {
       ...baseCard,
-      id: "abc123def456",
+      id: "abc123def456", page: true,
       description: "Erster Absatz mit https://example.org/x.\n\nZweiter Absatz\nmit Umbruch\n\n#löten #hardware",
     };
     const xml = generateRSS([card]);
@@ -1163,11 +1163,12 @@ describe("generateRSS", () => {
     assert.ok(!/&(?!amp;|lt;|gt;|quot;|#)/.test(xml));
   });
 
-  it("deep-links the item to the event anchor", () => {
-    const xml = generateRSS([baseCard]);
-    assert.ok(
-      xml.includes("<link>https://bitcircus101.de/events#" + eventAnchor(baseCard) + "</link>")
-    );
+  it("links the item to the event's own page, a page-less card to its anchor", () => {
+    const xml = generateRSS([{ ...baseCard, id: "abc123def456", page: true }]);
+    assert.ok(xml.includes("<link>https://bitcircus101.de/e/abc123def456/</link>"));
+    const friend = generateRSS([{ ...baseCard, id: "abc123def456" }]);
+    assert.ok(friend.includes("<link>https://bitcircus101.de/events#" + eventAnchor(baseCard) + "</link>"));
+    assert.ok(!friend.includes("/e/abc123def456/"), "a card without a page links a page that is never built");
   });
 
   it("stays well-formed XML with hostile field content", () => {
@@ -1546,9 +1547,9 @@ describe("toJsonLdEvent", () => {
     assert.equal(node.endDate, "2026-07-17T23:00:00+02:00");
   });
 
-  it("keys the node url to the RSS item anchor, byte-identical", () => {
-    const node = toJsonLdEvent(timed);
-    assert.equal(node.url, `https://bitcircus101.de/events#${eventAnchor(timed)}`);
+  it("keys the node url to the event's own page", () => {
+    const node = toJsonLdEvent({ ...timed, id: "abc123def456", page: true });
+    assert.equal(node.url, "https://bitcircus101.de/e/abc123def456/");
   });
 
   it("emits location as a Place and strips the # off keywords", () => {
@@ -1683,7 +1684,7 @@ describe("card pipeline — golden output", () => {
   ].join("\r\n");
 
   const CAL_BUILTIN = {
-    id: "bitcircus", name: "bitcircus101",
+    id: "bitcircus", name: "bitcircus101", relation: "own",
     url: "https://nc.example.org/apps/calendar/p/abc",
   };
   const CAL_SINGLE = {
@@ -1739,6 +1740,7 @@ describe("card pipeline — golden output", () => {
     "source": "bitcircus101",
     "uid": "evt-1@example.com",
     "calendarUrl": "https://example.org/programm/crowd-gaming",
+    "page": true,
     "eventUrl": "https://example.org/programm/crowd-gaming"
   },
   {
@@ -1757,7 +1759,8 @@ describe("card pipeline — golden output", () => {
     "type": "special",
     "source": "bitcircus101",
     "uid": "",
-    "calendarUrl": "https://nc.example.org/apps/calendar/p/abc"
+    "calendarUrl": "https://nc.example.org/apps/calendar/p/abc",
+    "page": true
   },
   {
     "id": "15107eb32c8b",
@@ -1777,7 +1780,8 @@ describe("card pipeline — golden output", () => {
     "type": "workshop",
     "source": "bitcircus101",
     "uid": "evt-3@example.com",
-    "calendarUrl": "https://nc.example.org/apps/calendar/p/abc"
+    "calendarUrl": "https://nc.example.org/apps/calendar/p/abc",
+    "page": true
   },
   {
     "id": "6867f3e2c39f",
@@ -1795,7 +1799,8 @@ describe("card pipeline — golden output", () => {
     "type": "linkup",
     "source": "bitcircus101",
     "uid": "evt-4@example.com",
-    "calendarUrl": "https://nc.example.org/apps/calendar/p/abc"
+    "calendarUrl": "https://nc.example.org/apps/calendar/p/abc",
+    "page": true
   }
 ]`;
 
@@ -1953,6 +1958,7 @@ describe("card pipeline — golden output", () => {
       "source": "bitcircus101",
       "uid": "evt-1@example.com",
       "calendarUrl": "https://example.org/programm/crowd-gaming",
+      "page": true,
       "eventUrl": "https://example.org/programm/crowd-gaming",
       "firstSeen": "2026-01-15T11:00:00.000Z"
     },
@@ -1973,6 +1979,7 @@ describe("card pipeline — golden output", () => {
       "source": "bitcircus101",
       "uid": "",
       "calendarUrl": "https://nc.example.org/apps/calendar/p/abc",
+      "page": true,
       "firstSeen": "2026-01-15T11:00:00.000Z"
     },
     {
@@ -1994,6 +2001,7 @@ describe("card pipeline — golden output", () => {
       "source": "bitcircus101",
       "uid": "evt-3@example.com",
       "calendarUrl": "https://nc.example.org/apps/calendar/p/abc",
+      "page": true,
       "firstSeen": "2026-01-15T11:00:00.000Z"
     },
     {
@@ -2013,6 +2021,7 @@ describe("card pipeline — golden output", () => {
       "source": "bitcircus101",
       "uid": "evt-4@example.com",
       "calendarUrl": "https://nc.example.org/apps/calendar/p/abc",
+      "page": true,
       "firstSeen": "2026-01-15T11:00:00.000Z"
     }
   ],
@@ -2922,15 +2931,10 @@ describe("dedupeCards", () => {
 // ── eventPageUrl / toJsonLdEvent ─────────────────────────────────────────
 
 describe("eventPageUrl / toJsonLdEvent — url + cancellation", () => {
-  const withId = { id: "abc123def456", title: "Event", date: "2026-07-01", time: "20:00", tags: [] };
-  const withoutId = { title: "Event", date: "2026-07-01", time: "20:00", tags: [] };
+  const withId = { id: "abc123def456", page: true, title: "Event", date: "2026-07-01", time: "20:00", tags: [] };
 
   it("builds the permalink URL for a card with an id", () => {
     assert.equal(eventPageUrl(withId), "https://bitcircus101.de/e/abc123def456/");
-  });
-
-  it("falls back to the /events anchor for a card without an id", () => {
-    assert.equal(eventPageUrl(withoutId), `https://bitcircus101.de/events#${eventAnchor(withoutId)}`);
   });
 
   it("keeps the RSS <link> and the JSON-LD url byte-identical", () => {
