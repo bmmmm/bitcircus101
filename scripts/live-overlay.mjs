@@ -63,7 +63,6 @@ const REMOVE_FILES = [
     "CONTRIBUTING.md",
     "README.md",
     ".gitignore",
-    ".claudeignore",
 ];
 
 const ref = process.argv[2];

@@ -34,7 +34,6 @@ export const FUNDING_PATH = path.join(root, "funding.json");
 
 const CURRENCIES = ["EUR", "USD", "GBP"];
 const ID_RE = /^[a-z0-9][a-z0-9-]*$/;
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 // pulse.start — a calendar month, the first of the levels track (/status axis)
 const MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/;
 // A plain decimal: optional sign, digits, and a single "," OR "." separator
