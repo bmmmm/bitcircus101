@@ -11,8 +11,8 @@
  */
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
+import { esc } from "../scripts/html-text.mjs";
 import {
-  esc,
   formatDate,
   toDatetime,
   normalizeUrl,

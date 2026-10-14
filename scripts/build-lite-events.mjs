@@ -15,7 +15,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import EventsCore from "../events-core.js";
 import { esc } from "./html-text.mjs";
-export { esc }; // tests import it from here
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
