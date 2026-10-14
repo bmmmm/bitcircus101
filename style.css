@@ -58,9 +58,8 @@
             "DejaVu Sans Mono", monospace;
     --font-size: 1rem;
     --line-height: 1.7;
-    /* panel titles: 0.95rem on a phone (a long title like "teil von
-       bitcircus101 werden" has to fit the border line, and a clipped title
-       clips its focusable # anchor), growing to 1.05rem from ~800px up */
+    /* panel titles: 0.95rem on a phone (a long title wraps less often),
+       growing to 1.05rem from ~800px up */
     --fs-panel-title: clamp(0.95rem, 0.85rem + 0.4vw, 1.05rem);
     /* the small text, named by role — the values are the ones the sheet
        has always used; tests/markup.spec.mjs refuses the bare numbers */
@@ -240,29 +239,33 @@ section { margin: 0 0 2.5rem; }
    ──[ titel ]──────────────────────────────────────────────
    ============================================================================= */
 .panel {
+    --panel-pad-top: 1.5rem;
+    --panel-pad-x: 1.25rem;
     position: relative;
     border: 1px solid var(--line);
-    padding: 1.5rem 1.25rem 0.75rem;
+    padding: var(--panel-pad-top) var(--panel-pad-x) 0.75rem;
     margin: 2.25rem 0;
 }
 
 /* The logo strip (section.logo-slider, markup generated) is a panel without
-   the .panel class — it shares this rule rather than carrying a copy. */
+   the .panel class — it shares this rule rather than carrying a copy.
+   In flow, not absolute: a title too long for a phone wraps (a heading is
+   never truncated, WCAG 1.4.10) and its extra lines push the content down.
+   The negative top margin centres the first line on the border; the bottom
+   gap is padding, not margin, so it adds to the next element's top margin
+   instead of collapsing with it — a one-line title sits exactly where the
+   old absolute one did. Offsets are against the panel's padding box, hence
+   --panel-pad-top/-x from the panel. */
 .panel > h2:first-child,
 section.logo-slider > h2:first-child {
-    position: absolute;
-    top: 0;
-    left: 1rem;
-    transform: translateY(-50%);
-    margin: 0;
+    width: fit-content;
+    max-width: calc(100% + 2 * var(--panel-pad-x) - 2rem);
+    margin: calc(-1 * var(--panel-pad-top) - 0.5lh) 0 0 calc(1rem - var(--panel-pad-x));
     background: var(--paper);
-    padding: 0 0.75ch;
+    padding: 0 0.75ch calc(var(--panel-pad-top) - 0.5lh);
     font-size: var(--fs-panel-title);
     letter-spacing: 0.04em;
-    max-width: calc(100% - 2rem);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-wrap: balance;
 }
 
 /* the brackets are the panel's green marker; the title text stays ink */
@@ -289,8 +292,7 @@ h1:hover .section-anchor,
 h2:hover .section-anchor,
 .section-anchor:focus-visible,
 .section-anchor:hover { opacity: 1; }
-/* Focus gets the reverse video too: inside the overflow:hidden panel title
-   the ring is clipped to its side bars, so colour has to carry the mark. */
+/* Focus gets the reverse video too, so the small # carries a clear mark. */
 .section-anchor:focus-visible,
 .section-anchor:hover { background: var(--ink); color: var(--paper); }
 
@@ -2031,9 +2033,11 @@ h3.sidenote__title::before { content: none; }
    panel look is applied here instead of via a .panel class in the HTML.
    ============================================================================= */
 section.logo-slider {
+    --panel-pad-top: 1.5rem;
+    --panel-pad-x: 0px;
     position: relative;
     border: 1px solid var(--line);
-    padding: 1.5rem 0 0.25rem;
+    padding: var(--panel-pad-top) var(--panel-pad-x) 0.25rem;
     margin: 2.25rem 0;
 }
 

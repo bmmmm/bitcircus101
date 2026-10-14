@@ -3382,6 +3382,40 @@ test.describe('Internal links', () => {
 // ─── Accessibility ───────────────────────────────────────────────────────────
 
 test.describe('Accessibility', () => {
+    test('panel titles wrap at 320 px instead of being cut, and never cover the content', async ({ page }) => {
+        // WCAG 1.4.10: at 320 CSS px (a phone, or 1280 px at 400 % zoom) a
+        // heading must reflow, not lose its end to an ellipsis. One title is
+        // stretched synthetically so the check does not hinge on today's copy.
+        await page.setViewportSize({ width: 320, height: 568 });
+        await page.goto('/index.html');
+        const S = '.panel > h2:first-child, section.logo-slider > h2:first-child';
+        await page.locator(S).first().evaluate((h) => { h.firstChild.textContent = 'ein sehr langer titel '.repeat(4); });
+        const titles = await page.$$eval(S, (hs) => hs.map((h) => {
+            const panel = h.parentElement.getBoundingClientRect(), r = h.getBoundingClientRect();
+            const next = h.nextElementSibling.getBoundingClientRect();
+            const half = parseFloat(getComputedStyle(h).lineHeight) / 2;
+            return {
+                text: h.textContent.trim().slice(0, 30),
+                cut: h.scrollWidth - h.clientWidth,
+                pastPanel: Math.round(r.right - panel.right),
+                // first line centred on the top border, as the one-line design has it
+                offBorder: Math.round(Math.abs(r.top + half - panel.top)),
+                // the text's last line ends above the content (padding-bottom is
+                // the title's own gap, so compare against its content box)
+                coversNext: Math.round(r.bottom - parseFloat(getComputedStyle(h).paddingBottom) - next.top),
+                lines: Math.round((r.height - parseFloat(getComputedStyle(h).paddingBottom)) / (2 * half)),
+            };
+        }));
+        expect(titles.length).toBeGreaterThan(3);
+        expect(titles[0].lines, 'the stretched title did not wrap').toBeGreaterThan(2);
+        for (const t of titles) {
+            expect(t.cut, `"${t.text}" is cut`).toBeLessThanOrEqual(0);
+            expect(t.pastPanel, `"${t.text}" runs past its panel`).toBeLessThan(0);
+            expect(t.offBorder, `"${t.text}" left the border line`).toBeLessThanOrEqual(1);
+            expect(t.coversNext, `"${t.text}" covers the content below`).toBeLessThanOrEqual(0);
+        }
+    });
+
     test('aria-labels, alt texts and landmark roles', async ({ page, isMobile }) => {
         await page.goto('/');
 
