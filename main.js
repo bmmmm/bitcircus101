@@ -1136,6 +1136,9 @@
       }
       window.addEventListener("scroll", schedule, { passive: true });
       window.addEventListener("resize", schedule, { passive: true });
+      // A re-render (/events: filter toggle, 30 s refresh) moves the footer
+      // without a scroll event.
+      if ("ResizeObserver" in window) new ResizeObserver(schedule).observe(document.body);
       // A reload restores the scroll position without a scroll event.
       place();
 
