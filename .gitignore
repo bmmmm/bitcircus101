@@ -20,7 +20,6 @@ playwright-report/
 
 # Claude Code
 .claude/
-.claudeignore
 
 # VSCode
 .vscode/
@@ -31,8 +30,6 @@ logs
 *.log
 
 # Build output
-dist/
-build/
 *.tmp
 *.swp
 
@@ -48,12 +45,6 @@ Desktop.ini
 .idea/
 *.sublime-workspace
 *.sublime-project
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
 
 # Backup
 *~
@@ -80,6 +71,3 @@ pinnwand/
 
 # Local temp directory (QA reports, screenshots, etc.)
 tmp/
-
-# Screenshots (dev only)
-location-card-*.png
