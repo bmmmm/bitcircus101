@@ -82,7 +82,9 @@ jobs:
           # them cannot trip over untracked copies.
           inputs="scripts calendars ics-core.js events-core.js jobs-core.js"
           git reset -q -- $inputs
-          git checkout -- $inputs
+          # Only what live tracks: a file new to this list on main is not on
+          # live until the next deploy, and a bare pathspec would fail on it.
+          git checkout -- $(git ls-files -- $inputs)
           git clean -fdq -- $inputs
           # -f: the feeds are .gitignored on main (rebuilt here); force-add so the
           # first run can track them on live. ical.ics + events/ copies are new (issue #1).
