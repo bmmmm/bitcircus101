@@ -173,22 +173,21 @@ describe("buildMarkup", () => {
   it("links a title with an id to its own page, the external URL beside it", () => {
     const out = buildMarkup(
       [
-        ev("2026-09-04", { id: "0a1b2c3d4e5f", eventUrl: "https://kurse.example/x" }),
-        ev("2026-09-05", { id: "<x>", title: "Ohne Link" }),
+        ev("2026-09-04", { id: "0a1b2c3d4e5f", page: true, eventUrl: "https://kurse.example/x" }),
+        ev("2026-09-05", { id: "<x>", page: true, title: "Ohne Link" }),
       ],
       null,
-      "../feed.xml",
-      { bitcircus101: "own" }
+      "../feed.xml"
     );
     assert.match(out, /— <a href="\.\.\/e\/0a1b2c3d4e5f\/">Linkup<\/a> · <a href="https:\/\/kurse\.example\/x" rel="noopener noreferrer">extern<\/a><\/li>/);
     assert.match(out, /— <a href="\.\.\/e\/&lt;x&gt;\/">Ohne Link<\/a><\/li>/);
-    // a home calendar's card links its page only when the sync flagged it
-    const home = buildMarkup(
-      [ev("2026-09-04", { id: "0a1b2c3d4e5f", source: "Toys" }), ev("2026-09-05", { id: "ffffffffffff", source: "Toys", page: true })],
-      null, "../feed.xml", { bitcircus101: "own", Toys: "home" }
+    // a card links its page only when the sync flagged it
+    const flag = buildMarkup(
+      [ev("2026-09-04", { id: "0a1b2c3d4e5f" }), ev("2026-09-05", { id: "ffffffffffff", page: true })],
+      null, "../feed.xml"
     );
-    assert.ok(!home.includes("/e/0a1b2c3d4e5f/"), "an unflagged home card got a page link");
-    assert.ok(home.includes('<a href="../e/ffffffffffff/">'), "a flagged home card lost its page link");
+    assert.ok(!flag.includes("/e/0a1b2c3d4e5f/"), "an unflagged card got a page link");
+    assert.ok(flag.includes('<a href="../e/ffffffffffff/">'), "a flagged card lost its page link");
   });
 
   it("renders a plain title when the URL is unusable", () => {

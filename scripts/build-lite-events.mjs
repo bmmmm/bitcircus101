@@ -50,18 +50,17 @@ export function normalizeUrl(u) {
   return null;
 }
 
-export function buildMarkup(events, icsUrl, rssPath, relations = null) {
+export function buildMarkup(events, icsUrl, rssPath) {
   if (!events.length) {
     return `<p class="dim">Keine Termine eingetragen — <a href="../events.html">Veranstaltungen</a></p>`;
   }
   const items = events
     .map((e) => {
       const url = normalizeUrl(e.eventUrl);
-      // The title leads to the event's own page; an external link stays the
-      // second way. A card of our own calendar from a sync before the `page`
-      // flag existed has a page all the same (relations: events-core relationMap).
+      // The title leads to the event's own page (the sync flags `page`); an
+      // external link stays the second way.
       const ext = url ? `<a href="${esc(url)}" rel="noopener noreferrer">${esc(e.title)}</a>` : esc(e.title);
-      const label = e.id && (e.page || EventsCore.sourceRelation(relations, e.source) === "own")
+      const label = e.id && e.page
         ? `<a href="../e/${esc(e.id)}/">${esc(e.title)}</a>` +
           (url ? ` · <a href="${esc(url)}" rel="noopener noreferrer">extern</a>` : "")
         : ext;
@@ -130,15 +129,13 @@ function main() {
   let rssPath = "../feed.xml";
 
   let upcoming = [];
-  let relations = null;
   if (fs.existsSync(EVENTS_JSON)) {
     const data = JSON.parse(fs.readFileSync(EVENTS_JSON, "utf8"));
     rssPath = resolveRssPath(data, rssPath);
     upcoming = selectUpcoming(data, todayStr);
-    relations = EventsCore.relationMap(data.sources);
   }
 
-  const markup = buildMarkup(upcoming, icsUrl, rssPath, relations);
+  const markup = buildMarkup(upcoming, icsUrl, rssPath);
   let html = fs.readFileSync(LITE, "utf8");
 
   const si = html.indexOf(START);

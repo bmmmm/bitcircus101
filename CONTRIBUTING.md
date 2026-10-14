@@ -103,7 +103,7 @@ Cloudflare proxy in front of the site via a *Response Header Transform Rule*
 (Rules → Transform Rules → Modify Response Header), on all routes:
 
 ```
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://nc.6bm.de; frame-src https://ko-fi.com https://www.openstreetmap.org; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; frame-src https://ko-fi.com https://www.openstreetmap.org; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
 Strict-Transport-Security: max-age=31536000
 X-Frame-Options: DENY
 X-Content-Type-Options: nosniff
@@ -123,8 +123,8 @@ Permissions-Policy: geolocation=(), camera=(), microphone=()
   older browsers; no `<meta>` equivalent), the `frame-src` allowlist, and
   `Strict-Transport-Security` (pins HTTPS for a year). Add a host to `frame-src`
   before embedding any new third party.
-- `img-src data:` covers the logo-slider placeholders; `connect-src` the events
-  page's ICS fallback fetch from the calendar server.
+- `img-src data:` covers the logo-slider placeholders; `connect-src` allows no
+  external host: every page fetches only same-origin JSON.
 - `Referrer-Policy` is also a `<meta>` on ten pages — the seven that carry the
   shared chrome plus `/ascii/`, `/chat/` and `404.html` (so it applies even
   without the rule); the header is the authoritative copy and covers all routes. The stubs

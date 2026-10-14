@@ -54,9 +54,9 @@ main.js                     Frontend: nav, carousel, map, events preview, footer
 storage.js                  Central localStorage wrapper — all keys in one place, exception-safe
 
 events.js                   Frontend: fetches events-data.json, renders event cards, tag filtering
-events-core.js              Shared card shaping (tags, type) for events.js fallback + CI sync
+events-core.js              Shared card shaping (tags, type, relations) for the pages + CI sync
                             (key order pinned by a golden test in tests/sync-events.spec.mjs)
-ics-core.js                 Shared ICS parser for the browser fallback + CI sync (one parser, no drift)
+ics-core.js                 Shared ICS parser for the CI sync; the browser uses its eventAnchor
 status.js                   Frontend: draws the /status bar rows, the zoom detail, the incident list, the pulse
 status-core.js              Shared timeline math for /status (bucket ladder, states, pulse months); unit-tested
 calendars/                  Calendar source definitions (config.json manifest + one file per source)
