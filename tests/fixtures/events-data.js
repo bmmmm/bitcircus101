@@ -168,11 +168,10 @@ function buildEventsData() {
         fetchedAt: now,
         status: "ok",
         events: 4,
-        added: 0,
-        removed: 0,
-        total: 4,
-        past: 0,
-        upcoming: 4,
+        hash: "0123456789abcdef",
+        // 73 h, not 72: the sync row floors to whole days, and the page renders
+        // after this fixture is built — so this reads "vor 3 Tagen" either way.
+        changedAt: new Date(Date.now() - 73 * 3600000).toISOString(),
       },
       {
         id: "look-at-my-toys",
@@ -181,11 +180,8 @@ function buildEventsData() {
         fetchedAt: now,
         status: "ok",
         events: 1,
-        added: 0,
-        removed: 0,
-        total: 1,
-        past: 0,
-        upcoming: 1,
+        hash: "fedcba9876543210",
+        changedAt: null, // no change seen yet (first sight, or byte-stable since)
       },
       {
         id: "datenburg",
@@ -194,11 +190,8 @@ function buildEventsData() {
         fetchedAt: now,
         status: "ok",
         events: 2,
-        added: 0,
-        removed: 0,
-        total: 2,
-        past: 0,
-        upcoming: 2,
+        hash: "0f1e2d3c4b5a6978",
+        changedAt: new Date(Date.now() - 90 * 60000).toISOString(),
       },
     ],
     events,

@@ -298,7 +298,7 @@ describe("validateCalendars — collisions", () => {
   });
 
   it("errors on a duplicate name", () => {
-    // name keys icsKeys, the RSS source filter and the stale-cache lookup in
+    // name keys the stale cache, the archive, the RSS source filter and the relation map in
     // sync-events.mjs — two sources sharing one silently cross-contaminate.
     const dir = fixture(
       { "a.json": valid({ id: "a", name: "Same" }), "b.json": valid({ id: "b", name: "Same" }) },

@@ -1211,7 +1211,7 @@ describe("eventAnchor", () => {
 
 describe("aggregate", () => {
   const NOW = "2026-04-01T00:00:00.000Z";
-  const emptyPrev = { events: [], sources: [], icsKeys: {} };
+  const emptyPrev = { events: [], sources: [] };
   const card = (over) => ({
     title: "E", date: "2026-05-01", time: "20:00", uid: "",
     source: "A", tags: [], type: "special", ...over,
@@ -1219,7 +1219,6 @@ describe("aggregate", () => {
   const result = (cards, name) => ({
     cards,
     source: { id: name, name, status: "ok", events: cards.length },
-    icsKeys: { [name]: [] },
   });
 
   it("dedupes the same event cross-posted to two sources (first wins)", () => {
@@ -1260,7 +1259,7 @@ describe("aggregate", () => {
   it("carries firstSeen over by uid and defaults new events to nowISO", () => {
     const prev = {
       events: [{ uid: "old@x", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
-      sources: [], icsKeys: {},
+      sources: [],
     };
     const a = result([card({ uid: "old@x" }), card({ uid: "new@x", date: "2026-05-02" })], "A");
     const { events } = aggregate([a], prev, NOW);
@@ -1307,7 +1306,7 @@ describe("aggregate", () => {
   it("does not leak firstSeen onto a different-UID event sharing date+title", () => {
     const prev = {
       events: [{ uid: "real@x", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
-      sources: [], icsKeys: {},
+      sources: [],
     };
     const a = result([card({ uid: "other@y", date: "2026-05-01", title: "E" })], "A");
     const { events } = aggregate([a], prev, NOW);
@@ -1317,7 +1316,7 @@ describe("aggregate", () => {
   it("migrates firstSeen by date+title for a once-UID-less event", () => {
     const prev = {
       events: [{ uid: "", date: "2026-05-01", title: "E", firstSeen: "2026-01-01T00:00:00.000Z" }],
-      sources: [], icsKeys: {},
+      sources: [],
     };
     const a = result([card({ uid: "nowhas@x", date: "2026-05-01", title: "E" })], "A");
     const { events } = aggregate([a], prev, NOW);
@@ -1712,11 +1711,10 @@ describe("card pipeline — golden output", () => {
         cards: toCards(parsed(), CAL_BUILTIN, NOW),
         source: {
           id: "bitcircus", name: "bitcircus101", fetchedAt: NOW_ISO, status: "ok",
-          events: 0, added: 0, removed: 0, total: 0, past: 0, upcoming: 0,
+          events: 0, hash: "0123456789abcdef", changedAt: null,
         },
-        icsKeys: null,
       }],
-      { icsKeys: {}, events: [], sources: [] },
+      { events: [], sources: [] },
       NOW_ISO
     );
 
@@ -2025,14 +2023,10 @@ describe("card pipeline — golden output", () => {
       "fetchedAt": "2026-01-15T11:00:00.000Z",
       "status": "ok",
       "events": 4,
-      "added": 0,
-      "removed": 0,
-      "total": 0,
-      "past": 0,
-      "upcoming": 0
+      "hash": "0123456789abcdef",
+      "changedAt": null
     }
-  ],
-  "icsKeys": {}
+  ]
 }`;
 
   // Physical (folded) lines — generateICS output is CRLF-joined with a trailing CRLF.
@@ -2966,14 +2960,14 @@ describe("eventPageUrl / toJsonLdEvent — url + cancellation", () => {
 // ── mergeArchive / serializeArchive / loadArchive ────────────────────────
 //
 // `results` fixtures below are shaped like processSource()'s real output:
-// { cards, allCards, source: { id, name, status }, icsKeys }.
+// { cards, allCards, source: { id, name, status } }.
 
 const mkArchiveCard = (over = {}) => ({
   id: "card1", title: "Event", date: "2026-07-01", time: "20:00",
   source: "A", uid: "u1", recurring: false, ...over,
 });
 const mkArchiveResult = (allCards, overSource = {}) => ({
-  cards: [], allCards, icsKeys: {},
+  cards: [], allCards,
   source: { id: "a", name: "A", status: "ok", ...overSource },
 });
 
@@ -2986,7 +2980,7 @@ describe("processSource", () => {
     const origFetch = globalThis.fetch;
     const origLog = console.log;
     console.log = () => {};
-    const prev = { sources: [], events: [], icsKeys: {} };
+    const prev = { sources: [], events: [] };
     const cal = (flags) => ({ id: "p", name: "P", ics: "https://p.example/x.ics", url: "https://p.example", ...flags });
     try {
       globalThis.fetch = async () => new Response(ics);
@@ -3003,6 +2997,54 @@ describe("processSource", () => {
       console.log = origLog;
     }
   });
+
+  it("hashes the fetched body: changedAt is null on first sight, moves when the bytes differ, holds otherwise and survives a stale run", async () => {
+    const ics = (summary) => [
+      "BEGIN:VCALENDAR", "BEGIN:VEVENT", "UID:h1@example.org",
+      "DTSTART:20990101T190000", `SUMMARY:${summary}`, "END:VEVENT", "END:VCALENDAR",
+    ].join("\r\n");
+    const cal = { id: "p", name: "P", ics: "https://p.example/x.ics", url: "https://p.example" };
+    const origFetch = globalThis.fetch;
+    const origLog = console.log;
+    const origError = console.error;
+    console.log = () => {};
+    console.error = () => {};
+    try {
+      globalThis.fetch = async () => new Response(ics("Werkstatt"));
+      const first = await processSource(cal, { sources: [], events: [] });
+      assert.match(first.source.hash, /^[0-9a-f]{16}$/);
+      assert.equal(first.source.changedAt, null);
+
+      // Seen before, never changed: stays null, not "now".
+      const stillNull = await processSource(cal, {
+        events: [], sources: [{ id: "p", hash: first.source.hash, changedAt: null }],
+      });
+      assert.equal(stillNull.source.changedAt, null);
+
+      const prev = {
+        events: [],
+        sources: [{ id: "p", hash: first.source.hash, changedAt: "2026-01-01T00:00:00.000Z" }],
+      };
+      const same = await processSource(cal, prev);
+      assert.equal(same.source.hash, first.source.hash);
+      assert.equal(same.source.changedAt, "2026-01-01T00:00:00.000Z");
+
+      globalThis.fetch = async () => new Response(ics("Werkstatt (neu)"));
+      const changed = await processSource(cal, prev);
+      assert.notEqual(changed.source.hash, first.source.hash);
+      assert.equal(changed.source.changedAt, changed.source.fetchedAt);
+
+      globalThis.fetch = async () => { throw new Error("down"); };
+      const stale = await processSource(cal, prev);
+      assert.equal(stale.source.status, "stale");
+      assert.equal(stale.source.hash, first.source.hash);
+      assert.equal(stale.source.changedAt, "2026-01-01T00:00:00.000Z");
+    } finally {
+      globalThis.fetch = origFetch;
+      console.log = origLog;
+      console.error = origError;
+    }
+  });
 });
 
 describe("mergeArchive", () => {
@@ -3015,7 +3057,7 @@ describe("mergeArchive", () => {
     const origLog = console.log;
     globalThis.fetch = async () => new Response(ics);
     console.log = () => {};
-    const prev = { sources: [], events: [], icsKeys: {} };
+    const prev = { sources: [], events: [] };
     const run = (flags) => processSource(
       { id: "p", name: "P", ics: "https://p.example/x.ics", url: "https://p.example", ...flags }, prev);
     let withPages, without;

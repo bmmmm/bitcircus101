@@ -382,7 +382,7 @@ Nothing reaches production without passing all tests first.
   2. Fetches ICS feeds from all sources listed in `calendars/config.json`
   3. Parses VEVENT entries, expands RRULE recurrences (weekly, monthly with BYDAY/BYSETPOS)
   4. Filters out internal/blocker events and past events
-  5. Generates `events-data.json` with `lastSync` timestamp (max 40 cards, 120-day horizon)
+  5. Generates `events-data.json` with `lastSync` and, per source, a `hash` of the fetched ICS plus `changedAt` (max 40 cards, 120-day horizon)
   6. Generates `feed.xml` (RSS 2.0, primary calendar only, every card in the window)
   7. Runs `scripts/build-pinnwand-feed.mjs` (`pinnwand/feed.xml` from `jobs.json`)
   8. Runs `scripts/build-status-data.mjs` (`status-data.json` for `/status` from `events-archive.json`)
@@ -439,7 +439,7 @@ Active sources right now (`calendars/config.json`):
 | `look-at-my-toys` | Look at my toys! | ics-full | home | yes |
 | `datenburg` | Datenburg e.V. | ics-full | friend | no |
 
-To add a calendar: create the source JSON in `calendars/` (or a subdirectory) and add its path to `sources` in `config.json`. Order in `sources` is dedupe priority. `relation` says what the calendar is to the space — `own` (exactly one), `home` (its events take place at bitcircus101) or `friend` (the default: opt-in on `/termine`, its own source feed, never in the primary feed, the homepage, `/status` or lite); every page and script reads it from the data, never from the source name. To temporarily disable: remove the path from `sources` — the file stays put; an unlisted source file is only a warning at the gate, because parking one is intentional. A source's `name` must be unique — it keys `icsKeys`, the relation map, the RSS filter and the stale-cache.
+To add a calendar: create the source JSON in `calendars/` (or a subdirectory) and add its path to `sources` in `config.json`. Order in `sources` is dedupe priority. `relation` says what the calendar is to the space — `own` (exactly one), `home` (its events take place at bitcircus101) or `friend` (the default: opt-in on `/termine`, its own source feed, never in the primary feed, the homepage, `/status` or lite); every page and script reads it from the data, never from the source name. To temporarily disable: remove the path from `sources` — the file stays put; an unlisted source file is only a warning at the gate, because parking one is intentional. A source's `name` must be unique — it keys the stale cache, the archive, the RSS filter and the relation map.
 
 #### Source `type`s
 

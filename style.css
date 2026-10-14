@@ -1562,7 +1562,6 @@ a.event-tag:hover { background: var(--ink); color: var(--paper); }
 .sync-source__bar { letter-spacing: -0.05em; }
 .sync-source__ago { color: var(--ink-dim); }
 .sync-source__events { color: var(--ink-dim); }
-.sync-source__diff { color: var(--ink); }
 .sync-source__alert { color: var(--ink-max); }
 .sync-source--stale,
 .sync-source--overdue,
