@@ -952,8 +952,8 @@
       fetch("events-data.json")
         .then((res) => (res.ok ? res.json() : Promise.reject()))
         .then((data) => {
-          var events = Array.isArray(data) ? data : data.events;
-          if (events && events.length) this.render(events, el, Array.isArray(data) ? null : data.sources);
+          var events = data.events;
+          if (events && events.length) this.render(events, el, data.sources || null);
         })
         .catch(() => {});
     },

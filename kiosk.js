@@ -922,14 +922,14 @@
         return res.json();
       })
       .then(function (data) {
-        var events = Array.isArray(data) ? data : data.events;
+        var events = data.events;
         if (!events) throw new Error("no events");
         var core = window.EventsCore;
         lastGood = {
           events: events,
           // source name → relation; null on pre-field data (then nothing is a friend)
-          relations: core && core.relationMap ? core.relationMap(Array.isArray(data) ? null : data.sources) : null,
-          lastSync: Array.isArray(data) ? null : data.lastSync,
+          relations: core && core.relationMap ? core.relationMap(data.sources || null) : null,
+          lastSync: data.lastSync || null,
           at: Date.now(),
         };
         failCount = 0;

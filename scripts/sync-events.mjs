@@ -699,10 +699,10 @@ function loadPrevious() {
   }
   try {
     const prev = JSON.parse(raw);
-    const events = Array.isArray(prev) ? prev : prev.events || [];
+    const events = prev.events || [];
     const sources = prev.sources || [];
     // feeds carries the previous feed manifest incl. the retirement ledger
-    const feeds = (!Array.isArray(prev) && prev.feeds) || null;
+    const feeds = prev.feeds || null;
     return { events, sources, feeds };
   } catch (e) {
     // A present-but-unparseable file (truncated/partial write, merge markers, bad edit)
