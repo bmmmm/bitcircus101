@@ -47,13 +47,16 @@
     var d = new Date();
     return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
   }
+  /** A clipped bucket's "Mär 26…" reads badly aloud; the date range next to
+   *  it already says where the bar stops, so spoken labels drop the "…". */
+  function spoken(label) { return label.replace(/…$/, ""); }
   function labelSpan(text) { return '<span class="status-label">' + esc(text) + "</span>"; }
 
   // ── bars ───────────────────────────────────────────────────────────────────
-  function barHtml(classes, key, text, glyph, current) {
+  function barHtml(classes, key, text, glyph, current, aria) {
     return (
       '<button type="button" class="status-bar ' + classes + '" data-key="' + esc(key) +
-      '" title="' + esc(text) + '" aria-label="' + esc(text) + '" aria-pressed="false" tabindex="-1"' +
+      '" title="' + esc(text) + '" aria-label="' + esc(aria || text) + '" aria-pressed="false" tabindex="-1"' +
       (current ? ' aria-current="date"' : "") + ">" +
       '<span class="status-bar__glyph" aria-hidden="true">' + glyph + "</span></button>"
     );
@@ -68,8 +71,8 @@
   function seriesText(b) { return Core.rangeLabel(b) + SEP + Core.countsText(b.counts); }
   function seriesBar(b) {
     var cls = "status-bar--" + b.state + (b.today ? " status-bar--today" : "");
-    var text = b.label + SEP + seriesText(b) + (b.today ? SEP + "heute" : "");
-    return barHtml(cls, b.key, text, GLYPH[b.state], b.today);
+    var rest = SEP + seriesText(b) + (b.today ? SEP + "heute" : "");
+    return barHtml(cls, b.key, b.label + rest, GLYPH[b.state], b.today, spoken(b.label) + rest);
   }
   function pulseText(p) {
     if (p.level === null) return "keine Angabe";
@@ -80,7 +83,8 @@
     var cls = "status-bar--pulse " + (p.level === null ? "status-bar--gap" : "status-bar--l" + p.level) +
       (p.today ? " status-bar--today" : "");
     var glyph = p.level === null ? GLYPH.empty : PULSE_GLYPHS[p.level];
-    return barHtml(cls, p.key, p.label + SEP + pulseText(p) + (p.today ? SEP + "heute" : ""), glyph, p.today);
+    var rest = SEP + pulseText(p) + (p.today ? SEP + "heute" : "");
+    return barHtml(cls, p.key, p.label + rest, glyph, p.today, spoken(p.label) + rest);
   }
 
   /**
@@ -209,7 +213,7 @@
     if (zoom) {
       html +=
         '<p class="status-detail__hint">Feinraster – ein Klick filtert die Liste, ein zweiter hebt den Filter auf.</p>' +
-        '<div class="status-bars status-bars--zoom" role="group" aria-label="Feinraster ' + esc(bucket.label) + '"></div>' +
+        '<div class="status-bars status-bars--zoom" role="group" aria-label="Feinraster ' + esc(spoken(bucket.label)) + '"></div>' +
         '<p class="status-readout status-readout--zoom" aria-live="polite"></p>';
     }
     html += '<ul class="status-detail__list">' + listHtml(bucket.events, today) + "</ul>";
@@ -310,7 +314,7 @@
     var html = detailHead(p);
     if (zoom) {
       html +=
-        '<div class="status-bars status-bars--zoom status-bars--pulse" role="group" aria-label="Monate in ' + esc(p.label) + '"></div>' +
+        '<div class="status-bars status-bars--zoom status-bars--pulse" role="group" aria-label="Monate in ' + esc(spoken(p.label)) + '"></div>' +
         '<p class="status-readout status-readout--zoom" aria-live="polite"></p>';
     }
     html += '<p class="status-detail__trend">' + esc(pulseText(p)) + "</p>";

@@ -2198,6 +2198,10 @@ test.describe('Status page', () => {
         // and gone once the bars are in; every bar carries a glyph, not colour alone.
         await expect(page.locator('#status-bars-linkup')).not.toHaveAttribute('aria-busy', /.*/);
         expect(await page.locator('#status-bars-linkup .status-bar .status-bar__glyph').count()).toBe(await linkupBars.count());
+        // A clipped bucket keeps "…" in its tooltip but not in what a screen
+        // reader announces (the date range in the label says where it stops).
+        expect(await page.locator('.status-bar[title*="…"]').count()).toBeGreaterThan(0);
+        expect(await page.locator('.status-bar[aria-label*="…"]').count()).toBe(0);
         await expect(page.locator('#status-headline')).toHaveClass(/status-headline--degraded/);
         await expect(page.locator('#status-headline .status-headline__text')).toHaveText(/\d+ von \d+ Terminen abgesagt/);
 
