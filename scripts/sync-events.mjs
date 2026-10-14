@@ -31,6 +31,7 @@ const CANCEL_STORM = 5;
 
 import { readFileSync, writeFileSync, renameSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { dirname } from "node:path";
+import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import ICSCore from "../ics-core.js";
 import EventsCore from "../events-core.js";
@@ -686,24 +687,23 @@ function writeFileAtomic(file, data) {
   renameSync(tmp, file);
 }
 
-/** Read previous sync state for diff and fallback on errors */
+/** Read previous sync state: the stale fallback, firstSeen carry-over, per-source
+ *  hash and the feed ledger. */
 function loadPrevious() {
   let raw;
   try {
     raw = readFileSync("events-data.json", "utf8");
   } catch (e) {
-    if (e.code === "ENOENT") return { icsKeys: {}, events: [], sources: [], feeds: null }; // legit first run
+    if (e.code === "ENOENT") return { events: [], sources: [], feeds: null }; // legit first run
     throw e;
   }
   try {
     const prev = JSON.parse(raw);
-    const events = Array.isArray(prev) ? prev : prev.events || [];
+    const events = prev.events || [];
     const sources = prev.sources || [];
-    // icsKeys stores ALL calendar events (before time filtering) from previous run
-    const icsKeys = prev.icsKeys || {};
     // feeds carries the previous feed manifest incl. the retirement ledger
-    const feeds = (!Array.isArray(prev) && prev.feeds) || null;
-    return { icsKeys, events, sources, feeds };
+    const feeds = prev.feeds || null;
+    return { events, sources, feeds };
   } catch (e) {
     // A present-but-unparseable file (truncated/partial write, merge markers, bad edit)
     // must NOT be silently treated as "first run": a stale/dead source would then
@@ -838,10 +838,10 @@ function fetchWithTimeout(url, ms = FETCH_TIMEOUT_MS) {
 }
 
 /**
- * Fetch + parse + filter + diff a single source. Always resolves (never rejects):
+ * Fetch + hash + parse + filter a single source. Always resolves (never rejects):
  * on any failure it returns the previous run's cached cards with status "stale", so
  * one dead source never takes the others down. Returns a uniform shape consumed by
- * aggregate(): { cards, source (meta), icsKeys ({name: [...]} | null) }.
+ * aggregate(): { cards, allCards, source (meta) }.
  */
 async function processSource(cal, prev) {
   console.log(`[${cal.id}] Fetching ${cal.ics}`);
@@ -862,9 +862,9 @@ async function processSource(cal, prev) {
         id: cal.id, name: cal.name, relation: relationOf(cal),
         fetchedAt: prevSource?.fetchedAt || null,
         status: "stale", error: reason,
-        events: cached.length, added: 0, removed: 0,
+        events: cached.length,
+        hash: prevSource?.hash || null, changedAt: prevSource?.changedAt || null,
       },
-      icsKeys: null,
     };
   };
 
@@ -874,7 +874,16 @@ async function processSource(cal, prev) {
 
     const fetchedAt = new Date().toISOString();
     const text = await res.text();
-    console.log(`[${cal.id}] ${text.length} bytes`);
+    // The change signal is a hash of the fetched bytes: no current source honours
+    // a conditional GET, and every one of them returns byte-identical exports
+    // between runs (a source that stamped its export time would move changedAt
+    // every run). changedAt is null until the body first differs from a previous
+    // run's — after a deploy it stays null until a calendar is actually edited —,
+    // fetchedAt on that run, else carried over.
+    const hash = createHash("sha256").update(text).digest("hex").slice(0, 16);
+    const prevHash = prevSource?.hash || null;
+    const changedAt = !prevHash ? null : hash !== prevHash ? fetchedAt : (prevSource.changedAt || null);
+    console.log(`[${cal.id}] ${text.length} bytes, ${!prevHash ? "first sight" : hash !== prevHash ? "changed" : "unchanged"} (${hash})`);
 
     let icsEvents = parseICS(text, cal.id);
     console.log(`[${cal.id}] ${icsEvents.length} VEVENT entries`);
@@ -891,34 +900,13 @@ async function processSource(cal, prev) {
     // cap — only for the sources that get pages (`pages`, default: in the primary feed).
     const allCards = hasPages(cal) ? dedupeCards(toAllCards(icsEvents, cal)) : null;
 
-    // Diff against previous sync — prefer UID (stable), fall back to date|summary
-    // so natural event expiry doesn't count as a "removed" change.
-    const keyOf = (e) => e.uid || (e.dtstart.toISOString().slice(0, 10) + "|" + e.summary);
-    const today = new Date().toISOString().slice(0, 10);
-    const allIcsKeys = new Set(icsEvents.map(keyOf));
-    const prevIcsKeys = new Set(prev.icsKeys[cal.name] || []);
-    const added = [...allIcsKeys].filter((k) => !prevIcsKeys.has(k)).length;
-    // Only count upcoming events as "removed". A past event ageing out of the ICS
-    // export window is natural expiry, not a real change. Bare-UID keys carry no
-    // date part and keep the old behaviour (can't be dated).
-    const removed = [...prevIcsKeys].filter(
-      (k) => !allIcsKeys.has(k) && (!k.includes("|") || k.split("|")[0] >= today)
-    ).length;
-
-    let past = 0, upcoming = 0;
-    for (const k of allIcsKeys) {
-      if (k.split("|")[0] >= today) upcoming++; else past++;
-    }
-
     return {
       cards,
       allCards,
       source: {
         id: cal.id, name: cal.name, relation: relationOf(cal), fetchedAt, status: "ok",
-        events: cards.length, added, removed,
-        total: allIcsKeys.size, past, upcoming,
+        events: cards.length, hash, changedAt,
       },
-      icsKeys: { [cal.name]: [...allIcsKeys] },
     };
   } catch (err) {
     return stale(err.name === "AbortError" ? `timeout after ${FETCH_TIMEOUT_MS}ms` : err.message);
@@ -967,11 +955,9 @@ function dedupeCards(cards) {
 function aggregate(results, prev, nowISO) {
   let allCards = [];
   const sources = [];
-  const icsKeys = {};
   for (const r of results) {
     allCards = allCards.concat(r.cards);
     sources.push(r.source);
-    if (r.icsKeys) Object.assign(icsKeys, r.icsKeys);
   }
 
   // Carry over firstSeen from previous sync, set to now for new events. Prefer UID
@@ -1007,7 +993,7 @@ function aggregate(results, prev, nowISO) {
     s.events = allCards.filter((c) => c.source === s.name).length;
   }
 
-  return { events: allCards, sources, icsKeys };
+  return { events: allCards, sources };
 }
 
 async function main() {
@@ -1018,7 +1004,7 @@ async function main() {
   // manifest order still drives dedupe priority in aggregate().
   const results = await Promise.all(calendars.map((cal) => processSource(cal, prev)));
 
-  const { events, sources, icsKeys } = aggregate(results, prev, new Date().toISOString());
+  const { events, sources } = aggregate(results, prev, new Date().toISOString());
   console.log(`Total: ${events.length} event cards from ${calendars.length} calendars`);
 
   const nowISO = new Date().toISOString();
@@ -1046,7 +1032,7 @@ async function main() {
   // Plan the filtered feeds BEFORE the JSON write so the manifest lands inside
   // events-data.json (the frontend reads feed paths from there, never guesses).
   const feedPlan = buildFeedPlan(events, calendars, prev.feeds, nowISO);
-  const output = { lastSync: nowISO, sources, icsKeys, feeds: feedPlan.manifest, events };
+  const output = { lastSync: nowISO, sources, feeds: feedPlan.manifest, events };
   writeFileAtomic("events-data.json", JSON.stringify(output, null, 2) + "\n");
   console.log("Written events-data.json");
 
