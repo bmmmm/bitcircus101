@@ -885,16 +885,9 @@
   function agoText(mins) {
     if (mins < 1) return "jetzt";
     if (mins < 60) return "vor " + mins + " min";
+    if (mins >= 2880) return "vor " + Math.floor(mins / 1440) + " Tagen";
     var h = Math.floor(mins / 60);
     return "vor " + h + " h " + (mins % 60) + " min";
-  }
-
-  function diffText(s) {
-    if (!s.added && !s.removed) return "keine \u00c4nderungen";
-    var parts = [];
-    if (s.added) parts.push("+" + s.added + " neu");
-    if (s.removed) parts.push("-" + s.removed + " entfernt");
-    return parts.join(" \u00b7 ");
   }
 
   function showLastSync(sources) {
@@ -936,11 +929,12 @@
           // Row 2: Event stats
           html += '<span class="sync-source__events">';
           html += s.events + " bevorstehende Events";
-          if (s.past) {
-            html += " \u00b7 " + s.past + " stattgefundene Events";
-          }
-          if (s.added || s.removed) {
-            html += ' \u00b7 <span class="sync-source__diff">' + diffText(s) + "</span>";
+          // changedAt: when the fetched calendar last differed from the run
+          // before (sync-events.mjs, processSource) — null until a change has
+          // been seen at all, so the text is simply absent until then.
+          if (s.changedAt) {
+            var changedMins = Math.floor((now - new Date(s.changedAt).getTime()) / 60000);
+            html += " \u00b7 ge\u00e4ndert " + agoText(changedMins);
           }
           html += "</span>";
         } else {

@@ -74,7 +74,7 @@ function validateSource(entry, path, errors, warnings) {
   }
 
   // id / name / ics are load-bearing: `id` keys the parser warnings, `name` keys the
-  // icsKeys map, the RSS source filter and the stale-cache lookup, `ics` is the fetch.
+  // stale cache, the archive, the RSS source filter and the relation map, `ics` is the fetch.
   for (const key of ["id", "name", "ics"]) {
     if (typeof entry[key] !== "string" || !entry[key].trim()) {
       errors.push(at(`missing or empty "${key}"`));
@@ -194,8 +194,8 @@ export function validateCalendars(dir = CAL_DIR) {
     sources.push({ rel, path, entry });
   }
 
-  // Collisions. `id` keys log output; `name` keys the icsKeys map, the RSS filter and
-  // the stale-cache lookup — two sources sharing a name silently cross-contaminate.
+  // Collisions. `id` keys log output; `name` keys the stale cache, the archive, the
+  // RSS filter and the relation map — two sources sharing a name silently cross-contaminate.
   for (const key of ["id", "name"]) {
     const seen = new Map();
     for (const s of sources) {

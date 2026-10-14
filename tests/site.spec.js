@@ -1245,7 +1245,7 @@ test.describe('Events content', () => {
         // A second friend, so "some but not all" has a case. No cards needed:
         // a configured source has a feed even at zero events.
         data.sources.push({ id: 'kult', name: 'Kult 41', relation: 'friend', fetchedAt: data.lastSync,
-            status: 'ok', events: 0, added: 0, removed: 0, total: 0, past: 0, upcoming: 0 });
+            status: 'ok', events: 0, hash: '0123456789abcdef', changedAt: null });
         data.feeds.sources.kult = { name: 'Kult 41', relation: 'friend',
             ics: '/feeds/source/kult.ics', rss: '/feeds/source/kult.xml', count: 0 };
         await useEventsFixture(page, data);
@@ -1312,6 +1312,13 @@ test.describe('Events content', () => {
         expect(bar).toMatch(/^\[.*\]$/);
         const ago = await sources.first().locator('.sync-source__ago').textContent();
         expect(ago).toMatch(/jetzt|vor \d+ (min|h)/);
+        // Row 2 carries the content-change age from changedAt (fixture: 73 h on
+        // our own calendar, 90 min on Datenburg) and nothing at all while no
+        // change has been seen yet (null, Look at my toys!).
+        const row2 = (name) => sources.filter({ hasText: name }).locator('.sync-source__events');
+        await expect(row2('bitcircus101')).toContainText('geändert vor 3 Tagen');
+        await expect(row2('Datenburg e.V.')).toContainText('geändert vor 1 h 30 min');
+        await expect(row2('Look at my toys!')).not.toContainText('geändert');
     });
 });
 
