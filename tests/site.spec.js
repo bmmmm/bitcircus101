@@ -3475,6 +3475,23 @@ test.describe('Accessibility', () => {
                     q.left < r.right && q.right > r.left && q.top < r.bottom && q.bottom > r.top))
                 .map((el) => el.className || el.textContent.trim());
         }), 'back-to-top covers a control at the page end').toEqual([]);
+        // The page can change height without a scroll event (/events
+        // re-renders on a filter toggle and every 30 s): the lift has to
+        // follow, or the button hangs in mid-air once the footer is gone.
+        await page.evaluate(() => {
+            const pad = document.createElement('div');
+            pad.className = 'test-pad';
+            pad.innerHTML = 'x<br>'.repeat(200);
+            document.querySelector('main').append(pad);
+        });
+        await page.waitForTimeout(100);
+        expect(await page.evaluate(() => {
+            const bar = document.querySelector('.footer__bar').getBoundingClientRect();
+            const btn = document.querySelector('.scroll-top').getBoundingClientRect();
+            const rem = parseFloat(getComputedStyle(document.documentElement).fontSize);
+            return { barBelow: bar.top >= innerHeight, gap: Math.round(innerHeight - btn.bottom - 1.25 * rem) };
+        }), 'back-to-top kept its lift after the page grew under it').toEqual({ barBelow: true, gap: 0 });
+        await page.evaluate(() => document.querySelector('.test-pad').remove());
 
         // Back-to-top, now that the footer is in view: it reaches the tab
         // order, and on Enter it jumps (reduced motion: no smooth scroll) and
