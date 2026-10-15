@@ -1,13 +1,13 @@
 {
-  "lastSync": "2026-10-15T11:17:13.673Z",
+  "lastSync": "2026-10-15T12:17:13.330Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
       "relation": "own",
-      "fetchedAt": "2026-10-15T11:17:13.274Z",
+      "fetchedAt": "2026-10-15T12:17:12.925Z",
       "status": "ok",
-      "events": 22,
+      "events": 21,
       "hash": "b0c2b53232d7689d",
       "changedAt": null
     },
@@ -15,17 +15,17 @@
       "id": "look-at-my-toys",
       "name": "Look at my toys!",
       "relation": "home",
-      "fetchedAt": "2026-10-15T11:17:12.890Z",
+      "fetchedAt": "2026-10-15T12:17:12.674Z",
       "status": "ok",
-      "events": 0,
-      "hash": "b3fde680fdd70dba",
-      "changedAt": null
+      "events": 1,
+      "hash": "f26b8388fd17aa34",
+      "changedAt": "2026-10-15T12:17:12.674Z"
     },
     {
       "id": "datenburg",
       "name": "Datenburg e.V.",
       "relation": "friend",
-      "fetchedAt": "2026-10-15T11:17:13.655Z",
+      "fetchedAt": "2026-10-15T12:17:13.319Z",
       "status": "ok",
       "events": 18,
       "hash": "f6012c008590673f",
@@ -48,12 +48,12 @@
       "#community": {
         "ics": "/feeds/tag/community.ics",
         "rss": "/feeds/tag/community.xml",
-        "count": 2
+        "count": 3
       },
       "#foss": {
         "ics": "/feeds/tag/foss.ics",
         "rss": "/feeds/tag/foss.xml",
-        "count": 2
+        "count": 1
       },
       "#lightning-talks": {
         "ics": "/feeds/tag/lightning-talks.ics",
@@ -102,14 +102,14 @@
         "relation": "own",
         "ics": "/feeds/source/bitcircus.ics",
         "rss": "/feeds/source/bitcircus.xml",
-        "count": 22
+        "count": 21
       },
       "look-at-my-toys": {
         "name": "Look at my toys!",
         "relation": "home",
         "ics": "/feeds/source/look-at-my-toys.ics",
         "rss": "/feeds/source/look-at-my-toys.xml",
-        "count": 0
+        "count": 1
       },
       "datenburg": {
         "name": "Datenburg e.V.",
@@ -234,6 +234,26 @@
       "recurring": true,
       "page": true,
       "firstSeen": "2026-05-19T18:59:16.839Z"
+    },
+    {
+      "id": "91f3f4e4f160",
+      "title": "Peppige Postkarten 📖 Peppy postcarding",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-10-20",
+      "time": "19:00",
+      "endDate": "2026-10-20",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "d73c2e21-feef-4eed-b4fc-df76f5c23414",
+      "calendarUrl": "https://my.stim.toys",
+      "page": true,
+      "firstSeen": "2026-10-15T12:17:13.323Z"
     },
     {
       "id": "7c3144896687",
@@ -958,28 +978,6 @@
       "recurring": true,
       "page": true,
       "firstSeen": "2026-05-09T10:12:20.662Z"
-    },
-    {
-      "id": "4a327b5e9b62",
-      "title": "Treffen: Bonner FSFE Community",
-      "subtitle": "",
-      "description": "",
-      "location": "Dorotheenstraße 101 Bonn",
-      "date": "2026-12-14",
-      "time": "19:00",
-      "endDate": "2026-12-14",
-      "endTime": "22:00",
-      "tags": [
-        "#foss"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
-      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
-      "recurring": true,
-      "page": true,
-      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
-      "firstSeen": "2026-05-11T19:45:03.502Z"
     }
   ]
 }

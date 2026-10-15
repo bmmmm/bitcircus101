@@ -11,7 +11,7 @@
       <title>bitcircus101 – Alle Termine</title>
       <link>https://bitcircus101.de/events</link>
     </image>
-    <lastBuildDate>Tue, 13 Oct 2026 17:17:16 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 15 Oct 2026 12:17:13 +0000</lastBuildDate>
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
@@ -70,6 +70,14 @@ We play inclusive and together. There is stim toys and you can grab something to
       <category>#spieletreff</category>
       <pubDate>Tue, 19 May 2026 18:59:16 +0000</pubDate>
       <guid isPermaLink="false">A396A6A2-9155-4DA9-8DFA-887441FBF9BC-20261020T1900</guid>
+    </item>
+    <item>
+      <title>[2026-10-20 19:00] Peppige Postkarten 📖 Peppy postcarding @ Dorotheenstr. 101, 53113 Bonn</title>
+      <link>https://bitcircus101.de/e/91f3f4e4f160/</link>
+      <description>Peppige Postkarten 📖 Peppy postcarding · 2026-10-20</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/91f3f4e4f160/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 15 Oct 2026 12:17:13 +0000</pubDate>
+      <guid isPermaLink="false">d73c2e21-feef-4eed-b4fc-df76f5c23414-20261020T1900</guid>
     </item>
     <item>
       <title>[2026-10-22 19:00] Spieleabend</title>
@@ -412,15 +420,6 @@ We play inclusive and together. There is stim toys and you can grab something to
       <category>#meetup</category>
       <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20261211T2000</guid>
-    </item>
-    <item>
-      <title>[2026-12-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
-      <link>https://bitcircus101.de/e/4a327b5e9b62/</link>
-      <description>Treffen: Bonner FSFE Community · 2026-12-14</description>
-      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4a327b5e9b62/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#foss</category>
-      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
-      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261214T1900</guid>
     </item>
   </channel>
 </rss>

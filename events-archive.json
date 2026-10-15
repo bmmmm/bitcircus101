@@ -4707,6 +4707,27 @@
       "firstSeen": "2026-09-30T21:11:47.441Z",
       "lastSeen": "2026-10-15"
     },
+    "91f3f4e4f160": {
+      "id": "91f3f4e4f160",
+      "title": "Peppige Postkarten 📖 Peppy postcarding",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-10-20",
+      "time": "19:00",
+      "endDate": "2026-10-20",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "d73c2e21-feef-4eed-b4fc-df76f5c23414",
+      "calendarUrl": "https://my.stim.toys",
+      "page": true,
+      "firstSeen": "2026-10-15T12:17:13.330Z",
+      "lastSeen": "2026-10-15"
+    },
     "c984f4ae68c1": {
       "id": "c984f4ae68c1",
       "title": "Look at my toys!",
