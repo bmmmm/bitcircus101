@@ -15,17 +15,6 @@
     <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
 
     <item>
-      <title>[2026-10-16 17:00] Exkursion zum Hackspace in Andernach (haxko e.V.)?</title>
-      <link>https://bitcircus101.de/events#ev-2026-10-16-exkursion-zum-hackspace-in-andernach-hax</link>
-      <description>Details noch nicht klar.
-Der Hackspace öffnet um 18:00 Uhr und ist direkt beim Bahnhof.
-Siehe Matrix: Hackertours@Datenburg.</description>
-      <content:encoded>&lt;p&gt;Details noch nicht klar.&lt;br /&gt;Der Hackspace öffnet um 18:00 Uhr und ist direkt beim Bahnhof.&lt;br /&gt;Siehe Matrix: Hackertours@Datenburg.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-10-16-exkursion-zum-hackspace-in-andernach-hax&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
-      <category>#datenburg</category>
-      <pubDate>Tue, 29 Sep 2026 20:06:45 +0000</pubDate>
-      <guid isPermaLink="false">8811dfb1-cad2-4236-9daa-30486ef66754-20261016T1700</guid>
-    </item>
-    <item>
       <title>[2026-10-16 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
       <link>https://bitcircus101.de/e/8d0fdd318df3/</link>
       <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
@@ -420,6 +409,15 @@ We play inclusive and together. There is stim toys and you can grab something to
       <category>#meetup</category>
       <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
       <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20261211T2000</guid>
+    </item>
+    <item>
+      <title>[2026-12-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/4a327b5e9b62/</link>
+      <description>Treffen: Bonner FSFE Community · 2026-12-14</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4a327b5e9b62/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261214T1900</guid>
     </item>
   </channel>
 </rss>
