@@ -1,11 +1,11 @@
 {
-  "lastSync": "2026-10-17T05:53:30.149Z",
+  "lastSync": "2026-10-17T06:17:11.672Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
       "relation": "own",
-      "fetchedAt": "2026-10-17T05:53:29.611Z",
+      "fetchedAt": "2026-10-17T06:17:11.183Z",
       "status": "ok",
       "events": 21,
       "hash": "b0c2b53232d7689d",
@@ -15,7 +15,7 @@
       "id": "look-at-my-toys",
       "name": "Look at my toys!",
       "relation": "home",
-      "fetchedAt": "2026-10-17T05:53:29.388Z",
+      "fetchedAt": "2026-10-17T06:17:11.294Z",
       "status": "ok",
       "events": 1,
       "hash": "f26b8388fd17aa34",
@@ -25,7 +25,7 @@
       "id": "datenburg",
       "name": "Datenburg e.V.",
       "relation": "friend",
-      "fetchedAt": "2026-10-17T05:53:30.049Z",
+      "fetchedAt": "2026-10-17T06:17:11.657Z",
       "status": "ok",
       "events": 18,
       "hash": "03a150d59e211c59",
