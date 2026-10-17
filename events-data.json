@@ -1,11 +1,11 @@
 {
-  "lastSync": "2026-10-17T08:17:13.595Z",
+  "lastSync": "2026-10-17T09:17:10.386Z",
   "sources": [
     {
       "id": "bitcircus",
       "name": "bitcircus101",
       "relation": "own",
-      "fetchedAt": "2026-10-17T08:17:13.425Z",
+      "fetchedAt": "2026-10-17T09:17:10.009Z",
       "status": "ok",
       "events": 21,
       "hash": "b0c2b53232d7689d",
@@ -15,7 +15,7 @@
       "id": "look-at-my-toys",
       "name": "Look at my toys!",
       "relation": "home",
-      "fetchedAt": "2026-10-17T08:17:13.051Z",
+      "fetchedAt": "2026-10-17T09:17:10.080Z",
       "status": "ok",
       "events": 1,
       "hash": "f26b8388fd17aa34",
@@ -25,7 +25,7 @@
       "id": "datenburg",
       "name": "Datenburg e.V.",
       "relation": "friend",
-      "fetchedAt": "2026-10-17T08:17:13.579Z",
+      "fetchedAt": "2026-10-17T09:17:10.374Z",
       "status": "ok",
       "events": 18,
       "hash": "03a150d59e211c59",
@@ -65,34 +65,24 @@
         "rss": "/feeds/tag/meetup.xml",
         "count": 8
       },
-      "#offener-abend": {
-        "ics": "/feeds/tag/offener-abend.ics",
-        "rss": "/feeds/tag/offener-abend.xml",
-        "count": 1
-      },
       "#relax": {
         "ics": "/feeds/tag/relax.ics",
         "rss": "/feeds/tag/relax.xml",
-        "count": 8
+        "count": 9
       },
       "#social": {
         "ics": "/feeds/tag/social.ics",
         "rss": "/feeds/tag/social.xml",
-        "count": 8
+        "count": 9
       },
       "#spieletreff": {
         "ics": "/feeds/tag/spieletreff.ics",
         "rss": "/feeds/tag/spieletreff.xml",
-        "count": 8
+        "count": 9
       },
       "#talk": {
         "ics": "/feeds/tag/talk.ics",
         "rss": "/feeds/tag/talk.xml",
-        "count": 1
-      },
-      "#workshop": {
-        "ics": "/feeds/tag/workshop.ics",
-        "rss": "/feeds/tag/workshop.xml",
         "count": 1
       }
     },
@@ -123,32 +113,12 @@
       "#datenburg": "2026-10-13T22:25:52.955Z",
       "#gaming": "2026-10-13T22:25:52.955Z",
       "#linux": "2026-10-10T22:12:56.765Z",
-      "#security": "2026-10-06T16:17:12.412Z"
+      "#offener-abend": "2026-10-17T09:17:10.386Z",
+      "#security": "2026-10-06T16:17:12.412Z",
+      "#workshop": "2026-10-17T09:17:10.386Z"
     }
   },
   "events": [
-    {
-      "id": "a3d56ef0b824",
-      "title": "Hack den Stadtrat: Mitmach-Tag zu offenen Ratsdaten und KI",
-      "subtitle": "",
-      "description": "⁨https://machdenstaat.de/blog/hack-den-stadtrat/⁩\n#workshop",
-      "location": "Dorotheenstraße 101, 53113 Bonn",
-      "date": "2026-10-17",
-      "time": "11:00",
-      "endDate": "2026-10-17",
-      "endTime": "19:00",
-      "tags": [
-        "#workshop",
-        "#offener-abend"
-      ],
-      "type": "special",
-      "source": "bitcircus101",
-      "uid": "hack-den-stadtrat@machdenstaat.de",
-      "calendarUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
-      "page": true,
-      "eventUrl": "https://machdenstaat.de/blog/hack-den-stadtrat/",
-      "firstSeen": "2026-09-30T21:11:47.428Z"
-    },
     {
       "id": "48886128d3e4",
       "title": "Offene Datenburg",
@@ -979,6 +949,29 @@
       "calendarUrl": "https://cloud.datenb.org/apps/calendar/p/QLmHENYXAXECozbt",
       "recurring": true,
       "firstSeen": "2026-06-16T15:09:02.297Z"
+    },
+    {
+      "id": "da49faec4d6a",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-15",
+      "time": "19:00",
+      "endDate": "2026-12-15",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-05-19T18:59:16.839Z"
     }
   ]
 }
