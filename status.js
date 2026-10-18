@@ -198,9 +198,7 @@
       html +=
         '<li class="status-detail__item status-detail__item--' + state + '">' +
         labelSpan(Core.formatDate(ev.date)) + SEP +
-        '<span class="status-detail__name">' + esc(ev.title) + "</span>" + SEP +
-        '<span class="status-detail__state">' + esc(Core.stateWord(state)) + "</span>" + SEP +
-        '<a href="e/' + esc(ev.id) + '/">Details</a></li>';
+        '<span class="status-detail__state">' + esc(Core.stateWord(state)) + "</span></li>";
     }
     return html;
   }
@@ -269,9 +267,7 @@
       var ev = list[i];
       html +=
         '<li class="status-incident">' + labelSpan(Core.formatDate(ev.date)) + SEP +
-        '<span class="status-incident__name">' + esc(ev.title) + "</span>" + SEP +
-        '<span class="status-incident__series">' + esc(seriesLabel(ev.series)) + "</span>" + SEP +
-        '<a href="e/' + esc(ev.id) + '/">Details</a></li>';
+        '<span class="status-incident__series">' + esc(seriesLabel(ev.series)) + "</span></li>";
     }
     ul.innerHTML = html;
   }

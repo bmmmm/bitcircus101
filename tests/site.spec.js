@@ -2214,15 +2214,16 @@ test.describe('Status page', () => {
         await expect(page.locator('#status-headline .status-headline__text')).toHaveText(/\d+ von \d+ Terminen abgesagt/);
 
         // The cancelled fixture linkup: exactly one such bar; its click opens the
-        // detail with the title, the state word and the link to its page.
+        // detail with the state word — no title, no link (privacy: status-data
+        // carries only whether an event took place).
         const cancelled = page.locator('#status-bars-linkup .status-bar--cancelled');
         await expect(cancelled).toHaveCount(1);
         await cancelled.click();
         const detail = page.locator('#status-detail-linkup');
         await expect(detail).toBeVisible();
-        await expect(detail).toContainText('Linkup ausgefallen (Fixture)');
         await expect(detail).toContainText('abgesagt');
-        await expect(detail.locator('a[href^="e/"]')).toHaveCount(1);
+        await expect(detail).not.toContainText('Fixture');
+        await expect(detail.locator('a[href^="e/"]')).toHaveCount(0);
         await expect(cancelled).toHaveAttribute('aria-pressed', 'true');
         await expect(page.locator('#status-readout-linkup')).toContainText('abgesagt');
 
@@ -2235,18 +2236,20 @@ test.describe('Status page', () => {
         expect(await focusedKey()).not.toBe(before);
         await page.keyboard.press('Enter');
         await expect(detail).toBeVisible();
-        await expect(detail).not.toContainText('Linkup ausgefallen (Fixture)');
+        await expect(detail).not.toContainText('abgesagt');
         await page.keyboard.press('Escape');
         await expect(detail).toBeHidden();
         await expect(page.locator('#status-bars-linkup .status-bar[aria-pressed="true"]')).toHaveCount(0);
 
-        // The incident list names the cancelled one; the 400-day-old linkup
-        // sits in a squashed month bucket whose detail zooms into weeks.
-        await expect(page.locator('#status-incidents')).toContainText('Linkup ausgefallen (Fixture)');
+        // The incident list dates the cancelled one by series only; the 400-day-old
+        // linkup sits in a squashed month bucket whose detail zooms into weeks.
+        await expect(page.locator('#status-incidents .status-incident')).toHaveCount(1);
+        await expect(page.locator('#status-incidents')).toContainText('Linkup');
+        await expect(page.locator('#status-incidents')).not.toContainText('Fixture');
         const squashed = page.locator('#status-bars-linkup .status-bar--happened[data-key^="m:"]');
         await expect(squashed).toHaveCount(1);
         await squashed.click();
-        await expect(detail).toContainText('Uralter Linkup (Fixture)');
+        await expect(detail).toContainText('stattgefunden');
         expect(await detail.locator('.status-bars--zoom .status-bar').count()).toBeGreaterThan(3);
 
         // Back to the plain row: the close button sits in the detail's head,

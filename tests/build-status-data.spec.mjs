@@ -72,28 +72,27 @@ describe("buildStatusData", () => {
   );
   const out = buildStatusData(a, REL);
 
-  it("keeps the events at bitcircus101 (own + home) of a known type since STATUS_SINCE, sorted by date then id", () => {
+  it("keeps the events at bitcircus101 (own + home) of a known type since STATUS_SINCE, sorted by date then series", () => {
     assert.deepEqual(
-      out.events.map((e) => e.id),
-      ["ccc", "aaa", "bbb", "jjj", "ddd", "iii"]
+      out.events.map((e) => e.date + " " + e.series),
+      ["2025-06-13 special", "2026-01-16 linkup", "2026-01-16 workshop", "2026-02-20 special", "2026-03-06 linkup", "2026-04-03 workshop"]
     );
     // without calendars/ there is no telling friends apart: everyone counts
-    assert.ok(buildStatusData(a).events.some((e) => e.id === "fff"));
+    assert.ok(buildStatusData(a).events.some((e) => e.date === "2026-02-06"));
     assert.equal(out.since, STATUS_SINCE);
-    assert.equal(out.version, 1);
+    assert.equal(out.version, 2);
   });
 
-  it("carries exactly five fields per event — the size guard", () => {
+  it("carries only whether an event took place — no title, no id (privacy)", () => {
     for (const e of out.events) {
-      assert.deepEqual(Object.keys(e).sort(), ["cancelled", "date", "id", "series", "title"]);
+      assert.deepEqual(Object.keys(e).sort(), ["cancelled", "date", "series"]);
     }
-    assert.equal(out.events.find((e) => e.id === "aaa").series, "workshop");
-    assert.equal(out.events.find((e) => e.id === "aaa").title, "Lötabend");
+    const json = JSON.stringify(out);
+    for (const leak of ["Lötabend", "Linkup 2026", "aaa", "uid-"]) assert.equal(json.includes(leak), false, leak);
   });
 
   it("normalises cancelled to a real boolean (absent, false, truthy junk)", () => {
-    const by = Object.fromEntries(out.events.map((e) => [e.id, e.cancelled]));
-    assert.deepEqual(by, { ccc: true, aaa: false, bbb: false, jjj: false, ddd: false, iii: false });
+    assert.deepEqual(out.events.map((e) => e.cancelled), [true, false, false, false, false, false]);
   });
 
   it("lists the series in page order, as a copy", () => {
@@ -122,8 +121,8 @@ describe("buildStatusData", () => {
       entry("t2", "2099-01-01", { title: "CANCELED: Linkup", cancelled: true, cancelledBy: "title" }), // future too
       entry("t3", "2026-01-23", { title: "CANCELED: Linkup" }) // the sync has not flagged it yet
     ));
-    const by = Object.fromEntries(out2.events.map((e) => [e.id, e.cancelled]));
-    assert.deepEqual(by, { t1: true, t2: true, t3: false });
+    const by = Object.fromEntries(out2.events.map((e) => [e.date, e.cancelled]));
+    assert.deepEqual(by, { "2026-01-09": true, "2099-01-01": true, "2026-01-23": false });
     for (const e of out2.events) assert.equal("cancelledBy" in e, false, "the reason must not leak into the page data");
   });
 
@@ -147,8 +146,8 @@ describe("buildStatusData", () => {
       entry("v7", "2026-10-09", { cancelled: true, ...berlinEdge }),
       entry("v8", "2026-10-09", { cancelled: true, ...berlinPastMidnight })
     ));
-    const by = Object.fromEntries(out2.events.map((e) => [e.id, e.cancelled]));
-    assert.deepEqual(by, { v2: true, v3: true, v4: true, v5: true, v6: false, v7: true });
+    // v2 v3 v4 v5 v7 survive as cancelled, v6 as held; v0 v1 v3b v8 are noise
+    assert.deepEqual(out2.events.map((e) => e.cancelled), [false, true, true, true, true, true]);
     assert.equal(visibleDays(sameDay), 0);
     assert.equal(visibleDays(short), 2);
     assert.equal(visibleDays(long), 3);
@@ -217,7 +216,7 @@ describe("main()", () => {
     const stdout = execFileSync(process.execPath, [SCRIPT, src, out], { encoding: "utf8" });
     assert.match(stdout, /1 event\(s\)/);
     const data = JSON.parse(fs.readFileSync(out, "utf8"));
-    assert.deepEqual(data.events.map((e) => e.id), ["a1"]);
+    assert.deepEqual(data.events, [{ date: "2026-01-16", series: "linkup", cancelled: false }]);
     assert.ok(fs.readFileSync(out, "utf8").endsWith("\n"));
   });
 

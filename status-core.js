@@ -313,13 +313,13 @@
     return { weeks: weeks, from: weeks ? addDays(week, 7) : "" };
   }
 
-  /** Cancelled events, newest first (date desc, then id asc), optionally capped. */
+  /** Cancelled events, newest first (date desc, then series asc), optionally capped. */
   function incidents(events, limit) {
     var out = [];
     for (var i = 0; i < events.length; i++) if (events[i].cancelled) out.push(events[i]);
     out.sort(function (a, b) {
       if (a.date !== b.date) return a.date < b.date ? 1 : -1;
-      return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+      return a.series < b.series ? -1 : a.series > b.series ? 1 : 0;
     });
     return typeof limit === "number" ? out.slice(0, limit) : out;
   }

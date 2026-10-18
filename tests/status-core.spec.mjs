@@ -15,10 +15,8 @@ const Core = require("../status-core.js");
 const TODAY = "2026-09-21";
 const SINCE = "2025-05-25";
 
-const ev = (date, { id: suffix = "", ...extra } = {}) => ({
-  id: "id-" + date + suffix,
+const ev = (date, extra = {}) => ({
   date,
-  title: "Termin " + date,
   series: "linkup",
   cancelled: false,
   ...extra,
@@ -220,7 +218,7 @@ describe("assign", () => {
   const events = [
     ev("2026-09-18"),
     ev("2026-09-11", { cancelled: true }),
-    ev("2026-09-11", { id: "-b" }),
+    ev("2026-09-11"),
     ev("2026-09-25"),
     ev("2025-06-13"),
     ev("2024-01-01"), // before since → ignored
@@ -297,9 +295,9 @@ describe("incidents", () => {
       ev("2026-09-18"),
       ev("2026-10-02", { cancelled: true }),
       ev("2025-06-13", { cancelled: true }),
-      ev("2026-09-11", { cancelled: true, id: "-a" }),
+      ev("2026-09-11", { cancelled: true, series: "special" }),
     ]);
-    assert.deepEqual(list.map((e) => e.id), ["id-2026-10-02", "id-2026-09-11", "id-2026-09-11-a", "id-2025-06-13"]);
+    assert.deepEqual(list.map((e) => e.date + " " + e.series), ["2026-10-02 linkup", "2026-09-11 linkup", "2026-09-11 special", "2025-06-13 linkup"]);
     assert.equal(Core.incidents(list, 2).length, 2);
   });
 });

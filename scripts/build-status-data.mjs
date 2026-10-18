@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 /**
  * build-status-data.mjs — the small JSON behind /status (status.html): every
- * event of the primary calendar since STATUS_SINCE, reduced to the five fields
- * the timeline needs. Derived from events-archive.json, which is 230+ KB and
- * growing — the page must never load that directly.
+ * event of the primary calendar since STATUS_SINCE, reduced to whether it took
+ * place — date, series, cancelled, nothing else. Privacy by design: no title,
+ * no id (an id leads to the event page and its title), so the history of who
+ * met when stays out of this file and out of the live branch's git history.
+ * Derived from events-archive.json, which is 230+ KB and growing — the page
+ * must never load that directly.
  *
  * Live-only, like the event pages: the archive exists on the live branch only,
  * so this runs in BOTH pipelines (the hourly sync and the deploy) and its
@@ -82,8 +85,6 @@ function cmp(a, b) {
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
-const titleOf = (e) => (typeof e.title === "string" ? e.title : "");
-
 /** Calendar days between the firstSeen day and the lastSeen day, both as Berlin
  *  dates — lastSeen is written as one (sync-events' todayStr), so firstSeen's
  *  UTC stamp is read through the same clock (berlinToday). Missing, unparsable
@@ -104,10 +105,11 @@ export function isNoise(entry) {
 }
 
 /**
- * Pure: archive in, status data out. Exactly five fields per event (the size
- * guard — descriptions alone are most of the archive's bytes), `cancelled`
- * always a real boolean (the archive omits the key when false), sorted by date
- * then id so the output is diff-stable and the browser never sorts.
+ * Pure: archive in, status data out. Exactly three fields per event — when,
+ * which series, held or not; anything more is a privacy leak, not a feature.
+ * `cancelled` is always a real boolean (the archive omits the key when false),
+ * sorted by date, series, then cancelled so the output is diff-stable and the
+ * browser never sorts.
  *
  * `relations` (source name → own/home/friend, events-core relationMap) decides
  * whose events count: everything at bitcircus101, never a friend's calendar.
@@ -117,15 +119,9 @@ export function buildStatusData(archive, relations = null) {
     .filter((e) => e && typeof e.id === "string" && typeof e.date === "string" && DATE_RE.test(e.date))
     .filter((e) => EventsCore.sourceRelation(relations, e.source) !== "friend" && KEYS.has(e.type) && e.date >= STATUS_SINCE)
     .filter((e) => !isNoise(e))
-    .map((e) => ({
-      id: e.id,
-      date: e.date,
-      title: titleOf(e),
-      series: e.type,
-      cancelled: e.cancelled === true,
-    }))
-    .sort((a, b) => (a.date === b.date ? cmp(a.id, b.id) : cmp(a.date, b.date)));
-  return { version: 1, since: STATUS_SINCE, series: SERIES.map((s) => ({ ...s })), events };
+    .map((e) => ({ date: e.date, series: e.type, cancelled: e.cancelled === true }))
+    .sort((a, b) => cmp(a.date, b.date) || cmp(a.series, b.series) || cmp(a.cancelled, b.cancelled));
+  return { version: 2, since: STATUS_SINCE, series: SERIES.map((s) => ({ ...s })), events };
 }
 
 /**

@@ -184,7 +184,8 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   the header/footer template. Locally: `pnpm run build:event-pages <archive.json>`.
   `/status` (`scripts/build-status-data.mjs`) leaves out vanished entries that
   stood in the export for less than three calendar days (typos, not events); a
-  marked title is never noise.
+  marked title is never noise. Its `status-data.json` carries only whether an
+  event took place (`date`, `series`, `cancelled`) — no title, no id.
 
 `finanz.json` and `funding.json` are **not** in that list — they are versioned on
 `main` and edited through the maintainer CLI — never by hand, and no longer by a
