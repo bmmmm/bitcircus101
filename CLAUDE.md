@@ -87,14 +87,18 @@ more are tooling-only:
 - `jobs.json` — gate is `pnpm run check:jobs`; expiry only warns, never errors.
 - `pinnwand/feed.xml` — live-only, `scripts/build-pinnwand-feed.mjs` in the sync
   and on deploy; the button on `pinnwand.html` 404s in a plain checkout.
-- `events-archive.json`, `e/`, `archiv/` — live-only, written by the sync and
+- `events-archive.json`, `e/` — live-only, written by the sync and
   `scripts/build-event-pages.mjs` (template: the checkout's `events.html`, so
   keep its first `<header>`/`<footer>` blocks intact — `tests/event-pages.spec.mjs`
   renders against the real file). Try it locally with a fixture:
-  `pnpm run build:event-pages <archive.json>`; the output is git-ignored, and
-  until it exists the `archiv/` link on `events.html` 404s in a plain checkout.
+  `pnpm run build:event-pages <archive.json>`; the output is git-ignored.
   `calendar/` (the subscribe page) follows the same contract via
   `scripts/build-calendar-page.mjs`.
+- **Privacy: past events keep only whether they took place.** The archive cuts
+  a past entry to `PAST_FIELDS` (`sync-events.mjs`), its `e/<id>/` page is a
+  stub, `status-data.json` holds `date`/`series`/`cancelled`, and `live` keeps
+  no history (`scripts/push-live.sh` force-pushes one parentless commit). No
+  archive index, no titles in seeds or fixtures on `main` — don't re-add them.
 
 **Never run `scripts/sync-events.mjs` to try a calendar link out** — it
 overwrites the feeds *and* rewrites the JSON-LD in the tracked `events.html`.

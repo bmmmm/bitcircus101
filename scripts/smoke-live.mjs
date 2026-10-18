@@ -72,7 +72,7 @@ function samplePages(locs, max) {
         .map((u, i) => ({ u, d: pathDepth(u), i }))
         .sort((a, b) => a.d - b.d || a.i - b.i);
 
-    // "Shallow" is the top level of the site (/, /events, /archiv/, …): those
+    // "Shallow" is the top level of the site (/, /events, /status, …): those
     // are always checked, capped at shallowCap in sitemap order so the gate
     // degrades to "the first 20 top-level pages", never to "none of them".
     // Everything nested deeper (/e/<id>/ and whatever comes next) is only

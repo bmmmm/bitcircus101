@@ -1,11 +1,11 @@
 // Playwright globalSetup — builds the event pages the suite navigates to.
 //
-// The pages under e/<id>/ and archiv/ are live-only artifacts (the sync writes
-// them on the live branch), so a checkout has none. The suite still has to open
-// one ("No JavaScript errors"), follow the "→ details" pills the events fixture
-// renders ("Internal links") and read the archive index — so they are generated
-// here from the SAME fixture the tests serve, via the real generator, into the
-// git-ignored e/ and archiv/ directories. Deterministic: ids hash the uid.
+// The pages under e/<id>/ are live-only artifacts (the sync writes them on the
+// live branch), so a checkout has none. The suite still has to open one ("No
+// JavaScript errors"), follow the "→ details" pills the events fixture renders
+// ("Internal links") and read a past event's stub — so they are generated here
+// from the SAME fixture the tests serve, via the real generator, into the
+// git-ignored e/ directory. Deterministic: ids hash the uid.
 // status-data.json (/status) is built from the same archive, for the same reason.
 const fs = require("node:fs");
 const os = require("node:os");
@@ -25,7 +25,8 @@ function iso(date) {
 }
 
 /** The archive the pages are built from: the fixture's own cards plus a few
- *  past ones, so the archive index has something to list. */
+ *  past ones, for the stubs and the status page. Full past entries on purpose:
+ *  the stub must not leak what an archive the sync has not cut down yet holds. */
 function buildEventsArchive() {
   const data = buildEventsData();
   const day = iso(new Date());
@@ -53,8 +54,7 @@ function buildEventsArchive() {
   // The status page reads these through scripts/build-status-data.mjs: past
   // linkups a week apart (never the same ISO week), one cancelled — the
   // incident the e2e clicks — and one old enough to sit in a squashed month
-  // bucket; the fixture's own future cards above are its "geplant" bars. All
-  // older than the Lötabend above, which the archive test expects on top.
+  // bucket; the fixture's own future cards above are its "geplant" bars.
   const linkup = { tags: ["#meetup"], type: "linkup" };
   past(27, "Casual Linkup (Fixture)", "fixture-linkup-1", "", linkup);
   past(34, "Casual Linkup (Fixture)", "fixture-linkup-2", "", linkup);

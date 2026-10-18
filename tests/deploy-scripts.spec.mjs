@@ -65,7 +65,7 @@ describe("live-overlay.mjs", () => {
         write(dir, "feeds/all.ics", "generated-all-feed");
         write(dir, "feeds/tag/linkup.ics", "generated-tag-feed");
         write(dir, "feeds/source/bitcircus.xml", "generated-source-feed");
-        // per-event page TREE + archive index (same FEED_DIRS contract as feeds/)
+        // per-event page TREE (same FEED_DIRS contract as feeds/) + the retired archive index
         write(dir, "e/abc123def456/index.html", "generated-event-page");
         write(dir, "e/abc123def456/event.ics", "generated-event-ics");
         write(dir, "archiv/index.html", "generated-archive-index");
@@ -92,10 +92,9 @@ describe("live-overlay.mjs", () => {
         assert.equal(fs.readFileSync(path.join(dir, "events-archive.json"), "utf8"), "generated-archive-json");
         assert.equal(fs.readFileSync(path.join(dir, "pinnwand/feed.xml"), "utf8"), "generated-pinnwand-feed");
         assert.equal(fs.readFileSync(path.join(dir, "feeds/tag/linkup.ics"), "utf8"), "generated-tag-feed");
-        // the per-event page tree and the archive index survive the overlay too
+        // the per-event page tree survives the overlay too
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/index.html"), "utf8"), "generated-event-page");
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/event.ics"), "utf8"), "generated-event-ics");
-        assert.equal(fs.readFileSync(path.join(dir, "archiv/index.html"), "utf8"), "generated-archive-index");
         assert.equal(fs.readFileSync(path.join(dir, "calendar/index.html"), "utf8"), "generated-calendar-page");
         // funding.json is tracked on main and feeds inject-layout's footer
         // percent — main's copy must overwrite whatever live still holds
@@ -133,16 +132,83 @@ describe("live-overlay.mjs", () => {
         // step would take it out without its FEEDS entry
         assert.equal(fs.readFileSync(path.join(dir, "pinnwand/feed.xml"), "utf8"), "generated-pinnwand-feed");
         // the FEED_DIRS tree survives pruning too — the exemption is scoped to
-        // the feeds/e/archiv prefixes (old-page/old-assets above prove pruning still runs)
+        // the feeds/e/calendar prefixes (old-page/old-assets above prove pruning still runs)
         assert.equal(fs.readFileSync(path.join(dir, "feeds/all.ics"), "utf8"), "generated-all-feed");
         assert.equal(fs.readFileSync(path.join(dir, "feeds/tag/linkup.ics"), "utf8"), "generated-tag-feed");
         assert.equal(fs.readFileSync(path.join(dir, "feeds/source/bitcircus.xml"), "utf8"), "generated-source-feed");
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/index.html"), "utf8"), "generated-event-page");
         assert.equal(fs.readFileSync(path.join(dir, "e/abc123def456/event.ics"), "utf8"), "generated-event-ics");
-        assert.equal(fs.readFileSync(path.join(dir, "archiv/index.html"), "utf8"), "generated-archive-index");
+        // the retired archive index is no FEED_DIRS tree any more: pruned
+        assert.ok(!fs.existsSync(path.join(dir, "archiv/index.html")), "the retired archive index survived the prune");
         // /calendar/ is the redirect target of the old Nextcloud view link —
         // a deploy that pruned it would turn that redirect into a 404
         assert.equal(fs.readFileSync(path.join(dir, "calendar/index.html"), "utf8"), "generated-calendar-page");
+    });
+});
+
+describe("push-live.sh", () => {
+    /** A bare remote whose live has history, and a checkout of it. */
+    function fixture() {
+        const root = tmpdir("push-live-");
+        const remote = path.join(root, "remote.git");
+        git(root, "init", "-q", "--bare", remote);
+        const seed = path.join(root, "seed");
+        git(root, "init", "-q", "-b", "live", seed);
+        for (const [i, title] of ["Alter Termin A", "Alter Termin B"].entries()) {
+            write(seed, "events-data.json", title);
+            git(seed, "add", "-A");
+            git(seed, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", `sync ${i}`);
+        }
+        git(seed, "push", "-q", remote, "live");
+        const clone = (name) => {
+            const dir = path.join(root, name);
+            git(root, "clone", "-q", "--branch", "live", remote, dir);
+            git(dir, "config", "user.name", "t");
+            git(dir, "config", "user.email", "t@t");
+            return dir;
+        };
+        return { root, remote, clone };
+    }
+    const run = (cwd) => spawnSync("bash", [path.join(SCRIPTS, "push-live.sh")], { cwd, encoding: "utf8" });
+    const history = (remote) => git(remote, "rev-list", "live").trim().split("\n");
+
+    it("replaces live with one parentless commit carrying HEAD's tree and message", () => {
+        const { root, remote, clone } = fixture();
+        try {
+            const dir = clone("a");
+            write(dir, "events-data.json", "Neuer Termin");
+            git(dir, "commit", "-qam", "Sync events from calendar sources");
+            const res = run(dir);
+            assert.equal(res.status, 0, res.stderr);
+            assert.equal(history(remote).length, 1, "live kept its history");
+            assert.equal(git(remote, "show", "live:events-data.json"), "Neuer Termin");
+            assert.equal(git(remote, "log", "-1", "--format=%s", "live").trim(), "Sync events from calendar sources");
+            assert.equal(git(remote, "log", "--all", "--format=%s").includes("sync 0"), false);
+        } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+        }
+    });
+
+    it("rebases onto a push that landed meanwhile — neither run drops the other's files", () => {
+        const { root, remote, clone } = fixture();
+        try {
+            const a = clone("a");
+            const b = clone("b"); // checked out the same tip as a
+            write(a, "feed.xml", "sync");
+            git(a, "add", "-A");
+            git(a, "commit", "-qm", "sync");
+            assert.equal(run(a).status, 0);
+            write(b, "style.css", "deploy");
+            git(b, "add", "-A");
+            git(b, "commit", "-qm", "Deploy: x");
+            const res = run(b);
+            assert.equal(res.status, 0, res.stderr);
+            assert.equal(history(remote).length, 1);
+            assert.equal(git(remote, "show", "live:feed.xml"), "sync");
+            assert.equal(git(remote, "show", "live:style.css"), "deploy");
+        } finally {
+            fs.rmSync(root, { recursive: true, force: true });
+        }
     });
 });
 
@@ -372,7 +438,7 @@ describe("smoke-live.mjs", () => {
             "/datenschutz",
             "/kontakt",
             "/pinnwand",
-            "/archiv",
+            "/status",
             "/mitmachen",
             "/verein",
         ];

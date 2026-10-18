@@ -140,7 +140,7 @@
      */
     normalizePageFile(pathname) {
       if (!pathname || pathname === "/") return "index.html";
-      // A nested directory index (/e/<id>/, /archiv/) is its own page: mapping
+      // A nested directory index (/e/<id>/, /calendar/) is its own page: mapping
       // it to "index.html" would hand the marker to the homepage's "/wir" link.
       if (/\/$/.test(pathname)) {
         const dirs = pathname.split("/").filter(Boolean);

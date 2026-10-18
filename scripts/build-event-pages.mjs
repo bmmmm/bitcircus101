@@ -1,13 +1,20 @@
 #!/usr/bin/env node
 /**
- * build-event-pages.mjs — one static detail page per archived event under
- * /e/<id>/ (plus its own event.ics) and the archive index under /archiv/.
- * Run after the sync wrote events-archive.json:
+ * build-event-pages.mjs — one static page per archived event under /e/<id>/:
+ * the full detail page (plus its own event.ics) while the event is upcoming,
+ * a stub once its day is over. Run after the sync wrote events-archive.json:
  *   node scripts/build-event-pages.mjs [events-archive.json]
  *
  * Why the pages exist: a shared link has to keep resolving after the event has
  * left the calendar, and a link preview needs a page of its own — the /events
  * anchor shows a teaser of a list that no longer contains the event.
+ *
+ * Privacy: a past event's page says only whether it took place — no title,
+ * no description, no ics (renderPastPage). The archive keeps nothing more for
+ * it anyway (sync-events PAST_FIELDS); the stub never reads past those fields,
+ * so an archive the sync has not cut down yet cannot leak through here either.
+ * There is no archive index any more: a list of past events is exactly the
+ * history this site no longer keeps.
  *
  * Template = the checkout's own events.html. It is the only page that exists
  * both on main and on live (includes/ is deleted by the deploy), and on live it
@@ -35,7 +42,6 @@ import {
   syncFeedsDir,
   toJsonLdEvent,
   truncateDesc,
-  writeFileAtomic,
 } from "./sync-events.mjs";
 
 const { stripTagLines, calendarHref, relationMap, sourceBadge } = EventsCore;
@@ -261,25 +267,21 @@ export function renderHead(entry, { assetVersion, relations = null }) {
   });
 }
 
-/** <head> of the archive index (depth 1: /archiv/index.html). */
-export function renderArchiveHead({ assetVersion }) {
+/** <head> of a past event's stub (depth 2): noindex, no JSON-LD, no ics — the
+ *  title says the date, nothing the event was called. */
+export function renderPastHead(entry, { assetVersion }) {
   return headShell({
-    depth: 1,
+    depth: 2,
     assetVersion,
-    title: "Archiv – bitcircus101",
-    description:
-      "Vergangene Termine im bitcircus101, Hackspace in Bonn — nach Jahr und Monat, mit eigener Seite je Termin.",
-    canonical: `${SITE_URL}/archiv/`,
-    robots: "index, follow",
+    title: `Termin vom ${formatDateShort(entry.date)} – bitcircus101`,
+    description: `${pastNotice(entry)} – bitcircus101, Hackspace in Bonn.`,
+    canonical: `${SITE_URL}/e/${entry.id}/`,
+    robots: "noindex, follow",
     alternates: [
-      { type: "application/rss+xml", title: "bitcircus101 Termine", href: "../feed.xml" },
-      { type: "text/calendar", title: "bitcircus101 Termine (iCal)", href: "../ical.ics" },
+      { type: "application/rss+xml", title: "bitcircus101 Termine", href: "../../feed.xml" },
+      { type: "text/calendar", title: "bitcircus101 Termine (iCal)", href: "../../ical.ics" },
     ],
-    jsonLd: jsonLdBlock({
-      "@type": "CollectionPage",
-      name: "Archiv – bitcircus101",
-      url: `${SITE_URL}/archiv/`,
-    }),
+    jsonLd: "",
   });
 }
 
@@ -332,6 +334,7 @@ ${footer}
  * mocking the clock.
  */
 export function renderEventPage(entry, chrome, todayStr = berlinToday(), relations = null) {
+  if (entry.date < todayStr) return renderPastPage(entry, chrome);
   const { assetVersion } = chrome;
   const parts = [];
   parts.push(`            <article class="event-page">`);
@@ -350,8 +353,6 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
       ? "Dieser Termin ist abgesagt."
       : "Dieser Termin ist nicht mehr im Kalender.";
     parts.push(`                <p class="event-page__notice">${notice}</p>`);
-  } else if (entry.date < todayStr) {
-    parts.push(`                <p class="event-page__past">vergangener Termin</p>`);
   }
 
   parts.push(`                <div class="event-page__meta">`);
@@ -408,7 +409,6 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
   parts.push(
     `                    <a class="event-action event-action--back" href="../../events.html">← alle termine</a>`
   );
-  parts.push(`                    <a class="event-action event-action--archive" href="../../archiv/">archiv</a>`);
   parts.push(`                </div>`);
   parts.push(`            </article>`);
 
@@ -422,97 +422,59 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
   });
 }
 
-/** Chronological key of an entry — date plus time, so a day sorts internally. */
-function sortKey(e) {
-  return `${e.date}T${e.time || "00:00"}`;
+/** The one sentence a past event keeps. */
+export function pastNotice(entry) {
+  return entry.cancelled ? "Dieser Termin wurde abgesagt." : "Dieser Termin hat stattgefunden.";
 }
 
 /**
- * The archive index: past, non-cancelled entries grouped year → month, newest
- * first. A cancelled event never happened, so it is not history — its page
- * stays reachable, the archive does not list it.
+ * A past event's page: date and whether it took place, nothing else — reads
+ * only id, date and cancelled, whatever else the entry still carries. The link
+ * keeps resolving (shared links, feed readers), the content is gone.
  */
-export function renderArchiveIndex(entries, chrome, todayStr = berlinToday()) {
+export function renderPastPage(entry, chrome) {
   const { assetVersion } = chrome;
-  const past = (entries || [])
-    .filter((e) => isRenderable(e) && e.date < todayStr && !e.cancelled)
-    .sort((a, b) => (sortKey(a) < sortKey(b) ? 1 : sortKey(a) > sortKey(b) ? -1 : 0));
-
   const parts = [];
-  parts.push(`            <section id="archiv" class="archive">`);
-  parts.push(`                <p class="doc-path"><a href="../index.html">~</a> ` +
-    `<a href="../events.html">/termine</a> /archiv</p>`);
-  parts.push(`                <h1>Archiv</h1>`);
+  parts.push(`            <article class="event-page">`);
   parts.push(
-    `                <p class="archive__intro">Vergangene Termine im bitcircus101 — jeder mit eigener Seite.</p>`
+    `                <p class="doc-path"><a href="../../index.html">~</a> ` +
+      `<a href="../../events.html">/termine</a> /${esc(entry.id)}</p>`
   );
-
-  if (!past.length) {
-    parts.push(`                <p class="archive__empty">Noch keine vergangenen Termine im Archiv.</p>`);
-  } else {
-    let year = null;
-    let month = null;
-    let open = false;
-    for (const e of past) {
-      const y = e.date.slice(0, 4);
-      const m = e.date.slice(5, 7);
-      if (y !== year) {
-        if (open) {
-          parts.push(`                </ul>`);
-          open = false;
-        }
-        year = y;
-        month = null;
-        parts.push(`                <h2 class="archive__year">${esc(y)}</h2>`);
-      }
-      if (m !== month) {
-        if (open) {
-          parts.push(`                </ul>`);
-          open = false;
-        }
-        month = m;
-        parts.push(`                <h3 class="archive__month">${esc(MONTHS[Number(m) - 1])}</h3>`);
-        parts.push(`                <ul class="archive__list">`);
-        open = true;
-      }
-      const time = e.time ? ` <span class="archive__time">${esc(e.time)}</span>` : "";
-      parts.push(
-        `                    <li class="archive__row">` +
-          `<time class="archive__date" datetime="${esc(datetimeAttr(e.date, e.time))}">${esc(formatDateShort(e.date))}</time> ` +
-          `<a class="archive__title" href="../e/${esc(e.id)}/">${esc(e.title)}</a>${time}</li>`
-      );
-    }
-    if (open) parts.push(`                </ul>`);
-  }
-
+  parts.push(`                <h1>Termin vom <time datetime="${esc(entry.date)}">${esc(formatDateLong(entry.date))}</time></h1>`);
+  parts.push(`                <p class="${entry.cancelled ? "event-page__notice" : "event-page__past"}">${pastNotice(entry)}</p>`);
+  parts.push(
+    `                <p>Von vergangenen Terminen speichern wir nur, ob sie stattgefunden haben – ` +
+      `ohne Titel, Beschreibung oder Ort.</p>`
+  );
   parts.push(`                <div class="event-page__actions">`);
   parts.push(
-    `                    <a class="event-action event-action--back" href="../events.html">← alle termine</a>`
+    `                    <a class="event-action event-action--back" href="../../events.html">← alle termine</a>`
   );
+  parts.push(`                    <a class="event-action" href="../../status.html">status →</a>`);
   parts.push(`                </div>`);
-  parts.push(`            </section>`);
+  parts.push(`            </article>`);
 
   return shell({
-    head: renderArchiveHead({ assetVersion }),
-    header: rebase(chrome.header, 1),
-    footer: rebase(chrome.footer, 1),
+    head: renderPastHead(entry, { assetVersion }),
+    header: rebase(chrome.header, 2),
+    footer: rebase(chrome.footer, 2),
     body: parts.join("\n"),
-    depth: 1,
+    depth: 2,
     assetVersion,
   });
 }
 
-/**
- * Every file under e/ — index.html and event.ics per archived entry. The
- * archive index is written separately (it lives outside e/, and syncFeedsDir
- * owns every file in the directory it is given).
- */
 /** An entry the generator can turn into a page: usable id (it becomes a
  *  directory name) and a YYYY-MM-DD date (it drives every date string). */
 export function isRenderable(entry) {
   return !!entry && ID_RE.test(String(entry.id || "")) && /^\d{4}-\d{2}-\d{2}$/.test(String(entry.date || ""));
 }
 
+/**
+ * Every file under e/ — index.html per archived entry, plus event.ics while it
+ * is upcoming. syncFeedsDir owns the directory, so a page's ics goes the day
+ * after its event.
+ */
 export function planPages(archive, chrome, todayStr = berlinToday(), relations = null) {
   const entries = Object.values((archive && archive.events) || {});
   const files = [];
@@ -522,6 +484,7 @@ export function planPages(archive, chrome, todayStr = berlinToday(), relations =
       continue;
     }
     files.push({ path: `e/${entry.id}/index.html`, data: renderEventPage(entry, chrome, todayStr, relations) });
+    if (entry.date < todayStr) continue;
     // DTSTAMP from firstSeen, not from now: a rebuild must not rewrite every
     // ics on every run (syncFeedsDir only writes what changed). A missing or
     // unparsable firstSeen (hand-edited archive) falls back to now instead of
@@ -552,8 +515,6 @@ function main() {
     return;
   }
 
-  // A missing archive is the first run, not an error — the archive index still
-  // gets written so /archiv/ is never a 404.
   let archive = { version: 1, events: {} };
   try {
     archive = loadArchive(archiveFile);
@@ -572,19 +533,10 @@ function main() {
   }
   const files = planPages(archive, chrome, todayStr, relations);
   const stats = syncFeedsDir("e", files);
-  fs.mkdirSync("archiv", { recursive: true });
-  const index = renderArchiveIndex(Object.values(archive.events), chrome, todayStr);
-  const indexFile = path.join("archiv", "index.html");
-  let existing = null;
-  try {
-    existing = fs.readFileSync(indexFile, "utf8");
-  } catch { /* new file */ }
-  if (existing !== index) writeFileAtomic(indexFile, index);
-
-  const past = Object.values(archive.events).filter((e) => e.date < todayStr && !e.cancelled).length;
+  const pages = files.filter((f) => f.path.endsWith("/index.html")).length;
+  const past = Object.values(archive.events).filter((e) => isRenderable(e) && e.date < todayStr).length;
   console.log(
-    `event-pages: ${files.length / 2} event page(s) (${stats.written} written, ${stats.removed} removed), ` +
-      `archiv/index.html with ${past} past entr${past === 1 ? "y" : "ies"}`
+    `event-pages: ${pages} event page(s), ${past} of them past stubs (${stats.written} written, ${stats.removed} removed)`
   );
 }
 

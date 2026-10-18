@@ -1,6 +1,9 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 const { buildEventsData, useEventsFixture } = require('./fixtures/events-data');
+const { buildEventsArchive } = require('./global-setup');
+// The past fixture entry globalSetup gave a page — a stub, since it is past.
+const PAST_EVENT_ID = Object.values(buildEventsArchive().events).find((e) => e.uid === 'fixture-past-1').id;
 const { buildHostileJobsData, useJobsFixture } = require('./fixtures/jobs-data');
 
 // ─── Hit-area probe ──────────────────────────────────────────────────────────
@@ -2121,13 +2124,15 @@ test.describe('Event details', () => {
         );
         await expect(page.locator('a[href="event.ics"]')).toHaveCount(1);
 
-        // Archive index: past entries only, newest first, linking to their pages.
-        await page.goto('/archiv/');
-        await expect(page.locator('h1')).toContainText('rchiv');
-        const rows = page.locator('.archive a[href^="../e/"]');
-        expect(await rows.count()).toBeGreaterThanOrEqual(2);
-        await expect(rows.first()).toContainText('Vergangener Lötabend');
-        await expect(page.locator('.archive')).not.toContainText('Hardware Hackingabend');
+        // A past entry keeps its address, but the page says only whether it
+        // took place: no title, no description, no ics, out of the index.
+        await page.goto(`/e/${PAST_EVENT_ID}/`);
+        await expect(page.locator('h1')).toContainText('Termin vom');
+        await expect(page.locator('main')).toContainText('Dieser Termin hat stattgefunden.');
+        await expect(page.locator('main')).not.toContainText('Lötabend');
+        await expect(page.locator('main')).not.toContainText('Erster Absatz');
+        await expect(page.locator('a[href="event.ics"]')).toHaveCount(0);
+        await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
     });
 
     test('kiosk info=full shows the whole description, info=short one line', async ({ page }) => {
@@ -2192,7 +2197,7 @@ test.describe('Calendar page', () => {
 test.describe('Status page', () => {
     test('bars from the fixture, click opens the detail, keyboard walks the row, pulse hidden without data', async ({ page }) => {
         // globalSetup built status-data.json from the same archive as e/ and
-        // archiv/: past linkups a week apart (one cancelled), one old enough
+        // the event pages: past linkups a week apart (one cancelled), one old enough
         // for a squashed month bucket, and the fixture's future cards as
         // "geplant". Every row shares the same buckets, so every row has bars.
         await page.goto('/status.html');
@@ -2366,7 +2371,7 @@ test.describe('No JavaScript errors', () => {
         ['/', 'Home'],
         ['/events.html', 'Events'],
         [`/e/${FIXTURE_EVENT_ID}/`, 'Event detail'],
-        ['/archiv/', 'Archiv'],
+        [`/e/${PAST_EVENT_ID}/`, 'Past event stub'],
         ['/calendar/', 'Calendar'],
         ['/support.html', 'Support'],
         ['/pinnwand.html', 'Pinnwand'],

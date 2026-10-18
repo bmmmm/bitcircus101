@@ -39,6 +39,9 @@ jobs:
           # A pathspec checkout also stages the files — the commit step below
           # resets them, or live would get main's unminified core scripts back.
           git checkout origin/main -- scripts/ calendars/ ics-core.js events-core.js jobs-core.js
+          # The commit step hands scripts/ back to live's copy; keep main's
+          # push script for it (live's copy may predate it).
+          cp scripts/push-live.sh "$RUNNER_TEMP/push-live.sh"
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -56,10 +59,10 @@ jobs:
       - name: Rebuild the Pinnwand feed
         run: node scripts/build-pinnwand-feed.mjs
 
-      # One static page per event (e/<id>/) plus the archive index, from
+      # One static page per event (e/<id>/, a stub once it is past), from
       # events-archive.json — the template is this checkout's events.html, so
       # the pages carry live's asset hashes without a cache-bust run.
-      - name: Build event pages and archive
+      - name: Build event pages
         run: node scripts/build-event-pages.mjs
 
       # The status page's data (/status), from the same archive — absent for
@@ -98,7 +101,7 @@ jobs:
           # The archive tree only exists once a primary source answered; a
           # pathspec with no match aborts git add (exit 128) and would take
           # the feed commit down with it.
-          for p in events-archive.json e archiv status-data.json calendar; do
+          for p in events-archive.json e status-data.json calendar; do
             [ -e "$p" ] && git add -f -A -- "$p"
           done
           if git diff --cached --quiet; then
@@ -106,11 +109,6 @@ jobs:
             exit 0
           fi
           git commit -m "Sync events from calendar sources"
-          # Retry loop: pull --rebase + push (handles concurrent pushes)
-          for i in 1 2 3; do
-            git pull --rebase origin live && git push origin HEAD:live && exit 0
-            echo "Retry $i..."
-            sleep 5
-          done
-          echo "Push failed after 3 retries"
-          exit 1
+          # live keeps no history (privacy): one parentless commit per push,
+          # rebased onto a concurrent push first — see scripts/push-live.sh.
+          bash "$RUNNER_TEMP/push-live.sh"

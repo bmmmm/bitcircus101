@@ -24,11 +24,13 @@ so ziemlich alles andere exportieren). Etwa stündlich läuft ein Job, der:
    mit dem, was im bitcircus101 stattfindet (`relation` `own` + `home`, siehe
    unten; `rss` kann das je Quelle übersteuern);
 7. **jedem Termin eine eigene Seite gibt** — `/e/<id>/` mit der vollen
-   Beschreibung (Absätze und Links bleiben erhalten), plus ein Archiv unter
-   `/archiv/`. Die `id` ist ein Hash der Kalender-`UID` (bei Serien plus Datum):
-   ein verschobener Termin behält seinen Link. Seiten und Archiv gibt es für
-   Quellen mit `pages: true` (Standard: wie der Haupt-Feed); alle anderen
-   verlinken weiter auf ihre eigene Seite.
+   Beschreibung (Absätze und Links bleiben erhalten). Ist der Tag vorbei, bleibt
+   davon aus Datenschutzgründen nur, ob der Termin stattgefunden hat: Titel,
+   Beschreibung und Ort werden nicht gespeichert, die Seite sagt nur noch
+   „stattgefunden“ oder „abgesagt“. Die `id` ist ein Hash der Kalender-`UID`
+   (bei Serien plus Datum): ein verschobener Termin behält seinen Link. Seiten
+   gibt es für Quellen mit `pages: true` (Standard: wie der Haupt-Feed); alle
+   anderen verlinken weiter auf ihre eigene Seite.
 
 Das Ergebnis landet auf dem `live`-Branch — nie im Quellcode. Wer einen Kalender
 ändert, ändert damit direkt die Website; niemand muss etwas nachpflegen.

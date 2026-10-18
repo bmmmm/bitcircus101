@@ -230,7 +230,7 @@ jobs:
       # After cache-bust (the pages inherit events.html's final ?v=) and before
       # the sitemap, so new event pages are indexed in the same deploy. The
       # archive itself is live-only state that live-overlay.mjs preserves.
-      - name: Build event pages and archive
+      - name: Build event pages
         run: node scripts/build-event-pages.mjs
 
       # The status page's data, from the same archive — live-only like the
@@ -280,13 +280,9 @@ jobs:
           fi
           COMMIT_MSG=$(git log origin/main -1 --pretty=format:"%s")
           git commit -m "Deploy: ${COMMIT_MSG}"
-          for i in 1 2 3; do
-            git pull --rebase origin live && git push origin HEAD:live && exit 0
-            echo "Retry $i..."
-            sleep 5
-          done
-          echo "Push failed after 3 retries"
-          exit 1
+          # live keeps no history (privacy): one parentless commit per push,
+          # rebased onto a concurrent push first — see scripts/push-live.sh.
+          bash scripts/push-live.sh
 
       - name: Smoke-test live site
         # Polls until the Pages build serves the new asset hash, then checks

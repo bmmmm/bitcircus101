@@ -19,7 +19,7 @@ import {
   eventSlot, eventGuid, eventPageUrl,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
   aggregate, dedupeCards, eventAnchor, eventId, toAllCards,
-  loadArchive, mergeArchive, serializeArchive, processSource,
+  loadArchive, mergeArchive, serializeArchive, processSource, pastRecord, PAST_FIELDS,
   ARCHIVE_MIN_DATE, MAX_ARCHIVE_ENTRIES, CANCEL_HORIZON_DAYS, CANCEL_STORM,
 } from "../scripts/sync-events.mjs";
 // toCard, stripTagLines and MAX_ALL_CARDS are card-shaping internals that live in
@@ -3130,7 +3130,7 @@ describe("mergeArchive", () => {
   it("leaves everything untouched when the source is stale (allCards null) or not ok", () => {
     const prevArchive = {
       version: 1,
-      events: { card1: { ...mkArchiveCard(), firstSeen: "x", lastSeen: "2026-06-01" } },
+      events: { card1: { ...mkArchiveCard({ date: "2026-07-08" }), firstSeen: "x", lastSeen: "2026-06-01" } },
     };
     const stale = mkArchiveResult(null, { status: "stale" });
     const r1 = mergeArchive(prevArchive, [stale], "2026-07-05", "2026-07-05T00:00:00.000Z");
@@ -3139,6 +3139,31 @@ describe("mergeArchive", () => {
     const notOk = mkArchiveResult([mkArchiveCard({ date: "2026-07-10" })], { status: "error" });
     const r2 = mergeArchive(prevArchive, [notOk], "2026-07-05", "2026-07-05T00:00:00.000Z");
     assert.deepEqual(r2.events.card1, prevArchive.events.card1);
+  });
+
+  it("keeps of a past entry only whether it took place — stale run, relisted card and cancelled alike", () => {
+    const full = { ...mkArchiveCard(), description: "Mit Alice und Bob", location: "Ort", tags: ["#x"], firstSeen: "x", lastSeen: "2026-06-01" };
+    const prevArchive = {
+      version: 1,
+      events: {
+        card1: full,
+        gone: { ...full, id: "gone", uid: "u9", cancelled: true, cancelledBy: "vanished" },
+        today: { ...full, id: "today", uid: "u8", date: "2026-07-05" },
+      },
+    };
+    // a stale source: nothing fresh, the past entries are reduced all the same
+    const r1 = mergeArchive(prevArchive, [mkArchiveResult(null, { status: "stale" })], "2026-07-05", "2026-07-05T00:00:00.000Z");
+    assert.deepEqual(r1.events.card1, { id: "card1", date: "2026-07-01", source: "A", firstSeen: "x", lastSeen: "2026-06-01" });
+    assert.deepEqual(r1.events.gone, { id: "gone", date: "2026-07-01", source: "A", firstSeen: "x", lastSeen: "2026-06-01", cancelled: true, cancelledBy: "vanished" });
+    assert.equal(r1.events.today.title, "Event", "today's event keeps its details until the day is over");
+    // the export relists history every run: the fresh card is cut down again,
+    // and an id hit on a reduced record is no collision
+    const r2 = mergeArchive(r1, [mkArchiveResult([mkArchiveCard({ type: "linkup" })])], "2026-07-05", "2026-07-05T00:00:00.000Z");
+    assert.deepEqual(Object.keys(r2.events.card1).sort(), ["date", "firstSeen", "id", "lastSeen", "source", "type"]);
+    for (const e of Object.values(r2.events)) {
+      for (const k of Object.keys(e)) if (e.date < "2026-07-05") assert.ok(PAST_FIELDS.includes(k), k);
+    }
+    assert.deepEqual(pastRecord({ ...full, cancelled: undefined }), r1.events.card1);
   });
 
   it("cancels nothing when allCards is an empty array", () => {
@@ -3277,9 +3302,9 @@ describe("mergeArchive", () => {
     const warnSpy = t.mock.method(console, "warn", () => {});
     const prevArchive = {
       version: 1,
-      events: { card1: { ...mkArchiveCard({ uid: "incumbent@x" }), firstSeen: "x", lastSeen: "2026-06-01" } },
+      events: { card1: { ...mkArchiveCard({ uid: "incumbent@x", date: "2026-07-10" }), firstSeen: "x", lastSeen: "2026-06-01" } },
     };
-    const newcomer = mkArchiveCard({ uid: "newcomer@y" }); // same id "card1", different uid → different identity
+    const newcomer = mkArchiveCard({ uid: "newcomer@y", date: "2026-07-10" }); // same id "card1", different uid → different identity
     let r;
     assert.doesNotThrow(() => {
       r = mergeArchive(prevArchive, [mkArchiveResult([newcomer])], "2026-07-05", "2026-07-05T00:00:00.000Z");

@@ -17,7 +17,13 @@ const EVENTS_URL = `${SITE_URL}/events`;
 // exported since ARCHIVE_MIN_DATE, keyed by card id. Append-only — the pages
 // under /e/<id>/ are built from it (scripts/build-event-pages.mjs), and a
 // shared link must keep resolving after the event has left the calendar.
+// Privacy: once its day is over an entry keeps only PAST_FIELDS — whether it
+// took place, never what it was or who met (see pastRecord).
 const ARCHIVE_FILE = "events-archive.json";
+// What a past entry keeps: the key, when, which series and whose calendar (for
+// /status), the two seen-stamps (build-status-data's typo rule) and the
+// cancelled flag with its reason. No title, description, location, uid, url.
+const PAST_FIELDS = ["id", "date", "type", "source", "firstSeen", "lastSeen", "cancelled", "cancelledBy"];
 const ARCHIVE_MIN_DATE = "2025-01-01";
 // Runaway guard, not a quota: warn when the archive grows past this.
 const MAX_ARCHIVE_ENTRIES = 5000;
@@ -733,6 +739,13 @@ function loadArchive(file = ARCHIVE_FILE) {
   }
 }
 
+/** A past entry reduced to PAST_FIELDS — whether it took place, nothing else. */
+function pastRecord(e) {
+  const out = {};
+  for (const k of PAST_FIELDS) if (e[k] !== undefined) out[k] = e[k];
+  return out;
+}
+
 /**
  * Pure archive merge — `results` are the processSource() outputs, `todayStr` a
  * local YYYY-MM-DD, `nowISO` the firstSeen fallback. Rules, in order:
@@ -751,7 +764,10 @@ function loadArchive(file = ARCHIVE_FILE) {
  *   - `cancelled` (with `cancelledBy: "title"`) is set for a card whose title
  *     carries the owner's marker (isCancelledTitle), past or future — the export
  *     relists history, so a rename after the date still lands here; it clears
- *     when the title is renamed back.
+ *     when the title is renamed back;
+ *   - last: every entry before `todayStr` is cut down to pastRecord(), the
+ *     ones the export relists included — the archive stores no history of
+ *     what happened, only that it did.
  */
 function mergeArchive(prevArchive, results, todayStr, nowISO) {
   const events = {};
@@ -769,7 +785,9 @@ function mergeArchive(prevArchive, results, todayStr, nowISO) {
     for (const c of r.allCards) {
       if (!c.id || c.date < ARCHIVE_MIN_DATE) continue;
       const prev = events[c.id];
-      if (prev && identityOf(prev) !== identityOf(c)) {
+      // A past record carries no identity any more (no uid, no title): an id
+      // hit on it is the same 12-hex hash again, not a collision worth a check.
+      if (prev && typeof prev.title === "string" && identityOf(prev) !== identityOf(c)) {
         console.warn(
           `::warning::archive id collision ${c.id}: "${prev.title}" (${prev.date}) vs "${c.title}" (${c.date}) — keeping the first`
         );
@@ -808,6 +826,9 @@ function mergeArchive(prevArchive, results, todayStr, nowISO) {
     if (flipped > CANCEL_STORM) {
       console.warn(`::warning::[${r.source.id}] ${flipped} upcoming archive entries vanished at once — marked cancelled, please check the source`);
     }
+  }
+  for (const [id, e] of Object.entries(events)) {
+    if (e.date < todayStr) events[id] = pastRecord(e);
   }
   const size = Object.keys(events).length;
   if (size > MAX_ARCHIVE_ENTRIES) {
@@ -1103,7 +1124,7 @@ export {
   eventSlot, eventGuid, eventPageUrl,
   berlinUtcOffset, generateJsonLd, injectJsonLd, toJsonLdEvent,
   aggregate, dedupeCards, eventAnchor,
-  loadArchive, mergeArchive, serializeArchive, processSource,
-  ARCHIVE_FILE, ARCHIVE_MIN_DATE, MAX_ARCHIVE_ENTRIES, CANCEL_HORIZON_DAYS, CANCEL_STORM,
+  loadArchive, mergeArchive, serializeArchive, processSource, pastRecord,
+  ARCHIVE_FILE, ARCHIVE_MIN_DATE, PAST_FIELDS, MAX_ARCHIVE_ENTRIES, CANCEL_HORIZON_DAYS, CANCEL_STORM,
   SITE_URL, EVENTS_URL,
 };

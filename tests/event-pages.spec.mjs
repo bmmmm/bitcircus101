@@ -1,6 +1,6 @@
 /**
  * Unit tests for scripts/build-event-pages.mjs — the generator that writes the
- * per-event pages under /e/<id>/ and the archive index under /archiv/. Runs with:
+ * per-event pages under /e/<id>/ (a stub once the event is past). Runs with:
  *   node --test tests/event-pages.spec.mjs
  * No browser, no network; the only writes go to a tmp dir (the main() round-trip
  * at the bottom runs the script with its cwd there, never in the checkout).
@@ -31,7 +31,7 @@ import {
   renderWhen,
   renderHead,
   renderEventPage,
-  renderArchiveIndex,
+  renderPastPage,
   planPages,
   berlinToday,
 } from "../scripts/build-event-pages.mjs";
@@ -249,13 +249,11 @@ describe("renderEventPage", () => {
     assert.match(html, /<a href="https:\/\/example\.org\/pfad"/);
   });
 
-  it("offers the four actions, each pointing where it claims", () => {
+  it("offers the three actions, each pointing where it claims", () => {
     assert.match(html, /href="https:\/\/cloud\.example\.org\/apps\/calendar\/p\/abc\/timeGridDay\/2026-09-18"[^>]*>→ kalender</);
     assert.match(html, /href="event\.ics"[^>]*>↓ ics</);
     assert.match(html, /href="\.\.\/\.\.\/events\.html">← alle termine</);
-    // From /e/<id>/ the archive is two levels up, not one: "../archiv/" would
-    // resolve to /e/archiv/ and 404.
-    assert.match(html, /href="\.\.\/\.\.\/archiv\/">archiv</);
+    assert.ok(!html.includes("archiv/"), "the archive index is gone");
     // An external event URL wins over the calendar day view.
     const ext = renderEventPage(entry({ eventUrl: "kult41.net/termin" }), CHROME, TODAY);
     assert.match(ext, /href="https:\/\/kult41\.net\/termin"/);
@@ -289,11 +287,7 @@ describe("renderEventPage", () => {
     assert.ok(!/\sstyle="/.test(html), "generated page carries an inline style attribute");
   });
 
-  it("says when an event is past, and when it is cancelled", () => {
-    const past = renderEventPage(entry({ date: "2026-09-01" }), CHROME, TODAY);
-    assert.match(past, /class="event-page__past">vergangener Termin</);
-    assert.ok(!past.includes("event-page__notice"), "a past event is not a cancelled one");
-
+  it("says when an upcoming event is cancelled", () => {
     const dead = renderEventPage(entry({ cancelled: true, cancelledBy: "vanished" }), CHROME, TODAY);
     assert.match(dead, /class="event-page__notice">Dieser Termin ist nicht mehr im Kalender\.</);
     const legacy = renderEventPage(entry({ cancelled: true }), CHROME, TODAY); // archive written before cancelledBy existed
@@ -304,6 +298,27 @@ describe("renderEventPage", () => {
 
     const upcoming = renderEventPage(entry(), CHROME, TODAY);
     assert.ok(!upcoming.includes("event-page__past"), "an upcoming event was called past");
+  });
+
+  it("turns a past event into a stub that says only whether it took place", () => {
+    const leaks = ["Vortrag", "Dateninfrastruktur", "Absatz", "Dorotheenstra", "vortrag", "event.ics", "ld+json"];
+    const past = renderEventPage(entry({ date: "2026-09-01" }), CHROME, TODAY);
+    assert.equal(past, renderPastPage(entry({ date: "2026-09-01" }), CHROME));
+    assert.match(past, /<h1>Termin vom <time datetime="2026-09-01">Dienstag, 1\. September 2026<\/time><\/h1>/);
+    assert.match(past, /class="event-page__past">Dieser Termin hat stattgefunden\.</);
+    assert.match(past, /<title>Termin vom 01\.09\.2026 – bitcircus101<\/title>/);
+    assert.match(past, /<meta name="robots" content="noindex, follow" \/>/);
+    assert.match(past, /<link rel="canonical" href="https:\/\/bitcircus101\.de\/e\/0a1b2c3d4e5f\/" \/>/);
+    assert.match(past, /href="\.\.\/\.\.\/events\.html">← alle termine</);
+    assert.match(past, /href="\.\.\/\.\.\/status\.html">status →</);
+    const dead = renderEventPage(entry({ date: "2026-09-01", cancelled: true, cancelledBy: "vanished" }), CHROME, TODAY);
+    assert.match(dead, /class="event-page__notice">Dieser Termin wurde abgesagt\.</);
+    for (const html of [past, dead]) {
+      for (const leak of leaks) assert.ok(!html.includes(leak), `a past page leaks ${leak}`);
+      assert.ok(!/\sstyle="/.test(html), "a stub carries an inline style attribute");
+    }
+    // the day itself still gets the full page
+    assert.match(renderEventPage(entry({ date: TODAY }), CHROME, TODAY), /<h1>Vortrag: Öffentliche Dateninfrastruktur<\/h1>/);
   });
 
   it("escapes hostile calendar data everywhere it lands", () => {
@@ -340,48 +355,6 @@ describe("renderEventPage", () => {
   });
 });
 
-describe("renderArchiveIndex", () => {
-  const entries = [
-    entry({ id: "aaa1", title: "Alt A", date: "2025-11-05", time: "20:00" }),
-    entry({ id: "aaa2", title: "Alt B", date: "2026-08-07", time: "" }),
-    entry({ id: "aaa3", title: "Alt C", date: "2026-08-21", time: "19:00" }),
-    entry({ id: "aaa4", title: "Alt D", date: "2026-09-04", time: "20:00" }),
-    entry({ id: "up1", title: "Kommt noch", date: "2026-10-02" }),
-    entry({ id: "dead1", title: "Abgesagt", date: "2026-07-03", cancelled: true }),
-  ];
-  const html = renderArchiveIndex(entries, CHROME, TODAY);
-
-  it("lists past events newest first, grouped year → month", () => {
-    const order = [...html.matchAll(/href="\.\.\/e\/([a-z0-9]+)\/"/g)].map((m) => m[1]);
-    assert.deepEqual(order, ["aaa4", "aaa3", "aaa2", "aaa1"]);
-    const years = [...html.matchAll(/class="archive__year">(\d{4})</g)].map((m) => m[1]);
-    assert.deepEqual(years, ["2026", "2025"]);
-    const months = [...html.matchAll(/class="archive__month">([^<]+)</g)].map((m) => m[1]);
-    assert.deepEqual(months, ["September", "August", "November"]);
-  });
-
-  it("excludes upcoming and cancelled events", () => {
-    assert.ok(!html.includes("Kommt noch"), "an upcoming event is not history");
-    assert.ok(!html.includes("Abgesagt"), "a cancelled event never happened");
-  });
-
-  it("is a real page: chrome rebased one level, canonical, link back", () => {
-    assert.match(html, /<a class="nav__brand" href="\.\.\/index\.html">/);
-    assert.ok(!html.includes("../../"), "archive page rebased two levels instead of one");
-    assert.match(html, /<link rel="canonical" href="https:\/\/bitcircus101\.de\/archiv\/" \/>/);
-    assert.match(html, /<title>Archiv – bitcircus101<\/title>/);
-    assert.match(html, /href="\.\.\/events\.html">← alle termine</);
-    assert.ok(!/\sstyle="/.test(html), "archive page carries an inline style attribute");
-  });
-
-  it("has an empty state instead of a bare heading", () => {
-    const empty = renderArchiveIndex([], CHROME, TODAY);
-    assert.match(empty, /Noch keine vergangenen Termine im Archiv\./);
-    const onlyUpcoming = renderArchiveIndex([entry({ date: "2026-12-01" })], CHROME, TODAY);
-    assert.match(onlyUpcoming, /Noch keine vergangenen Termine im Archiv\./);
-  });
-});
-
 describe("planPages", () => {
   const archive = {
     version: 1,
@@ -389,10 +362,10 @@ describe("planPages", () => {
   };
   const files = planPages(archive, CHROME, TODAY);
 
-  it("plans a page and an ics for every entry", () => {
+  it("plans a page for every entry, an ics only while it is upcoming", () => {
     assert.deepEqual(
       files.map((f) => f.path),
-      ["e/a1/event.ics", "e/a1/index.html", "e/b2/event.ics", "e/b2/index.html"]
+      ["e/a1/event.ics", "e/a1/index.html", "e/b2/index.html"]
     );
   });
 
@@ -452,10 +425,10 @@ describe("main() — the script end to end", () => {
   it("writes the pages under its cwd and never fails the sync", () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "bc101-event-pages-"));
     try {
-      // A cwd of its own: the script writes e/ and archiv/ relative to it, so
+      // A cwd of its own: the script writes e/ relative to it, so
       // this must never run in the checkout.
       fs.copyFileSync(path.join(ROOT, "events.html"), path.join(dir, "events.html"));
-      const archive = { version: 1, events: { a1: entry({ id: "a1" }), p1: entry({ id: "p1", date: "2026-01-09" }) } };
+      const archive = { version: 1, events: { a1: entry({ id: "a1", date: "2099-09-18" }), p1: entry({ id: "p1", date: "2026-01-09" }) } };
       const archiveFile = path.join(dir, "archive.json");
       fs.writeFileSync(archiveFile, JSON.stringify(archive));
 
@@ -467,10 +440,13 @@ describe("main() — the script end to end", () => {
 
       const out = run([archiveFile]);
       assert.match(out, /event-pages: 2 event page/);
-      for (const f of ["e/a1/index.html", "e/a1/event.ics", "e/p1/index.html", "archiv/index.html"]) {
+      assert.match(out, /1 of them past stubs/);
+      for (const f of ["e/a1/index.html", "e/a1/event.ics", "e/p1/index.html"]) {
         assert.ok(fs.existsSync(path.join(dir, f)), `${f} not written`);
       }
-      assert.match(fs.readFileSync(path.join(dir, "archiv/index.html"), "utf8"), /href="\.\.\/e\/p1\/"/);
+      assert.ok(!fs.existsSync(path.join(dir, "e/p1/event.ics")), "a past event kept its ics");
+      assert.ok(!fs.existsSync(path.join(dir, "archiv")), "the archive index is gone");
+      assert.match(fs.readFileSync(path.join(dir, "e/p1/index.html"), "utf8"), /Dieser Termin hat stattgefunden/);
 
       // Second run, unchanged input: syncFeedsDir writes nothing, so a no-op
       // sync stages no diff.
@@ -481,11 +457,9 @@ describe("main() — the script end to end", () => {
       run([archiveFile]);
       assert.ok(!fs.existsSync(path.join(dir, "e/p1")), "a dropped entry kept its page directory");
 
-      // Missing archive: first run, still a valid /archiv/ instead of a 404.
-      fs.rmSync(path.join(dir, "archiv"), { recursive: true, force: true });
+      // Missing archive: first run, no pages and no error.
       const fresh = run([path.join(dir, "nope.json")]);
       assert.match(fresh, /event-pages: 0 event page/);
-      assert.match(fs.readFileSync(path.join(dir, "archiv/index.html"), "utf8"), /Noch keine vergangenen Termine/);
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
@@ -501,7 +475,6 @@ describe("main() — the script end to end", () => {
         { cwd: dir, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }
       );
       assert.equal(res.trim(), "", "wrote output despite an unusable template");
-      assert.ok(!fs.existsSync(path.join(dir, "archiv")), "wrote a chrome-less archive page");
       assert.ok(!fs.existsSync(path.join(dir, "e")), "wrote chrome-less event pages");
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });

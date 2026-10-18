@@ -10,7 +10,7 @@ This repository contains the website for bitcircus101.
 |--------|---------|
 | `feat/…`, `fix/…` | Short-lived branches — all changes land here first, then merge to `main` via PR; delete after merge |
 | `main` | Integration branch (no direct pushes for normal work; see [CONTRIBUTING.md](CONTRIBUTING.md)) |
-| `live` | Production branch — served by GitHub Pages. CI actions commit generated files here |
+| `live` | Production branch — served by GitHub Pages. CI actions commit generated files here, as a single parentless commit each time (`scripts/push-live.sh`): live keeps no history |
 
 ## Project structure
 
@@ -139,7 +139,6 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
 | `feeds/` | `sync-events.yml` | Hourly |
 | `events-archive.json` | `sync-events.yml` | Hourly (append-only) |
 | `e/<id>/index.html`, `e/<id>/event.ics` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Hourly, and on deploy (sitemap) |
-| `archiv/index.html` | `sync-events.yml` and `deploy.yml` → `build-event-pages.mjs` | Hourly, and on deploy |
 | `calendar/index.html` | `sync-events.yml` and `deploy.yml` → `build-calendar-page.mjs` | Hourly, and on deploy |
 | `pinnwand/feed.xml` | `sync-events.yml` and `deploy.yml` → `build-pinnwand-feed.mjs` | Hourly, and on deploy |
 | `status-data.json` | `sync-events.yml` and `deploy.yml` → `build-status-data.mjs` | Hourly, and on deploy |
@@ -169,7 +168,7 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   healthy export (`cancelledBy: "vanished"`), or a title that starts with
   CANCELED / CANCELLED / ABGESAGT (`cancelledBy: "title"`, `isCancelledTitle` in
   `events-core.js`) — the owner's way to cancel: **rename, don't delete**, it
-  works after the date too and reaches the feeds (`STATUS:CANCELLED`), the
+  works after the date too (until the day is over — see below) and reaches the feeds (`STATUS:CANCELLED`), the
   JSON-LD (`EventCancelled`), the event page and `/status` alike — and the
   lists: `/events`, the homepage preview and `/kiosk/` show the title without
   the marker, struck through, labelled „abgesagt" (`stripCancelMarker`; the
@@ -178,10 +177,15 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   `RECURRENCE-ID` override, which `ics-core.js` treats as a replacement of that
   occurrence (same `uid|date` id), so only that Friday is marked. Entries flagged
   before the reason existed carry no `cancelledBy` and read as vanished.
-  `scripts/build-event-pages.mjs` renders the archive into `e/<id>/` (one
-  page + single-event `.ics` each, the RSS item links and the JSON-LD `url`
-  point there) and `archiv/index.html`, using the checkout's `events.html` as
-  the header/footer template. Locally: `pnpm run build:event-pages <archive.json>`.
+  **Privacy:** once its day is over an entry keeps only `PAST_FIELDS` — id,
+  date, type, source, the seen-stamps and the cancelled flag; no title,
+  description, location or uid. `scripts/build-event-pages.mjs` renders the
+  archive into `e/<id>/` (the RSS item links and the JSON-LD `url` point
+  there): a full page + single-event `.ics` while the event is upcoming, a
+  noindex stub („Dieser Termin hat stattgefunden.“ / „… wurde abgesagt.“)
+  afterwards, so shared links keep resolving. There is no archive index. The
+  checkout's `events.html` is the header/footer template. Locally:
+  `pnpm run build:event-pages <archive.json>`.
   `/status` (`scripts/build-status-data.mjs`) leaves out vanished entries that
   stood in the export for less than three calendar days (typos, not events); a
   marked title is never noise. Its `status-data.json` carries only whether an
@@ -363,7 +367,7 @@ Every push to `main` triggers:
 5. **Deploy** (only if all tests pass): Re-runs the generators (layout inject, logo strip, lite
    blocks) before cache-busting, syncs site files from `main` to `live`, prunes files no
    longer tracked on `main`, regenerates `sitemap.xml` with `cicirello/generate-sitemap`, then
-   commits and pushes to `live`
+   replaces `live` with one parentless commit (`scripts/push-live.sh`)
 
 PRs get lightweight CI: same layout check + unit tests (no Playwright). See [CONTRIBUTING.md](CONTRIBUTING.md).
 The file that actually runs is [`.forgejo/workflows/ci.yml`](.forgejo/workflows/ci.yml), because PRs live on
@@ -387,7 +391,7 @@ Nothing reaches production without passing all tests first.
   6. Generates `feed.xml` (RSS 2.0, primary calendar only, every card in the window)
   7. Runs `scripts/build-pinnwand-feed.mjs` (`pinnwand/feed.xml` from `jobs.json`)
   8. Runs `scripts/build-status-data.mjs` (`status-data.json` for `/status` from `events-archive.json`)
-  9. Commits and pushes to `live` with retry logic
+  9. Replaces `live` with one parentless commit (`scripts/push-live.sh`, rebases onto a concurrent push first)
 
 ### Create release (`release.yml`)
 
