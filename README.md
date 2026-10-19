@@ -40,6 +40,8 @@ lite/index.html             Zero-JS view — inlined stylesheet, generated event
 kiosk/index.html            Chrome-less wall display (/kiosk/) — noindex, unlisted, JSON only
 kiosk.js                    Frontend for that wall display (not part of the shared layout)
 google18556084d38e4dd8.html Google Search Console verification (do not delete)
+CNAME                       GitHub Pages custom domain (bitcircus101.de) — tracked here because the
+                            deploy prunes every live file main lacks; without it the domain drops
 
 includes/
   site-skip.html            Shared skip link; inlined into pages by build:layout
