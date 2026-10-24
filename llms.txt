@@ -1,0 +1,39 @@
+# bitcircus101
+
+> Hackspace und offener Treffpunkt in Bonn, Dorotheenstraße 101.
+
+bitcircus101 ist ein privat und nicht-kommerziell betriebener Hackspace in Bonn. Freitags ab 20 Uhr offen für alle – kein Anmelden, keine Mitgliedschaft. Schwerpunkte: IT-Security, Open-Source, Datensouveränität, KI/LLMs, Hardware-Projekte.
+
+## Seiten
+
+- [Startseite](https://bitcircus101.de/): Überblick, Signal-Channels, Kontakt
+- [Signal-Gruppen](https://bitcircus101.de/chat/): INFO-Gruppe beitreten (TALK-Gruppe nur auf Anfrage)
+- [Veranstaltungen](https://bitcircus101.de/events): Termine, linkup@bitcircus101 Lightning Talks, offene Freitagabende
+- [Status](https://bitcircus101.de/status): welche Termine stattfanden und welche ausfielen, seit Mai 2025 – ein Balken pro Woche, weiter zurück pro Monat, Quartal und Jahr; dazu ein grober Puls der Unterstützung ohne Zahlen
+- [Raum mieten](https://bitcircus101.de/raum-nutzen): bitcircus101 für Workshops, Meetups, Drehs buchen
+- [Unterstützen](https://bitcircus101.de/support): bitcircus101 finanziell unterstützen
+- [Pinnwand](https://bitcircus101.de/pinnwand): Stellenanzeigen aus der Community an einer echten Wand im Hackspace; dazu anonyme Gesuche von Jobsuchenden „unter Chiffre“, Kontakt per Weiterleitung über den Space
+- [Impressum & Datenschutz](https://bitcircus101.de/impressum-datenschutz): Rechtliches
+
+## Kontakt
+
+- E-Mail: info@bitcircus101.de
+- Matrix: https://matrix.to/#/#bitcircus101:stim.toys
+- Adresse: Dorotheenstraße 101, 53113 Bonn
+- GitHub: https://github.com/bmmmm/bitcircus101
+
+## Feeds
+
+- RSS: https://bitcircus101.de/feed.xml
+- iCal (aggregierbar, mit Start-/Endzeiten): https://bitcircus101.de/ical.ics
+- Alle Termine inkl. befreundeter Spaces (iCal + RSS): https://bitcircus101.de/feeds/all.ics und https://bitcircus101.de/feeds/all.xml
+- Gefilterte Feeds pro Schlagwort (nur Termine im bitcircus101) und pro Quelle: /feeds/tag/<slug>.{ics,xml} und /feeds/source/<id>.{ics,xml} — das Verzeichnis steht im `feeds`-Manifest von https://bitcircus101.de/events-data.json
+- RSS Pinnwand (neue Stellen-Zettel aus der Community): https://bitcircus101.de/pinnwand/feed.xml
+- Übersicht aller Feeds: https://bitcircus101.de/rss
+- ICS Kalender (Quelle, live): https://kalender.bitcircus101.de/bitcircus101.ics
+- Alle Abo-Adressen (kompletter Kalender und Feeds der Website): https://bitcircus101.de/calendar/
+
+## Regelmäßige Termine
+
+- Jeden Freitag ab 20:00 Uhr: offener Abend
+- Jeden dritten Freitag im Monat: linkup@bitcircus101 – Lightning Talks (3 Folien, 3 Minuten)

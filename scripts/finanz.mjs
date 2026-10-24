@@ -1,0 +1,750 @@
+#!/usr/bin/env node
+/**
+ * finanz.mjs — "Finanz-Steuerzentrale": the CLI for editing finanz.json (the
+ * cost/funding board on support.html#projekte) and the footer percent in
+ * funding.json.
+ *
+ * Two modes:
+ *   • no args        → interactive menu (prints the board, then offers actions,
+ *                      confirming before every write).
+ *   • a subcommand   → scriptable one-shot (raise/finish/add/monthly/pulse/
+ *                      percent/list/validate). Bad or missing args print an
+ *                      actionable usage message and exit 1.
+ *
+ * This is the ONLY place that calls new Date(): it passes today's YYYY-MM-DD
+ * into the pure data layer (finanz-data.mjs), which does the actual mutation +
+ * validation. Every write path validates FIRST and refuses with actionable
+ * errors if the result would be invalid.
+ *
+ * DSGVO: the CLI never prompts for or stores names or personal data. The pulse
+ * takes only an integer 0..7 level — never a euro amount.
+ *
+ * UI text is German; code comments are English (project convention).
+ */
+import path from "node:path";
+import readline from "node:readline/promises";
+import { stdin as input, stdout as output } from "node:process";
+import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
+import {
+  read,
+  write,
+  validate,
+  parseAmount,
+  raiseProject,
+  finishProject,
+  addEinmalig,
+  addMonatlich,
+  removeItem,
+  setPulse,
+  setPercent,
+  FINANZ_PATH,
+  FUNDING_PATH,
+} from "./finanz-data.mjs";
+
+const require = createRequire(import.meta.url);
+const Core = require("../finanz-core.js");
+
+/** Today as YYYY-MM-DD in local time — the single new Date() call in the layer. */
+function today() {
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+function readFunding() {
+  try {
+    const raw = require("fs").readFileSync(FUNDING_PATH, "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return { percent: null };
+  }
+}
+
+// ── Board printing (read-only, value-free pulse) ─────────────────────────────
+
+function printBoard(data) {
+  const currency = data.currency || "EUR";
+  console.log("");
+  console.log("  ┌─ Finanz-Steuerzentrale ───────────────────────────────");
+  console.log(`  │ Währung: ${currency}   zuletzt aktualisiert: ${data.updated}`);
+  const funding = readFunding();
+  if (funding.percent != null) {
+    console.log(`  │ LIGHTS ON? (funding.json): ${funding.percent}%`);
+  }
+  console.log("  ├─ Einmalige Projekte ──────────────────────────────────");
+  const einmalig = data.einmalig || [];
+  if (!einmalig.length) {
+    console.log("  │ (keine)");
+  } else {
+    for (const p of einmalig) {
+      const view = Core.computeProject(p, { currency });
+      const bar = view.bar.filled + view.bar.empty;
+      console.log(
+        `  │ ${p.id}  [${bar}] ${view.pct}%  ` +
+          `${Core.formatAmount(view.raised, currency)} / ${Core.formatAmount(
+            view.target,
+            currency
+          )}${view.reached ? "  *** ERREICHT ***" : ""}`
+      );
+    }
+  }
+  console.log("  ├─ Monatliche Kosten ───────────────────────────────────");
+  const monatlich = data.monatlich || [];
+  if (!monatlich.length) {
+    console.log("  │ (keine)");
+  } else {
+    for (const m of monatlich) {
+      console.log(
+        `  │ ${m.id}  ${Core.formatAmount(m.monthly, currency)} / Monat`
+      );
+    }
+  }
+  // Pulse: glyphs only — never a digit or euro figure on the board.
+  const levels = (data.pulse && data.pulse.levels) || [];
+  console.log("  ├─ Puls (wertfrei) ─────────────────────────────────────");
+  console.log(`  │ ${Core.pulseSparkline(levels) || "(leer)"}`);
+  console.log("  └───────────────────────────────────────────────────────");
+  console.log("");
+}
+
+// ── Machine-readable board (--json) ──────────────────────────────────────────
+
+/** Copy the optional string fields that are actually set, dropping the rest. */
+function pickOptional(item, keys) {
+  const out = {};
+  for (const k of keys) if (item[k]) out[k] = item[k];
+  return out;
+}
+
+/**
+ * The board as data — everything printBoard shows except the ASCII bar, which
+ * is presentation, not data. Every derived number (pct, remaining, reached)
+ * comes from Core.computeProject, the same function support.html renders
+ * through, so `list --json` can never drift from the public page.
+ *
+ * Optional item fields are omitted when unset, mirroring finanz.json itself.
+ * `pulse` is always present with a stable shape so a consumer can read
+ * .pulse.levels without a guard, even on a file that has no pulse key yet.
+ *
+ * Pure: no I/O, no clock — the caller passes both files in, which is what makes
+ * it unit-testable without spawning the CLI.
+ */
+export function boardJson(data, funding) {
+  data = data || {};
+  const currency = data.currency || "EUR";
+  const pulse = data.pulse || {};
+  return {
+    currency,
+    updated: data.updated || null,
+    percent: funding && funding.percent != null ? funding.percent : null,
+    einmalig: (data.einmalig || []).map((p) => {
+      const view = Core.computeProject(p, { currency });
+      return {
+        id: view.id,
+        title: view.title,
+        ...pickOptional(p, ["tagline", "icon"]),
+        target: view.target,
+        raised: view.raised,
+        remaining: view.remaining,
+        pct: view.pct,
+        reached: view.reached,
+      };
+    }),
+    monatlich: (data.monatlich || []).map((m) => ({
+      id: m.id,
+      title: m.title,
+      ...pickOptional(m, ["tagline", "icon"]),
+      monthly: m.monthly,
+    })),
+    // `start` only when set: the seed has no pulse, and consumers key on its
+    // presence (no time axis → nothing to plot on /status).
+    pulse: {
+      updated: pulse.updated || null,
+      ...(typeof pulse.start === "string" ? { start: pulse.start } : {}),
+      levels: pulse.levels || [],
+    },
+  };
+}
+
+// ── Shared write helper ──────────────────────────────────────────────────────
+
+/**
+ * Print what to do with the file that was just written. Both files feed a
+ * generator, so committing either WITHOUT rebuilding is exactly the HTML drift
+ * the CI gate rejects — the hint has to name the rebuild or it walks the caller
+ * into a red PR. finanz.json feeds the block in lite/index.html; funding.json
+ * feeds the footer's data-funding attribute that inject-layout.mjs stamps into
+ * every layout page (so the browser reads the percent from the HTML instead of
+ * fetching funding.json on every page view).
+ */
+function printCommitHint(file) {
+  if (file === "finanz.json") {
+    console.log("  Danach: pnpm run build:lite-finanz");
+    console.log(
+      "  Dann committen: git add finanz.json lite/index.html && git commit"
+    );
+    return;
+  }
+  if (file === "funding.json") {
+    console.log("  Danach: pnpm run build:layout");
+    console.log(
+      "  Dann committen: git add funding.json '*.html' && git commit"
+    );
+    return;
+  }
+  console.log(`  Bitte committen: git add ${file} && git commit`);
+}
+
+/**
+ * Refuse to open a prompt without a TTY. Headless — a script, an agent, CI —
+ * readline gets EOF on the first question, so these commands used to print one
+ * line, write nothing and still exit 0: a silent no-op that reads as success.
+ * Fail loudly on stderr instead, and name the way out rather than just the
+ * problem. Sets process.exitCode (not process.exit) so callers can unwind.
+ */
+function requireTTY(what, wayOut) {
+  if (process.stdin.isTTY) return true;
+  console.error(`✗ "${what}" ist interaktiv und braucht ein Terminal — stdin ist kein TTY.`);
+  console.error("  " + wayOut);
+  process.exitCode = 1;
+  return false;
+}
+
+/** Validate, write, and print the success + commit reminder. Returns true. */
+function commitWrite(next) {
+  const { ok, errors } = validate(next);
+  if (!ok) {
+    console.error("✗ Abbruch — finanz.json wäre ungültig:");
+    for (const e of errors) console.error("  - " + e);
+    return false;
+  }
+  write(next);
+  console.log(`✓ finanz.json aktualisiert (updated: ${next.updated})`);
+  printCommitHint("finanz.json");
+  return true;
+}
+
+// ── Scriptable subcommands ───────────────────────────────────────────────────
+
+const USAGE = `Finanz-Steuerzentrale — Verwaltung von finanz.json
+
+Aufruf:
+  node scripts/finanz.mjs                  interaktives Menü
+  node scripts/finanz.mjs <Befehl> [args]  direkter Befehl
+
+Befehle:
+  --help, -h, help           diese Hilfe (Exit 0)
+  list [--json]              Board anzeigen (--json: nur JSON auf stdout)
+  validate [--json]          finanz.json prüfen (--json: {ok, errors})
+  raise <id> <betrag>        Betrag zu "raised" addieren, ganze Euro (auch negativ)
+  finish <id>                Projekt auf erreicht setzen (raised = target)
+  add                        neues einmaliges Projekt anlegen (interaktiv)
+  monthly                    monatliche Kosten verwalten (interaktiv)
+  pulse <level> [--start YYYY-MM]
+                             Puls-Level 0..7 anhängen (wertfrei, keine Euro-Angabe);
+                             --start datiert den ersten Eintrag, nur einmal möglich
+  percent <n>                Gesamt-% (funding.json) setzen, 0..100
+
+"add" und "monthly" sowie das Menü sind interaktiv: ohne TTY brechen sie mit
+Exit 1 ab, statt still nichts zu tun.
+
+Hinweis: Jeder Schreibvorgang validiert zuerst und bricht mit konkreter
+Fehlermeldung ab, wenn das Ergebnis ungültig wäre. Daten ohne Personenbezug —
+keine Namen, keine Einzelspenden.`;
+
+function fail(message) {
+  console.error("✗ " + message);
+  console.error("");
+  console.error(USAGE);
+  process.exit(1);
+}
+
+async function runSubcommand(cmd, rawArgs) {
+  const date = today();
+  // --json is stripped before positional parsing so it can never be mistaken
+  // for an id or an amount, whichever subcommand it is passed to.
+  const wantsJson = rawArgs.includes("--json");
+  const args = rawArgs.filter((a) => a !== "--json");
+
+  if (cmd === "list") {
+    if (wantsJson) {
+      console.log(JSON.stringify(boardJson(read(), readFunding()), null, 2));
+      return;
+    }
+    printBoard(read());
+    return;
+  }
+
+  if (cmd === "validate") {
+    const { ok, errors } = validate(read());
+    if (wantsJson) {
+      // Same exit codes as the prose path; stdout stays parseable either way.
+      console.log(JSON.stringify({ ok, errors }, null, 2));
+      if (!ok) process.exitCode = 1;
+      return;
+    }
+    if (ok) {
+      console.log("✓ finanz.json ist gültig.");
+      return;
+    }
+    console.error("✗ finanz.json ist ungültig:");
+    for (const e of errors) console.error("  - " + e);
+    process.exit(1);
+  }
+
+  if (cmd === "raise") {
+    const [id, amountStr] = args;
+    if (!id || amountStr === undefined) {
+      fail('raise braucht <id> und <betrag>, z.B.: raise solar-speicher 100');
+    }
+    const amount = parseAmount(amountStr);
+    if (amount === null) {
+      fail(
+        `Betrag "${amountStr}" ist keine gültige Zahl — ganze Euro, z.B.: raise solar-speicher 100 (auch -50; keine Buchstaben/Hex/Exponent)`
+      );
+    }
+    // The schema stores euros without cents. Catching it here names what was
+    // typed; letting it through would report the resulting sum instead.
+    if (!Number.isInteger(amount)) {
+      fail(
+        `Betrag "${amountStr}" hat Nachkommastellen — finanz.json führt nur ganze Euro, z.B.: raise solar-speicher 13`
+      );
+    }
+    let next;
+    try {
+      next = raiseProject(read(), id, amount, date);
+    } catch (e) {
+      fail(e.message);
+    }
+    process.exitCode = commitWrite(next) ? 0 : 1;
+    return;
+  }
+
+  if (cmd === "finish") {
+    const [id] = args;
+    if (!id) fail("finish braucht <id>, z.B.: finish solar-speicher");
+    let next;
+    try {
+      next = finishProject(read(), id, date);
+    } catch (e) {
+      fail(e.message);
+    }
+    process.exitCode = commitWrite(next) ? 0 : 1;
+    return;
+  }
+
+  if (cmd === "pulse") {
+    // --start YYYY-MM dates the first level (the /status time axis); setPulse
+    // keeps it sticky, so a second, different --start fails there.
+    const flagAt = args.indexOf("--start");
+    if (flagAt !== -1 && args.indexOf("--start", flagAt + 1) !== -1) {
+      // Two flags, one track: the second would be dropped in silence, and the
+      // owner would believe the later month had been applied.
+      fail("--start darf nur einmal stehen — der Puls hat genau einen Startmonat");
+    }
+    const startMonth = flagAt === -1 ? undefined : args[flagAt + 1];
+    const positional = args.filter((_, i) => flagAt === -1 || (i !== flagAt && i !== flagAt + 1));
+    const [levelStr] = positional;
+    if (levelStr === undefined) {
+      fail("pulse braucht <level> 0..7, z.B.: pulse 4 (wertfrei, keine Euro-Angabe)");
+    }
+    const level = parseAmount(levelStr);
+    if (level === null || !Number.isInteger(level) || level < 0 || level > 7) {
+      fail(`Level "${levelStr}" muss eine ganze Zahl 0..7 sein`);
+    }
+    if (flagAt !== -1 && !/^\d{4}-(0[1-9]|1[0-2])$/.test(startMonth || "")) {
+      fail(`--start braucht einen Monat im Format YYYY-MM (ist ${JSON.stringify(startMonth)})`);
+    }
+    let next;
+    try {
+      next = setPulse(read(), level, date, startMonth);
+    } catch (e) {
+      fail(e.message);
+    }
+    process.exitCode = commitWrite(next) ? 0 : 1;
+    return;
+  }
+
+  if (cmd === "percent") {
+    const [nStr] = args;
+    if (nStr === undefined) fail("percent braucht <n> 0..100, z.B.: percent 25");
+    const n = parseAmount(nStr);
+    if (n === null) {
+      fail(`Prozent "${nStr}" ist keine gültige Zahl — ganze Zahl 0..100, z.B.: percent 25`);
+    }
+    const written = setPercent(n);
+    console.log(`✓ funding.json aktualisiert (percent: ${written})`);
+    printCommitHint("funding.json");
+    return;
+  }
+
+  if (cmd === "add") {
+    await interactiveAddEinmalig(date);
+    return;
+  }
+
+  if (cmd === "monthly") {
+    await interactiveMonthly(date);
+    return;
+  }
+
+  fail(`Unbekannter Befehl: "${cmd}"`);
+}
+
+// ── Interactive helpers ──────────────────────────────────────────────────────
+
+async function confirm(rl, question) {
+  const ans = (await rl.question(`${question} [j/N] `)).trim().toLowerCase();
+  return ans === "j" || ans === "ja" || ans === "y" || ans === "yes";
+}
+
+/**
+ * Ask for a number. An empty line returns `fallback` when one is given, else it
+ * re-asks (never silently coerces a bare Enter to 0). Garbage, hex and exponent
+ * forms are rejected with an actionable hint.
+ *
+ * `integer: true` is what every euro field needs: the schema types `target`,
+ * `raised` and `monthly` as integers, so a decimal entered here would parse
+ * fine and then die at validation — reported as the resulting SUM ("ist
+ * 2012.5"), a number the user never typed. Rejecting it at the prompt names
+ * the input instead. A trailing ",00" still passes: it parses to a whole
+ * number.
+ *
+ * Exported for tests: it drives a retry loop, so it needs an `rl`-shaped
+ * object with .question(), not a terminal.
+ */
+export async function askNumber(
+  rl,
+  label,
+  { min, max, fallback, integer, unit } = {}
+) {
+  const example = integer ? "1000" : "1000 oder 1000,50";
+  // `unit` keeps the euro wording off the pulse, which is a level, not money —
+  // the one place this CLI must never suggest an amount.
+  const whole = unit ? `ganze ${unit}` : "ganze Zahlen";
+  for (;;) {
+    const raw = (await rl.question(`${label}: `)).trim();
+    if (raw === "") {
+      if (fallback !== undefined) return fallback;
+      console.log("  Bitte einen Wert eingeben (z.B. 50; auch -20).");
+      continue;
+    }
+    const n = parseAmount(raw);
+    if (n === null) {
+      console.log(
+        `  Bitte eine normale Zahl eingeben (z.B. ${example}) — keine Buchstaben, Hex oder Exponenten.`
+      );
+      continue;
+    }
+    if (integer && !Number.isInteger(n)) {
+      console.log(
+        `  "${raw}" hat Nachkommastellen — hier zählen nur ${whole} (z.B. ${Math.round(
+          n
+        )} statt ${raw}).`
+      );
+      continue;
+    }
+    if (min !== undefined && n < min) {
+      console.log(`  Muss mindestens ${min} sein.`);
+      continue;
+    }
+    if (max !== undefined && n > max) {
+      console.log(`  Darf höchstens ${max} sein.`);
+      continue;
+    }
+    return n;
+  }
+}
+
+// interactiveAddEinmalig / interactiveMonthly are exported for the same reason
+// askNumber is: they already take an `rl`, so a scripted stand-in drives their
+// prompts without a terminal — which is the only way to gate what the call
+// sites pass (whole euros, a minimum of 1). A test scripts "n" at the confirm,
+// so nothing is ever written.
+
+/** Build an item from a set of optional string fields, dropping empties. */
+function withOptional(base, fields) {
+  const out = { ...base };
+  for (const [key, value] of Object.entries(fields)) {
+    if (value && value.trim()) out[key] = value.trim();
+  }
+  return out;
+}
+
+export async function interactiveAddEinmalig(date, rl = null) {
+  const own = !rl;
+  // Only guard when we open our own readline — called from the menu one is
+  // already running and the menu checked for a TTY before it got here.
+  if (
+    own &&
+    !requireTTY(
+      "add",
+      'Einen nicht-interaktiven Weg zum Anlegen gibt es nicht: finanz.json direkt editieren, dann "pnpm run finanz:validate".'
+    )
+  ) {
+    return;
+  }
+  if (own) rl = readline.createInterface({ input, output });
+  try {
+    console.log("\n  Neues einmaliges Projekt (DSGVO: keine Namen, nur Eckdaten):");
+    const id = (await rl.question("  id (a-z, 0-9, -): ")).trim();
+    const title = (await rl.question("  Titel: ")).trim();
+    const tagline = await rl.question("  Tagline (optional): ");
+    const description = await rl.question("  Beschreibung (optional): ");
+    const icon = await rl.question("  Icon-Glyph (optional): ");
+    // min 1, not 0.0001: with whole euros the smallest positive target IS 1.
+    const target = await askNumber(rl, "  Zielbetrag (target)", {
+      min: 1,
+      integer: true,
+      unit: "Euro",
+    });
+    const raised = await askNumber(rl, "  Bisher (raised)", {
+      min: 0,
+      fallback: 0,
+      integer: true,
+      unit: "Euro",
+    });
+    const url1 = await rl.question("  URL 1 (https, optional): ");
+    const url2 = await rl.question("  URL 2 (https, optional): ");
+
+    const obj = withOptional(
+      { id, title, target, raised },
+      { tagline, description, icon, url1, url2 }
+    );
+
+    let next;
+    try {
+      next = addEinmalig(read(), obj, date);
+    } catch (e) {
+      console.error("✗ " + e.message);
+      return;
+    }
+    if (await confirm(rl, `  Projekt "${id}" hinzufügen und speichern?`)) {
+      commitWrite(next);
+    } else {
+      console.log("  Abgebrochen — nichts geschrieben.");
+    }
+  } finally {
+    if (own) rl.close();
+  }
+}
+
+export async function interactiveMonthly(date, rl = null) {
+  const own = !rl;
+  if (
+    own &&
+    !requireTTY(
+      "monthly",
+      'Einen nicht-interaktiven Weg gibt es nicht: finanz.json direkt editieren, dann "pnpm run finanz:validate".'
+    )
+  ) {
+    return;
+  }
+  if (own) rl = readline.createInterface({ input, output });
+  try {
+    console.log("\n  Monatliche Kosten — (1) hinzufügen  (2) entfernen");
+    const choice = (await rl.question("  Auswahl: ")).trim();
+
+    if (choice === "1") {
+      console.log("  Neue monatliche Kosten:");
+      const id = (await rl.question("  id (a-z, 0-9, -): ")).trim();
+      const title = (await rl.question("  Titel: ")).trim();
+      const tagline = await rl.question("  Tagline (optional): ");
+      const description = await rl.question("  Beschreibung (optional): ");
+      const icon = await rl.question("  Icon-Glyph (optional): ");
+      const monthly = await askNumber(rl, "  Betrag pro Monat (monthly)", {
+        min: 1,
+        integer: true,
+        unit: "Euro",
+      });
+      const url1 = await rl.question("  URL 1 (https, optional): ");
+      const url2 = await rl.question("  URL 2 (https, optional): ");
+
+      const obj = withOptional(
+        { id, title, monthly },
+        { tagline, description, icon, url1, url2 }
+      );
+      let next;
+      try {
+        next = addMonatlich(read(), obj, date);
+      } catch (e) {
+        console.error("✗ " + e.message);
+        return;
+      }
+      if (await confirm(rl, `  Kosten "${id}" hinzufügen und speichern?`)) {
+        commitWrite(next);
+      } else {
+        console.log("  Abgebrochen — nichts geschrieben.");
+      }
+    } else if (choice === "2") {
+      const data = read();
+      const ids = (data.monatlich || []).map((m) => m.id);
+      if (!ids.length) {
+        console.log("  Keine monatlichen Kosten vorhanden.");
+        return;
+      }
+      console.log("  Vorhanden: " + ids.join(", "));
+      const id = (await rl.question("  Welche id entfernen? ")).trim();
+      let next;
+      try {
+        next = removeItem(data, id, date);
+      } catch (e) {
+        console.error("✗ " + e.message);
+        return;
+      }
+      if (await confirm(rl, `  "${id}" wirklich entfernen?`)) {
+        commitWrite(next);
+      } else {
+        console.log("  Abgebrochen — nichts geschrieben.");
+      }
+    } else {
+      console.log("  Ungültige Auswahl.");
+    }
+  } finally {
+    if (own) rl.close();
+  }
+}
+
+// ── Interactive top-level menu ───────────────────────────────────────────────
+
+export async function interactiveMenu(rl = null) {
+  // Same shape as interactiveAddEinmalig/interactiveMonthly: a caller may hand
+  // in a scripted rl, which is what lets a test drive the branches below. Only
+  // the real entry point opens its own — and only that path needs the TTY.
+  const own = !rl;
+  if (
+    own &&
+    !requireTTY(
+      "Das Menü",
+      'Nicht-interaktiv gibt es die Unterbefehle — "node scripts/finanz.mjs --help" zeigt sie.'
+    )
+  ) {
+    return;
+  }
+  const date = today();
+  if (own) rl = readline.createInterface({ input, output });
+  try {
+    printBoard(read());
+    console.log("  Aktionen:");
+    console.log("   1) raised aktualisieren");
+    console.log("   2) Projekt beenden (raised = target)");
+    console.log("   3) Projekt hinzufügen");
+    console.log("   4) monatliche Kosten verwalten");
+    console.log("   5) Puls-Level setzen (0..7, wertfrei)");
+    console.log("   6) Gesamt-% setzen (funding.json)");
+    console.log("   7) validieren");
+    console.log("   0) beenden");
+    const choice = (await rl.question("\n  Auswahl: ")).trim();
+
+    if (choice === "1") {
+      const id = (await rl.question("  Projekt-id: ")).trim();
+      const amount = await askNumber(rl, "  Betrag (+/-)", {
+        integer: true,
+        unit: "Euro",
+      });
+      let next;
+      try {
+        next = raiseProject(read(), id, amount, date);
+      } catch (e) {
+        console.error("✗ " + e.message);
+        return;
+      }
+      const p = next.einmalig.find((x) => x.id === id);
+      if (await confirm(rl, `  "${id}" auf ${p.raised} setzen und speichern?`)) {
+        commitWrite(next);
+      } else {
+        console.log("  Abgebrochen — nichts geschrieben.");
+      }
+    } else if (choice === "2") {
+      const id = (await rl.question("  Projekt-id: ")).trim();
+      let next;
+      try {
+        next = finishProject(read(), id, date);
+      } catch (e) {
+        console.error("✗ " + e.message);
+        return;
+      }
+      if (await confirm(rl, `  "${id}" als erreicht markieren und speichern?`)) {
+        commitWrite(next);
+      } else {
+        console.log("  Abgebrochen — nichts geschrieben.");
+      }
+    } else if (choice === "3") {
+      await interactiveAddEinmalig(date, rl);
+    } else if (choice === "4") {
+      await interactiveMonthly(date, rl);
+    } else if (choice === "5") {
+      // The bounds belong in the prompt, so a typo re-asks instead of throwing
+      // the user back out of the menu.
+      const level = await askNumber(rl, "  Puls-Level 0..7 (wertfrei)", {
+        min: 0,
+        max: 7,
+        integer: true,
+      });
+      let next;
+      try {
+        next = setPulse(read(), level, date);
+      } catch (e) {
+        console.error("✗ " + e.message);
+        return;
+      }
+      if (await confirm(rl, `  Puls-Level ${level} anhängen und speichern?`)) {
+        commitWrite(next);
+      } else {
+        console.log("  Abgebrochen — nichts geschrieben.");
+      }
+    } else if (choice === "6") {
+      const n = await askNumber(rl, "  Gesamt-% 0..100", { min: 0, max: 100 });
+      if (await confirm(rl, `  funding.json auf ${Math.round(n)}% setzen?`)) {
+        const written = setPercent(n);
+        console.log(`✓ funding.json aktualisiert (percent: ${written})`);
+        printCommitHint("funding.json");
+      } else {
+        console.log("  Abgebrochen — nichts geschrieben.");
+      }
+    } else if (choice === "7") {
+      const { ok, errors } = validate(read());
+      if (ok) {
+        console.log("✓ finanz.json ist gültig.");
+      } else {
+        console.error("✗ finanz.json ist ungültig:");
+        for (const e of errors) console.error("  - " + e);
+      }
+    } else if (choice === "0" || choice === "") {
+      console.log("  Tschüss.");
+    } else {
+      console.log("  Ungültige Auswahl.");
+    }
+  } finally {
+    if (own) rl.close();
+  }
+}
+
+// ── Entry ────────────────────────────────────────────────────────────────────
+
+async function main() {
+  const [, , cmd, ...args] = process.argv;
+  if (!cmd) {
+    await interactiveMenu();
+    return;
+  }
+  // Help is not an error: stdout + exit 0, never the fail() path.
+  if (cmd === "--help" || cmd === "-h" || cmd === "help") {
+    console.log(USAGE);
+    return;
+  }
+  await runSubcommand(cmd, args);
+}
+
+// Only run when invoked directly — importing this from a test must not start
+// the CLI (and must not open a prompt or touch finanz.json).
+if (
+  process.argv[1] &&
+  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
+  main().catch((e) => {
+    console.error("✗ " + (e && e.message ? e.message : e));
+    process.exit(1);
+  });
+}
