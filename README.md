@@ -493,6 +493,9 @@ If no tags match, the event gets `#community` as default.
 - Loads `events-data.json`; without it the list says so and links the calendar page
 - Renders event cards grouped by month; months unfold until six cards show, so
   the end of a month never leaves a single card in view
+- A series' later dates (same source + calendar UID, `seriesKey` in
+  `events-core.js`) are one line — title, time, links; its first card carries
+  the text, the place and the tags. A cancelled date never counts as that card
 - Times as a window („19:00–22:00“), all-day events as „ganztägig“
 - Dynamic tag filter bar (OR logic: any matching tag shows event)
 - A row of checkboxes for the friends' calendars (`?mit=<id>`); the events at bitcircus101 are always on

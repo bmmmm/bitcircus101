@@ -1195,6 +1195,10 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
     border-bottom: 1px solid var(--line);
 }
 .event-card:hover { background: var(--paper-2); }
+/* A series' later dates (events.js): title, time and links — the text, the
+   place and the tags stand on the series' first card. Tighter, so the list
+   reads as dates rather than as copies. */
+.event-card--repeat { padding-top: 0.5rem; padding-bottom: 0.5rem; }
 
 /* type marker — structural, not chromatic: the left rule varies by kind.
    The date is the card's green marker (below); the type rule stays ink, since

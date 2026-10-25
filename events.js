@@ -537,6 +537,7 @@
 
     var html = "";
     var unfolded = 0; // cards in the months before this one (OPEN_MIN)
+    var seenSeries = {}; // series whose full card is out (events-core seriesKey)
     groups.forEach(function (k) {
       var parts = k.split("-");
       var monthName = MONTHS_FULL[+parts[1] - 1];
@@ -559,8 +560,17 @@
         // e.title itself stays raw: eventAnchor and the RSS deep links read it.
         var cancelled = !!(core && core.isCancelledTitle(e.title));
         var shown = cancelled ? core.stripCancelMarker(e.title) : e.title;
+        // A series' later dates (events-core seriesKey) are short: title,
+        // time, links. Its first card in the list carries the text, the place
+        // and the tags — 13 of the 22 cards in the default view repeated one,
+        // 11 with the same text (October 2026). A cancelled date never counts
+        // as that first card, so the next real one keeps the text.
+        var series = core && core.seriesKey ? core.seriesKey(e) : null;
+        var repeat = !!(series && seenSeries[series]);
+        if (series && !cancelled) seenSeries[series] = true;
         var typeClass = (e.type ? " event-card--" + e.type : "") +
-          (cancelled ? " event-card--cancelled" : "");
+          (cancelled ? " event-card--cancelled" : "") +
+          (repeat ? " event-card--repeat" : "");
         // Shared with the RSS feed's deep-link (ics-core.js) so anchors stay in sync.
         var anchor = ICSCore.eventAnchor(e);
 
@@ -588,7 +598,7 @@
           html += '<span class="event-card__source">' + esc(badge) + "</span>";
         }
         html += "</div>";
-        if (e.subtitle) {
+        if (e.subtitle && !repeat) {
           html += '<p class="event-card__subtitle">' + esc(e.subtitle) + "</p>";
         }
         // Full text lives in the card since the detail pages exist; the list shows
@@ -596,7 +606,7 @@
         // a #ev-… deep link opens it, see the hash block below). Trailing
         // hashtag-only lines are the tag source, not prose — hidden here.
         var text = core ? core.stripTagLines(e.description) : (e.description || "");
-        if (text) {
+        if (text && !repeat) {
           var teaser = core ? core.truncateDesc(text, 200) : text;
           if (teaser !== text) {
             html += '<details class="event-card__more">' +
@@ -611,7 +621,7 @@
             html += '<p class="event-card__desc event-card__desc--full">' + esc(text) + "</p>";
           }
         }
-        if (e.location) {
+        if (e.location && !repeat) {
           var osmLoc = encodeURIComponent(e.location);
           html += '<a class="event-card__location" href="' +
             'https://www.openstreetmap.org/search?query=' + osmLoc +
@@ -621,7 +631,7 @@
         // Meta: time + tags
         html += '<div class="event-card__meta">';
         html += '<span class="event-card__time">' + esc(timeLabel(e)) + "</span>";
-        if (e.tags && e.tags.length) {
+        if (e.tags && e.tags.length && !repeat) {
           html += '<span class="event-card__tags">';
           e.tags.forEach(function (t) {
             html += '<span class="event-tag">' + esc(t) + "</span>";
@@ -647,16 +657,21 @@
         // Own page with the full text \u2014 only the sources with pages get one
         // (EventsCore.hasPages), marked `page` on the card. Relative directory
         // href: serves locally and live alike.
-        if (e.id && e.page) {
+        var hasPage = !!(e.id && e.page);
+        if (hasPage) {
           html += '<a class="event-action event-action--details" href="e/' +
             esc(e.id) + '/" title="Alle Details auf eigener Seite">' +
             '\u2192 details</a>';
         }
-        html += '<a class="event-action event-action--cal" href="' +
-          esc(calHref) +
-          '" target="_blank" rel="noopener noreferrer" title="' + calTitle + '">' +
-          calLabel + '</a>';
-        if (e.location) {
+        // A repeat keeps one way to the details: its page, else the calendar
+        // or the event's own link.
+        if (!repeat || !hasPage) {
+          html += '<a class="event-action event-action--cal" href="' +
+            esc(calHref) +
+            '" target="_blank" rel="noopener noreferrer" title="' + calTitle + '">' +
+            calLabel + '</a>';
+        }
+        if (e.location && !repeat) {
           var osmQuery = encodeURIComponent(e.location);
           html += '<a class="event-action event-action--map" href="' +
             'https://www.openstreetmap.org/search?query=' + osmQuery +

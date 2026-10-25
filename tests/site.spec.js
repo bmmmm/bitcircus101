@@ -2097,6 +2097,63 @@ test.describe('Event details', () => {
         await expect(page.locator('.event-card', { hasText: 'Termin 9' }).locator('.event-card__time')).toHaveText('ganztägig');
     });
 
+    test('a series carries its text once: its later dates are one line, and a cancelled date does not take the text', async ({ page }) => {
+        await page.clock.install({ time: new Date('2026-09-01T10:00:00') });
+        const weekly = (day, extra = {}) => ({
+            title: 'Spieleabend', subtitle: '', description: 'Brettspiele, Kartenspiele, Puzzles.',
+            location: 'Dorotheenstraße 101', date: `2026-09-${day}`, time: '19:00', endDate: `2026-09-${day}`,
+            endTime: '22:00', tags: ['#spieletreff'], type: 'special', source: 'bitcircus101',
+            uid: 'weekly@x', recurring: true, id: `weekly${day}`, page: true, ...extra,
+        });
+        const data = buildEventsData();
+        data.events = [
+            weekly('01', { title: 'ABGESAGT: Spieleabend' }),
+            weekly('08'),
+            weekly('15', { eventUrl: 'https://spiele.example/abend' }),
+            weekly('22', { title: 'CANCELED: Spieleabend' }),
+            // a one-off with an external page and no page of its own
+            { ...weekly('10'), title: 'Einmalig', uid: 'once@x', recurring: false, page: false, eventUrl: 'https://extern.example/x' },
+        ];
+        await useEventsFixture(page, data);
+        await page.goto('/events.html');
+
+        const card = (day) => page.locator(`.event-card[id^="ev-2026-09-${day}-"]`);
+        const pills = (day) => card(day).locator('.event-action');
+        await expect(page.locator('.event-card')).toHaveCount(5);
+
+        // The cancelled first date keeps its text, and so does the first real one.
+        for (const day of ['01', '08']) {
+            await expect(card(day)).not.toHaveClass(/event-card--repeat/);
+            await expect(card(day).locator('.event-card__desc')).toHaveCount(1);
+        }
+        await expect(card('08').locator('.event-card__location')).toHaveCount(1);
+        await expect(card('08').locator('.event-tag')).toHaveCount(1);
+        await expect(pills('08')).toHaveText(['← link', '→ details', '→ kalender', '○ karte']);
+
+        // A later date: title, time and one way to the details — its page.
+        await expect(card('15')).toHaveClass(/event-card--repeat/);
+        await expect(card('15').locator('.event-card__title')).toHaveText('Spieleabend');
+        await expect(card('15').locator('.event-card__time')).toHaveText('19:00–22:00');
+        await expect(card('15').locator('.event-card__desc, .event-card__location, .event-tag')).toHaveCount(0);
+        await expect(pills('15')).toHaveText(['← link', '→ details']);
+
+        // A cancelled later date is short too, and still reads as cancelled.
+        await expect(card('22')).toHaveClass(/event-card--repeat/);
+        await expect(card('22')).toHaveClass(/event-card--cancelled/);
+        await expect(card('22').locator('.event-card__title')).toContainText('abgesagt');
+
+        // An external page is "extern" — "← link" copies the card's own permalink.
+        await expect(card('10')).not.toHaveClass(/event-card--repeat/);
+        await expect(pills('10')).toHaveText(['← link', '→ extern', '○ karte']);
+
+        await expectHitZones(page, [['.event-card--repeat .event-action', 44, 44]]);
+
+        // A permalink to a later date lands on it.
+        await page.goto('about:blank');
+        await page.goto('/events.html#ev-2026-09-15-spieleabend');
+        await expect(card('15')).toBeInViewport();
+    });
+
     test('a permalink into a friend\'s calendar switches it on and drops the filters; a dead one changes nothing', async ({ page }) => {
         const data = buildEventsData();
         const target = data.events[2]; // Datenburg: off by default
