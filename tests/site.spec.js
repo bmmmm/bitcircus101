@@ -2041,10 +2041,24 @@ test.describe('Event details', () => {
 
     test('a #ev- permalink into a later month lands on an open, unfolded card', async ({ page }) => {
         const data = buildEventsData();
-        const target = data.events[3]; // +40d: always a later, collapsed month group
+        const target = data.events[3]; // +40d: always a later month group
         target.description = LONG;
+        // Months unfold until six cards show (events.js OPEN_MIN): six more in
+        // the first days keep the target's month folded, which is what the
+        // anchor has to undo.
+        const day = (n) => {
+            const d = new Date(Date.now() + n * 86400000);
+            return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-');
+        };
+        for (let n = 1; n <= 6; n++) {
+            data.events.push({ ...data.events[1], title: `Vorab ${n}`, uid: `fixture-early-${n}`, date: day(n), endDate: day(n) });
+        }
         await useEventsFixture(page, data);
         const anchor = `ev-${target.date}-monatstreffen-orga`;
+        await page.goto('/events.html');
+        await expect(page.locator('.events-month').filter({ has: page.locator(`#${anchor}`) }),
+            'the premise: without the anchor the month starts folded').not.toHaveAttribute('open', '');
+        await page.goto('about:blank');
         await page.goto(`/events.html#${anchor}`);
 
         const card = page.locator(`#${anchor}`);
@@ -2052,6 +2066,35 @@ test.describe('Event details', () => {
         await expect(page.locator('.events-month').filter({ has: card })).toHaveAttribute('open', '');
         await expect(card.locator('details.event-card__more')).toHaveAttribute('open', '');
         await expect(card.locator('.event-card__desc--full')).toBeVisible();
+    });
+
+    test('months unfold until six cards show, and a card names its time window', async ({ page }) => {
+        // Thursday 29 Oct, one card left in October: the current month alone
+        // left that single card in view and folded the next weeks away.
+        await page.clock.install({ time: new Date('2026-10-29T10:00:00') });
+        const card = (date, n, extra = {}) => ({
+            title: `Termin ${n}`, subtitle: '', description: '', location: '', date, time: '20:00',
+            endDate: date, endTime: '22:00', tags: ['#meetup'], type: '', source: 'bitcircus101',
+            uid: `unfold-${n}`, ...extra,
+        });
+        const data = buildEventsData();
+        data.events = [
+            card('2026-10-30', 1),
+            ...['03', '06', '10', '13', '20', '27'].map((d, i) => card(`2026-11-${d}`, i + 2)),
+            card('2026-12-04', 8),
+            card('2026-12-11', 9, { time: '', endTime: '' }),
+        ];
+        await useEventsFixture(page, data);
+        await page.goto('/events.html');
+
+        const months = page.locator('.events-month');
+        await expect(months).toHaveCount(3);
+        await expect(months.nth(0)).toHaveAttribute('open', '');
+        await expect(months.nth(1), 'one card so far — keep unfolding').toHaveAttribute('open', '');
+        await expect(months.nth(2), 'seven cards show — the rest stays folded').not.toHaveAttribute('open', '');
+        // the window, not just the start; an all-day event says so
+        await expect(page.locator('.event-card', { hasText: 'Termin 1' }).locator('.event-card__time')).toHaveText('20:00–22:00');
+        await expect(page.locator('.event-card', { hasText: 'Termin 9' }).locator('.event-card__time')).toHaveText('ganztägig');
     });
 
     test('a permalink into a friend\'s calendar switches it on and drops the filters; a dead one changes nothing', async ({ page }) => {
