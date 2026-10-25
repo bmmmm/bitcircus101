@@ -1,4 +1,8 @@
 // @ts-check
+const fs = require('node:fs');
+const os = require('node:os');
+const { join } = require('node:path');
+const { execFileSync } = require('node:child_process');
 const { test, expect } = require('@playwright/test');
 const { buildEventsData, useEventsFixture } = require('./fixtures/events-data');
 const { buildEventsArchive } = require('./global-setup');
@@ -3259,6 +3263,28 @@ test.describe('Kiosk view', () => {
 test.describe('Lite version', () => {
     // /lite/ is the ultra-light, zero-JS text view of the homepage. The point is
     // that it stays minimal — so we pin the invariants, not the prose.
+    //
+    // The tracked page carries the no-data placeholder: its event list is
+    // written on live only (scripts/build-lite-events.mjs, by the sync and the
+    // deploy). A test that needs the list serves what the generator makes of
+    // the events fixture — the real script, on a throwaway copy, so the
+    // tracked file stays clean.
+    const liteWith = (data) => {
+        const dir = fs.mkdtempSync(join(os.tmpdir(), 'bc101-lite-'));
+        try {
+            const json = join(dir, 'events-data.json');
+            const html = join(dir, 'index.html');
+            fs.writeFileSync(json, JSON.stringify(data));
+            fs.copyFileSync(join(__dirname, '..', 'lite', 'index.html'), html);
+            execFileSync(process.execPath, [join(__dirname, '..', 'scripts', 'build-lite-events.mjs'), json, html], { stdio: 'pipe' });
+            return fs.readFileSync(html, 'utf8');
+        } finally {
+            fs.rmSync(dir, { recursive: true, force: true });
+        }
+    };
+    const serveLite = (page, body) =>
+        page.route('**/lite/', (route) => route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body }));
+
     test('/lite/ is self-contained, script-free and noindex', async ({ request }) => {
         const res = await request.get('/lite/');
         expect(res.status()).toBe(200);
@@ -3277,7 +3303,10 @@ test.describe('Lite version', () => {
         // line box carrying only ~19px of ink. The CSS spends that reserved
         // slack on the tap zone, which is why this is a sweep and not a list:
         // any new link inherits the rule, and any edit that drops it fails here.
+        // With the event list filled, as live serves it.
+        await serveLite(page, liteWith(buildEventsData()));
         await page.goto('/lite/');
+        await expect(page.locator('ul.termine > li').first()).toBeVisible();
         const zones = await hitBoxes(page, 'a[href]:not(footer a)');
         // A sweep that measured nothing would pass without testing anything.
         expect(zones.length, 'no links measured — the sweep would be vacuous').toBeGreaterThan(15);
@@ -3304,6 +3333,75 @@ test.describe('Lite version', () => {
         // the gate neither trips on a font nor sleeps through the rule going away.
         expect(foot.filter((z) => z.w < 24 || z.h < 20).map((z) => `${z.w}x${z.h} "${z.text}"`),
             'footer links below what the line box allows').toEqual([]);
+    });
+
+    test('the event list shows a series once, a cancelled date struck through, and on a phone the date above the title', async ({ page, isMobile }) => {
+        // Calendar math, not 24 h steps: Date.now() + n days crosses a DST
+        // switch an hour off, and near midnight that is the wrong day.
+        const plusDays = (iso, n) => {
+            const [y, m, d] = iso.split('-').map(Number);
+            return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
+        };
+        const data = buildEventsData();
+        const first = data.events[0].date; // +2 days, the earliest card
+        const weekly = (date, title) => ({
+            title, subtitle: '', description: '', location: 'Dorotheenstraße 101',
+            date, time: '18:00', endDate: date, endTime: '20:00', tags: ['#spieletreff'], type: 'special',
+            source: 'bitcircus101', uid: 'fixture-weekly', recurring: true,
+        });
+        data.events.push(
+            weekly(first, 'ABGESAGT: Wochenrunde'),
+            weekly(plusDays(first, 7), 'Wochenrunde'),
+            weekly(plusDays(first, 14), 'Wochenrunde'),
+            weekly(plusDays(first, 21), 'Wochenrunde'),
+        );
+        const body = liteWith(data);
+        expect(body, 'the generator must not bring scripts into the page').not.toMatch(/<script/i);
+        await serveLite(page, body);
+        await page.goto('/lite/');
+
+        const lines = page.locator('ul.termine > li');
+        // the fixture's five cards at bitcircus101, the cancelled date, the
+        // series once — never a friend's calendar
+        await expect(lines).toHaveCount(7);
+        await expect(page.locator('ul.termine')).not.toContainText('Datenburg');
+        const series = lines.filter({ hasText: 'Wochenrunde' });
+        await expect(series).toHaveCount(2);
+
+        const off = lines.filter({ has: page.locator('s') });
+        await expect(off).toHaveCount(1);
+        await expect(off).toHaveClass('cancelled');
+        await expect(off).toContainText('Wochenrunde');
+        await expect(off).toContainText('abgesagt');
+        await expect(off).not.toContainText('ABGESAGT:');
+        expect(await off.locator('s').evaluate((el) => getComputedStyle(el).textDecorationLine)).toContain('line-through');
+        const colour = (loc) => loc.evaluate((el) => getComputedStyle(el).color);
+        const accent = await page.evaluate(() => {
+            const probe = document.createElement('span');
+            probe.style.color = 'var(--accent)';
+            document.body.append(probe);
+            const c = getComputedStyle(probe).color;
+            probe.remove();
+            return c;
+        });
+        expect(await colour(off.locator('.when')), 'a cancelled date gives up the green').not.toBe(accent);
+
+        const next = series.filter({ hasNot: page.locator('s') });
+        const day = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'][
+            new Date(`${plusDays(first, 7)}T12:00:00`).getDay()];
+        await expect(next).toContainText(`jeden ${day}`);
+        expect(await colour(next.locator('.when')), 'a date is the green marker').toBe(accent);
+
+        // A phone gives the date a line of its own; wider screens keep one
+        // line per entry, the dash between date and title.
+        const when = await next.locator('.when').evaluate((el) => getComputedStyle(el).display);
+        const sep = await next.locator('.sep').evaluate((el) => getComputedStyle(el).display);
+        expect([when, sep]).toEqual(isMobile ? ['block', 'none'] : ['inline', 'inline']);
+
+        // every event page the list links resolves (globalSetup built them)
+        const pages = await page.locator('ul.termine a[href^="../e/"]').evaluateAll((as) => as.map((a) => a.href));
+        expect(pages.length).toBe(5);
+        for (const href of pages) expect((await page.request.get(href)).status(), href).toBe(200);
     });
 });
 

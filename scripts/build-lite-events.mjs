@@ -4,6 +4,14 @@
  * events page's default view) into lite/index.html between
  * <!-- lite-events:start --> and <!-- lite-events:end --> markers.
  * Run after syncing events-data.json: pnpm run build:lite-events
+ * Against other files (a fixture; the tracked page stays clean):
+ *   node scripts/build-lite-events.mjs <events-data.json> <lite.html>
+ *
+ * One line per series: almost every event is a date of a series, and a weekly
+ * one took three of the eight lines while the monthly linkup fell off the end
+ * (measured on the live data, October 2026). A series shows its next date —
+ * "jeden Dienstag" when its dates run in weeks — and a cancelled date keeps a
+ * line of its own, struck through and labelled like on /events.
  *
  * Scope: events only. The "Projekte & Kosten" block and the "Stand" date next
  * to it belong to build-lite-finanz.mjs — this script used to stamp that date
@@ -28,6 +36,7 @@ const MAX_EVENTS = 8;
 
 const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
 const MONTHS = ["JAN", "FEB", "MÄR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ"];
+const WEEKDAYS = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 
 export function formatDate(dateStr, timeStr) {
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -50,6 +59,28 @@ export function normalizeUrl(u) {
   return null;
 }
 
+/** Whole days from one YYYY-MM-DD to another — UTC math, so no DST hour skews it. */
+function daysBetween(a, b) {
+  const [ay, am, ad] = a.split("-").map(Number);
+  const [by, bm, bd] = b.split("-").map(Number);
+  return Math.round((Date.UTC(by, bm - 1, bd) - Date.UTC(ay, am - 1, ad)) / 86400000);
+}
+
+/**
+ * "jeden Dienstag" when a series' dates (sorted) run in steps of exactly one
+ * week, at least three of them: two dates a week apart may be all there is.
+ * Anything else — monthly, a skipped week — gets no label: a rhythm the data
+ * does not show is left out rather than guessed.
+ */
+export function weeklyLabel(dates) {
+  if (!dates || dates.length < 3) return "";
+  for (let i = 1; i < dates.length; i++) {
+    if (daysBetween(dates[i - 1], dates[i]) !== 7) return "";
+  }
+  const [y, m, d] = dates[0].split("-").map(Number);
+  return "jeden " + WEEKDAYS[new Date(y, m - 1, d).getDay()];
+}
+
 export function buildMarkup(events, icsUrl, rssPath) {
   if (!events.length) {
     return `<p class="dim">Keine Termine eingetragen — <a href="../events.html">Veranstaltungen</a></p>`;
@@ -57,14 +88,26 @@ export function buildMarkup(events, icsUrl, rssPath) {
   const items = events
     .map((e) => {
       const url = normalizeUrl(e.eventUrl);
+      // Cancelled — rename, don't delete (events-core isCancelledTitle): the
+      // title without the marker, struck through, labelled.
+      const cancelled = EventsCore.isCancelledTitle(e.title);
+      const title = esc(cancelled ? EventsCore.stripCancelMarker(e.title) : e.title);
+      const shown = cancelled ? `<s>${title}</s>` : title;
       // The title leads to the event's own page (the sync flags `page`); an
       // external link stays the second way.
-      const ext = url ? `<a href="${esc(url)}" rel="noopener noreferrer">${esc(e.title)}</a>` : esc(e.title);
+      const ext = url ? `<a href="${esc(url)}" rel="noopener noreferrer">${shown}</a>` : shown;
       const label = e.id && e.page
-        ? `<a href="../e/${esc(e.id)}/">${esc(e.title)}</a>` +
+        ? `<a href="../e/${esc(e.id)}/">${shown}</a>` +
           (url ? ` · <a href="${esc(url)}" rel="noopener noreferrer">extern</a>` : "")
         : ext;
-      return `<li><time datetime="${esc(toDatetime(e.date, e.time))}" class="when">${formatDate(e.date, e.time)}</time> — ${label}</li>`;
+      const note = cancelled
+        ? ` <span class="abgesagt"><span aria-hidden="true">✕ </span>abgesagt</span>`
+        : e.rhythm ? ` <span class="dim">· ${esc(e.rhythm)}</span>` : "";
+      // The dash is its own span: on a phone the date takes a line of its
+      // own and the dash goes (the page's CSS).
+      return `<li${cancelled ? ' class="cancelled"' : ""}>` +
+        `<time datetime="${esc(toDatetime(e.date, e.time))}" class="when">${formatDate(e.date, e.time)}</time>` +
+        `<span class="sep"> — </span>${label}${note}</li>`;
     })
     .join("\n");
 
@@ -76,7 +119,7 @@ export function buildMarkup(events, icsUrl, rssPath) {
     ? `<a href="${esc(webcal)}" rel="noopener noreferrer">Kalender-Abo ↗</a> · <a href="${esc(icsUrl)}" rel="noopener noreferrer">ICS ↗</a> · `
     : "";
 
-  return `<ul>\n${items}\n</ul>\n<p class="dim">→ ${subLinks}<a href="${esc(rssPath)}">RSS-Feed</a> · <a href="../events.html">Alle Termine</a></p>`;
+  return `<ul class="termine">\n${items}\n</ul>\n<p class="dim">→ ${subLinks}<a href="${esc(rssPath)}">RSS-Feed</a> · <a href="../events.html">Alle Termine</a></p>`;
 }
 
 /**
@@ -94,23 +137,48 @@ export function resolveRssPath(data, fallback = "../feed.xml") {
  * The events at bitcircus101 from `todayStr` onwards, chronological, capped at
  * MAX_EVENTS: our own calendar and the home sources, never a friend's (the
  * data's sources list says which is which; pre-field data has no friends).
+ * A series (events-core seriesKey) takes one line, its next date, and carries
+ * `rhythm` — weeklyLabel over every date the window holds for it, cancelled
+ * ones included: a week off does not change the rhythm. A cancelled date is
+ * always a line of its own, so the next real date of its series follows it.
+ * Returns copies; the input stays untouched.
  * Pure: the caller passes today in, so the selection is testable without
  * mocking the clock.
  */
 export function selectUpcoming(data, todayStr) {
   const all = (data && data.events) || [];
   const relations = EventsCore.relationMap(data && data.sources);
-  return all
+  const upcoming = all
     .filter((e) => EventsCore.sourceRelation(relations, e.source) !== "friend" && e.date >= todayStr)
     .sort((a, b) => {
       const ka = a.date + (a.time || "");
       const kb = b.date + (b.time || "");
       return ka < kb ? -1 : ka > kb ? 1 : 0;
-    })
-    .slice(0, MAX_EVENTS);
+    });
+  const dates = new Map();
+  for (const e of upcoming) {
+    const key = EventsCore.seriesKey(e);
+    if (key) dates.set(key, (dates.get(key) || []).concat(e.date));
+  }
+  const shown = new Set();
+  const out = [];
+  for (const e of upcoming) {
+    if (out.length === MAX_EVENTS) break;
+    const key = EventsCore.seriesKey(e);
+    if (key && EventsCore.isCancelledTitle(e.title)) {
+      out.push({ ...e, rhythm: "" });
+      continue;
+    }
+    if (key && shown.has(key)) continue;
+    if (key) shown.add(key);
+    out.push({ ...e, rhythm: key ? weeklyLabel(dates.get(key)) : "" });
+  }
+  return out;
 }
 
-function main() {
+export function main(argv = process.argv.slice(2)) {
+  const eventsFile = argv[0] ? path.resolve(argv[0]) : EVENTS_JSON;
+  const liteFile = argv[1] ? path.resolve(argv[1]) : LITE;
   const now = new Date();
   const todayStr = [
     now.getFullYear(),
@@ -129,25 +197,25 @@ function main() {
   let rssPath = "../feed.xml";
 
   let upcoming = [];
-  if (fs.existsSync(EVENTS_JSON)) {
-    const data = JSON.parse(fs.readFileSync(EVENTS_JSON, "utf8"));
+  if (fs.existsSync(eventsFile)) {
+    const data = JSON.parse(fs.readFileSync(eventsFile, "utf8"));
     rssPath = resolveRssPath(data, rssPath);
     upcoming = selectUpcoming(data, todayStr);
   }
 
   const markup = buildMarkup(upcoming, icsUrl, rssPath);
-  let html = fs.readFileSync(LITE, "utf8");
+  let html = fs.readFileSync(liteFile, "utf8");
 
   const si = html.indexOf(START);
   const ei = html.indexOf(END);
   if (si === -1 || ei === -1) {
-    throw new Error(`lite-events markers not found in ${LITE}`);
+    throw new Error(`lite-events markers not found in ${liteFile}`);
   }
 
   html = html.slice(0, si + START.length) + "\n" + markup + "\n" + html.slice(ei);
 
-  fs.writeFileSync(LITE, html, "utf8");
-  console.log(`lite-events: injected ${upcoming.length} event(s) into lite/index.html`);
+  fs.writeFileSync(liteFile, html, "utf8");
+  console.log(`lite-events: injected ${upcoming.length} event(s) into ${liteFile === LITE ? "lite/index.html" : liteFile}`);
 }
 
 // Only run when invoked directly — importing this from a test must not write.

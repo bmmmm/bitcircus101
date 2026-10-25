@@ -11,6 +11,10 @@
  */
 import { describe, it } from "node:test";
 import { strict as assert } from "node:assert";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { esc } from "../scripts/html-text.mjs";
 import {
   formatDate,
@@ -19,6 +23,8 @@ import {
   buildMarkup,
   resolveRssPath,
   selectUpcoming,
+  weeklyLabel,
+  main,
 } from "../scripts/build-lite-events.mjs";
 
 const ev = (date, extra = {}) => ({
@@ -27,6 +33,9 @@ const ev = (date, extra = {}) => ({
   date,
   ...extra,
 });
+
+// Dates of one weekly series — 2026-09-01 is a Tuesday.
+const weekly = (date, extra = {}) => ev(date, { uid: "toys@x", recurring: true, title: "Look at my toys!", ...extra });
 
 describe("selectUpcoming", () => {
   const TODAY = "2026-09-01";
@@ -93,11 +102,76 @@ describe("selectUpcoming", () => {
       events.map((e) => e.date),
       snapshot
     );
+    // …nor the cards: the rhythm lands on copies
+    const series = [weekly("2026-09-08"), weekly("2026-09-01"), weekly("2026-09-15")];
+    const before = JSON.stringify(series);
+    selectUpcoming({ events: series }, TODAY);
+    assert.equal(JSON.stringify(series), before);
   });
 
   it("survives a missing or empty manifest", () => {
     assert.deepEqual(selectUpcoming({}, TODAY), []);
     assert.deepEqual(selectUpcoming(null, TODAY), []);
+  });
+});
+
+describe("selectUpcoming — one line per series", () => {
+  const TODAY = "2026-09-01";
+
+  it("shows a series once, at its next date, and the cap counts lines, not dates", () => {
+    const events = [
+      weekly("2026-09-01"), weekly("2026-09-08"), weekly("2026-09-15"), weekly("2026-09-22"),
+      ...Array.from({ length: 8 }, (_, i) => ev(`2026-09-${String(i + 2).padStart(2, "0")}`, { title: `Einmal ${i}` })),
+    ];
+    const out = selectUpcoming({ events }, TODAY);
+    assert.equal(out.length, 8);
+    assert.deepEqual(out.filter((e) => e.uid === "toys@x").map((e) => e.date), ["2026-09-01"]);
+    assert.equal(out[0].rhythm, "jeden Dienstag");
+    // the lines the series' later dates took go to what comes next
+    assert.equal(out.at(-1).title, "Einmal 6");
+    assert.ok(out.slice(1).every((e) => e.rhythm === ""), "a one-off has no rhythm");
+  });
+
+  it("gives a cancelled date a line of its own, and the series' next real date follows it", () => {
+    const events = [
+      weekly("2026-09-01", { title: "ABGESAGT: Look at my toys!" }),
+      weekly("2026-09-08"),
+      weekly("2026-09-15"),
+      weekly("2026-09-22", { title: "CANCELED: Look at my toys!" }),
+    ];
+    // a week off does not change the rhythm: the cancelled dates count for it
+    assert.deepEqual(
+      selectUpcoming({ events }, TODAY).map((e) => [e.date, e.rhythm]),
+      [["2026-09-01", ""], ["2026-09-08", "jeden Dienstag"], ["2026-09-22", ""]]
+    );
+  });
+
+  it("merges nothing but a series: the same UID in another source, or on one-offs, stays apart", () => {
+    const events = [
+      weekly("2026-09-01"),
+      weekly("2026-09-08", { source: "Look at my toys!" }),
+      ev("2026-09-02", { uid: "once@x" }),
+      ev("2026-09-03", { uid: "once@x" }),
+    ];
+    assert.equal(selectUpcoming({ events }, TODAY).length, 4);
+  });
+});
+
+describe("weeklyLabel", () => {
+  it("names the weekday when three dates or more run in steps of one week", () => {
+    assert.equal(weeklyLabel(["2026-09-01", "2026-09-08", "2026-09-15"]), "jeden Dienstag");
+    assert.equal(weeklyLabel(["2026-09-04", "2026-09-11", "2026-09-18", "2026-09-25"]), "jeden Freitag");
+    // across the end of summer time (25 Oct 2026) the steps are still whole weeks
+    assert.equal(weeklyLabel(["2026-10-20", "2026-10-27", "2026-11-03"]), "jeden Dienstag");
+  });
+
+  it("says nothing about a rhythm the dates do not show", () => {
+    assert.equal(weeklyLabel(["2026-09-01", "2026-09-08"]), "", "two dates may be all there is");
+    assert.equal(weeklyLabel(["2026-09-01", "2026-09-15", "2026-09-22"]), "", "a skipped week");
+    assert.equal(weeklyLabel(["2026-09-18", "2026-10-16", "2026-11-20"]), "", "monthly");
+    assert.equal(weeklyLabel(["2026-09-01"]), "");
+    assert.equal(weeklyLabel([]), "");
+    assert.equal(weeklyLabel(undefined), "");
   });
 });
 
@@ -179,8 +253,8 @@ describe("buildMarkup", () => {
       null,
       "../feed.xml"
     );
-    assert.match(out, /— <a href="\.\.\/e\/0a1b2c3d4e5f\/">Linkup<\/a> · <a href="https:\/\/kurse\.example\/x" rel="noopener noreferrer">extern<\/a><\/li>/);
-    assert.match(out, /— <a href="\.\.\/e\/&lt;x&gt;\/">Ohne Link<\/a><\/li>/);
+    assert.match(out, /<span class="sep"> — <\/span><a href="\.\.\/e\/0a1b2c3d4e5f\/">Linkup<\/a> · <a href="https:\/\/kurse\.example\/x" rel="noopener noreferrer">extern<\/a><\/li>/);
+    assert.match(out, /<span class="sep"> — <\/span><a href="\.\.\/e\/&lt;x&gt;\/">Ohne Link<\/a><\/li>/);
     // a card links its page only when the sync flagged it
     const flag = buildMarkup(
       [ev("2026-09-04", { id: "0a1b2c3d4e5f" }), ev("2026-09-05", { id: "ffffffffffff", page: true })],
@@ -193,7 +267,7 @@ describe("buildMarkup", () => {
   it("renders a plain title when the URL is unusable", () => {
     const out = buildMarkup([ev("2026-09-04", { eventUrl: "javascript:alert(1)" })], null, "../feed.xml");
     assert.ok(!out.includes("<a href=\"javascript:"), "javascript: URL reached the page");
-    assert.match(out, /— Linkup<\/li>/);
+    assert.match(out, /<span class="sep"> — <\/span>Linkup<\/li>/);
   });
 
   it("escapes HTML in titles", () => {
@@ -215,15 +289,62 @@ describe("buildMarkup", () => {
     assert.match(out, /<a href="\.\.\/feed\.xml">RSS-Feed<\/a>/);
   });
 
+  it("strikes a cancelled title through, without the marker, and labels it", () => {
+    const out = buildMarkup(
+      [ev("2026-09-04", { id: "0a1b2c3d4e5f", page: true, title: "CANCELED: Linkup" }), ev("2026-09-05")],
+      null,
+      "../feed.xml"
+    );
+    assert.match(out, /<li class="cancelled"><time[^>]*>FR 4\. SEP<\/time>/);
+    assert.match(
+      out,
+      /<a href="\.\.\/e\/0a1b2c3d4e5f\/"><s>Linkup<\/s><\/a> <span class="abgesagt"><span aria-hidden="true">✕ <\/span>abgesagt<\/span><\/li>/
+    );
+    assert.ok(!out.includes("CANCELED"), "the marker reached the page");
+    // the other line is untouched
+    assert.match(out, /<li><time datetime="2026-09-05"/);
+    assert.equal((out.match(/class="abgesagt"/g) || []).length, 1, "one badge, on the cancelled line only");
+  });
+
+  it("names a series' rhythm after the title, escaped, and nothing without one", () => {
+    const out = buildMarkup([ev("2026-09-01", { rhythm: "jeden <Dienstag>" })], null, "../feed.xml");
+    assert.match(out, /Linkup <span class="dim">· jeden &lt;Dienstag&gt;<\/span><\/li>/);
+    assert.ok(!buildMarkup([ev("2026-09-01")], null, "../feed.xml").includes('<span class="dim">'));
+  });
+
   it("says so instead of rendering an empty list", () => {
     const out = buildMarkup([], null, "../feed.xml");
     assert.match(out, /Keine Termine eingetragen/);
-    assert.ok(!out.includes("<ul>"));
+    assert.ok(!out.includes("<ul"), "an empty list must not render a list element");
   });
 });
 
 describe("esc", () => {
   it("escapes the four characters that can break out of markup", () => {
     assert.equal(esc('<&">'), "&lt;&amp;&quot;&gt;");
+  });
+});
+
+describe("main", () => {
+  const TRACKED = fileURLToPath(new URL("../lite/index.html", import.meta.url));
+  const localDay = (offsetDays) => {
+    const d = new Date(Date.now() + offsetDays * 86400000);
+    return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
+  };
+
+  it("writes the list into the page it is handed and leaves the tracked one alone", () => {
+    const dir = mkdtempSync(join(tmpdir(), "lite-events-"));
+    try {
+      const tracked = readFileSync(TRACKED, "utf8");
+      const page = join(dir, "index.html");
+      const data = join(dir, "events-data.json");
+      writeFileSync(page, tracked);
+      writeFileSync(data, JSON.stringify({ events: [ev(localDay(3), { title: "Fixture-Abend" })] }));
+      main([data, page]);
+      assert.match(readFileSync(page, "utf8"), /<ul class="termine">\n<li>[^\n]*Fixture-Abend<\/li>\n<\/ul>/);
+      assert.equal(readFileSync(TRACKED, "utf8"), tracked, "lite/index.html was written");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });

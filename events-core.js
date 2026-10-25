@@ -207,6 +207,17 @@
   }
 
   /**
+   * Which series a card belongs to: its source plus the calendar UID, for the
+   * occurrences of a recurring event — an override (a renamed or cancelled
+   * date) keeps both, see ics-core. null for a one-off or a UID-less card: a
+   * series of one. The lite list shows a series once, /events its later
+   * dates as one line.
+   */
+  function seriesKey(e) {
+    return e && e.recurring && e.uid ? (e.source || "") + "|" + e.uid : null;
+  }
+
+  /**
    * The "→ kalender" target for a card without an event URL. A Nextcloud
    * calendar view (…/apps/calendar/…) opens on the event's day; any other
    * calendar page (bitcircus101.de/calendar/) has no day route and is linked as is.
@@ -392,6 +403,7 @@
     calendarHref: calendarHref,
     fnv1a32: fnv1a32,
     eventId: eventId,
+    seriesKey: seriesKey,
     hasPages: hasPages,
     RELATIONS: RELATIONS,
     relationOf: relationOf,

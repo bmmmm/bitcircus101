@@ -497,6 +497,18 @@ If no tags match, the event gets `#community` as default.
 - Source line for other calendars' events — home: „Kalender: …", friend: „Externer Kalender: …"
 - Permalink anchors with smooth scroll
 
+### Lite list (`scripts/build-lite-events.mjs`)
+
+- The next eight lines of events at bitcircus101 (own + home sources) in
+  `lite/index.html`, written on live by the sync and the deploy — the tracked
+  file keeps the no-data placeholder
+- A series takes one line, its next date — „jeden Dienstag“ when three dates or
+  more run a week apart. A cancelled date keeps a line of its own, struck
+  through and labelled „abgesagt“
+- On a phone the date stands above the title
+- Against a fixture, into a copy: `node scripts/build-lite-events.mjs
+  <events-data.json> <lite.html>`
+
 ## Local development
 
 **Site chrome (nav + footer):** Edit [`includes/site-header.html`](includes/site-header.html) and [`includes/site-footer.html`](includes/site-footer.html), then run `pnpm run build:layout` and commit the partials plus updated `*.html`. Documented in [CONTRIBUTING.md](CONTRIBUTING.md).

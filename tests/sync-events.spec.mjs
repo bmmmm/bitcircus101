@@ -28,7 +28,7 @@ import {
 // itself imports them.
 import EventsCore from "../events-core.js";
 const {
-  toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS,
+  toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS, seriesKey,
   RELATIONS, relationOf, isHome, inPrimaryFeed, relationMap, sourceRelation, sourceBadge,
 } = EventsCore;
 
@@ -2725,6 +2725,34 @@ describe("parseICS — RECURRENCE-ID overrides", () => {
     const exdated = parseICS(cal([...master, "EXDATE:20260112T190000"],
       ["UID:series@x", "RECURRENCE-ID:20260112T190000", "DTSTART:20260112T190000", "SUMMARY:Back"]));
     assert.deepEqual(byDay(exdated), ["2026-01-05 Weekly *", "2026-01-12 Back *", "2026-01-19 Weekly *"]);
+  });
+});
+
+describe("seriesKey", () => {
+  const cal = (...vevents) =>
+    ["BEGIN:VCALENDAR", ...vevents.map((b) => ["BEGIN:VEVENT", ...b, "END:VEVENT"].join("\r\n")), "END:VCALENDAR"].join("\r\n");
+
+  it("joins every date of a series, a cancelled override included, and nothing else", () => {
+    const cards = parseICS(cal(
+      ["UID:series@x", "DTSTART:20260105T190000", "RRULE:FREQ=WEEKLY;BYDAY=MO;COUNT=3", "SUMMARY:Weekly"],
+      ["UID:series@x", "RECURRENCE-ID:20260112T190000", "DTSTART:20260112T190000", "SUMMARY:CANCELED: Weekly"],
+      ["UID:once@x", "DTSTART:20260107T190000", "SUMMARY:Once"]
+    )).map((e) => toCard(e, { name: "Cal" }));
+    const series = cards.filter((c) => c.uid === "series@x");
+    assert.equal(series.length, 3);
+    assert.ok(series.some((c) => isCancelledTitle(c.title)), "the override is part of the series");
+    assert.deepEqual([...new Set(series.map(seriesKey))], ["Cal|series@x"]);
+    assert.equal(seriesKey(cards.find((c) => c.uid === "once@x")), null, "a one-off is a series of one");
+  });
+
+  it("keeps two sources apart, and a card without UID or recurrence is no series", () => {
+    assert.notEqual(
+      seriesKey({ recurring: true, uid: "u", source: "A" }),
+      seriesKey({ recurring: true, uid: "u", source: "B" })
+    );
+    assert.equal(seriesKey({ recurring: true, uid: "", source: "A" }), null);
+    assert.equal(seriesKey({ uid: "u", source: "A" }), null);
+    assert.equal(seriesKey(null), null);
   });
 });
 

@@ -95,6 +95,22 @@ dt::before { content: "— "; color: var(--accent) }
 dd { margin: 0 0 0 1rem }
 .dim { color: var(--ink-dim) }
 .when { color: var(--accent) } /* the date before an event: the green marker */
+/* The event list (scripts/build-lite-events.mjs). A cancelled date keeps its
+   line, struck through and labelled, and its date gives up the green — like
+   the cards on /events. On a phone the date takes a line of its own, so a
+   title never wraps back under it. */
+.termine .cancelled .when { color: var(--ink-dim) }
+.abgesagt {
+  color: var(--ink-max);
+  border: 1px solid currentColor;
+  padding: 0 .6ch;
+  font-size: .85rem;
+  white-space: nowrap;
+}
+@media (max-width: 30rem) {
+  .termine .when { display: block }
+  .termine .sep { display: none }
+}
 /* ASCII hero — lite's own small tent (the homepage carries the detailed one);
    fixed width, never wraps */
 .hero { margin: 0 0 1.6rem }
