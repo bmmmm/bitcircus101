@@ -626,7 +626,9 @@
         var calHref = e.eventUrl
           ? httpUrl(e.eventUrl)
           : (core ? core.calendarHref(calBase, e.date) : calBase);
-        var calLabel = e.eventUrl ? '\u2192 link' : '\u2192 kalender';
+        // "extern", not "link": "\u2190 link" beside it copies this card's own
+        // permalink, and two "link" pills pointing opposite ways read as one.
+        var calLabel = e.eventUrl ? '\u2192 extern' : '\u2192 kalender';
         var calTitle = e.eventUrl ? 'Auf externer Seite \u00f6ffnen' : 'Im Kalender anzeigen';
         html += '<div class="event-card__actions">';
         html += '<button class="event-action event-action--link" ' +

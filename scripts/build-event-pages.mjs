@@ -397,10 +397,11 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
     ? httpUrl(entry.eventUrl)
     : calendarHref(httpUrl(entry.calendarUrl || CALENDAR_URL), entry.date);
   const calTitle = entry.eventUrl ? "Auf externer Seite öffnen" : "Im Kalender anzeigen";
+  const calLabel = entry.eventUrl ? "→ extern" : "→ kalender";
   parts.push(`                <div class="event-page__actions">`);
   parts.push(
     `                    <a class="event-action event-action--cal" href="${esc(calHref)}" ` +
-      `target="_blank" rel="noopener noreferrer" title="${esc(calTitle)}">→ kalender</a>`
+      `target="_blank" rel="noopener noreferrer" title="${esc(calTitle)}">${calLabel}</a>`
   );
   parts.push(
     `                    <a class="event-action event-action--ics" href="event.ics" ` +

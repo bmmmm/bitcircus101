@@ -254,9 +254,10 @@ describe("renderEventPage", () => {
     assert.match(html, /href="event\.ics"[^>]*>↓ ics</);
     assert.match(html, /href="\.\.\/\.\.\/events\.html">← alle termine</);
     assert.ok(!html.includes("archiv/"), "the archive index is gone");
-    // An external event URL wins over the calendar day view.
+    // An external event URL wins over the calendar day view, and says so.
     const ext = renderEventPage(entry({ eventUrl: "kult41.net/termin" }), CHROME, TODAY);
-    assert.match(ext, /href="https:\/\/kult41\.net\/termin"/);
+    assert.match(ext, /href="https:\/\/kult41\.net\/termin"[^>]*>→ extern</);
+    assert.ok(!ext.includes("→ kalender"), "an external site is not a calendar");
   });
 
   it("carries the rebased chrome and nothing that throws on this page", () => {
