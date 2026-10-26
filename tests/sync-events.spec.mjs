@@ -224,12 +224,36 @@ describe("expandRRule — MONTHLY with BYSETPOS", () => {
     }
   });
 
-  it("warns instead of silently dropping an unsupported BYDAY list", () => {
+  // One series for "every Friday but the 3rd" (the linkups: the 3rd Friday is
+  // its own event) — as an ordinal list or as BYSETPOS positions, same dates.
+  // Both used to warn and expand to nothing.
+  it("expands a BYDAY list with ordinals and a BYSETPOS list alike", () => {
+    const dtstart = new Date(2026, 0, 2, 20, 0); // the 1st Friday of January 2026
+    const fmt = (ds) => ds.map((d) => `${d.getMonth() + 1}/${d.getDate()} ${d.getHours()}h`);
+    const want = ["1/2 20h", "1/9 20h", "1/23 20h", "1/30 20h", "2/6 20h", "2/13 20h", "2/27 20h", "3/6 20h", "3/13 20h"];
+    assert.deepEqual(fmt(expandRRule(dtstart, "FREQ=MONTHLY;BYDAY=1FR,2FR,4FR,5FR;COUNT=9", [])), want);
+    assert.deepEqual(fmt(expandRRule(dtstart, "FREQ=MONTHLY;BYDAY=FR;BYSETPOS=1,2,4,5;COUNT=9", [])), want);
+    // An EXDATE takes out one date, the COUNT slot stays spent (RFC5545).
+    assert.deepEqual(
+      fmt(expandRRule(dtstart, "FREQ=MONTHLY;BYDAY=1FR,2FR,4FR,5FR;COUNT=3", [new Date(2026, 0, 9)])),
+      ["1/2 20h", "1/23 20h"]
+    );
+  });
+
+  it("expands plain weekdays as every such day of the month, BYSETPOS over the whole set", () => {
+    const dtstart = new Date(2026, 1, 2, 19, 0); // Monday 2 February 2026
+    const days = (rule) => expandRRule(dtstart, rule, []).filter((d) => d.getMonth() === 1).map((d) => d.getDate());
+    assert.deepEqual(days("FREQ=MONTHLY;BYDAY=MO,WE;COUNT=8"), [2, 4, 9, 11, 16, 18, 23, 25]);
+    // The last workday: Friday 27 February.
+    assert.deepEqual(days("FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1;COUNT=1"), [27]);
+  });
+
+  it("warns instead of silently dropping an unknown BYDAY code", () => {
     const warnings = [];
     const orig = console.warn;
     console.warn = (msg) => warnings.push(String(msg));
     try {
-      expandRRule(new Date(2026, 0, 5, 19, 0), "FREQ=MONTHLY;BYDAY=MO,WE", []);
+      expandRRule(new Date(2026, 0, 5, 19, 0), "FREQ=MONTHLY;BYDAY=MO,XY", []);
     } finally {
       console.warn = orig;
     }

@@ -102,32 +102,57 @@
         cur.setDate(cur.getDate() + 1);
       }
     } else if (p.FREQ === "MONTHLY" && p.BYDAY) {
-      // Support "3TH" (nth in BYDAY) and "TH" + BYSETPOS=3, each with an optional
-      // minus for end-of-month counting ("-1WE" = last Wednesday, BYSETPOS=-1).
-      // Without the sign in this regex "-1WE" fell through to nth=null and the whole
-      // series expanded to nothing — silently, since the branch below just skipped.
-      var m = p.BYDAY.match(/^(-?\d+)([A-Z]{2})$/);
-      var nth = m ? +m[1] : (p.BYSETPOS ? +p.BYSETPOS : null);
-      var dayCode = m ? m[2] : p.BYDAY.replace(/[^A-Z]/g, "").slice(-2);
-      var twd = WD[dayCode];
-      if (!nth || twd == null) {
-        // Reachable for multi-day BYDAY lists ("MO,WE") and unknown day codes. Warn
-        // rather than drop the series without a trace.
+      // BYDAY is a list of weekdays, each with an optional ordinal: "3TH" (3rd
+      // Thursday), "-1WE" (last Wednesday), "FR" (every Friday of the month),
+      // "1FR,2FR,4FR,5FR" (every Friday but the 3rd). BYSETPOS then picks
+      // positions out of the month's sorted set ("FR;BYSETPOS=1,2,4,5" is that
+      // same rule; "MO,TU,WE,TH,FR;BYSETPOS=-1" the last workday).
+      var toks = [];
+      var bad = false;
+      p.BYDAY.split(",").forEach(function (tok) {
+        var tm = tok.match(/^([+-]?\d+)?([A-Z]{2})$/);
+        if (!tm || WD[tm[2]] == null || tm[1] === "0") { bad = true; return; }
+        toks.push({ nth: tm[1] ? +tm[1] : null, wd: WD[tm[2]] });
+      });
+      var setpos = p.BYSETPOS
+        ? p.BYSETPOS.split(",").map(Number).filter(function (n) { return n && isFinite(n); })
+        : [];
+      if (bad || !toks.length) {
+        // Unknown day codes: warn rather than drop the series without a trace.
         console.warn(
           "[rrule] unsupported MONTHLY BYDAY=" + p.BYDAY +
           (p.BYSETPOS ? ";BYSETPOS=" + p.BYSETPOS : "") + " — event not expanded"
         );
-      }
-      if (nth && twd != null) {
+      } else {
         var mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
         var genM = 0;
         while (mo <= limit && genM < max) {
-          var d = nthWeekday(mo.getFullYear(), mo.getMonth(), twd, nth);
-          if (d) {
-            d.setHours(dtstart.getHours(), dtstart.getMinutes(), 0, 0);
+          var y = mo.getFullYear(), mon = mo.getMonth();
+          var days = {};
+          toks.forEach(function (t) {
+            if (t.nth) {
+              var nd = nthWeekday(y, mon, t.wd, t.nth);
+              if (nd) days[nd.getDate()] = true;
+              return;
+            }
+            for (var k = 1; k <= 5; k++) {
+              var kd = nthWeekday(y, mon, t.wd, k);
+              if (kd) days[kd.getDate()] = true;
+            }
+          });
+          var set = Object.keys(days).map(Number).sort(function (a, b) { return a - b; });
+          if (setpos.length) {
+            set = setpos
+              .map(function (pos) { return set[pos > 0 ? pos - 1 : set.length + pos]; })
+              .filter(function (x) { return x != null; })
+              .sort(function (a, b) { return a - b; })
+              .filter(function (x, i, arr) { return i === 0 || arr[i - 1] !== x; });
+          }
+          for (var si = 0; si < set.length && genM < max; si++) {
+            var d = new Date(y, mon, set[si], dtstart.getHours(), dtstart.getMinutes());
             if (d >= dtstart && d <= limit) {
               genM++; // counts toward COUNT regardless of EXDATE (RFC5545)
-              if (!exSet[d.toDateString()]) out.push(new Date(d));
+              if (!exSet[d.toDateString()]) out.push(d);
             }
           }
           mo.setMonth(mo.getMonth() + 1);

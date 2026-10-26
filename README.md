@@ -387,7 +387,7 @@ Nothing reaches production without passing all tests first.
 - **What it does:**
   1. Runs `scripts/sync-events.mjs` (Node 22, zero dependencies)
   2. Fetches ICS feeds from all sources listed in `calendars/config.json`
-  3. Parses VEVENT entries, expands RRULE recurrences (weekly, monthly with BYDAY/BYSETPOS)
+  3. Parses VEVENT entries, expands RRULE recurrences (weekly; monthly with BYDAY lists — `1FR,2FR,4FR,5FR` — and BYSETPOS lists)
   4. Filters out internal/blocker events and those that are over (`isOver` in `events-core.js`)
   5. Generates `events-data.json` with `lastSync` and, per source, a `hash` of the fetched ICS plus `changedAt` (max 40 cards, 120-day horizon)
   6. Generates `feed.xml` (RSS 2.0, primary calendar only, every card in the window)
@@ -553,7 +553,7 @@ spec under `tests/*.spec.mjs`):
 |------|---------------|
 | `parseDate` | All-day dates, datetime with timezone, UTC, null inputs |
 | `nthWeekday` | Nth weekday calculation, month overflow |
-| `expandRRule` | BYSETPOS + classic BYDAY, weekly, COUNT, EXDATE exclusions |
+| `expandRRule` | BYDAY/BYSETPOS lists (monthly), classic BYDAY, weekly, COUNT, EXDATE exclusions |
 | `parseICS` | Single events, all-day, TZID params, line folding, recurring BYSETPOS |
 | `clean` | ICS character unescaping (`\n`, `\,`, `\;`) |
 
