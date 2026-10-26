@@ -1482,6 +1482,19 @@ a.event-page__location:hover { background: var(--ink); color: var(--paper); }
 a.event-tag { color: var(--ink-dim); text-decoration: none; }
 a.event-tag:hover { background: var(--ink); color: var(--paper); }
 
+/* "Weitere Termine" of the series: dates as links, the rhythm beside the
+   heading in meta grey. */
+.event-page__series-title { font-size: var(--fs-small); margin: 1.6rem 0 0.5rem; }
+.event-page__rhythm { color: var(--ink-dim); font-weight: 400; }
+.event-page__series {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--fs-small);
+    line-height: 1.9;
+}
+.event-page__series .event-card__cancelled { font-size: 0.7rem; margin-left: 1ch; }
+
 .event-page__actions {
     display: flex;
     gap: 0.75ch;

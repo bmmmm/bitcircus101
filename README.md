@@ -185,7 +185,8 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   archive into `e/<id>/` (the RSS item links and the JSON-LD `url` point
   there): a full page + single-event `.ics` while the event is upcoming, a
   noindex stub („Dieser Termin hat stattgefunden.“ / „… wurde abgesagt.“)
-  afterwards, so shared links keep resolving. There is no archive index. The
+  afterwards, so shared links keep resolving. An upcoming page of a series
+  lists its next four other dates („Weitere Termine · jeden Dienstag“). There is no archive index. The
   checkout's `events.html` is the header/footer template. Locally:
   `pnpm run build:event-pages <archive.json>`.
   `/status` (`scripts/build-status-data.mjs`) leaves out vanished entries that

@@ -44,7 +44,10 @@ import {
   truncateDesc,
 } from "./sync-events.mjs";
 
-const { stripTagLines, calendarHref, relationMap, sourceBadge } = EventsCore;
+const { stripTagLines, calendarHref, relationMap, sourceBadge, seriesKey, rhythmLabel, isCancelledTitle } = EventsCore;
+
+/** How many of a series' other dates an event page lists. */
+const SERIES_SHOWN = 4;
 
 const TEMPLATE_FILE = "events.html";
 const OG_IMAGE = `${SITE_URL}/images/og-image.jpg`;
@@ -126,6 +129,52 @@ export function renderWhen(entry) {
       `<time datetime="${esc(datetimeAttr(endDate, entry.endTime))}">${esc(formatDateLong(endDate))}, ${esc(entry.endTime)} Uhr</time>`;
   }
   return `<time datetime="${esc(start)}">${esc(formatDateLong(entry.date))}, ${esc(entry.time)} Uhr</time>`;
+}
+
+/**
+ * "Weitere Termine" — the series' next other dates, each linking its page,
+ * with the rhythm the dates show (events-core rhythmLabel). A cancelled one
+ * is struck through and labelled, like on /events. "" for a one-off.
+ */
+export function renderSeries(entry, series) {
+  const others = (series || []).filter((e) => e.id !== entry.id).slice(0, SERIES_SHOWN);
+  if (!others.length) return "";
+  const rhythm = rhythmLabel(series.map((e) => e.date));
+  const items = others.map((e) => {
+    const when = `<time datetime="${esc(datetimeAttr(e.date, e.time))}">` +
+      `${esc(formatDateLong(e.date))}${e.time ? `, ${esc(e.time)} Uhr` : ""}</time>`;
+    const cancelled = isCancelledTitle(e.title);
+    return `                    <li><a href="../${esc(e.id)}/">${cancelled ? `<s>${when}</s>` : when}</a>` +
+      (cancelled ? ` <span class="event-card__cancelled"><span aria-hidden="true">✕ </span>abgesagt</span>` : "") +
+      `</li>`;
+  });
+  return [
+    `                <h2 class="event-page__series-title">Weitere Termine` +
+      (rhythm ? ` <span class="event-page__rhythm">· ${esc(rhythm)}</span>` : "") + `</h2>`,
+    `                <ul class="event-page__series">`,
+    ...items,
+    `                </ul>`,
+  ].join("\n");
+}
+
+/**
+ * Every series' upcoming dates, chronological, by events-core seriesKey —
+ * from `todayStr` on, renderable, and still in the calendar (a vanished
+ * entry is gone from the series; a title-cancelled one stays, marked).
+ */
+export function seriesDates(entries, todayStr) {
+  const map = new Map();
+  for (const e of entries) {
+    const key = seriesKey(e);
+    if (!key || !isRenderable(e) || e.date < todayStr) continue;
+    if (e.cancelled && e.cancelledBy !== "title") continue;
+    if (!map.has(key)) map.set(key, []);
+    map.get(key).push(e);
+  }
+  for (const list of map.values()) {
+    list.sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")));
+  }
+  return map;
 }
 
 /** Today in Europe/Berlin as YYYY-MM-DD — en-CA formats exactly that shape. */
@@ -331,9 +380,10 @@ ${footer}
 /**
  * One event page. `chrome` comes from extractChrome(); `todayStr` decides the
  * "vergangener Termin" note and is injectable so the output is testable without
- * mocking the clock.
+ * mocking the clock. `series` are the series' upcoming dates, this one
+ * included (planPages seriesDates); the page lists the others.
  */
-export function renderEventPage(entry, chrome, todayStr = berlinToday(), relations = null) {
+export function renderEventPage(entry, chrome, todayStr = berlinToday(), relations = null, series = []) {
   if (entry.date < todayStr) return renderPastPage(entry, chrome);
   const { assetVersion } = chrome;
   const parts = [];
@@ -390,6 +440,9 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
     }
     parts.push(`                </p>`);
   }
+
+  const more = renderSeries(entry, series);
+  if (more) parts.push(more);
 
   // External event URLs link straight to their page; a Nextcloud calendar URL
   // gets the day-view suffix, exactly like the card on /events.
@@ -478,13 +531,18 @@ export function isRenderable(entry) {
  */
 export function planPages(archive, chrome, todayStr = berlinToday(), relations = null) {
   const entries = Object.values((archive && archive.events) || {});
+  const series = seriesDates(entries, todayStr);
   const files = [];
   for (const entry of entries) {
     if (!isRenderable(entry)) {
       console.warn(`::warning::event-pages: skipping entry with unusable id/date ${JSON.stringify(entry && [entry.id, entry.date])}`);
       continue;
     }
-    files.push({ path: `e/${entry.id}/index.html`, data: renderEventPage(entry, chrome, todayStr, relations) });
+    const key = seriesKey(entry);
+    files.push({
+      path: `e/${entry.id}/index.html`,
+      data: renderEventPage(entry, chrome, todayStr, relations, (key && series.get(key)) || []),
+    });
     if (entry.date < todayStr) continue;
     // DTSTAMP from firstSeen, not from now: a rebuild must not rewrite every
     // ics on every run (syncFeedsDir only writes what changed). A missing or

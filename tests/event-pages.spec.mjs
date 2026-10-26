@@ -381,6 +381,36 @@ describe("planPages", () => {
     const bad = planPages({ events: { x: entry({ id: "../../etc/passwd" }) } }, CHROME, TODAY);
     assert.deepEqual(bad, []);
   });
+
+  // A series' page lists its other upcoming dates: the next four, linked,
+  // with the rhythm — past, vanished and other series' dates stay out.
+  it("lists a series' other upcoming dates on each of its pages", () => {
+    const weekly = (day, extra = {}) =>
+      entry({ id: `w${day}`, date: `2026-09-${day}`, endDate: `2026-09-${day}`, uid: "weekly@x", recurring: true, ...extra });
+    const events = {};
+    for (const e of [
+      weekly("08"), // past (TODAY is the 13th)
+      weekly("15"),
+      weekly("22", { title: "CANCELED: Vortrag", cancelled: true, cancelledBy: "title" }),
+      weekly("29"),
+      weekly("30", { cancelled: true, cancelledBy: "vanished" }), // gone from the calendar
+      entry({ id: "o06", date: "2026-10-06", endDate: "2026-10-06", uid: "weekly@x", recurring: true, source: "Andere" }),
+      weekly("31", { id: "w1006", date: "2026-10-06", endDate: "2026-10-06" }),
+      weekly("31", { id: "w1013", date: "2026-10-13", endDate: "2026-10-13" }),
+      weekly("31", { id: "w1020", date: "2026-10-20", endDate: "2026-10-20" }),
+      entry({ id: "solo" }),
+    ]) events[e.id] = e;
+    const page = (id) => planPages({ events }, CHROME, TODAY).find((f) => f.path === `e/${id}/index.html`).data;
+    const listed = (html) => [...html.matchAll(/<li><a href="\.\.\/([^/]+)\/">/g)].map((m) => m[1]);
+
+    const p15 = page("w15");
+    assert.deepEqual(listed(p15), ["w22", "w29", "w1006", "w1013"], "the next four, itself left out");
+    assert.match(p15, /<h2 class="event-page__series-title">Weitere Termine <span class="event-page__rhythm">· jeden Dienstag<\/span><\/h2>/);
+    assert.match(p15, /<li><a href="\.\.\/w22\/"><s><time datetime="2026-09-22T20:30">Dienstag, 22\. September 2026, 20:30 Uhr<\/time><\/s><\/a> <span class="event-card__cancelled">/);
+    assert.deepEqual(listed(page("w1020")), ["w15", "w22", "w29", "w1006"]);
+    assert.ok(!page("solo").includes("Weitere Termine"), "a one-off lists nothing");
+    assert.ok(!page("w08").includes("Weitere Termine"), "a past stub lists nothing");
+  });
 });
 
 describe("extractChrome — against the tracked events.html", () => {
