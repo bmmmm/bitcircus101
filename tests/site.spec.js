@@ -2097,6 +2097,32 @@ test.describe('Event details', () => {
         await expect(page.locator('.event-card', { hasText: 'Termin 9' }).locator('.event-card__time')).toHaveText('ganztägig');
     });
 
+    test('an event shows while it runs, on /events and the homepage, and goes when it ends', async ({ page }) => {
+        // 20:30: the 19:00–22:00 evening runs, the 17:00–19:00 one is over, the
+        // all-day one lasts the day. The hourly sync used to drop an event at
+        // its first run past the start; the pages filter by the same rule
+        // as the sync now (events-core isOver).
+        await page.clock.install({ time: new Date('2026-10-27T20:30:00') });
+        const card = (title, date, time, endTime) => ({
+            title, subtitle: '', description: '', location: '', date, time, endDate: date, endTime,
+            tags: ['#meetup'], type: '', source: 'bitcircus101', uid: `run-${title}`,
+        });
+        const data = buildEventsData();
+        data.events = [
+            card('Schon vorbei', '2026-10-27', '17:00', '19:00'),
+            card('Läuft gerade', '2026-10-27', '19:00', '22:00'),
+            card('Ganztags heute', '2026-10-27', '', ''),
+            card('Morgen', '2026-10-28', '19:00', '22:00'),
+        ];
+        await useEventsFixture(page, data);
+        const shown = [/Ganztags heute/, /Läuft gerade/, /Morgen/];
+
+        await page.goto('/events.html');
+        await expect(page.locator('.event-card__title')).toHaveText(shown);
+        await page.goto('/');
+        await expect(page.locator('#next-events-list .event-preview__title')).toHaveText(shown);
+    });
+
     test('a series carries its text once: its later dates are one line, and a cancelled date does not take the text', async ({ page }) => {
         await page.clock.install({ time: new Date('2026-09-01T10:00:00') });
         const weekly = (day, extra = {}) => ({
@@ -2636,9 +2662,11 @@ test.describe('Kiosk view', () => {
                     location: 'Dorotheenstraße 101, Bonn',
                     tags: ['#offener-abend'],
                 }),
-                // ran 18:00–19:00 → over half an hour ago. Started 1.5 h ago,
-                // so the 3 h heuristic still called this running.
+                // ran 18:00–19:00 → over half an hour ago: off the wall
+                // (events-core isOver). The 3 h heuristic called it running.
                 ev({ title: 'Schon vorbei', date: DAY, time: '18:00', endTime: '19:00' }),
+                // 19:00–19:45 → short, still running inside the long one
+                ev({ title: 'Gleich vorbei', date: DAY, time: '19:00', endTime: '19:45' }),
                 // 19:00–22:00 → running, and overlapping BOTH of the above
                 ev({
                     title: 'Parallel dazu', date: DAY, time: '19:00', endTime: '22:00',
@@ -2681,13 +2709,14 @@ test.describe('Kiosk view', () => {
         // Nothing anywhere on the wall renders a raw URL
         expect(await page.locator('.kiosk__list').innerText()).not.toMatch(/https?:\/\//);
 
-        // "läuft" gates on the real end, both directions: the 4.5 h-old event
-        // still runs, the one that ended half an hour ago does not.
+        // "läuft" gates on the real end: the 4.5 h-old event still runs, and
+        // the one that ended half an hour ago is not on the wall at all.
         await expect(page.locator('.kiosk-ev--now .kiosk-ev__title'))
-            .toHaveText(['Läuft seit langem', 'Parallel dazu']);
+            .toHaveText(['Läuft seit langem', 'Gleich vorbei', 'Parallel dazu']);
+        await expect(page.locator('.kiosk-ev').filter({ hasText: 'Schon vorbei' })).toHaveCount(0);
 
         // Parallel events are bracketed as such — all three overlap the long
-        // one, including the short one that already ended inside it.
+        // one, the short one included.
         await expect(page.locator('.kiosk-par')).toHaveCount(1);
         await expect(page.locator('.kiosk-par .kiosk-ev')).toHaveCount(3);
         await expect(page.locator('.kiosk-par__label')).toHaveCount(2);

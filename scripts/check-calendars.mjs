@@ -312,10 +312,10 @@ async function probe(url, label, cal) {
   }
   for (const c of cards.slice(0, 8)) console.log(fmtCard(c));
   if (cards.length > 8) console.log(`  … and ${cards.length - 8} more`);
-  // toCards drops past events and internal/blocker entries. Naming the gap keeps the
+  // toCards drops events that are over and internal/blocker entries. Naming the gap keeps the
   // count honest — otherwise "12 entries, 3 cards" reads like something broke.
   if (events.length > cards.length) {
-    console.log(`  (${events.length - cards.length} entries dropped: past, internal/blocker, or over the cap)`);
+    console.log(`  (${events.length - cards.length} entries dropped: ended, internal/blocker, or over the cap)`);
   }
 
   const withUid = cards.filter((c) => c.uid).length;

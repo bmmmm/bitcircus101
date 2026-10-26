@@ -382,11 +382,12 @@
     eventsContainer = el;
     setSources(sources);
     var now = new Date();
-    now.setHours(0, 0, 0, 0);
 
+    // A running event stays until its end, an all-day one the whole day
+    // (events-core isOver — the sync keeps them by the same rule).
     allFutureSorted = events
       .filter(function (e) {
-        return new Date(e.date + "T23:59:59") >= now;
+        return !EventsCore.isOver(e, now);
       })
       .sort(function (a, b) {
         // Date then time, so same-day events run chronologically (all-day first).

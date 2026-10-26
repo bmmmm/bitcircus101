@@ -134,22 +134,23 @@ export function resolveRssPath(data, fallback = "../feed.xml") {
 }
 
 /**
- * The events at bitcircus101 from `todayStr` onwards, chronological, capped at
- * MAX_EVENTS: our own calendar and the home sources, never a friend's (the
+ * The events at bitcircus101 not over at `now` (events-core isOver: a running
+ * event stays until its end, an all-day one the whole day), chronological,
+ * capped at MAX_EVENTS: our own calendar and the home sources, never a friend's (the
  * data's sources list says which is which; pre-field data has no friends).
  * A series (events-core seriesKey) takes one line, its next date, and carries
  * `rhythm` — weeklyLabel over every date the window holds for it, cancelled
  * ones included: a week off does not change the rhythm. A cancelled date is
  * always a line of its own, so the next real date of its series follows it.
  * Returns copies; the input stays untouched.
- * Pure: the caller passes today in, so the selection is testable without
- * mocking the clock.
+ * Pure: the caller passes `now` (a Date) in, so the selection is testable
+ * without mocking the clock.
  */
-export function selectUpcoming(data, todayStr) {
+export function selectUpcoming(data, now) {
   const all = (data && data.events) || [];
   const relations = EventsCore.relationMap(data && data.sources);
   const upcoming = all
-    .filter((e) => EventsCore.sourceRelation(relations, e.source) !== "friend" && e.date >= todayStr)
+    .filter((e) => EventsCore.sourceRelation(relations, e.source) !== "friend" && !EventsCore.isOver(e, now))
     .sort((a, b) => {
       const ka = a.date + (a.time || "");
       const kb = b.date + (b.time || "");
@@ -179,13 +180,6 @@ export function selectUpcoming(data, todayStr) {
 export function main(argv = process.argv.slice(2)) {
   const eventsFile = argv[0] ? path.resolve(argv[0]) : EVENTS_JSON;
   const liteFile = argv[1] ? path.resolve(argv[1]) : LITE;
-  const now = new Date();
-  const todayStr = [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0"),
-  ].join("-");
-
   let icsUrl = null;
   if (fs.existsSync(BITCIRCUS_CAL)) {
     const cal = JSON.parse(fs.readFileSync(BITCIRCUS_CAL, "utf8"));
@@ -200,7 +194,7 @@ export function main(argv = process.argv.slice(2)) {
   if (fs.existsSync(eventsFile)) {
     const data = JSON.parse(fs.readFileSync(eventsFile, "utf8"));
     rssPath = resolveRssPath(data, rssPath);
-    upcoming = selectUpcoming(data, todayStr);
+    upcoming = selectUpcoming(data, new Date());
   }
 
   const markup = buildMarkup(upcoming, icsUrl, rssPath);

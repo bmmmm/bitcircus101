@@ -34,15 +34,25 @@ const ev = (date, extra = {}) => ({
   ...extra,
 });
 
+// selectUpcoming's clock: a local wall time, the start of the day by default.
+const at = (date, time = "00:00") => new Date(`${date}T${time}:00`);
+
 // Dates of one weekly series — 2026-09-01 is a Tuesday.
 const weekly = (date, extra = {}) => ev(date, { uid: "toys@x", recurring: true, title: "Look at my toys!", ...extra });
 
 describe("selectUpcoming", () => {
   const TODAY = "2026-09-01";
 
-  it("keeps today's events — an event is not past until the day is over", () => {
-    const out = selectUpcoming({ events: [ev(TODAY)] }, TODAY);
-    assert.equal(out.length, 1);
+  it("keeps an event until it is over: all-day the whole day, timed until its end", () => {
+    const events = [
+      ev(TODAY, { title: "Ganztags" }),
+      ev(TODAY, { title: "Läuft", time: "19:00", endTime: "22:00" }),
+      ev(TODAY, { title: "Vorbei", time: "17:00", endTime: "19:00" }),
+    ];
+    const titles = (time) => selectUpcoming({ events }, at(TODAY, time)).map((e) => e.title);
+    assert.deepEqual(titles("00:00"), ["Ganztags", "Vorbei", "Läuft"]);
+    assert.deepEqual(titles("20:30"), ["Ganztags", "Läuft"]);
+    assert.deepEqual(titles("23:59"), ["Ganztags"]);
   });
 
   it("drops past events and the friends' calendars, keeps a home calendar's", () => {
@@ -58,13 +68,13 @@ describe("selectUpcoming", () => {
       { source: "Toys", title: "Bei uns", date: "2026-09-04" },
       { source: "Nobody", title: "Unbekannt", date: "2026-09-05" }, // not in the list: a friend by default
     ];
-    const out = selectUpcoming({ sources, events }, TODAY);
+    const out = selectUpcoming({ sources, events }, at(TODAY));
     assert.deepEqual(
       out.map((e) => e.date),
       ["2026-09-02", "2026-09-04"]
     );
     // pre-field data (no relation anywhere) has no friends: everything upcoming shows
-    const legacy = selectUpcoming({ events }, TODAY);
+    const legacy = selectUpcoming({ events }, at(TODAY));
     assert.deepEqual(legacy.map((e) => e.date), ["2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05"]);
   });
 
@@ -89,15 +99,15 @@ describe("selectUpcoming", () => {
     const events = Array.from({ length: 20 }, (_, i) =>
       ev(`2026-09-${String(i + 2).padStart(2, "0")}`)
     );
-    assert.equal(selectUpcoming({ events }, TODAY).length, 8);
+    assert.equal(selectUpcoming({ events }, at(TODAY)).length, 8);
     // …and keeps the EARLIEST eight, not an arbitrary window.
-    assert.equal(selectUpcoming({ events }, TODAY)[0].date, "2026-09-02");
+    assert.equal(selectUpcoming({ events }, at(TODAY))[0].date, "2026-09-02");
   });
 
   it("does not mutate the input array's order", () => {
     const events = [ev("2026-09-05"), ev("2026-09-02")];
     const snapshot = events.map((e) => e.date);
-    selectUpcoming({ events }, TODAY);
+    selectUpcoming({ events }, at(TODAY));
     assert.deepEqual(
       events.map((e) => e.date),
       snapshot
@@ -105,13 +115,13 @@ describe("selectUpcoming", () => {
     // …nor the cards: the rhythm lands on copies
     const series = [weekly("2026-09-08"), weekly("2026-09-01"), weekly("2026-09-15")];
     const before = JSON.stringify(series);
-    selectUpcoming({ events: series }, TODAY);
+    selectUpcoming({ events: series }, at(TODAY));
     assert.equal(JSON.stringify(series), before);
   });
 
   it("survives a missing or empty manifest", () => {
-    assert.deepEqual(selectUpcoming({}, TODAY), []);
-    assert.deepEqual(selectUpcoming(null, TODAY), []);
+    assert.deepEqual(selectUpcoming({}, at(TODAY)), []);
+    assert.deepEqual(selectUpcoming(null, at(TODAY)), []);
   });
 });
 
@@ -123,7 +133,7 @@ describe("selectUpcoming — one line per series", () => {
       weekly("2026-09-01"), weekly("2026-09-08"), weekly("2026-09-15"), weekly("2026-09-22"),
       ...Array.from({ length: 8 }, (_, i) => ev(`2026-09-${String(i + 2).padStart(2, "0")}`, { title: `Einmal ${i}` })),
     ];
-    const out = selectUpcoming({ events }, TODAY);
+    const out = selectUpcoming({ events }, at(TODAY));
     assert.equal(out.length, 8);
     assert.deepEqual(out.filter((e) => e.uid === "toys@x").map((e) => e.date), ["2026-09-01"]);
     assert.equal(out[0].rhythm, "jeden Dienstag");
@@ -141,7 +151,7 @@ describe("selectUpcoming — one line per series", () => {
     ];
     // a week off does not change the rhythm: the cancelled dates count for it
     assert.deepEqual(
-      selectUpcoming({ events }, TODAY).map((e) => [e.date, e.rhythm]),
+      selectUpcoming({ events }, at(TODAY)).map((e) => [e.date, e.rhythm]),
       [["2026-09-01", ""], ["2026-09-08", "jeden Dienstag"], ["2026-09-22", ""]]
     );
   });
@@ -153,7 +163,7 @@ describe("selectUpcoming — one line per series", () => {
       ev("2026-09-02", { uid: "once@x" }),
       ev("2026-09-03", { uid: "once@x" }),
     ];
-    assert.equal(selectUpcoming({ events }, TODAY).length, 4);
+    assert.equal(selectUpcoming({ events }, at(TODAY)).length, 4);
   });
 });
 

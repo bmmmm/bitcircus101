@@ -388,7 +388,7 @@ Nothing reaches production without passing all tests first.
   1. Runs `scripts/sync-events.mjs` (Node 22, zero dependencies)
   2. Fetches ICS feeds from all sources listed in `calendars/config.json`
   3. Parses VEVENT entries, expands RRULE recurrences (weekly, monthly with BYDAY/BYSETPOS)
-  4. Filters out internal/blocker events and past events
+  4. Filters out internal/blocker events and those that are over (`isOver` in `events-core.js`)
   5. Generates `events-data.json` with `lastSync` and, per source, a `hash` of the fetched ICS plus `changedAt` (max 40 cards, 120-day horizon)
   6. Generates `feed.xml` (RSS 2.0, primary calendar only, every card in the window)
   7. Runs `scripts/build-pinnwand-feed.mjs` (`pinnwand/feed.xml` from `jobs.json`)
@@ -485,7 +485,10 @@ If no tags match, the event gets `#community` as default.
 ### Filtering
 
 - Events with "blocker" or "interne veranstaltung" in the title are excluded
-- Only future events are shown (up to 120 days ahead)
+- An event shows until it is over (up to 120 days ahead): a timed one until
+  its end, an all-day one — or a timed one without an end — to the end of its
+  day. One rule, `isOver` in `events-core.js`, for the sync and every list
+  (`/events`, homepage, kiosk, lite)
 - Max 30 events per calendar, 40 total
 
 ### Frontend (`events.js`)

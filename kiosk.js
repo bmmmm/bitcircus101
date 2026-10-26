@@ -418,10 +418,12 @@
 
     var rows = lastGood.events
       .filter(function (e) {
-        if (new Date(e.date + "T23:59:59") < startOfToday) return false;
+        // Over is over (events-core isOver): a running event stays until its
+        // end, an all-day one the whole day.
+        var core = window.EventsCore;
+        if (core && core.isOver ? core.isOver(e, now) : new Date(e.date + "T23:59:59") < startOfToday) return false;
         // "nur im bitcircus101" hides the friends' calendars — the events
         // page's default view (events-core relationOf: own + home stay).
-        var core = window.EventsCore;
         return settings.source === "all" ||
           !core || core.sourceRelation(lastGood.relations, e.source) !== "friend";
       })

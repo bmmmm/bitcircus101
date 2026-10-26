@@ -960,7 +960,6 @@
 
     render(events, el, sources) {
       const now = new Date();
-      now.setHours(0, 0, 0, 0);
       const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
       const pad = (n) => (n < 10 ? "0" + n : "" + n);
       const escHtml = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -973,9 +972,14 @@
       const relations = rel ? rel.relationMap(sources) : null;
       const isFriend = (e) => !!rel && rel.sourceRelation(relations, e.source) === "friend";
 
+      // Not over yet: a running event stays until its end (events-core isOver);
+      // without events-core, everything of today stays.
+      const isOver = core && core.isOver
+        ? (e) => core.isOver(e, now)
+        : (e) => new Date(e.date + "T23:59:59") < now;
       const upcoming = events
-        .filter((e) => !isFriend(e) && new Date(e.date + "T23:59:59") >= now)
-        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .filter((e) => !isFriend(e) && !isOver(e))
+        .sort((a, b) => (a.date + (a.time || "")).localeCompare(b.date + (b.time || "")))
         .slice(0, 3);
 
       if (!upcoming.length) return;

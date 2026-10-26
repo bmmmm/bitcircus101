@@ -49,7 +49,7 @@ import { paragraphs } from "./html-text.mjs";
 const { parseDate, parseDuration, nthWeekday, expandRRule, clean, parseICS, eventAnchor } = ICSCore;
 // Card shaping (tags, type, toCards) is shared the same way via events-core.js.
 // Re-exported below so tests and check-calendars.mjs keep importing from here.
-const { isInternal, guessType, isCancelledTitle, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId, hasPages, relationOf, inPrimaryFeed, relationMap, sourceRelation } = EventsCore;
+const { isInternal, guessType, isCancelledTitle, extractHashtags, keywordTags, buildTags, cleanLocation, truncateDesc, stripTagLines, toCards, toAllCards, eventId, hasPages, relationOf, inPrimaryFeed, relationMap, sourceRelation, isOver } = EventsCore;
 
 /** Cancelled for every consumer: the archive's flag (set by mergeArchive for a
  *  vanished entry or a marked title) or, for a fresh card that never went
@@ -869,12 +869,9 @@ async function processSource(cal, prev) {
   const stale = (reason) => {
     console.error(`[${cal.id}] ${reason} – using cached events`);
     // Re-apply the date filter to the cached fallback: a flapping source must not
-    // resurrect events that have since passed. Cards store `date` as local
-    // YYYY-MM-DD (see toCards), so a lexical ">= today" keeps all of today plus
-    // future and drops past ones — mirroring the all-day rule in toCards.
+    // resurrect events that have since ended — the same isOver rule as toCards.
     const now = new Date();
-    const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-    const cached = prev.events.filter((e) => e.source === cal.name && e.date >= today);
+    const cached = prev.events.filter((e) => e.source === cal.name && !isOver(e, now));
     return {
       cards: cached,
       allCards: null, // no fresh export → the archive leaves this source untouched

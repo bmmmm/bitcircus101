@@ -217,6 +217,38 @@
     return e && e.recurring && e.uid ? (e.source || "") + "|" + e.uid : null;
   }
 
+  /** A card's "YYYY-MM-DD" + "HH:MM" (local wall time, as toCard writes it), `plusDays` later, as epoch ms. */
+  function localMs(date, time, plusDays) {
+    var d = date.split("-"), t = (time || "00:00").split(":");
+    return new Date(+d[0], +d[1] - 1, +d[2] + (plusDays || 0), +t[0], +t[1]).getTime();
+  }
+
+  /**
+   * When a card stops being current, as epoch ms: the end the source gave.
+   * An all-day event runs to the end of its last day (endDate is exclusive,
+   * like the ICS DTEND); a timed one without a usable end — none, or none
+   * after its start — to the end of its day: an end we don't know is no
+   * reason to hide it early.
+   */
+  function endsAt(card) {
+    var dayEnd = localMs(card.date, "", 1);
+    if (!card.time) return card.endDate > card.date ? localMs(card.endDate, "") : dayEnd;
+    if (card.endTime) {
+      var end = localMs(card.endDate || card.date, card.endTime);
+      if (end > localMs(card.date, card.time)) return end;
+    }
+    return dayEnd;
+  }
+
+  /**
+   * Whether a card is over at `now` (a Date or epoch ms). The one rule for
+   * every list — sync, /events, homepage, kiosk, lite: an event shows while
+   * it runs, not only until it starts.
+   */
+  function isOver(card, now) {
+    return endsAt(card) <= +now;
+  }
+
   /**
    * The "→ kalender" target for a card without an event URL. A Nextcloud
    * calendar view (…/apps/calendar/…) opens on the event's day; any other
@@ -345,25 +377,22 @@
   }
 
   /**
-   * Full pure pipeline: drop past + internal events, sort by start, apply the
-   * per-source cap, map to cards. `now` is injectable for deterministic tests;
-   * both existing 2-arg call sites (sync + check-calendars --probe) default to
-   * the wall clock.
+   * Full pure pipeline: drop internal events and those that are over, sort by
+   * start, apply the per-source cap, map to cards. `now` is injectable for
+   * deterministic tests; both existing 2-arg call sites (sync + check-calendars
+   * --probe) default to the wall clock.
    */
   function toCards(icsEvents, cal, now) {
     now = now || new Date();
-    var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     var cap = typeof cal.cap === "number" && isFinite(cal.cap) ? cal.cap : 30;
     return icsEvents
-      // All-day events carry no time (midnight). Comparing them against `now` would
-      // drop an all-day event happening *today* at any moment past 00:00, so gate them
-      // on the start of today instead; timed events keep the strict "future" check.
-      .filter(function (e) {
-        return (e.allDay ? e.dtstart >= startOfToday : e.dtstart > now) && !isInternal(e.summary);
-      })
+      .filter(function (e) { return !isInternal(e.summary); })
       .sort(function (a, b) { return a.dtstart - b.dtstart; })
-      .slice(0, cap)
-      .map(function (e) { return toCard(e, cal); });
+      .map(function (e) { return toCard(e, cal); })
+      // isOver, not "starts after now": the hourly sync used to drop a 19:00
+      // event at its first run past 19:00, so it left every page while it ran.
+      .filter(function (c) { return !isOver(c, now); })
+      .slice(0, cap);
   }
 
   /** Runaway guard for the archive pass — every series runs to the horizon
@@ -404,6 +433,8 @@
     fnv1a32: fnv1a32,
     eventId: eventId,
     seriesKey: seriesKey,
+    endsAt: endsAt,
+    isOver: isOver,
     hasPages: hasPages,
     RELATIONS: RELATIONS,
     relationOf: relationOf,

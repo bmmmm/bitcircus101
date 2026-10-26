@@ -28,7 +28,7 @@ import {
 // itself imports them.
 import EventsCore from "../events-core.js";
 const {
-  toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS, seriesKey,
+  toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS, seriesKey, isOver,
   RELATIONS, relationOf, isHome, inPrimaryFeed, relationMap, sourceRelation, sourceBadge,
 } = EventsCore;
 
@@ -979,6 +979,44 @@ describe("toCards", () => {
     const events = [mkEvent({ allDay: true, dtstart: yesterday, uid: "allday-past" })];
     const r = toCards(events, { name: "X", url: "https://x.example" });
     assert.equal(r.length, 0);
+  });
+
+  // The hourly sync dropped a timed event at its first run past the start, so
+  // it left every page while it ran. Now it stays until its end.
+  it("keeps an event while it runs: timed until its end, all-day to the end of its last day", () => {
+    const cal = { name: "X", url: "https://x.example" };
+    const at = (ev, ...t) => toCards([mkEvent(ev)], cal, new Date(...t)).length;
+    const evening = { dtstart: new Date(2026, 9, 27, 19, 0), dtend: new Date(2026, 9, 27, 22, 0) };
+    assert.equal(at(evening, 2026, 9, 27, 19, 30), 1, "running at 19:30");
+    assert.equal(at(evening, 2026, 9, 27, 21, 59), 1, "running at 21:59");
+    assert.equal(at(evening, 2026, 9, 27, 22, 0), 0, "over at 22:00");
+    // No end (or none after the start): the day is the window.
+    for (const ev of [{ dtstart: evening.dtstart }, { dtstart: evening.dtstart, dtend: evening.dtstart }]) {
+      assert.equal(at(ev, 2026, 9, 27, 23, 59), 1);
+      assert.equal(at(ev, 2026, 9, 28, 0, 0), 0);
+    }
+    // Past midnight: the end's own date counts.
+    const late = { dtstart: new Date(2026, 9, 27, 22, 0), dtend: new Date(2026, 9, 28, 2, 0) };
+    assert.equal(at(late, 2026, 9, 28, 1, 0), 1);
+    assert.equal(at(late, 2026, 9, 28, 2, 0), 0);
+    // All-day over three days: DTEND is exclusive (the 29th's midnight).
+    const camp = { allDay: true, dtstart: new Date(2026, 9, 26), dtend: new Date(2026, 9, 29) };
+    assert.equal(at(camp, 2026, 9, 28, 23, 0), 1, "the last day still shows");
+    assert.equal(at(camp, 2026, 9, 29, 0, 0), 0);
+  });
+});
+
+describe("isOver", () => {
+  const at = (...t) => new Date(...t);
+  it("reads a card's strings: end, else the end of its (last) day", () => {
+    const card = { date: "2026-10-27", time: "19:00", endDate: "2026-10-27", endTime: "22:00" };
+    assert.equal(isOver(card, at(2026, 9, 27, 21, 59)), false);
+    assert.equal(isOver(card, at(2026, 9, 27, 22, 0)), true);
+    assert.equal(isOver(card, at(2026, 9, 27, 22, 0).getTime()), true, "epoch ms works too");
+    // Pre-endDate data and an all-day card without an end.
+    assert.equal(isOver({ date: "2026-10-27", time: "19:00", endTime: "22:00" }, at(2026, 9, 27, 21, 0)), false);
+    assert.equal(isOver({ date: "2026-10-27", time: "" }, at(2026, 9, 27, 23, 59)), false);
+    assert.equal(isOver({ date: "2026-10-27", time: "" }, at(2026, 9, 28)), true);
   });
 });
 
