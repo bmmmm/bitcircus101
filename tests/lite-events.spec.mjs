@@ -349,6 +349,17 @@ describe("buildMarkup", () => {
     assert.equal((out.match(/class="jetzt"/g) || []).length, 1);
   });
 
+  it("names another group's event and links their site", () => {
+    const sources = [
+      { id: "bitcircus", name: "bitcircus101", relation: "own" },
+      { id: "toys", name: "Look at my toys!", relation: "home", site: "https://my.stim.toys/workshops" },
+    ];
+    const events = [ev("2026-09-01"), ev("2026-09-01", { source: "Look at my toys!", title: "Postkarten", time: "19:00" })];
+    const out = buildMarkup(selectUpcoming({ sources, events }, at("2026-09-01")), null, "../feed.xml");
+    assert.match(out, /Postkarten <span class="dim">· veranstaltet von <a href="https:\/\/my\.stim\.toys\/workshops" rel="noopener noreferrer">Look at my toys! ↗<\/a><\/span><\/li>/);
+    assert.equal((out.match(/veranstaltet von/g) || []).length, 1, "ours carries no origin");
+  });
+
   it("says so instead of rendering an empty list", () => {
     const out = buildMarkup([], null, "../feed.xml");
     assert.match(out, /Keine Termine eingetragen/);

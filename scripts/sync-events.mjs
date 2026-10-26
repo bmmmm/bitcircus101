@@ -892,6 +892,13 @@ function fetchWithTimeout(url, ms = FETCH_TIMEOUT_MS) {
   return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
 }
 
+/** `{ site }` — the group's website the cards' origin line links (calendars/
+ *  README `site`, else `url`; events-core siteMap) — or nothing. */
+function siteOf(cal) {
+  const site = cal.site || cal.url;
+  return site ? { site } : {};
+}
+
 /**
  * Fetch + hash + parse + filter a single source. Always resolves (never rejects):
  * on any failure it returns the previous run's cached cards with status "stale", so
@@ -911,7 +918,7 @@ async function processSource(cal, prev) {
       cards: cached,
       allCards: null, // no fresh export → the archive leaves this source untouched
       source: {
-        id: cal.id, name: cal.name, relation: relationOf(cal),
+        id: cal.id, name: cal.name, relation: relationOf(cal), ...siteOf(cal),
         fetchedAt: prevSource?.fetchedAt || null,
         status: "stale", error: reason,
         events: cached.length,
@@ -956,7 +963,7 @@ async function processSource(cal, prev) {
       cards,
       allCards,
       source: {
-        id: cal.id, name: cal.name, relation: relationOf(cal), fetchedAt, status: "ok",
+        id: cal.id, name: cal.name, relation: relationOf(cal), ...siteOf(cal), fetchedAt, status: "ok",
         events: cards.length, hash, changedAt,
       },
     };

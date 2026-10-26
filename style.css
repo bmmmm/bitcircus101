@@ -1272,13 +1272,41 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 }
 .event-card__title::before { content: none; }
 
-.event-card__source {
-    font-size: 0.7rem;
-    color: var(--ink-dim);
-    border: 1px solid var(--line);
-    padding: 0.1em 0.6ch;
-    white-space: nowrap;
-    flex-shrink: 0;
+/* Another group's event (events.js, events-core origin): whose it is and the
+   way to them, framed so it reads before the text does. A link, so its host
+   is green; the words stay ink. The small grey "Kalender: X" badge it
+   replaces went unnoticed (October 2026). */
+.event-card__origin {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin: 0.1rem 0 0.6rem;
+    padding: 0.35em 1ch;
+    border: 1px solid var(--line-strong);
+    font-size: var(--fs-meta);
+    line-height: 1.5;
+    color: var(--ink);
+    text-decoration: none;
+}
+a.event-card__origin { position: relative; }
+a.event-card__origin::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+}
+a.event-card__origin:hover { background: var(--ink); color: var(--paper); }
+a.event-card__origin:hover span { color: inherit; }
+.event-card__origin-kind { color: var(--ink-dim); }
+.event-card__origin-name { color: var(--ink-max); font-weight: 700; }
+.event-card__origin-host {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    overflow-wrap: anywhere;
 }
 
 .event-card__subtitle { font-size: var(--fs-meta); color: var(--ink-dim); margin: 0 0 0.4rem; }
@@ -1455,13 +1483,16 @@ a.event-page__location {
     text-decoration: none;
 }
 a.event-page__location:hover { background: var(--ink); color: var(--paper); }
-.event-page__source {
-    margin: 0;
-    font-size: 0.7rem;
-    color: var(--ink-dim);
-    border: 1px solid var(--line);
-    padding: 0.1em 0.6ch;
+/* Another group's event: whose it is and the way to them, above the meta
+   block — framed like a notice, so nobody takes it for ours. */
+.event-page__origin {
+    border: 1px solid var(--line-strong);
+    padding: 0.5rem 1.5ch;
+    margin: 0 0 1.2rem;
+    color: var(--ink);
+    font-size: var(--fs-small);
 }
+.event-page__origin strong { color: var(--ink-max); }
 
 /* The reason the page exists: the full text, with its paragraphs intact. */
 .event-page__body {

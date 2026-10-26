@@ -44,7 +44,7 @@ import {
   truncateDesc,
 } from "./sync-events.mjs";
 
-const { stripTagLines, calendarHref, relationMap, sourceBadge, seriesKey, rhythmLabel, isCancelledTitle } = EventsCore;
+const { stripTagLines, calendarHref, relationMap, sourceBadge, seriesKey, rhythmLabel, isCancelledTitle, siteMap, origin } = EventsCore;
 
 /** How many of a series' other dates an event page lists. */
 const SERIES_SHOWN = 4;
@@ -382,9 +382,11 @@ ${footer}
  * One event page. `chrome` comes from extractChrome(); `todayStr` decides the
  * "vergangener Termin" note and is injectable so the output is testable without
  * mocking the clock. `series` are the series' upcoming dates, this one
- * included (planPages seriesDates); the page lists the others.
+ * included (planPages seriesDates); the page lists the others. `sites`
+ * (events-core siteMap over calendars/) is where another group's origin
+ * line leads.
  */
-export function renderEventPage(entry, chrome, todayStr = berlinToday(), relations = null, series = []) {
+export function renderEventPage(entry, chrome, todayStr = berlinToday(), relations = null, series = [], sites = null) {
   if (entry.date < todayStr) return renderPastPage(entry, chrome);
   const { assetVersion } = chrome;
   const parts = [];
@@ -412,6 +414,18 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
     parts.push(`                <p class="event-page__notice">${notice}</p>`);
   }
 
+  // Another group's event says whose it is before anything else, and leads
+  // there — the line the card on /termine carries (events-core origin).
+  const from = origin(relations, sites, entry);
+  if (from) {
+    const where = from.href
+      ? ` — mehr dazu bei <a href="${esc(from.href)}" target="_blank" rel="noopener noreferrer">${esc(from.host)} ↗</a>`
+      : "";
+    parts.push(
+      `                <p class="event-page__origin">${from.kind} <strong>${esc(from.name)}</strong>${where}</p>`
+    );
+  }
+
   parts.push(`                <div class="event-page__meta">`);
   parts.push(`                    <p class="event-page__when">${renderWhen(entry)}</p>`);
   if (entry.location) {
@@ -419,12 +433,6 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
       `                    <a class="event-page__location" href="${esc(osmHref(entry.location))}" ` +
         `target="_blank" rel="noopener noreferrer" title="Auf Karte anzeigen">○ ${esc(entry.location)}</a>`
     );
-  }
-  // "Kalender: X" for a home source, "Externer Kalender: X" for a friend's,
-  // nothing for ours — the same line the card on /termine carries.
-  const badge = sourceBadge(relations, entry.source);
-  if (badge) {
-    parts.push(`                    <p class="event-page__source">${esc(badge)}</p>`);
   }
   parts.push(`                </div>`);
 
@@ -539,7 +547,7 @@ export function isRenderable(entry) {
  * is upcoming. syncFeedsDir owns the directory, so a page's ics goes the day
  * after its event.
  */
-export function planPages(archive, chrome, todayStr = berlinToday(), relations = null) {
+export function planPages(archive, chrome, todayStr = berlinToday(), relations = null, sites = null) {
   const entries = Object.values((archive && archive.events) || {});
   const series = seriesDates(entries, todayStr);
   const files = [];
@@ -551,7 +559,7 @@ export function planPages(archive, chrome, todayStr = berlinToday(), relations =
     const key = seriesKey(entry);
     files.push({
       path: `e/${entry.id}/index.html`,
-      data: renderEventPage(entry, chrome, todayStr, relations, (key && series.get(key)) || []),
+      data: renderEventPage(entry, chrome, todayStr, relations, (key && series.get(key)) || [], sites),
     });
     // no ics for a past date, nor for one whose series left the calendar
     if (entry.date < todayStr || entry.removed) continue;
@@ -596,12 +604,15 @@ function main() {
   // Who is at home and who is a friend: the archive carries source names only,
   // calendars/ (checked out from main next to these scripts) says the rest.
   let relations = null;
+  let sites = null;
   try {
-    relations = relationMap(loadCalendars());
+    const calendars = loadCalendars();
+    relations = relationMap(calendars);
+    sites = siteMap(calendars);
   } catch (err) {
     console.warn(`::warning::event-pages: calendars/ unreadable (${err.message}) — no source lines on the pages`);
   }
-  const files = planPages(archive, chrome, todayStr, relations);
+  const files = planPages(archive, chrome, todayStr, relations, sites);
   const stats = syncFeedsDir("e", files);
   const pages = files.filter((f) => f.path.endsWith("/index.html")).length;
   const past = Object.values(archive.events).filter((e) => isRenderable(e) && e.date < todayStr).length;

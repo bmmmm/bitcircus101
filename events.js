@@ -33,6 +33,7 @@
   var rhythms = {}; // series key → "jeden Dienstag" (events-core rhythmLabel), over every listed date
   var feeds = null; // feeds manifest from events-data.json; null until the JSON has loaded
   var relMap = null; // source name → relation (events-core relationMap); null on pre-field data
+  var sites = null; // source name → the group's website (events-core siteMap)
   var friendList = []; // the friends' calendars the toolbar offers, {id, name} in config order
   var eventsContainer = null;
   var filterBar = null;
@@ -92,6 +93,7 @@
   // home. Pre-field data (no relation anywhere) has no friends: everything shows.
   function setSources(sources) {
     relMap = EventsCore.relationMap(sources);
+    sites = EventsCore.siteMap && EventsCore.siteMap(sources);
     friendList = [];
     if (relMap && sources) {
       for (var i = 0; i < sources.length; i++) {
@@ -608,13 +610,21 @@
         html += '<h3 class="event-card__title">' + esc(shown) +
           (cancelled ? ' <span class="event-card__cancelled"><span aria-hidden="true">✕ </span>abgesagt</span>' : "") +
           "</h3>";
-        // "Kalender: X" for a home source, "Externer Kalender: X" for a
-        // friend's, nothing for ours (events-core sourceBadge).
-        var badge = core ? core.sourceBadge(relMap, e.source) : "";
-        if (badge) {
-          html += '<span class="event-card__source">' + esc(badge) + "</span>";
-        }
         html += "</div>";
+        // Another group's event says whose it is, and leads there:
+        // "veranstaltet von X · their site ↗" for a home source, "externer
+        // Termin von X" for a friend's, nothing for ours (events-core origin).
+        // The small "Kalender: X" badge it replaces went unnoticed.
+        var from = core && core.origin ? core.origin(relMap, sites, e) : null;
+        if (from) {
+          var fromInner = '<span class="event-card__origin-kind">' + from.kind + "</span> " +
+            '<span class="event-card__origin-name">' + esc(from.name) + "</span>" +
+            (from.href ? ' <span class="event-card__origin-host">' + esc(from.host) + " \u2197</span>" : "");
+          html += from.href
+            ? '<a class="event-card__origin" href="' + esc(httpUrl(from.href)) +
+              '" target="_blank" rel="noopener noreferrer">' + fromInner + "</a>"
+            : '<p class="event-card__origin">' + fromInner + "</p>";
+        }
         if (e.subtitle && !repeat) {
           html += '<p class="event-card__subtitle">' + esc(e.subtitle) + "</p>";
         }

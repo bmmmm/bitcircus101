@@ -82,6 +82,12 @@ export function buildMarkup(events, icsUrl, rssPath) {
         : ext;
       // Inside the <time>: on a phone the date line takes it along.
       const word = !cancelled && e.word ? ` <span class="jetzt">${esc(e.word)}</span>` : "";
+      // another group's event names it and links their site (events-core origin)
+      const from = e.origin
+        ? ` <span class="dim">· ${e.origin.kind} ` +
+          (e.origin.href ? `<a href="${esc(e.origin.href)}" rel="noopener noreferrer">${esc(e.origin.name)} ↗</a>` : esc(e.origin.name)) +
+          `</span>`
+        : "";
       const note = cancelled
         ? ` <span class="abgesagt"><span aria-hidden="true">✕ </span>abgesagt</span>`
         : e.rhythm ? ` <span class="dim">· ${esc(e.rhythm)}</span>` : "";
@@ -89,7 +95,7 @@ export function buildMarkup(events, icsUrl, rssPath) {
       // own and the dash goes (the page's CSS).
       return `<li${cancelled ? ' class="cancelled"' : ""}>` +
         `<time datetime="${esc(toDatetime(e.date, e.time))}" class="when">${formatDate(e.date, e.time)}${word}</time>` +
-        `<span class="sep"> — </span>${label}${note}</li>`;
+        `<span class="sep"> — </span>${label}${note}${from}</li>`;
     })
     .join("\n");
 
@@ -123,7 +129,8 @@ export function resolveRssPath(data, fallback = "../feed.xml") {
  * A series (events-core seriesKey) takes one line, its next date, and carries
  * `rhythm` — the sync's (toCards, over every date to the horizon), else
  * rhythmLabel over the dates the window holds, cancelled ones included: a
- * week off does not change the rhythm — and `word` (whenWord at `now`). A cancelled date is
+ * week off does not change the rhythm — `word` (whenWord at `now`) and
+ * `origin` (events-core origin: whose event, when not ours). A cancelled date is
  * always a line of its own, so the next real date of its series follows it.
  * Returns copies; the input stays untouched.
  * Pure: the caller passes `now` (a Date) in, so the selection is testable
@@ -132,6 +139,7 @@ export function resolveRssPath(data, fallback = "../feed.xml") {
 export function selectUpcoming(data, now) {
   const all = (data && data.events) || [];
   const relations = EventsCore.relationMap(data && data.sources);
+  const sites = EventsCore.siteMap(data && data.sources);
   const upcoming = all
     .filter((e) => EventsCore.sourceRelation(relations, e.source) !== "friend" && !EventsCore.isOver(e, now))
     .sort((a, b) => {
@@ -150,14 +158,14 @@ export function selectUpcoming(data, now) {
     if (out.length === MAX_EVENTS) break;
     const key = EventsCore.seriesKey(e);
     if (key && EventsCore.isCancelledTitle(e.title)) {
-      out.push({ ...e, rhythm: "", word: EventsCore.whenWord(e, now) });
+      out.push({ ...e, rhythm: "", word: EventsCore.whenWord(e, now), origin: EventsCore.origin(relations, sites, e) });
       continue;
     }
     if (key && shown.has(key)) continue;
     if (key) shown.add(key);
     // the sync's rhythm (every date to the horizon) first, else the window's
     const rhythm = key ? e.rhythm || EventsCore.rhythmLabel(dates.get(key)) : "";
-    out.push({ ...e, rhythm, word: EventsCore.whenWord(e, now) });
+    out.push({ ...e, rhythm, word: EventsCore.whenWord(e, now), origin: EventsCore.origin(relations, sites, e) });
   }
   return out;
 }

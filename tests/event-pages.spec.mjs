@@ -357,15 +357,19 @@ describe("renderEventPage", () => {
     assert.equal([...out.matchAll(/<script\b/g)].length, 4, "unexpected number of <script> elements");
   });
 
-  it("labels a friend's calendar external, a home calendar by name, and stays quiet for our own", () => {
-    const ext = renderEventPage(entry({ source: "datenburg" }), CHROME, TODAY, REL);
-    assert.match(ext, /<p class="event-page__source">Externer Kalender: datenburg<\/p>/);
-    const home = renderEventPage(entry({ source: "Look at my toys!" }), CHROME, TODAY, REL);
-    assert.match(home, /<p class="event-page__source">Kalender: Look at my toys!<\/p>/);
-    assert.ok(!home.includes("Externer Kalender"), "a home calendar was labelled external");
-    const own = renderEventPage(entry(), CHROME, TODAY, REL);
-    assert.ok(!own.includes("event-page__source"), "our own calendar got a source line");
-    assert.ok(!html.includes("event-page__source"), "without relations, nothing is labelled");
+  // Another group's event says whose it is above everything else and links
+  // their site — the small "Kalender: X" line went unnoticed.
+  it("names another group's event and leads to their site; stays quiet for our own", () => {
+    const SITES = { "Look at my toys!": "https://my.stim.toys/workshops", datenburg: "https://datenburg.org" };
+    const ext = renderEventPage(entry({ source: "datenburg" }), CHROME, TODAY, REL, [], SITES);
+    assert.match(ext, /<p class="event-page__origin">externer Termin von <strong>datenburg<\/strong> — mehr dazu bei <a href="https:\/\/datenburg\.org" target="_blank" rel="noopener noreferrer">datenburg\.org ↗<\/a><\/p>/);
+    const home = renderEventPage(entry({ source: "Look at my toys!" }), CHROME, TODAY, REL, [], SITES);
+    assert.match(home, /<p class="event-page__origin">veranstaltet von <strong>Look at my toys!<\/strong> — mehr dazu bei <a href="https:\/\/my\.stim\.toys\/workshops"[^>]*>my\.stim\.toys\/workshops ↗<\/a><\/p>/);
+    // above the when/where block, so it reads first
+    assert.ok(home.indexOf("event-page__origin") < home.indexOf("event-page__meta"));
+    const own = renderEventPage(entry(), CHROME, TODAY, REL, [], SITES);
+    assert.ok(!own.includes("event-page__origin"), "our own calendar got an origin line");
+    assert.ok(!html.includes("event-page__origin"), "without relations, nothing is labelled");
   });
 });
 

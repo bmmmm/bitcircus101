@@ -137,7 +137,7 @@ function buildEventsData() {
       uid: "fixture-6",
     },
     // Appended, so the indices above stay what the tests name. A home source's
-    // card: in the default view, badged "Kalender: …", with a page (the sync
+    // card: in the default view, "veranstaltet von …", with a page (the sync
     // flags the primary sources' cards `page`).
     {
       title: "Spieleabend mit Toys",
@@ -181,6 +181,7 @@ function buildEventsData() {
         id: "look-at-my-toys",
         name: "Look at my toys!",
         relation: "home",
+        site: "https://my.stim.toys/workshops",
         fetchedAt: now,
         status: "ok",
         events: 1,
@@ -191,6 +192,7 @@ function buildEventsData() {
         id: "datenburg",
         name: "Datenburg e.V.",
         relation: "friend",
+        site: "https://datenburg.org",
         fetchedAt: now,
         status: "ok",
         events: 2,

@@ -155,6 +155,7 @@ niemals aus dem Quellnamen.
 | `name` | ja | Anzeigename auf der Karte. **Muss eindeutig sein** — der Name ist intern der Schlüssel für Feed-Auswahl und Ausfall-Cache. |
 | `ics` | ja | Der öffentliche ICS-Link. Den liest der Sync; bei der `own`-Quelle ist es auch die Abo-Adresse, die `/calendar/` und die Lite-Ansicht zeigen. |
 | `url` | — | Menschenlesbare Seite des Kalenders; Fallback-Ziel für Karten ohne eigenen Link. |
+| `site` | — | Website der Gruppe, wenn es nicht `url` ist. Die Herkunftszeile jedes fremden Termins („veranstaltet von …“, „externer Termin von …“) auf `/termine` und der Event-Seite verlinkt `site`, sonst `url`. |
 | `type` | — | `ics-full` (Standard), `ics-single`, `ics-filtered`. |
 | `relation` | — | `own` (unser Kalender, genau einer), `home` (findet im bitcircus101 statt) oder `friend` (Standard: zuschaltbar auf `/termine`). Siehe „Freund*innen verwalten". |
 | `rss` | — | Override für den Haupt-Feed: `true`/`false` = diese Quelle geht in `/feed.xml` und `/ical.ics` oder nicht. Fehlt das Feld, gilt `true` für `own` und `home`. |

@@ -410,6 +410,44 @@
     return (rel === "home" ? "Kalender: " : "Externer Kalender: ") + name;
   }
 
+  /**
+   * Source name → the group's own website: calendars/<id>.json `site`, else
+   * its `url` — carried in events-data's sources[] as `site`. null without.
+   */
+  function siteMap(sources) {
+    if (!sources || !sources.length) return null;
+    var map = {};
+    for (var i = 0; i < sources.length; i++) {
+      var s = sources[i];
+      if (!s || typeof s.name !== "string") continue;
+      var url = s.site || s.url;
+      if (typeof url === "string" && /^https?:\/\//i.test(url)) map[s.name] = url;
+    }
+    return map;
+  }
+
+  /**
+   * Whose event a card is, when it is not ours: { kind, name, href, host } —
+   * kind "veranstaltet von" for a home source (at bitcircus101, run by
+   * them), "externer Termin von" for a friend; href their site (siteMap),
+   * else the card's calendar link; host the href without scheme and
+   * trailing slash, for the eye ("my.stim.toys/workshops"). null for ours
+   * and for pre-field data (no relation map), like sourceBadge.
+   */
+  function origin(map, sites, card) {
+    if (!map || !card) return null;
+    var rel = sourceRelation(map, card.source);
+    if (rel === "own") return null;
+    var href = (sites && sites[card.source]) || card.calendarUrl || "";
+    if (!/^https?:\/\//i.test(href)) href = "";
+    return {
+      kind: rel === "home" ? "veranstaltet von" : "externer Termin von",
+      name: card.source,
+      href: href,
+      host: href.replace(/^https?:\/\/(www\.)?/i, "").replace(/\/$/, ""),
+    };
+  }
+
   /** ONE parsed ICS event → ONE card. Pure — no date filtering, no cap, no sort. */
   function toCard(e, cal) {
     // External calendars (ics-single, ics-filtered) link directly to event/program
@@ -542,6 +580,8 @@
     relationMap: relationMap,
     sourceRelation: sourceRelation,
     sourceBadge: sourceBadge,
+    siteMap: siteMap,
+    origin: origin,
     toCard: toCard,
     toCards: toCards,
     toAllCards: toAllCards,

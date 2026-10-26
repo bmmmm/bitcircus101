@@ -29,7 +29,7 @@ import {
 import EventsCore from "../events-core.js";
 const {
   toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS, seriesKey, isOver, isRunning, whenWord,
-  RELATIONS, relationOf, isHome, inPrimaryFeed, relationMap, sourceRelation, sourceBadge,
+  RELATIONS, relationOf, isHome, inPrimaryFeed, relationMap, sourceRelation, sourceBadge, siteMap, origin,
 } = EventsCore;
 
 // The owner's marker and what is left once it is stripped; the second list
@@ -2435,6 +2435,26 @@ describe("relation helpers", () => {
     assert.equal(sourceBadge(map, "Nobody"), "Externer Kalender: Nobody");
     assert.equal(sourceBadge(null, "C"), "");
   });
+
+  it("origin: whose event and the way there — the group's site, else the card's calendar link", () => {
+    const map = relationMap([{ name: "A", relation: "own" }, { name: "B", relation: "home" }, { name: "C", relation: "friend" }]);
+    const sites = siteMap([
+      { name: "A", url: "https://a.example" },
+      { name: "B", url: "https://www.b.example/workshops/" },
+      { name: "C", url: "https://cloud.c.example/cal", site: "https://c.example" },
+      { name: "D", url: "javascript:alert(1)" },
+    ]);
+    assert.deepEqual(Object.keys(sites), ["A", "B", "C"], "only http(s) sites");
+    assert.equal(origin(map, sites, { source: "A" }), null, "ours says nothing");
+    assert.equal(origin(null, sites, { source: "C" }), null, "pre-field data says nothing");
+    assert.deepEqual(origin(map, sites, { source: "B" }),
+      { kind: "veranstaltet von", name: "B", href: "https://www.b.example/workshops/", host: "b.example/workshops" });
+    assert.deepEqual(origin(map, sites, { source: "C", calendarUrl: "https://cloud.c.example/cal" }),
+      { kind: "externer Termin von", name: "C", href: "https://c.example", host: "c.example" });
+    // no site known (data from before the field): the card's calendar link
+    assert.equal(origin(map, null, { source: "C", calendarUrl: "https://cloud.c.example/cal" }).href, "https://cloud.c.example/cal");
+    assert.equal(origin(map, null, { source: "C", calendarUrl: "javascript:x" }).href, "");
+  });
 });
 
 // Shared fixtures for the feed-plan tests. buildFeedPlan never mutates cards,
@@ -3123,7 +3143,7 @@ const mkArchiveResult = (allCards, overSource = {}) => ({
 });
 
 describe("processSource", () => {
-  it("stamps each source's relation on its status entry — ok and stale alike, missing means friend", async () => {
+  it("stamps each source's relation and site on its status entry — ok and stale alike, missing means friend", async () => {
     const ics = [
       "BEGIN:VCALENDAR", "BEGIN:VEVENT", "UID:r1@example.org",
       "DTSTART:20990101T190000", "SUMMARY:Werkstatt", "END:VEVENT", "END:VCALENDAR",
@@ -3138,11 +3158,16 @@ describe("processSource", () => {
       const home = await processSource(cal({ relation: "home" }), prev);
       assert.equal(home.source.status, "ok");
       assert.equal(home.source.relation, "home");
-      assert.equal((await processSource(cal({}), prev)).source.relation, "friend");
+      // …and the group's site the origin line links: `site`, else `url`
+      assert.equal(home.source.site, "https://p.example");
+      const friend = await processSource(cal({ site: "https://p.example/verein" }), prev);
+      assert.equal(friend.source.relation, "friend");
+      assert.equal(friend.source.site, "https://p.example/verein");
       globalThis.fetch = async () => { throw new Error("down"); };
       const stale = await processSource(cal({ relation: "own" }), prev);
       assert.equal(stale.source.status, "stale");
       assert.equal(stale.source.relation, "own");
+      assert.equal(stale.source.site, "https://p.example");
     } finally {
       globalThis.fetch = origFetch;
       console.log = origLog;

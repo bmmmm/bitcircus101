@@ -32,7 +32,7 @@ const { RELATIONS } = EventsCore;
 // `_comment` in config.json and `_note` in the external sources). Anything else is a
 // typo — `icsUrl`, `categoryAllowed`, `taggs` — and must not pass silently.
 const KNOWN_KEYS = new Set([
-  "id", "name", "ics", "url", "type", "relation", "rss", "pages", "tags", "cap", "eventUrl", "filter",
+  "id", "name", "ics", "url", "site", "type", "relation", "rss", "pages", "tags", "cap", "eventUrl", "filter",
 ]);
 const KNOWN_TYPES = new Set(["ics-full", "ics-single", "ics-filtered"]);
 const KNOWN_FILTER_KEYS = new Set([
@@ -83,7 +83,7 @@ function validateSource(entry, path, errors, warnings) {
   if (typeof entry.id === "string" && !/^[a-z0-9][a-z0-9-]*$/.test(entry.id)) {
     errors.push(at(`"id" must be lowercase kebab-case, got "${entry.id}"`));
   }
-  for (const key of ["ics", "url", "eventUrl"]) {
+  for (const key of ["ics", "url", "site", "eventUrl"]) {
     const v = entry[key];
     if (v === undefined) continue;
     if (typeof v !== "string" || !/^https?:\/\//.test(v)) {

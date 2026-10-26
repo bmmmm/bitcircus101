@@ -1087,14 +1087,18 @@ test.describe('Events content', () => {
         await expect(page.locator('#events-src-datenburg')).toBeVisible();
 
         // The default view is what happens at bitcircus101: ours and the home
-        // source (badged by calendar), a friend's cards only once its box is
-        // ticked — and they read as external.
+        // source ("veranstaltet von", linking the group's site), a friend's
+        // cards only once its box is ticked — and they read as external.
         await expect(page.locator('.event-card')).toHaveCount(5);
-        await expect(page.locator('.event-card__source')).toHaveCount(1);
-        await expect(page.locator('.event-card__source')).toHaveText('Kalender: Look at my toys!');
+        const origin = page.locator('.event-card__origin');
+        await expect(origin).toHaveCount(1);
+        await expect(origin).toHaveText('veranstaltet von Look at my toys! my.stim.toys/workshops ↗');
+        await expect(origin).toHaveAttribute('href', 'https://my.stim.toys/workshops');
+        await expect(origin).toHaveAttribute('target', '_blank');
         await page.locator('#events-src-datenburg').check();
         await expect(page.locator('.event-card')).toHaveCount(7);
-        await expect(page.locator('.event-card__source').filter({ hasText: 'Externer Kalender: Datenburg e.V.' })).toHaveCount(2);
+        await expect(origin.filter({ hasText: 'externer Termin von Datenburg e.V. datenburg.org ↗' })).toHaveCount(2);
+        await expectHitZones(page, [['a.event-card__origin', 44, 44]]);
         await page.locator('#events-src-datenburg').uncheck();
         await expect(page.locator('.event-card')).toHaveCount(5);
 
@@ -2228,7 +2232,7 @@ test.describe('Event details', () => {
         await page.goto('/events.html?mit=datenburg');
         await expect(page.locator('.event-card')).toHaveCount(7);
         await expect(page.locator('.events-toolbar__sources')).toBeHidden();
-        await expect(page.locator('.event-card__source')).toHaveCount(0);
+        await expect(page.locator('.event-card__origin')).toHaveCount(0);
         await expect(page).toHaveURL(/\/events\.html$/);
     });
 

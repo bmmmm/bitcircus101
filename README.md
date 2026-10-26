@@ -513,7 +513,11 @@ If no tags match, the event gets `#community` as default.
   preview shows the same, and links an event with a page of its own there
 - Dynamic tag filter bar (OR logic: any matching tag shows event)
 - A row of checkboxes for the friends' calendars (`?mit=<id>`); the events at bitcircus101 are always on
-- Source line for other calendars' events — home: „Kalender: …", friend: „Externer Kalender: …"
+- Another group's event says whose it is in a framed line under the title and
+  links their site — home: „veranstaltet von …", friend: „externer Termin von …"
+  (`origin` in `events-core.js`; the site is `site`, else `url`, in
+  `calendars/<id>.json`). The event page carries the same line above the date,
+  the lite list a short form
 - Permalink anchors with smooth scroll
 
 ### Lite list (`scripts/build-lite-events.mjs`)
