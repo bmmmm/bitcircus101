@@ -3441,8 +3441,11 @@ test.describe('Lite version', () => {
         // Minimal forever: no scripts, no external stylesheet (all CSS inline)
         expect(html).not.toMatch(/<script/i);
         expect(html).not.toMatch(/<link[^>]+rel=["']stylesheet/i);
-        // Always offers the way back to the full site
-        expect(html).toMatch(/href=["']\.\.\/index\.html["']/);
+        // Offers the way back to the full site up top, not only in the footer
+        // (it hid there, and nobody found it)
+        const back = html.indexOf('href="../index.html"');
+        expect(back, 'no link to the full site').toBeGreaterThan(-1);
+        expect(back, 'the link to the full site comes only after the first section').toBeLessThan(html.indexOf('<h2'));
     });
 
     test('every link on /lite/ is big enough to tap', async ({ page }) => {
