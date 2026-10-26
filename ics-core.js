@@ -124,9 +124,11 @@
           (p.BYSETPOS ? ";BYSETPOS=" + p.BYSETPOS : "") + " — event not expanded"
         );
       } else {
-        var mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
         var genM = 0;
-        while (mo <= limit && genM < max) {
+        // INTERVAL=2 is every other month, counted from DTSTART's — ignored
+        // here before, so a bimonthly series showed up every month.
+        for (var mo = new Date(dtstart.getFullYear(), dtstart.getMonth(), 1);
+          mo <= limit && genM < max; mo.setMonth(mo.getMonth() + interval)) {
           var y = mo.getFullYear(), mon = mo.getMonth();
           var days = {};
           toks.forEach(function (t) {
@@ -155,7 +157,6 @@
               if (!exSet[d.toDateString()]) out.push(d);
             }
           }
-          mo.setMonth(mo.getMonth() + 1);
         }
       }
     } else if (p.FREQ === "MONTHLY") {

@@ -240,6 +240,11 @@ describe("expandRRule — MONTHLY with BYSETPOS", () => {
     );
   });
 
+  it("keeps INTERVAL: BYDAY=1MO;INTERVAL=2 is every other month", () => {
+    const dates = expandRRule(new Date(2026, 0, 5, 19, 0), "FREQ=MONTHLY;INTERVAL=2;BYDAY=1MO;COUNT=3", []);
+    assert.deepEqual(dates.map((d) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`), ["2026-1-5", "2026-3-2", "2026-5-4"]);
+  });
+
   it("expands plain weekdays as every such day of the month, BYSETPOS over the whole set", () => {
     const dtstart = new Date(2026, 1, 2, 19, 0); // Monday 2 February 2026
     const days = (rule) => expandRRule(dtstart, rule, []).filter((d) => d.getMonth() === 1).map((d) => d.getDate());
