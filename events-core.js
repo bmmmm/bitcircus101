@@ -249,6 +249,81 @@
     return endsAt(card) <= +now;
   }
 
+  /** "läuft" without a known end: for this long after the start (the kiosk's window). */
+  var NO_END_RUNNING_MS = 3 * 3600000;
+
+  /**
+   * Whether a timed card runs at `now`: from its start to its end — without
+   * an end for NO_END_RUNNING_MS, not to midnight: "läuft" is a claim, the
+   * list just keeps showing it (isOver). A cancelled date never runs; an
+   * all-day one is "heute" instead (whenWord).
+   */
+  function isRunning(card, now) {
+    if (!card.time || isCancelledTitle(card.title)) return false;
+    var start = localMs(card.date, card.time);
+    var end = card.endTime ? localMs(card.endDate || card.date, card.endTime) : start;
+    if (end <= start) end = start + NO_END_RUNNING_MS;
+    return start <= +now && +now < end;
+  }
+
+  /** "YYYY-MM-DD" of `now` plus `plusDays`, local. */
+  function dayKey(now, plusDays) {
+    var d = new Date(+now);
+    d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + (plusDays || 0));
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+
+  /**
+   * The word a list puts before a card's time: "läuft" while it runs,
+   * "heute" / "morgen" by its day (a multi-day all-day event is "heute" on
+   * each of its days), else "".
+   */
+  function whenWord(card, now) {
+    if (isRunning(card, now)) return "läuft";
+    var today = dayKey(now, 0);
+    if (card.date === today || (!card.time && card.date < today && card.endDate > today)) return "heute";
+    return card.date === dayKey(now, 1) ? "morgen" : "";
+  }
+
+  var WEEKDAYS = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+
+  /**
+   * A series' rhythm from its dates (YYYY-MM-DD, any order): "jeden Dienstag"
+   * when they run a week apart, "jeden 3. Freitag" / "jeden letzten Freitag"
+   * when they fall on that weekday of consecutive months. At least three
+   * dates — two may be all there is; anything else (a skipped week or month,
+   * the 1st, 2nd and 4th Friday) gets "": a rhythm the data does not show is
+   * left out rather than guessed.
+   */
+  function rhythmLabel(dates) {
+    var seen = {};
+    var ds = (dates || []).filter(function (s) { return !seen[s] && (seen[s] = true); }).sort();
+    if (ds.length < 3) return "";
+    var parsed = ds.map(function (s) {
+      var p = s.split("-");
+      return new Date(+p[0], +p[1] - 1, +p[2]);
+    });
+    var wd = parsed[0].getDay();
+    var name = WEEKDAYS[wd];
+    var weekly = true, monthly = true, nth = Math.ceil(parsed[0].getDate() / 7), last = true;
+    for (var i = 0; i < parsed.length; i++) {
+      var d = parsed[i];
+      if (d.getDay() !== wd) return "";
+      if (i > 0) {
+        var prev = parsed[i - 1];
+        if (Math.round((localMs(ds[i], "") - localMs(ds[i - 1], "")) / 86400000) !== 7) weekly = false;
+        if ((d.getFullYear() * 12 + d.getMonth()) - (prev.getFullYear() * 12 + prev.getMonth()) !== 1) monthly = false;
+      }
+      if (Math.ceil(d.getDate() / 7) !== nth) nth = 0;
+      if (d.getDate() + 7 <= new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()) last = false;
+    }
+    if (weekly) return "jeden " + name;
+    if (!monthly) return "";
+    // A 5th weekday is the last one too: "letzten" reads it for every month.
+    if (nth && nth < 5) return "jeden " + nth + ". " + name;
+    return last ? "jeden letzten " + name : "";
+  }
+
   /**
    * The "→ kalender" target for a card without an event URL. A Nextcloud
    * calendar view (…/apps/calendar/…) opens on the event's day; any other
@@ -385,14 +460,35 @@
   function toCards(icsEvents, cal, now) {
     now = now || new Date();
     var cap = typeof cal.cap === "number" && isFinite(cal.cap) ? cal.cap : 30;
-    return icsEvents
+    var cards = icsEvents
       .filter(function (e) { return !isInternal(e.summary); })
       .sort(function (a, b) { return a.dtstart - b.dtstart; })
       .map(function (e) { return toCard(e, cal); })
       // isOver, not "starts after now": the hourly sync used to drop a 19:00
       // event at its first run past 19:00, so it left every page while it ran.
-      .filter(function (c) { return !isOver(c, now); })
-      .slice(0, cap);
+      .filter(function (c) { return !isOver(c, now); });
+    // The rhythm needs every date to the horizon, not the capped few: the
+    // 40-card window held a monthly series twice (October 2026) — too few
+    // for rhythmLabel, and the lists see only the window.
+    var dates = {};
+    cards.forEach(function (c) {
+      var key = seriesKey(c);
+      if (key) (dates[key] = dates[key] || []).push(c.date);
+    });
+    return cards.slice(0, cap).map(function (c) {
+      var key = seriesKey(c);
+      return withRhythm(c, key ? rhythmLabel(dates[key]) : "");
+    });
+  }
+
+  /** `card` plus `rhythm` when there is one — before eventUrl, which stays the last key. */
+  function withRhythm(card, rhythm) {
+    if (!rhythm) return card;
+    var out = {};
+    Object.keys(card).forEach(function (k) { if (k !== "eventUrl") out[k] = card[k]; });
+    out.rhythm = rhythm;
+    if (card.eventUrl) out.eventUrl = card.eventUrl;
+    return out;
   }
 
   /** Runaway guard for the archive pass — every series runs to the horizon
@@ -435,6 +531,9 @@
     seriesKey: seriesKey,
     endsAt: endsAt,
     isOver: isOver,
+    isRunning: isRunning,
+    whenWord: whenWord,
+    rhythmLabel: rhythmLabel,
     hasPages: hasPages,
     RELATIONS: RELATIONS,
     relationOf: relationOf,

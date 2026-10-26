@@ -997,7 +997,10 @@
         const shown = cancelled ? core.stripCancelMarker(e.title) : e.title;
         const typeClass = (e.type ? " event-preview--" + e.type : "") +
           (cancelled ? " event-preview--cancelled" : "");
-        html += '<a class="event-preview' + typeClass + '" href="events.html">';
+        // its own page when it has one (events-core hasPages, `page` on the
+        // card), else the list
+        const href = e.id && e.page ? "e/" + escHtml(e.id) + "/" : "events.html";
+        html += '<a class="event-preview' + typeClass + '" href="' + href + '">';
         html += '<span class="event-preview__dow">' + dow + "</span>";
         html += '<span class="event-preview__date">' + date + "</span>";
         html +=
@@ -1011,9 +1014,17 @@
         html += "</span>";
         if (cancelled)
           html += '<span class="event-preview__cancelled"><span aria-hidden="true">✕ </span>abgesagt</span>';
-        else if (e.time)
-          html +=
-            '<span class="event-preview__time">' + escHtml(e.time) + "</span>";
+        else {
+          // "läuft" / "heute" / "morgen" (events-core whenWord), then the window
+          const word = core && core.whenWord ? core.whenWord(e, now) : "";
+          const span = e.time && e.endTime && e.endTime !== e.time ? e.time + "–" + e.endTime : e.time;
+          if (word || span) {
+            html += '<span class="event-preview__time">' +
+              (word ? '<span class="event-preview__word' + (word === "läuft" ? " event-preview__word--now" : "") +
+                '">' + word + "</span>" + (span ? " " : "") : "") +
+              escHtml(span || "") + "</span>";
+          }
+        }
         html += "</a>";
       });
 

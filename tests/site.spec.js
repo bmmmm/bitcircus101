@@ -2103,27 +2103,42 @@ test.describe('Event details', () => {
         // its first run past the start; the pages filter by the same rule
         // as the sync now (events-core isOver).
         await page.clock.install({ time: new Date('2026-10-27T20:30:00') });
-        const card = (title, date, time, endTime) => ({
+        const card = (title, date, time, endTime, extra = {}) => ({
             title, subtitle: '', description: '', location: '', date, time, endDate: date, endTime,
-            tags: ['#meetup'], type: '', source: 'bitcircus101', uid: `run-${title}`,
+            tags: ['#meetup'], type: '', source: 'bitcircus101', uid: `run-${title}`, ...extra,
         });
         const data = buildEventsData();
         data.events = [
             card('Schon vorbei', '2026-10-27', '17:00', '19:00'),
-            card('Läuft gerade', '2026-10-27', '19:00', '22:00'),
+            card('Läuft gerade', '2026-10-27', '19:00', '22:00', { id: 'aa11bb22cc33', page: true }),
             card('Ganztags heute', '2026-10-27', '', ''),
             card('Morgen', '2026-10-28', '19:00', '22:00'),
+            card('Übermorgen', '2026-10-29', '19:00', '22:00'),
         ];
         await useEventsFixture(page, data);
-        const shown = [/Ganztags heute/, /Läuft gerade/, /Morgen/];
 
+        // /events: the word before the time — "läuft" with the green dot
         await page.goto('/events.html');
-        await expect(page.locator('.event-card__title')).toHaveText(shown);
+        await expect(page.locator('.event-card__title')).toHaveText([/Ganztags heute/, /Läuft gerade/, /Morgen/, /Übermorgen/]);
+        const word = (title) => page.locator('.event-card', { hasText: title }).locator('.event-card__word');
+        await expect(word('Läuft gerade')).toHaveText('läuft');
+        await expect(word('Läuft gerade')).toHaveClass(/event-card__word--now/);
+        await expect(word('Ganztags heute')).toHaveText('heute');
+        await expect(word('Morgen')).toHaveText('morgen');
+        await expect(word('Übermorgen')).toHaveCount(0);
+
+        // homepage: the same three, word and window in the time cell, and a
+        // row with a page of its own links there
         await page.goto('/');
-        await expect(page.locator('#next-events-list .event-preview__title')).toHaveText(shown);
+        const rows = page.locator('#next-events-list .event-preview');
+        await expect(rows.locator('.event-preview__title')).toHaveText([/Ganztags heute/, /Läuft gerade/, /Morgen/]);
+        await expect(rows.locator('.event-preview__time')).toHaveText(['heute', 'läuft 19:00–22:00', 'morgen 19:00–22:00']);
+        await expect(rows.nth(1).locator('.event-preview__word--now')).toHaveCount(1);
+        await expect(rows.nth(1)).toHaveAttribute('href', 'e/aa11bb22cc33/');
+        await expect(rows.nth(0)).toHaveAttribute('href', 'events.html');
     });
 
-    test('a series carries its text once: its later dates are one line, and a cancelled date does not take the text', async ({ page }) => {
+    test('a series carries its text and rhythm once: its later dates and a cancelled one are one line', async ({ page }) => {
         await page.clock.install({ time: new Date('2026-09-01T10:00:00') });
         const weekly = (day, extra = {}) => ({
             title: 'Spieleabend', subtitle: '', description: 'Brettspiele, Kartenspiele, Puzzles.',
@@ -2147,11 +2162,14 @@ test.describe('Event details', () => {
         const pills = (day) => card(day).locator('.event-action');
         await expect(page.locator('.event-card')).toHaveCount(5);
 
-        // The cancelled first date keeps its text, and so does the first real one.
-        for (const day of ['01', '08']) {
-            await expect(card(day)).not.toHaveClass(/event-card--repeat/);
-            await expect(card(day).locator('.event-card__desc')).toHaveCount(1);
-        }
+        // A cancelled date is short even as the first one; the first real date
+        // carries the text — and the series' rhythm, once.
+        await expect(card('01')).toHaveClass(/event-card--repeat/);
+        await expect(card('01').locator('.event-card__desc')).toHaveCount(0);
+        await expect(card('08')).not.toHaveClass(/event-card--repeat/);
+        await expect(card('08').locator('.event-card__desc')).toHaveCount(1);
+        await expect(page.locator('.event-card__rhythm')).toHaveText(['jeden Dienstag']);
+        await expect(card('08').locator('.event-card__rhythm')).toHaveCount(1);
         await expect(card('08').locator('.event-card__location')).toHaveCount(1);
         await expect(card('08').locator('.event-tag')).toHaveCount(1);
         await expect(pills('08')).toHaveText(['← link', '→ details', '→ kalender', '○ karte']);

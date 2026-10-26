@@ -30,6 +30,7 @@
   var PARAM = { TAGS: "tags", WITH: "mit", Q: "q" };
   var state = { tags: [], friends: [], q: "" };
   var allFutureSorted = [];
+  var rhythms = {}; // series key → "jeden Dienstag" (events-core rhythmLabel), over every listed date
   var feeds = null; // feeds manifest from events-data.json; null until the JSON has loaded
   var relMap = null; // source name → relation (events-core relationMap); null on pre-field data
   var friendList = []; // the friends' calendars the toolbar offers, {id, name} in config order
@@ -394,6 +395,18 @@
         return (a.date + (a.time || "")).localeCompare(b.date + (b.time || ""));
       });
 
+    // A series' rhythm comes from all its dates in the list, not just the
+    // filtered ones: a search must not turn "jeden Dienstag" into nothing.
+    var seriesDates = {};
+    allFutureSorted.forEach(function (e) {
+      var key = EventsCore.seriesKey(e);
+      if (key) (seriesDates[key] = seriesDates[key] || []).push(e.date);
+    });
+    rhythms = {};
+    Object.keys(seriesDates).forEach(function (key) {
+      rhythms[key] = EventsCore.rhythmLabel(seriesDates[key]);
+    });
+
     if (!allFutureSorted.length) {
       removeToolbar();
       removeFilterBar();
@@ -537,6 +550,7 @@
     });
 
     var html = "";
+    var now = new Date(); // "läuft" / "heute" / "morgen" (events-core whenWord)
     var unfolded = 0; // cards in the months before this one (OPEN_MIN)
     var seenSeries = {}; // series whose full card is out (events-core seriesKey)
     groups.forEach(function (k) {
@@ -565,9 +579,11 @@
         // time, links. Its first card in the list carries the text, the place
         // and the tags — 13 of the 22 cards in the default view repeated one,
         // 11 with the same text (October 2026). A cancelled date never counts
-        // as that first card, so the next real one keeps the text.
+        // as that first card, so the next real one keeps the text — and a
+        // cancelled date of a series is short wherever it falls: it only has
+        // to say that this date is off.
         var series = core && core.seriesKey ? core.seriesKey(e) : null;
-        var repeat = !!(series && seenSeries[series]);
+        var repeat = !!(series && (seenSeries[series] || cancelled));
         if (series && !cancelled) seenSeries[series] = true;
         var typeClass = (e.type ? " event-card--" + e.type : "") +
           (cancelled ? " event-card--cancelled" : "") +
@@ -631,7 +647,18 @@
         }
         // Meta: time + tags
         html += '<div class="event-card__meta">';
+        var word = core && core.whenWord ? core.whenWord(e, now) : "";
+        if (word) {
+          html += '<span class="event-card__word' + (word === "l\u00e4uft" ? " event-card__word--now" : "") +
+            '">' + word + "</span>";
+        }
         html += '<span class="event-card__time">' + esc(timeLabel(e)) + "</span>";
+        // the rhythm stands once, on the series' full card
+        // (the sync's, from every date to the horizon; else what the list holds)
+        var rhythm = series && !repeat ? e.rhythm || rhythms[series] : "";
+        if (rhythm) {
+          html += '<span class="event-card__rhythm">' + esc(rhythm) + "</span>";
+        }
         if (e.tags && e.tags.length && !repeat) {
           html += '<span class="event-card__tags">';
           e.tags.forEach(function (t) {

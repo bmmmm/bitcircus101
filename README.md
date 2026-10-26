@@ -498,8 +498,11 @@ If no tags match, the event gets `#community` as default.
   the end of a month never leaves a single card in view
 - A series' later dates (same source + calendar UID, `seriesKey` in
   `events-core.js`) are one line — title, time, links; its first card carries
-  the text, the place and the tags. A cancelled date never counts as that card
-- Times as a window („19:00–22:00“), all-day events as „ganztägig“
+  the text, the place, the tags and the rhythm („jeden Dienstag“, „jeden 3.
+  Freitag“ — `rhythmLabel`). A cancelled date of a series is always one line
+- Times as a window („19:00–22:00“), all-day events as „ganztägig“; before it
+  „läuft“ (with the green dot), „heute“ or „morgen“ (`whenWord`). The homepage
+  preview shows the same, and links an event with a page of its own there
 - Dynamic tag filter bar (OR logic: any matching tag shows event)
 - A row of checkboxes for the friends' calendars (`?mit=<id>`); the events at bitcircus101 are always on
 - Source line for other calendars' events — home: „Kalender: …", friend: „Externer Kalender: …"
@@ -510,9 +513,10 @@ If no tags match, the event gets `#community` as default.
 - The next eight lines of events at bitcircus101 (own + home sources) in
   `lite/index.html`, written on live by the sync and the deploy — the tracked
   file keeps the no-data placeholder
-- A series takes one line, its next date — „jeden Dienstag“ when three dates or
-  more run a week apart. A cancelled date keeps a line of its own, struck
-  through and labelled „abgesagt“
+- A series takes one line, its next date — with its rhythm („jeden Dienstag“,
+  „jeden 3. Freitag“) when three dates or more show one. A cancelled date
+  keeps a line of its own, struck through and labelled „abgesagt“
+- „läuft“ / „heute“ / „morgen“ after the date, as of the hourly build
 - On a phone the date stands above the title
 - Against a fixture, into a copy: `node scripts/build-lite-events.mjs
   <events-data.json> <lite.html>`

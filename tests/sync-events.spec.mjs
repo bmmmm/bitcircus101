@@ -28,7 +28,7 @@ import {
 // itself imports them.
 import EventsCore from "../events-core.js";
 const {
-  toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS, seriesKey, isOver,
+  toCard, stripTagLines, isCancelledTitle, stripCancelMarker, MAX_ALL_CARDS, seriesKey, isOver, isRunning, whenWord,
   RELATIONS, relationOf, isHome, inPrimaryFeed, relationMap, sourceRelation, sourceBadge,
 } = EventsCore;
 
@@ -1032,6 +1032,58 @@ describe("toCards", () => {
     const camp = { allDay: true, dtstart: new Date(2026, 9, 26), dtend: new Date(2026, 9, 29) };
     assert.equal(at(camp, 2026, 9, 28, 23, 0), 1, "the last day still shows");
     assert.equal(at(camp, 2026, 9, 29, 0, 0), 0);
+  });
+});
+
+describe("toCards — the series' rhythm", () => {
+  // Monthly dates over four months, a cap of two: the rhythm still comes from
+  // all four — the 40-card window held a monthly series only twice.
+  it("stamps rhythm from every upcoming date, past the cap, before eventUrl", () => {
+    const at = (m, d) => ({
+      summary: "Linkup", description: "", location: "", categories: "", url: "https://x.example/linkup",
+      uid: "linkup@x", recurring: true, allDay: false,
+      dtstart: new Date(2026, m, d, 20, 0), dtend: new Date(2026, m, d, 22, 0),
+    });
+    const events = [at(9, 16), at(10, 20), at(11, 18), at(12, 15)]; // 3rd Fridays, Oct 2026 – Jan 2027 (month 12)
+    const cards = toCards(events, { name: "X", url: "https://x.example", type: "ics-single", cap: 2 }, new Date(2026, 9, 1));
+    assert.equal(cards.length, 2);
+    assert.deepEqual(cards.map((c) => c.rhythm), ["jeden 3. Freitag", "jeden 3. Freitag"]);
+    assert.deepEqual(Object.keys(cards[0]).slice(-2), ["rhythm", "eventUrl"]);
+    // a one-off carries no rhythm key at all
+    const [one] = toCards([{ ...at(9, 16), recurring: false }], { name: "X", url: "https://x.example" }, new Date(2026, 9, 1));
+    assert.equal("rhythm" in one, false);
+  });
+});
+
+describe("isRunning / whenWord", () => {
+  const at = (...t) => new Date(...t);
+  const evening = { title: "Abend", date: "2026-10-27", time: "19:00", endDate: "2026-10-27", endTime: "22:00" };
+  it("runs from start to end; without an end for three hours, not to midnight", () => {
+    assert.equal(isRunning(evening, at(2026, 9, 27, 18, 59)), false);
+    assert.equal(isRunning(evening, at(2026, 9, 27, 19, 0)), true);
+    assert.equal(isRunning(evening, at(2026, 9, 27, 22, 0)), false);
+    const open = { title: "Offen", date: "2026-10-27", time: "16:00" };
+    assert.equal(isRunning(open, at(2026, 9, 27, 18, 59)), true);
+    assert.equal(isRunning(open, at(2026, 9, 27, 19, 0)), false);
+    // an end at midnight is a real end, not "none"
+    const late = { title: "Spät", date: "2026-10-27", time: "20:00", endDate: "2026-10-28", endTime: "00:00" };
+    assert.equal(isRunning(late, at(2026, 9, 27, 23, 30)), true);
+    // a cancelled date and an all-day one never "run"
+    assert.equal(isRunning({ ...evening, title: "CANCELED: Abend" }, at(2026, 9, 27, 20, 0)), false);
+    assert.equal(isRunning({ title: "Tag", date: "2026-10-27", time: "" }, at(2026, 9, 27, 20, 0)), false);
+  });
+
+  it("says läuft, heute or morgen — a multi-day all-day event is heute on each day", () => {
+    const now = at(2026, 9, 27, 20, 30);
+    assert.equal(whenWord(evening, now), "läuft");
+    assert.equal(whenWord({ ...evening, time: "17:00", endTime: "19:00" }, at(2026, 9, 27, 10, 0)), "heute");
+    assert.equal(whenWord({ ...evening, title: "CANCELED: Abend" }, now), "heute");
+    assert.equal(whenWord({ title: "Tag", date: "2026-10-27", time: "" }, now), "heute");
+    assert.equal(whenWord({ title: "Camp", date: "2026-10-26", time: "", endDate: "2026-10-29" }, now), "heute");
+    assert.equal(whenWord({ ...evening, date: "2026-10-28", endDate: "2026-10-28" }, now), "morgen");
+    // the last of the month: tomorrow is the 1st
+    assert.equal(whenWord({ ...evening, date: "2026-11-01", endDate: "2026-11-01" }, at(2026, 9, 31, 12, 0)), "morgen");
+    assert.equal(whenWord({ ...evening, date: "2026-10-29", endDate: "2026-10-29" }, now), "");
   });
 });
 

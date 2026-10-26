@@ -10,8 +10,11 @@
  * One line per series: almost every event is a date of a series, and a weekly
  * one took three of the eight lines while the monthly linkup fell off the end
  * (measured on the live data, October 2026). A series shows its next date —
- * "jeden Dienstag" when its dates run in weeks — and a cancelled date keeps a
- * line of its own, struck through and labelled like on /events.
+ * with its rhythm, "jeden Dienstag" / "jeden 3. Freitag" (events-core
+ * rhythmLabel) — and a cancelled date keeps a line of its own, struck through
+ * and labelled like on /events. "läuft" / "heute" / "morgen" stand after the
+ * date (events-core whenWord) — as of the build, which runs hourly: the date
+ * stays, so a late build leaves a stale word, never a wrong date.
  *
  * Scope: events only. The "Projekte & Kosten" block and the "Stand" date next
  * to it belong to build-lite-finanz.mjs — this script used to stamp that date
@@ -36,7 +39,6 @@ const MAX_EVENTS = 8;
 
 const DAYS = ["SO", "MO", "DI", "MI", "DO", "FR", "SA"];
 const MONTHS = ["JAN", "FEB", "MÄR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ"];
-const WEEKDAYS = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
 
 export function formatDate(dateStr, timeStr) {
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -59,28 +61,6 @@ export function normalizeUrl(u) {
   return null;
 }
 
-/** Whole days from one YYYY-MM-DD to another — UTC math, so no DST hour skews it. */
-function daysBetween(a, b) {
-  const [ay, am, ad] = a.split("-").map(Number);
-  const [by, bm, bd] = b.split("-").map(Number);
-  return Math.round((Date.UTC(by, bm - 1, bd) - Date.UTC(ay, am - 1, ad)) / 86400000);
-}
-
-/**
- * "jeden Dienstag" when a series' dates (sorted) run in steps of exactly one
- * week, at least three of them: two dates a week apart may be all there is.
- * Anything else — monthly, a skipped week — gets no label: a rhythm the data
- * does not show is left out rather than guessed.
- */
-export function weeklyLabel(dates) {
-  if (!dates || dates.length < 3) return "";
-  for (let i = 1; i < dates.length; i++) {
-    if (daysBetween(dates[i - 1], dates[i]) !== 7) return "";
-  }
-  const [y, m, d] = dates[0].split("-").map(Number);
-  return "jeden " + WEEKDAYS[new Date(y, m - 1, d).getDay()];
-}
-
 export function buildMarkup(events, icsUrl, rssPath) {
   if (!events.length) {
     return `<p class="dim">Keine Termine eingetragen — <a href="../events.html">Veranstaltungen</a></p>`;
@@ -100,13 +80,15 @@ export function buildMarkup(events, icsUrl, rssPath) {
         ? `<a href="../e/${esc(e.id)}/">${shown}</a>` +
           (url ? ` · <a href="${esc(url)}" rel="noopener noreferrer">extern</a>` : "")
         : ext;
+      // Inside the <time>: on a phone the date line takes it along.
+      const word = !cancelled && e.word ? ` <span class="jetzt">${esc(e.word)}</span>` : "";
       const note = cancelled
         ? ` <span class="abgesagt"><span aria-hidden="true">✕ </span>abgesagt</span>`
         : e.rhythm ? ` <span class="dim">· ${esc(e.rhythm)}</span>` : "";
       // The dash is its own span: on a phone the date takes a line of its
       // own and the dash goes (the page's CSS).
       return `<li${cancelled ? ' class="cancelled"' : ""}>` +
-        `<time datetime="${esc(toDatetime(e.date, e.time))}" class="when">${formatDate(e.date, e.time)}</time>` +
+        `<time datetime="${esc(toDatetime(e.date, e.time))}" class="when">${formatDate(e.date, e.time)}${word}</time>` +
         `<span class="sep"> — </span>${label}${note}</li>`;
     })
     .join("\n");
@@ -139,8 +121,9 @@ export function resolveRssPath(data, fallback = "../feed.xml") {
  * capped at MAX_EVENTS: our own calendar and the home sources, never a friend's (the
  * data's sources list says which is which; pre-field data has no friends).
  * A series (events-core seriesKey) takes one line, its next date, and carries
- * `rhythm` — weeklyLabel over every date the window holds for it, cancelled
- * ones included: a week off does not change the rhythm. A cancelled date is
+ * `rhythm` — the sync's (toCards, over every date to the horizon), else
+ * rhythmLabel over the dates the window holds, cancelled ones included: a
+ * week off does not change the rhythm — and `word` (whenWord at `now`). A cancelled date is
  * always a line of its own, so the next real date of its series follows it.
  * Returns copies; the input stays untouched.
  * Pure: the caller passes `now` (a Date) in, so the selection is testable
@@ -167,12 +150,14 @@ export function selectUpcoming(data, now) {
     if (out.length === MAX_EVENTS) break;
     const key = EventsCore.seriesKey(e);
     if (key && EventsCore.isCancelledTitle(e.title)) {
-      out.push({ ...e, rhythm: "" });
+      out.push({ ...e, rhythm: "", word: EventsCore.whenWord(e, now) });
       continue;
     }
     if (key && shown.has(key)) continue;
     if (key) shown.add(key);
-    out.push({ ...e, rhythm: key ? weeklyLabel(dates.get(key)) : "" });
+    // the sync's rhythm (every date to the horizon) first, else the window's
+    const rhythm = key ? e.rhythm || EventsCore.rhythmLabel(dates.get(key)) : "";
+    out.push({ ...e, rhythm, word: EventsCore.whenWord(e, now) });
   }
   return out;
 }

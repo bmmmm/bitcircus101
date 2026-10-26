@@ -23,9 +23,11 @@ import {
   buildMarkup,
   resolveRssPath,
   selectUpcoming,
-  weeklyLabel,
   main,
 } from "../scripts/build-lite-events.mjs";
+import EventsCore from "../events-core.js";
+
+const { rhythmLabel } = EventsCore;
 
 const ev = (date, extra = {}) => ({
   source: "bitcircus101",
@@ -53,6 +55,11 @@ describe("selectUpcoming", () => {
     assert.deepEqual(titles("00:00"), ["Ganztags", "Vorbei", "Läuft"]);
     assert.deepEqual(titles("20:30"), ["Ganztags", "Läuft"]);
     assert.deepEqual(titles("23:59"), ["Ganztags"]);
+    // …and says where it stands today
+    assert.deepEqual(
+      selectUpcoming({ events }, at(TODAY, "20:30")).map((e) => e.word),
+      ["heute", "läuft"]
+    );
   });
 
   it("drops past events and the friends' calendars, keeps a home calendar's", () => {
@@ -167,21 +174,31 @@ describe("selectUpcoming — one line per series", () => {
   });
 });
 
-describe("weeklyLabel", () => {
+// events-core's, tested here with its first consumer.
+describe("rhythmLabel", () => {
   it("names the weekday when three dates or more run in steps of one week", () => {
-    assert.equal(weeklyLabel(["2026-09-01", "2026-09-08", "2026-09-15"]), "jeden Dienstag");
-    assert.equal(weeklyLabel(["2026-09-04", "2026-09-11", "2026-09-18", "2026-09-25"]), "jeden Freitag");
+    assert.equal(rhythmLabel(["2026-09-01", "2026-09-08", "2026-09-15"]), "jeden Dienstag");
+    assert.equal(rhythmLabel(["2026-09-25", "2026-09-04", "2026-09-18", "2026-09-11"]), "jeden Freitag", "any order");
     // across the end of summer time (25 Oct 2026) the steps are still whole weeks
-    assert.equal(weeklyLabel(["2026-10-20", "2026-10-27", "2026-11-03"]), "jeden Dienstag");
+    assert.equal(rhythmLabel(["2026-10-20", "2026-10-27", "2026-11-03"]), "jeden Dienstag");
+  });
+
+  it("names the nth weekday of consecutive months, and the last one", () => {
+    assert.equal(rhythmLabel(["2026-09-18", "2026-10-16", "2026-11-20"]), "jeden 3. Freitag");
+    assert.equal(rhythmLabel(["2026-11-20", "2026-12-18", "2027-01-15"]), "jeden 3. Freitag", "across the year");
+    // 28 Oct, 25 Nov, 30 Dec: the 4th, 4th and 5th Wednesday — always the last
+    assert.equal(rhythmLabel(["2026-10-28", "2026-11-25", "2026-12-30"]), "jeden letzten Mittwoch");
   });
 
   it("says nothing about a rhythm the dates do not show", () => {
-    assert.equal(weeklyLabel(["2026-09-01", "2026-09-08"]), "", "two dates may be all there is");
-    assert.equal(weeklyLabel(["2026-09-01", "2026-09-15", "2026-09-22"]), "", "a skipped week");
-    assert.equal(weeklyLabel(["2026-09-18", "2026-10-16", "2026-11-20"]), "", "monthly");
-    assert.equal(weeklyLabel(["2026-09-01"]), "");
-    assert.equal(weeklyLabel([]), "");
-    assert.equal(weeklyLabel(undefined), "");
+    assert.equal(rhythmLabel(["2026-09-01", "2026-09-08"]), "", "two dates may be all there is");
+    assert.equal(rhythmLabel(["2026-09-01", "2026-09-15", "2026-09-22"]), "", "a skipped week");
+    assert.equal(rhythmLabel(["2026-09-18", "2026-11-20", "2026-12-18"]), "", "a skipped month");
+    assert.equal(rhythmLabel(["2026-10-02", "2026-10-09", "2026-10-23", "2026-10-30"]), "", "1st, 2nd, 4th, 5th Friday");
+    assert.equal(rhythmLabel(["2026-10-30", "2027-01-29", "2027-04-30"]), "", "5th Fridays: no month in a row");
+    assert.equal(rhythmLabel(["2026-09-01"]), "");
+    assert.equal(rhythmLabel([]), "");
+    assert.equal(rhythmLabel(undefined), "");
   });
 });
 
@@ -320,6 +337,16 @@ describe("buildMarkup", () => {
     const out = buildMarkup([ev("2026-09-01", { rhythm: "jeden <Dienstag>" })], null, "../feed.xml");
     assert.match(out, /Linkup <span class="dim">· jeden &lt;Dienstag&gt;<\/span><\/li>/);
     assert.ok(!buildMarkup([ev("2026-09-01")], null, "../feed.xml").includes('<span class="dim">'));
+  });
+
+  it("puts the word of the day inside the date, never on a cancelled line", () => {
+    const out = buildMarkup([
+      ev("2026-09-01", { time: "19:00", word: "läuft" }),
+      ev("2026-09-02", { title: "ABGESAGT: Linkup", word: "morgen" }),
+    ], null, "../feed.xml");
+    // inside the <time>: on a phone the date line takes it along
+    assert.match(out, /DI 1\. SEP · 19:00 <span class="jetzt">läuft<\/span><\/time>/);
+    assert.equal((out.match(/class="jetzt"/g) || []).length, 1);
   });
 
   it("says so instead of rendering an empty list", () => {

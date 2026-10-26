@@ -40,7 +40,8 @@
        "[ ]" of panel and month titles, the "── " before an h3, the h1 double
        rule, and the date before an event (list day+month, homepage preview,
        event page "wann", kiosk day label) · state on /status
-       (bars that happened, pulse levels).
+       (bars that happened, pulse levels) and the "●" of an event that runs
+       now (kiosk, /termine, homepage — its word "läuft" stays ink).
        INK: every heading and body text · form controls and UI toggles (theme
        toggle, carousel dots, checkboxes), focus rings (but the w/a/s/d
        cursor's) and selection outlines ·
@@ -880,6 +881,7 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .event-preview:last-child { border-bottom: none; }
 .event-preview:hover { background: var(--ink); color: var(--paper); }
 .event-preview:hover span { color: inherit; }
+.event-preview:hover .event-preview__word--now::before { color: inherit; }
 
 /* the date is the row's green marker (the hover reset above takes it back) */
 .event-preview__dow { color: var(--accent); font-size: var(--fs-label); }
@@ -910,6 +912,11 @@ h1.man__name b { color: var(--ink-max); font-weight: 700; }
 .event-preview--cancelled .event-preview__dow,
 .event-preview--cancelled .event-preview__date { color: var(--ink-dim); }
 .event-preview__cancelled { font-size: 0.7rem; justify-self: end; }
+/* On a phone "● LÄUFT 19:00–22:00" left the title four letters: the time
+   cell takes a line of its own under the title there. */
+@media (max-width: 30rem) {
+    .event-preview__time { grid-column: 3 / -1; text-align: left; }
+}
 
 .events-more-link { font-size: var(--fs-small); margin: 0.75rem 0 0.25rem; }
 /* the side doors of the events panel: ink text, only the keywords are links —
@@ -1328,6 +1335,22 @@ a.event-card__location:hover { background: var(--ink); color: var(--paper); }
 
 .event-card__meta { display: flex; align-items: center; gap: 1.5ch; flex-wrap: wrap; }
 .event-card__time { color: var(--ink-max); font-size: var(--fs-meta); font-weight: 700; }
+/* "läuft" / "heute" / "morgen" before the time (events-core whenWord): a word,
+   so ink — only the running dot is green, like the kiosk's (state). The gap
+   between it and the time is the meta row's; margin-right pulls it closer. */
+.event-card__word,
+.event-preview__word {
+    color: var(--ink-max);
+    font-size: var(--fs-meta);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.event-card__word { margin-right: -0.75ch; }
+.event-card__word--now::before,
+.event-preview__word--now::before { content: "● "; color: var(--accent); }
+/* the series' rhythm, "jeden Dienstag" — once, on its full card */
+.event-card__rhythm { color: var(--ink-dim); font-size: var(--fs-meta); }
 
 .event-card__tags { display: flex; gap: 0.75ch; flex-wrap: wrap; }
 .event-tag {
