@@ -167,7 +167,7 @@ export function seriesDates(entries, todayStr) {
   for (const e of entries) {
     const key = seriesKey(e);
     if (!key || !isRenderable(e) || e.date < todayStr) continue;
-    if (e.cancelled && e.cancelledBy !== "title") continue;
+    if (e.removed || (e.cancelled && e.cancelledBy !== "title")) continue;
     if (!map.has(key)) map.set(key, []);
     map.get(key).push(e);
   }
@@ -307,10 +307,11 @@ export function renderHead(entry, { assetVersion, relations = null }) {
     canonical: `${SITE_URL}/e/${entry.id}/`,
     // A cancelled event keeps its page (shared links must resolve) but leaves
     // the index — "follow" so the crawler still reaches /events from here.
-    robots: entry.cancelled ? "noindex, follow" : "index, follow",
+    robots: entry.cancelled || entry.removed ? "noindex, follow" : "index, follow",
     alternates: [
       { type: "application/rss+xml", title: "bitcircus101 Termine", href: "../../feed.xml" },
-      { type: "text/calendar", title: `${entry.title} (iCal)`, href: "event.ics" },
+      // planPages writes no ics for a removed entry
+      ...(entry.removed ? [] : [{ type: "text/calendar", title: `${entry.title} (iCal)`, href: "event.ics" }]),
     ],
     jsonLd: jsonLdBlock(toJsonLdEvent(entry)),
   });
@@ -396,7 +397,13 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
   if (entry.subtitle) {
     parts.push(`                <p class="event-page__subtitle">${esc(entry.subtitle)}</p>`);
   }
-  if (entry.cancelled) {
+  if (entry.removed) {
+    // The series left the calendar (mergeArchive): no date was called off.
+    parts.push(
+      `                <p class="event-page__notice">Dieser Termin steht nicht mehr in unserem Kalender – ` +
+        `was ansteht, steht unter <a href="../../events.html">/termine</a>.</p>`
+    );
+  } else if (entry.cancelled) {
     // Two ways into `cancelled` (see mergeArchive): the owner marked the title,
     // or the entry vanished from the export — say which one the reader sees.
     const notice = entry.cancelledBy === "title"
@@ -456,10 +463,12 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
     `                    <a class="event-action event-action--cal" href="${esc(calHref)}" ` +
       `target="_blank" rel="noopener noreferrer" title="${esc(calTitle)}">${calLabel}</a>`
   );
-  parts.push(
-    `                    <a class="event-action event-action--ics" href="event.ics" ` +
-      `title="Diesen Termin als ICS laden">↓ ics</a>`
-  );
+  if (!entry.removed) {
+    parts.push(
+      `                    <a class="event-action event-action--ics" href="event.ics" ` +
+        `title="Diesen Termin als ICS laden">↓ ics</a>`
+    );
+  }
   parts.push(
     `                    <a class="event-action event-action--back" href="../../events.html">← alle termine</a>`
   );
@@ -478,6 +487,7 @@ export function renderEventPage(entry, chrome, todayStr = berlinToday(), relatio
 
 /** The one sentence a past event keeps. */
 export function pastNotice(entry) {
+  if (entry.removed) return "Dieser Termin wurde aus unserem Kalender genommen.";
   return entry.cancelled ? "Dieser Termin wurde abgesagt." : "Dieser Termin hat stattgefunden.";
 }
 
@@ -495,7 +505,7 @@ export function renderPastPage(entry, chrome) {
       `<a href="../../events.html">/termine</a> /${esc(entry.id)}</p>`
   );
   parts.push(`                <h1>Termin vom <time datetime="${esc(entry.date)}">${esc(formatDateLong(entry.date))}</time></h1>`);
-  parts.push(`                <p class="${entry.cancelled ? "event-page__notice" : "event-page__past"}">${pastNotice(entry)}</p>`);
+  parts.push(`                <p class="${entry.cancelled && !entry.removed ? "event-page__notice" : "event-page__past"}">${pastNotice(entry)}</p>`);
   parts.push(
     `                <p>Von vergangenen Terminen speichern wir nur, ob sie stattgefunden haben – ` +
       `ohne Titel, Beschreibung oder Ort.</p>`
@@ -543,7 +553,8 @@ export function planPages(archive, chrome, todayStr = berlinToday(), relations =
       path: `e/${entry.id}/index.html`,
       data: renderEventPage(entry, chrome, todayStr, relations, (key && series.get(key)) || []),
     });
-    if (entry.date < todayStr) continue;
+    // no ics for a past date, nor for one whose series left the calendar
+    if (entry.date < todayStr || entry.removed) continue;
     // DTSTAMP from firstSeen, not from now: a rebuild must not rewrite every
     // ics on every run (syncFeedsDir only writes what changed). A missing or
     // unparsable firstSeen (hand-edited archive) falls back to now instead of

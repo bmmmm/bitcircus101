@@ -301,6 +301,19 @@ describe("renderEventPage", () => {
     assert.ok(!upcoming.includes("event-page__past"), "an upcoming event was called past");
   });
 
+  // The series left the calendar (mergeArchive `removed`): the page stays for
+  // the links out there, but says neither "abgesagt" nor offers an ics.
+  it("says a removed series' date left the calendar — not cancelled, no ics", () => {
+    const html = renderEventPage(entry({ removed: true }), CHROME, TODAY);
+    assert.match(html, /class="event-page__notice">Dieser Termin steht nicht mehr in unserem Kalender – was ansteht, steht unter <a href="\.\.\/\.\.\/events\.html">\/termine<\/a>\.</);
+    assert.ok(!/abgesagt|EventCancelled|event\.ics/.test(html), "a removed date reads as cancelled or offers an ics");
+    assert.match(html, /<meta name="robots" content="noindex, follow" \/>/);
+    const past = renderEventPage(entry({ date: "2026-09-01", removed: true }), CHROME, TODAY);
+    assert.match(past, /class="event-page__past">Dieser Termin wurde aus unserem Kalender genommen\.</);
+    const files = planPages({ events: { r: entry({ id: "r", removed: true }), k: entry({ id: "k" }) } }, CHROME, TODAY);
+    assert.deepEqual(files.map((f) => f.path), ["e/k/event.ics", "e/k/index.html", "e/r/index.html"]);
+  });
+
   it("turns a past event into a stub that says only whether it took place", () => {
     const leaks = ["Vortrag", "Dateninfrastruktur", "Absatz", "Dorotheenstra", "vortrag", "event.ics", "ld+json"];
     const past = renderEventPage(entry({ date: "2026-09-01" }), CHROME, TODAY);
@@ -394,6 +407,7 @@ describe("planPages", () => {
       weekly("22", { title: "CANCELED: Vortrag", cancelled: true, cancelledBy: "title" }),
       weekly("29"),
       weekly("30", { cancelled: true, cancelledBy: "vanished" }), // gone from the calendar
+      weekly("30", { id: "w30r", removed: true }), // its series left the calendar
       entry({ id: "o06", date: "2026-10-06", endDate: "2026-10-06", uid: "weekly@x", recurring: true, source: "Andere" }),
       weekly("31", { id: "w1006", date: "2026-10-06", endDate: "2026-10-06" }),
       weekly("31", { id: "w1013", date: "2026-10-13", endDate: "2026-10-13" }),

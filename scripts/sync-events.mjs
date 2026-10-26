@@ -21,9 +21,10 @@ const EVENTS_URL = `${SITE_URL}/events`;
 // took place, never what it was or who met (see pastRecord).
 const ARCHIVE_FILE = "events-archive.json";
 // What a past entry keeps: the key, when, which series and whose calendar (for
-// /status), the two seen-stamps (build-status-data's typo rule) and the
-// cancelled flag with its reason. No title, description, location, uid, url.
-const PAST_FIELDS = ["id", "date", "type", "source", "firstSeen", "lastSeen", "cancelled", "cancelledBy"];
+// /status), the two seen-stamps (build-status-data's typo rule), the
+// cancelled flag with its reason and the removed flag. No title, description,
+// location, uid, url.
+const PAST_FIELDS = ["id", "date", "type", "source", "firstSeen", "lastSeen", "cancelled", "cancelledBy", "removed"];
 const ARCHIVE_MIN_DATE = "2025-01-01";
 // Runaway guard, not a quota: warn when the archive grows past this.
 const MAX_ARCHIVE_ENTRIES = 5000;
@@ -761,6 +762,10 @@ function pastRecord(e) {
  *     entry of a source that answered with a non-empty fresh export and no
  *     longer lists it (series occurrences only inside the expansion horizon);
  *     it clears when the card reappears;
+ *   - `removed` instead, when the entry's series (its UID) no longer reaches
+ *     its date — gone from the export, or ended before it (an UNTIL): the
+ *     series left the calendar, no date was called off; it clears when the
+ *     series comes back;
  *   - `cancelled` (with `cancelledBy: "title"`) is set for a card whose title
  *     carries the owner's marker (isCancelledTitle), past or future — the export
  *     relists history, so a rename after the date still lands here; it clears
@@ -814,15 +819,45 @@ function mergeArchive(prevArchive, results, todayStr, nowISO) {
     }
     // Cancellation pass — only meaningful when the export answered with content.
     if (!r.allCards.length) continue;
+    // A series that no longer reaches a date was ended or taken out, not
+    // called off date by date: "Look at my toys!" left our calendar for its
+    // own (October 2026) — Apple Calendar's "delete this and all future"
+    // keeps the UID and writes an UNTIL before today, and its "edit this and
+    // all future" does the same and starts a new UID. Such dates are
+    // `removed` — never cancelled, so no page or /status calls them off —
+    // and keep their pages. A date the owner marked keeps that word. A date
+    // missing inside a series that runs on (an EXDATE) is still vanished.
+    const lastDate = new Map(); // uid → the series' last exported date
+    for (const c of r.allCards) {
+      if (c.uid && !(lastDate.get(c.uid) >= c.date)) lastDate.set(c.uid, c.date);
+    }
     let flipped = 0;
+    const removed = new Set();
     for (const e of Object.values(events)) {
-      if (e.source !== r.source.name || seen.has(e.id) || e.cancelled) continue;
-      if (e.date < todayStr) continue;
+      if (e.source !== r.source.name || seen.has(e.id)) continue;
+      if (e.date < todayStr || e.cancelledBy === "title") continue;
+      // ended: nothing left from today on, so every later date is gone for
+      // sure; cut short: the end falls before this date — trusted only inside
+      // the horizon, like a vanished date (the export expands 120 days)
+      const last = e.recurring && e.uid ? lastDate.get(e.uid) : null;
+      const ended = e.recurring && e.uid && !(last >= todayStr);
+      const cutShort = last != null && last < e.date && e.date <= horizon;
+      if (ended || cutShort) {
+        // a run before this rule (or before the series went) may have flagged it
+        delete e.cancelled;
+        delete e.cancelledBy;
+        if (!e.removed) removed.add(e.title);
+        e.removed = true;
+        continue;
+      }
+      delete e.removed; // the series is back, just not this date
+      if (e.cancelled) continue;
       if (e.recurring && e.date > horizon) continue;
       e.cancelled = true;
       e.cancelledBy = "vanished";
       flipped++;
     }
+    for (const title of removed) console.log(`[${r.source.id}] series "${title}" left the calendar — its dates are removed, not cancelled`);
     if (flipped > CANCEL_STORM) {
       console.warn(`::warning::[${r.source.id}] ${flipped} upcoming archive entries vanished at once — marked cancelled, please check the source`);
     }

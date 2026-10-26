@@ -3370,6 +3370,62 @@ describe("mergeArchive", () => {
     assert.equal(r.events.card1.cancelled, true);
   });
 
+  // "Look at my toys!" left our calendar for its own (October 2026): every
+  // upcoming date of the series vanished at once. That is a series gone, not
+  // eighteen Tuesdays called off — no page or /status may say "abgesagt".
+  it("marks the dates a series no longer reaches removed, never cancelled", (t) => {
+    const logSpy = t.mock.method(console, "log", () => {});
+    const today = "2026-10-27", now = "2026-10-27T00:00:00.000Z";
+    const toys = (id, date, extra = {}) =>
+      ({ ...mkArchiveCard({ id, date, uid: "toys@x", recurring: true, title: "Look at my toys!" }), firstSeen: "x", lastSeen: "2026-10-26", ...extra });
+    const prevArchive = {
+      version: 1,
+      events: {
+        t1: toys("t1", "2026-10-27"),
+        t2: toys("t2", "2026-11-03", { cancelled: true, cancelledBy: "vanished" }), // an earlier run flagged it
+        t3: toys("t3", "2026-11-10", { cancelled: true, cancelledBy: "title" }),    // the owner's word stays
+        t4: toys("t4", "2027-06-01"),                                               // past the horizon too
+        t6: toys("t6", "2026-12-01"),
+        tp: toys("tp", "2026-10-20"),                                               // past: untouched
+        one: { ...mkArchiveCard({ id: "one", date: "2026-11-05", uid: "solo@x" }), firstSeen: "x", lastSeen: "2026-10-26" },
+      },
+    };
+    const linkup = mkArchiveCard({ id: "l1", date: "2026-11-20", uid: "linkup@x", recurring: true });
+    const r = mergeArchive(prevArchive, [mkArchiveResult([linkup])], today, now);
+    const state = (id) => [r.events[id].removed, r.events[id].cancelled, r.events[id].cancelledBy];
+    assert.deepEqual(state("t1"), [true, undefined, undefined]);
+    assert.deepEqual(state("t2"), [true, undefined, undefined]);
+    assert.deepEqual(state("t3"), [undefined, true, "title"]);
+    assert.deepEqual(state("t4"), [true, undefined, undefined]);
+    assert.equal(r.events.tp.removed, undefined);
+    // a one-off has no series to tell by: missing is still vanished
+    assert.deepEqual(state("one"), [undefined, true, "vanished"]);
+    assert.ok(logSpy.mock.calls.some((c) => String(c.arguments[0]).includes('"Look at my toys!" left the calendar')));
+    // the flag outlives the day, the uid does not need to
+    assert.equal(pastRecord(r.events.t1).removed, true);
+
+    // Apple's "delete this and all future": the UID stays in the export with
+    // an UNTIL before today — the series ends at a past date, so the same.
+    const ended = mergeArchive(prevArchive, [mkArchiveResult([toys("tq", "2026-10-20"), linkup])], today, now);
+    assert.deepEqual([ended.events.t1.removed, ended.events.t1.cancelled], [true, undefined]);
+    // Cut short ahead (an UNTIL in December): the dates after it are removed,
+    // those before it vanished.
+    const cut = mergeArchive(prevArchive, [mkArchiveResult([toys("tn", "2026-11-17"), linkup])], today, now);
+    assert.deepEqual([cut.events.t1.removed, cut.events.t1.cancelledBy], [undefined, "vanished"]);
+    assert.deepEqual([cut.events.t6.removed, cut.events.t6.cancelled], [true, undefined]);
+    // t4 lies past the horizon: an export that stops there says nothing
+    assert.deepEqual([cut.events.t4.removed, cut.events.t4.cancelled], [undefined, undefined]);
+    // A date missing inside a series that runs on is an EXDATE: vanished.
+    const gap = mergeArchive(prevArchive, [mkArchiveResult([toys("t4", "2027-06-01"), linkup])], today, now);
+    assert.deepEqual([gap.events.t1.removed, gap.events.t1.cancelledBy], [undefined, "vanished"]);
+
+    // The series comes back without one date: that date is vanished again,
+    // the dates it lists are plain entries.
+    const back = mergeArchive(r, [mkArchiveResult([toys("t2", "2026-11-03"), toys("t5", "2026-11-17"), linkup])], today, now);
+    assert.deepEqual([back.events.t1.removed, back.events.t1.cancelledBy], [undefined, "vanished"]);
+    assert.deepEqual([back.events.t2.removed, back.events.t2.cancelled], [undefined, undefined]);
+  });
+
   it("clears cancelled when the card reappears", () => {
     const prevArchive = {
       version: 1,

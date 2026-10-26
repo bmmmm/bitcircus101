@@ -179,8 +179,15 @@ on `live`** (they are git-ignored on `main`); only `sitemap.xml` keeps a seed on
   `RECURRENCE-ID` override, which `ics-core.js` treats as a replacement of that
   occurrence (same `uid|date` id), so only that Friday is marked. Entries flagged
   before the reason existed carry no `cancelledBy` and read as vanished.
+  A series taken out of a calendar is not cancelled: when its UID no longer
+  reaches an upcoming entry — gone from the export, or ended before it (Apple
+  Calendar's „dieses und alle zukünftigen“ writes an `UNTIL`) — the entry is
+  `removed` instead —
+  the page stays (noindex, no ics, „steht nicht mehr in unserem Kalender“),
+  `/status` leaves them out. Deleting one date of a series (or a one-off) still
+  reads as vanished.
   **Privacy:** once its day is over an entry keeps only `PAST_FIELDS` — id,
-  date, type, source, the seen-stamps and the cancelled flag; no title,
+  date, type, source, the seen-stamps, the cancelled and removed flags; no title,
   description, location or uid. `scripts/build-event-pages.mjs` renders the
   archive into `e/<id>/` (the RSS item links and the JSON-LD `url` point
   there): a full page + single-event `.ics` while the event is upcoming, a

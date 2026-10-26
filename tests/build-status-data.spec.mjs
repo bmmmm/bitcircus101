@@ -126,6 +126,15 @@ describe("buildStatusData", () => {
     for (const e of out2.events) assert.equal("cancelledBy" in e, false, "the reason must not leak into the page data");
   });
 
+  it("leaves out a removed series' dates — neither held here nor called off", () => {
+    const out2 = buildStatusData(archive(
+      entry("r1", "2026-11-03", { type: "special", removed: true }),
+      entry("r2", "2026-01-13", { type: "special", removed: true }), // its stub, after the day
+      entry("k1", "2026-11-04", { type: "special" })
+    ));
+    assert.deepEqual(out2.events.map((e) => e.date), ["2026-11-04"]);
+  });
+
   it("drops a vanished entry that was in the export for less than MIN_VISIBLE_DAYS — a typo, not a cancellation", () => {
     assert.equal(MIN_VISIBLE_DAYS, 3);
     const sameDay = { firstSeen: "2026-10-01T08:00:00.000Z", lastSeen: "2026-10-01" }; // 0 days — the common typo

@@ -118,7 +118,8 @@ export function buildStatusData(archive, relations = null) {
   const events = Object.values((archive && archive.events) || {})
     .filter((e) => e && typeof e.id === "string" && typeof e.date === "string" && DATE_RE.test(e.date))
     .filter((e) => EventsCore.sourceRelation(relations, e.source) !== "friend" && KEYS.has(e.type) && e.date >= STATUS_SINCE)
-    .filter((e) => !isNoise(e))
+    // a removed series' date (mergeArchive) was neither held here nor called off
+    .filter((e) => !isNoise(e) && !e.removed)
     .map((e) => ({ date: e.date, series: e.type, cancelled: e.cancelled === true }))
     .sort((a, b) => cmp(a.date, b.date) || cmp(a.series, b.series) || cmp(a.cancelled, b.cancelled));
   return { version: 2, since: STATUS_SINCE, series: SERIES.map((s) => ({ ...s })), events };
