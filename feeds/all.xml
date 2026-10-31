@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>bitcircus101 – Alle Termine</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Alle Termine aus dem Hackspace und befreundeten Spaces in Bonn.</description>
+    <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Alle Termine</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
+    <lastBuildDate>Wed, 28 Oct 2026 10:17:13 +0000</lastBuildDate>
+    <atom:link href="https://bitcircus101.de/feeds/all.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>[2026-11-01 14:00] Digital Independence Day (DID) in der Brotfabrik @ Kreuzstraße 16, 53225 Bonn-Beuel</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-01-digital-independence-day-did-in-der-brot</link>
+      <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <content:encoded>&lt;p&gt;Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. &lt;a href=&quot;https://di.day/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://di.day/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-11-01-digital-independence-day-did-in-der-brot&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Fri, 02 Oct 2026 19:17:15 +0000</pubDate>
+      <guid isPermaLink="false">5c6922eb-0e63-42dc-a525-4f75d38644f1-20261101T1400</guid>
+    </item>
+    <item>
+      <title>[2026-11-03 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-03-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-11-03</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-11-03-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261103T1800</guid>
+    </item>
+    <item>
+      <title>[2026-11-05 18:00] Interner Burgabend</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-05-interner-burgabend</link>
+      <description>Interner Burgabend · 2026-11-05</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-11-05-interner-burgabend&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
+      <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261105T1800</guid>
+    </item>
+    <item>
+      <title>[2026-11-06 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/61abb4973c47/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/61abb4973c47/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-1fr@bitcircus101.de-20261106T2000</guid>
+    </item>
+    <item>
+      <title>[2026-11-09 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/c1d0794b2df4/</link>
+      <description>Treffen: Bonner FSFE Community · 2026-11-09</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c1d0794b2df4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261109T1900</guid>
+    </item>
+    <item>
+      <title>[2026-11-10 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-10-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-11-10</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-11-10-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261110T1800</guid>
+    </item>
+    <item>
+      <title>[2026-11-11 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-11-le-sabot-computerspiel-abend</link>
+      <description>Le Sabot Computerspiel-Abend · 2026-11-11</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-11-11-le-sabot-computerspiel-abend&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
+      <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261111T1930</guid>
+    </item>
+    <item>
+      <title>[2026-11-13 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/eaacb806a193/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/eaacb806a193/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20261113T2000</guid>
+    </item>
+    <item>
+      <title>[2026-11-17 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-17-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-11-17</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-11-17-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261117T1800</guid>
+    </item>
+    <item>
+      <title>[2026-11-19 20:00] This is gonna be tricky 🧩 Das mir alles etwas rätselhaft @ Dorotheenstr. 101, 53113 Bonn</title>
+      <link>https://bitcircus101.de/e/91f3f4e4f160/</link>
+      <description>This is gonna be tricky 🧩 Das mir alles etwas rätselhaft · 2026-11-19</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/91f3f4e4f160/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 15 Oct 2026 12:17:13 +0000</pubDate>
+      <guid isPermaLink="false">d73c2e21-feef-4eed-b4fc-df76f5c23414-20261119T2000</guid>
+    </item>
+    <item>
+      <title>[2026-11-20 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/e45639019f6b/</link>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
+      <content:encoded>&lt;p&gt;Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.&lt;/p&gt;
+&lt;p&gt;On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/e45639019f6b/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <category>#lightning-talks</category>
+      <category>#talk</category>
+      <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
+      <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20261120T2000</guid>
+    </item>
+    <item>
+      <title>[2026-11-21 11:00] KI-Workshop: Agenten an die Leine @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/65960cd8b2aa/</link>
+      <description>KI-Agenten können Server und Webseiten pflegen. Wir zeigen dir, wie du sie dabei im Griff behältst: eigener Key, eigenes Budget, jeder Token sichtbar, jede Änderung mit deinem OK. Gemeinsam entwickeln wir Workflows und testen, wie gut KI eine Website pflegen kann. Zuschauen reicht nicht, du hackst …</description>
+      <content:encoded>&lt;p&gt;KI-Agenten können Server und Webseiten pflegen. Wir zeigen dir, wie du sie dabei im Griff behältst: eigener Key, eigenes Budget, jeder Token sichtbar, jede Änderung mit deinem OK. Gemeinsam entwickeln wir Workflows und testen, wie gut KI eine Website pflegen kann. Zuschauen reicht nicht, du hackst selbst mit und bringst deine Fragen und Ideen ein. Mitbringen: Erfahrung mit KI-Chats, ein Grundverständnis von Software und Netzwerken und einen eigenen Laptop. Etwa zehn Plätze, nur mit Anmeldung bis 14.11. an info+kiws26@bitcircus101.de. Gefördert vom Land NRW im Programm 2.000 x 1.000 Euro für das Engagement. Mit &amp;lt;3 aus Europa: THX to opper.ai 🇪🇺 💪&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/65960cd8b2aa/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#workshop</category>
+      <category>#ai</category>
+      <pubDate>Wed, 28 Oct 2026 10:17:13 +0000</pubDate>
+      <guid isPermaLink="false">059aab40-d40c-40f2-9c04-2ebeee65bce0@bitcircus101.de-20261121T1100</guid>
+    </item>
+    <item>
+      <title>[2026-11-24 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-24-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-11-24</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-11-24-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261124T1800</guid>
+    </item>
+    <item>
+      <title>[2026-11-25 20:00] Treffen: Bolle-Bonn.de @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/0814feb4508e/</link>
+      <description>Treffen: Bolle-Bonn.de · 2026-11-25</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/0814feb4508e/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Mon, 31 Aug 2026 14:17:23 +0000</pubDate>
+      <guid isPermaLink="false">B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20261125T2000</guid>
+    </item>
+    <item>
+      <title>[2026-11-26 19:00] Spieleabend</title>
+      <link>https://bitcircus101.de/events#ev-2026-11-26-spieleabend</link>
+      <description>Spieleabend · 2026-11-26</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-11-26-spieleabend&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#gaming</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">19efb037-b521-4f7b-b508-bd63eb3b292b-20261126T1900</guid>
+    </item>
+    <item>
+      <title>[2026-11-27 20:00] Casual Linkup@bitcircus101 (4FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/c18b498bb7c1/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c18b498bb7c1/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Thu, 23 Apr 2026 19:09:53 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-4fr@bitcircus101.de-20261127T2000</guid>
+    </item>
+    <item>
+      <title>[2026-12-01 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-01-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-12-01</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-01-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261201T1800</guid>
+    </item>
+    <item>
+      <title>[2026-12-03 18:00] Interner Burgabend</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-03-interner-burgabend</link>
+      <description>Interner Burgabend · 2026-12-03</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-03-interner-burgabend&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
+      <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20261203T1800</guid>
+    </item>
+    <item>
+      <title>[2026-12-04 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/a4982056db1b/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/a4982056db1b/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-1fr@bitcircus101.de-20261204T2000</guid>
+    </item>
+    <item>
+      <title>[2026-12-06 14:00] Digital Independence Day (DID) in der Brotfabrik @ Kreuzstraße 16, 53225 Bonn-Beuel</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-06-digital-independence-day-did-in-der-brot</link>
+      <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <content:encoded>&lt;p&gt;Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. &lt;a href=&quot;https://di.day/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://di.day/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-06-digital-independence-day-did-in-der-brot&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Fri, 02 Oct 2026 19:17:15 +0000</pubDate>
+      <guid isPermaLink="false">5c6922eb-0e63-42dc-a525-4f75d38644f1-20261206T1400</guid>
+    </item>
+    <item>
+      <title>[2026-12-08 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-08-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-12-08</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-08-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261208T1800</guid>
+    </item>
+    <item>
+      <title>[2026-12-09 19:30] Le Sabot Computerspiel-Abend @ Breite Str. 76</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-09-le-sabot-computerspiel-abend</link>
+      <description>Le Sabot Computerspiel-Abend · 2026-12-09</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-09-le-sabot-computerspiel-abend&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 13 Aug 2026 18:25:49 +0000</pubDate>
+      <guid isPermaLink="false">4f3eb937-ebc8-4dda-bec7-9f3547ca6240-20261209T1930</guid>
+    </item>
+    <item>
+      <title>[2026-12-10 19:00] Plenum mit anschließendem Essen</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-10-plenum-mit-anschlie-endem-essen</link>
+      <description>Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein</description>
+      <content:encoded>&lt;p&gt;Gerne schon ab 18:00 Uhr vorbeikommen zum Beisamensein&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-10-plenum-mit-anschlie-endem-essen&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Tue, 13 Oct 2026 17:17:16 +0000</pubDate>
+      <guid isPermaLink="false">36f59fc2-7422-47d0-bc19-38bed610e3ac-20261210T1900</guid>
+    </item>
+    <item>
+      <title>[2026-12-11 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/4f18d3a378ba/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4f18d3a378ba/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20261211T2000</guid>
+    </item>
+    <item>
+      <title>[2026-12-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/4a327b5e9b62/</link>
+      <description>Treffen: Bonner FSFE Community · 2026-12-14</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4a327b5e9b62/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261214T1900</guid>
+    </item>
+    <item>
+      <title>[2026-12-15 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-15-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-12-15</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-15-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261215T1800</guid>
+    </item>
+    <item>
+      <title>[2026-12-17 20:00] Houseplant, Cat or Cactus? 🌵 Topfpflanze, Katz oder Kaktus? @ Dorotheenstr. 101, 53113 Bonn</title>
+      <link>https://bitcircus101.de/e/ea78b67d3952/</link>
+      <description>Houseplant, Cat or Cactus? 🌵 Topfpflanze, Katz oder Kaktus? · 2026-12-17</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/ea78b67d3952/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Tue, 27 Oct 2026 18:49:50 +0000</pubDate>
+      <guid isPermaLink="false">aa16bcf1-0722-4e08-8464-2eb23c3883f2-20261217T2000</guid>
+    </item>
+    <item>
+      <title>[2026-12-18 20:00] Linkup@bitcircus101 @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/e2f988a12451/</link>
+      <description>Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people …</description>
+      <content:encoded>&lt;p&gt;Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.&lt;/p&gt;
+&lt;p&gt;On all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/e2f988a12451/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <category>#lightning-talks</category>
+      <category>#talk</category>
+      <pubDate>Fri, 15 May 2026 21:15:10 +0000</pubDate>
+      <guid isPermaLink="false">19471ECE-D83E-4AA6-B70D-545B3F281B66-20261218T2000</guid>
+    </item>
+    <item>
+      <title>[2026-12-22 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-22-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-12-22</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-22-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261222T1800</guid>
+    </item>
+    <item>
+      <title>[2026-12-24 19:00] Spieleabend</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-24-spieleabend</link>
+      <description>Spieleabend · 2026-12-24</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-24-spieleabend&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#gaming</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">19efb037-b521-4f7b-b508-bd63eb3b292b-20261224T1900</guid>
+    </item>
+    <item>
+      <title>[2026-12-25 20:00] Casual Linkup@bitcircus101 (4FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/905e7c72628f/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/905e7c72628f/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Thu, 23 Apr 2026 19:09:53 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-4fr@bitcircus101.de-20261225T2000</guid>
+    </item>
+    <item>
+      <title>[2026-12-29 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2026-12-29-offene-datenburg</link>
+      <description>Offene Datenburg · 2026-12-29</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2026-12-29-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20261229T1800</guid>
+    </item>
+    <item>
+      <title>[2026-12-30 20:00] Treffen: Bolle-Bonn.de @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/5c48e8519d9c/</link>
+      <description>Treffen: Bolle-Bonn.de · 2026-12-30</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/5c48e8519d9c/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Mon, 31 Aug 2026 14:17:23 +0000</pubDate>
+      <guid isPermaLink="false">B7E4662F-A7A4-4FC0-8143-79C8C362E2D0-20261230T2000</guid>
+    </item>
+    <item>
+      <title>[2027-01-01 20:00] Casual Linkup@bitcircus101 (1FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/747ef622c7e6/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/747ef622c7e6/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Sat, 02 May 2026 10:51:21 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-1fr@bitcircus101.de-20270101T2000</guid>
+    </item>
+    <item>
+      <title>[2027-01-03 14:00] Digital Independence Day (DID) in der Brotfabrik @ Kreuzstraße 16, 53225 Bonn-Beuel</title>
+      <link>https://bitcircus101.de/events#ev-2027-01-03-digital-independence-day-did-in-der-brot</link>
+      <description>Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. https://di.day/</description>
+      <content:encoded>&lt;p&gt;Treffen für Menschen, die Unterstützung zu Themen rund um den DID suchen und/oder sich austauschen wollen. &lt;a href=&quot;https://di.day/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://di.day/&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2027-01-03-digital-independence-day-did-in-der-brot&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Fri, 02 Oct 2026 19:17:15 +0000</pubDate>
+      <guid isPermaLink="false">5c6922eb-0e63-42dc-a525-4f75d38644f1-20270103T1400</guid>
+    </item>
+    <item>
+      <title>[2027-01-05 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2027-01-05-offene-datenburg</link>
+      <description>Offene Datenburg · 2027-01-05</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2027-01-05-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20270105T1800</guid>
+    </item>
+    <item>
+      <title>[2027-01-07 18:00] Interner Burgabend</title>
+      <link>https://bitcircus101.de/events#ev-2027-01-07-interner-burgabend</link>
+      <description>Interner Burgabend · 2027-01-07</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2027-01-07-interner-burgabend&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <pubDate>Thu, 11 Jun 2026 18:34:04 +0000</pubDate>
+      <guid isPermaLink="false">88fda39c-f934-44ad-b8e8-67e2cd9a2931-20270107T1800</guid>
+    </item>
+    <item>
+      <title>[2027-01-08 20:00] Casual Linkup@bitcircus101 (2FR) @ Dorotheenstraße 101, 53111 Bonn</title>
+      <link>https://bitcircus101.de/e/71f5165e840d/</link>
+      <description>A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de</description>
+      <content:encoded>&lt;p&gt;A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. &lt;a href=&quot;https://bitcircus101.de&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;https://bitcircus101.de&lt;/a&gt;&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/71f5165e840d/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#meetup</category>
+      <pubDate>Sat, 09 May 2026 10:12:20 +0000</pubDate>
+      <guid isPermaLink="false">casual-linkup-2fr@bitcircus101.de-20270108T2000</guid>
+    </item>
+    <item>
+      <title>[2027-01-11 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/3fecd3cae4eb/</link>
+      <description>Treffen: Bonner FSFE Community · 2027-01-11</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3fecd3cae4eb/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20270111T1900</guid>
+    </item>
+    <item>
+      <title>[2027-01-12 18:00] Offene Datenburg</title>
+      <link>https://bitcircus101.de/events#ev-2027-01-12-offene-datenburg</link>
+      <description>Offene Datenburg · 2027-01-12</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/events#ev-2027-01-12-offene-datenburg&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#datenburg</category>
+      <category>#offener-abend</category>
+      <pubDate>Tue, 16 Jun 2026 15:09:02 +0000</pubDate>
+      <guid isPermaLink="false">c90560a6-876b-4ea8-b8b8-eacb4d12b7b0-20270112T1800</guid>
+    </item>
+  </channel>
+</rss>

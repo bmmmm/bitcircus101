@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pinnwand: Hall of Working | Tech-Jobs aus der Community in Bonn</title>
+        <meta name="title" content="Pinnwand: Hall of Working | Tech-Jobs aus der Community in Bonn" />
+        <meta
+            name="description"
+            content="Firmen hängen an der Pinnwand von bitcircus101 in Bonn einen Zettel mit ihrer Stellenanzeige auf – eine echte Wand im Hackspace statt Werbeplatz im Feed."
+        />
+        <meta name="author" content="bitcircus101" />
+        <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#0a0a0a" />
+        <meta property="og:type" content="website" />
+        <meta
+            property="og:url"
+            content="https://bitcircus101.de/pinnwand"
+        />
+        <meta
+            property="og:title"
+            content="Pinnwand: Hall of Working | Tech-Jobs aus der Community in Bonn"
+        />
+        <meta
+            property="og:description"
+            content="Firmen hängen an der Pinnwand von bitcircus101 in Bonn einen Zettel mit ihrer Stellenanzeige auf – eine echte Wand im Hackspace statt Werbeplatz im Feed."
+        />
+        <meta property="og:image" content="https://bitcircus101.de/images/og-image.jpg" />
+        <meta property="og:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
+        <meta property="og:locale" content="de_DE" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Pinnwand: Hall of Working | Tech-Jobs aus der Community in Bonn" />
+        <meta name="twitter:description" content="Stellenanzeigen aus der Community, aufgehängt an einer echten Wand im Hackspace bitcircus101 in Bonn." />
+        <meta name="twitter:image" content="https://bitcircus101.de/images/og-image.jpg" />
+        <meta name="twitter:image:alt" content="bitcircus101 – Offener Hackspace in Bonn" />
+        <link rel="canonical" href="https://bitcircus101.de/pinnwand" />
+        <link rel="alternate" type="application/rss+xml" title="bitcircus101 Termine" href="feed.xml" />
+        <link rel="alternate" type="application/rss+xml" title="bitcircus101 Pinnwand" href="pinnwand/feed.xml" />
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg?v=eca68660" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png?v=eca68660" />
+        <link rel="manifest" href="site.webmanifest?v=eca68660" />
+        <script>
+            // No-flash: apply the persisted light theme before the stylesheet paints.
+            try { if (localStorage.getItem("bc.theme") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}
+        </script>
+        <link rel="stylesheet" href="style.css?v=eca68660" />
+    </head>
+    <body>
+        <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
+        <header>
+            <nav id="main-nav" aria-label="Hauptnavigation">
+                <a class="nav__brand" href="index.html">
+                    <span class="nav__name">bitcircus101</span>
+                </a>
+                <button
+                    class="menu-toggle"
+                    id="menu-toggle"
+                    aria-controls="main-nav"
+                    aria-expanded="false"
+                >
+                    ≡ menü
+                </button>
+                <ul class="nav__links">
+                    <li><a href="events.html">/termine</a></li>
+                    <li><a href="index.html#about">/wir</a></li>
+                    <li><a href="raum-nutzen.html">/raum</a></li>
+                    <li><a href="support.html">/support</a></li>
+                    <li><a href="pinnwand.html">/pinnwand</a></li>
+                    <li><a href="index.html#contact">/kontakt</a></li>
+                </ul>
+                <div class="nav__utils">
+                    <a href="rss.html" class="nav__util" title="RSS-Feeds: Termine und Pinnwand" aria-label="RSS-Feeds: Termine und Pinnwand">rss</a>
+                    <a href="lite/" class="nav__util nav__util--lite" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="kiosk/" class="nav__util" title="Wandanzeige: Termine groß, ohne Menü, aktualisiert sich selbst">kiosk</a>
+                    <button type="button" class="nav__util theme-toggle" id="theme-toggle" aria-pressed="false" aria-label="Helles Design umschalten" title="Invertieren (hell/dunkel)">◐</button>
+                </div>
+            </nav>
+        </header>
+        <main id="main-content">
+            <div class="container">
+                <section aria-labelledby="pinnwand-heading">
+                    <p class="doc-path"><a href="index.html">~</a> /pinnwand</p>
+                    <h1 id="pinnwand-heading" tabindex="-1">pinnwand: hall of working<a class="section-anchor" href="#pinnwand-heading" aria-label="Link zu: pinnwand">#</a></h1>
+                    <p>
+                        Hier hängen Firmen einen Zettel auf: einen Link zu ihrer Stellenanzeige.
+                        Die Anzeige selbst liegt bei der Firma – wir hosten nichts, wir verlinken.
+                        Kein Werbeplatz, kein Vertrag, kein Funnel: eine Wand, ein Zettel, fertig.
+                        Und wer selbst sucht, hängt einen Zettel <a href="#chiffre">unter Chiffre</a>
+                        auf – ohne Namen, ohne Adresse.
+                    </p>
+
+                    <section id="zettel" class="panel" aria-labelledby="zettel-heading">
+                        <h2 id="zettel-heading">zettel<a class="section-anchor" href="#zettel" aria-label="Link zu: Zettel">#</a></h2>
+                        <div id="jobs-list" class="jobs-list" aria-live="polite">
+                            <!-- jobs.js owns #jobs-postings; the invite note after it is
+                                 static so the wall never shifts when the postings land. -->
+                            <div id="jobs-postings">
+                                <noscript>
+                                    <p>
+                                        Die Zettel werden per JavaScript angezeigt – so nehmen sie sich
+                                        von selbst wieder ab, wenn ihre Laufzeit endet.
+                                    </p>
+                                </noscript>
+                            </div>
+                            <!-- Sample note: shows what a Zettel looks like while the wall is
+                                 empty, and it is unmistakably not a vacancy — leetspeak, a made-up
+                                 company, and a CTA that jumps to the how-to instead of linking out.
+                                 jobs.js hides it the moment real postings render, so nobody has to
+                                 wonder whether h4x0r & söhne is hiring. -->
+                            <article class="job-panel" id="jobs-sample">
+                                <div class="job-panel__chrome" aria-hidden="true">
+                                    <span class="job-panel__path">~/pinnwand/b31sp13l</span>
+                                </div>
+                                <div class="job-panel__body">
+                                    <!-- The leetspeak is for the eye only: a screen reader spells
+                                         "S3n10r" digit by digit, so each leet word is aria-hidden and
+                                         a plain twin stands in for it in .sr-only. -->
+                                    <h3 class="job-panel__title"><span aria-hidden="true">S3n10r L0tk0lb3n-0p3r4t0r</span><span class="sr-only">Beispiel: Senior Lötkolben-Operator</span> (m/w/d)</h3>
+                                    <p class="job-panel__company"><span aria-hidden="true">h4x0r</span><span class="sr-only">hacker</span> &amp; söhne gmbh <span class="job-panel__sep" aria-hidden="true">·</span> Bonn oder /dev/remote</p>
+                                    <ul class="job-panel__tags" role="list" aria-label="Anstellungsart"><li class="event-tag">Vollzeit</li><li class="event-tag">Teilzeit</li></ul>
+                                    <a class="btn job-panel__action" href="#aufhaengen"><span aria-hidden="true">b31sp13l · </span>so sieht ein Zettel aus ↓</a>
+                                </div>
+                            </article>
+                            <!-- "jobs-invite", not "job-invite": the job-<id> namespace belongs
+                                 to jobs.json, and a posting with id "invite" would collide.
+                                 aria-live="off": jobs.js cycles the karussell names through the
+                                 title, and the surrounding polite region must not read each one. -->
+                            <article class="job-panel job-panel--invite" id="jobs-invite" aria-live="off">
+                                <div class="job-panel__chrome" aria-hidden="true">
+                                    <span class="job-panel__path">~/pinnwand/dauerplatz</span>
+                                </div>
+                                <div class="job-panel__body">
+                                    <!-- One line, like the names jobs.js swaps in (gate caps them at 24
+                                         characters) — the title's height must not change on the swap. -->
+                                    <h3 class="job-panel__title">Frei für Euren Zettel :)</h3>
+                                    <p class="job-panel__company">Dauerplatz im Karussell · da passt auch Euer Zettel rein</p>
+                                    <a class="btn job-panel__action" href="#aufhaengen">Zettel aufhängen ↓</a>
+                                </div>
+                            </article>
+                        </div>
+                        <!-- Same subscribe block as the calendar on /events (shared classes,
+                             no data-feed attributes: events.js does not run here). The feed
+                             is live-only (pinnwand/feed.xml, built by CI), so the href 404s
+                             in a plain checkout like feed.xml does. -->
+                        <div class="events-subscribe" id="pinnwand-abo">
+                            <div class="events-subscribe__row">
+                                <h3 class="events-subscribe__title">neue zettel abonnieren</h3>
+                                <div class="events-subscribe__actions">
+                                    <a class="events-subscribe__btn" href="pinnwand/feed.xml" title="RSS-Feed der Pinnwand" aria-label="RSS-Feed der Pinnwand">rss</a>
+                                    <a class="events-subscribe__btn" href="rss.html">alle feeds →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="aufhaengen" class="panel" aria-labelledby="aufhaengen-heading">
+                        <h2 id="aufhaengen-heading">zettel aufhängen<a class="section-anchor" href="#aufhaengen" aria-label="Link zu: Zettel aufhängen">#</a></h2>
+                        <!-- A unit test reads every number out of this paragraph and expects
+                             exactly the sold runtimes 1/3/12 — no other digit may appear here, so
+                             an amount cannot sneak in as a "richtwert". Two more tests keep this
+                             file free of any currency and of the vocabulary of buying: this wall
+                             hands out no service and asks for nothing in return, and the text may
+                             not imply otherwise. Wink, don't invoice. -->
+                        <p class="jobs-pitch">
+                            Ein Zettel hängt <strong>1, 3 oder 12 monate</strong> und nimmt sich
+                            danach von selbst wieder ab – ganz ohne Kündigungsfrist. Der Space
+                            läuft übrigens auf Mate ;)
+                        </p>
+
+                        <details class="sidenote jobs-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">so hängt ihr einen Zettel auf</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ol>
+                                    <li>
+                                        <strong>Eintrag anhängen.</strong> Hängt dieses Objekt in
+                                        <code>jobs.json</code> ans <code>postings</code>-Array – eine
+                                        Anzeige pro Pull Request:
+                                        <pre class="jobs-snippet"><code>{
+  "id": "acme-2026-09",
+  "company": "ACME GmbH",
+  "title": "Embedded-Entwickler:in (m/w/d)",
+  "location": "Bonn oder remote",
+  "employment": ["full-time", "part-time"],
+  "url": "https://acme.example/jobs/embedded",
+  "from": "2026-09-03",
+  "months": 3
+}</code></pre>
+                                        Bei <code>employment</code> geht eins oder mehreres davon:
+                                        <code>full-time</code> (Vollzeit), <code>part-time</code> (Teilzeit),
+                                        <code>working-student</code> (Werkstudium), <code>internship</code> (Praktikum),
+                                        <code>apprenticeship</code> (Ausbildung), <code>freelance</code> (Freiberuflich).
+                                        Für den <strong>Dauerplatz</strong> stattdessen ins
+                                        <code>karussell</code>-Array – nur Name und Link, kein Datum:
+                                        <pre class="jobs-snippet jobs-snippet--slot"><code>{ "name": "ACME GmbH", "url": "https://acme.example" }</code></pre>
+                                        <p>
+                                            <a class="btn btn-primary" href="https://github.com/bmmmm/bitcircus101/edit/main/jobs.json" target="_blank" rel="noopener noreferrer">jobs.json auf GitHub bearbeiten&nbsp;↗</a>
+                                        </p>
+                                        <p>
+                                            Der Web-Editor legt die Kopie und den Pull Request selbst an,
+                                            ganz ohne Clone. Kein Git im Haus? Schickt uns den Schnipsel
+                                            <a href="mailto:info@bitcircus101.de?subject=Pinnwand">per E-Mail</a>,
+                                            dann schreiben wir den Pull Request.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <strong>Wir hängen auf.</strong> Die CI prüft den Eintrag, dann
+                                        wird gemergt – und der Zettel hängt. Gerechnet wird nach
+                                        Kalender: ein Monat ab dem 01.09. hängt bis einschließlich
+                                        30.09., danach nimmt sich der Zettel selbst wieder ab. Kein
+                                        Abo, das man vergisst zu kündigen ;)
+                                    </li>
+                                </ol>
+                            </div>
+                        </details>
+
+                        <details class="sidenote jobs-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">spielregeln</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ul>
+                                    <li>Nur <code>https</code>-Links, direkt auf die Anzeige – kein Redirect-Labyrinth.</li>
+                                    <li>Eine Anzeige pro Pull Request.</li>
+                                    <li>Nichts, was nach dem AGG diskriminiert.</li>
+                                    <li>„Rockstar-Ninja (m/w/d)" hängen wir auf. Grinsen dürfen wir trotzdem ;)</li>
+                                    <li>Wir dürfen einen Zettel ablehnen oder wieder abnehmen – Hausrecht gilt auch für Wände.</li>
+                                </ul>
+                            </div>
+                        </details>
+
+                        <!-- The support page is one link away and stands on its own: nothing here
+                             depends on it, and that is the whole point. Never turn this into a
+                             step of the how-to. -->
+                        <p class="jobs-outro">
+                            Der Kühlschrank füllt sich nicht von allein – wie man ihm dabei hilft,
+                            steht drüben bei <a href="support.html">/support</a> ;)
+                        </p>
+                    </section>
+                    <section id="chiffre" class="panel" aria-labelledby="chiffre-heading">
+                        <h2 id="chiffre-heading">unter chiffre<a class="section-anchor" href="#chiffre" aria-label="Link zu: unter Chiffre">#</a></h2>
+                        <p>
+                            Hier hängen Menschen aus der Community, die selbst einen Job suchen –
+                            anonym, wie früher die Chiffre-Anzeige in der Zeitung. Wer
+                            dahintersteckt, bleibt offen. Eure Zuschrift geht an uns, mit der Chiffre im
+                            Betreff, und wir leiten sie unverändert weiter – oder direkt an die Adresse
+                            auf dem Zettel, wenn dort eine steht. Antworten wird die Person selbst, wenn
+                            sie mag.
+                        </p>
+                        <div id="chiffre-list" class="jobs-list" aria-live="polite">
+                            <!-- jobs.js owns #chiffre-entries; the empty note after it is
+                                 static, like #jobs-invite, so nothing shifts when notes land. -->
+                            <div id="chiffre-entries">
+                                <noscript>
+                                    <p>
+                                        Die Chiffre-Zettel werden per JavaScript angezeigt – so nehmen
+                                        sie sich von selbst wieder ab, wenn ihre Laufzeit endet.
+                                    </p>
+                                </noscript>
+                            </div>
+                            <article class="job-panel job-panel--invite" id="chiffre-invite">
+                                <div class="job-panel__chrome" aria-hidden="true">
+                                    <span class="job-panel__path">~/pinnwand/chiffre/0x??</span>
+                                </div>
+                                <div class="job-panel__body">
+                                    <h3 class="job-panel__title">Frei für deine Chiffre :)</h3>
+                                    <p class="job-panel__company">Du suchst was? Häng deinen Zettel hier auf – ohne Namen, ohne Adresse</p>
+                                    <a class="btn job-panel__action" href="#chiffre-howto">Zettel unter Chiffre ↓</a>
+                                </div>
+                            </article>
+                        </div>
+                        <details class="sidenote jobs-howto" id="chiffre-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">so hängst du deinen Zettel unter Chiffre auf</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ol>
+                                    <li>
+                                        <strong>Zettel per Pull Request.</strong> Häng diesen Schnipsel
+                                        ins <code>chiffre</code>-Array von <code>jobs.json</code> und
+                                        such dir selbst eine Chiffre für <code>id</code> aus –
+                                        <code>0x</code> plus zwei bis vier Hex-Ziffern, noch nicht vergeben:
+                                        <pre class="jobs-snippet jobs-snippet--chiffre"><code>{
+  "id": "0x2a",
+  "headline": "Embedded / Rust, sucht Teilzeit",
+  "level": "experienced",
+  "location": "Bonn/Köln oder remote",
+  "employment": ["part-time"],
+  "skills": ["rust", "embedded", "linux"],
+  "about": "Baut gern Dinge, die blinken. Sucht ein Team, das Hardware ernst nimmt.",
+  "from": "2026-10-01",
+  "months": 3
+}</code></pre>
+                                        Bei <code>level</code> geht <code>entry</code> (Einstieg),
+                                        <code>experienced</code> (Erfahren) oder <code>senior</code>
+                                        (Sehr erfahren); <code>employment</code> wie bei den Firmen-Zetteln.
+                                        Bis zu acht Skills, klein geschrieben.
+                                        <p>
+                                            <a class="btn btn-primary" href="https://github.com/bmmmm/bitcircus101/edit/main/jobs.json" target="_blank" rel="noopener noreferrer">jobs.json auf GitHub bearbeiten&nbsp;↗</a>
+                                        </p>
+                                        <p>
+                                            Achtung: Dein GitHub-Account und die Mailadresse deines Commits
+                                            stehen öffentlich am Pull Request – nimm einen Account, der nichts
+                                            über dich verrät, und schalte bei GitHub „Keep my email addresses
+                                            private“ ein. In unsere Versionsgeschichte übernehmen wir den Zettel
+                                            unter unserem Namen. Kein Git? Schick uns den Schnipsel
+                                            <a href="mailto:info@bitcircus101.de?subject=Chiffre">per E-Mail</a>,
+                                            wir hängen ihn auf und wählen die Chiffre, falls deine schon vergeben ist.
+                                        </p>
+                                    </li>
+                                    <li>
+                                        <strong>Kontakt wählen.</strong> Entweder du trägst eine Adresse,
+                                        die öffentlich sein darf, als <code>"contact": "mailto:…"</code>
+                                        in den Zettel ein – dann schreiben Firmen dir direkt. Oder du lässt
+                                        das Feld weg und schickst uns deine Adresse für die Weiterleitung
+                                        <strong>getrennt per E-Mail</strong>, Betreff <code>WEITERLEITUNG 0x2a</code>
+                                        mit deiner Chiffre, nie im Pull Request. Wir antworten mit einem kurzen
+                                        Code, den du als Kommentar in deinen Pull Request schreibst – so wissen
+                                        wir, dass die Adresse wirklich zu deinem Zettel gehört. Per E-Mail
+                                        eingeschickt? Dann nehmen wir einfach deine Absenderadresse. Beides
+                                        zusammen geht auch.
+                                        Die Adresse für die Weiterleitung steht nirgends öffentlich, und mit
+                                        dem Zettel löschen wir sie wieder. Der Zettel hängt 1, 3 oder 12 Monate.
+                                    </li>
+                                    <li>
+                                        <strong>Post kommt.</strong> Direkt an deine öffentliche Adresse,
+                                        oder über uns: Schreibt jemand unter deiner Chiffre, leiten wir die
+                                        Mail unverändert an dich weiter, meist innerhalb weniger Tage. Ob und
+                                        wem du antwortest, entscheidest du.
+                                    </li>
+                                </ol>
+                            </div>
+                        </details>
+                        <details class="sidenote jobs-howto" id="chiffre-privacy">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">was öffentlich bleibt</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <p>
+                                    Wie bei einer Mailingliste mit öffentlichem Archiv: Du hängst deinen Zettel
+                                    freiwillig auf, und was du schreibst, bleibt öffentlich lesbar. Die Wand
+                                    liegt in einem Git-Repository, das nichts vergisst. Deshalb
+                                    <strong>keine personenbezogenen Daten</strong> auf den Zettel: kein Name,
+                                    keine aktuelle Firma, keine private Adresse. Als Kontakt geht nur eine Adresse,
+                                    die öffentlich sein darf (z.&nbsp;B. ein Alias), oder der Weg über uns.
+                                </p>
+                            </div>
+                        </details>
+                        <details class="sidenote jobs-howto">
+                            <summary class="sidenote__summary">
+                                <span class="sidenote__caret" aria-hidden="true"></span>
+                                <span class="sidenote__label">
+                                    <h3 class="sidenote__title">damit dich niemand erkennt</h3>
+                                </span>
+                            </summary>
+                            <div class="sidenote__body">
+                                <ul>
+                                    <li>Kein Name, keine private Mailadresse, keine Telefonnummer, kein Link aufs Profil – wir schauen vor dem Aufhängen drüber.</li>
+                                    <li>Bleib grob: „Bonn/Köln“ statt Stadtteil, keine aktuelle Firma, kein Jahr des Berufsstarts. Die Szene hier ist klein.</li>
+                                    <li>Abnehmen geht jederzeit auf Zuruf. Aber: Die Wand ist ein öffentliches Git-Repo – was einmal hing, bleibt in dessen Geschichte lesbar.</li>
+                                    <li>Mehr dazu steht in der <a href="impressum-datenschutz.html#pinnwand">Datenschutzerklärung</a>.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </section>
+                    <div class="back-link">
+                        <a href="index.html" class="btn">← zurück zur startseite</a>
+                    </div>
+                </section>
+            </div>
+        </main>
+        <footer role="contentinfo" class="footer">
+            <div class="footer__grid">
+                <div class="footer__col">
+                    <span class="footer__brand">bitcircus101</span>
+                    <span class="footer__tagline">offener hackspace · dorotheenstraße 101 · 53113 bonn</span>
+                    <span class="footer__a11y">ohne maus bedienbar: <kbd>tab</kbd>, <kbd>enter</kbd>, <kbd>esc</kbd> — darauf achten wir</span>
+                    <span class="footer__keys" hidden><button type="button" class="footer__keys-toggle" aria-pressed="true">nerd-modus</button>: <kbd>w</kbd> <kbd>a</kbd> <kbd>s</kbd> <kbd>d</kbd> bewegen den cursor, <kbd>enter</kbd> öffnet, <kbd>esc</kbd> beendet</span>
+                </div>
+                <div class="footer__col footer__col--links">
+                    <a href="https://github.com/bmmmm/bitcircus101" target="_blank" rel="noopener noreferrer">github ↗</a>
+                    <a href="https://ko-fi.com/bmabma" target="_blank" rel="noopener noreferrer">ko-fi ↗</a>
+                    <a href="rss.html">rss</a>
+                    <a href="status.html" title="Terminverlauf: was stattfand, was ausfiel">status</a>
+                    <a href="lite/" title="Ultraleichte Textversion ohne Skripte">lite</a>
+                    <a href="impressum-datenschutz.html">impressum</a>
+                </div>
+            </div>
+            <div class="footer__bar">
+                <span class="footer__mode" aria-hidden="true">-- OPEN --</span>
+                <span class="footer__sep">│</span>
+                <span>fr ab 20:00</span>
+                <span class="footer__sep">│</span>
+                <span class="footer__year"></span>
+                <span class="footer__status" data-funding="18">lights: on</span>
+            </div>
+        </footer>
+        <script defer src="storage.js?v=eca68660"></script>
+        <script defer src="jobs-core.js?v=eca68660"></script>
+        <script defer src="jobs.js?v=eca68660"></script>
+        <script defer src="main.js?v=eca68660"></script>
+    </body>
+</html>

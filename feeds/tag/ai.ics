@@ -1,0 +1,46 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//bitcircus101//events//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:bitcircus101 – Termine: #ai
+X-WR-TIMEZONE:Europe/Berlin
+BEGIN:VTIMEZONE
+TZID:Europe/Berlin
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:059aab40-d40c-40f2-9c04-2ebeee65bce0@bitcircus101.de-20261121T1100@bitc
+ ircus101.de
+DTSTAMP:20261028T101713Z
+DTSTART;TZID=Europe/Berlin:20261121T110000
+DTEND;TZID=Europe/Berlin:20261121T180000
+SUMMARY:KI-Workshop: Agenten an die Leine
+DESCRIPTION:KI-Agenten können Server und Webseiten pflegen. Wir zeigen dir
+ \, wie du sie dabei im Griff behältst: eigener Key\, eigenes Budget\, jed
+ er Token sichtbar\, jede Änderung mit deinem OK. Gemeinsam entwickeln wir
+  Workflows und testen\, wie gut KI eine Website pflegen kann. Zuschauen re
+ icht nicht\, du hackst selbst mit und bringst deine Fragen und Ideen ein. 
+ Mitbringen: Erfahrung mit KI-Chats\, ein Grundverständnis von Software un
+ d Netzwerken und einen eigenen Laptop. Etwa zehn Plätze\, nur mit Anmeldu
+ ng bis 14.11. an info+kiws26@bitcircus101.de. Gefördert vom Land NRW im P
+ rogramm 2.000 x 1.000 Euro für das Engagement. Mit <3 aus Europa: THX to 
+ opper.ai 🇪🇺 💪
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de/calendar/
+CATEGORIES:workshop,ai
+END:VEVENT
+END:VCALENDAR

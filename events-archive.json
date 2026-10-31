@@ -1,0 +1,2811 @@
+{
+  "version": 1,
+  "events": {
+    "e955edae5d26": {
+      "id": "e955edae5d26",
+      "date": "2025-05-28",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "5d503d1b2fdd": {
+      "id": "5d503d1b2fdd",
+      "date": "2025-06-13",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c501060c6c76": {
+      "id": "c501060c6c76",
+      "date": "2025-06-14",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "56c2c0158a05": {
+      "id": "56c2c0158a05",
+      "date": "2025-06-16",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "2d905da02cc6": {
+      "id": "2d905da02cc6",
+      "date": "2025-06-20",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "2a8fc5163dbd": {
+      "id": "2a8fc5163dbd",
+      "date": "2025-06-27",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "d078f83d8c43": {
+      "id": "d078f83d8c43",
+      "date": "2025-06-28",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "248d68ac7842": {
+      "id": "248d68ac7842",
+      "date": "2025-07-02",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
+    "cac940f88688": {
+      "id": "cac940f88688",
+      "date": "2025-07-02",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ce233311b746": {
+      "id": "ce233311b746",
+      "date": "2025-07-04",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "bb64bd4815e7": {
+      "id": "bb64bd4815e7",
+      "date": "2025-07-11",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "a7510ea8f861": {
+      "id": "a7510ea8f861",
+      "date": "2025-07-14",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "58463df62746": {
+      "id": "58463df62746",
+      "date": "2025-07-18",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "d25d95a6059f": {
+      "id": "d25d95a6059f",
+      "date": "2025-07-23",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ec5b4b39526f": {
+      "id": "ec5b4b39526f",
+      "date": "2025-07-25",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "3e2f5c710f6b": {
+      "id": "3e2f5c710f6b",
+      "date": "2025-07-30",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9824e6adb4f5": {
+      "id": "9824e6adb4f5",
+      "date": "2025-08-01",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "f373825dc987": {
+      "id": "f373825dc987",
+      "date": "2025-08-08",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "deb8a10919fe": {
+      "id": "deb8a10919fe",
+      "date": "2025-08-11",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ffc7b64af939": {
+      "id": "ffc7b64af939",
+      "date": "2025-08-15",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c06ccb08d5e4": {
+      "id": "c06ccb08d5e4",
+      "date": "2025-08-16",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "dfd4ebe7755c": {
+      "id": "dfd4ebe7755c",
+      "date": "2025-08-22",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "5d47ba7d8630": {
+      "id": "5d47ba7d8630",
+      "date": "2025-08-29",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "4a2c782a0ae5": {
+      "id": "4a2c782a0ae5",
+      "date": "2025-09-08",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1db9d06fb6dc": {
+      "id": "1db9d06fb6dc",
+      "date": "2025-09-09",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "eaeedd0bf23c": {
+      "id": "eaeedd0bf23c",
+      "date": "2025-09-12",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "7e4ad6c79125": {
+      "id": "7e4ad6c79125",
+      "date": "2025-09-19",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "63ccd78ee821": {
+      "id": "63ccd78ee821",
+      "date": "2025-09-20",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "f32a9e89618a": {
+      "id": "f32a9e89618a",
+      "date": "2025-09-24",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "0086fe3a3777": {
+      "id": "0086fe3a3777",
+      "date": "2025-09-26",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c9efe617a74a": {
+      "id": "c9efe617a74a",
+      "date": "2025-09-26",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "3c15515c9305": {
+      "id": "3c15515c9305",
+      "date": "2025-10-03",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "70f1e9e3e242": {
+      "id": "70f1e9e3e242",
+      "date": "2025-10-10",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "4ebc2f2cc3dd": {
+      "id": "4ebc2f2cc3dd",
+      "date": "2025-10-13",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "8380183bd39a": {
+      "id": "8380183bd39a",
+      "date": "2025-10-17",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "6896e9128259": {
+      "id": "6896e9128259",
+      "date": "2025-10-24",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1e95828afef7": {
+      "id": "1e95828afef7",
+      "date": "2025-10-27",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ec5575642fcc": {
+      "id": "ec5575642fcc",
+      "date": "2025-10-29",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "94cef4cd9101": {
+      "id": "94cef4cd9101",
+      "date": "2025-10-31",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13",
+      "cancelled": true,
+      "cancelledBy": "title"
+    },
+    "ad76c443a187": {
+      "id": "ad76c443a187",
+      "date": "2025-11-04",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "79fd583d98c2": {
+      "id": "79fd583d98c2",
+      "date": "2025-11-07",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "6952db4a13e5": {
+      "id": "6952db4a13e5",
+      "date": "2025-11-08",
+      "type": "workshop",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "6fd1be7770ec": {
+      "id": "6fd1be7770ec",
+      "date": "2025-11-08",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c9ef99102acd": {
+      "id": "c9ef99102acd",
+      "date": "2025-11-10",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "58cb781338df": {
+      "id": "58cb781338df",
+      "date": "2025-11-12",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
+    "5ce0eb62f802": {
+      "id": "5ce0eb62f802",
+      "date": "2025-11-14",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "d5dbe89f7cc6": {
+      "id": "d5dbe89f7cc6",
+      "date": "2025-11-21",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "04e97fb099dd": {
+      "id": "04e97fb099dd",
+      "date": "2025-11-25",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "14cd6df985dd": {
+      "id": "14cd6df985dd",
+      "date": "2025-11-25",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "7cea6d31cd84": {
+      "id": "7cea6d31cd84",
+      "date": "2025-11-27",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "0e93355babfa": {
+      "id": "0e93355babfa",
+      "date": "2025-11-28",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "604473c69277": {
+      "id": "604473c69277",
+      "date": "2025-11-29",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1af4f2899d3c": {
+      "id": "1af4f2899d3c",
+      "date": "2025-12-01",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "892d11f9c9a6": {
+      "id": "892d11f9c9a6",
+      "date": "2025-12-02",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e520844856e3": {
+      "id": "e520844856e3",
+      "date": "2025-12-02",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "d4da61e4d7d5": {
+      "id": "d4da61e4d7d5",
+      "date": "2025-12-05",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "f78091b29d6b": {
+      "id": "f78091b29d6b",
+      "date": "2025-12-08",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "8e2d19d8c2a6": {
+      "id": "8e2d19d8c2a6",
+      "date": "2025-12-09",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e0207c695de3": {
+      "id": "e0207c695de3",
+      "date": "2025-12-09",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e7d0f7af0cef": {
+      "id": "e7d0f7af0cef",
+      "date": "2025-12-12",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9b2aefb8c3a4": {
+      "id": "9b2aefb8c3a4",
+      "date": "2025-12-16",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "eb22cc5154e5": {
+      "id": "eb22cc5154e5",
+      "date": "2025-12-16",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "50f5f3bf7e23": {
+      "id": "50f5f3bf7e23",
+      "date": "2025-12-19",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "15259f98b1a8": {
+      "id": "15259f98b1a8",
+      "date": "2025-12-30",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e11e3f65e6ea": {
+      "id": "e11e3f65e6ea",
+      "date": "2025-12-30",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "309802cc7bd8": {
+      "id": "309802cc7bd8",
+      "date": "2026-01-02",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "55b3f1302cad": {
+      "id": "55b3f1302cad",
+      "date": "2026-01-04",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "dab02cc4c074": {
+      "id": "dab02cc4c074",
+      "date": "2026-01-05",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9514df152a2c": {
+      "id": "9514df152a2c",
+      "date": "2026-01-06",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9ccce268e108": {
+      "id": "9ccce268e108",
+      "date": "2026-01-06",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "8c054d0e4a00": {
+      "id": "8c054d0e4a00",
+      "date": "2026-01-09",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "eedc5bf0e86c": {
+      "id": "eedc5bf0e86c",
+      "date": "2026-01-12",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "2811f4e72529": {
+      "id": "2811f4e72529",
+      "date": "2026-01-13",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "89cf0316e60a": {
+      "id": "89cf0316e60a",
+      "date": "2026-01-13",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "cff0802b7168": {
+      "id": "cff0802b7168",
+      "date": "2026-01-16",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "16c792484f0d": {
+      "id": "16c792484f0d",
+      "date": "2026-01-20",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "230fae71b431": {
+      "id": "230fae71b431",
+      "date": "2026-01-20",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "827ed27809ed": {
+      "id": "827ed27809ed",
+      "date": "2026-01-22",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "4bedea8cd325": {
+      "id": "4bedea8cd325",
+      "date": "2026-01-23",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "a2013091879e": {
+      "id": "a2013091879e",
+      "date": "2026-01-23",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1dc79d4d520d": {
+      "id": "1dc79d4d520d",
+      "date": "2026-01-27",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "240fb004b931": {
+      "id": "240fb004b931",
+      "date": "2026-01-27",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c0e9b600dca0": {
+      "id": "c0e9b600dca0",
+      "date": "2026-01-28",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "8e99fa25d57b": {
+      "id": "8e99fa25d57b",
+      "date": "2026-01-30",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ffa9df3f2328": {
+      "id": "ffa9df3f2328",
+      "date": "2026-02-01",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "36908db041f8": {
+      "id": "36908db041f8",
+      "date": "2026-02-03",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "505cb7694a15": {
+      "id": "505cb7694a15",
+      "date": "2026-02-03",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "30c18ca7deb5": {
+      "id": "30c18ca7deb5",
+      "date": "2026-02-06",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "04c971772eaa": {
+      "id": "04c971772eaa",
+      "date": "2026-02-09",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "338e4a603af5": {
+      "id": "338e4a603af5",
+      "date": "2026-02-10",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "535efab93117": {
+      "id": "535efab93117",
+      "date": "2026-02-10",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "d543b2b6ca9e": {
+      "id": "d543b2b6ca9e",
+      "date": "2026-02-13",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "545efc4c3617": {
+      "id": "545efc4c3617",
+      "date": "2026-02-17",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "595c56a554bb": {
+      "id": "595c56a554bb",
+      "date": "2026-02-17",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "23167355282e": {
+      "id": "23167355282e",
+      "date": "2026-02-20",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1122dbee842c": {
+      "id": "1122dbee842c",
+      "date": "2026-02-21",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e863f387d7b8": {
+      "id": "e863f387d7b8",
+      "date": "2026-02-24",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c10b4e4495e4": {
+      "id": "c10b4e4495e4",
+      "date": "2026-02-25",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ec08e76fe8ab": {
+      "id": "ec08e76fe8ab",
+      "date": "2026-02-27",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "4219f58f630d": {
+      "id": "4219f58f630d",
+      "date": "2026-02-28",
+      "type": "workshop",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "48795a459e20": {
+      "id": "48795a459e20",
+      "date": "2026-03-01",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "8f964165311c": {
+      "id": "8f964165311c",
+      "date": "2026-03-03",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ff5c1a5ead14": {
+      "id": "ff5c1a5ead14",
+      "date": "2026-03-06",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c0aeffce909f": {
+      "id": "c0aeffce909f",
+      "date": "2026-03-09",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "929884b5381f": {
+      "id": "929884b5381f",
+      "date": "2026-03-10",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "702480ab5fd5": {
+      "id": "702480ab5fd5",
+      "date": "2026-03-11",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "bb32aac3a2cd": {
+      "id": "bb32aac3a2cd",
+      "date": "2026-03-13",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "8b9879b0351f": {
+      "id": "8b9879b0351f",
+      "date": "2026-03-17",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "aed26cb0ea49": {
+      "id": "aed26cb0ea49",
+      "date": "2026-03-20",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1ac75fe4bf7c": {
+      "id": "1ac75fe4bf7c",
+      "date": "2026-03-21",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "61c05c2e48fc": {
+      "id": "61c05c2e48fc",
+      "date": "2026-03-21",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9c9ad30aa217": {
+      "id": "9c9ad30aa217",
+      "date": "2026-03-24",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "3d9627ad6243": {
+      "id": "3d9627ad6243",
+      "date": "2026-03-25",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1b6e5692184c": {
+      "id": "1b6e5692184c",
+      "date": "2026-03-27",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1d9ddcb42b1a": {
+      "id": "1d9ddcb42b1a",
+      "date": "2026-03-31",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "98324306eab9": {
+      "id": "98324306eab9",
+      "date": "2026-04-03",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "485a1d7a91fa": {
+      "id": "485a1d7a91fa",
+      "date": "2026-04-07",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "2508c191632c": {
+      "id": "2508c191632c",
+      "date": "2026-04-10",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c59bfa92758e": {
+      "id": "c59bfa92758e",
+      "date": "2026-04-13",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "3957c7468ef7": {
+      "id": "3957c7468ef7",
+      "date": "2026-04-14",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "092234310a05": {
+      "id": "092234310a05",
+      "date": "2026-04-17",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "365583f6fbff": {
+      "id": "365583f6fbff",
+      "date": "2026-04-21",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "bb86b7b095ef": {
+      "id": "bb86b7b095ef",
+      "date": "2026-04-24",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "3f55922104ff": {
+      "id": "3f55922104ff",
+      "date": "2026-04-28",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "17fcecdec32b": {
+      "id": "17fcecdec32b",
+      "date": "2026-04-29",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "d0e47b216944": {
+      "id": "d0e47b216944",
+      "date": "2026-05-01",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "51525d66bc64": {
+      "id": "51525d66bc64",
+      "date": "2026-05-02",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "d126556ef1bc": {
+      "id": "d126556ef1bc",
+      "date": "2026-05-02",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "610c2335ebfd": {
+      "id": "610c2335ebfd",
+      "date": "2026-05-05",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ab8e2d3d0319": {
+      "id": "ab8e2d3d0319",
+      "date": "2026-05-08",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9b8ca6335b2d": {
+      "id": "9b8ca6335b2d",
+      "date": "2026-05-09",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ad8af5c58f85": {
+      "id": "ad8af5c58f85",
+      "date": "2026-05-11",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "640e6685f2ff": {
+      "id": "640e6685f2ff",
+      "date": "2026-05-12",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "f36286122216": {
+      "id": "f36286122216",
+      "date": "2026-05-15",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "690e6e64ebff": {
+      "id": "690e6e64ebff",
+      "date": "2026-05-19",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "a4d4b51b4292": {
+      "id": "a4d4b51b4292",
+      "date": "2026-05-22",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "cf8dca7e0355": {
+      "id": "cf8dca7e0355",
+      "date": "2026-05-25",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ee06f0fe5d02": {
+      "id": "ee06f0fe5d02",
+      "date": "2026-05-26",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "025beb211d2e": {
+      "id": "025beb211d2e",
+      "date": "2026-05-27",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "7fb472ab92eb": {
+      "id": "7fb472ab92eb",
+      "date": "2026-05-29",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e703e01f502a": {
+      "id": "e703e01f502a",
+      "date": "2026-06-02",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "81a84a9e1944": {
+      "id": "81a84a9e1944",
+      "date": "2026-06-05",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "4bb01fb0abc8": {
+      "id": "4bb01fb0abc8",
+      "date": "2026-06-08",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "f003ee4a452a": {
+      "id": "f003ee4a452a",
+      "date": "2026-06-09",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "91f249652ff0": {
+      "id": "91f249652ff0",
+      "date": "2026-06-12",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e10198164a28": {
+      "id": "e10198164a28",
+      "date": "2026-06-16",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "33ac4c153db0": {
+      "id": "33ac4c153db0",
+      "date": "2026-06-19",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "76093e6a3f25": {
+      "id": "76093e6a3f25",
+      "date": "2026-06-23",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9240f49bfd51": {
+      "id": "9240f49bfd51",
+      "date": "2026-06-24",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9d7a39e01775": {
+      "id": "9d7a39e01775",
+      "date": "2026-06-26",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "6f06f4cebc22": {
+      "id": "6f06f4cebc22",
+      "date": "2026-06-30",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "9ecd50790fa3": {
+      "id": "9ecd50790fa3",
+      "date": "2026-07-03",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "eb7d10ad54e7": {
+      "id": "eb7d10ad54e7",
+      "date": "2026-07-07",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "77e1417247e7": {
+      "id": "77e1417247e7",
+      "date": "2026-07-10",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "d53590154ab6": {
+      "id": "d53590154ab6",
+      "date": "2026-07-13",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "ee7f53fd63e9": {
+      "id": "ee7f53fd63e9",
+      "date": "2026-07-14",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "160fbaeebd2d": {
+      "id": "160fbaeebd2d",
+      "date": "2026-07-17",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "1155de9f1b83": {
+      "id": "1155de9f1b83",
+      "date": "2026-07-18",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "f181974dcee1": {
+      "id": "f181974dcee1",
+      "date": "2026-07-21",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "6a5511637512": {
+      "id": "6a5511637512",
+      "date": "2026-07-24",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "8375b1d3a586": {
+      "id": "8375b1d3a586",
+      "date": "2026-07-24",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e8818922d5e1": {
+      "id": "e8818922d5e1",
+      "date": "2026-07-28",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c328e705960d": {
+      "id": "c328e705960d",
+      "date": "2026-07-29",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "2747e956ff9a": {
+      "id": "2747e956ff9a",
+      "date": "2026-07-31",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "822148fcf8ca": {
+      "id": "822148fcf8ca",
+      "date": "2026-08-01",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "5de2edebd14b": {
+      "id": "5de2edebd14b",
+      "date": "2026-08-04",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "8ff6f7e60af5": {
+      "id": "8ff6f7e60af5",
+      "date": "2026-08-07",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "5ce0adc1d049": {
+      "id": "5ce0adc1d049",
+      "date": "2026-08-11",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e2cfc7c7e5c7": {
+      "id": "e2cfc7c7e5c7",
+      "date": "2026-08-13",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "329c57010745": {
+      "id": "329c57010745",
+      "date": "2026-08-14",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "53e09f96d749": {
+      "id": "53e09f96d749",
+      "date": "2026-08-18",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e90acf9898a8": {
+      "id": "e90acf9898a8",
+      "date": "2026-08-21",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "50de5c465c50": {
+      "id": "50de5c465c50",
+      "date": "2026-08-25",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "e33289c31e7c": {
+      "id": "e33289c31e7c",
+      "date": "2026-08-26",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "a6a5db905208": {
+      "id": "a6a5db905208",
+      "date": "2026-08-28",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "5f2df3ae5dcc": {
+      "id": "5f2df3ae5dcc",
+      "date": "2026-09-01",
+      "type": "special",
+      "source": "Look at my toys!",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
+    "b4f2e5e59816": {
+      "id": "b4f2e5e59816",
+      "date": "2026-09-01",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "3b02d3ee716d": {
+      "id": "3b02d3ee716d",
+      "date": "2026-09-04",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "11284c42d78c": {
+      "id": "11284c42d78c",
+      "date": "2026-09-08",
+      "type": "special",
+      "source": "Look at my toys!",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
+    "bbf2f0ea8f16": {
+      "id": "bbf2f0ea8f16",
+      "date": "2026-09-08",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "88db67339972": {
+      "id": "88db67339972",
+      "date": "2026-09-09",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "58fd3acbe78e": {
+      "id": "58fd3acbe78e",
+      "date": "2026-09-11",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-13"
+    },
+    "c131139aced7": {
+      "id": "c131139aced7",
+      "date": "2026-09-14",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-14"
+    },
+    "75e0c0f4a2f4": {
+      "id": "75e0c0f4a2f4",
+      "date": "2026-09-15",
+      "type": "special",
+      "source": "Look at my toys!",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
+    "bcf53114201a": {
+      "id": "bcf53114201a",
+      "date": "2026-09-15",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-15"
+    },
+    "67d0a07d76fd": {
+      "id": "67d0a07d76fd",
+      "date": "2026-09-18",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-18"
+    },
+    "bef4fc45327a": {
+      "id": "bef4fc45327a",
+      "date": "2026-09-18",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-18"
+    },
+    "2c8a32452fc1": {
+      "id": "2c8a32452fc1",
+      "date": "2026-09-19",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-19"
+    },
+    "2d87f541a8c8": {
+      "id": "2d87f541a8c8",
+      "date": "2026-09-20",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-20"
+    },
+    "29ed8de6211c": {
+      "id": "29ed8de6211c",
+      "date": "2026-09-22",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-22"
+    },
+    "74d76b806e9c": {
+      "id": "74d76b806e9c",
+      "date": "2026-09-22",
+      "type": "special",
+      "source": "Look at my toys!",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
+    "1d9a350e2120": {
+      "id": "1d9a350e2120",
+      "date": "2026-09-25",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-25"
+    },
+    "30ed98eb1c1c": {
+      "id": "30ed98eb1c1c",
+      "date": "2026-09-29",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-29"
+    },
+    "506a1fe5fa40": {
+      "id": "506a1fe5fa40",
+      "date": "2026-09-29",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-29"
+    },
+    "8a95bebbdb48": {
+      "id": "8a95bebbdb48",
+      "date": "2026-09-29",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
+    "8797f899c84a": {
+      "id": "8797f899c84a",
+      "date": "2026-09-30",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-09-30"
+    },
+    "3309141a8e57": {
+      "id": "3309141a8e57",
+      "date": "2026-10-02",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-02"
+    },
+    "44bca13490df": {
+      "id": "44bca13490df",
+      "date": "2026-10-06",
+      "type": "special",
+      "source": "Look at my toys!",
+      "firstSeen": "2026-10-12T23:56:56.985Z",
+      "lastSeen": "2026-10-13"
+    },
+    "bb806176eec6": {
+      "id": "bb806176eec6",
+      "date": "2026-10-06",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-06"
+    },
+    "bdd744ba8e08": {
+      "id": "bdd744ba8e08",
+      "date": "2026-10-06",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-10-02T16:28:59.450Z",
+      "lastSeen": "2026-10-06"
+    },
+    "184ba0f4c433": {
+      "id": "184ba0f4c433",
+      "date": "2026-10-09",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-09"
+    },
+    "fc7b7b7f441a": {
+      "id": "fc7b7b7f441a",
+      "date": "2026-10-10",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-10"
+    },
+    "930208fa5a93": {
+      "id": "930208fa5a93",
+      "date": "2026-10-12",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-12"
+    },
+    "ae547059cd1d": {
+      "id": "ae547059cd1d",
+      "date": "2026-10-13",
+      "type": "special",
+      "source": "Look at my toys!",
+      "firstSeen": "2026-10-13T16:48:03.614Z",
+      "lastSeen": "2026-10-13"
+    },
+    "c082a7ecdbc9": {
+      "id": "c082a7ecdbc9",
+      "date": "2026-10-13",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-13"
+    },
+    "8d0fdd318df3": {
+      "id": "8d0fdd318df3",
+      "date": "2026-10-16",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-16"
+    },
+    "391bdb24996d": {
+      "id": "391bdb24996d",
+      "date": "2026-10-17",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-10-03T11:07:49.039Z",
+      "lastSeen": "2026-10-13",
+      "cancelled": true,
+      "cancelledBy": "vanished"
+    },
+    "a3d56ef0b824": {
+      "id": "a3d56ef0b824",
+      "date": "2026-10-17",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-30T21:11:47.441Z",
+      "lastSeen": "2026-10-17"
+    },
+    "c984f4ae68c1": {
+      "id": "c984f4ae68c1",
+      "date": "2026-10-20",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-20"
+    },
+    "05bfccda9d0f": {
+      "id": "05bfccda9d0f",
+      "date": "2026-10-23",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-23"
+    },
+    "cc84f9676fc1": {
+      "id": "cc84f9676fc1",
+      "date": "2026-10-27",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "b14bcce61fed": {
+      "id": "b14bcce61fed",
+      "date": "2026-10-28",
+      "type": "special",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-28"
+    },
+    "1f9a61d121da": {
+      "id": "1f9a61d121da",
+      "date": "2026-10-30",
+      "type": "linkup",
+      "source": "bitcircus101",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-30"
+    },
+    "3eb855200367": {
+      "id": "3eb855200367",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-03",
+      "time": "19:00",
+      "endDate": "2026-11-03",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "61abb4973c47": {
+      "id": "61abb4973c47",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-06",
+      "time": "20:00",
+      "endDate": "2026-11-06",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-1fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "c1d0794b2df4": {
+      "id": "c1d0794b2df4",
+      "title": "Treffen: Bonner FSFE Community",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-11-09",
+      "time": "19:00",
+      "endDate": "2026-11-09",
+      "endTime": "22:00",
+      "tags": [
+        "#foss"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
+      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "3bb611d0fc65": {
+      "id": "3bb611d0fc65",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-10",
+      "time": "19:00",
+      "endDate": "2026-11-10",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "eaacb806a193": {
+      "id": "eaacb806a193",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-13",
+      "time": "20:00",
+      "endDate": "2026-11-13",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "42b61cd5ff65": {
+      "id": "42b61cd5ff65",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-17",
+      "time": "19:00",
+      "endDate": "2026-11-17",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "91f3f4e4f160": {
+      "id": "91f3f4e4f160",
+      "title": "This is gonna be tricky 🧩 Das mir alles etwas rätselhaft",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-11-19",
+      "time": "20:00",
+      "endDate": "2026-11-19",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "d73c2e21-feef-4eed-b4fc-df76f5c23414",
+      "calendarUrl": "https://my.stim.toys/workshops",
+      "page": true,
+      "firstSeen": "2026-10-15T12:17:13.330Z",
+      "lastSeen": "2026-10-31"
+    },
+    "e45639019f6b": {
+      "id": "e45639019f6b",
+      "title": "Linkup@bitcircus101",
+      "subtitle": "",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.\n\nOn all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-20",
+      "time": "20:00",
+      "endDate": "2026-11-20",
+      "endTime": "22:30",
+      "tags": [
+        "#meetup",
+        "#lightning-talks",
+        "#talk"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "65960cd8b2aa": {
+      "id": "65960cd8b2aa",
+      "title": "KI-Workshop: Agenten an die Leine",
+      "subtitle": "",
+      "description": "KI-Agenten können Server und Webseiten pflegen. Wir zeigen dir, wie du sie dabei im Griff behältst: eigener Key, eigenes Budget, jeder Token sichtbar, jede Änderung mit deinem OK. Gemeinsam entwickeln wir Workflows und testen, wie gut KI eine Website pflegen kann. Zuschauen reicht nicht, du hackst selbst mit und bringst deine Fragen und Ideen ein. Mitbringen: Erfahrung mit KI-Chats, ein Grundverständnis von Software und Netzwerken und einen eigenen Laptop. Etwa zehn Plätze, nur mit Anmeldung bis 14.11. an info+kiws26@bitcircus101.de. Gefördert vom Land NRW im Programm 2.000 x 1.000 Euro für das Engagement. Mit <3 aus Europa: THX to opper.ai 🇪🇺 💪",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-21",
+      "time": "11:00",
+      "endDate": "2026-11-21",
+      "endTime": "18:00",
+      "tags": [
+        "#workshop",
+        "#ai"
+      ],
+      "type": "workshop",
+      "source": "bitcircus101",
+      "uid": "059aab40-d40c-40f2-9c04-2ebeee65bce0@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "page": true,
+      "firstSeen": "2026-10-28T10:17:13.152Z",
+      "lastSeen": "2026-10-31"
+    },
+    "51bcf0379262": {
+      "id": "51bcf0379262",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-24",
+      "time": "19:00",
+      "endDate": "2026-11-24",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "0814feb4508e": {
+      "id": "0814feb4508e",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-11-25",
+      "time": "20:00",
+      "endDate": "2026-11-25",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "c18b498bb7c1": {
+      "id": "c18b498bb7c1",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-11-27",
+      "time": "20:00",
+      "endDate": "2026-11-27",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-4fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "7247189d4d68": {
+      "id": "7247189d4d68",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-01",
+      "time": "19:00",
+      "endDate": "2026-12-01",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "a4982056db1b": {
+      "id": "a4982056db1b",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-04",
+      "time": "20:00",
+      "endDate": "2026-12-04",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-1fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "69470a725468": {
+      "id": "69470a725468",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-08",
+      "time": "19:00",
+      "endDate": "2026-12-08",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "4f18d3a378ba": {
+      "id": "4f18d3a378ba",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-11",
+      "time": "20:00",
+      "endDate": "2026-12-11",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "4a327b5e9b62": {
+      "id": "4a327b5e9b62",
+      "title": "Treffen: Bonner FSFE Community",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-12-14",
+      "time": "19:00",
+      "endDate": "2026-12-14",
+      "endTime": "22:00",
+      "tags": [
+        "#foss"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
+      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "da49faec4d6a": {
+      "id": "da49faec4d6a",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-15",
+      "time": "19:00",
+      "endDate": "2026-12-15",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "ea78b67d3952": {
+      "id": "ea78b67d3952",
+      "title": "Houseplant, Cat or Cactus? 🌵 Topfpflanze, Katz oder Kaktus?",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2026-12-17",
+      "time": "20:00",
+      "endDate": "2026-12-17",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "aa16bcf1-0722-4e08-8464-2eb23c3883f2",
+      "calendarUrl": "https://my.stim.toys/workshops",
+      "page": true,
+      "firstSeen": "2026-10-27T18:49:50.658Z",
+      "lastSeen": "2026-10-31"
+    },
+    "e2f988a12451": {
+      "id": "e2f988a12451",
+      "title": "Linkup@bitcircus101",
+      "subtitle": "",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.\n\nOn all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-18",
+      "time": "20:00",
+      "endDate": "2026-12-18",
+      "endTime": "22:30",
+      "tags": [
+        "#meetup",
+        "#lightning-talks",
+        "#talk"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "67428a1ed66e": {
+      "id": "67428a1ed66e",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-22",
+      "time": "19:00",
+      "endDate": "2026-12-22",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "905e7c72628f": {
+      "id": "905e7c72628f",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-25",
+      "time": "20:00",
+      "endDate": "2026-12-25",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-4fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "5e427bf3d16d": {
+      "id": "5e427bf3d16d",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2026-12-29",
+      "time": "19:00",
+      "endDate": "2026-12-29",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "5c48e8519d9c": {
+      "id": "5c48e8519d9c",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2026-12-30",
+      "time": "20:00",
+      "endDate": "2026-12-30",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "747ef622c7e6": {
+      "id": "747ef622c7e6",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-01",
+      "time": "20:00",
+      "endDate": "2027-01-01",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-1fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "6567f6dee9a1": {
+      "id": "6567f6dee9a1",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-05",
+      "time": "19:00",
+      "endDate": "2027-01-05",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "71f5165e840d": {
+      "id": "71f5165e840d",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-08",
+      "time": "20:00",
+      "endDate": "2027-01-08",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-13T16:50:55.355Z",
+      "lastSeen": "2026-10-31"
+    },
+    "3fecd3cae4eb": {
+      "id": "3fecd3cae4eb",
+      "title": "Treffen: Bonner FSFE Community",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2027-01-11",
+      "time": "19:00",
+      "endDate": "2027-01-11",
+      "endTime": "22:00",
+      "tags": [
+        "#foss"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
+      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "firstSeen": "2026-09-13T17:17:13.336Z",
+      "lastSeen": "2026-10-31"
+    },
+    "6665b9da5e9e": {
+      "id": "6665b9da5e9e",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-12",
+      "time": "19:00",
+      "endDate": "2027-01-12",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-14T17:17:13.479Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "8ae01b3568e9": {
+      "id": "8ae01b3568e9",
+      "title": "Linkup@bitcircus101",
+      "subtitle": "",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.\n\nOn all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-15",
+      "time": "20:00",
+      "endDate": "2027-01-15",
+      "endTime": "22:30",
+      "tags": [
+        "#meetup",
+        "#lightning-talks",
+        "#talk"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-17T18:17:14.667Z",
+      "lastSeen": "2026-10-31"
+    },
+    "5d65abaf699e": {
+      "id": "5d65abaf699e",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-19",
+      "time": "19:00",
+      "endDate": "2027-01-19",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-21T17:17:13.862Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "20602ddb2b10": {
+      "id": "20602ddb2b10",
+      "title": "Scribble Like Noone is Watching ✏️ Malen ohne Grenzen",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2027-01-21",
+      "time": "20:00",
+      "endDate": "2027-01-21",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "237f551b-e24f-41c8-876b-90c5c2cd1166",
+      "calendarUrl": "https://my.stim.toys/workshops",
+      "page": true,
+      "firstSeen": "2026-10-27T18:49:50.658Z",
+      "lastSeen": "2026-10-31"
+    },
+    "f4efd578368a": {
+      "id": "f4efd578368a",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-22",
+      "time": "20:00",
+      "endDate": "2027-01-22",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-4fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-24T18:17:15.895Z",
+      "lastSeen": "2026-10-31"
+    },
+    "d46d22c95c9b": {
+      "id": "d46d22c95c9b",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-26",
+      "time": "19:00",
+      "endDate": "2027-01-26",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-09-28T17:17:16.567Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "5b4f5ac61ac7": {
+      "id": "5b4f5ac61ac7",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2027-01-27",
+      "time": "20:00",
+      "endDate": "2027-01-27",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-09-29T18:17:14.602Z",
+      "lastSeen": "2026-10-31"
+    },
+    "58f1419ef19c": {
+      "id": "58f1419ef19c",
+      "title": "Casual Linkup@bitcircus101 (5FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. Hosted by bitcircus101 – https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-01-29",
+      "time": "20:00",
+      "endDate": "2027-01-29",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "A181B019-30E9-40E0-8250-45DC8DF5B788",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-01T18:17:13.257Z",
+      "lastSeen": "2026-10-31"
+    },
+    "b1a422a809c3": {
+      "id": "b1a422a809c3",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-02-02",
+      "time": "19:00",
+      "endDate": "2027-02-02",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-05T17:17:21.202Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "ed8737a59798": {
+      "id": "ed8737a59798",
+      "title": "Casual Linkup@bitcircus101 (1FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-02-05",
+      "time": "20:00",
+      "endDate": "2027-02-05",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-1fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-08T18:17:14.620Z",
+      "lastSeen": "2026-10-31"
+    },
+    "9217428f9ead": {
+      "id": "9217428f9ead",
+      "title": "Treffen: Bonner FSFE Community",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2027-02-08",
+      "time": "19:00",
+      "endDate": "2027-02-08",
+      "endTime": "22:00",
+      "tags": [
+        "#foss"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "401025E2-82B0-4010-876A-22DFA0C51B32",
+      "calendarUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://wiki.fsfe.org/LocalGroups/Bonn",
+      "firstSeen": "2026-10-11T17:17:16.176Z",
+      "lastSeen": "2026-10-31"
+    },
+    "aca41ac900c3": {
+      "id": "aca41ac900c3",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-02-09",
+      "time": "19:00",
+      "endDate": "2027-02-09",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-12T17:17:11.579Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "f2ea8cd2e2e8": {
+      "id": "f2ea8cd2e2e8",
+      "title": "Casual Linkup@bitcircus101 (2FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-02-12",
+      "time": "20:00",
+      "endDate": "2027-02-12",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-2fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-15T18:17:11.912Z",
+      "lastSeen": "2026-10-31"
+    },
+    "b7a66ab10fc5": {
+      "id": "b7a66ab10fc5",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-02-16",
+      "time": "19:00",
+      "endDate": "2027-02-16",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-19T17:17:12.625Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "766ab57eb7eb": {
+      "id": "766ab57eb7eb",
+      "title": "Let's Poetry to the North Pole and Back ✍️ Schwungvolle Schreiberei",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstr. 101, 53113 Bonn",
+      "date": "2027-02-18",
+      "time": "20:00",
+      "endDate": "2027-02-18",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "Look at my toys!",
+      "uid": "1b08db5f-b70e-45ab-937f-8d7545fc967f",
+      "calendarUrl": "https://my.stim.toys/workshops",
+      "page": true,
+      "firstSeen": "2026-10-27T18:49:50.658Z",
+      "lastSeen": "2026-10-31"
+    },
+    "1dd0341ab829": {
+      "id": "1dd0341ab829",
+      "title": "Linkup@bitcircus101",
+      "subtitle": "",
+      "description": "Linkup@bitcircus101 is our signature monthly meetup for anyone in Bonn’s tech scene to come together, share ideas and unwind. Every third Friday of the month starting at 8 PM, we kick things off with a series of lightning talks—short, punchy presentations (3 slides in 3 minutes each) where people can showcase a project, demo a tool or pose a new question. After the talks, the formal program wraps up and we transition into an open, relaxed hangout: you can grab a drink or snack, pull up a chair and dive into conversations with fellow tech-enthusiasts in a friendly, low-pressure atmosphere.\n\nOn all the other Fridays, we host Casual Linkup at the same time—no talks, just a laid-back environment to brainstorm, get feedback, troubleshoot problems or simply meet others who love technology. Whether you’re here to present or to listen, to ask questions or to offer advice, Linkup is all about building real human connections around shared tech interests",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-02-19",
+      "time": "20:00",
+      "endDate": "2027-02-19",
+      "endTime": "22:30",
+      "tags": [
+        "#meetup",
+        "#lightning-talks",
+        "#talk"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "19471ECE-D83E-4AA6-B70D-545B3F281B66",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-22T18:17:12.720Z",
+      "lastSeen": "2026-10-31"
+    },
+    "2a9ed0f592c8": {
+      "id": "2a9ed0f592c8",
+      "title": "Look at my toys!",
+      "subtitle": "",
+      "description": "We meet up once a week for games, puzzles and brain teasers. Starting with a topic such as a card game or a jigsaw puzzle. Afterwards you're welcome to hang out and continue playing and chatting as you like.\nWe play inclusive and together. There is stim toys and you can grab something to drink from the bitcircus fridge or bring your own.\n\nEinmal die Woche treffen wir uns zum Spielen, Puzzeln und Rätseln. Los geht es mit einem Thema z.B. ein Kartenspiel oder ein Puzzle. Danach wird gechillt und weiter gespielt, gerätselt oder einfach nur gequatscht.\nWir spielen inklusiv und miteinander. Es gibt Stim Toys und Getränke aus dem bitcircus-Kühlschrank. Wer mag darf sich auch selbst Getränke mitbringen.\n\n#relax&chill #social",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-02-23",
+      "time": "19:00",
+      "endDate": "2027-02-23",
+      "endTime": "22:00",
+      "tags": [
+        "#relax",
+        "#social",
+        "#spieletreff"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "A396A6A2-9155-4DA9-8DFA-887441FBF9BC",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-26T18:11:32.439Z",
+      "lastSeen": "2026-10-26",
+      "removed": true
+    },
+    "652dd2404ef4": {
+      "id": "652dd2404ef4",
+      "title": "Treffen: Bolle-Bonn.de",
+      "subtitle": "",
+      "description": "",
+      "location": "Dorotheenstraße 101 Bonn",
+      "date": "2027-02-24",
+      "time": "20:00",
+      "endDate": "2027-02-24",
+      "endTime": "22:00",
+      "tags": [
+        "#community"
+      ],
+      "type": "special",
+      "source": "bitcircus101",
+      "uid": "B7E4662F-A7A4-4FC0-8143-79C8C362E2D0",
+      "calendarUrl": "https://bolle-bonn.de",
+      "recurring": true,
+      "page": true,
+      "eventUrl": "https://bolle-bonn.de",
+      "firstSeen": "2026-10-27T19:17:14.956Z",
+      "lastSeen": "2026-10-31"
+    },
+    "73fb5bbb2305": {
+      "id": "73fb5bbb2305",
+      "title": "Casual Linkup@bitcircus101 (4FR)",
+      "subtitle": "",
+      "description": "A relaxed get-together for techies, creatives, and curious minds in the heart of Bonn. Drop by for a chat, a drink, or just to unwind. https://bitcircus101.de",
+      "location": "Dorotheenstraße 101, 53111 Bonn",
+      "date": "2027-02-26",
+      "time": "20:00",
+      "endDate": "2027-02-26",
+      "endTime": "23:00",
+      "tags": [
+        "#meetup"
+      ],
+      "type": "linkup",
+      "source": "bitcircus101",
+      "uid": "casual-linkup-4fr@bitcircus101.de",
+      "calendarUrl": "https://bitcircus101.de/calendar/",
+      "recurring": true,
+      "page": true,
+      "firstSeen": "2026-10-29T19:17:12.697Z",
+      "lastSeen": "2026-10-31"
+    }
+  }
+}

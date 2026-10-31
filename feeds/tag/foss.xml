@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>bitcircus101 – Termine: #foss</title>
+    <link>https://bitcircus101.de/events</link>
+    <description>Gefiltert nach #foss – alle Termine im bitcircus101 mit diesem Schlagwort.</description>
+    <language>de-de</language>
+    <ttl>30</ttl>
+    <image>
+      <url>https://bitcircus101.de/images/icon-192.png</url>
+      <title>bitcircus101 – Termine: #foss</title>
+      <link>https://bitcircus101.de/events</link>
+    </image>
+    <lastBuildDate>Mon, 11 May 2026 19:45:03 +0000</lastBuildDate>
+    <atom:link href="https://bitcircus101.de/feeds/tag/foss.xml" rel="self" type="application/rss+xml"/>
+
+    <item>
+      <title>[2026-11-09 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/c1d0794b2df4/</link>
+      <description>Treffen: Bonner FSFE Community · 2026-11-09</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/c1d0794b2df4/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261109T1900</guid>
+    </item>
+    <item>
+      <title>[2026-12-14 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/4a327b5e9b62/</link>
+      <description>Treffen: Bonner FSFE Community · 2026-12-14</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/4a327b5e9b62/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20261214T1900</guid>
+    </item>
+    <item>
+      <title>[2027-01-11 19:00] Treffen: Bonner FSFE Community @ Dorotheenstraße 101 Bonn</title>
+      <link>https://bitcircus101.de/e/3fecd3cae4eb/</link>
+      <description>Treffen: Bonner FSFE Community · 2027-01-11</description>
+      <content:encoded>&lt;p&gt;&lt;a href=&quot;https://bitcircus101.de/e/3fecd3cae4eb/&quot;&gt;Details, Kalendereintrag (.ics) und Ort&lt;/a&gt;&lt;/p&gt;</content:encoded>
+      <category>#foss</category>
+      <pubDate>Mon, 11 May 2026 19:45:03 +0000</pubDate>
+      <guid isPermaLink="false">401025E2-82B0-4010-876A-22DFA0C51B32-20270111T1900</guid>
+    </item>
+  </channel>
+</rss>
