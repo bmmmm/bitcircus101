@@ -1,0 +1,114 @@
+name: Sync calendar events
+
+permissions:
+  contents: write
+
+on:
+  schedule:
+    - cron: "*/30 * * * *" # fallback only — GitHub drops most of these; an hourly
+                            # workflow_dispatch from our own server sets the cadence
+  workflow_dispatch:
+
+concurrency:
+  group: sync-events
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # A healthy run takes 15-25s. This caps a hanging step — an ICS source that
+    # accepts the connection and then stalls, or the push retry loop — so the job
+    # fails with a log instead of burning the runner. Note it counts from job
+    # start, not from queueing: a run that never gets a runner is not covered.
+    timeout-minutes: 10
+    # ICS values from our calendar are floating-local Europe/Berlin; pin the runner TZ
+    # so date/time formatting (and UTC→local conversion) matches the calendar, not UTC.
+    env:
+      TZ: Europe/Berlin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: live
+          persist-credentials: true
+
+      - name: Use scripts and config from main
+        run: |
+          git fetch origin main
+          # jobs-core.js: build-pinnwand-feed.mjs needs it in step with the script,
+          # not live's copy from the last deploy (a deploy can lag this cron).
+          # A pathspec checkout also stages the files — the commit step below
+          # resets them, or live would get main's unminified core scripts back.
+          git checkout origin/main -- scripts/ calendars/ ics-core.js events-core.js jobs-core.js
+          # The commit step hands scripts/ back to live's copy; keep main's
+          # push script for it (live's copy may predate it).
+          cp scripts/push-live.sh "$RUNNER_TEMP/push-live.sh"
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Fetch ICS and generate events JSON + RSS
+        run: node scripts/sync-events.mjs
+
+      - name: Rebuild lite page event list
+        run: node scripts/build-lite-events.mjs
+
+      # Not calendar data, but the same live-only contract and the same cadence:
+      # a note whose `from` is today has to appear without waiting for a deploy.
+      # jobs.json is tracked on main and the overlay copies it to live.
+      - name: Rebuild the Pinnwand feed
+        run: node scripts/build-pinnwand-feed.mjs
+
+      # One static page per event (e/<id>/, a stub once it is past), from
+      # events-archive.json — the template is this checkout's events.html, so
+      # the pages carry live's asset hashes without a cache-bust run.
+      - name: Build event pages
+        run: node scripts/build-event-pages.mjs
+
+      # The status page's data (/status), from the same archive — absent for
+      # the same reason the archive can be, hence the guarded add below.
+      - name: Build the status page data
+        run: node scripts/build-status-data.mjs
+
+      # /calendar/ — the subscribe page, listed from the feeds manifest the
+      # sync just wrote. Same template contract as the event pages.
+      - name: Build the calendar page
+        run: node scripts/build-calendar-page.mjs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Hand main's build inputs back: live keeps the deploy's copies (the
+          # core scripts minified there), and the sync commit carries data only.
+          # clean drops files new on main, so a rebase onto a deploy that adds
+          # them cannot trip over untracked copies.
+          inputs="scripts calendars ics-core.js events-core.js jobs-core.js"
+          git reset -q -- $inputs
+          # Only what live tracks: a file new to this list on main is not on
+          # live until the next deploy, and a bare pathspec would fail on it.
+          git checkout -- $(git ls-files -- $inputs)
+          git clean -fdq -- $inputs
+          # -f: the feeds are .gitignored on main (rebuilt here); force-add so the
+          # first run can track them on live. ical.ics + events/ copies are new (issue #1).
+          # events.html: sync-events.mjs rewrites its JSON-LD block in place (#5),
+          # index.html: build-status-data.mjs stamps the streak line in place.
+          # -A on the feeds/ pathspec stages DELETIONS too — a retired tag feed
+          # that syncFeedsDir removed must stop being tracked on live.
+          # pinnwand/feed.xml is in the fixed list, not the guarded loop below:
+          # the build step above always writes it, even for an empty wall.
+          git add -f -A events-data.json feed.xml ical.ics events/feed.xml events/ical.ics feeds lite/index.html events.html index.html pinnwand/feed.xml
+          # The archive tree only exists once a primary source answered; a
+          # pathspec with no match aborts git add (exit 128) and would take
+          # the feed commit down with it.
+          for p in events-archive.json e status-data.json calendar; do
+            [ -e "$p" ] && git add -f -A -- "$p"
+          done
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "Sync events from calendar sources"
+          # live keeps no history (privacy): one parentless commit per push,
+          # rebased onto a concurrent push first — see scripts/push-live.sh.
+          bash "$RUNNER_TEMP/push-live.sh"

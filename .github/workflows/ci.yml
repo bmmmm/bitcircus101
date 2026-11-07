@@ -1,0 +1,64 @@
+name: PR checks
+
+on:
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - "*.md"
+      - "LICENSE"
+      - ".gitignore"
+      - "llms.txt"
+
+permissions:
+  contents: read
+
+jobs:
+  quick-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Verify layout HTML matches partials and logo slider
+        run: |
+          # build-lite-events.mjs is intentionally NOT part of this gate: it writes
+          # live event data into lite/index.html, so that file can never be
+          # drift-free in a PR. It is a deploy-time artifact like sitemap.xml.
+          # build-lite-finanz.mjs IS gated — it reads only the tracked finanz.json
+          # and has no clock, so its output is deterministic and must be committed.
+          node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
+          node scripts/build-lite-finanz.mjs
+          git diff --exit-code -- '*.html' || (
+            echo "::error::HTML drift: run pnpm run build:layout and pnpm run build:logos, then commit the updated HTML files."
+            exit 1
+          )
+
+      - name: Validate calendar sources
+        # Offline only — no network in the PR gate. Catches the silent failures of the
+        # two-step "add a calendar" flow: a source file that nobody listed in
+        # calendars/config.json, a misspelled key, a duplicate id/name. Warnings
+        # (e.g. an unlisted file) are surfaced as annotations but never fail the build.
+        run: node scripts/check-calendars.mjs
+
+      - name: Validate funding data
+        # finanz.json is hand-edited through scripts/finanz.mjs, which validates
+        # before every write — this gate catches the one path that bypasses it:
+        # someone editing the JSON directly. Same shape as the calendar check
+        # above: offline, no network, actionable errors naming the bad field.
+        run: node scripts/finanz.mjs validate
+
+      - name: Validate job board
+        # jobs.json is edited by hand (companies open a PR against it), so this
+        # is the only thing between a typo and a broken card on /pinnwand.
+        # Offline, no dependencies. An EXPIRED posting is only a warning: it is
+        # housekeeping, and failing on it would turn every deploy red on the day
+        # a posting runs out.
+        run: node scripts/check-jobs.mjs
+
+      - name: Run unit tests
+        run: node --test tests/*.spec.mjs
