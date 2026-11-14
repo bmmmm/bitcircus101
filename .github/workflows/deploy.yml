@@ -1,0 +1,292 @@
+name: Test & Deploy to live
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [main]
+    # Doc/meta-only pushes can't change the served site, so skip the full
+    # E2E + deploy run for them (a mixed push touching any other file still
+    # deploys — paths-ignore only skips when EVERY changed path matches).
+    # NOTE: deliberately unlike ci.yml's list — llms.txt is omitted here
+    # because it IS live content and must still trigger a deploy when it
+    # changes; it only sits in ci.yml because it needs no tests.
+    paths-ignore:
+      - "*.md"
+      - "LICENSE"
+      - ".gitignore"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  # Single source of truth for the Playwright image tag: package.json. A
+  # hand-kept tag in this file drifted when Dependabot bumped @playwright/test
+  # (1.63.0 vs image v1.62.0 → no matching chromium → every E2E test failed).
+  playwright-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - id: v
+        run: echo "version=$(node -p "require('./package.json').devDependencies['@playwright/test']")" >> "$GITHUB_OUTPUT"
+
+  test:
+    needs: playwright-version
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Browsers + OS deps are baked into the image, so there is no fragile
+    # `playwright install --with-deps` download step (which hung repeatedly and
+    # which caching can't save us from: this site deploys less often than the
+    # 7-day cache-eviction window, so the browser cache is always cold). The tag
+    # follows the exact @playwright/test pin in package.json (job above).
+    container: mcr.microsoft.com/playwright:v${{ needs.playwright-version.outputs.version }}-jammy
+    # Match the calendar's Europe/Berlin floating-local times when generating
+    # events-data.json / feed.xml and running the (date-sensitive) unit tests.
+    env:
+      TZ: Europe/Berlin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The container runs as root but the checkout is owned by the runner uid, so
+      # git refuses the repo ("dubious ownership" → "not a git repository") and the
+      # `git diff` drift check below fails. Mark the workspace trusted first.
+      - name: Trust workspace for git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify HTML matches layout partials and logo slider
+        run: |
+          # build-lite-events.mjs is intentionally NOT part of this gate: it writes
+          # live event data into lite/index.html (a deploy-time artifact like
+          # sitemap.xml), so it can never be drift-free here. build-lite-finanz.mjs
+          # IS gated — deterministic output from the tracked finanz.json.
+          node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
+          node scripts/build-lite-finanz.mjs
+          git diff --exit-code -- '*.html' || (
+            echo "::error::HTML drift: run pnpm run build:layout and pnpm run build:logos, then commit."
+            exit 1
+          )
+
+      - name: Validate funding data
+        # Same gate as both ci.yml files. It lives here too because the PR gate
+        # only runs on the PR path: a commit pushed straight to main reaches the
+        # public site without ever passing it, and finanz.json can be
+        # hand-edited around the CLI's own validation.
+        run: node scripts/finanz.mjs validate
+
+      - name: Validate job board
+        # jobs.json is edited by hand (companies open a PR against it), so this
+        # is the only thing between a typo and a broken card on /pinnwand.
+        # Offline, no dependencies. An EXPIRED posting is only a warning: it is
+        # housekeeping, and failing on it would turn every deploy red on the day
+        # a posting runs out.
+        run: node scripts/check-jobs.mjs
+
+      - name: Run unit tests
+        run: node --test tests/*.spec.mjs
+
+      # The E2E suite no longer depends on this: the events tests serve their
+      # own fixture (tests/fixtures/events-data.js), because a failed fetch here
+      # used to leave an empty file and silently turn those tests into no-ops.
+      # Kept as the one place a real sync run is exercised before deploying —
+      # the unit tests cover its logic, not a live fetch against every source.
+      - name: Smoke-run the calendar sync
+        run: |
+          node scripts/sync-events.mjs || {
+            echo "::warning::Calendar fetch failed — deploy will regenerate later"
+            echo '{"lastSync":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","sources":[],"events":[]}' > events-data.json
+          }
+
+      - name: Run Playwright tests
+        run: pnpm exec playwright test
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Same TZ pin as the test job for the events-data.json regeneration fallback.
+    env:
+      TZ: Europe/Berlin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: live
+          persist-credentials: true
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          # The live checkout has no package.json (stripped by the overlay), so
+          # action-setup cannot read the version from packageManager — pin it here.
+          version: 11.5.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24"
+
+      - name: Sync all site files from main
+        # Feed save/restore, overlay and dev-file removal live in a unit-tested
+        # node script (tests/deploy-scripts.spec.mjs) instead of inline bash —
+        # the bash version was only testable by a real deploy and twice hit the
+        # `bash -e` for-loop exit-status trap. The live checkout may not have
+        # the script yet (first run after introducing it), so pull scripts/
+        # from main before invoking it.
+        run: |
+          git fetch origin main
+          git checkout origin/main -- scripts/
+          node scripts/live-overlay.mjs origin/main
+
+      - name: Apply layout partials, logo slider, and lite blocks to HTML
+        run: |
+          node scripts/inject-layout.mjs
+          node scripts/build-logo-slider.mjs
+          node scripts/build-lite-events.mjs
+          node scripts/build-lite-finanz.mjs
+
+      - name: Build the Pinnwand feed
+        # Live-only, like the event feeds: pinnwand/ is gitignored on main, so
+        # a posting PR against the tracked jobs.json needs no build commit.
+        run: node scripts/build-pinnwand-feed.mjs
+
+      - name: Remove build-only includes/ partials
+        # includes/site-header.html, site-footer.html and site-skip.html are
+        # build inputs, not pages — inject-layout.mjs above already inlined
+        # their content into every real page. Left on live they carry no
+        # noindex meta, so the sitemap generator listed all three as if they
+        # were pages. Must run after inject-layout.mjs (not folded into
+        # live-overlay.mjs's REMOVE_DIRS, which runs in the earlier
+        # "Sync all site files from main" step, before injection happens).
+        run: rm -rf includes
+
+      - name: Minify CSS and JS
+        # Versions are pinned: npm releases are immutable, so a pinned version
+        # can never be swapped for a freshly-compromised "latest" between deploys
+        # — that swap is the main supply-chain risk of a bare `pnpm dlx <tool>`.
+        # A full lockfile approach (csso/terser as devDeps + pnpm exec) was
+        # considered but rejected: it needs package.json kept past the live
+        # overlay cleanup, and this deploy job can't be exercised locally, so the
+        # only smoke test would be a real production push. Bump these manually.
+        # Every first-party script the pages load is in the list — the ones
+        # added for /support and /pinnwand used to ship raw (Lighthouse flagged
+        # "unminified JavaScript" on /support). confetti.min.js is already
+        # minified. This list, cache-bust.mjs's ASSETS and the <script src>
+        # tags in the tracked HTML are held in lockstep by a unit test
+        # (tests/deploy-scripts.spec.mjs, "minify list"): a script minified
+        # here but not hashed there is served from a stale cache after a
+        # deploy that changed only that file, and a script a page loads but
+        # neither list names ships raw.
+        run: |
+          scripts="main.js events.js ics-core.js events-core.js kiosk.js storage.js finanz-core.js finanz.js jobs-core.js jobs.js status-core.js status.js"
+          echo "Before: style.css=$(wc -c < style.css)B $(for f in $scripts; do printf '%s=%sB ' "$f" "$(wc -c < "$f")"; done)"
+          pnpm dlx csso-cli@4.0.2 style.css -o style.css
+          for f in $scripts; do
+            pnpm dlx terser@5.48.0 "$f" -o "$f" --compress --mangle
+          done
+          echo "After:  style.css=$(wc -c < style.css)B $(for f in $scripts; do printf '%s=%sB ' "$f" "$(wc -c < "$f")"; done)"
+
+      - name: Cache-bust asset references
+        id: cachebust
+        # Hashing + rewrite live in a unit-tested node script; it walks every
+        # HTML file in the tree, so new page dirs are covered automatically
+        # (the old inline loop needed a hand-maintained directory list).
+        # Assignment form on purpose: `echo "hash=$(cmd)"` would swallow a
+        # script crash under `bash -e` and deploy with an empty hash.
+        run: |
+          hash=$(node scripts/cache-bust.mjs)
+          echo "hash=$hash" >> "$GITHUB_OUTPUT"
+
+      - name: Regenerate events data if missing
+        run: |
+          # ical.ics and feeds/all.ics are in the guard too so the first deploy
+          # after each feed feature lands generates the new files immediately
+          # instead of 404ing until the next sync-events run (up to an hour).
+          if [ ! -f events-data.json ] || [ ! -f ical.ics ] || [ ! -f feeds/all.ics ]; then
+            echo "events-data.json, ical.ics or feeds/all.ics missing — regenerating"
+            node scripts/sync-events.mjs
+          fi
+
+      # After cache-bust (the pages inherit events.html's final ?v=) and before
+      # the sitemap, so new event pages are indexed in the same deploy. The
+      # archive itself is live-only state that live-overlay.mjs preserves.
+      - name: Build event pages
+        run: node scripts/build-event-pages.mjs
+
+      # The status page's data, from the same archive — live-only like the
+      # pages above; status.js says "nicht verfügbar" until the file exists.
+      - name: Build the status page data
+        run: node scripts/build-status-data.mjs
+
+      # /calendar/ — live-only like the pages above, from the feeds manifest.
+      - name: Build the calendar page
+        run: node scripts/build-calendar-page.mjs
+
+      - name: Generate sitemap.xml
+        # Used to live in its own workflow (sitemap.yml) triggered on `push:
+        # branches: [live]` — but the push below uses the default
+        # GITHUB_TOKEN, and GitHub deliberately does not fire follow-on
+        # workflow runs for pushes made with that token (loop prevention), so
+        # sitemap.xml silently stopped updating after its first run. Folding
+        # generation in here means it always lands in the same deploy commit.
+        # Same action, same pin, same options as the old workflow — only the
+        # trigger changes. Must run after the includes/ removal above and
+        # after inject-layout/build-lite-events so noindex-carrying and
+        # build-only paths are excluded/absent exactly as before.
+        uses: cicirello/generate-sitemap@6a56a20238e631d653600cf792c3596722b78259 # v1.10.4
+        with:
+          base-url-path: https://bitcircus101.de
+          path-to-root: .
+          include-html: true
+          sitemap-format: xml
+          # The site is served with clean URLs: /events.html 308-redirects to
+          # /events. A sitemap listing the .html form would point every entry at
+          # a redirect, so drop the extension to match what is actually served —
+          # and what each page's own canonical/og:url now declares. index.html
+          # is unaffected (the generator maps it to / and /chat/ either way).
+          # exclude-paths still matches file paths, not URLs, so both entries
+          # below keep working with the extension.
+          drop-html-extension: true
+          exclude-paths: /google18556084d38e4dd8.html /donations.html
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to deploy"
+            exit 0
+          fi
+          COMMIT_MSG=$(git log origin/main -1 --pretty=format:"%s")
+          git commit -m "Deploy: ${COMMIT_MSG}"
+          # live keeps no history (privacy): one parentless commit per push,
+          # rebased onto a concurrent push first — see scripts/push-live.sh.
+          bash scripts/push-live.sh
+
+      - name: Smoke-test live site
+        # Polls until the Pages build serves the new asset hash, then checks
+        # that the hashed stylesheet resolves and unknown paths return 404.
+        # Also passes when the push was skipped ("No changes to deploy"): the
+        # current hash is then already live and the health checks still run.
+        run: node scripts/smoke-live.mjs https://bitcircus101.de "${{ steps.cachebust.outputs.hash }}"

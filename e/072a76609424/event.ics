@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//bitcircus101//events//DE
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:bitcircus101 – Termine
+X-WR-TIMEZONE:Europe/Berlin
+BEGIN:VTIMEZONE
+TZID:Europe/Berlin
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0200
+TZNAME:CEST
+DTSTART:19700329T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:+0200
+TZOFFSETTO:+0100
+TZNAME:CET
+DTSTART:19701025T030000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:cddb3238-8339-47bd-9341-39644b0c216d@bitcircus101.de-20261128T2000@bitc
+ ircus101.de
+DTSTAMP:20261103T141719Z
+DTSTART;TZID=Europe/Berlin:20261128T200000
+DTEND;TZID=Europe/Berlin:20261129T000000
+SUMMARY:Lesung: Mein Ex\, seine Braut und ihre Hochzeit
+DESCRIPTION:Hinweis: Geschlossene Gesellschaft - Teilnahme nur für geladen
+ e Gäste\n\nAn diesem Abend verwandelt sich der bitcircus101 in einen Eule
+ n-Horst! Finni To Eulfeld präsentiert in privatem Rahmen ihren autobiogra
+ fischen Debütroman "Mein Ex\, seine Braut und ihre Hochzeit".
+LOCATION:Dorotheenstraße 101\, 53111 Bonn
+URL:https://bitcircus101.de/calendar/
+CATEGORIES:community
+END:VEVENT
+END:VCALENDAR

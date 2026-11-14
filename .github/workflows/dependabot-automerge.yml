@@ -1,0 +1,112 @@
+# dependabot-automerge — fleet template, source: bsz/github templates/dependabot-automerge.yml
+# Rolled out by scripts/fleet-dependabot-automerge.sh; edit there, not in a repo.
+#
+# Merges a Dependabot PR on the GitHub mirror on its own, as soon as it is safe:
+#   - every updated dependency is non-major; a 0.x minor counts as major
+#     (0.13 -> 0.14 breaks like 1 -> 2), a missing update type holds too,
+#     except for github-actions digest bumps
+#   - every other check on the PR's head commit has finished green
+#     (SUCCESS, NEUTRAL, or SKIPPED for deploy/release/publish/pages jobs),
+#     the same rule the nightly adoption in ops/scripts/fleet-mirror-sync.sh uses
+#   - a PR with no checks at all is merged only if it bumps github-actions
+#     alone: Forgejo cannot run GitHub actions, so there is nothing to wait for
+# Anything else stays open for review; the nightly adoption still sees it.
+#
+# Forgejo stays the source of truth: the squash commit has author dependabot[bot]
+# and committer GitHub, which fleet-mirror-sync's bot-only intake takes back to
+# Forgejo on its next run. The job waits for CI itself, instead of GitHub's
+# native auto-merge, because private repos on the free plan have neither
+# auto-merge nor required checks.
+name: dependabot-automerge
+
+on: pull_request
+
+permissions: {}
+
+concurrency:
+  group: dependabot-automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  dependabot-automerge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.server_url == 'https://github.com'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+      statuses: read
+    steps:
+      - id: meta
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+
+      - id: policy
+        name: Policy (non-major, 0.x minor counts as major)
+        env:
+          DEPS: ${{ steps.meta.outputs.updated-dependencies-json }}
+        run: |
+          set -euo pipefail
+          verdict=$(jq -r '
+            def maj: (. // "") | ltrimstr("v") | split(".")[0];
+            if (type != "array") or length == 0 then "hold: no dependency metadata"
+            else
+              [ .[] |
+                if .updateType == "version-update:semver-major" then "major \(.dependencyName)"
+                elif (.prevVersion | maj) == "0" and .updateType == "version-update:semver-minor" then "0.x minor \(.dependencyName)"
+                elif .updateType == null and .packageEcosystem != "github_actions" then "no update type \(.dependencyName)"
+                else empty end ] as $bad
+              | if ($bad | length) > 0 then "hold: " + ($bad | join(", "))
+                elif all(.[]; .packageEcosystem == "github_actions") then "ok actions"
+                else "ok" end
+            end' <<<"${DEPS:-[]}")
+          echo "verdict: $verdict"
+          echo "verdict=$verdict" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for the other checks, then merge
+        if: startsWith(steps.policy.outputs.verdict, 'ok')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          SELF: ${{ github.job }}
+          ACTIONS_ONLY: ${{ steps.policy.outputs.verdict == 'ok actions' }}
+        run: |
+          set -euo pipefail
+          state() {
+            {
+              gh api --paginate "repos/$REPO/commits/$SHA/check-runs?per_page=100" \
+                --jq '.check_runs[] | {n: .name, c: (if .status == "completed" then (.conclusion | ascii_upcase) else "PENDING" end)}'
+              gh api "repos/$REPO/commits/$SHA/status" \
+                --jq '.statuses[] | {n: .context, c: (.state | ascii_upcase)}'
+            } | jq -rs --arg self "$SELF" '
+              def ok: .c == "SUCCESS" or .c == "NEUTRAL"
+                or (.c == "SKIPPED" and (.n | test("^(deploy|release|publish|pages)"; "i")));
+              def running: .c == "PENDING" or .c == "QUEUED" or .c == "IN_PROGRESS" or .c == "WAITING" or .c == "REQUESTED";
+              [ .[] | select(.n != $self) ]
+              | if length == 0 then "none"
+                elif all(ok) and any(.c == "SUCCESS") then "green"
+                elif all(ok) then "none"
+                elif all(ok or running) then "pending"
+                else "red" end'
+          }
+          start=$(date +%s)
+          while :; do
+            s=$(state); age=$(( $(date +%s) - start ))
+            echo "checks: $s (${age}s)"
+            case "$s" in
+              green) break ;;
+              red)   echo "::notice::a check failed — left for review"; exit 0 ;;
+              none)  # no check, or only NEUTRAL/SKIPPED ones (CodeQL with nothing to
+                     # analyse). Other workflows register within seconds: wait 90 s
+                     if [ "$age" -ge 90 ]; then
+                       [ "$ACTIONS_ONLY" = true ] && break
+                       echo "::notice::no checks and not actions-only — left for review"; exit 0
+                     fi ;;
+            esac
+            sleep 20
+          done
+          method=$(gh api "repos/$REPO" --jq 'if .allow_squash_merge then "squash" elif .allow_merge_commit then "merge" else "rebase" end')
+          gh pr merge "$PR" --repo "$REPO" "--$method" --match-head-commit "$SHA"
+          echo "::notice::merged #$PR ($method)"
