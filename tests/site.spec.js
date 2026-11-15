@@ -2536,6 +2536,8 @@ test.describe('No JavaScript errors', () => {
         ['/chat/', 'Signal'],
         ['/lite/', 'Lite'],
         ['/kiosk/', 'Kiosk'],
+        ['/anmeldung/', 'On rails registration'],
+        ['/anmeldung/danke.html', 'On rails ticket'],
         ['/404.html', '404'],
     ];
 

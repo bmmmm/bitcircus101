@@ -3332,3 +3332,178 @@ html[data-theme="light"][data-palette="pride"] {
     .panel > h2:first-child,
     section.logo-slider > h2:first-child { background: #ffffff; }
 }
+
+/* =============================================================================
+   /anmeldung/ — on rails. Shared site tokens, one arrival, no image downloads.
+   ============================================================================= */
+.rail-page { --rail-width: 1120px; --rail-arrival-duration: 3200ms; --rail-arrival-easing: cubic-bezier(.24,.65,.35,1); }
+.rail-page [hidden] { display: none !important; }
+.rail-skip { position: absolute; top: -100px; left: 1rem; z-index: 110; padding: 0.65rem 1rem; background: var(--ink-max); color: var(--paper); }
+.rail-skip:focus { top: 0.5rem; }
+.rail-header { position: static; display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 72px; max-width: var(--rail-width); margin: auto; padding: 0 var(--gutter); border-bottom: 1px solid var(--line); }
+.rail-brand { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; color: var(--ink-max); text-decoration: none; letter-spacing: -0.03em; }
+.rail-brand span { color: var(--accent); }
+.rail-header-actions { display: flex; align-items: center; gap: 1.75rem; font-size: var(--fs-meta); }
+.rail-header-actions > a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+.rail-theme { width: 44px; height: 44px; padding: 0; border: 1px solid var(--line); color: var(--ink); background: transparent; font: inherit; font-size: 1.3rem; cursor: pointer; }
+.rail-theme:hover { color: var(--paper); background: var(--ink-max); }
+.rail-main { max-width: var(--rail-width); padding: 0 var(--gutter); }
+.rail-intro { display: grid; grid-template-columns: 1fr 0.75fr; align-items: center; gap: 4rem; padding: 58px 0 14px; }
+.rail-intro > * { min-width: 0; }
+.rail-intro h1 { border: 0; margin: 0 0 20px; padding: 0; font-size: clamp(2.25rem, 5.3vw, 4.25rem); line-height: 1.12; letter-spacing: -0.04em; font-weight: 700; }
+.rail-title-stop { color: var(--ink-dim); }
+.rail-lead { margin: 0; font-size: clamp(1rem, 1.5vw, 1.125rem); line-height: 1.65; color: var(--ink); }
+.rail-departure { align-self: center; border-top: 3px double var(--accent); border-bottom: 1px solid var(--line); padding: 13px 0 12px; }
+.rail-board-label { display: flex; justify-content: space-between; font-size: var(--fs-label); letter-spacing: 0.12em; color: var(--ink-dim); }
+.rail-board-label > :last-child { color: var(--ink); font-size: 1.25rem; line-height: 1; }
+.rail-board-date { margin: 7px 0 9px; font-size: clamp(1.6rem, 3.1vw, 2.6rem); font-variant-numeric: tabular-nums; letter-spacing: -0.04em; line-height: 1.5; color: var(--ink-max); }
+.rail-board-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: var(--fs-meta); }
+.rail-board-bottom b { color: var(--ink-max); font-weight: 400; }
+.rail-board-location { font-size: var(--fs-label); color: var(--ink-dim); margin: 14px 0 0; }
+.rail-scene { position: relative; height: 250px; margin: 10px calc(-1 * var(--gutter)) 0; overflow: hidden; isolation: isolate; }
+.rail-wire { position: absolute; bottom: 156px; left: 0; width: 100%; height: 1px; background: var(--line); }
+.rail-wire::before { content: ''; position: absolute; left: 7%; top: -28px; height: 160px; width: 1px; background: var(--line); }
+.rail-wire::after { content: ''; position: absolute; left: 7%; top: -28px; width: 160px; height: 1px; background: var(--line); transform: rotate(11deg); transform-origin: left; }
+.rail-station { position: absolute; right: 12%; top: 13px; display: flex; align-items: stretch; font-size: var(--fs-label); color: var(--ink-max); border: 1px solid var(--line-strong); background: var(--paper); }
+.rail-station span { padding: 5px 12px; }
+.rail-station b { padding: 5px 8px; color: var(--paper); background: var(--ink-max); font-weight: 400; }
+.rail-station::before, .rail-station::after { content: ''; position: absolute; top: 100%; width: 2px; height: 150px; background: var(--line); z-index: -1; }
+.rail-station::before { left: 9px; }
+.rail-station::after { right: 9px; }
+.rail-lamp { position: absolute; bottom: 63px; width: 2px; height: 142px; background: var(--line); }
+.rail-lamp::before { content: ''; position: absolute; left: -20px; top: 0; width: 42px; height: 3px; background: var(--line-strong); }
+.rail-lamp-one { left: 36%; }
+.rail-lamp-two { right: 4%; }
+.rail-train-wrap { position: absolute; right: 0; bottom: 55px; width: 100%; min-width: 1100px; }
+.rail-train { display: block; width: 100%; height: auto; overflow: visible; }
+.rail-train.is-arriving { will-change: transform; animation: rail-arrive var(--rail-arrival-duration) var(--rail-arrival-easing) both; }
+.rail-car-body { fill: var(--ink-max); }
+.rail-couplers { fill: var(--line-strong); }
+.rail-stripe { fill: #ec0016; } /* DB Red 500: the train's livery, not a UI accent. */
+.rail-windows { fill: var(--paper-2); }
+.rail-undercarriage { fill: var(--line); }
+.rail-bogies { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1.5; }
+.rail-wheel { transform-box: fill-box; transform-origin: center; }
+.is-arriving .rail-wheel { animation: rail-wheel-turn var(--rail-arrival-duration) var(--rail-arrival-easing); }
+.rail-doors { fill: none; stroke: var(--line-strong); stroke-width: 1; }
+.rail-pantograph { fill: none; stroke: var(--line-strong); stroke-width: 2; stroke-linejoin: round; }
+.rail-train-lettering { fill: var(--paper); font-family: var(--font); font-size: 9px; }
+.rail-headlight { fill: var(--paper); }
+.rail-platform { position: absolute; bottom: 57px; left: 0; width: 100%; height: 9px; background: var(--line); border-top: 1px solid var(--ink-dim); z-index: -1; }
+.rail-track { position: absolute; bottom: 49px; left: 0; width: 100%; height: 6px; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line); }
+.rail-platform-label { position: absolute; bottom: 7px; left: var(--gutter); right: var(--gutter); display: flex; justify-content: flex-end; gap: 1rem; color: var(--ink-dim); font-size: 0.65rem; letter-spacing: 0.12em; }
+.rail-dust { position: absolute; bottom: 65px; left: 76%; width: 50px; height: 9px; border-radius: 50%; background: var(--ink-dim); filter: blur(5px); opacity: 0; pointer-events: none; }
+.rail-scene.is-braking .rail-dust { animation: rail-brake 650ms ease-out 2450ms both; }
+.rail-dust-two { left: 66%; width: 35px; }
+.rail-scene.is-braking .rail-dust-two { animation-delay: 2570ms; }
+.rail-dust-three { left: 60%; width: 22px; }
+.rail-scene.is-braking .rail-dust-three { animation-delay: 2690ms; }
+.rail-boarding { display: grid; grid-template-columns: 0.9fr 1fr; gap: 5rem; border-top: 1px solid var(--line); padding: 34px 0 36px; margin: 18px 0 0; }
+.rail-section-mark { color: var(--accent); font-size: var(--fs-label); margin-bottom: 11px; }
+.rail-boarding h2 { font-size: clamp(1.2rem, 2vw, 1.5rem); line-height: 1.4; letter-spacing: -0.025em; margin-bottom: 13px; }
+.rail-boarding-copy > p:not(.rail-section-mark) { font-size: var(--fs-small); }
+.rail-form-context { max-width: 36ch; color: var(--ink-dim); padding-top: 4px; }
+.rail-preview-note { font-size: var(--fs-label); color: var(--ink-dim); border-top: 1px dashed var(--line-strong); padding-top: 14px; margin-top: 20px; max-width: 52ch; }
+.rail-preview-note b { font-weight: 400; color: var(--ink); }
+.rail-form { min-width: 0; }
+.rail-form-names { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rail-field { display: flex; flex-direction: column; min-width: 0; margin-bottom: 17px; }
+.rail-field label { font-size: var(--fs-meta); color: var(--ink); margin-bottom: 6px; }
+.rail-field input { width: 100%; min-width: 0; min-height: 48px; border: 1px solid var(--line-strong); border-radius: 0; padding: 10px 12px; background: var(--paper-2); color: var(--ink-max); font: inherit; font-size: 16px; line-height: 1.5; caret-color: var(--ink-max); }
+.rail-field input:hover { border-color: var(--ink-dim); }
+.rail-field input:focus-visible { border-color: var(--ink-max); outline: 1px solid var(--ink-max); outline-offset: 2px; }
+.rail-field input[aria-invalid="true"] { border-style: dashed; border-color: var(--ink-max); }
+.rail-field-error { font-size: var(--fs-label); color: var(--ink-max); margin-top: 5px; }
+.rail-submit { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; min-height: 50px; padding: 11px 16px; border: 1px solid var(--accent); border-radius: 0; background: var(--accent); color: var(--paper); font: inherit; font-size: var(--fs-small); font-weight: 700; cursor: pointer; transition: background 120ms ease, color 120ms ease; }
+.rail-submit svg { fill: none; stroke: currentColor; stroke-width: 1.5; flex-shrink: 0; }
+.rail-submit:hover { background: var(--ink-max); border-color: var(--ink-max); }
+.rail-submit:disabled { cursor: wait; opacity: 0.65; }
+.rail-submit:focus-visible { outline-offset: 4px; }
+.rail-privacy { font-size: var(--fs-label); color: var(--ink-dim); line-height: 1.65; margin: 12px 0 0; }
+.rail-form-status { font-size: var(--fs-meta); border: 1px dashed var(--line-strong); padding: 12px; color: var(--ink-max); overflow-wrap: anywhere; }
+.rail-footer { max-width: var(--rail-width); margin: 0 auto; padding: 22px var(--gutter) 30px; display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; border-top: 1px solid var(--line); color: var(--ink-dim); font-size: var(--fs-label); }
+.rail-footer a { color: var(--ink-dim); }
+.rail-footer a:hover { color: var(--paper); }
+.rail-confirmation { max-width: 900px; padding-top: 56px; padding-bottom: 50px; }
+.rail-confirmation > h1 { border: 0; padding: 0; font-size: clamp(1.7rem, 4.5vw, 2.8rem); letter-spacing: -0.04em; line-height: 1.25; margin-bottom: 16px; overflow-wrap: anywhere; }
+.rail-confirmation-intro { max-width: 60ch; color: var(--ink-dim); font-size: var(--fs-small); }
+.rail-confirmation > .rail-preview-note { max-width: none; margin-bottom: 28px; }
+.rail-ticket { display: grid; grid-template-columns: 1fr 154px; border: 1px solid var(--line-strong); background: var(--paper-2); margin-top: 30px; }
+.rail-ticket-main { padding: 26px 30px 30px; min-width: 0; }
+.rail-ticket-heading { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; font-size: var(--fs-label); letter-spacing: 0.06em; color: var(--ink-dim); margin-bottom: 27px; }
+.rail-ticket-main h2 { font-size: clamp(1.6rem, 3.2vw, 2.6rem); line-height: 1.15; letter-spacing: -0.04em; margin-bottom: 30px; }
+.rail-ticket-details { margin: 0; font-size: var(--fs-meta); }
+.rail-ticket-details > div { display: grid; grid-template-columns: 100px 1fr; gap: 14px; padding: 10px 0; border-top: 1px solid var(--line); }
+.rail-ticket-details dt { color: var(--ink-dim); }
+.rail-ticket-details dd { margin: 0; color: var(--ink); overflow-wrap: anywhere; }
+.rail-ticket-stub { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 19px; padding: 20px 15px; border-left: 1px dashed var(--line-strong); font-size: 0.75rem; letter-spacing: 0.03em; color: var(--ink-dim); text-align: center; }
+.rail-ticket-stub b { font-size: 2.5rem; line-height: 1.2; color: var(--ink-max); font-weight: 400; letter-spacing: -0.04em; }
+.rail-ticket-bars { width: 86px; height: 35px; background: repeating-linear-gradient(90deg, var(--ink-dim) 0 1px, transparent 1px 4px, var(--ink-dim) 4px 7px, transparent 7px 9px); }
+.rail-ticket-actions { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 24px; font-size: var(--fs-meta); }
+.rail-ticket-actions .rail-submit { width: auto; min-width: 285px; font-weight: 400; }
+.rail-ticket-actions > a { display: flex; align-items: center; min-height: 44px; }
+.rail-confirmation-mail { color: var(--ink-dim); font-size: var(--fs-meta); margin-top: 25px; max-width: 65ch; }
+@keyframes rail-arrive { from { transform: translateX(-108%); } to { transform: translateX(0); } }
+/* 108% × 1440 SVG units / (2π × 12 radius) = 20.626 wheel revolutions.
+   Matching the train's easing keeps wheel speed tied to travelled distance. */
+@keyframes rail-wheel-turn { from { transform: rotate(-20.626turn); } to { transform: rotate(0); } }
+@keyframes rail-brake { 0% { opacity: 0; transform: translateX(-15px) scale(0.5); } 25% { opacity: 0.2; } 100% { opacity: 0; transform: translateX(36px) scale(2); } }
+@media (min-width: 1500px) { .rail-intro { padding-top: 74px; } .rail-scene { height: 270px; } }
+@media (max-width: 760px) {
+    .rail-intro { gap: 2rem; padding-top: 40px; grid-template-columns: 1.1fr 1fr; }
+    .rail-intro h1 { font-size: clamp(2rem, 5.3vw, 3rem); }
+    .rail-board-date { font-size: clamp(1.5rem, 3.3vw, 2rem); }
+    .rail-board-bottom { font-size: var(--fs-label); }
+    .rail-board-location { margin-top: 10px; }
+    .rail-boarding { grid-template-columns: 0.85fr 1fr; gap: 2.5rem; }
+    .rail-form-names { grid-template-columns: 1fr; gap: 0; }
+    .rail-scene { height: 230px; }
+    .rail-train-wrap { left: auto; right: -65px; }
+    .rail-ticket-actions { align-items: flex-start; flex-direction: column; gap: 12px; }
+}
+@media (max-width: 540px) {
+    .rail-header { min-height: 64px; }
+    .rail-header-actions { gap: 14px; }
+    .rail-intro { grid-template-columns: 1fr; gap: 27px; padding-top: 32px; }
+    .rail-intro h1 { font-size: clamp(2.1rem, 9vw, 3rem); margin-bottom: 17px; }
+    .rail-lead br { display: none; }
+    .rail-departure { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; padding-top: 10px; }
+    .rail-board-label { grid-column: 1 / -1; }
+    .rail-board-date { font-size: clamp(1.35rem, 6vw, 1.8rem); margin: 8px 0 0; }
+    .rail-board-bottom { align-items: flex-end; justify-content: flex-end; gap: 0; flex-direction: column; line-height: 1.7; }
+    .rail-board-location { grid-column: 1 / -1; font-size: 0.75rem; }
+    .rail-scene { height: 202px; margin-top: 21px; }
+    .rail-train-wrap { right: -74px; min-width: 960px; }
+    .rail-station { right: 8%; top: 0; font-size: 0.7rem; }
+    .rail-lamp { height: 132px; }
+    .rail-lamp-one { left: 14%; }
+    .rail-lamp-two { display: none; }
+    .rail-wire { bottom: 142px; }
+    .rail-wire::before, .rail-wire::after { display: none; }
+    .rail-platform-label { font-size: 0.55rem; letter-spacing: 0.04em; bottom: 12px; }
+    .rail-boarding { grid-template-columns: 1fr; gap: 20px; padding-top: 26px; margin-top: 2px; padding-bottom: 30px; }
+    .rail-boarding-copy > p:not(.rail-section-mark) { margin-bottom: 12px; }
+    .rail-form-context { max-width: none; padding-top: 0; }
+    .rail-preview-note { margin-top: 16px; padding-top: 11px; }
+    .rail-form-names { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .rail-footer { flex-direction: column; gap: 8px; padding-top: 18px; }
+    .rail-confirmation { padding-top: 35px; padding-bottom: 34px; }
+    .rail-ticket { grid-template-columns: 1fr 70px; }
+    .rail-ticket-main { padding: 18px 16px; }
+    .rail-ticket-heading { font-size: 0.75rem; gap: 5px; margin-bottom: 22px; }
+    .rail-ticket-details > div { grid-template-columns: 1fr; gap: 3px; }
+    .rail-ticket-stub { padding: 15px 8px; font-size: 0.75rem; letter-spacing: 0; }
+    .rail-ticket-stub b { font-size: 1.8rem; }
+    .rail-ticket-stub > span:first-child { writing-mode: vertical-rl; }
+    .rail-ticket-bars { width: 36px; height: 60px; }
+    .rail-ticket-actions { gap: 12px; }
+    .rail-ticket-actions .rail-submit { width: 100%; min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .rail-train.is-arriving, .is-arriving .rail-wheel, .rail-scene.is-braking .rail-dust { animation: none !important; will-change: auto; }
+}
+@media print {
+    .rail-header, .rail-footer, .rail-ticket-actions { display: none; }
+    .rail-confirmation { padding: 0; }
+    .rail-ticket { break-inside: avoid; }
+}

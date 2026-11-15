@@ -41,6 +41,8 @@ const server = createServer(async (req, res) => {
   res.setHeader("X-Serve-Root", root);
   try {
     let path = decodeURIComponent(req.url.split("?")[0]);
+    // Ticket pages can contain a transient first name; never cache the HTML.
+    if (path === "/anmeldung/danke.html") res.setHeader("Cache-Control", "no-store");
     if (path.endsWith("/")) path += "index.html";
     const filePath = normalize(join(root, path));
     // Block path traversal outside the served root.

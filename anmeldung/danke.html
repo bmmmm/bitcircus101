@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Dein Fahrschein — bitcircus101 on rails</title>
+    <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+    <script>try { if (localStorage.getItem('bc.theme') === 'light') document.documentElement.dataset.theme = 'light'; } catch (e) {}</script>
+    <link rel="stylesheet" href="../style.css">
+    <script type="module" src="anmeldung.mjs"></script>
+</head>
+<body class="rail-page rail-thanks-page">
+    <a class="rail-skip" href="#fahrschein">Direkt zum Fahrschein</a>
+    <header class="rail-header">
+        <a class="rail-brand" href="../index.html">bitcircus101<span aria-hidden="true">_</span></a>
+        <div class="rail-header-actions"><a href="../events.html">/termine</a><button class="rail-theme" type="button" aria-label="Helles Design umschalten" aria-pressed="false" title="Hell / Dunkel">◐</button></div>
+    </header>
+    <main class="rail-main rail-confirmation" id="fahrschein">
+        <h1 id="rail-welcome">Dein nächster Halt.</h1>
+        <p class="rail-confirmation-intro" id="rail-confirmation-intro">Hier findest du alle bisher bekannten Infos zum Event. Diese Seite allein bestätigt keine Anmeldung.</p>
+        <p class="rail-preview-note" id="rail-ticket-preview" hidden><b>Das ist dein Vorschau-Fahrschein.</b> Du bist noch nicht angemeldet. Es wurde keine Anmeldung gespeichert und keine E-Mail versendet.</p>
+        <article class="rail-ticket" aria-label="Fahrschein mit Event-Details">
+            <div class="rail-ticket-main">
+                <div class="rail-ticket-heading"><span>FAHRSCHEIN</span><span id="rail-ticket-state">EVENT-INFO</span></div>
+                <h2>bitcircus101<br>on rails.</h2>
+                <dl class="rail-ticket-details">
+                    <div><dt>Datum</dt><dd><time datetime="2027-01-23">Sa, 23. Januar 2027</time></dd></div>
+                    <div><dt>Einfahrt</dt><dd><time datetime="11:00">11:00 Uhr</time></dd></div>
+                    <div><dt>Treffpunkt</dt><dd data-event-location>bitcircus 101, Dorotheenstraße 101, Bonn</dd></div>
+                    <div><dt>Anfahrt</dt><dd data-event-directions>Wir treffen uns direkt im bitcircus 101 in der Dorotheenstraße 101 in Bonn.</dd></div>
+                    <div><dt>Mitbringen</dt><dd data-event-bring>Was du mitbringen solltest, geben wir noch bekannt.</dd></div>
+                </dl>
+            </div>
+            <div class="rail-ticket-stub"><span>BITCIRCUS101</span><b>23<br>JAN<br>27</b><span>11:00 UHR</span><div class="rail-ticket-bars" aria-hidden="true"></div><span>ON RAILS</span></div>
+        </article>
+        <div class="rail-ticket-actions"><button class="rail-submit" id="rail-calendar" type="button" disabled><span>Im Kalender vormerken</span><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 5H19V21H5ZM8 2V8M16 2V8M5 11H19M9 15H15"/></svg></button><a id="rail-change" href="mailto:info@bitcircus101.de?subject=bitcircus101%20on%20rails%20%E2%80%93%20Anmeldung">Anmeldung ändern / absagen</a></div>
+        <p class="rail-confirmation-mail" id="rail-confirmation-mail" hidden>Deinen Fahrschein schicken wir dir auch per E-Mail. Schau bitte im Spamordner nach, falls er nicht ankommt.</p>
+        <noscript><p>Zum Vormerken im Kalender: 23. Januar 2027, 11 Uhr. Bei Fragen schreib uns an <a href="mailto:info@bitcircus101.de">info@bitcircus101.de</a>.</p></noscript>
+    </main>
+    <footer class="rail-footer"><span>Zusammen kommt man weiter.</span><a href="../impressum-datenschutz.html">Impressum &amp; Datenschutz</a></footer>
+</body>
+</html>

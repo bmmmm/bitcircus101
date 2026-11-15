@@ -1,0 +1,4 @@
+# Honoured by Cloudflare Pages. The existing GitHub Pages deployment needs the
+# equivalent Cache-Control rule at its Cloudflare proxy (see anmeldung/README.md).
+/anmeldung/danke.html
+  Cache-Control: no-store

@@ -22,10 +22,10 @@ const PORT = checkoutPort();
 
 module.exports = defineConfig({
     testDir: './tests',
-    // Only site.spec.js is a Playwright suite. The *.spec.mjs files are
+    // Only *.spec.js files are Playwright suites. The *.spec.mjs files are
     // node:test units — without this scope Playwright imports them during
     // collection, which executes them as a side effect.
-    testMatch: 'site.spec.js',
+    testMatch: ['site.spec.js', 'rail.spec.js'],
     // Generates the live-only event pages (e/<id>/) from the events
     // fixture so the suite can open and link-check them — see the file.
     globalSetup: require.resolve('./tests/global-setup.js'),

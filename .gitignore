@@ -67,6 +67,7 @@ pinnwand/
 
 # Playwright MCP
 .playwright-mcp/
+.impeccable/review/
 
 # Local temp directory (QA reports, screenshots, etc.)
 tmp/
