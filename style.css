@@ -3383,7 +3383,7 @@ html[data-theme="light"][data-palette="pride"] {
 .rail-windows { fill: var(--paper-2); }
 .rail-undercarriage { fill: var(--line); }
 .rail-bogies { fill: var(--paper); stroke: var(--line-strong); stroke-width: 1.5; }
-.rail-wheel { transform-box: fill-box; transform-origin: center; }
+.rail-wheel { transform-box: view-box; transform-origin: 0 0; }
 .is-arriving .rail-wheel { animation: rail-wheel-turn var(--rail-arrival-duration) var(--rail-arrival-easing); }
 .rail-doors { fill: none; stroke: var(--line-strong); stroke-width: 1; }
 .rail-pantograph { fill: none; stroke: var(--line-strong); stroke-width: 2; stroke-linejoin: round; }

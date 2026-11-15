@@ -3,6 +3,41 @@ const { join } = require('node:path');
 const { test, expect } = require('@playwright/test');
 
 test.describe('On rails', () => {
+    test('turns visible wheel spokes around fixed axles and stops them on arrival', async ({ page }) => {
+        await page.goto('/anmeldung/');
+        const wheels = page.locator('.rail-bogies .rail-wheel');
+        await expect(wheels).toHaveCount(12);
+        const sample = await page.evaluate(() => {
+            document.getAnimations().forEach((animation) => animation.pause());
+            document.querySelector('.rail-train').getAnimations()[0].currentTime = 2400;
+            const wheel = [...document.querySelectorAll('.rail-bogies .rail-wheel')].at(-1);
+            const animation = wheel.getAnimations()[0];
+            const read = () => {
+                const matrix = wheel.getScreenCTM();
+                const center = new DOMPoint(0, 0).matrixTransform(matrix);
+                return { x: center.x, y: center.y, a: matrix.a, b: matrix.b };
+            };
+            animation.currentTime = 1800;
+            const before = read();
+            animation.currentTime = 1900;
+            const after = read();
+            return { before, after };
+        });
+        expect(sample.after.x).toBeCloseTo(sample.before.x, 4);
+        expect(sample.after.y).toBeCloseTo(sample.before.y, 4);
+        expect(Math.abs(sample.after.a - sample.before.a) + Math.abs(sample.after.b - sample.before.b)).toBeGreaterThan(0.05);
+        // Compare the same rendered axle area at two wheel angles: checking a
+        // definition's animation alone missed the stationary SVG instances.
+        const clip = { x: Math.floor(sample.after.x) - 12, y: Math.floor(sample.after.y) - 12, width: 24, height: 24 };
+        const firstFrame = await page.screenshot({ clip });
+        await wheels.last().evaluate((wheel) => { wheel.getAnimations()[0].currentTime = 2000; });
+        const nextFrame = await page.screenshot({ clip });
+        expect(firstFrame.equals(nextFrame)).toBe(false);
+        await page.evaluate(() => document.getAnimations().forEach((animation) => animation.finish()));
+        await expect(page.locator('.rail-train')).not.toHaveClass(/is-arriving/);
+        expect(await wheels.evaluateAll((items) => items.every((wheel) => wheel.getAnimations().length === 0))).toBe(true);
+    });
+
     test('validates, previews a ticket and downloads a calendar without sending data', async ({ page }, testInfo) => {
         const desktop = testInfo.project.name === 'chromium';
         await page.setViewportSize(desktop ? { width: 1440, height: 1000 } : { width: 390, height: 844 });

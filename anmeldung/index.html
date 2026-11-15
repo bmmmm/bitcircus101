@@ -47,12 +47,27 @@
                     <defs>
                         <g id="rail-window"><rect width="37" height="24" rx="4"/></g>
                         <g id="rail-wheel"><circle r="12"/><circle r="3"/><path d="M0-9V-3M2.6 1.5L7.8 4.5M-2.6 1.5L-7.8 4.5"/></g>
-                        <g id="rail-bogie"><rect x="-29" y="-8" width="58" height="16" rx="4"/><use class="rail-wheel" href="#rail-wheel" x="-18"/><use class="rail-wheel" href="#rail-wheel" x="18"/></g>
+                        <g id="rail-bogie"><rect x="-29" y="-8" width="58" height="16" rx="4"/></g>
                         <g id="rail-door"><rect width="28" height="72" rx="4"/><path d="M14 3V69M7 16H21M7 37H21"/></g>
                     </defs>
                     <g class="rail-pantograph"><path d="M548 52L575 26L604 43L579 52M563 24H591M552 52H605"/></g>
                     <g class="rail-undercarriage"><rect x="-70" y="127" width="465" height="12" rx="4"/><rect x="434" y="127" width="470" height="12" rx="4"/><rect x="956" y="127" width="310" height="12" rx="4"/></g>
-                    <g class="rail-bogies"><use href="#rail-bogie" x="80" y="142"/><use href="#rail-bogie" x="350" y="142"/><use href="#rail-bogie" x="493" y="142"/><use href="#rail-bogie" x="855" y="142"/><use href="#rail-bogie" x="1004" y="142"/><use href="#rail-bogie" x="1254" y="142"/></g>
+                    <g class="rail-bogies">
+                        <use href="#rail-bogie" x="80" y="142"/><use href="#rail-bogie" x="350" y="142"/><use href="#rail-bogie" x="493" y="142"/><use href="#rail-bogie" x="855" y="142"/><use href="#rail-bogie" x="1004" y="142"/><use href="#rail-bogie" x="1254" y="142"/>
+                        <!-- Animate real groups; nested use instances do not share CSS animation timelines reliably. -->
+                        <g transform="translate(62 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(98 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(332 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(368 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(475 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(511 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(837 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(873 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(986 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(1022 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(1236 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                        <g transform="translate(1272 142)"><g class="rail-wheel"><use href="#rail-wheel"/></g></g>
+                    </g>
                     <g class="rail-car-body"><rect x="-160" y="54" width="572" height="77" rx="12"/><rect x="423" y="54" width="498" height="77" rx="12"/><path d="M944 54H1210C1248 54 1270 66 1295 86L1352 121Q1365 131 1348 131H944Q933 131 933 119V66Q933 54 944 54Z"/></g>
                     <g class="rail-couplers"><path d="M412 73H423V121H412ZM921 73H933V121H921Z"/></g>
                     <g class="rail-stripe"><path d="M-160 107H412V112H-160ZM423 107H921V112H423ZM933 107H1329L1338 112H933Z"/></g>
