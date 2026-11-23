@@ -40,8 +40,9 @@ jobs:
           # resets them, or live would get main's unminified core scripts back.
           git checkout origin/main -- scripts/ calendars/ ics-core.js events-core.js jobs-core.js
           # The commit step hands scripts/ back to live's copy; keep main's
-          # push script for it (live's copy may predate it).
+          # push script and commit gate for it (live's copy may predate them).
           cp scripts/push-live.sh "$RUNNER_TEMP/push-live.sh"
+          cp scripts/sync-commit-gate.mjs "$RUNNER_TEMP/sync-commit-gate.mjs"
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -76,6 +77,8 @@ jobs:
         run: node scripts/build-calendar-page.mjs
 
       - name: Commit and push if changed
+        env:
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -104,10 +107,22 @@ jobs:
           for p in events-archive.json e status-data.json calendar; do
             [ -e "$p" ] && git add -f -A -- "$p"
           done
-          if git diff --cached --quiet; then
-            echo "No changes"
-            exit 0
-          fi
+          # Each push is a Pages build. The hourly dispatch at :17 always
+          # publishes, so the freshness shown on /events, the kiosk and Kuma's
+          # 6 h check read as before; a schedule run that only moved
+          # lastSync/fetchedAt is skipped while the published stamp is under
+          # 50 min old. Assignment form: a gate crash fails the step under
+          # bash -e; any output but commit/skip fails it too.
+          decision=$(node "$RUNNER_TEMP/sync-commit-gate.mjs" 50 "$EVENT_NAME")
+          case "$decision" in
+            commit) ;;
+            skip)
+              echo "No changes worth a commit"
+              exit 0 ;;
+            *)
+              echo "::error::sync-commit-gate printed '$decision', expected commit or skip"
+              exit 1 ;;
+          esac
           git commit -m "Sync events from calendar sources"
           # live keeps no history (privacy): one parentless commit per push,
           # rebased onto a concurrent push first — see scripts/push-live.sh.
