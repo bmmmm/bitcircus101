@@ -1,4 +1,4 @@
-# dependabot-automerge — fleet template, source: bsz/github templates/dependabot-automerge.yml
+# dependabot-automerge — fleet template (templates/dependabot-automerge.yml in the fleet steering repo)
 # Rolled out by scripts/fleet-dependabot-automerge.sh; edit there, not in a repo.
 #
 # Merges a Dependabot PR on the GitHub mirror on its own, as soon as it is safe:
@@ -7,7 +7,7 @@
 #     except for github-actions digest bumps
 #   - every other check on the PR's head commit has finished green
 #     (SUCCESS, NEUTRAL, or SKIPPED for deploy/release/publish/pages jobs),
-#     the same rule the nightly adoption in ops/scripts/fleet-mirror-sync.sh uses
+#     the same rule the nightly adoption by fleet-mirror-sync uses
 #   - a PR with no checks at all is merged only if it bumps github-actions
 #     alone: Forgejo cannot run GitHub actions, so there is nothing to wait for
 # Anything else stays open for review; the nightly adoption still sees it.
@@ -74,6 +74,11 @@ jobs:
           ACTIONS_ONLY: ${{ steps.policy.outputs.verdict == 'ok actions' }}
         run: |
           set -euo pipefail
+          leave() { # an expected non-merge: green, with the reason in notice and summary
+            echo "::notice::$1"
+            echo "**#$PR not merged:** $1" >>"${GITHUB_STEP_SUMMARY:-/dev/null}"
+            exit 0
+          }
           state() {
             {
               gh api --paginate "repos/$REPO/commits/$SHA/check-runs?per_page=100" \
@@ -97,16 +102,55 @@ jobs:
             echo "checks: $s (${age}s)"
             case "$s" in
               green) break ;;
-              red)   echo "::notice::a check failed — left for review"; exit 0 ;;
+              red)   leave "a check failed — left for review" ;;
               none)  # no check, or only NEUTRAL/SKIPPED ones (CodeQL with nothing to
                      # analyse). Other workflows register within seconds: wait 90 s
                      if [ "$age" -ge 90 ]; then
                        [ "$ACTIONS_ONLY" = true ] && break
-                       echo "::notice::no checks and not actions-only — left for review"; exit 0
+                       leave "no checks and not actions-only — left for review"
                      fi ;;
             esac
             sleep 20
           done
           method=$(gh api "repos/$REPO" --jq 'if .allow_squash_merge then "squash" elif .allow_merge_commit then "merge" else "rebase" end')
-          gh pr merge "$PR" --repo "$REPO" "--$method" --match-head-commit "$SHA"
+          rc=0
+          out=$(gh pr merge "$PR" --repo "$REPO" "--$method" --match-head-commit "$SHA" 2>&1) || rc=$?
+          [ -z "$out" ] || printf '%s\n' "$out"
+          if [ "$rc" -ne 0 ]; then
+            # A refused merge ends green only when GitHub's view of the PR names an
+            # expected cause; anything else, an answer of unexpected shape included,
+            # stays red. mergeable is computed lazily (UNKNOWN right after a push), so
+            # ask again for a while. A conflict shows as GitHub's GraphQL refusal or as
+            # gh's own pre-check on mergeStateStatus DIRTY (gh v2.20.0 to v2.105.0, sampled:
+            # "Pull request [owner/repo]#N is not mergeable: the merge commit cannot be
+            # cleanly created.", pkg/cmd/pr/merge/merge.go blockedReason).
+            why=unknown
+            for i in 1 2 3 4 5 6; do
+              why=$(gh pr view "$PR" --repo "$REPO" --json state,mergeable,headRefOid \
+                | jq -r --arg sha "$SHA" --arg err "$out" --arg pr "$PR" '
+                    def one_of($xs): . as $v | any($xs[]; . == $v);
+                    # null answers null to every field; another non-object makes jq fail
+                    if (.state | one_of(["OPEN", "MERGED", "CLOSED"]) | not)
+                      or (.mergeable | one_of(["MERGEABLE", "CONFLICTING", "UNKNOWN"]) | not)
+                      or (.headRefOid | type != "string" or . == "")
+                    then "error: unexpected answer"
+                    elif .state != "OPEN" then "gone: the PR is \(.state | ascii_downcase) already"
+                    elif .headRefOid != $sha then "moved: the head moved on — the new head gets its own run"
+                    elif .mergeable == "CONFLICTING" and ($err | test("GraphQL: Pull Request has merge conflicts|Pull request ([^ ]+)?#\($pr) is not mergeable: the merge commit cannot be cleanly created\\.")) then
+                      "conflict: merge conflict — Dependabot rebases it, the new head gets its own run"
+                    elif .mergeable == "UNKNOWN" then "unknown"
+                    else "error: no expected cause" end') || why=error
+              [ "$why" = unknown ] || break
+              [ "$i" = 6 ] || sleep 10
+            done
+            [ -n "$why" ] || why="error: no answer"
+            case "$why" in gone:*|moved:*|conflict:*) leave "${why#*: }" ;; esac
+            echo "::error::merge of #$PR failed (${why}): ${out%%$'\n'*}"
+            exit 1
+          fi
+          # gh exits 0 without merging when the PR was merged before (same wording
+          # gh v2.20.0 to v2.105.0, merge.go deleteLocalBranch): not this run's merge.
+          if grep -qE "Pull request ([^ ]+)?#$PR was already merged$" <<<"$out"; then
+            leave "the PR is merged already"
+          fi
           echo "::notice::merged #$PR ($method)"
