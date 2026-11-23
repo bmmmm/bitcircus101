@@ -313,14 +313,18 @@ describe("sync-commit-gate.mjs", () => {
                 'console.error(process.argv.slice(2).join(" "));\n' +
                 "if (process.env.FAKE_RC) process.exit(Number(process.env.FAKE_RC));\n" +
                 "process.stdout.write(process.env.FAKE_OUT);\n");
-            const run = (out, rc = "") => spawnSync("bash", ["-e", "-c", script], {
+            const run = (out, rc = "", event = "schedule") => spawnSync("bash", ["-e", "-c", script], {
                 encoding: "utf8", input: "", timeout: 10000,
-                env: { ...process.env, RUNNER_TEMP: dir, EVENT_NAME: "schedule", FAKE_OUT: out, FAKE_RC: rc },
+                env: { ...process.env, RUNNER_TEMP: dir, EVENT_NAME: event, FAKE_OUT: out, FAKE_RC: rc },
             });
             const commit = run("commit\n");
             assert.equal(commit.status, 0, commit.stderr);
             assert.match(commit.stdout, /COMMITTED/);
             assert.equal(commit.stderr.trim(), "50 schedule", "heartbeat and event not passed");
+            // The event must come from $EVENT_NAME, not a literal: a hard-wired
+            // "schedule" would gate every hourly dispatch.
+            assert.equal(run("commit\n", "", "workflow_dispatch").stderr.trim(), "50 workflow_dispatch",
+                "event name not taken from EVENT_NAME");
             const skip = run("skip\n");
             assert.equal(skip.status, 0, skip.stderr);
             assert.doesNotMatch(skip.stdout, /COMMITTED/);
