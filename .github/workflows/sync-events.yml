@@ -77,6 +77,8 @@ jobs:
         run: node scripts/build-calendar-page.mjs
 
       - name: Commit and push if changed
+        env:
+          EVENT_NAME: ${{ github.event_name }}
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -105,16 +107,22 @@ jobs:
           for p in events-archive.json e status-data.json calendar; do
             [ -e "$p" ] && git add -f -A -- "$p"
           done
-          # A run that only moved lastSync/fetchedAt is not pushed (each push
-          # is a Pages build) while the published stamp is younger than the
-          # heartbeat; the hourly dispatch at :17 still publishes it, so the
-          # freshness shown on /events, the kiosk and Kuma's 6 h check read as
-          # before. Assignment form: a gate crash fails the step under bash -e.
-          decision=$(node "$RUNNER_TEMP/sync-commit-gate.mjs" 50)
-          if [ "$decision" != "commit" ]; then
-            echo "No changes worth a commit"
-            exit 0
-          fi
+          # Each push is a Pages build. The hourly dispatch at :17 always
+          # publishes, so the freshness shown on /events, the kiosk and Kuma's
+          # 6 h check read as before; a schedule run that only moved
+          # lastSync/fetchedAt is skipped while the published stamp is under
+          # 50 min old. Assignment form: a gate crash fails the step under
+          # bash -e; any output but commit/skip fails it too.
+          decision=$(node "$RUNNER_TEMP/sync-commit-gate.mjs" 50 "$EVENT_NAME")
+          case "$decision" in
+            commit) ;;
+            skip)
+              echo "No changes worth a commit"
+              exit 0 ;;
+            *)
+              echo "::error::sync-commit-gate printed '$decision', expected commit or skip"
+              exit 1 ;;
+          esac
           git commit -m "Sync events from calendar sources"
           # live keeps no history (privacy): one parentless commit per push,
           # rebased onto a concurrent push first — see scripts/push-live.sh.

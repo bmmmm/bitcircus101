@@ -222,29 +222,47 @@ describe("sync-commit-gate.mjs", () => {
         }, null, 2);
     const minutesLater = (m) => new Date(Date.parse(T0) + m * 60000).toISOString();
 
-    /** A live checkout whose HEAD carries events-data.json stamped T0, with `stage` applied. */
-    function decision(stage) {
+    /**
+     * A live checkout whose HEAD carries `head` as events-data.json, with
+     * `stage` applied, gated as a run of `event` — called through `script`.
+     */
+    function decision(stage, { event = "schedule", head = data(T0), script = path.join(SCRIPTS, "sync-commit-gate.mjs") } = {}) {
         const dir = tmpdir("sync-gate-");
         try {
             git(dir, "init", "-q", "-b", "live");
-            write(dir, "events-data.json", data(T0));
+            write(dir, "events-data.json", head);
             write(dir, "feed.xml", "feed");
             git(dir, "add", "-A");
             git(dir, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "sync");
             stage(dir);
             git(dir, "add", "-A");
-            const res = spawnSync("node", [path.join(SCRIPTS, "sync-commit-gate.mjs"), "50"], { cwd: dir, encoding: "utf8" });
+            const res = spawnSync("node", [script, "50", event], { cwd: dir, encoding: "utf8", input: "", timeout: 10000 });
             assert.equal(res.status, 0, res.stderr);
             return res.stdout.trim();
         } finally {
             fs.rmSync(dir, { recursive: true, force: true });
         }
     }
+    const stamped = (m) => (d) => write(d, "events-data.json", data(minutesLater(m)));
 
-    it("skips a run that only moved the stamps, until the published one is a heartbeat old", () => {
+    it("skips a schedule run that only moved the stamps, until the published one is 50 min old", () => {
         assert.equal(decision(() => {}), "skip", "nothing staged");
-        assert.equal(decision((d) => write(d, "events-data.json", data(minutesLater(28)))), "skip");
-        assert.equal(decision((d) => write(d, "events-data.json", data(minutesLater(60)))), "commit");
+        assert.equal(decision(stamped(28)), "skip");
+        assert.equal(decision(stamped(50 - 1 / 60000)), "skip", "1 ms under the heartbeat");
+        assert.equal(decision(stamped(50)), "commit", "exactly the heartbeat");
+        assert.equal(decision(stamped(60)), "commit");
+    });
+
+    it("publishes a schedule run when the published stamp is unreadable, missing or in the future", () => {
+        assert.equal(decision(stamped(5), { head: data("garbage") }), "commit", "unparsable");
+        assert.equal(decision(stamped(5), { head: data(undefined) }), "commit", "missing");
+        assert.equal(decision(stamped(0), { head: data(minutesLater(10)) }), "commit", "10 min in the future");
+    });
+
+    it("always commits a dispatch (or any non-schedule) run that staged something", () => {
+        assert.equal(decision(stamped(5), { event: "workflow_dispatch" }), "commit");
+        assert.equal(decision(stamped(5), { event: "" }), "commit", "no event name");
+        assert.equal(decision(() => {}, { event: "workflow_dispatch" }), "skip", "nothing staged");
     });
 
     it("commits any content change at once, however young the published stamp", () => {
@@ -255,14 +273,65 @@ describe("sync-commit-gate.mjs", () => {
         assert.equal(decision((d) => fs.rmSync(path.join(d, "events-data.json"))), "commit");
     });
 
+    // Node resolves a symlinked main module; a guard that does not would
+    // print nothing and exit 0.
+    it("decides when called through a symlink", () => {
+        const dir = tmpdir("sync-gate-link-");
+        try {
+            const link = path.join(dir, "sync-commit-gate.mjs");
+            fs.symlinkSync(path.join(SCRIPTS, "sync-commit-gate.mjs"), link);
+            assert.equal(decision(stamped(28), { script: link }), "skip");
+            assert.equal(decision(stamped(60), { script: link }), "commit");
+        } finally {
+            fs.rmSync(dir, { recursive: true, force: true });
+        }
+    });
+
+    const wf = fs.readFileSync(new URL("../.github/workflows/sync-events.yml", import.meta.url), "utf8");
+
     // The commit step hands scripts/ back to live's copy before it runs the
     // gate, so the gate must be called from the copy the first step saved.
     it("is called from the RUNNER_TEMP copy that sync-events.yml makes before the reset", () => {
-        const wf = fs.readFileSync(new URL("../.github/workflows/sync-events.yml", import.meta.url), "utf8");
         const copy = wf.indexOf('cp scripts/sync-commit-gate.mjs "$RUNNER_TEMP/sync-commit-gate.mjs"');
         const reset = wf.indexOf("git reset -q -- $inputs");
         const call = wf.indexOf('node "$RUNNER_TEMP/sync-commit-gate.mjs"');
         assert.ok(copy > -1 && copy < reset && reset < call, "copy → reset → call order broken");
+        assert.match(wf, /^ {10}EVENT_NAME: \$\{\{ github\.event_name \}\}$/m, "event not handed to the step");
+    });
+
+    // Runs the workflow's own gate call and branch against a fake gate:
+    // only exactly "commit" reaches the commit, only exactly "skip" ends green.
+    it("sync-events.yml commits on commit, ends green on skip and fails on anything else", () => {
+        const lines = wf.split("\n");
+        const from = lines.findIndex((l) => l.includes('decision=$(node "$RUNNER_TEMP/sync-commit-gate.mjs"'));
+        const to = lines.findIndex((l, i) => i > from && l.trim() === "esac");
+        assert.ok(from > -1 && to > from, "gate call or its case block not found");
+        const script = lines.slice(from, to + 1).join("\n") + "\necho COMMITTED\n";
+        const dir = tmpdir("sync-gate-wf-");
+        try {
+            write(dir, "sync-commit-gate.mjs",
+                'console.error(process.argv.slice(2).join(" "));\n' +
+                "if (process.env.FAKE_RC) process.exit(Number(process.env.FAKE_RC));\n" +
+                "process.stdout.write(process.env.FAKE_OUT);\n");
+            const run = (out, rc = "") => spawnSync("bash", ["-e", "-c", script], {
+                encoding: "utf8", input: "", timeout: 10000,
+                env: { ...process.env, RUNNER_TEMP: dir, EVENT_NAME: "schedule", FAKE_OUT: out, FAKE_RC: rc },
+            });
+            const commit = run("commit\n");
+            assert.equal(commit.status, 0, commit.stderr);
+            assert.match(commit.stdout, /COMMITTED/);
+            assert.equal(commit.stderr.trim(), "50 schedule", "heartbeat and event not passed");
+            const skip = run("skip\n");
+            assert.equal(skip.status, 0, skip.stderr);
+            assert.doesNotMatch(skip.stdout, /COMMITTED/);
+            for (const [label, res] of [["empty", run("")], ["unknown", run("maybe\n")], ["crash", run("commit\n", "1")]]) {
+                assert.notEqual(res.status, 0, `${label} output must fail the step`);
+                assert.doesNotMatch(res.stdout, /COMMITTED/, label);
+            }
+            assert.match(run("").stdout, /::error::/);
+        } finally {
+            fs.rmSync(dir, { recursive: true, force: true });
+        }
     });
 });
 

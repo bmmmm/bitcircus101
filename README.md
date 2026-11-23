@@ -402,7 +402,8 @@ Nothing reaches production without passing all tests first.
   7. Runs `scripts/build-pinnwand-feed.mjs` (`pinnwand/feed.xml` from `jobs.json`)
   8. Runs `scripts/build-status-data.mjs` (`status-data.json` for `/status` from `events-archive.json`)
   9. Replaces `live` with one parentless commit (`scripts/push-live.sh`, rebases onto a concurrent push first) —
-     unless `scripts/sync-commit-gate.mjs` finds only `lastSync`/`fetchedAt` moved and the published
+     always on the hourly `workflow_dispatch`; a `schedule` (cron fallback) run is skipped when
+     `scripts/sync-commit-gate.mjs` finds only `lastSync`/`fetchedAt` moved and the published
      `lastSync` is under 50 min old (each push to `live` is a Pages build)
 
 ### Create release (`release.yml`)
