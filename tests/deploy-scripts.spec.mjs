@@ -212,6 +212,60 @@ describe("push-live.sh", () => {
     });
 });
 
+describe("sync-commit-gate.mjs", () => {
+    const T0 = "2026-11-23T13:17:20.000Z";
+    const data = (lastSync, { fetchedAt = lastSync, events = 17, hash = "083b3ed245e9761d" } = {}) =>
+        JSON.stringify({
+            lastSync,
+            sources: [{ id: "bitcircus", fetchedAt, status: "ok", events, hash, changedAt: null }],
+            events: [],
+        }, null, 2);
+    const minutesLater = (m) => new Date(Date.parse(T0) + m * 60000).toISOString();
+
+    /** A live checkout whose HEAD carries events-data.json stamped T0, with `stage` applied. */
+    function decision(stage) {
+        const dir = tmpdir("sync-gate-");
+        try {
+            git(dir, "init", "-q", "-b", "live");
+            write(dir, "events-data.json", data(T0));
+            write(dir, "feed.xml", "feed");
+            git(dir, "add", "-A");
+            git(dir, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "sync");
+            stage(dir);
+            git(dir, "add", "-A");
+            const res = spawnSync("node", [path.join(SCRIPTS, "sync-commit-gate.mjs"), "50"], { cwd: dir, encoding: "utf8" });
+            assert.equal(res.status, 0, res.stderr);
+            return res.stdout.trim();
+        } finally {
+            fs.rmSync(dir, { recursive: true, force: true });
+        }
+    }
+
+    it("skips a run that only moved the stamps, until the published one is a heartbeat old", () => {
+        assert.equal(decision(() => {}), "skip", "nothing staged");
+        assert.equal(decision((d) => write(d, "events-data.json", data(minutesLater(28)))), "skip");
+        assert.equal(decision((d) => write(d, "events-data.json", data(minutesLater(60)))), "commit");
+    });
+
+    it("commits any content change at once, however young the published stamp", () => {
+        const young = minutesLater(5);
+        assert.equal(decision((d) => write(d, "events-data.json", data(young, { events: 16 }))), "commit");
+        assert.equal(decision((d) => write(d, "events-data.json", data(young, { hash: "8454f9e06b64d9f1" }))), "commit");
+        assert.equal(decision((d) => write(d, "feed.xml", "feed 2")), "commit");
+        assert.equal(decision((d) => fs.rmSync(path.join(d, "events-data.json"))), "commit");
+    });
+
+    // The commit step hands scripts/ back to live's copy before it runs the
+    // gate, so the gate must be called from the copy the first step saved.
+    it("is called from the RUNNER_TEMP copy that sync-events.yml makes before the reset", () => {
+        const wf = fs.readFileSync(new URL("../.github/workflows/sync-events.yml", import.meta.url), "utf8");
+        const copy = wf.indexOf('cp scripts/sync-commit-gate.mjs "$RUNNER_TEMP/sync-commit-gate.mjs"');
+        const reset = wf.indexOf("git reset -q -- $inputs");
+        const call = wf.indexOf('node "$RUNNER_TEMP/sync-commit-gate.mjs"');
+        assert.ok(copy > -1 && copy < reset && reset < call, "copy → reset → call order broken");
+    });
+});
+
 describe("cache-bust.mjs", () => {
     it("rewrites ?v= in every html file with a hash over the existing assets", () => {
         const dir = tmpdir("bust-");

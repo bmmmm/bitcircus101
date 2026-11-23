@@ -401,7 +401,9 @@ Nothing reaches production without passing all tests first.
   6. Generates `feed.xml` (RSS 2.0, primary calendar only, every card in the window)
   7. Runs `scripts/build-pinnwand-feed.mjs` (`pinnwand/feed.xml` from `jobs.json`)
   8. Runs `scripts/build-status-data.mjs` (`status-data.json` for `/status` from `events-archive.json`)
-  9. Replaces `live` with one parentless commit (`scripts/push-live.sh`, rebases onto a concurrent push first)
+  9. Replaces `live` with one parentless commit (`scripts/push-live.sh`, rebases onto a concurrent push first) —
+     unless `scripts/sync-commit-gate.mjs` finds only `lastSync`/`fetchedAt` moved and the published
+     `lastSync` is under 50 min old (each push to `live` is a Pages build)
 
 ### Create release (`release.yml`)
 
