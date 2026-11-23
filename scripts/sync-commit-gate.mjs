@@ -13,8 +13,10 @@
  * kiosk.js flags "daten alt", and the Uptime Kuma monitor alerts when the
  * published `lastSync` is older than 6 h. So the hourly workflow_dispatch
  * (our own host, at :17) always commits and sets the cadence of the published
- * freshness exactly as before. Only a schedule run (the cron fallback) is
- * gated: it commits on any content change, or when the published `lastSync`
+ * freshness. The maximum age of `lastSync` is unchanged, but schedule runs no
+ * longer refresh it between two dispatches, so if the dispatches stop
+ * entirely it can get up to one heartbeat (50 min) older than before. Only a
+ * schedule run (the cron fallback) is gated: it commits on any content change, or when the published `lastSync`
  * is at least a heartbeat old — so the cron still publishes when the
  * dispatches stop. Any other or missing event name commits.
  *

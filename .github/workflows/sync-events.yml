@@ -108,11 +108,12 @@ jobs:
             [ -e "$p" ] && git add -f -A -- "$p"
           done
           # Each push is a Pages build. The hourly dispatch at :17 always
-          # publishes, so the freshness shown on /events, the kiosk and Kuma's
-          # 6 h check read as before; a schedule run that only moved
-          # lastSync/fetchedAt is skipped while the published stamp is under
-          # 50 min old. Assignment form: a gate crash fails the step under
-          # bash -e; any output but commit/skip fails it too.
+          # publishes, so the maximum age of the freshness shown on /events,
+          # the kiosk and Kuma's 6 h check is unchanged; a schedule run that
+          # only moved lastSync/fetchedAt is skipped while the published stamp
+          # is under 50 min old, so if the dispatches stop it can get up to
+          # 50 min older than before. Assignment form: a gate crash fails the
+          # step under bash -e; any output but commit/skip fails it too.
           decision=$(node "$RUNNER_TEMP/sync-commit-gate.mjs" 50 "$EVENT_NAME")
           case "$decision" in
             commit) ;;
