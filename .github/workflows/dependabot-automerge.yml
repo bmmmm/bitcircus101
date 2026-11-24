@@ -70,6 +70,7 @@ jobs:
           REPO: ${{ github.repository }}
           PR: ${{ github.event.pull_request.number }}
           SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
           SELF: ${{ github.job }}
           ACTIONS_ONLY: ${{ steps.policy.outputs.verdict == 'ok actions' }}
         run: |
@@ -154,3 +155,28 @@ jobs:
             leave "the PR is merged already"
           fi
           echo "::notice::merged #$PR ($method)"
+          # Delete the head branch: GitHub's delete_branch_on_merge skips merges made
+          # with GITHUB_TOKEN, and Dependabot removes its own branch only sometimes
+          # (2026-11-24: NoteDrop #16, ShareViaQRCode #21 kept theirs). Only while the
+          # branch still points at the merged commit; a branch that is still there
+          # after a refused delete fails the run, so a leftover never goes unseen.
+          tip() { # the branch's commit; "" only on 404, "error: …" for anything else
+            local o
+            if o=$(gh api "repos/$REPO/git/ref/heads/$HEAD_REF" --jq .object.sha 2>&1); then
+              [[ $o =~ ^[0-9a-f]+$ ]] && echo "$o" || echo "error: unexpected answer"
+            elif grep -q 'HTTP 404' <<<"$o"; then echo ""
+            else echo "error: ${o%%$'\n'*}"; fi
+          }
+          t=$(tip)
+          if [ -z "$t" ]; then echo "branch $HEAD_REF: gone already"; exit 0; fi
+          case "$t" in error:*) echo "::error::merged #$PR, but could not read branch $HEAD_REF (${t#error: })"; exit 1 ;; esac
+          if [ "$t" != "$SHA" ]; then
+            echo "::warning::branch $HEAD_REF moved on after the merge (now ${t:0:7}) — left in place"; exit 0
+          fi
+          if gh api -X DELETE "repos/$REPO/git/refs/heads/$HEAD_REF" >/dev/null; then
+            echo "branch $HEAD_REF: deleted"
+          elif [ -z "$(tip)" ]; then
+            echo "branch $HEAD_REF: gone already (deleted meanwhile)"
+          else
+            echo "::error::merged #$PR, but could not delete branch $HEAD_REF"; exit 1
+          fi
