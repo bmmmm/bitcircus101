@@ -17,6 +17,10 @@
 # Forgejo on its next run. The job waits for CI itself, instead of GitHub's
 # native auto-merge, because private repos on the free plan have neither
 # auto-merge nor required checks.
+#
+# Runner: ubuntu-latest, unless the repo variable GARAGE_RUNNER is `on`: then
+# the light pool of the self-hosted runner (garage-gh-light), never the pool
+# the checks it waits for run on, so a waiting merge cannot hold their slot.
 name: dependabot-automerge
 
 on: pull_request
@@ -30,7 +34,7 @@ concurrency:
 jobs:
   dependabot-automerge:
     if: github.event.pull_request.user.login == 'dependabot[bot]' && github.server_url == 'https://github.com'
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.GARAGE_RUNNER == 'on' && 'garage-gh-light' || 'ubuntu-latest' }}
     timeout-minutes: 40
     permissions:
       contents: write
