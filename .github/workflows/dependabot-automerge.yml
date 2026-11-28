@@ -1,0 +1,186 @@
+# dependabot-automerge — fleet template (templates/dependabot-automerge.yml in the fleet steering repo)
+# Rolled out by scripts/fleet-dependabot-automerge.sh; edit there, not in a repo.
+#
+# Merges a Dependabot PR on the GitHub mirror on its own, as soon as it is safe:
+#   - every updated dependency is non-major; a 0.x minor counts as major
+#     (0.13 -> 0.14 breaks like 1 -> 2), a missing update type holds too,
+#     except for github-actions digest bumps
+#   - every other check on the PR's head commit has finished green
+#     (SUCCESS, NEUTRAL, or SKIPPED for deploy/release/publish/pages jobs),
+#     the same rule the nightly adoption by fleet-mirror-sync uses
+#   - a PR with no checks at all is merged only if it bumps github-actions
+#     alone: Forgejo cannot run GitHub actions, so there is nothing to wait for
+# Anything else stays open for review; the nightly adoption still sees it.
+#
+# Forgejo stays the source of truth: the squash commit has author dependabot[bot]
+# and committer GitHub, which fleet-mirror-sync's bot-only intake takes back to
+# Forgejo on its next run. The job waits for CI itself, instead of GitHub's
+# native auto-merge, because private repos on the free plan have neither
+# auto-merge nor required checks.
+#
+# Runner: ubuntu-latest, unless the repo variable GARAGE_RUNNER is `on`: then
+# the light pool of the self-hosted runner (garage-gh-light), never the pool
+# the checks it waits for run on, so a waiting merge cannot hold their slot.
+name: dependabot-automerge
+
+on: pull_request
+
+permissions: {}
+
+concurrency:
+  group: dependabot-automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  dependabot-automerge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.server_url == 'https://github.com'
+    runs-on: ${{ vars.GARAGE_RUNNER == 'on' && 'garage-gh-light' || 'ubuntu-latest' }}
+    timeout-minutes: 40
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+      statuses: read
+    steps:
+      - id: meta
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+
+      - id: policy
+        name: Policy (non-major, 0.x minor counts as major)
+        env:
+          DEPS: ${{ steps.meta.outputs.updated-dependencies-json }}
+        run: |
+          set -euo pipefail
+          verdict=$(jq -r '
+            def maj: (. // "") | ltrimstr("v") | split(".")[0];
+            if (type != "array") or length == 0 then "hold: no dependency metadata"
+            else
+              [ .[] |
+                if .updateType == "version-update:semver-major" then "major \(.dependencyName)"
+                elif (.prevVersion | maj) == "0" and .updateType == "version-update:semver-minor" then "0.x minor \(.dependencyName)"
+                elif .updateType == null and .packageEcosystem != "github_actions" then "no update type \(.dependencyName)"
+                else empty end ] as $bad
+              | if ($bad | length) > 0 then "hold: " + ($bad | join(", "))
+                elif all(.[]; .packageEcosystem == "github_actions") then "ok actions"
+                else "ok" end
+            end' <<<"${DEPS:-[]}")
+          echo "verdict: $verdict"
+          echo "verdict=$verdict" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for the other checks, then merge
+        if: startsWith(steps.policy.outputs.verdict, 'ok')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          SELF: ${{ github.job }}
+          ACTIONS_ONLY: ${{ steps.policy.outputs.verdict == 'ok actions' }}
+        run: |
+          set -euo pipefail
+          leave() { # an expected non-merge: green, with the reason in notice and summary
+            echo "::notice::$1"
+            echo "**#$PR not merged:** $1" >>"${GITHUB_STEP_SUMMARY:-/dev/null}"
+            exit 0
+          }
+          state() {
+            {
+              gh api --paginate "repos/$REPO/commits/$SHA/check-runs?per_page=100" \
+                --jq '.check_runs[] | {n: .name, c: (if .status == "completed" then (.conclusion | ascii_upcase) else "PENDING" end)}'
+              gh api "repos/$REPO/commits/$SHA/status" \
+                --jq '.statuses[] | {n: .context, c: (.state | ascii_upcase)}'
+            } | jq -rs --arg self "$SELF" '
+              def ok: .c == "SUCCESS" or .c == "NEUTRAL"
+                or (.c == "SKIPPED" and (.n | test("^(deploy|release|publish|pages)"; "i")));
+              def running: .c == "PENDING" or .c == "QUEUED" or .c == "IN_PROGRESS" or .c == "WAITING" or .c == "REQUESTED";
+              [ .[] | select(.n != $self) ]
+              | if length == 0 then "none"
+                elif all(ok) and any(.c == "SUCCESS") then "green"
+                elif all(ok) then "none"
+                elif all(ok or running) then "pending"
+                else "red" end'
+          }
+          start=$(date +%s)
+          while :; do
+            s=$(state); age=$(( $(date +%s) - start ))
+            echo "checks: $s (${age}s)"
+            case "$s" in
+              green) break ;;
+              red)   leave "a check failed — left for review" ;;
+              none)  # no check, or only NEUTRAL/SKIPPED ones (CodeQL with nothing to
+                     # analyse). Other workflows register within seconds: wait 90 s
+                     if [ "$age" -ge 90 ]; then
+                       [ "$ACTIONS_ONLY" = true ] && break
+                       leave "no checks and not actions-only — left for review"
+                     fi ;;
+            esac
+            sleep 20
+          done
+          method=$(gh api "repos/$REPO" --jq 'if .allow_squash_merge then "squash" elif .allow_merge_commit then "merge" else "rebase" end')
+          rc=0
+          out=$(gh pr merge "$PR" --repo "$REPO" "--$method" --match-head-commit "$SHA" 2>&1) || rc=$?
+          [ -z "$out" ] || printf '%s\n' "$out"
+          if [ "$rc" -ne 0 ]; then
+            # A refused merge ends green only when GitHub's view of the PR names an
+            # expected cause; anything else, an answer of unexpected shape included,
+            # stays red. mergeable is computed lazily (UNKNOWN right after a push), so
+            # ask again for a while. A conflict shows as GitHub's GraphQL refusal or as
+            # gh's own pre-check on mergeStateStatus DIRTY (gh v2.20.0 to v2.105.0, sampled:
+            # "Pull request [owner/repo]#N is not mergeable: the merge commit cannot be
+            # cleanly created.", pkg/cmd/pr/merge/merge.go blockedReason).
+            why=unknown
+            for i in 1 2 3 4 5 6; do
+              why=$(gh pr view "$PR" --repo "$REPO" --json state,mergeable,headRefOid \
+                | jq -r --arg sha "$SHA" --arg err "$out" --arg pr "$PR" '
+                    def one_of($xs): . as $v | any($xs[]; . == $v);
+                    # null answers null to every field; another non-object makes jq fail
+                    if (.state | one_of(["OPEN", "MERGED", "CLOSED"]) | not)
+                      or (.mergeable | one_of(["MERGEABLE", "CONFLICTING", "UNKNOWN"]) | not)
+                      or (.headRefOid | type != "string" or . == "")
+                    then "error: unexpected answer"
+                    elif .state != "OPEN" then "gone: the PR is \(.state | ascii_downcase) already"
+                    elif .headRefOid != $sha then "moved: the head moved on — the new head gets its own run"
+                    elif .mergeable == "CONFLICTING" and ($err | test("GraphQL: Pull Request has merge conflicts|Pull request ([^ ]+)?#\($pr) is not mergeable: the merge commit cannot be cleanly created\\.")) then
+                      "conflict: merge conflict — Dependabot rebases it, the new head gets its own run"
+                    elif .mergeable == "UNKNOWN" then "unknown"
+                    else "error: no expected cause" end') || why=error
+              [ "$why" = unknown ] || break
+              [ "$i" = 6 ] || sleep 10
+            done
+            [ -n "$why" ] || why="error: no answer"
+            case "$why" in gone:*|moved:*|conflict:*) leave "${why#*: }" ;; esac
+            echo "::error::merge of #$PR failed (${why}): ${out%%$'\n'*}"
+            exit 1
+          fi
+          # gh exits 0 without merging when the PR was merged before (same wording
+          # gh v2.20.0 to v2.105.0, merge.go deleteLocalBranch): not this run's merge.
+          if grep -qE "Pull request ([^ ]+)?#$PR was already merged$" <<<"$out"; then
+            leave "the PR is merged already"
+          fi
+          echo "::notice::merged #$PR ($method)"
+          # Delete the head branch: GitHub's delete_branch_on_merge skips merges made
+          # with GITHUB_TOKEN, and Dependabot removes its own branch only sometimes
+          # (2026-11-24: NoteDrop #16, ShareViaQRCode #21 kept theirs). Only while the
+          # branch still points at the merged commit; a branch that is still there
+          # after a refused delete fails the run, so a leftover never goes unseen.
+          tip() { # the branch's commit; "" only on 404, "error: …" for anything else
+            local o
+            if o=$(gh api "repos/$REPO/git/ref/heads/$HEAD_REF" --jq .object.sha 2>&1); then
+              [[ $o =~ ^[0-9a-f]+$ ]] && echo "$o" || echo "error: unexpected answer"
+            elif grep -q 'HTTP 404' <<<"$o"; then echo ""
+            else echo "error: ${o%%$'\n'*}"; fi
+          }
+          t=$(tip)
+          if [ -z "$t" ]; then echo "branch $HEAD_REF: gone already"; exit 0; fi
+          case "$t" in error:*) echo "::error::merged #$PR, but could not read branch $HEAD_REF (${t#error: })"; exit 1 ;; esac
+          if [ "$t" != "$SHA" ]; then
+            echo "::warning::branch $HEAD_REF moved on after the merge (now ${t:0:7}) — left in place"; exit 0
+          fi
+          if gh api -X DELETE "repos/$REPO/git/refs/heads/$HEAD_REF" >/dev/null; then
+            echo "branch $HEAD_REF: deleted"
+          elif [ -z "$(tip)" ]; then
+            echo "branch $HEAD_REF: gone already (deleted meanwhile)"
+          else
+            echo "::error::merged #$PR, but could not delete branch $HEAD_REF"; exit 1
+          fi
